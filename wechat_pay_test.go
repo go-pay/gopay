@@ -1,27 +1,27 @@
 package go_pay
 
 import (
-	"fmt"
 	"testing"
 )
 
-func TestGetSign(t *testing.T) {
-	necessary := new(WechatParamsNecessary)
-	necessary.Appid = "zbcdefg"
-	necessary.MchId = "1234455"
-	necessary.NonceStr = "dyUNIkNS29hvDUC1CmoF0alSdfCQGg9I"
-	necessary.Body = "测试充值"
-	necessary.OutTradeNo = "GYsadfjksdhgflkhfgnlsdkf"
-	necessary.TotalFee = 15
-	necessary.SpbillCreateIp = "127.0.0.1"
-	necessary.NotifyUrl = "http://www.igoogle.ink"
-	necessary.TradeType = "APP"
-
+func TestWXPay(t *testing.T) {
+	client := NewWechatPayClient("fdgdfg", "23466", false)
 	params := new(WechatParams)
+	params.NonceStr = "dyUNIkNS29hvDUC1CmoF0alSdfCQGg9I"
+	params.Body = "测试充值"
+	params.OutTradeNo = "GYsadfjksdhgflkhfgnlsdkf"
+	params.TotalFee = 15
+	params.SpbillCreateIp = "127.0.0.1"
+	params.NotifyUrl = "http://www.igoogle.ink"
+	params.TradeType = WX_PayType_Mini
 	params.DeviceInfo = "WEB"
-	params.NecessaryParams = *necessary
+	params.SignType = WX_SignType_HMAC_SHA256
+	params.Openid = "o0Df70H2Q0fY8JXh1aFPIRyOBgu8"
 
-	s := getSign("asdfdsagsfdg", params)
+	client.SetParams(params)
 
-	fmt.Println("sign:", s)
+	client.GetSignAndSetReqParam("bfvnbhnmt5435")
+	//fmt.Println("sign:", sign)
+
+	client.GoWechatPay()
 }

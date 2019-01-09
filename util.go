@@ -5,10 +5,8 @@ import (
 	"time"
 )
 
-/*
-	获取随机字符串
-	length：字符串长度
-*/
+//获取随机字符串
+//    length：字符串长度
 func GetRandomString(length int) string {
 	str := "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
 	bytes := []byte(str)
