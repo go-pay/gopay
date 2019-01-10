@@ -7,7 +7,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -189,11 +188,20 @@ func getSignString(secretKey string, wxReq WXReq) string {
 	return buffer.String()
 }
 
-func (w WXReq) generateXml() (reqXML string) {
-	reqXML = "<xml>"
+func (w WXReq) generateXml() (reqXml string) {
+	buffer := new(bytes.Buffer)
+	buffer.WriteString("<xml>")
+
 	for k, v := range w {
-		reqXML += fmt.Sprintf("<%s>%s</%s>", k, v, k)
+		buffer.WriteString("<")
+		buffer.WriteString(k)
+		buffer.WriteString("><![CDATA[")
+		buffer.WriteString(v)
+		buffer.WriteString("]]></")
+		buffer.WriteString(k)
+		buffer.WriteString(">")
 	}
-	reqXML += "</xml>"
+	buffer.WriteString("</xml>")
+	reqXml = buffer.String()
 	return
 }
