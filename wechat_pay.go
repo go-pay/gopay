@@ -1,15 +1,29 @@
 package go_pay
 
 import (
-	"fmt"
+	"encoding/xml"
 	"github.com/parnurzeal/gorequest"
 )
+
+type WechatPayResponse struct {
+	ReturnCode string `xml:"return_code"`
+	ReturnMsg  string `xml:"return_msg"`
+	Appid      string `xml:"appid"`
+	MchId      string `xml:"mch_id"`
+	DeviceInfo string `xml:"device_info"`
+	NonceStr   string `xml:"nonce_str"`
+	Sign       string `xml:"sign"`
+	ResultCode string `xml:"result_code"`
+	PrepayId   string `xml:"prepay_id"`
+	TradeType  string `xml:"trade_type"`
+}
 
 type WechatPayClient struct {
 	Appid    string
 	MchId    string
 	Params   *WechatParams
 	ReqParam WXReq
+	WXRsp    *WechatPayResponse
 	isDebug  bool
 }
 
@@ -20,6 +34,7 @@ func NewWechatPayClient(appid, mchId string, isDebug bool) *WechatPayClient {
 	client.Appid = appid
 	client.MchId = mchId
 	client.isDebug = isDebug
+	client.WXRsp = new(WechatPayResponse)
 	return client
 }
 
@@ -36,18 +51,22 @@ func (this *WechatPayClient) GetSignAndSetReqParam(secretKey string) string {
 }
 
 //APP支付
-func (this *WechatPayClient) GoWechatPay() error {
+func (this *WechatPayClient) GoWechatPay() (err error) {
 	//fmt.Println("reqs:", this.ReqParam)
 	reqXML := this.ReqParam.generateXml()
 	agent := gorequest.New()
 	agent.Post(WX_PayUrl)
 	agent.Type("xml")
 	agent.SendString(reqXML)
-	response, bytes, _ := agent.EndBytes()
+	response, bytes, errs := agent.EndBytes()
 	defer response.Body.Close()
-
-	//fmt.Println("response:", response.Body)
-	fmt.Println("bytes:", string(bytes))
-	//fmt.Println("errors:", errors)
+	if len(errs) > 0 {
+		return errs[0]
+	}
+	//fmt.Println("bytes:", string(bytes))
+	err = xml.Unmarshal(bytes, this.WXRsp)
+	if err != nil {
+		return err
+	}
 	return nil
 }
