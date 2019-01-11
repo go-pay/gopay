@@ -6,7 +6,7 @@ Go 支付相关SDK
 
 ```
 	//New一个微信支付客户端，目前isDebug参数只支持false
-	client := NewWechatPayClient("wxdaa2ab9ef87123465", "136666666", false)
+	client := NewWechatPayClient("wxdaa2ab9ef87123456", "136666666", false)
 
 	//初始化参数结构体
 	params := new(WechatParams)
