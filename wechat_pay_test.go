@@ -6,11 +6,16 @@ import (
 )
 
 func TestWXPay(t *testing.T) {
-	//New一个微信支付客户端，目前isDebug参数只支持false
-	client := NewWechatPayClient("wxdaa2ab9ef87b54971", "13681395021", false)
+
+	//初始化微信客户端
+	//    appId：应用ID
+	//    mchID：商户ID
+	//    isProd：是否是正式环境
+	//    secretKey：key，（当isProd为true时，此参数必传；false时，此参数为空）
+	client := NewWeChatClient(AppID, MchID, false)
 
 	//初始化参数结构体
-	params := new(WechatParams)
+	params := new(WeChatPayParams)
 	params.NonceStr = "dyUNIkNS29hvDUC1CmoF0alSdfCQGg9I"
 	params.Body = "测试充值"
 	params.OutTradeNo = "GYsadfjk4dhg3fkhffgnlsdkf"
@@ -19,31 +24,23 @@ func TestWXPay(t *testing.T) {
 	params.NotifyUrl = "http://www.igoogle.ink"
 	params.TradeType = WX_PayType_JsApi //目前只支持JSAPI有效
 	params.DeviceInfo = "WEB"
-	params.SignType = WX_SignType_HMAC_SHA256 //如不设置此参数，默认为 MD5
-	params.Openid = "o0Df70H2Q0fY8JXh1aFPIRyOBgu81"
+	params.SignType = WX_SignType_MD5 //如不设置此参数，默认为 MD5
+	params.Openid = OpenID
 
-	//客户端设置参数
-	client.SetParams(params)
-
-	//传入secretKey获取Sign并重新设置参数
-	client.GetSignAndSetReqParam("GFDS8j98rewnmgl45wHTt980jg543wmg1")
-
-	//请求支付，成功后得到结构
-	err := client.GoWechatPay()
+	//请求支付，成功后得到结果
+	wxRsp, err := client.GoWeChatPay(params)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Println("ReturnCode：", wxRsp.ReturnCode)
+		fmt.Println("ReturnMsg：", wxRsp.ReturnMsg)
+		fmt.Println("Appid：", wxRsp.Appid)
+		fmt.Println("MchId：", wxRsp.MchId)
+		fmt.Println("DeviceInfo：", wxRsp.DeviceInfo)
+		fmt.Println("NonceStr：", wxRsp.NonceStr)
+		fmt.Println("Sign：", wxRsp.Sign)
+		fmt.Println("ResultCode：", wxRsp.ResultCode)
+		fmt.Println("PrepayId：", wxRsp.PrepayId)
+		fmt.Println("TradeType：", wxRsp.TradeType)
 	}
-	//err为空，请求支付成功后，输出请求结果
-	fmt.Println(client.WXRsp)
-
-	fmt.Println("ReturnCode：", client.WXRsp.ReturnCode)
-	fmt.Println("ReturnMsg：", client.WXRsp.ReturnMsg)
-	fmt.Println("Appid：", client.WXRsp.Appid)
-	fmt.Println("MchId：", client.WXRsp.MchId)
-	fmt.Println("DeviceInfo：", client.WXRsp.DeviceInfo)
-	fmt.Println("NonceStr：", client.WXRsp.NonceStr)
-	fmt.Println("Sign：", client.WXRsp.Sign)
-	fmt.Println("ResultCode：", client.WXRsp.ResultCode)
-	fmt.Println("PrepayId：", client.WXRsp.PrepayId)
-	fmt.Println("TradeType：", client.WXRsp.TradeType)
 }

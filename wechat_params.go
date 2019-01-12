@@ -12,10 +12,10 @@ import (
 	"strings"
 )
 
-type WXReq map[string]string
+type WeChatRequestBody map[string]string
 
 //获取参数
-func (w WXReq) Get(key string) string {
+func (w WeChatRequestBody) Get(key string) string {
 	if w == nil {
 		return ""
 	}
@@ -24,12 +24,12 @@ func (w WXReq) Get(key string) string {
 }
 
 //设置参数
-func (w WXReq) Set(key string, value string) {
+func (w WeChatRequestBody) Set(key string, value string) {
 	w[key] = value
 }
 
 //删除参数
-func (w WXReq) Remove(key string) {
+func (w WeChatRequestBody) Remove(key string) {
 	delete(w, key)
 }
 
@@ -58,7 +58,7 @@ func (w WXReq) Remove(key string) {
 //    Openid: 用户标识: trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识.
 //    Receipt: Y，传入Y时，支付成功消息和支付详情页将出现开票入口。需要在微信支付商户平台或微信公众平台开通电子发票功能，传此字段才可生效.
 //    SceneInfo: 该字段常用于线下活动时的场景信息上报，支持上报实际门店信息，商户也可以按需求自己上报相关信息。该字段为JSON对象数据，对象格式为{"store_info":{"id": "门店ID","name": "名称","area_code": "编码","address": "地址" }}.
-type WechatParams struct {
+type WeChatPayParams struct {
 	NonceStr       string `xml:"nonce_str"`
 	Body           string `xml:"body"`
 	OutTradeNo     string `xml:"out_trade_no"`
@@ -91,9 +91,9 @@ type StoreInfo struct {
 }
 
 //获取请求支付的参数
-func (w *WechatParams) getRequestParams(appid, mchId string, params *WechatParams) WXReq {
-	reqs := make(WXReq)
-	reqs.Set("appid", appid)
+func (w *WeChatPayParams) getRequestParams(appId, mchId string, params *WeChatPayParams) WeChatRequestBody {
+	reqs := make(WeChatRequestBody)
+	reqs.Set("appid", appId)
 	reqs.Set("mch_id", mchId)
 	reqs.Set("nonce_str", params.NonceStr)
 	reqs.Set("body", params.Body)
@@ -149,9 +149,9 @@ func (w *WechatParams) getRequestParams(appid, mchId string, params *WechatParam
 }
 
 //获取Sign签名和请求支付的参数
-func getSignAndRequestParam(appid, mchId string, secretKey string, param *WechatParams) (sign string, reqs WXReq) {
+func getSignAndRequestParam(appId, mchId string, secretKey string, param *WeChatPayParams) (sign string, reqs WeChatRequestBody) {
 
-	reqs = param.getRequestParams(appid, mchId, param)
+	reqs = param.getRequestParams(appId, mchId, param)
 
 	signStr := getSignString(secretKey, reqs)
 	//fmt.Println("signStr:", signStr)
@@ -170,7 +170,7 @@ func getSignAndRequestParam(appid, mchId string, secretKey string, param *Wechat
 }
 
 //获取根据Key排序后的请求参数字符串
-func getSignString(secretKey string, wxReq WXReq) string {
+func getSignString(secretKey string, wxReq WeChatRequestBody) string {
 	keyList := make([]string, 0)
 	for k := range wxReq {
 		keyList = append(keyList, k)
@@ -188,7 +188,13 @@ func getSignString(secretKey string, wxReq WXReq) string {
 	return buffer.String()
 }
 
-func (w WXReq) generateXml() (reqXml string) {
+//获取Sanbox
+func getSanBoxSignString() {
+	//url:= "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
+
+}
+
+func (w WeChatRequestBody) generateXml() (reqXml string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("<xml>")
 

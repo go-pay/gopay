@@ -3,9 +3,10 @@ package go_pay
 import (
 	"encoding/xml"
 	"github.com/parnurzeal/gorequest"
+	"github.com/pkg/errors"
 )
 
-type WechatPayResponse struct {
+type WeChatPayResponse struct {
 	ReturnCode string `xml:"return_code"`
 	ReturnMsg  string `xml:"return_msg"`
 	Appid      string `xml:"appid"`
@@ -18,55 +19,65 @@ type WechatPayResponse struct {
 	TradeType  string `xml:"trade_type"`
 }
 
-type WechatPayClient struct {
-	Appid    string
-	MchId    string
-	Params   *WechatParams
-	ReqParam WXReq
-	WXRsp    *WechatPayResponse
-	isDebug  bool
+type WeChatClient struct {
+	AppId     string
+	MchId     string
+	secretKey string
+	Params    *WeChatPayParams
+	ReqParam  WeChatRequestBody
+	isProd    bool
 }
 
-//    Appid: 微信支付分配的公众账号ID（企业号corpid即为此appId）
-//    MchId: 微信支付分配的商户号
-func NewWechatPayClient(appid, mchId string, isDebug bool) *WechatPayClient {
-	client := new(WechatPayClient)
-	client.Appid = appid
+//初始化微信客户端
+//    appId：应用ID
+//    mchID：商户ID
+//    isProd：是否是正式环境
+//    secretKey：key，（当isProd为true时，此参数必传；false时，此参数为空）
+func NewWeChatClient(appId, mchId string, isProd bool, secretKey ...string) *WeChatClient {
+	client := new(WeChatClient)
+	client.AppId = appId
 	client.MchId = mchId
-	client.isDebug = isDebug
-	client.WXRsp = new(WechatPayResponse)
+	client.isProd = isProd
+	if isProd && len(secretKey) > 0 {
+		client.secretKey = secretKey[0]
+	}
 	return client
 }
 
-//设置参数
-func (this *WechatPayClient) SetParams(param *WechatParams) {
+//支付
+func (this *WeChatClient) GoWeChatPay(param *WeChatPayParams) (wxRsp *WeChatPayResponse, err error) {
 	this.Params = param
-}
-
-func (this *WechatPayClient) GetSignAndSetReqParam(secretKey string) string {
-	sign, reqs := getSignAndRequestParam(this.Appid, this.MchId, secretKey, this.Params)
+	//fmt.Println("reqs:", this.ReqParam)
+	var sign string
+	var reqs WeChatRequestBody
+	if this.isProd {
+		sign, reqs = getSignAndRequestParam(this.AppId, this.MchId, this.secretKey, this.Params)
+	} else {
+		return nil, errors.New("暂不支持沙箱测试")
+		//getSanBoxSignString(this.Appid, this.MchId, this.Params)
+	}
 	this.ReqParam = reqs
 	this.ReqParam.Set("sign", sign)
-	return sign
-}
 
-//APP支付
-func (this *WechatPayClient) GoWechatPay() (err error) {
-	//fmt.Println("reqs:", this.ReqParam)
 	reqXML := this.ReqParam.generateXml()
 	agent := gorequest.New()
-	agent.Post(WX_PayUrl)
+	if this.isProd {
+		agent.Post(WX_PayUrl)
+	} else {
+		agent.Post(WX_PayUrl_SanBox)
+	}
 	agent.Type("xml")
 	agent.SendString(reqXML)
 	response, bytes, errs := agent.EndBytes()
 	defer response.Body.Close()
 	if len(errs) > 0 {
-		return errs[0]
+		return nil, errs[0]
 	}
 	//fmt.Println("bytes:", string(bytes))
-	err = xml.Unmarshal(bytes, this.WXRsp)
+	wxRsp = new(WeChatPayResponse)
+	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return wxRsp, nil
 }
