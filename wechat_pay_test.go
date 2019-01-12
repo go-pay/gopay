@@ -27,8 +27,8 @@ func TestWXPay(t *testing.T) {
 	params.SignType = WX_SignType_MD5 //如不设置此参数，默认为 MD5
 	params.Openid = OpenID
 
-	//请求支付，成功后得到结果
-	wxRsp, err := client.GoWeChatPay(params)
+	//请求支付下单，成功后得到结果
+	wxRsp, err := client.GoUnifiedOrder(params)
 	if err != nil {
 		fmt.Println("Error:", err)
 	} else {
