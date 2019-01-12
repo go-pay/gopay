@@ -44,8 +44,8 @@ func NewWeChatClient(appId, mchId string, isProd bool, secretKey ...string) *WeC
 	return client
 }
 
-//支付
-func (this *WeChatClient) GoWeChatPay(param *WeChatPayParams) (wxRsp *WeChatPayResponse, err error) {
+//统一下单
+func (this *WeChatClient) GoUnifiedOrder(param *WeChatPayParams) (wxRsp *WeChatPayResponse, err error) {
 	this.Params = param
 	//fmt.Println("reqs:", this.ReqParam)
 	var sign string
