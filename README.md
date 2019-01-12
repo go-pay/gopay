@@ -2,7 +2,7 @@
 ![](https://img02.sogoucdn.com/app/a/100520146/2D860B130504E7780A8F94CFACC023DD)
 # GoPay
 
-### 文档：[https://doc.gopay.ink](https://doc.gopay.ink)
+## 文档：[https://doc.gopay.ink](https://doc.gopay.ink)
 
 ## 微信支付 example
 
@@ -58,6 +58,6 @@
 
 ## 支付宝支付 example
 
-### License
+## License
 
 [MIT](https://github.com/labstack/echo/blob/master/LICENSE)
