@@ -1,6 +1,8 @@
 # Golang Pay
 
-Go 支付相关SDK
+#### Go 支付相关SDK
+
+![](https://img02.sogoucdn.com/app/a/100520146/0E446154E959553AC7FD7D86E912A822)
 
 ### 微信支付 example
 
