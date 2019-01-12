@@ -6,15 +6,19 @@
 
 ### 微信支付 example
 
-```
-	//初始化微信客户端
-	//    appId：应用ID
-	//    mchID：商户ID
-	//    isProd：是否是正式环境
-	//    secretKey：key，（当isProd为true时，此参数必传；false时，此参数为空）
-	client := NewWeChatClient(AppID, MchID, false)
+* 初始化客户端
+    * AppId：应用ID
+    * mchID：商户ID
+    * isProd：是否是正式环境
+    * secretKey：key，（当isProd为true时，此参数必传；false时，此参数为空）
 
-	//初始化参数结构体
+```go
+	client := NewWeChatClient(AppID, MchID, false)
+```
+
+* 初始化统一下单参数
+> 参数说明请参考文档：[微信支付文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)，[JSAPI支付：统一下单文档](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1)
+```go
 	params := new(WeChatPayParams)
 	params.NonceStr = "dyUNIkNS29hvDUC1CmoF0alSdfCQGg9I"
 	params.Body = "测试充值"
@@ -28,7 +32,14 @@
 	params.Openid = OpenID
 
 	//请求支付，成功后得到结果
-	wxRsp, err := client.GoWeChatPay(params)
+
+```
+
+* 发起统一下单请求
+    * param：统一下单请求参数
+> 请求成后，获取下单结果
+```go
+	wxRsp, err := client.GoUnifiedOrder(params)
 	if err != nil {
 		fmt.Println("Error:", err)
 	} else {
