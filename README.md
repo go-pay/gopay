@@ -1,10 +1,10 @@
-# Golang Pay
-
-#### Go 支付相关SDK
 
 ![](https://img02.sogoucdn.com/app/a/100520146/2D860B130504E7780A8F94CFACC023DD)
+# GoPay
 
-### 微信支付 example
+### 文档：[https://doc.gopay.ink](https://doc.gopay.ink)
+
+## 微信支付 example
 
 * 初始化客户端
     * AppId：应用ID
@@ -56,4 +56,8 @@
 	}
 ```
 
-### 支付宝支付 example
+## 支付宝支付 example
+
+### License
+
+[MIT](https://github.com/labstack/echo/blob/master/LICENSE)
