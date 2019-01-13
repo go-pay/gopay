@@ -1,4 +1,4 @@
-package go_pay
+package gopay
 
 import (
 	"fmt"
@@ -12,7 +12,7 @@ func TestWXPay(t *testing.T) {
 	//    mchID：商户ID
 	//    isProd：是否是正式环境
 	//    secretKey：key，（当isProd为true时，此参数必传；false时，此参数为空）
-	client := NewWeChatClient(AppID, MchID, false)
+	client := NewWeChatClient(appID, mchID, true, secretKey)
 
 	//初始化参数结构体
 	params := new(WeChatPayParams)
@@ -25,10 +25,10 @@ func TestWXPay(t *testing.T) {
 	params.TradeType = WX_PayType_JsApi //目前只支持JSAPI有效
 	params.DeviceInfo = "WEB"
 	params.SignType = WX_SignType_MD5 //如不设置此参数，默认为 MD5
-	params.Openid = OpenID
+	params.Openid = openID
 
 	//请求支付下单，成功后得到结果
-	wxRsp, err := client.GoUnifiedOrder(params)
+	wxRsp, err := client.UnifiedOrder(params)
 	if err != nil {
 		fmt.Println("Error:", err)
 	} else {
