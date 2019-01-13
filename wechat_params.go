@@ -1,4 +1,4 @@
-package go_pay
+package gopay
 
 import (
 	"bytes"
@@ -12,10 +12,10 @@ import (
 	"strings"
 )
 
-type WeChatRequestBody map[string]string
+type requestBody map[string]string
 
 //获取参数
-func (w WeChatRequestBody) Get(key string) string {
+func (w requestBody) Get(key string) string {
 	if w == nil {
 		return ""
 	}
@@ -24,12 +24,12 @@ func (w WeChatRequestBody) Get(key string) string {
 }
 
 //设置参数
-func (w WeChatRequestBody) Set(key string, value string) {
+func (w requestBody) Set(key string, value string) {
 	w[key] = value
 }
 
 //删除参数
-func (w WeChatRequestBody) Remove(key string) {
+func (w requestBody) Remove(key string) {
 	delete(w, key)
 }
 
@@ -91,8 +91,8 @@ type StoreInfo struct {
 }
 
 //获取请求支付的参数
-func (w *WeChatPayParams) getRequestParams(appId, mchId string, params *WeChatPayParams) WeChatRequestBody {
-	reqs := make(WeChatRequestBody)
+func (w *WeChatPayParams) getRequestBody(appId, mchId string, params *WeChatPayParams) requestBody {
+	reqs := make(requestBody)
 	reqs.Set("appid", appId)
 	reqs.Set("mch_id", mchId)
 	reqs.Set("nonce_str", params.NonceStr)
@@ -149,9 +149,9 @@ func (w *WeChatPayParams) getRequestParams(appId, mchId string, params *WeChatPa
 }
 
 //获取Sign签名和请求支付的参数
-func getSignAndRequestParam(appId, mchId string, secretKey string, param *WeChatPayParams) (sign string, reqs WeChatRequestBody) {
+func getSignAndRequestBody(appId, mchId string, secretKey string, param *WeChatPayParams) (sign string, reqs requestBody) {
 
-	reqs = param.getRequestParams(appId, mchId, param)
+	reqs = param.getRequestBody(appId, mchId, param)
 
 	signStr := getSignString(secretKey, reqs)
 	//fmt.Println("signStr:", signStr)
@@ -170,7 +170,7 @@ func getSignAndRequestParam(appId, mchId string, secretKey string, param *WeChat
 }
 
 //获取根据Key排序后的请求参数字符串
-func getSignString(secretKey string, wxReq WeChatRequestBody) string {
+func getSignString(secretKey string, wxReq requestBody) string {
 	keyList := make([]string, 0)
 	for k := range wxReq {
 		keyList = append(keyList, k)
@@ -188,26 +188,8 @@ func getSignString(secretKey string, wxReq WeChatRequestBody) string {
 	return buffer.String()
 }
 
-//获取Sanbox
-func getSanBoxSignString() {
+//获取SanboxKey
+func getSanBoxSignKey() {
 	//url:= "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
 
-}
-
-func (w WeChatRequestBody) generateXml() (reqXml string) {
-	buffer := new(bytes.Buffer)
-	buffer.WriteString("<xml>")
-
-	for k, v := range w {
-		buffer.WriteString("<")
-		buffer.WriteString(k)
-		buffer.WriteString("><![CDATA[")
-		buffer.WriteString(v)
-		buffer.WriteString("]]></")
-		buffer.WriteString(k)
-		buffer.WriteString(">")
-	}
-	buffer.WriteString("</xml>")
-	reqXml = buffer.String()
-	return
 }
