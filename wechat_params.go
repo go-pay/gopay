@@ -7,6 +7,9 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"encoding/xml"
+	"errors"
+	"github.com/parnurzeal/gorequest"
 	"sort"
 	"strconv"
 	"strings"
@@ -91,8 +94,8 @@ type StoreInfo struct {
 }
 
 //获取请求支付的参数
-func (w *WeChatPayParams) getRequestBody(appId, mchId string, params *WeChatPayParams) requestBody {
-	reqs := make(requestBody)
+func (w *WeChatPayParams) getRequestBody(appId, mchId string, params *WeChatPayParams) (reqs requestBody) {
+	reqs = make(requestBody)
 	reqs.Set("appid", appId)
 	reqs.Set("mch_id", mchId)
 	reqs.Set("nonce_str", params.NonceStr)
@@ -148,15 +151,30 @@ func (w *WeChatPayParams) getRequestBody(appId, mchId string, params *WeChatPayP
 	return reqs
 }
 
+//获取SanBox秘钥
+func (w *WeChatPayParams) getSanBoxSignKey(mchId, nonceStr, secretKey, signType string) (key string, err error) {
+	body := make(requestBody)
+	body.Set("mch_id", mchId)
+	body.Set("nonce_str", nonceStr)
+
+	//计算沙箱参数Sign
+	sanboxSign := getSign(secretKey, signType, body)
+	//沙箱环境：获取key后，重新计算Sign
+	key, err = getSanBoxSignKey(mchId, nonceStr, sanboxSign)
+	if err != nil {
+		return "", err
+	}
+	return
+}
+
 //获取Sign签名和请求支付的参数
-func getSignAndRequestBody(appId, mchId string, secretKey string, param *WeChatPayParams) (sign string, reqs requestBody) {
+func getSign(secretKey string, signType string, body requestBody) (sign string) {
 
-	reqs = param.getRequestBody(appId, mchId, param)
-
-	signStr := getSignString(secretKey, reqs)
+	signStr := getSignString(secretKey, body)
 	//fmt.Println("signStr:", signStr)
 	var hashSign []byte
-	if param.SignType == WX_SignType_MD5 {
+	if signType == WX_SignType_MD5 {
+
 		hash := md5.New()
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
@@ -170,9 +188,9 @@ func getSignAndRequestBody(appId, mchId string, secretKey string, param *WeChatP
 }
 
 //获取根据Key排序后的请求参数字符串
-func getSignString(secretKey string, wxReq requestBody) string {
+func getSignString(secretKey string, body requestBody) string {
 	keyList := make([]string, 0)
-	for k := range wxReq {
+	for k := range body {
 		keyList = append(keyList, k)
 	}
 	sort.Strings(keyList)
@@ -180,7 +198,7 @@ func getSignString(secretKey string, wxReq requestBody) string {
 	for _, k := range keyList {
 		buffer.WriteString(k)
 		buffer.WriteString("=")
-		buffer.WriteString(wxReq[k])
+		buffer.WriteString(body[k])
 		buffer.WriteString("&")
 	}
 	buffer.WriteString("key=")
@@ -189,7 +207,28 @@ func getSignString(secretKey string, wxReq requestBody) string {
 }
 
 //获取SanboxKey
-func getSanBoxSignKey() {
-	//url:= "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
+func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
+	reqs := make(requestBody)
+	reqs.Set("mch_id", mchId)
+	reqs.Set("nonce_str", nonceStr)
+	reqs.Set("sign", sign)
 
+	reqXml := generateXml(reqs)
+	//fmt.Println("req:::", reqXml)
+	_, byteList, errorList := gorequest.New().
+		Post(wxURL_sanbox_getsignkey).
+		Type("xml").
+		SendString(reqXml).EndBytes()
+	if len(errorList) > 0 {
+		return "", errorList[0]
+	}
+	keyResponse := new(getSignKeyResponse)
+	err = xml.Unmarshal(byteList, keyResponse)
+	if err != nil {
+		return "", err
+	}
+	if keyResponse.ReturnCode == "FAIL" {
+		return "", errors.New(keyResponse.Retmsg)
+	}
+	return keyResponse.SandboxSignkey, nil
 }
