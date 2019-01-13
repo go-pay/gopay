@@ -1,6 +1,6 @@
 # GoPay
 
-![](https://img02.sogoucdn.com/app/a/100520146/2D860B130504E7780A8F94CFACC023DD)
+![](https://github.com/iGoogle-ink/gopay/logo.png)
 
 ## 安装
 
