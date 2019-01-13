@@ -3,10 +3,10 @@
 
 # GoPay
 
-<a href="https://golang.org" target="_blank"><img src="https://img.shields.io/badge/Golang-1.11+-brightgreen.svg"/></a>
-<a href="https://doc.gopay.ink" target="_blank"><img src="https://img.shields.io/badge/Doc-doc.gopay.ink-blue.svg"/></a>
+<a href="https://golang.org" target="_blank"><img src="https://img.shields.io/badge/golang-1.11+-brightgreen.svg"/></a>
+<a href="https://doc.gopay.ink" target="_blank"><img src="https://img.shields.io/badge/doc-doc.gopay.ink-blue.svg"/></a>
 <img src="https://img.shields.io/badge/build-passing-brightgreen.svg"/>
-<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank"><img src="https://img.shields.io/badge/License-Apache-blue.svg"/></a>
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank"><img src="https://img.shields.io/badge/license-apache-blue.svg"/></a>
 
 ## 安装
 
