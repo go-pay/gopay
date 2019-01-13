@@ -3,10 +3,11 @@
 
 # GoPay
 
-<a href="https://golang.org" target="_blank"><img src="https://img.shields.io/badge/golang-1.11+-brightgreen.svg"/></a>
-<a href="https://doc.gopay.ink" target="_blank"><img src="https://img.shields.io/badge/doc-doc.gopay.ink-blue.svg"/></a>
-<img src="https://img.shields.io/badge/build-passing-brightgreen.svg"/>
-<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank"><img src="https://img.shields.io/badge/license-apache-blue.svg"/></a>
+<a href="https://www.igoogle.ink" target="_blank"><img src="https://img.shields.io/badge/Authors-Jerry-blue.svg"/></a>
+<a href="https://golang.org" target="_blank"><img src="https://img.shields.io/badge/Golang-1.11+-brightgreen.svg"/></a>
+<a href="https://doc.gopay.ink" target="_blank"><img src="https://img.shields.io/badge/Doc-doc.gopay.ink-blue.svg"/></a>
+<img src="https://img.shields.io/badge/Build-passing-brightgreen.svg"/>
+<a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank"><img src="https://img.shields.io/badge/License-Apache 2-blue.svg"/></a>
 
 ## 安装
 
@@ -76,6 +77,21 @@ if err != nil {
 
 ## 支付宝支付 example
 
-## License
+* Coming soon.
 
-[Apache License](https://www.apache.org/licenses/LICENSE-2.0.html)
+## License
+```
+Copyright 2019 Jerry
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
