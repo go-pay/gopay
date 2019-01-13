@@ -1,10 +1,10 @@
-package go_pay
+package gopay
 
-type ErrorMessage struct {
+type errorMessage struct {
 	ErrorCode int    `json:"error_code"`
 	ErrorDesc string `json:"error_desc"`
 }
 
-type SuccessMessage struct {
+type successMessage struct {
 	Msg string `json:"msg"`
 }
