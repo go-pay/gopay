@@ -1,1 +1,1 @@
-package go_pay
+package gopay
