@@ -2,7 +2,6 @@ package gopay
 
 import (
 	"encoding/xml"
-	"errors"
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -10,46 +9,53 @@ type weChatClient struct {
 	AppId     string
 	MchId     string
 	secretKey string
-	Params    *WeChatPayParams
 	isProd    bool
 }
 
 //初始化微信客户端
 //    appId：应用ID
 //    mchID：商户ID
+//    secretKey：Key值
 //    isProd：是否是正式环境
-//    secretKey：key，（当isProd为true时，此参数必传；false时，此参数为空）
-func NewWeChatClient(appId, mchId string, isProd bool, secretKey ...string) *weChatClient {
+func NewWeChatClient(appId, mchId, secretKey string, isProd bool) *weChatClient {
 	client := new(weChatClient)
 	client.AppId = appId
 	client.MchId = mchId
+	client.secretKey = secretKey
 	client.isProd = isProd
-	if isProd && len(secretKey) > 0 {
-		client.secretKey = secretKey[0]
-	}
 	return client
 }
 
 //统一下单
 func (this weChatClient) UnifiedOrder(param *WeChatPayParams) (wxRsp *weChatPayResponse, err error) {
-	this.Params = param
-	//fmt.Println("reqs:", this.ReqParam)
-	var sign string
 	var reqs requestBody
-	if this.isProd {
-		sign, reqs = getSignAndRequestBody(this.AppId, this.MchId, this.secretKey, this.Params)
+	var sign string
+	//生成下单请求参数
+	if !this.isProd {
+		//沙箱环境
+		param.TotalFee = 101
+		param.SignType = WX_SignType_MD5
+		reqs = param.getRequestBody(this.AppId, this.MchId, param)
+		key, err := param.getSanBoxSignKey(this.MchId, param.NonceStr, this.secretKey, param.SignType)
+		if err != nil {
+			return nil, err
+		}
+		sign = getSign(key, param.SignType, reqs)
 	} else {
-		return nil, errors.New("暂不支持沙箱测试")
-		//getSanBoxSignKey(this.Appid, this.MchId, this.Params)
+		reqs = param.getRequestBody(this.AppId, this.MchId, param)
+		//计算Sign
+		sign = getSign(this.secretKey, param.SignType, reqs)
 	}
+
 	reqs.Set("sign", sign)
 
 	reqXML := generateXml(reqs)
+	//fmt.Println("req:::", reqXML)
 	agent := gorequest.New()
 	if this.isProd {
-		agent.Post(wX_PayUrl)
+		agent.Post(wxURL_unifiedOrder)
 	} else {
-		agent.Post(wX_PayUrl_SanBox)
+		agent.Post(wxURL_sanbox_unifiedOrder)
 	}
 	agent.Type("xml")
 	agent.SendString(reqXML)
