@@ -2,8 +2,17 @@ package gopay
 
 const (
 	//URL
-	wX_PayUrl        = "https://api.mch.weixin.qq.com/pay/unifiedorder"
-	wX_PayUrl_SanBox = "https://api.mch.weixin.qq.com/sandboxnew/pay/unifiedorder"
+	wx_base_url        = "https://api.mch.weixin.qq.com/"
+	wx_sanbox_base_url = "https://api.mch.weixin.qq.com/sandboxnew/"
+
+	wxURL_unifiedOrder = wx_base_url + "pay/unifiedorder"
+	wxURL_orderquery   = wx_base_url + "pay/orderquery"
+	wxURL_closeorder   = wx_base_url + "pay/closeorder"
+
+	wxURL_sanbox_getsignkey   = wx_sanbox_base_url + "pay/getsignkey"
+	wxURL_sanbox_unifiedOrder = wx_sanbox_base_url + "pay/unifiedorder"
+	wxURL_sanbox_orderquery   = wx_sanbox_base_url + "pay/orderquery"
+	wxURL_sanbox_closeorder   = wx_sanbox_base_url + "pay/closeorder"
 
 	//支付类型
 	WX_PayType_Mini   = "JSAPI"
