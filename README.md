@@ -1,6 +1,6 @@
 # GoPay
 
-![](https://github.com/iGoogle-ink/gopay/logo.png)
+![](https://raw.githubusercontent.com/iGoogle-ink/gopay/master/logo.png)
 
 ## 安装
 
