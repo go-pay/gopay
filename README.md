@@ -24,14 +24,14 @@ $ go get github.com/iGoogle-ink/gopay
 * 初始化客户端
     * AppId：应用ID
     * mchID：商户ID
-    * isProd：是否是正式环境
-    * secretKey：key，（当isProd为true时，此参数必传；false时，此参数为空）
+    * secretKey：Key值
+    * isProd：是否正式环境
 ```go
 //正式环境 
-client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", true, "192006250b4c09247ec02edce69f6a2d")
+client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", true)
 
 //沙箱环境
-client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", false)
+client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
 ```
 
 * 初始化统一下单参数
@@ -43,12 +43,12 @@ params := new(gopay.WeChatPayParams)
 params.NonceStr = "dyUNIkNS29hvDUC1CmoF0alSdfCQGg9I"
 params.Body = "支付测试"
 params.OutTradeNo = "GYsadfjk4dhg3fkh3ffgnlsdkf"
-params.TotalFee = 10 //单位为分
+params.TotalFee = 10 //单位为分，如沙箱环境，则默认为101
 params.SpbillCreateIp = "127.0.0.1"
 params.NotifyUrl = "http://www.igoogle.ink"
 params.TradeType = gopay.WX_PayType_JsApi //目前只支持JSAPI有效
 params.DeviceInfo = "WEB"
-params.SignType = gopay.WX_SignType_HMAC_SHA256 //如不设置此参数，默认为 MD5
+params.SignType = gopay.WX_SignType_HMAC_SHA256 //如不设置此参数，默认为MD5，如沙箱环境，则默认为MD5
 params.Openid = "o0Df70H2Q0fY8JXh1aFPIRyOBgu8"
 ```
 
