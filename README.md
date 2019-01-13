@@ -1,6 +1,12 @@
-# GoPay
 
 <div align=center><img width="250" height="250" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/logo.png"/></div>
+
+# GoPay
+
+<a href="https://golang.org" target="_blank"><img src="https://img.shields.io/badge/Golang-1.11+-brightgreen.svg"/></a>
+<a href="https://doc.gopay.ink" target="_blank"><img src="https://img.shields.io/badge/Doc-doc.gopay.ink-blue.svg"/></a>
+<img src="https://img.shields.io/badge/build-passing-brightgreen.svg"/>
+<a href="https://www.apache.org/licenses/LICENSE-2.0.html" target="_blank"><img src="https://img.shields.io/badge/License-Apache-blue.svg"/></a>
 
 ## 安装
 
@@ -72,4 +78,4 @@ if err != nil {
 
 ## License
 
-[MIT](https://github.com/labstack/echo/blob/master/LICENSE)
+[Apache License](https://www.apache.org/licenses/LICENSE-2.0.html)
