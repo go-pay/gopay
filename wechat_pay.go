@@ -1,30 +1,16 @@
-package go_pay
+package gopay
 
 import (
 	"encoding/xml"
+	"errors"
 	"github.com/parnurzeal/gorequest"
-	"github.com/pkg/errors"
 )
 
-type WeChatPayResponse struct {
-	ReturnCode string `xml:"return_code"`
-	ReturnMsg  string `xml:"return_msg"`
-	Appid      string `xml:"appid"`
-	MchId      string `xml:"mch_id"`
-	DeviceInfo string `xml:"device_info"`
-	NonceStr   string `xml:"nonce_str"`
-	Sign       string `xml:"sign"`
-	ResultCode string `xml:"result_code"`
-	PrepayId   string `xml:"prepay_id"`
-	TradeType  string `xml:"trade_type"`
-}
-
-type WeChatClient struct {
+type weChatClient struct {
 	AppId     string
 	MchId     string
 	secretKey string
 	Params    *WeChatPayParams
-	ReqParam  WeChatRequestBody
 	isProd    bool
 }
 
@@ -33,8 +19,8 @@ type WeChatClient struct {
 //    mchID：商户ID
 //    isProd：是否是正式环境
 //    secretKey：key，（当isProd为true时，此参数必传；false时，此参数为空）
-func NewWeChatClient(appId, mchId string, isProd bool, secretKey ...string) *WeChatClient {
-	client := new(WeChatClient)
+func NewWeChatClient(appId, mchId string, isProd bool, secretKey ...string) *weChatClient {
+	client := new(weChatClient)
 	client.AppId = appId
 	client.MchId = mchId
 	client.isProd = isProd
@@ -45,26 +31,25 @@ func NewWeChatClient(appId, mchId string, isProd bool, secretKey ...string) *WeC
 }
 
 //统一下单
-func (this *WeChatClient) GoUnifiedOrder(param *WeChatPayParams) (wxRsp *WeChatPayResponse, err error) {
+func (this weChatClient) UnifiedOrder(param *WeChatPayParams) (wxRsp *weChatPayResponse, err error) {
 	this.Params = param
 	//fmt.Println("reqs:", this.ReqParam)
 	var sign string
-	var reqs WeChatRequestBody
+	var reqs requestBody
 	if this.isProd {
-		sign, reqs = getSignAndRequestParam(this.AppId, this.MchId, this.secretKey, this.Params)
+		sign, reqs = getSignAndRequestBody(this.AppId, this.MchId, this.secretKey, this.Params)
 	} else {
 		return nil, errors.New("暂不支持沙箱测试")
-		//getSanBoxSignString(this.Appid, this.MchId, this.Params)
+		//getSanBoxSignKey(this.Appid, this.MchId, this.Params)
 	}
-	this.ReqParam = reqs
-	this.ReqParam.Set("sign", sign)
+	reqs.Set("sign", sign)
 
-	reqXML := this.ReqParam.generateXml()
+	reqXML := generateXml(reqs)
 	agent := gorequest.New()
 	if this.isProd {
-		agent.Post(WX_PayUrl)
+		agent.Post(wX_PayUrl)
 	} else {
-		agent.Post(WX_PayUrl_SanBox)
+		agent.Post(wX_PayUrl_SanBox)
 	}
 	agent.Type("xml")
 	agent.SendString(reqXML)
@@ -74,10 +59,45 @@ func (this *WeChatClient) GoUnifiedOrder(param *WeChatPayParams) (wxRsp *WeChatP
 		return nil, errs[0]
 	}
 	//fmt.Println("bytes:", string(bytes))
-	wxRsp = new(WeChatPayResponse)
+	wxRsp = new(weChatPayResponse)
 	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
 		return nil, err
 	}
 	return wxRsp, nil
+}
+
+//查询订单
+func (this weChatClient) QueryOrder() {
+
+}
+
+//关闭订单
+func (this weChatClient) CloseOrder() {
+
+}
+
+//申请退款
+func (this weChatClient) Refund() {
+
+}
+
+//查询退款
+func (this weChatClient) QueryRefund() {
+
+}
+
+//下载对账单
+func (this weChatClient) DownloadBill() {
+
+}
+
+//下载资金账单
+func (this weChatClient) DownloadFundFlow() {
+
+}
+
+//拉取订单评价数据
+func (this weChatClient) BatchQueryComment() {
+
 }
