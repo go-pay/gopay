@@ -1,8 +1,16 @@
-
-![](https://img02.sogoucdn.com/app/a/100520146/2D860B130504E7780A8F94CFACC023DD)
 # GoPay
 
-## 文档：[https://doc.gopay.ink](https://doc.gopay.ink)
+![](https://img02.sogoucdn.com/app/a/100520146/2D860B130504E7780A8F94CFACC023DD)
+
+## 安装
+
+```bash
+$ go get github.com/iGoogle-ink/gopay
+```
+
+## 文档
+
+[GoPay使用手册](https://doc.gopay.ink)
 
 ## 微信支付 example
 
