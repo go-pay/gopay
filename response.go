@@ -20,6 +20,15 @@ type weChatPayResponse struct {
 	TradeType  string `xml:"trade_type"`
 }
 
+type getSignKeyResponse struct {
+	ReturnCode     string `xml:"return_code"`
+	ReturnMsg      string `xml:"return_msg"`
+	Retmsg         string `xml:"retmsg"`
+	Retcode        string `xml:"retcode"`
+	MchId          string `xml:"mch_id"`
+	SandboxSignkey string `xml:"sandbox_signkey"`
+}
+
 type aliPayResponse struct {
 	ReturnCode string `xml:"return_code"`
 	ReturnMsg  string `xml:"return_msg"`
