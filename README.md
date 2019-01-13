@@ -1,5 +1,5 @@
 
-<div align=center><img width="250" height="250" alt="Logo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/logo.png"/></div>
+<div align=center><a href="https://doc.gopay.ink" target="_blank"><img width="250" height="250" alt="Logo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/logo.png"/></a></div>
 
 # GoPay
 
