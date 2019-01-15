@@ -6,6 +6,27 @@ import (
 	"time"
 )
 
+type requestBody map[string]string
+
+//获取参数
+func (w requestBody) Get(key string) string {
+	if w == nil {
+		return ""
+	}
+	ws := w[key]
+	return ws
+}
+
+//设置参数
+func (w requestBody) Set(key string, value string) {
+	w[key] = value
+}
+
+//删除参数
+func (w requestBody) Remove(key string) {
+	delete(w, key)
+}
+
 //获取随机字符串
 //    length：字符串长度
 func GetRandomString(length int) string {
