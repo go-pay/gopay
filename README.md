@@ -87,6 +87,8 @@ if err != nil {
 	fmt.Println("ErrCodeDes：", wxRsp.ErrCodeDes)
 	fmt.Println("PrepayId：", wxRsp.PrepayId)
 	fmt.Println("TradeType：", wxRsp.TradeType)
+	fmt.Println("CodeUrl：", wxRsp.CodeUrl)
+	fmt.Println("MwebUrl：", wxRsp.MwebUrl)
 }
 ```
 
