@@ -32,7 +32,7 @@ $ go get github.com/iGoogle-ink/gopay
 
 ## 文档
 
-[GoPay使用手册](https://doc.gopay.ink)
+未完成
 
 ## 微信统一下单 example
 

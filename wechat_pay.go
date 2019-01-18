@@ -27,7 +27,7 @@ func NewWeChatClient(appId, mchId, secretKey string, isProd bool) *weChatClient 
 }
 
 //统一下单
-func (this weChatClient) UnifiedOrder(param *WeChatPayParams) (wxRsp *weChatPayResponse, err error) {
+func (this *weChatClient) UnifiedOrder(param *WeChatPayParams) (wxRsp *weChatPayResponse, err error) {
 	var reqs requestBody
 	var sign string
 	//生成下单请求参数
@@ -74,36 +74,36 @@ func (this weChatClient) UnifiedOrder(param *WeChatPayParams) (wxRsp *weChatPayR
 }
 
 //查询订单
-func (this weChatClient) QueryOrder() {
+func (this *weChatClient) QueryOrder() {
 
 }
 
 //关闭订单
-func (this weChatClient) CloseOrder() {
+func (this *weChatClient) CloseOrder() {
 
 }
 
 //申请退款
-func (this weChatClient) Refund() {
+func (this *weChatClient) Refund() {
 
 }
 
 //查询退款
-func (this weChatClient) QueryRefund() {
+func (this *weChatClient) QueryRefund() {
 
 }
 
 //下载对账单
-func (this weChatClient) DownloadBill() {
+func (this *weChatClient) DownloadBill() {
 
 }
 
 //下载资金账单
-func (this weChatClient) DownloadFundFlow() {
+func (this *weChatClient) DownloadFundFlow() {
 
 }
 
 //拉取订单评价数据
-func (this weChatClient) BatchQueryComment() {
+func (this *weChatClient) BatchQueryComment() {
 
 }

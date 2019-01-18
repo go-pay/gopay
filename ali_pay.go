@@ -25,37 +25,37 @@ func NewAlipayClient(appId, mchId string, isProd bool, secretKey ...string) *ali
 }
 
 //统一下单
-func (this aliPayClient) UnifiedOrder() {
+func (this *aliPayClient) UnifiedOrder() {
 
 }
 
 //查询订单
-func (this aliPayClient) QueryOrder() {
+func (this *aliPayClient) QueryOrder() {
 
 }
 
 //关闭订单
-func (this aliPayClient) CloseOrder() {
+func (this *aliPayClient) CloseOrder() {
 
 }
 
 //申请退款
-func (this aliPayClient) Refund() {
+func (this *aliPayClient) Refund() {
 
 }
 
 //查询退款
-func (this aliPayClient) QueryRefund() {
+func (this *aliPayClient) QueryRefund() {
 
 }
 
 //下载对账单
-func (this aliPayClient) DownloadBill() {
+func (this *aliPayClient) DownloadBill() {
 
 }
 
 //下载资金账单
-func (this aliPayClient) DownloadFundFlow() {
+func (this *aliPayClient) DownloadFundFlow() {
 
 }
 
