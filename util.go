@@ -8,6 +8,11 @@ import (
 
 type requestBody map[string]string
 
+//设置参数
+func (w requestBody) Set(key string, value string) {
+	w[key] = value
+}
+
 //获取参数
 func (w requestBody) Get(key string) string {
 	if w == nil {
@@ -15,11 +20,6 @@ func (w requestBody) Get(key string) string {
 	}
 	ws := w[key]
 	return ws
-}
-
-//设置参数
-func (w requestBody) Set(key string, value string) {
-	w[key] = value
 }
 
 //删除参数
