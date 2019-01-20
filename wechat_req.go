@@ -30,7 +30,10 @@ package gopay
 //    Openid: 用户标识: trade_type=JSAPI，此参数必传，用户在商户appid下的唯一标识.
 //    Receipt: Y，传入Y时，支付成功消息和支付详情页将出现开票入口。需要在微信支付商户平台或微信公众平台开通电子发票功能，传此字段才可生效.
 //    SceneInfo: 该字段常用于线下活动时的场景信息上报，支持上报实际门店信息，商户也可以按需求自己上报相关信息。该字段为JSON对象数据，对象格式为{"store_info":{"id": "门店ID","name": "名称","area_code": "编码","address": "地址" }}.
+//    TransactionId：微信的订单号，建议优先使用，与OutTradeNo二选一
+//
 type WeChatPayParams struct {
+	//统一下单
 	NonceStr       string `xml:"nonce_str"`
 	Body           string `xml:"body"`
 	OutTradeNo     string `xml:"out_trade_no"`
@@ -51,6 +54,8 @@ type WeChatPayParams struct {
 	Openid         string `xml:"openid"`
 	Receipt        string `xml:"receipt"`
 	SceneInfo      string `xml:"scene_info"`
+	//查询订单
+	TransactionId string `json:"transaction_id"`
 }
 
 //StoreInfo: SceneInfo 的字段信息

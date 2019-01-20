@@ -15,7 +15,7 @@
     * NATIVE - Native支付
     * APP - app支付
     * MWEB - H5支付
-* 查询订单(开发中)
+* 查询订单
 * 关闭订单(开发中)
 * 申请退款(开发中)
 * 查询退款(开发中)
@@ -34,62 +34,82 @@ $ go get github.com/iGoogle-ink/gopay
 
 未完成
 
-## 微信统一下单 example
+## 微信
 
-* 初始化客户端
-    * 参数：AppId：应用ID
-    * 参数：mchID：商户ID
-    * 参数：secretKey：Key值
-    * 参数：isProd：是否正式环境
+<font color='#0088ff'>注意：具体参数根据请求的不同而不同，请参考微信官方文档的参数说明！</font>
+
+参考文档：[微信支付文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
+
+
+### 统一下单
 ```go
-//正式环境 
+//初始化微信客户端
+//    appId：应用ID
+//    mchID：商户ID
+//    secretKey：Key值
+//    isProd：是否是正式环境
 client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", true)
 
-//沙箱环境
-client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
-```
+//初始化参数Map
+body := make(gopay.BodyMap)
+body.Set("nonce_str", gopay.GetRandomString(32))
+body.Set("body", "测试支付")
+number := gopay.GetRandomString(32)
+log.Println("Number:", number)
+body.Set("out_trade_no", number)
+body.Set("total_fee", 1)
+body.Set("spbill_create_ip", "127.0.0.1")   //终端IP
+body.Set("notify_url", "http://www.igoogle.ink")
+body.Set("trade_type", gopay.TradeType_JsApi)
+body.Set("device_info", "WEB")
+body.Set("sign_type", gopay.SignType_MD5)
+//body.Set("scene_info", `{"h5_info": {"type":"Wap","wap_url": "http://www.igoogle.ink","wap_name": "测试支付"}}`)
+body.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu6")
 
-* 初始化统一下单参数
-> 以下参数设置皆为必选参数，如需其他参数，请参考API文档。
->
-> 参考文档：[微信支付文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
-```go
-params := new(gopay.WeChatPayParams)
-params.NonceStr = "dyUNIkNS29hvDUC1CmoF0alSdfCQGg9I"
-params.Body = "支付测试"
-params.OutTradeNo = "GYsadfjk4dhg3fkh3ffgnlsdkf"
-params.TotalFee = 10 //单位为分，如沙箱环境，则默认为101
-params.SpbillCreateIp = "127.0.0.1"
-params.NotifyUrl = "http://www.igoogle.ink"
-params.TradeType = gopay.WX_PayType_JsApi
-params.DeviceInfo = "WEB"
-params.SignType = gopay.WX_SignType_HMAC_SHA256 //如不设置此参数，默认为MD5，如沙箱环境，则默认为MD5
-params.Openid = "o0Df70H2Q0fY8JXh1aFPIRyOBgu8" //JSAPI 方式时，此参数必填
-```
-
-* 发起统一下单请求
-    * 参数：param：统一下单请求参数
-> 请求成功后，获取下单结果
-```go
-wxRsp, err := client.UnifiedOrder(params)
+//发起下单请求
+wxRsp, err := client.UnifiedOrder(body)
 if err != nil {
 	fmt.Println("Error:", err)
-} else {
-	fmt.Println("ReturnCode：", wxRsp.ReturnCode)
-	fmt.Println("ReturnMsg：", wxRsp.ReturnMsg)
-	fmt.Println("Appid：", wxRsp.Appid)
-	fmt.Println("MchId：", wxRsp.MchId)
-	fmt.Println("DeviceInfo：", wxRsp.DeviceInfo)
-	fmt.Println("NonceStr：", wxRsp.NonceStr)
-	fmt.Println("Sign：", wxRsp.Sign)
-	fmt.Println("ResultCode：", wxRsp.ResultCode)
-	fmt.Println("ErrCode：", wxRsp.ErrCode)
-	fmt.Println("ErrCodeDes：", wxRsp.ErrCodeDes)
-	fmt.Println("PrepayId：", wxRsp.PrepayId)
-	fmt.Println("TradeType：", wxRsp.TradeType)
-	fmt.Println("CodeUrl：", wxRsp.CodeUrl)
-	fmt.Println("MwebUrl：", wxRsp.MwebUrl)
+	return
 }
+fmt.Println("ReturnCode：", wxRsp.ReturnCode)
+fmt.Println("ReturnMsg：", wxRsp.ReturnMsg)
+fmt.Println("Appid：", wxRsp.Appid)
+fmt.Println("MchId：", wxRsp.MchId)
+fmt.Println("DeviceInfo：", wxRsp.DeviceInfo)
+fmt.Println("NonceStr：", wxRsp.NonceStr)
+fmt.Println("Sign：", wxRsp.Sign)
+fmt.Println("ResultCode：", wxRsp.ResultCode)
+fmt.Println("ErrCode：", wxRsp.ErrCode)
+fmt.Println("ErrCodeDes：", wxRsp.ErrCodeDes)
+fmt.Println("PrepayId：", wxRsp.PrepayId)
+fmt.Println("TradeType：", wxRsp.TradeType)
+fmt.Println("CodeUrl:", wxRsp.CodeUrl)
+fmt.Println("MwebUrl:", wxRsp.MwebUrl)
+```
+
+### 查询订单
+```go
+//初始化微信客户端
+//    appId：应用ID
+//    mchID：商户ID
+//    secretKey：Key值
+//    isProd：是否是正式环境
+client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", true)
+
+//初始化参数结构体
+body := make(gopay.BodyMap)
+body.Set("out_trade_no", "CC68aTofMIwVKkVR5UruoBLFFXTAqBfv")
+body.Set("nonce_str", gopay.GetRandomString(32))
+body.Set("sign_type", gopay.SignType_MD5)
+
+//请求订单查询
+wxRsp, err := client.QueryOrder(body)
+if err != nil {
+	fmt.Println("Error:", err)
+	return
+}
+fmt.Println("Response：", wxRsp)
 ```
 
 ## 支付宝支付 example

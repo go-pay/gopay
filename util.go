@@ -2,29 +2,39 @@ package gopay
 
 import (
 	"bytes"
+	"encoding/xml"
+	"errors"
+	"github.com/parnurzeal/gorequest"
 	"math/rand"
+	"sort"
+	"strconv"
 	"time"
 )
 
-type requestBody map[string]string
+type BodyMap map[string]interface{}
 
 //设置参数
-func (w requestBody) Set(key string, value string) {
-	w[key] = value
+func (bm BodyMap) Set(key string, value interface{}) {
+	bm[key] = value
 }
 
 //获取参数
-func (w requestBody) Get(key string) string {
-	if w == nil {
+func (bm BodyMap) Get(key string) string {
+	if bm == nil {
 		return ""
 	}
-	ws := w[key]
-	return ws
+	v := bm[key]
+	value, ok := v.(int)
+	if ok {
+		value := strconv.Itoa(value)
+		return value
+	}
+	return v.(string)
 }
 
 //删除参数
-func (w requestBody) Remove(key string) {
-	delete(w, key)
+func (bm BodyMap) Remove(key string) {
+	delete(bm, key)
 }
 
 //获取随机字符串
@@ -40,20 +50,54 @@ func GetRandomString(length int) string {
 	return string(result)
 }
 
-func generateXml(w requestBody) (reqXml string) {
-	buffer := new(bytes.Buffer)
-	buffer.WriteString("<xml>")
-
-	for k, v := range w {
-		buffer.WriteString("<")
-		buffer.WriteString(k)
-		buffer.WriteString("><![CDATA[")
-		buffer.WriteString(v)
-		buffer.WriteString("]]></")
-		buffer.WriteString(k)
-		buffer.WriteString(">")
+//获取根据Key排序后的请求参数字符串
+func sortSignParams(secretKey string, body BodyMap) string {
+	keyList := make([]string, 0)
+	for k := range body {
+		keyList = append(keyList, k)
 	}
-	buffer.WriteString("</xml>")
-	reqXml = buffer.String()
-	return
+	sort.Strings(keyList)
+	buffer := new(bytes.Buffer)
+	for _, k := range keyList {
+		buffer.WriteString(k)
+		buffer.WriteString("=")
+		value, ok := body[k].(int)
+		if ok {
+			value := strconv.Itoa(value)
+			buffer.WriteString(value)
+		} else {
+			buffer.WriteString(body[k].(string))
+		}
+		buffer.WriteString("&")
+	}
+	buffer.WriteString("key=")
+	buffer.WriteString(secretKey)
+	return buffer.String()
+}
+
+//从微信提供的接口获取：SandboxSignkey
+func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
+	reqs := make(BodyMap)
+	reqs.Set("mch_id", mchId)
+	reqs.Set("nonce_str", nonceStr)
+	reqs.Set("sign", sign)
+
+	reqXml := generateXml(reqs)
+	//fmt.Println("req:::", reqXml)
+	_, byteList, errorList := gorequest.New().
+		Post(wxURL_SanBox_GetSignKey).
+		Type("xml").
+		SendString(reqXml).EndBytes()
+	if len(errorList) > 0 {
+		return "", errorList[0]
+	}
+	keyResponse := new(getSignKeyResponse)
+	err = xml.Unmarshal(byteList, keyResponse)
+	if err != nil {
+		return "", err
+	}
+	if keyResponse.ReturnCode == "FAIL" {
+		return "", errors.New(keyResponse.Retmsg)
+	}
+	return keyResponse.SandboxSignkey, nil
 }
