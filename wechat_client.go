@@ -124,8 +124,50 @@ func (this *weChatClient) QueryOrder(body BodyMap) (wxRsp *weChatQueryOrderRespo
 }
 
 //关闭订单
-func (this *weChatClient) CloseOrder() {
+func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *weChatCloseOrderResponse, err error) {
+	var sign string
+	body.Set("appid", this.AppId)
+	body.Set("mch_id", this.MchId)
+	//===============生成参数===================
+	if !this.isProd {
+		//沙箱环境
+		body.Set("sign_type", SignType_MD5)
+		//从微信接口获取SanBoxSignKey
+		key, err := getSanBoxSign(this.MchId, body.Get("nonce_str"), this.secretKey, body.Get("sign_type"))
+		if err != nil {
+			return nil, err
+		}
+		sign = getLocalSign(key, body.Get("sign_type"), body)
+	} else {
+		//正式环境
+		//本地计算Sign
+		sign = getLocalSign(this.secretKey, body.Get("sign_type"), body)
+	}
+	body.Set("sign", sign)
 
+	reqXML := generateXml(body)
+	//fmt.Println("req:::", reqXML)
+	//===============发起请求===================
+	agent := gorequest.New()
+	if this.isProd {
+		agent.Post(wxURL_CloseOrder)
+	} else {
+		agent.Post(wxURL_SanBox_CloseOrder)
+	}
+	agent.Type("xml")
+	agent.SendString(reqXML)
+	response, bytes, errs := agent.EndBytes()
+	defer response.Body.Close()
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	//fmt.Println("bytes:", string(bytes))
+	wxRsp = new(weChatCloseOrderResponse)
+	err = xml.Unmarshal(bytes, wxRsp)
+	if err != nil {
+		return nil, err
+	}
+	return wxRsp, nil
 }
 
 //申请退款

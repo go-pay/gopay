@@ -14,17 +14,16 @@ type AliPayParams struct {
 	NotifyUrl      string `xml:"notify_url"`
 	TradeType      string `xml:"trade_type"`
 
-	DeviceInfo string     `xml:"device_info"`
-	SignType   string     `xml:"sign_type"`
-	Detail     string     `xml:"detail"`
-	Attach     string     `xml:"attach"`
-	FeeType    string     `xml:"fee_type"`
-	TimeStart  string     `xml:"time_start"`
-	TimeExpire string     `xml:"time_expire"`
-	GoodsTag   string     `xml:"goods_tag"`
-	ProductId  string     `xml:"product_id"`
-	LimitPay   string     `xml:"limit_pay"`
-	Openid     string     `xml:"openid"`
-	Receipt    string     `xml:"receipt"`
-	SceneInfo  *StoreInfo `xml:"scene_info"`
+	DeviceInfo string `xml:"device_info"`
+	SignType   string `xml:"sign_type"`
+	Detail     string `xml:"detail"`
+	Attach     string `xml:"attach"`
+	FeeType    string `xml:"fee_type"`
+	TimeStart  string `xml:"time_start"`
+	TimeExpire string `xml:"time_expire"`
+	GoodsTag   string `xml:"goods_tag"`
+	ProductId  string `xml:"product_id"`
+	LimitPay   string `xml:"limit_pay"`
+	Openid     string `xml:"openid"`
+	Receipt    string `xml:"receipt"`
 }

@@ -1,10 +1,11 @@
 package gopay
 
-type errorMessage struct {
-	ErrorCode int    `json:"error_code"`
-	ErrorDesc string `json:"error_desc"`
-}
+const (
+	SUCCESS = "SUCCESS"
+	FAIL    = "FAIL"
+)
 
-type successMessage struct {
-	Msg string `json:"msg"`
+type ReturnMessage struct {
+	ReturnCode string `json:"return_code"`
+	ReturnMsg  string `json:"return_msg"`
 }

@@ -55,6 +55,19 @@ type weChatQueryOrderResponse struct {
 	TradeStateDesc     string `xml:"trade_state_desc"`
 }
 
+type weChatCloseOrderResponse struct {
+	ReturnCode string `xml:"return_code"`
+	ReturnMsg  string `xml:"return_msg"`
+	Appid      string `xml:"appid"`
+	MchId      string `xml:"mch_id"`
+	DeviceInfo string `xml:"device_info"`
+	NonceStr   string `xml:"nonce_str"`
+	Sign       string `xml:"sign"`
+	ResultCode string `xml:"result_code"`
+	ErrCode    string `xml:"err_code"`
+	ErrCodeDes string `xml:"err_code_des"`
+}
+
 type getSignKeyResponse struct {
 	ReturnCode     string `xml:"return_code"`
 	ReturnMsg      string `xml:"return_msg"`
