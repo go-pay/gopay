@@ -2,7 +2,6 @@ package gopay
 
 import (
 	"encoding/xml"
-	"fmt"
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -29,45 +28,14 @@ func NewWeChatClient(appId, mchId, secretKey string, isProd bool) *weChatClient 
 
 //统一下单
 func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *weChatUnifiedOrderResponse, err error) {
-	var sign string
-	body.Set("appid", this.AppId)
-	body.Set("mch_id", this.MchId)
-	//===============生成参数===================
-	if !this.isProd {
-		//沙箱环境
-		body.Set("total_fee", 101)
-		body.Set("sign_type", SignType_MD5)
-		//从微信接口获取SanBoxSignKey
-		key, err := getSanBoxSign(this.MchId, body.Get("nonce_str"), this.secretKey, body.Get("sign_type"))
-		if err != nil {
-			return nil, err
-		}
-		sign = getLocalSign(key, body.Get("sign_type"), body)
-	} else {
-		//正式环境
-		//本地计算Sign
-		sign = getLocalSign(this.secretKey, body.Get("sign_type"), body)
-	}
-
-	body.Set("sign", sign)
-
-	reqXML := generateXml(body)
-	fmt.Println("req:::", reqXML)
-	//===============发起请求===================
-	agent := gorequest.New()
+	var bytes []byte
 	if this.isProd {
-		agent.Post(wxURL_UnifiedOrder)
+		//正式环境
+		bytes, err = this.doWeChat(body, wxURL_UnifiedOrder)
 	} else {
-		agent.Post(wxURL_SanBox_UnifiedOrder)
+		bytes, err = this.doWeChat(body, wxURL_SanBox_UnifiedOrder)
 	}
-	agent.Type("xml")
-	agent.SendString(reqXML)
-	response, bytes, errs := agent.EndBytes()
-	defer response.Body.Close()
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	//fmt.Println("bytes:", string(bytes))
+
 	wxRsp = new(weChatUnifiedOrderResponse)
 	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
@@ -78,43 +46,14 @@ func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *weChatUnifiedOrderR
 
 //查询订单
 func (this *weChatClient) QueryOrder(body BodyMap) (wxRsp *weChatQueryOrderResponse, err error) {
-	var sign string
-	body.Set("appid", this.AppId)
-	body.Set("mch_id", this.MchId)
-	//===============生成参数===================
-	if !this.isProd {
-		//沙箱环境
-		body.Set("sign_type", SignType_MD5)
-		//从微信接口获取SanBoxSignKey
-		key, err := getSanBoxSign(this.MchId, body.Get("nonce_str"), this.secretKey, body.Get("sign_type"))
-		if err != nil {
-			return nil, err
-		}
-		sign = getLocalSign(key, body.Get("sign_type"), body)
-	} else {
-		//正式环境
-		//本地计算Sign
-		sign = getLocalSign(this.secretKey, body.Get("sign_type"), body)
-	}
-	body.Set("sign", sign)
-
-	reqXML := generateXml(body)
-	//fmt.Println("req:::", reqXML)
-	//===============发起请求===================
-	agent := gorequest.New()
+	var bytes []byte
 	if this.isProd {
-		agent.Post(wxURL_OrderQuery)
+		//正式环境
+		bytes, err = this.doWeChat(body, wxURL_OrderQuery)
 	} else {
-		agent.Post(wxURL_SanBox_OrderQuery)
+		bytes, err = this.doWeChat(body, wxURL_SanBox_OrderQuery)
 	}
-	agent.Type("xml")
-	agent.SendString(reqXML)
-	response, bytes, errs := agent.EndBytes()
-	defer response.Body.Close()
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	//fmt.Println("bytes:", string(bytes))
+
 	wxRsp = new(weChatQueryOrderResponse)
 	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
@@ -125,43 +64,14 @@ func (this *weChatClient) QueryOrder(body BodyMap) (wxRsp *weChatQueryOrderRespo
 
 //关闭订单
 func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *weChatCloseOrderResponse, err error) {
-	var sign string
-	body.Set("appid", this.AppId)
-	body.Set("mch_id", this.MchId)
-	//===============生成参数===================
-	if !this.isProd {
-		//沙箱环境
-		body.Set("sign_type", SignType_MD5)
-		//从微信接口获取SanBoxSignKey
-		key, err := getSanBoxSign(this.MchId, body.Get("nonce_str"), this.secretKey, body.Get("sign_type"))
-		if err != nil {
-			return nil, err
-		}
-		sign = getLocalSign(key, body.Get("sign_type"), body)
-	} else {
-		//正式环境
-		//本地计算Sign
-		sign = getLocalSign(this.secretKey, body.Get("sign_type"), body)
-	}
-	body.Set("sign", sign)
-
-	reqXML := generateXml(body)
-	//fmt.Println("req:::", reqXML)
-	//===============发起请求===================
-	agent := gorequest.New()
+	var bytes []byte
 	if this.isProd {
-		agent.Post(wxURL_CloseOrder)
+		//正式环境
+		bytes, err = this.doWeChat(body, wxURL_CloseOrder)
 	} else {
-		agent.Post(wxURL_SanBox_CloseOrder)
+		bytes, err = this.doWeChat(body, wxURL_SanBox_CloseOrder)
 	}
-	agent.Type("xml")
-	agent.SendString(reqXML)
-	response, bytes, errs := agent.EndBytes()
-	defer response.Body.Close()
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	//fmt.Println("bytes:", string(bytes))
+
 	wxRsp = new(weChatCloseOrderResponse)
 	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
@@ -193,4 +103,44 @@ func (this *weChatClient) DownloadFundFlow() {
 //拉取订单评价数据
 func (this *weChatClient) BatchQueryComment() {
 
+}
+
+//向微信发送请求
+func (this *weChatClient) doWeChat(body BodyMap, url string) (bytes []byte, err error) {
+	var sign string
+	body.Set("appid", this.AppId)
+	body.Set("mch_id", this.MchId)
+	//===============生成参数===================
+	if !this.isProd {
+		//沙箱环境
+		body.Set("sign_type", SignType_MD5)
+		//从微信接口获取SanBoxSignKey
+		key, err := getSanBoxSign(this.MchId, body.Get("nonce_str"), this.secretKey, body.Get("sign_type"))
+		if err != nil {
+			return nil, err
+		}
+		sign = getLocalSign(key, body.Get("sign_type"), body)
+	} else {
+		//正式环境
+		//本地计算Sign
+		sign = getLocalSign(this.secretKey, body.Get("sign_type"), body)
+	}
+	body.Set("sign", sign)
+
+	reqXML := generateXml(body)
+	//fmt.Println("req:::", reqXML)
+	//===============发起请求===================
+	agent := gorequest.New()
+	if this.isProd {
+		agent.Post(url)
+	} else {
+		agent.Post(url)
+	}
+	agent.Type("xml")
+	agent.SendString(reqXML)
+	_, bytes, errs := agent.EndBytes()
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	return bytes, nil
 }
