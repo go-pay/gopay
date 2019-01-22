@@ -17,11 +17,11 @@
     * MWEB - H5支付
 * 查询订单
 * 关闭订单
-* 申请退款(开发中)
-* 查询退款(开发中)
-* 下载对账单(开发中)
-* 下载资金账单(开发中)
-* 拉取订单评价数据(开发中)
+* 申请退款
+* 查询退款
+* 下载对账单
+* 下载资金账单
+* 拉取订单评价数据
 
 
 ## 安装
@@ -48,7 +48,7 @@ $ go get github.com/iGoogle-ink/gopay
 //    mchID：商户ID
 //    secretKey：Key值
 //    isProd：是否是正式环境
-client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", true)
+client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
 
 //初始化参数Map
 body := make(gopay.BodyMap)
@@ -90,7 +90,7 @@ fmt.Println("MwebUrl:", wxRsp.MwebUrl)
 
 ### 查询订单
 ```go
-client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", true)
+client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
 
 //初始化参数结构体
 body := make(gopay.BodyMap)
@@ -107,21 +107,26 @@ if err != nil {
 fmt.Println("Response：", wxRsp)
 ```
 
-### 关闭订单
+### 下载账单
 ```go
-client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", true)
+//初始化微信客户端
+//    appId：应用ID
+//    mchID：商户ID
+//    secretKey：Key值
+//    isProd：是否是正式环境
+client := NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
 
 //初始化参数结构体
-body := make(gopay.BodyMap)
-body.Set("out_trade_no", "CC68aTofMIwVKkVR5UruoBLFFXTAqBfv")
-body.Set("nonce_str", gopay.GetRandomString(32))
-body.Set("sign_type", gopay.SignType_MD5)
+body := make(BodyMap)
+body.Set("nonce_str", GetRandomString(32))
+body.Set("sign_type", SignType_MD5)
+body.Set("bill_date", "20190122")
+body.Set("bill_type", "ALL")
 
-//请求关闭订单
-wxRsp, err := client.CloseOrder(body)
+//请求下载账单，成功后得到结果（string类型）
+wxRsp, err := client.DownloadBill(body)
 if err != nil {
 	fmt.Println("Error:", err)
-	return
 }
 fmt.Println("Response：", wxRsp)
 ```
