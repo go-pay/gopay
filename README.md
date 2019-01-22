@@ -114,12 +114,12 @@ fmt.Println("Response：", wxRsp)
 //    mchID：商户ID
 //    secretKey：Key值
 //    isProd：是否是正式环境
-client := NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
+client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
 
 //初始化参数结构体
-body := make(BodyMap)
-body.Set("nonce_str", GetRandomString(32))
-body.Set("sign_type", SignType_MD5)
+body := make(gopay.BodyMap)
+body.Set("nonce_str", gopay.GetRandomString(32))
+body.Set("sign_type", gopay.SignType_MD5)
 body.Set("bill_date", "20190122")
 body.Set("bill_type", "ALL")
 
