@@ -5,14 +5,26 @@ const (
 	wx_base_url        = "https://api.mch.weixin.qq.com/"
 	wx_sanbox_base_url = "https://api.mch.weixin.qq.com/sandboxnew/"
 
-	wxURL_UnifiedOrder = wx_base_url + "pay/unifiedorder"
-	wxURL_OrderQuery   = wx_base_url + "pay/orderquery"
-	wxURL_CloseOrder   = wx_base_url + "pay/closeorder"
+	//正式
+	wxURL_UnifiedOrder      = wx_base_url + "pay/unifiedorder"                //统一下单
+	wxURL_OrderQuery        = wx_base_url + "pay/orderquery"                  //查询订单
+	wxURL_CloseOrder        = wx_base_url + "pay/closeorder"                  //关闭订单
+	wxURL_Refund            = wx_base_url + "secapi/pay/refund"               //申请退款
+	wxURL_RefundQuery       = wx_base_url + "pay/refundquery"                 //查询退款
+	wxURL_DownloadBill      = wx_base_url + "pay/downloadbill"                //下载对账单
+	wxURL_DownloadFundFlow  = wx_base_url + "pay/downloadfundflow"            //下载资金账单
+	wxURL_BatchQueryComment = wx_base_url + "billcommentsp/batchquerycomment" //拉取订单评价数据
 
-	wxURL_SanBox_GetSignKey   = wx_sanbox_base_url + "pay/getsignkey"
-	wxURL_SanBox_UnifiedOrder = wx_sanbox_base_url + "pay/unifiedorder"
-	wxURL_SanBox_OrderQuery   = wx_sanbox_base_url + "pay/orderquery"
-	wxURL_SanBox_CloseOrder   = wx_sanbox_base_url + "pay/closeorder"
+	//SanBox
+	wxURL_SanBox_GetSignKey        = wx_sanbox_base_url + "pay/getsignkey"
+	wxURL_SanBox_UnifiedOrder      = wx_sanbox_base_url + "pay/unifiedorder"
+	wxURL_SanBox_OrderQuery        = wx_sanbox_base_url + "pay/orderquery"
+	wxURL_SanBox_CloseOrder        = wx_sanbox_base_url + "pay/closeorder"
+	wxURL_SanBox_Refund            = wx_sanbox_base_url + "pay/refund"
+	wxURL_SanBox_RefundQuery       = wx_sanbox_base_url + "pay/refundquery"
+	wxURL_SanBox_DownloadBill      = wx_sanbox_base_url + "pay/downloadbill"
+	wxURL_SanBox_DownloadFundFlow  = wx_sanbox_base_url + "pay/downloadfundflow"
+	wxURL_SanBox_BatchQueryComment = wx_sanbox_base_url + "billcommentsp/batchquerycomment"
 
 	//支付类型
 	TradeType_Mini   = "JSAPI"

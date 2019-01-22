@@ -12,7 +12,7 @@ type weChatClient struct {
 	isProd    bool
 }
 
-//初始化微信客户端
+//初始化微信客户端 ok
 //    appId：应用ID
 //    mchID：商户ID
 //    secretKey：Key值
@@ -26,14 +26,22 @@ func NewWeChatClient(appId, mchId, secretKey string, isProd bool) *weChatClient 
 	return client
 }
 
-//统一下单
+//统一下单 ok
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
 func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *weChatUnifiedOrderResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
 		bytes, err = this.doWeChat(body, wxURL_UnifiedOrder)
+		if err != nil {
+			return nil, err
+		}
 	} else {
+		body.Set("total_fee", 101)
 		bytes, err = this.doWeChat(body, wxURL_SanBox_UnifiedOrder)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	wxRsp = new(weChatUnifiedOrderResponse)
@@ -44,14 +52,21 @@ func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *weChatUnifiedOrderR
 	return wxRsp, nil
 }
 
-//查询订单
+//查询订单 ok
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
 func (this *weChatClient) QueryOrder(body BodyMap) (wxRsp *weChatQueryOrderResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
 		bytes, err = this.doWeChat(body, wxURL_OrderQuery)
+		if err != nil {
+			return nil, err
+		}
 	} else {
 		bytes, err = this.doWeChat(body, wxURL_SanBox_OrderQuery)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	wxRsp = new(weChatQueryOrderResponse)
@@ -62,14 +77,21 @@ func (this *weChatClient) QueryOrder(body BodyMap) (wxRsp *weChatQueryOrderRespo
 	return wxRsp, nil
 }
 
-//关闭订单
+//关闭订单 ok
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_3
 func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *weChatCloseOrderResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
 		bytes, err = this.doWeChat(body, wxURL_CloseOrder)
+		if err != nil {
+			return nil, err
+		}
 	} else {
 		bytes, err = this.doWeChat(body, wxURL_SanBox_CloseOrder)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	wxRsp = new(weChatCloseOrderResponse)
@@ -80,32 +102,112 @@ func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *weChatCloseOrderRespo
 	return wxRsp, nil
 }
 
-//申请退款
-func (this *weChatClient) Refund() {
+//申请退款 ok
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
+func (this *weChatClient) Refund(body BodyMap) (wxRsp *weChatRefundResponse, err error) {
+	var bytes []byte
+	if this.isProd {
+		//正式环境
+		bytes, err = this.doWeChat(body, wxURL_Refund)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		bytes, err = this.doWeChat(body, wxURL_SanBox_Refund)
+		if err != nil {
+			return nil, err
+		}
+	}
 
+	wxRsp = new(weChatRefundResponse)
+	err = xml.Unmarshal(bytes, wxRsp)
+	if err != nil {
+		return nil, err
+	}
+	return wxRsp, nil
 }
 
-//查询退款
-func (this *weChatClient) QueryRefund() {
+//查询退款 ok
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_5
+func (this *weChatClient) QueryRefund(body BodyMap) (wxRsp *weChatQueryRefundResponse, err error) {
+	var bytes []byte
+	if this.isProd {
+		//正式环境
+		bytes, err = this.doWeChat(body, wxURL_RefundQuery)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		bytes, err = this.doWeChat(body, wxURL_SanBox_RefundQuery)
+		if err != nil {
+			return nil, err
+		}
+	}
 
+	wxRsp = new(weChatQueryRefundResponse)
+	err = xml.Unmarshal(bytes, wxRsp)
+	if err != nil {
+		return nil, err
+	}
+	return wxRsp, nil
 }
 
-//下载对账单
-func (this *weChatClient) DownloadBill() {
-
+//下载对账单 ok
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_6
+func (this *weChatClient) DownloadBill(body BodyMap) (wxRsp string, err error) {
+	var bytes []byte
+	if this.isProd {
+		//正式环境
+		bytes, err = this.doWeChat(body, wxURL_DownloadBill)
+	} else {
+		bytes, err = this.doWeChat(body, wxURL_SanBox_DownloadBill)
+	}
+	wxRsp = string(bytes)
+	if err != nil {
+		return wxRsp, err
+	}
+	return wxRsp, nil
 }
 
-//下载资金账单
-func (this *weChatClient) DownloadFundFlow() {
-
+//下载资金账单 ok
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7
+//    好像不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
+func (this *weChatClient) DownloadFundFlow(body BodyMap) (wxRsp string, err error) {
+	var bytes []byte
+	if this.isProd {
+		//正式环境
+		bytes, err = this.doWeChat(body, wxURL_DownloadFundFlow)
+	} else {
+		bytes, err = this.doWeChat(body, wxURL_SanBox_DownloadFundFlow)
+	}
+	wxRsp = string(bytes)
+	if err != nil {
+		return wxRsp, err
+	}
+	return wxRsp, nil
 }
 
 //拉取订单评价数据
-func (this *weChatClient) BatchQueryComment() {
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_17&index=11
+//    好像不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
+func (this *weChatClient) BatchQueryComment(body BodyMap) (wxRsp string, err error) {
+	var bytes []byte
+	if this.isProd {
+		//正式环境
+		body.Set("sign_type", SignType_HMAC_SHA256)
+		bytes, err = this.doWeChat(body, wxURL_BatchQueryComment)
+	} else {
+		bytes, err = this.doWeChat(body, wxURL_SanBox_BatchQueryComment)
+	}
 
+	wxRsp = string(bytes)
+	if err != nil {
+		return wxRsp, err
+	}
+	return wxRsp, nil
 }
 
-//向微信发送请求
+//向微信发送请求 ok
 func (this *weChatClient) doWeChat(body BodyMap, url string) (bytes []byte, err error) {
 	var sign string
 	body.Set("appid", this.AppId)
