@@ -5,7 +5,7 @@
 //==================================
 package gopay
 
-type AliPayParams struct {
+type aliPayParams struct {
 	NonceStr       string `xml:"nonce_str"`
 	Body           string `xml:"body"`
 	OutTradeNo     string `xml:"out_trade_no"`

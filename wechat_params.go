@@ -6,7 +6,6 @@ import (
 	"crypto/md5"
 	"crypto/sha256"
 	"encoding/hex"
-	"strconv"
 	"strings"
 )
 
@@ -53,13 +52,10 @@ func generateXml(bm BodyMap) (reqXml string) {
 		buffer.WriteString("<")
 		buffer.WriteString(k)
 		buffer.WriteString("><![CDATA[")
-		value, ok := v.(int)
-		if ok {
-			value := strconv.Itoa(value)
-			buffer.WriteString(value)
-		} else {
-			buffer.WriteString(v.(string))
-		}
+
+		valueStr := convert2String(v)
+		buffer.WriteString(valueStr)
+
 		buffer.WriteString("]]></")
 		buffer.WriteString(k)
 		buffer.WriteString(">")

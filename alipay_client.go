@@ -4,7 +4,6 @@ type aliPayClient struct {
 	AppId     string
 	MchId     string
 	secretKey string
-	Params    *AliPayParams
 	isProd    bool
 }
 

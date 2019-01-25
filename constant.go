@@ -1,6 +1,10 @@
 package gopay
 
 const (
+	null       string = ""
+	TimeLayout string = "2006-01-02 15:04:05"
+	DateLayout string = "2006-01-02"
+
 	//URL
 	wx_base_url        = "https://api.mch.weixin.qq.com/"
 	wx_sanbox_base_url = "https://api.mch.weixin.qq.com/sandboxnew/"
