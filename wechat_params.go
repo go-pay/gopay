@@ -19,7 +19,7 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, secretKey st
 	buffer.WriteString(nonceStr)
 
 	buffer.WriteString("&package=")
-	buffer.WriteString("prepay_id=" + prepayId)
+	buffer.WriteString(prepayId)
 
 	buffer.WriteString("&signType=")
 	buffer.WriteString(signType)
