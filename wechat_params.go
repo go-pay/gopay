@@ -15,20 +15,27 @@ func GetMiniPaySign(appId, timeStamp, nonceStr, packages, signType, secretKey st
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("appId=")
 	buffer.WriteString(appId)
+
 	buffer.WriteString("&nonceStr=")
 	buffer.WriteString(nonceStr)
+
 	buffer.WriteString("&package=")
 	buffer.WriteString("prepay_id=" + packages)
+
 	buffer.WriteString("&signType=")
 	buffer.WriteString(signType)
+
 	buffer.WriteString("&timeStamp=")
 	buffer.WriteString(timeStamp)
+
 	buffer.WriteString("&key=")
 	buffer.WriteString(secretKey)
+
 	signStr := buffer.String()
-	log.Println("signStr:::", signStr)
+
 	var hashSign []byte
 	if signType == SignType_MD5 {
+		log.Println("signStr:::", signStr)
 		hash := md5.New()
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
