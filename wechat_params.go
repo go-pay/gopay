@@ -6,21 +6,20 @@ import (
 	"crypto/md5"
 	"crypto/sha256"
 	"encoding/hex"
-	"log"
 	"strings"
 )
 
 //JSAPI支付，支付参数后，再次计算出小程序用的paySign
-func GetMiniPaySign(appId, timeStamp, nonceStr, packages, signType, secretKey string) (paySign string) {
+func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, secretKey string) (paySign string) {
 	buffer := new(bytes.Buffer)
-	buffer.WriteString("appId=")
+	buffer.WriteString("appid=")
 	buffer.WriteString(appId)
 
 	buffer.WriteString("&nonceStr=")
 	buffer.WriteString(nonceStr)
 
 	buffer.WriteString("&package=")
-	buffer.WriteString("prepay_id=" + packages)
+	buffer.WriteString("prepay_id=" + prepayId)
 
 	buffer.WriteString("&signType=")
 	buffer.WriteString(signType)
@@ -35,7 +34,6 @@ func GetMiniPaySign(appId, timeStamp, nonceStr, packages, signType, secretKey st
 
 	var hashSign []byte
 	if signType == SignType_MD5 {
-		log.Println("signStr:::", signStr)
 		hash := md5.New()
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)

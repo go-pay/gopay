@@ -1,9 +1,14 @@
 package gopay
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
 	"testing"
+	"time"
 )
 
 func TestWeChatClient_UnifiedOrder(t *testing.T) {
@@ -36,7 +41,11 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
-	fmt.Println("Response:", wxRsp)
+	timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
+	//获取小程序需要的paySign
+	paySign := GetMiniPaySign(appID, wxRsp.NonceStr, wxRsp.PrepayId, SignType_MD5, timeStamp, secretKey)
+	fmt.Println("paySign:", paySign)
+	//fmt.Println("Response:", wxRsp)
 }
 
 func TestWeChatClient_QueryOrder(t *testing.T) {
@@ -200,4 +209,13 @@ func TestWeChatClient_BatchQueryComment(t *testing.T) {
 		fmt.Println("Error:", err)
 	}
 	fmt.Println("Response：", wxRsp)
+}
+
+func TestMd5(t *testing.T) {
+	st := "appid=wxdaa2ab9ef87b5497&nonceStr=9k20rM66parD2U49&package=prepay_id=wx29164301554772fbc70d1d793335446010&signType=MD5&timeStamp=1548751382&key=GFDS8j98rewnmgl45wHTt980jg543wmg"
+	hash := md5.New()
+	hash.Write([]byte(st))
+	sum := hash.Sum(nil)
+	upper := strings.ToUpper(hex.EncodeToString(sum))
+	fmt.Println(" ssad  ", upper)
 }
