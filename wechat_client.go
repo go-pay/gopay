@@ -3,6 +3,7 @@ package gopay
 import (
 	"encoding/xml"
 	"github.com/parnurzeal/gorequest"
+	"log"
 )
 
 type weChatClient struct {
@@ -228,9 +229,9 @@ func (this *weChatClient) doWeChat(body BodyMap, url string) (bytes []byte, err 
 		sign = getLocalSign(this.secretKey, body.Get("sign_type"), body)
 	}
 	body.Set("sign", sign)
-
+	log.Println("reqBody:::", body)
 	reqXML := generateXml(body)
-	//fmt.Println("req:::", reqXML)
+	log.Println("reqXML:::", reqXML)
 	//===============发起请求===================
 	agent := gorequest.New()
 	if this.isProd {
