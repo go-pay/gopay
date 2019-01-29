@@ -13,7 +13,7 @@ import (
 //JSAPI支付，支付参数后，再次计算出小程序用的paySign
 func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, secretKey string) (paySign string) {
 	buffer := new(bytes.Buffer)
-	buffer.WriteString("appid=")
+	buffer.WriteString("appId=")
 	buffer.WriteString(appId)
 
 	buffer.WriteString("&nonceStr=")
