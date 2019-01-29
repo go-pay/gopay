@@ -6,7 +6,6 @@ import (
 	"crypto/md5"
 	"crypto/sha256"
 	"encoding/hex"
-	"log"
 	"strings"
 )
 
@@ -35,7 +34,6 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, secretKey st
 
 	var hashSign []byte
 	if signType == SignType_MD5 {
-		log.Println("signStr:", signStr)
 		hash := md5.New()
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
