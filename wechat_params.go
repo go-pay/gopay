@@ -6,6 +6,7 @@ import (
 	"crypto/md5"
 	"crypto/sha256"
 	"encoding/hex"
+	"log"
 	"strings"
 )
 
@@ -31,6 +32,7 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, secretKey st
 	buffer.WriteString(secretKey)
 
 	signStr := buffer.String()
+	log.Println("sss:", signStr)
 
 	var hashSign []byte
 	if signType == SignType_MD5 {
