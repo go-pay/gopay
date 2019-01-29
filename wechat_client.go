@@ -28,7 +28,7 @@ func NewWeChatClient(appId, mchId, secretKey string, isProd bool) *weChatClient 
 
 //统一下单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
-func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *weChatUnifiedOrderResponse, err error) {
+func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -44,7 +44,7 @@ func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *weChatUnifiedOrderR
 		}
 	}
 
-	wxRsp = new(weChatUnifiedOrderResponse)
+	wxRsp = new(WeChatUnifiedOrderResponse)
 	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *weChatUnifiedOrderR
 
 //查询订单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
-func (this *weChatClient) QueryOrder(body BodyMap) (wxRsp *weChatQueryOrderResponse, err error) {
+func (this *weChatClient) QueryOrder(body BodyMap) (wxRsp *WeChatQueryOrderResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -69,7 +69,7 @@ func (this *weChatClient) QueryOrder(body BodyMap) (wxRsp *weChatQueryOrderRespo
 		}
 	}
 
-	wxRsp = new(weChatQueryOrderResponse)
+	wxRsp = new(WeChatQueryOrderResponse)
 	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ func (this *weChatClient) QueryOrder(body BodyMap) (wxRsp *weChatQueryOrderRespo
 
 //关闭订单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_3
-func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *weChatCloseOrderResponse, err error) {
+func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -94,7 +94,7 @@ func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *weChatCloseOrderRespo
 		}
 	}
 
-	wxRsp = new(weChatCloseOrderResponse)
+	wxRsp = new(WeChatCloseOrderResponse)
 	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
 		return nil, err
@@ -104,7 +104,7 @@ func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *weChatCloseOrderRespo
 
 //申请退款 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
-func (this *weChatClient) Refund(body BodyMap) (wxRsp *weChatRefundResponse, err error) {
+func (this *weChatClient) Refund(body BodyMap) (wxRsp *WeChatRefundResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -119,7 +119,7 @@ func (this *weChatClient) Refund(body BodyMap) (wxRsp *weChatRefundResponse, err
 		}
 	}
 
-	wxRsp = new(weChatRefundResponse)
+	wxRsp = new(WeChatRefundResponse)
 	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
 		return nil, err
@@ -129,7 +129,7 @@ func (this *weChatClient) Refund(body BodyMap) (wxRsp *weChatRefundResponse, err
 
 //查询退款 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_5
-func (this *weChatClient) QueryRefund(body BodyMap) (wxRsp *weChatQueryRefundResponse, err error) {
+func (this *weChatClient) QueryRefund(body BodyMap) (wxRsp *WeChatQueryRefundResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -144,7 +144,7 @@ func (this *weChatClient) QueryRefund(body BodyMap) (wxRsp *weChatQueryRefundRes
 		}
 	}
 
-	wxRsp = new(weChatQueryRefundResponse)
+	wxRsp = new(WeChatQueryRefundResponse)
 	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
 		return nil, err
