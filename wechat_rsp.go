@@ -140,7 +140,7 @@ type getSignKeyResponse struct {
 	SandboxSignkey string `xml:"sandbox_signkey"`
 }
 
-type WeChatNotifyResponse struct {
+type WeChatNotifyRequest struct {
 	ReturnCode         string `xml:"return_code"`
 	ReturnMsg          string `xml:"return_msg"`
 	ResultCode         string `xml:"result_code"`
