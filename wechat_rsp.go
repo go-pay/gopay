@@ -68,6 +68,19 @@ type WeChatCloseOrderResponse struct {
 	ErrCodeDes string `xml:"err_code_des"`
 }
 
+type WeChatReverseResponse struct {
+	ReturnCode string `xml:"return_code"`
+	ReturnMsg  string `xml:"return_msg"`
+	Appid      string `xml:"appid"`
+	MchId      string `xml:"mch_id"`
+	NonceStr   string `xml:"nonce_str"`
+	Sign       string `xml:"sign"`
+	ResultCode string `xml:"result_code"`
+	ErrCode    string `xml:"err_code"`
+	ErrCodeDes string `xml:"err_code_des"`
+	Recall     string `xml:"recall"`
+}
+
 type WeChatRefundResponse struct {
 	ReturnCode          string `xml:"return_code"`
 	ReturnMsg           string `xml:"return_msg"`
@@ -129,6 +142,34 @@ type WeChatQueryRefundResponse struct {
 	RefundAccount0       string `xml:"refund_account_0"`
 	RefundRecvAccout0    string `xml:"refund_recv_accout_0"`
 	RefundSuccessTime0   string `xml:"refund_success_time_0"`
+}
+
+type WeChatMicropayResponse struct {
+	ReturnCode         string `xml:"return_code"`
+	ReturnMsg          string `xml:"return_msg"`
+	Appid              string `xml:"appid"`
+	MchId              string `xml:"mch_id"`
+	DeviceInfo         string `xml:"device_info"`
+	NonceStr           string `xml:"nonce_str"`
+	Sign               string `xml:"sign"`
+	ResultCode         string `xml:"result_code"`
+	ErrCode            string `xml:"err_code"`
+	ErrCodeDes         string `xml:"err_code_des"`
+	Openid             string `xml:"openid"`
+	IsSubscribe        string `xml:"is_subscribe"`
+	TradeType          string `xml:"trade_type"`
+	BankType           string `xml:"bank_type"`
+	FeeType            string `xml:"fee_type"`
+	TotalFee           int    `xml:"total_fee"`
+	SettlementTotalFee int    `xml:"settlement_total_fee"`
+	CouponFee          int    `xml:"coupon_fee"`
+	CashFeeType        string `xml:"cash_fee_type"`
+	CashFee            int    `xml:"cash_fee"`
+	TransactionId      string `xml:"transaction_id"`
+	OutTradeNo         string `xml:"out_trade_no"`
+	Attach             string `xml:"attach"`
+	TimeEnd            string `xml:"time_end"`
+	PromotionDetail    string `xml:"promotion_detail"`
 }
 
 type getSignKeyResponse struct {
