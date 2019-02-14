@@ -212,6 +212,56 @@ func TestWeChatClient_BatchQueryComment(t *testing.T) {
 	fmt.Println("Response：", wxRsp)
 }
 
+func TestWeChatClient_Micropay(t *testing.T) {
+	//初始化微信客户端
+	//    appId：应用ID
+	//    mchID：商户ID
+	//    secretKey：Key值
+	//    isProd：是否是正式环境
+	client := NewWeChatClient(appID, mchID, secretKey, false)
+
+	//初始化参数Map
+	body := make(BodyMap)
+	body.Set("nonce_str", GetRandomString(32))
+	body.Set("body", "扫用户付款码支付")
+	number := GetRandomString(32)
+	log.Println("Number:", number)
+	body.Set("out_trade_no", number)
+	body.Set("total_fee", 1)
+	body.Set("spbill_create_ip", "124.77.173.62")
+	body.Set("auth_code", "120061098828009406")
+	body.Set("sign_type", SignType_MD5)
+
+	//请求支付，成功后得到结果
+	wxRsp, err := client.Micropay(body)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	fmt.Println("Response:", wxRsp)
+}
+
+func TestWeChatClient_Reverse(t *testing.T) {
+	//初始化微信客户端
+	//    appId：应用ID
+	//    mchID：商户ID
+	//    secretKey：Key值
+	//    isProd：是否是正式环境
+	client := NewWeChatClient(appID, mchID, secretKey, false)
+
+	//初始化参数Map
+	body := make(BodyMap)
+	body.Set("nonce_str", GetRandomString(32))
+	body.Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B")
+	body.Set("sign_type", SignType_MD5)
+
+	//请求撤销订单，成功后得到结果
+	wxRsp, err := client.Reverse(body)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	fmt.Println("Response:", wxRsp)
+}
+
 func TestMd5(t *testing.T) {
 	st := "appid=wxdaa2ab9ef87b5497&nonceStr=9k20rM66parD2U49&package=prepay_id=wx29164301554772fbc70d1d793335446010&signType=MD5&timeStamp=1548751382&key=GFDS8j98rewnmgl45wHTt980jg543wmg"
 	hash := md5.New()
