@@ -14,8 +14,10 @@
     * NATIVE - Native支付
     * APP - app支付
     * MWEB - H5支付
+* 提交付款码支付
 * 查询订单
 * 关闭订单
+* 撤销订单
 * 申请退款
 * 查询退款
 * 下载对账单
@@ -85,6 +87,36 @@ fmt.Println("PrepayId：", wxRsp.PrepayId)
 fmt.Println("TradeType：", wxRsp.TradeType)
 fmt.Println("CodeUrl:", wxRsp.CodeUrl)
 fmt.Println("MwebUrl:", wxRsp.MwebUrl)
+```
+
+### 提交付款码支付
+```go
+//初始化微信客户端
+//    appId：应用ID
+//    mchID：商户ID
+//    secretKey：Key值
+//    isProd：是否是正式环境
+client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
+
+//初始化参数Map
+body := make(gopay.BodyMap)
+body.Set("nonce_str", gopay.GetRandomString(32))
+body.Set("body", "扫用户付款码支付")
+number := gopay.GetRandomString(32)
+log.Println("Number:", number)
+body.Set("out_trade_no", number)
+body.Set("total_fee", 1)
+body.Set("spbill_create_ip", "127.0.0.1")
+body.Set("notify_url", "http://www.igoogle.ink")
+body.Set("auth_code", "120061098828009406")
+body.Set("sign_type", gopay.SignType_MD5)
+
+//请求支付，成功后得到结果
+wxRsp, err := client.Micropay(body)
+if err != nil {
+	fmt.Println("Error:", err)
+}
+fmt.Println("Response:", wxRsp)
 ```
 
 ### 查询订单
