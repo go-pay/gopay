@@ -127,7 +127,7 @@ func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderRespo
 	return wxRsp, nil
 }
 
-//撤销订单
+//撤销订单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3
 func (this *weChatClient) Reverse(body BodyMap) (wxRsp *WeChatReverseResponse, err error) {
 	var bytes []byte
