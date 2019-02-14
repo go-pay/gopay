@@ -5,7 +5,6 @@
 
 <a href="https://www.igoogle.ink" target="_blank"><img src="https://img.shields.io/badge/Author-Jerry-blue.svg"/></a>
 <a href="https://golang.org" target="_blank"><img src="https://img.shields.io/badge/Golang-1.11+-brightgreen.svg"/></a>
-<a href="https://doc.gopay.ink" target="_blank"><img src="https://img.shields.io/badge/Doc-doc.gopay.ink-blue.svg"/></a>
 <img src="https://img.shields.io/badge/Build-passing-brightgreen.svg"/>
 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank"><img src="https://img.shields.io/badge/License-Apache 2-blue.svg"/></a>
 
