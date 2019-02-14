@@ -26,6 +26,31 @@ func NewWeChatClient(appId, mchId, secretKey string, isProd bool) *weChatClient 
 	return client
 }
 
+//提交付款码支付 ok
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
+func (this *weChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse, err error) {
+	var bytes []byte
+	if this.isProd {
+		//正式环境
+		bytes, err = this.doWeChat(body, wxURL_Micropay)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		bytes, err = this.doWeChat(body, wxURL_SanBox_Micropay)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	wxRsp = new(WeChatMicropayResponse)
+	err = xml.Unmarshal(bytes, wxRsp)
+	if err != nil {
+		return nil, err
+	}
+	return wxRsp, nil
+}
+
 //统一下单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
 func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderResponse, err error) {
@@ -95,6 +120,31 @@ func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderRespo
 	}
 
 	wxRsp = new(WeChatCloseOrderResponse)
+	err = xml.Unmarshal(bytes, wxRsp)
+	if err != nil {
+		return nil, err
+	}
+	return wxRsp, nil
+}
+
+//撤销订单
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3
+func (this *weChatClient) Reverse(body BodyMap) (wxRsp *WeChatReverseResponse, err error) {
+	var bytes []byte
+	if this.isProd {
+		//正式环境
+		bytes, err = this.doWeChat(body, wxURL_Reverse)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		bytes, err = this.doWeChat(body, wxURL_SanBox_Reverse)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	wxRsp = new(WeChatReverseResponse)
 	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
 		return nil, err
