@@ -1,8 +1,11 @@
 package gopay
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/xml"
 	"github.com/parnurzeal/gorequest"
+	"io/ioutil"
 )
 
 type weChatClient struct {
@@ -129,11 +132,26 @@ func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderRespo
 
 //撤销订单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3
-func (this *weChatClient) Reverse(body BodyMap) (wxRsp *WeChatReverseResponse, err error) {
+func (this *weChatClient) Reverse(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatReverseResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		bytes, err = this.doWeChat(body, wxURL_Reverse)
+		pkcsPool := x509.NewCertPool()
+		pkcs, err := ioutil.ReadFile(pkcs12FilePath)
+		if err != nil {
+			return nil, err
+		}
+		pkcsPool.AppendCertsFromPEM(pkcs)
+		certificate, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
+		if err != nil {
+			return nil, err
+		}
+		tlsConfig := new(tls.Config)
+		tlsConfig.Certificates = []tls.Certificate{certificate}
+		tlsConfig.RootCAs = pkcsPool
+		tlsConfig.InsecureSkipVerify = true
+
+		bytes, err = this.doWeChat(body, wxURL_Reverse, tlsConfig)
 		if err != nil {
 			return nil, err
 		}
@@ -154,11 +172,26 @@ func (this *weChatClient) Reverse(body BodyMap) (wxRsp *WeChatReverseResponse, e
 
 //申请退款 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
-func (this *weChatClient) Refund(body BodyMap) (wxRsp *WeChatRefundResponse, err error) {
+func (this *weChatClient) Refund(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatRefundResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		bytes, err = this.doWeChat(body, wxURL_Refund)
+		pkcsPool := x509.NewCertPool()
+		pkcs, err := ioutil.ReadFile(pkcs12FilePath)
+		if err != nil {
+			return nil, err
+		}
+		pkcsPool.AppendCertsFromPEM(pkcs)
+		certificate, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
+		if err != nil {
+			return nil, err
+		}
+		tlsConfig := new(tls.Config)
+		tlsConfig.Certificates = []tls.Certificate{certificate}
+		tlsConfig.RootCAs = pkcsPool
+		tlsConfig.InsecureSkipVerify = true
+
+		bytes, err = this.doWeChat(body, wxURL_Refund, tlsConfig)
 		if err != nil {
 			return nil, err
 		}
@@ -222,43 +255,76 @@ func (this *weChatClient) DownloadBill(body BodyMap) (wxRsp string, err error) {
 //下载资金账单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7
 //    好像不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
-func (this *weChatClient) DownloadFundFlow(body BodyMap) (wxRsp string, err error) {
+func (this *weChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		bytes, err = this.doWeChat(body, wxURL_DownloadFundFlow)
+		pkcsPool := x509.NewCertPool()
+		pkcs, err := ioutil.ReadFile(pkcs12FilePath)
+		if err != nil {
+			return "", err
+		}
+		pkcsPool.AppendCertsFromPEM(pkcs)
+		certificate, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
+		if err != nil {
+			return "", err
+		}
+		tlsConfig := new(tls.Config)
+		tlsConfig.Certificates = []tls.Certificate{certificate}
+		tlsConfig.RootCAs = pkcsPool
+		tlsConfig.InsecureSkipVerify = true
+
+		bytes, err = this.doWeChat(body, wxURL_DownloadFundFlow, tlsConfig)
 	} else {
 		bytes, err = this.doWeChat(body, wxURL_SanBox_DownloadFundFlow)
 	}
-	wxRsp = string(bytes)
+
 	if err != nil {
-		return wxRsp, err
+		return "", err
 	}
+	wxRsp = string(bytes)
 	return wxRsp, nil
 }
 
 //拉取订单评价数据
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_17&index=11
 //    好像不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
-func (this *weChatClient) BatchQueryComment(body BodyMap) (wxRsp string, err error) {
+func (this *weChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
 		body.Set("sign_type", SignType_HMAC_SHA256)
-		bytes, err = this.doWeChat(body, wxURL_BatchQueryComment)
+
+		pkcsPool := x509.NewCertPool()
+		pkcs, err := ioutil.ReadFile(pkcs12FilePath)
+		if err != nil {
+			return "", err
+		}
+		pkcsPool.AppendCertsFromPEM(pkcs)
+		certificate, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
+		if err != nil {
+			return "", err
+		}
+		tlsConfig := new(tls.Config)
+		tlsConfig.Certificates = []tls.Certificate{certificate}
+		tlsConfig.RootCAs = pkcsPool
+		tlsConfig.InsecureSkipVerify = true
+
+		bytes, err = this.doWeChat(body, wxURL_BatchQueryComment, tlsConfig)
 	} else {
 		bytes, err = this.doWeChat(body, wxURL_SanBox_BatchQueryComment)
 	}
 
-	wxRsp = string(bytes)
 	if err != nil {
-		return wxRsp, err
+		return "", err
 	}
+
+	wxRsp = string(bytes)
 	return wxRsp, nil
 }
 
 //向微信发送请求 ok
-func (this *weChatClient) doWeChat(body BodyMap, url string) (bytes []byte, err error) {
+func (this *weChatClient) doWeChat(body BodyMap, url string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
 	var sign string
 	body.Set("appid", this.AppId)
 	body.Set("mch_id", this.MchId)
@@ -281,11 +347,12 @@ func (this *weChatClient) doWeChat(body BodyMap, url string) (bytes []byte, err 
 	reqXML := generateXml(body)
 	//===============发起请求===================
 	agent := gorequest.New()
-	if this.isProd {
-		agent.Post(url)
-	} else {
-		agent.Post(url)
+
+	if this.isProd && tlsConfig != nil {
+		agent.TLSClientConfig(tlsConfig[0])
 	}
+
+	agent.Post(url)
 	agent.Type("xml")
 	agent.SendString(reqXML)
 	_, bytes, errs := agent.EndBytes()

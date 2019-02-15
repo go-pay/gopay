@@ -99,7 +99,7 @@ func TestWeChatClient_Refund(t *testing.T) {
 	//    mchID：商户ID
 	//    secretKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(appID, mchID, secretKey, false)
+	client := NewWeChatClient(appID, mchID, secretKey, true)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -113,7 +113,7 @@ func TestWeChatClient_Refund(t *testing.T) {
 	body.Set("refund_fee", 101)
 
 	//请求申请退款
-	wxRsp, err := client.Refund(body)
+	wxRsp, err := client.Refund(body, "", "", "")
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
