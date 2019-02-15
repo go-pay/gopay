@@ -112,7 +112,7 @@ func TestWeChatClient_Refund(t *testing.T) {
 	body.Set("total_fee", 101)
 	body.Set("refund_fee", 101)
 
-	//请求申请退款
+	//请求申请退款，沙箱环境下，证书路径参数可传空
 	wxRsp, err := client.Refund(body, "", "", "")
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -180,8 +180,8 @@ func TestWeChatClient_DownloadFundFlow(t *testing.T) {
 	body.Set("bill_date", "20190122")
 	body.Set("account_type", "Basic")
 
-	//请求订单查询，成功后得到结果
-	wxRsp, err := client.DownloadFundFlow(body)
+	//请求订单查询，成功后得到结果，沙箱环境下，证书路径参数可传空
+	wxRsp, err := client.DownloadFundFlow(body, "", "", "")
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
@@ -204,8 +204,8 @@ func TestWeChatClient_BatchQueryComment(t *testing.T) {
 	body.Set("end_time", "20190122174000")
 	body.Set("offset", "0")
 
-	//请求订单查询，成功后得到结果
-	wxRsp, err := client.BatchQueryComment(body)
+	//请求订单查询，成功后得到结果，沙箱环境下，证书路径参数可传空
+	wxRsp, err := client.BatchQueryComment(body, "", "", "")
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
@@ -254,8 +254,8 @@ func TestWeChatClient_Reverse(t *testing.T) {
 	body.Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B")
 	body.Set("sign_type", SignType_MD5)
 
-	//请求撤销订单，成功后得到结果
-	wxRsp, err := client.Reverse(body)
+	//请求撤销订单，成功后得到结果，沙箱环境下，证书路径参数可传空
+	wxRsp, err := client.Reverse(body, "", "", "")
 	if err != nil {
 		fmt.Println("Error:", err)
 	}

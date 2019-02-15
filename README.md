@@ -119,6 +119,34 @@ if err != nil {
 fmt.Println("Response:", wxRsp)
 ```
 
+### 申请退款
+```go
+//初始化微信客户端
+//    appId：应用ID
+//    mchID：商户ID
+//    secretKey：Key值
+//    isProd：是否是正式环境
+client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
+
+//初始化参数结构体
+body := make(gopay.BodyMap)
+body.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ")
+body.Set("nonce_str", gopay.GetRandomString(32))
+body.Set("sign_type", gopay.SignType_MD5)
+s := gopay.GetRandomString(64)
+fmt.Println("s:", s)
+body.Set("out_refund_no", s)
+body.Set("total_fee", 101)
+body.Set("refund_fee", 101)
+
+//请求申请退款，沙箱环境下，证书路径参数可传空
+wxRsp, err := client.Refund(body, "", "", "")
+if err != nil {
+	fmt.Println("Error:", err)
+}
+fmt.Println("Response：", wxRsp)
+```
+
 ### 查询订单
 ```go
 client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
