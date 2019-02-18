@@ -50,4 +50,9 @@ const (
 	appID     = "wxdaa2ab9ef87b5497"
 	mchID     = "1368139502"
 	openID    = "o0Df70H2Q0fY8JXh1aFPIRyOBgu8"
+	//
+	//===========================================================================================
+	//
+	zfb_base_url        = "https://openapi.alipay.com/gateway.do"
+	zfb_sanbox_base_url = "https://openapi.alipaydev.com/gateway.do"
 )
