@@ -11,6 +11,7 @@ import (
 	"net/http"
 )
 
+//解析支付完成后的回调信息
 func ParseNotifyResult(req *http.Request) (notifyRsp *WeChatNotifyRequest, err error) {
 	notifyRsp = new(WeChatNotifyRequest)
 	defer req.Body.Close()
