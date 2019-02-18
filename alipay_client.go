@@ -23,42 +23,77 @@ func NewAlipayClient(appId, mchId string, isProd bool, secretKey ...string) *ali
 	return client
 }
 
-//统一下单
-func (this *aliPayClient) UnifiedOrder() {
+//alipay.trade.fastpay.refund.query(统一收单交易退款查询)
+func (this *aliPayClient) AliPayTradeFastPayRefundQuery() {
 
 }
 
-//查询订单
-func (this *aliPayClient) QueryOrder() {
+//alipay.trade.order.settle(统一收单交易结算接口)
+func (this *aliPayClient) AliPayTradeOrderSettle() {
 
 }
 
-//关闭订单
-func (this *aliPayClient) CloseOrder() {
+//alipay.trade.close(统一收单交易关闭接口)
+func (this *aliPayClient) AliPayTradeClose() {
 
 }
 
-//申请退款
-func (this *aliPayClient) Refund() {
+//alipay.trade.cancel(统一收单交易撤销接口)
+func (this *aliPayClient) AliPayTradeCancel() {
 
 }
 
-//查询退款
-func (this *aliPayClient) QueryRefund() {
+//alipay.trade.refund(统一收单交易退款接口)
+func (this *aliPayClient) AliPayTradeRefund() {
 
 }
 
-//下载对账单
-func (this *aliPayClient) DownloadBill() {
+//alipay.trade.precreate(统一收单线下交易预创建)
+func (this *aliPayClient) AliPayTradePrecreate() {
 
 }
 
-//下载资金账单
-func (this *aliPayClient) DownloadFundFlow() {
+//alipay.trade.create(统一收单交易创建接口)
+func (this *aliPayClient) AliPayTradeCreate() {
 
 }
 
-//拉取订单评价数据
-func (this aliPayClient) BatchQueryComment() {
+//alipay.trade.pay(统一收单交易支付接口)
+func (this *aliPayClient) AliPayTradePay() {
+
+}
+
+//alipay.trade.query(统一收单线下交易查询)
+func (this *aliPayClient) AliPayTradeQuery() {
+
+}
+
+//alipay.trade.app.pay(app支付接口2.0)
+func (this *aliPayClient) AliPayTradeAppPay() {
+
+}
+
+//alipay.trade.wap.pay(手机网站支付接口2.0)
+func (this *aliPayClient) AliPayTradeWapPay() {
+
+}
+
+//alipay.trade.orderinfo.sync(支付宝订单信息同步接口)
+func (this *aliPayClient) AliPayTradeOrderinfoSync() {
+
+}
+
+//alipay.trade.page.pay(统一收单下单并支付页面接口)
+func (this *aliPayClient) AliPayTradePagePay() {
+
+}
+
+//zhima.credit.score.brief.get(芝麻分普惠版)
+func (this *aliPayClient) ZhimaCreditScoreBriefGet() {
+
+}
+
+//zhima.credit.score.get(芝麻分)
+func (this *aliPayClient) ZhimaCreditScoreGet() {
 
 }
