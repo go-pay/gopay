@@ -59,7 +59,7 @@ func TestWeChatClient_QueryOrder(t *testing.T) {
 
 	//初始化参数结构体
 	body := make(BodyMap)
-	body.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ")
+	body.Set("out_trade_no", "GYWX201901301040355706100401")
 	body.Set("nonce_str", GetRandomString(32))
 	body.Set("sign_type", SignType_MD5)
 
@@ -103,17 +103,17 @@ func TestWeChatClient_Refund(t *testing.T) {
 
 	//初始化参数结构体
 	body := make(BodyMap)
-	body.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ")
+	body.Set("out_trade_no", "GYWX201808300559489073925369")
 	body.Set("nonce_str", GetRandomString(32))
 	body.Set("sign_type", SignType_MD5)
 	s := GetRandomString(64)
 	fmt.Println("s:", s)
 	body.Set("out_refund_no", s)
-	body.Set("total_fee", 101)
-	body.Set("refund_fee", 101)
+	body.Set("total_fee", 18)
+	body.Set("refund_fee", 18)
 
 	//请求申请退款，沙箱环境下，证书路径参数可传空
-	wxRsp, err := client.Refund(body, "", "", "")
+	wxRsp, err := client.Refund(body, "cert/apiclient_cert.pem", "cert/apiclient_key.pem", "cert/apiclient_cert.p12")
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
