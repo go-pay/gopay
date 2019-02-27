@@ -41,6 +41,14 @@ $ go get github.com/iGoogle-ink/gopay
 
 参考文档：[微信支付文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 
+### 付款结果回调,需回复微信平台是否成功
+```go
+rsp := new(gopay.WeChatNotifyResponse) //回复微信的数据
+
+rsp.ReturnCode = "SUCCESS"
+rsp.ReturnMsg = "OK"
+return c.String(http.StatusOK, rsp.ToXmlString())
+```
 
 ### 统一下单
 ```go

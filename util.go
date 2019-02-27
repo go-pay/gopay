@@ -1,12 +1,7 @@
 package gopay
 
 import (
-	"bytes"
-	"encoding/xml"
-	"errors"
-	"github.com/parnurzeal/gorequest"
 	"math/rand"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -51,28 +46,6 @@ func GetRandomString(length int) string {
 	return string(result)
 }
 
-//获取根据Key排序后的请求参数字符串
-func sortSignParams(secretKey string, body BodyMap) string {
-	keyList := make([]string, 0)
-	for k := range body {
-		keyList = append(keyList, k)
-	}
-	sort.Strings(keyList)
-	buffer := new(bytes.Buffer)
-	for _, k := range keyList {
-		buffer.WriteString(k)
-		buffer.WriteString("=")
-
-		valueStr := convert2String(body[k])
-		buffer.WriteString(valueStr)
-
-		buffer.WriteString("&")
-	}
-	buffer.WriteString("key=")
-	buffer.WriteString(secretKey)
-	return buffer.String()
-}
-
 func convert2String(value interface{}) (valueStr string) {
 	switch v := value.(type) {
 	case int:
@@ -89,33 +62,6 @@ func convert2String(value interface{}) (valueStr string) {
 		valueStr = null
 	}
 	return
-}
-
-//从微信提供的接口获取：SandboxSignkey
-func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
-	reqs := make(BodyMap)
-	reqs.Set("mch_id", mchId)
-	reqs.Set("nonce_str", nonceStr)
-	reqs.Set("sign", sign)
-
-	reqXml := generateXml(reqs)
-	//fmt.Println("req:::", reqXml)
-	_, byteList, errorList := gorequest.New().
-		Post(wxURL_SanBox_GetSignKey).
-		Type("xml").
-		SendString(reqXml).EndBytes()
-	if len(errorList) > 0 {
-		return "", errorList[0]
-	}
-	keyResponse := new(getSignKeyResponse)
-	err = xml.Unmarshal(byteList, keyResponse)
-	if err != nil {
-		return "", err
-	}
-	if keyResponse.ReturnCode == "FAIL" {
-		return "", errors.New(keyResponse.Retmsg)
-	}
-	return keyResponse.SandboxSignkey, nil
 }
 
 //解析时间

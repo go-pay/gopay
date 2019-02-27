@@ -1,5 +1,9 @@
 package gopay
 
+import (
+	"crypto/tls"
+)
+
 type aliPayClient struct {
 	AppId     string
 	MchId     string
@@ -96,4 +100,10 @@ func (this *aliPayClient) ZhimaCreditScoreBriefGet() {
 //zhima.credit.score.get(芝麻分)
 func (this *aliPayClient) ZhimaCreditScoreGet() {
 
+}
+
+//向支付宝发送请求
+func (this *aliPayClient) doAliPay(body BodyMap, method string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
+
+	return bytes, nil
 }
