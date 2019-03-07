@@ -28,7 +28,7 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 	log.Println("Number:", number)
 	body.Set("out_trade_no", number)
 	body.Set("total_fee", 1)
-	body.Set("spbill_create_ip", "180.171.101.212")
+	body.Set("spbill_create_ip", "124.77.173.62")
 	body.Set("notify_url", "http://www.igoogle.ink")
 	body.Set("trade_type", TradeType_JsApi)
 	//body.Set("device_info", "WEB")

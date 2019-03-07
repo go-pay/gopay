@@ -35,7 +35,10 @@ func (this *weChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse,
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		bytes, err = this.doWeChat(body, wxURL_Micropay)
+		tlsConfig := new(tls.Config)
+		tlsConfig.InsecureSkipVerify = true
+
+		bytes, err = this.doWeChat(body, wxURL_Micropay, tlsConfig)
 		if err != nil {
 			return nil, err
 		}
@@ -60,7 +63,10 @@ func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderR
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		bytes, err = this.doWeChat(body, wxURL_UnifiedOrder)
+		tlsConfig := new(tls.Config)
+		tlsConfig.InsecureSkipVerify = true
+
+		bytes, err = this.doWeChat(body, wxURL_UnifiedOrder, tlsConfig)
 		if err != nil {
 			return nil, err
 		}
@@ -86,7 +92,9 @@ func (this *weChatClient) QueryOrder(body BodyMap) (wxRsp *WeChatQueryOrderRespo
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		bytes, err = this.doWeChat(body, wxURL_OrderQuery)
+		tlsConfig := new(tls.Config)
+		tlsConfig.InsecureSkipVerify = true
+		bytes, err = this.doWeChat(body, wxURL_OrderQuery, tlsConfig)
 		if err != nil {
 			return nil, err
 		}
@@ -111,7 +119,9 @@ func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderRespo
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		bytes, err = this.doWeChat(body, wxURL_CloseOrder)
+		tlsConfig := new(tls.Config)
+		tlsConfig.InsecureSkipVerify = true
+		bytes, err = this.doWeChat(body, wxURL_CloseOrder, tlsConfig)
 		if err != nil {
 			return nil, err
 		}
@@ -216,7 +226,9 @@ func (this *weChatClient) QueryRefund(body BodyMap) (wxRsp *WeChatQueryRefundRes
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		bytes, err = this.doWeChat(body, wxURL_RefundQuery)
+		tlsConfig := new(tls.Config)
+		tlsConfig.InsecureSkipVerify = true
+		bytes, err = this.doWeChat(body, wxURL_RefundQuery, tlsConfig)
 		if err != nil {
 			return nil, err
 		}
@@ -241,7 +253,9 @@ func (this *weChatClient) DownloadBill(body BodyMap) (wxRsp string, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		bytes, err = this.doWeChat(body, wxURL_DownloadBill)
+		tlsConfig := new(tls.Config)
+		tlsConfig.InsecureSkipVerify = true
+		bytes, err = this.doWeChat(body, wxURL_DownloadBill, tlsConfig)
 	} else {
 		bytes, err = this.doWeChat(body, wxURL_SanBox_DownloadBill)
 	}
