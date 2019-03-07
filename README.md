@@ -28,7 +28,7 @@
 ## 安装
 
 ```bash
-$ go get github.com/iGoogle-ink/gopay
+$ go get -u github.com/iGoogle-ink/gopay
 ```
 
 ## 文档
