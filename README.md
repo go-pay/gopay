@@ -198,7 +198,8 @@ if err != nil {
 fmt.Println("Response：", wxRsp)
 ```
 
-## 支付宝支付 example
+## 支付宝支付（由于没有支付条件，暂停更新，后续补上）
+
 
 * Coming soon.
 * 手机网站支付流程
