@@ -147,7 +147,11 @@ body.Set("out_refund_no", s)
 body.Set("total_fee", 101)
 body.Set("refund_fee", 101)
 
-//请求申请退款，沙箱环境下，证书路径参数可传空
+//请求申请退款（沙箱环境下，证书路径参数可传空）
+//    body：参数Body
+//    certFilePath：cert证书路径
+//    keyFilePath：Key证书路径
+//    pkcs12FilePath：p12证书路径
 wxRsp, err := client.Refund(body, "", "", "")
 if err != nil {
 	fmt.Println("Error:", err)

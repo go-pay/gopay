@@ -112,7 +112,11 @@ func TestWeChatClient_Refund(t *testing.T) {
 	body.Set("total_fee", 18)
 	body.Set("refund_fee", 18)
 
-	//请求申请退款，沙箱环境下，证书路径参数可传空
+	//请求申请退款（沙箱环境下，证书路径参数可传空）
+	//    body：参数Body
+	//    certFilePath：cert证书路径
+	//    keyFilePath：Key证书路径
+	//    pkcs12FilePath：p12证书路径
 	wxRsp, err := client.Refund(body, "cert/apiclient_cert.pem", "cert/apiclient_key.pem", "cert/apiclient_cert.p12")
 	if err != nil {
 		fmt.Println("Error:", err)
