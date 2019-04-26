@@ -33,7 +33,7 @@ $ go get -u github.com/iGoogle-ink/gopay
 
 ## 文档
 
-未完成
+未完成，有问题请QQ或微信讨论（同号）：85411418
 
 ## 微信
 
