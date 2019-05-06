@@ -274,3 +274,15 @@ func TestMd5(t *testing.T) {
 	upper := strings.ToUpper(hex.EncodeToString(sum))
 	fmt.Println(" ssad  ", upper)
 }
+
+func TestGetWeChatUserId(t *testing.T) {
+	userIdRsp, err := GetWeChatUserId(appID, secretKey, "")
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("OpenID:", userIdRsp.Openid)
+	fmt.Println("UnionID:", userIdRsp.Unionid)
+	fmt.Println("SessionKey:", userIdRsp.SessionKey)
+
+}
