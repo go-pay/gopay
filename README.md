@@ -41,12 +41,52 @@ $ go get -u github.com/iGoogle-ink/gopay
 
 参考文档：[微信支付文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 
+### 获取微信用户OpenId、UnionId、SessionKey
+
+```go
+userIdRsp, err := gopay.GetWeChatUserId(appID, secretKey, "")
+if err != nil {
+	fmt.Println("Error:", err)
+	return
+}
+fmt.Println("OpenID:", userIdRsp.Openid)
+fmt.Println("UnionID:", userIdRsp.Unionid)
+fmt.Println("SessionKey:", userIdRsp.SessionKey)
+```
+
+### 微信小程序支付，需要进一步获取小程序支付所需要的参数
+
+* 小程序支付所需要的参数，最好由后端计算后给出
+    * timeStamp
+    * nonceStr
+    * package 
+    * signType
+    * paySign
+
+> 官方文档说明[微信小程序支付API](https://developers.weixin.qq.com/miniprogram/dev/api/wx.requestPayment.html)
+```go
+timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
+packages := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一下单成功后得到
+paySign := gopay.GetMiniPaySign("wxd678efh567hg6787", wxRsp.NonceStr, packages, gopay.SignType_MD5, timeStamp, "192006250b4c09247ec02edce69f6a2d")
+
+//微信小程序支付需要的参数信息
+payRsp := new(vm.WeChatPayRsp)
+fmt.Println("timeStamp：", timeStamp)
+fmt.Println("nonceStr：", wxRsp.NonceStr)
+fmt.Println("package：", packages)
+fmt.Println("signType：", gopay.SignType_MD5)
+fmt.Println("paySign：", paySign)
+```
+
 ### 付款结果回调,需回复微信平台是否成功
+
+> 代码中return写法，由于本人用的[Echo Web框架](https://github.com/labstack/echo)，有兴趣的可以尝试一下
 ```go
 rsp := new(gopay.WeChatNotifyResponse) //回复微信的数据
 
 rsp.ReturnCode = "SUCCESS"
 rsp.ReturnMsg = "OK"
+
 return c.String(http.StatusOK, rsp.ToXmlString())
 ```
 
