@@ -212,3 +212,10 @@ type WeChatNotifyRequest struct {
 	Attach             string `xml:"attach"`
 	TimeEnd            string `xml:"time_end"`
 }
+
+type WeChatUserIdRsp struct {
+	Openid     string `json:"openid"`      //用户唯一标识
+	SessionKey string `json:"session_key"` //会话密钥
+	Unionid    string `json:"unionid"`     //用户在开放平台的唯一标识符
+	ExpiresIn  int    `json:"expires_in"`  //
+}
