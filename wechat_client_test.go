@@ -18,7 +18,7 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 	//    mchID：商户ID
 	//    secretKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(appID, mchID, secretKey, true)
+	client := NewWeChatClient(appID, mchID, secretKey, false)
 
 	//初始化参数Map
 	body := make(BodyMap)
@@ -27,7 +27,7 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 	number := GetRandomString(32)
 	log.Println("Number:", number)
 	body.Set("out_trade_no", number)
-	body.Set("total_fee", 1)
+	body.Set("total_fee", 10)
 	body.Set("spbill_create_ip", "124.77.173.62")
 	body.Set("notify_url", "http://www.igoogle.ink")
 	body.Set("trade_type", TradeType_JsApi)
@@ -46,7 +46,7 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 	pac := "prepay_id=" + wxRsp.PrepayId
 	paySign := GetMiniPaySign(appID, wxRsp.NonceStr, pac, SignType_MD5, timeStamp, secretKey)
 	fmt.Println("paySign:", paySign)
-	//fmt.Println("Response:", wxRsp)
+	fmt.Println("Response:", wxRsp)
 }
 
 func TestWeChatClient_QueryOrder(t *testing.T) {
