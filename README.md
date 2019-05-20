@@ -35,7 +35,7 @@ $ go get -u github.com/iGoogle-ink/gopay
 
 未完成，有问题请QQ或微信讨论（同号）：85411418
 
-## 微信
+## 微信支付
 
 <font color='#0088ff'>注意：具体参数根据请求的不同而不同，请参考微信官方文档的参数说明！</font>
 
