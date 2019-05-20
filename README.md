@@ -54,9 +54,9 @@ fmt.Println("UnionID:", userIdRsp.Unionid)
 fmt.Println("SessionKey:", userIdRsp.SessionKey)
 ```
 
-### 微信小程序支付，需要进一步获取小程序支付所需要的参数
+### 微信小程序支付，需要进一步获取微信小程序支付所需要的参数
 
-* 小程序支付所需要的参数，最好由后端计算后给出
+* 小程序支付所需要的参数，paySign由后端计算
     * timeStamp
     * nonceStr
     * package 
@@ -71,6 +71,31 @@ paySign := gopay.GetMiniPaySign("wxd678efh567hg6787", wxRsp.NonceStr, packages, 
 
 //微信小程序支付需要的参数信息
 payRsp := new(vm.WeChatPayRsp)
+fmt.Println("timeStamp：", timeStamp)
+fmt.Println("nonceStr：", wxRsp.NonceStr)
+fmt.Println("package：", packages)
+fmt.Println("signType：", gopay.SignType_MD5)
+fmt.Println("paySign：", paySign)
+```
+
+### 微信内H5支付，同样需要进一步获取支付所需要的参数（与微信小程序支付类似）
+
+* 微信内H5支付所需要的参数，paySign由后端计算
+    * appId
+    * timeStamp
+    * nonceStr
+    * package 
+    * signType
+    * paySign
+> 官方文档说明[微信内H5支付文档](https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6)
+```go
+timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
+packages := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一下单成功后得到
+paySign := gopay.GetH5PaySign("wxd678efh567hg6787", wxRsp.NonceStr, packages, gopay.SignType_MD5, timeStamp, "192006250b4c09247ec02edce69f6a2d")
+
+//微信内H5支付需要的参数信息
+payRsp := new(vm.WeChatPayRsp)
+fmt.Println("appId:","wxd678efh567hg6787")
 fmt.Println("timeStamp：", timeStamp)
 fmt.Println("nonceStr：", wxRsp.NonceStr)
 fmt.Println("package：", packages)
