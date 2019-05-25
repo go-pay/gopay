@@ -8,7 +8,7 @@
 <img src="https://img.shields.io/badge/Build-passing-brightgreen.svg"/>
 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank"><img src="https://img.shields.io/badge/License-Apache 2-blue.svg"/></a>
 
-## 微信
+## 微信支付
 * 统一下单
     * JSAPI - JSAPI支付（或小程序支付）
     * NATIVE - Native支付
@@ -24,6 +24,10 @@
 * 下载资金账单
 * 拉取订单评价数据
 
+## 小程序服务端
+* gopay.Code2Session（登录凭证校验：获取微信用户OpenId、UnionId、SessionKey）
+* gopay.GetAccessToken（获取小程序全局唯一后台接口调用凭据）
+* gopay.GetPaidUnionId（用户支付完成后，获取该用户的 UnionId，无需用户授权）
 
 ## 安装
 
@@ -44,7 +48,7 @@ $ go get -u github.com/iGoogle-ink/gopay
 ### 获取微信用户OpenId、UnionId、SessionKey
 
 ```go
-userIdRsp, err := gopay.GetWeChatUserId(appID, secretKey, "")
+userIdRsp, err := gopay.Code2Session(appID, secretKey, "")
 if err != nil {
 	fmt.Println("Error:", err)
 	return
