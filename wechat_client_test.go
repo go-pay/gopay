@@ -15,10 +15,10 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 
 	//初始化微信客户端
 	//    appId：应用ID
-	//    mchID：商户ID
+	//    MchID：商户ID
 	//    secretKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(appID, mchID, secretKey, false)
+	client := NewWeChatClient(AppID, MchID, secretKey, false)
 
 	//初始化参数Map
 	body := make(BodyMap)
@@ -34,7 +34,7 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 	//body.Set("device_info", "WEB")
 	body.Set("sign_type", SignType_MD5)
 	//body.Set("scene_info", `{"h5_info": {"type":"Wap","wap_url": "http://www.igoogle.ink","wap_name": "测试支付"}}`)
-	body.Set("openid", openID)
+	body.Set("openid", OpenID)
 
 	//请求支付下单，成功后得到结果
 	wxRsp, err := client.UnifiedOrder(body)
@@ -44,7 +44,7 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 	timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
 	//获取小程序需要的paySign
 	pac := "prepay_id=" + wxRsp.PrepayId
-	paySign := GetMiniPaySign(appID, wxRsp.NonceStr, pac, SignType_MD5, timeStamp, secretKey)
+	paySign := GetMiniPaySign(AppID, wxRsp.NonceStr, pac, SignType_MD5, timeStamp, secretKey)
 	fmt.Println("paySign:", paySign)
 	fmt.Println("Response:", wxRsp)
 }
@@ -52,10 +52,10 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 func TestWeChatClient_QueryOrder(t *testing.T) {
 	//初始化微信客户端
 	//    appId：应用ID
-	//    mchID：商户ID
+	//    MchID：商户ID
 	//    secretKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(appID, mchID, secretKey, false)
+	client := NewWeChatClient(AppID, MchID, secretKey, false)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -74,10 +74,10 @@ func TestWeChatClient_QueryOrder(t *testing.T) {
 func TestWeChatClient_CloseOrder(t *testing.T) {
 	//初始化微信客户端
 	//    appId：应用ID
-	//    mchID：商户ID
+	//    MchID：商户ID
 	//    secretKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(appID, mchID, secretKey, false)
+	client := NewWeChatClient(AppID, MchID, secretKey, false)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -96,10 +96,10 @@ func TestWeChatClient_CloseOrder(t *testing.T) {
 func TestWeChatClient_Refund(t *testing.T) {
 	//初始化微信客户端
 	//    appId：应用ID
-	//    mchID：商户ID
+	//    MchID：商户ID
 	//    secretKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(appID, mchID, secretKey, true)
+	client := NewWeChatClient(AppID, MchID, secretKey, true)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -127,10 +127,10 @@ func TestWeChatClient_Refund(t *testing.T) {
 func TestWeChatClient_QueryRefund(t *testing.T) {
 	//初始化微信客户端
 	//    appId：应用ID
-	//    mchID：商户ID
+	//    MchID：商户ID
 	//    secretKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(appID, mchID, secretKey, false)
+	client := NewWeChatClient(AppID, MchID, secretKey, false)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -149,10 +149,10 @@ func TestWeChatClient_QueryRefund(t *testing.T) {
 func TestWeChatClient_DownloadBill(t *testing.T) {
 	//初始化微信客户端
 	//    appId：应用ID
-	//    mchID：商户ID
+	//    MchID：商户ID
 	//    secretKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(appID, mchID, secretKey, false)
+	client := NewWeChatClient(AppID, MchID, secretKey, false)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -172,10 +172,10 @@ func TestWeChatClient_DownloadBill(t *testing.T) {
 func TestWeChatClient_DownloadFundFlow(t *testing.T) {
 	//初始化微信客户端
 	//    appId：应用ID
-	//    mchID：商户ID
+	//    MchID：商户ID
 	//    secretKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(appID, mchID, secretKey, false)
+	client := NewWeChatClient(AppID, MchID, secretKey, false)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -195,10 +195,10 @@ func TestWeChatClient_DownloadFundFlow(t *testing.T) {
 func TestWeChatClient_BatchQueryComment(t *testing.T) {
 	//初始化微信客户端
 	//    appId：应用ID
-	//    mchID：商户ID
+	//    MchID：商户ID
 	//    secretKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(appID, mchID, secretKey, false)
+	client := NewWeChatClient(AppID, MchID, secretKey, false)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -219,10 +219,10 @@ func TestWeChatClient_BatchQueryComment(t *testing.T) {
 func TestWeChatClient_Micropay(t *testing.T) {
 	//初始化微信客户端
 	//    appId：应用ID
-	//    mchID：商户ID
+	//    MchID：商户ID
 	//    secretKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(appID, mchID, secretKey, false)
+	client := NewWeChatClient(AppID, MchID, secretKey, false)
 
 	//初始化参数Map
 	body := make(BodyMap)
@@ -247,10 +247,10 @@ func TestWeChatClient_Micropay(t *testing.T) {
 func TestWeChatClient_Reverse(t *testing.T) {
 	//初始化微信客户端
 	//    appId：应用ID
-	//    mchID：商户ID
+	//    MchID：商户ID
 	//    secretKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(appID, mchID, secretKey, false)
+	client := NewWeChatClient(AppID, MchID, secretKey, false)
 
 	//初始化参数Map
 	body := make(BodyMap)
@@ -275,14 +275,39 @@ func TestMd5(t *testing.T) {
 	fmt.Println(" ssad  ", upper)
 }
 
-func TestGetWeChatUserId(t *testing.T) {
-	userIdRsp, err := GetWeChatUserId(appID, secretKey, "")
+func TestCode2Session(t *testing.T) {
+	userIdRsp, err := Code2Session(AppID, APPSecret, "001xW1v22mdEtW0bXQt22YCYu22xW1vt")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
+	fmt.Println("SessionKey:", userIdRsp.SessionKey)
+	fmt.Println("ExpiresIn:", userIdRsp.ExpiresIn)
 	fmt.Println("OpenID:", userIdRsp.Openid)
 	fmt.Println("UnionID:", userIdRsp.Unionid)
-	fmt.Println("SessionKey:", userIdRsp.SessionKey)
+	fmt.Println("Errcode:", userIdRsp.Errcode)
+	fmt.Println("Errmsg:", userIdRsp.Errmsg)
+}
 
+func TestGetAccessToken(t *testing.T) {
+	rsp, err := GetAccessToken(AppID, APPSecret)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("AccessToken:", rsp.AccessToken)
+	fmt.Println("ExpiresIn:", rsp.ExpiresIn)
+	fmt.Println("Errcode:", rsp.Errcode)
+	fmt.Println("Errmsg:", rsp.Errmsg)
+}
+
+func TestGetPaidUnionId(t *testing.T) {
+	rsp, err := GetPaidUnionId("21_xtheVOuysOja3u-v1pqmEnvpfcnXKcLVLsMzhUcJfanrhzzwpIsaTJgPe0oqbN-ETK6Ugsf0LmGjMTi4flgSdCRgheCj2WuMm6VCqlSmsf6Itu_BFfoh0wYeiMAwvP9pYSH3wJbIzXQdUzOqKRXcAGAYFL", "o0Df70MSI4Ygv2KQ2cLnoMN5CXI8", "4200000326201905256499385970")
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("Unionid:", rsp.Unionid)
+	fmt.Println("Errcode:", rsp.Errcode)
+	fmt.Println("Errmsg:", rsp.Errmsg)
 }
