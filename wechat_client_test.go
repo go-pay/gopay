@@ -276,7 +276,7 @@ func TestMd5(t *testing.T) {
 }
 
 func TestCode2Session(t *testing.T) {
-	userIdRsp, err := Code2Session(AppID, APPSecret, "001xW1v22mdEtW0bXQt22YCYu22xW1vt")
+	userIdRsp, err := Code2Session(AppID, APPSecret, "011q70AD06npij2RsnxD08V8AD0q70Aw")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -310,4 +310,30 @@ func TestGetPaidUnionId(t *testing.T) {
 	fmt.Println("Unionid:", rsp.Unionid)
 	fmt.Println("Errcode:", rsp.Errcode)
 	fmt.Println("Errmsg:", rsp.Errmsg)
+}
+
+func TestGetWeChatUserInfo(t *testing.T) {
+	userInfo, err := GetWeChatUserInfo("21_duf5flUtcHrORmBVTUrP3pJILBi13YBPrf2T9PJ5_Nykc-78jXYZf2HRDDFO-o8zD85Wte8hIhBRj9kz852IYVXHn9VzmOtveZuXsovUSpwHwKv96lKqU1tzweXib8HGvamPMqNVbJC_8WtdNVDgAIAIQY", OpenID)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("userInfo:", userInfo)
+}
+
+func TestDecryptOpenDataToStruct(t *testing.T) {
+	data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
+	iv := "Cds8j3VYoGvnTp1BrjXdJg=="
+	session := "lyY4HPQbaOYzZdG+JcYK9w=="
+
+	phone := new(WeChatUserPhone)
+	err := DecryptOpenDataToStruct(data, iv, session, phone)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("PhoneNumber:", phone.PhoneNumber)
+	fmt.Println("PurePhoneNumber:", phone.PurePhoneNumber)
+	fmt.Println("CountryCode:", phone.CountryCode)
+	fmt.Println("Watermark:", phone.Watermark)
 }
