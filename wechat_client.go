@@ -17,7 +17,7 @@ type weChatClient struct {
 
 //初始化微信客户端 ok
 //    appId：应用ID
-//    mchID：商户ID
+//    MchID：商户ID
 //    secretKey：Key值
 //    isProd：是否是正式环境
 func NewWeChatClient(appId, mchId, secretKey string, isProd bool) *weChatClient {
