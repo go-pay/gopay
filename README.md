@@ -24,10 +24,12 @@
 * 下载资金账单：gopay.DownloadFundFlow()
 * 拉取订单评价数据：gopay.BatchQueryComment()
 
-## 小程序服务端API
+## 服务端API
 * gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
 * gopay.GetAccessToken() => 获取小程序全局唯一后台接口调用凭据
 * gopay.GetPaidUnionId() => 用户支付完成后，获取该用户的 UnionId，无需用户授权
+* gopay.GetWeChatUserInfo() => 获取用户基本信息(UnionID机制)
+* gopay.DecryptOpenDataToStruct() => 加密数据，解密到指定结构体
 
 ## 安装
 
@@ -105,6 +107,29 @@ fmt.Println("nonceStr：", wxRsp.NonceStr)
 fmt.Println("package：", packages)
 fmt.Println("signType：", gopay.SignType_MD5)
 fmt.Println("paySign：", paySign)
+```
+
+### 加密数据，解密到指定结构体
+
+拿小程序获取手机号为例
+button按钮获取手机号码:[button组件文档](https://developers.weixin.qq.com/miniprogram/dev/component/button.html)
+
+微信解密算法文档:[解密算法文档](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html)
+```go
+data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
+iv := "Cds8j3VYoGvnTp1BrjXdJg=="
+sessionKey := "lyY4HPQbaOYzZdG+JcYK9w=="
+
+phone := new(gopay.WeChatUserPhone)
+err := gopay.DecryptOpenDataToStruct(data, iv, sessionKey, phone)
+if err != nil {
+	fmt.Println("err:", err)
+	return
+}
+fmt.Println("PhoneNumber:", phone.PhoneNumber)
+fmt.Println("PurePhoneNumber:", phone.PurePhoneNumber)
+fmt.Println("CountryCode:", phone.CountryCode)
+fmt.Println("Watermark:", phone.Watermark)
 ```
 
 ### 付款结果回调,需回复微信平台是否成功
