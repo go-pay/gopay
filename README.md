@@ -9,25 +9,25 @@
 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank"><img src="https://img.shields.io/badge/License-Apache 2-blue.svg"/></a>
 
 ## 微信支付
-* 统一下单
+* 统一下单：gopay.UnifiedOrder()
     * JSAPI - JSAPI支付（或小程序支付）
     * NATIVE - Native支付
     * APP - app支付
     * MWEB - H5支付
-* 提交付款码支付
-* 查询订单
-* 关闭订单
-* 撤销订单
-* 申请退款
-* 查询退款
-* 下载对账单
-* 下载资金账单
-* 拉取订单评价数据
+* 提交付款码支付：gopay.Micropay()
+* 查询订单：gopay.QueryOrder()
+* 关闭订单：gopay.CloseOrder()
+* 撤销订单：gopay.Reverse()
+* 申请退款：gopay.Refund()
+* 查询退款：gopay.QueryRefund()
+* 下载对账单：gopay.DownloadBill()
+* 下载资金账单：gopay.DownloadFundFlow()
+* 拉取订单评价数据：gopay.BatchQueryComment()
 
-## 小程序服务端
-* gopay.Code2Session（登录凭证校验：获取微信用户OpenId、UnionId、SessionKey）
-* gopay.GetAccessToken（获取小程序全局唯一后台接口调用凭据）
-* gopay.GetPaidUnionId（用户支付完成后，获取该用户的 UnionId，无需用户授权）
+## 小程序服务端API
+* gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
+* gopay.GetAccessToken() => 获取小程序全局唯一后台接口调用凭据
+* gopay.GetPaidUnionId() => 用户支付完成后，获取该用户的 UnionId，无需用户授权
 
 ## 安装
 
