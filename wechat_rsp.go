@@ -213,9 +213,24 @@ type WeChatNotifyRequest struct {
 	TimeEnd            string `xml:"time_end"`
 }
 
-type WeChatUserIdRsp struct {
-	Openid     string `json:"openid"`      //用户唯一标识
+type Code2SessionRsp struct {
 	SessionKey string `json:"session_key"` //会话密钥
+	ExpiresIn  int    `json:"expires_in"`  //SessionKey超时时间（秒）
+	Openid     string `json:"openid"`      //用户唯一标识
 	Unionid    string `json:"unionid"`     //用户在开放平台的唯一标识符
-	ExpiresIn  int    `json:"expires_in"`  //
+	Errcode    int    `json:"errcode"`     //错误码
+	Errmsg     string `json:"errmsg"`      //错误信息
+}
+
+type GetPaidUnionIdRsp struct {
+	Unionid string `json:"unionid"` //用户在开放平台的唯一标识符
+	Errcode int    `json:"errcode"` //错误码
+	Errmsg  string `json:"errmsg"`  //错误信息
+}
+
+type GetAccessTokenRsp struct {
+	AccessToken string `json:"access_token"` //获取到的凭证
+	ExpiresIn   int    `json:"expires_in"`   //SessionKey超时时间（秒）
+	Errcode     int    `json:"errcode"`      //错误码
+	Errmsg      string `json:"errmsg"`       //错误信息
 }
