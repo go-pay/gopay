@@ -111,7 +111,8 @@ fmt.Println("paySign：", paySign)
 
 ### 加密数据，解密到指定结构体
 
-拿小程序获取手机号为例
+> 拿小程序获取手机号为例
+
 button按钮获取手机号码:[button组件文档](https://developers.weixin.qq.com/miniprogram/dev/component/button.html)
 
 微信解密算法文档:[解密算法文档](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html)
