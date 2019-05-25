@@ -148,3 +148,11 @@ func Int642String(intNum int64) (int64Str string) {
 	int64Str = strconv.FormatInt(intNum, 10)
 	return
 }
+
+//解密填充模式（去除补全码） PKCS7UnPadding
+//解密时，需要在最后面去掉加密时添加的填充byte
+func PKCS7UnPadding(plainText []byte) []byte {
+	length := len(plainText)
+	unpadding := int(plainText[length-1])   //找到Byte数组最后的填充byte
+	return plainText[:(length - unpadding)] //只截取返回有效数字内的byte数组
+}
