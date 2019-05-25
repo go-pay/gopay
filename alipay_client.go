@@ -13,7 +13,7 @@ type aliPayClient struct {
 
 //初始化支付宝客户端
 //    appId：应用ID
-//    mchID：商户ID
+//    MchID：商户ID
 //    isProd：是否是正式环境
 //    secretKey：key，（当isProd为true时，此参数必传；false时，此参数为空）
 func NewAlipayClient(appId, mchId string, isProd bool, secretKey ...string) *aliPayClient {
