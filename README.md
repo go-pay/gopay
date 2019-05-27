@@ -69,7 +69,7 @@ fmt.Println("SessionKey:", userIdRsp.SessionKey)
     * signType
     * paySign
 
-> 官方文档说明[微信小程序支付API](https://developers.weixin.qq.com/miniprogram/dev/api/wx.requestPayment.html)
+> 官方文档说明[微信小程序支付API](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html)
 ```go
 timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
 packages := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一下单成功后得到
