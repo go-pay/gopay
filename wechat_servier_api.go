@@ -17,7 +17,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/parnurzeal/gorequest"
 	"reflect"
 	"strings"
@@ -206,7 +205,6 @@ func GetWeChatUserInfo(accessToken, openId string, lang ...string) (userInfo *We
 	} else {
 		url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + accessToken + "&openid=" + openId + "&lang=zh_CN"
 	}
-	fmt.Println(url)
 	agent := HttpAgent()
 	_, _, errs := agent.Get(url).EndStruct(userInfo)
 	if len(errs) > 0 {

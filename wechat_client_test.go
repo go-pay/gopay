@@ -276,7 +276,7 @@ func TestMd5(t *testing.T) {
 }
 
 func TestCode2Session(t *testing.T) {
-	userIdRsp, err := Code2Session(AppID, APPSecret, "011q70AD06npij2RsnxD08V8AD0q70Aw")
+	userIdRsp, err := Code2Session(AppID, APPSecret, "081fuZyJ1wqYE20z15yJ15T2zJ1fuZyd")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -302,7 +302,8 @@ func TestGetAccessToken(t *testing.T) {
 }
 
 func TestGetPaidUnionId(t *testing.T) {
-	rsp, err := GetPaidUnionId("21_xtheVOuysOja3u-v1pqmEnvpfcnXKcLVLsMzhUcJfanrhzzwpIsaTJgPe0oqbN-ETK6Ugsf0LmGjMTi4flgSdCRgheCj2WuMm6VCqlSmsf6Itu_BFfoh0wYeiMAwvP9pYSH3wJbIzXQdUzOqKRXcAGAYFL", "o0Df70MSI4Ygv2KQ2cLnoMN5CXI8", "4200000326201905256499385970")
+	accessToken := "21_3puo3mxoK6Ry2bR7Dh-qdn41wUP1wClwke8Zhf9a_i39jfWRq9rhNJZZZHaOt_Yad-Gp6u9_46dGW0RbIMz3nANInRI3m-1glvCnGW47v63sjYWV1iyTKOHGwDVxEv78kY-0OfkmkiIveVqAZCZaAAAQTQ"
+	rsp, err := GetPaidUnionId(accessToken, "o0Df70MSI4Ygv2KQ2cLnoMN5CXI8", "4200000326201905256499385970")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -313,7 +314,8 @@ func TestGetPaidUnionId(t *testing.T) {
 }
 
 func TestGetWeChatUserInfo(t *testing.T) {
-	userInfo, err := GetWeChatUserInfo("21_duf5flUtcHrORmBVTUrP3pJILBi13YBPrf2T9PJ5_Nykc-78jXYZf2HRDDFO-o8zD85Wte8hIhBRj9kz852IYVXHn9VzmOtveZuXsovUSpwHwKv96lKqU1tzweXib8HGvamPMqNVbJC_8WtdNVDgAIAIQY", OpenID)
+	accessToken := "21_3puo3mxoK6Ry2bR7Dh-qdn41wUP1wClwke8Zhf9a_i39jfWRq9rhNJZZZHaOt_Yad-Gp6u9_46dGW0RbIMz3nANInRI3m-1glvCnGW47v63sjYWV1iyTKOHGwDVxEv78kY-0OfkmkiIveVqAZCZaAAAQTQ"
+	userInfo, err := GetWeChatUserInfo(accessToken, OpenID)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
