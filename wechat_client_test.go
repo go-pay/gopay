@@ -16,7 +16,7 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 	//初始化微信客户端
 	//    appId：应用ID
 	//    MchID：商户ID
-	//    secretKey：Key值
+	//    apiKey：API秘钥值
 	//    isProd：是否是正式环境
 	client := NewWeChatClient(AppID, MchID, secretKey, false)
 
@@ -53,7 +53,7 @@ func TestWeChatClient_QueryOrder(t *testing.T) {
 	//初始化微信客户端
 	//    appId：应用ID
 	//    MchID：商户ID
-	//    secretKey：Key值
+	//    apiKey：API秘钥值
 	//    isProd：是否是正式环境
 	client := NewWeChatClient(AppID, MchID, secretKey, false)
 

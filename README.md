@@ -150,7 +150,7 @@ return c.String(http.StatusOK, rsp.ToXmlString())
 //初始化微信客户端
 //    appId：应用ID
 //    mchID：商户ID
-//    secretKey：Key值
+//    apiKey：API秘钥值
 //    isProd：是否是正式环境
 client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
 
@@ -197,7 +197,7 @@ fmt.Println("MwebUrl:", wxRsp.MwebUrl)
 //初始化微信客户端
 //    appId：应用ID
 //    mchID：商户ID
-//    secretKey：Key值
+//    apiKey：API秘钥值
 //    isProd：是否是正式环境
 client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
 
@@ -227,7 +227,7 @@ fmt.Println("Response:", wxRsp)
 //初始化微信客户端
 //    appId：应用ID
 //    mchID：商户ID
-//    secretKey：Key值
+//    apiKey：API秘钥值
 //    isProd：是否是正式环境
 client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
 
@@ -278,7 +278,7 @@ fmt.Println("Response：", wxRsp)
 //初始化微信客户端
 //    appId：应用ID
 //    mchID：商户ID
-//    secretKey：Key值
+//    apiKey：API秘钥值
 //    isProd：是否是正式环境
 client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
 

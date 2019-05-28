@@ -29,7 +29,7 @@ func HttpAgent() (agent *gorequest.SuperAgent) {
 }
 
 //JSAPI支付，支付参数后，再次计算出小程序用的paySign
-func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, secretKey string) (paySign string) {
+func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("appId=")
 	buffer.WriteString(appId)
@@ -47,7 +47,7 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, secretKey st
 	buffer.WriteString(timeStamp)
 
 	buffer.WriteString("&key=")
-	buffer.WriteString(secretKey)
+	buffer.WriteString(apiKey)
 
 	signStr := buffer.String()
 
@@ -57,7 +57,7 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, secretKey st
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	} else {
-		hash := hmac.New(sha256.New, []byte(secretKey))
+		hash := hmac.New(sha256.New, []byte(apiKey))
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	}
@@ -66,7 +66,7 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, secretKey st
 }
 
 //JSAPI支付，支付参数后，再次计算出微信内H5支付需要用的paySign
-func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, secretKey string) (paySign string) {
+func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("appId=")
 	buffer.WriteString(appId)
@@ -84,7 +84,7 @@ func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, secretKey stri
 	buffer.WriteString(timeStamp)
 
 	buffer.WriteString("&key=")
-	buffer.WriteString(secretKey)
+	buffer.WriteString(apiKey)
 
 	signStr := buffer.String()
 
@@ -94,7 +94,7 @@ func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, secretKey stri
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	} else {
-		hash := hmac.New(sha256.New, []byte(secretKey))
+		hash := hmac.New(sha256.New, []byte(apiKey))
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	}

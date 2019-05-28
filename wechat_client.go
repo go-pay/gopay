@@ -9,22 +9,22 @@ import (
 )
 
 type weChatClient struct {
-	AppId     string
-	MchId     string
-	secretKey string
-	isProd    bool
+	AppId  string
+	MchId  string
+	apiKey string
+	isProd bool
 }
 
 //初始化微信客户端 ok
 //    appId：应用ID
 //    MchID：商户ID
-//    secretKey：Key值
+//    apiKey：API秘钥值
 //    isProd：是否是正式环境
-func NewWeChatClient(appId, mchId, secretKey string, isProd bool) *weChatClient {
+func NewWeChatClient(appId, mchId, apiKey string, isProd bool) *weChatClient {
 	client := new(weChatClient)
 	client.AppId = appId
 	client.MchId = mchId
-	client.secretKey = secretKey
+	client.apiKey = apiKey
 	client.isProd = isProd
 	return client
 }
@@ -347,7 +347,7 @@ func (this *weChatClient) doWeChat(body BodyMap, url string, tlsConfig ...*tls.C
 		//沙箱环境
 		body.Set("sign_type", SignType_MD5)
 		//从微信接口获取SanBoxSignKey
-		key, err := getSanBoxSign(this.MchId, body.Get("nonce_str"), this.secretKey, body.Get("sign_type"))
+		key, err := getSanBoxSign(this.MchId, body.Get("nonce_str"), this.apiKey, body.Get("sign_type"))
 		if err != nil {
 			return nil, err
 		}
@@ -355,7 +355,7 @@ func (this *weChatClient) doWeChat(body BodyMap, url string, tlsConfig ...*tls.C
 	} else {
 		//正式环境
 		//本地计算Sign
-		sign = getLocalSign(this.secretKey, body.Get("sign_type"), body)
+		sign = getLocalSign(this.apiKey, body.Get("sign_type"), body)
 	}
 	body.Set("sign", sign)
 	reqXML := generateXml(body)

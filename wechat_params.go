@@ -14,8 +14,8 @@ import (
 )
 
 //本地通过支付参数计算Sign值
-func getLocalSign(secretKey string, signType string, body BodyMap) (sign string) {
-	signStr := sortSignParams(secretKey, body)
+func getLocalSign(apiKey string, signType string, body BodyMap) (sign string) {
+	signStr := sortSignParams(apiKey, body)
 	//fmt.Println("signStr:", signStr)
 	var hashSign []byte
 	if signType == SignType_MD5 {
@@ -23,7 +23,7 @@ func getLocalSign(secretKey string, signType string, body BodyMap) (sign string)
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	} else {
-		hash := hmac.New(sha256.New, []byte(secretKey))
+		hash := hmac.New(sha256.New, []byte(apiKey))
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	}
@@ -32,7 +32,7 @@ func getLocalSign(secretKey string, signType string, body BodyMap) (sign string)
 }
 
 //获取根据Key排序后的请求参数字符串
-func sortSignParams(secretKey string, body BodyMap) string {
+func sortSignParams(apiKey string, body BodyMap) string {
 	keyList := make([]string, 0)
 	for k := range body {
 		keyList = append(keyList, k)
@@ -49,18 +49,18 @@ func sortSignParams(secretKey string, body BodyMap) string {
 		buffer.WriteString("&")
 	}
 	buffer.WriteString("key=")
-	buffer.WriteString(secretKey)
+	buffer.WriteString(apiKey)
 	return buffer.String()
 }
 
 //从微信提供的接口获取：SandboxSignKey
-func getSanBoxSign(mchId, nonceStr, secretKey, signType string) (key string, err error) {
+func getSanBoxSign(mchId, nonceStr, apiKey, signType string) (key string, err error) {
 	body := make(BodyMap)
 	body.Set("mch_id", mchId)
 	body.Set("nonce_str", nonceStr)
 
 	//计算沙箱参数Sign
-	sanboxSign := getLocalSign(secretKey, signType, body)
+	sanboxSign := getLocalSign(apiKey, signType, body)
 	//沙箱环境：获取key后，重新计算Sign
 	key, err = getSanBoxSignKey(mchId, nonceStr, sanboxSign)
 	if err != nil {
