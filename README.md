@@ -24,7 +24,9 @@
 * 下载资金账单：gopay.DownloadFundFlow()
 * 拉取订单评价数据：gopay.BatchQueryComment()
 
-## 服务端API
+## 公共API
+* gopay.ParseNotifyResult() => 解析并返回微信支付通知的参数
+* gopay.VerifyPayResultSign() => 支付通知的签名验证和参数签名后的Sign
 * gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
 * gopay.GetAccessToken() => 获取小程序全局唯一后台接口调用凭据
 * gopay.GetPaidUnionId() => 用户支付完成后，获取该用户的 UnionId，无需用户授权
@@ -108,6 +110,30 @@ fmt.Println("package：", packages)
 fmt.Println("signType：", gopay.SignType_MD5)
 fmt.Println("paySign：", paySign)
 ```
+
+### 支付结果通知回调：参数解析和Sign值的验证
+
+> 微信支付后的回调通知文档[支付结果通知](https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_7&index=8)
+
+```go
+//解析支付完成后的回调信息
+notifyRsp, err := gopay.ParseNotifyResult(c.Request())
+if err != nil {
+    fmt.Println("err:", err)
+}
+fmt.Println("notifyRsp:", notifyRsp)
+
+//支付通知的签名验证和参数签名后的Sign
+//    apiKey：API秘钥值
+//    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
+//    notifyRsp：利用 gopay.ParseNotifyResult() 得到的结构体
+//    返回参数ok：是否验证通过
+//    返回参数sign：根据参数计算的sign值，非微信返回参数中的Sign
+ok, sign := gopay.VerifyPayResultSign("192006250b4c09247ec02edce69f6a2d", "MD5", notifyRsp)
+log.Println("ok:", ok)
+log.Println("sign:", sign)
+```
+
 
 ### 加密数据，解密到指定结构体
 

@@ -16,8 +16,11 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
+	"encoding/xml"
 	"errors"
 	"github.com/parnurzeal/gorequest"
+	"log"
+	"net/http"
 	"reflect"
 	"strings"
 )
@@ -28,7 +31,42 @@ func HttpAgent() (agent *gorequest.SuperAgent) {
 	return
 }
 
-//验证支付成功后通知Sign值
+//解析支付完成后的回调信息
+func ParseNotifyResult(req *http.Request) (notifyRsp *WeChatNotifyRequest, err error) {
+	notifyRsp = new(WeChatNotifyRequest)
+	defer req.Body.Close()
+	err = xml.NewDecoder(req.Body).Decode(notifyRsp)
+	if err != nil {
+		return nil, err
+	}
+	return
+}
+
+type WeChatNotifyResponse struct {
+	ReturnCode string `xml:"return_code"`
+	ReturnMsg  string `xml:"return_msg"`
+}
+
+//返回数据给微信
+func (this *WeChatNotifyResponse) ToXmlString() (xmlStr string) {
+	buffer := new(bytes.Buffer)
+	buffer.WriteString("<xml><return_code><![CDATA[")
+	buffer.WriteString(this.ReturnCode)
+	buffer.WriteString("]]></return_code>")
+
+	buffer.WriteString("<return_msg><![CDATA[")
+	buffer.WriteString(this.ReturnMsg)
+	buffer.WriteString("]]></return_msg></xml>")
+	xmlStr = buffer.String()
+	return
+}
+
+//支付通知的签名验证和参数签名后的Sign
+//    apiKey：API秘钥值
+//    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
+//    notifyRsp：利用 gopay.ParseNotifyResult() 得到的结构体
+//    返回参数ok：是否验证通过
+//    返回参数sign：根据参数计算的sign值，非微信返回参数中的Sign
 func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotifyRequest) (ok bool, sign string) {
 
 	body := make(BodyMap)
@@ -61,7 +99,19 @@ func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotify
 	body.Set("attach", notifyRsp.Attach)
 	body.Set("time_end", notifyRsp.TimeEnd)
 
-	signStr := sortSignParams(apiKey, body)
+	newBody := make(BodyMap)
+	for k, v := range body {
+		vStr := convert2String(v)
+		if vStr != "" && vStr != "0" {
+			newBody.Set(k, v)
+		}
+	}
+
+	for key, value := range newBody {
+		log.Printf("key:%v,value:%v\n", key, value)
+	}
+
+	signStr := sortSignParams(apiKey, newBody)
 	var hashSign []byte
 	if signType == SignType_MD5 {
 		hash := md5.New()
@@ -73,7 +123,7 @@ func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotify
 		hashSign = hash.Sum(nil)
 	}
 	sign = strings.ToUpper(hex.EncodeToString(hashSign))
-	ok = sign == notifyRsp.SignType
+	ok = sign == notifyRsp.Sign
 	return
 }
 
