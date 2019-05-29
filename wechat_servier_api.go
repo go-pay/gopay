@@ -19,7 +19,6 @@ import (
 	"encoding/xml"
 	"errors"
 	"github.com/parnurzeal/gorequest"
-	"log"
 	"net/http"
 	"reflect"
 	"strings"
@@ -105,10 +104,6 @@ func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotify
 		if vStr != "" && vStr != "0" {
 			newBody.Set(k, v)
 		}
-	}
-
-	for key, value := range newBody {
-		log.Printf("key:%v,value:%v\n", key, value)
 	}
 
 	signStr := sortSignParams(apiKey, newBody)
