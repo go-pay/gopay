@@ -276,7 +276,7 @@ func TestMd5(t *testing.T) {
 }
 
 func TestCode2Session(t *testing.T) {
-	userIdRsp, err := Code2Session(AppID, APPSecret, "081fuZyJ1wqYE20z15yJ15T2zJ1fuZyd")
+	userIdRsp, err := Code2Session(AppID, APPSecret, "011EZg6p0VO47n1p2W4p0mle6p0EZg6u")
 	if err != nil {
 		fmt.Println("err:", err)
 		return

@@ -28,6 +28,55 @@ func HttpAgent() (agent *gorequest.SuperAgent) {
 	return
 }
 
+//验证支付成功后通知Sign值
+func VerifyPayResultSign(apiKey string, notifyRsp *WeChatNotifyRequest) (ok bool, sign string) {
+
+	body := make(BodyMap)
+	body.Set("return_code", notifyRsp.ReturnCode)
+	body.Set("return_msg", notifyRsp.ReturnMsg)
+	body.Set("appid", notifyRsp.Appid)
+	body.Set("mch_id", notifyRsp.MchId)
+	body.Set("device_info", notifyRsp.DeviceInfo)
+	body.Set("nonce_str", notifyRsp.NonceStr)
+	body.Set("sign_type", notifyRsp.SignType)
+	body.Set("result_code", notifyRsp.ResultCode)
+	body.Set("err_code", notifyRsp.ErrCode)
+	body.Set("err_code_des", notifyRsp.ErrCodeDes)
+	body.Set("openid", notifyRsp.Openid)
+	body.Set("is_subscribe", notifyRsp.IsSubscribe)
+	body.Set("trade_type", notifyRsp.TradeType)
+	body.Set("bank_type", notifyRsp.BankType)
+	body.Set("total_fee", notifyRsp.TotalFee)
+	body.Set("settlement_total_fee", notifyRsp.SettlementTotalFee)
+	body.Set("fee_type", notifyRsp.FeeType)
+	body.Set("cash_fee", notifyRsp.CashFee)
+	body.Set("cash_fee_type", notifyRsp.CashFeeType)
+	body.Set("coupon_fee", notifyRsp.CouponFee)
+	body.Set("coupon_count", notifyRsp.CouponCount)
+	body.Set("coupon_type_0", notifyRsp.CouponType0)
+	body.Set("coupon_id_0", notifyRsp.CouponId0)
+	body.Set("coupon_fee_$n", notifyRsp.CouponFee0)
+	body.Set("transaction_id", notifyRsp.TransactionId)
+	body.Set("out_trade_no", notifyRsp.OutTradeNo)
+	body.Set("attach", notifyRsp.Attach)
+	body.Set("time_end", notifyRsp.TimeEnd)
+
+	signStr := sortSignParams(apiKey, body)
+	var hashSign []byte
+	if notifyRsp.SignType == SignType_MD5 {
+		hash := md5.New()
+		hash.Write([]byte(signStr))
+		hashSign = hash.Sum(nil)
+	} else {
+		hash := hmac.New(sha256.New, []byte(apiKey))
+		hash.Write([]byte(signStr))
+		hashSign = hash.Sum(nil)
+	}
+	sign = strings.ToUpper(hex.EncodeToString(hashSign))
+	ok = sign == notifyRsp.SignType
+	return
+}
+
 //JSAPI支付，支付参数后，再次计算出小程序用的paySign
 func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
 	buffer := new(bytes.Buffer)
