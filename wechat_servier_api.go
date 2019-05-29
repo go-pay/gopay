@@ -29,7 +29,7 @@ func HttpAgent() (agent *gorequest.SuperAgent) {
 }
 
 //验证支付成功后通知Sign值
-func VerifyPayResultSign(apiKey string, notifyRsp *WeChatNotifyRequest) (ok bool, sign string) {
+func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotifyRequest) (ok bool, sign string) {
 
 	body := make(BodyMap)
 	body.Set("return_code", notifyRsp.ReturnCode)
@@ -63,7 +63,7 @@ func VerifyPayResultSign(apiKey string, notifyRsp *WeChatNotifyRequest) (ok bool
 
 	signStr := sortSignParams(apiKey, body)
 	var hashSign []byte
-	if notifyRsp.SignType == SignType_MD5 {
+	if signType == SignType_MD5 {
 		hash := md5.New()
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
