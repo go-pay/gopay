@@ -44,7 +44,7 @@ $ go get -u github.com/iGoogle-ink/gopay
 * 未完成，有问题
 
 微信群：
-<img width="226" height="300" src="https://ae01.alicdn.com/kf/HTB11JwUaLWG3KVjSZFgq6zTspXaj.jpg"/>
+<img width="226" height="300" src="https://ae01.alicdn.com/kf/HTB1Zf7YaRWD3KVjSZKPq6yp7FXaO.jpg"/>
 微信：
 <img width="226" height="300" src="https://ae01.alicdn.com/kf/HTB1hjQVaQ5E3KVjSZFCq6zuzXXai.jpg"/>
 
