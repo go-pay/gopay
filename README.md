@@ -41,7 +41,12 @@ $ go get -u github.com/iGoogle-ink/gopay
 
 ## 文档
 
-未完成，有问题请QQ或微信讨论（同号）：85411418
+* 未完成，有问题
+
+微信群：
+<img width="226" height="300" src="https://ae01.alicdn.com/kf/HTB11JwUaLWG3KVjSZFgq6zTspXaj.jpg"/>
+微信：
+<img width="226" height="300" src="https://ae01.alicdn.com/kf/HTB1hjQVaQ5E3KVjSZFCq6zuzXXai.jpg"/>
 
 ## 微信支付
 
