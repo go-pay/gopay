@@ -122,7 +122,7 @@ func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotify
 	return
 }
 
-//JSAPI支付，支付参数后，再次计算出小程序用的paySign
+//JSAPI支付，统一下单获取支付参数后，再次计算出小程序用的paySign
 func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("appId=")
@@ -159,7 +159,7 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey strin
 	return
 }
 
-//JSAPI支付，支付参数后，再次计算出微信内H5支付需要用的paySign
+//JSAPI支付，统一下单获取支付参数后，再次计算出微信内H5支付需要用的paySign
 func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("appId=")
@@ -176,6 +176,46 @@ func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string)
 
 	buffer.WriteString("&timeStamp=")
 	buffer.WriteString(timeStamp)
+
+	buffer.WriteString("&key=")
+	buffer.WriteString(apiKey)
+
+	signStr := buffer.String()
+
+	var hashSign []byte
+	if signType == SignType_MD5 {
+		hash := md5.New()
+		hash.Write([]byte(signStr))
+		hashSign = hash.Sum(nil)
+	} else {
+		hash := hmac.New(sha256.New, []byte(apiKey))
+		hash.Write([]byte(signStr))
+		hashSign = hash.Sum(nil)
+	}
+	paySign = strings.ToUpper(hex.EncodeToString(hashSign))
+	return
+}
+
+//APP支付，统一下单获取支付参数后，再次计算APP支付所需要的的sign
+//    signType：此处签名方式，务必与统一下单时用的签名方式一致
+func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, apiKey string) (paySign string) {
+	buffer := new(bytes.Buffer)
+	buffer.WriteString("appid=")
+	buffer.WriteString(appid)
+
+	buffer.WriteString("&nonceStr=")
+	buffer.WriteString(noncestr)
+
+	buffer.WriteString("&package=Sign=WXPay")
+
+	buffer.WriteString("&partnerid=")
+	buffer.WriteString(partnerid)
+
+	buffer.WriteString("&prepayid=")
+	buffer.WriteString(prepayid)
+
+	buffer.WriteString("&timeStamp=")
+	buffer.WriteString(timestamp)
 
 	buffer.WriteString("&key=")
 	buffer.WriteString(apiKey)
