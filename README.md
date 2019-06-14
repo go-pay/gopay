@@ -127,10 +127,10 @@ fmt.Println("paySign：", paySign)
 timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
 //注意：signType：此处签名方式，务必与统一下单时用的签名方式一致
 //注意：package：参数因为是固定值，不需开发者再传入
-paySign := gopay.GetH5PaySign(appid, partnerid, wxRsp.NonceStr, prepayid, gopay.SignType_MD5, timeStamp, apiKey)
+sign := gopay.GetH5PaySign(appid, partnerid, wxRsp.NonceStr, prepayid, gopay.SignType_MD5, timeStamp, apiKey)
 
 //APP支付需要的参数信息
-fmt.Println("paySign：", paySign)
+fmt.Println("sign：", sign)
 ```
 
 ### 支付结果通知回调：参数解析和Sign值的验证
