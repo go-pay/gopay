@@ -2,28 +2,32 @@ package gopay
 
 import (
 	"crypto/tls"
+	"log"
+	"time"
 )
 
 type aliPayClient struct {
-	AppId     string
-	MchId     string
-	secretKey string
-	isProd    bool
+	AppId           string
+	aliPayPublicKey string
+	privateKey      string
+	ReturnUrl       string
+	NotifyUrl       string
+	Charset         string
+	SignType        string
+	isProd          bool
 }
 
 //初始化支付宝客户端
 //    appId：应用ID
-//    MchID：商户ID
+//    aliPayPublicKey：支付宝公钥
+//    privateKey：应用私钥
 //    isProd：是否是正式环境
-//    secretKey：key，（当isProd为true时，此参数必传；false时，此参数为空）
-func NewAlipayClient(appId, mchId string, isProd bool, secretKey ...string) *aliPayClient {
-	client := new(aliPayClient)
+func NewAliPayClient(appId, aliPayPublicKey, privateKey string, isProd bool) (client *aliPayClient) {
+	client = new(aliPayClient)
 	client.AppId = appId
-	client.MchId = mchId
+	client.aliPayPublicKey = aliPayPublicKey
+	client.privateKey = privateKey
 	client.isProd = isProd
-	if isProd && len(secretKey) > 0 {
-		client.secretKey = secretKey[0]
-	}
 	return client
 }
 
@@ -78,8 +82,16 @@ func (this *aliPayClient) AliPayTradeAppPay() {
 }
 
 //alipay.trade.wap.pay(手机网站支付接口2.0)
-func (this *aliPayClient) AliPayTradeWapPay() {
+func (this *aliPayClient) AliPayTradeWapPay(body BodyMap) (err error) {
+	var bytes []byte
 
+	bytes, err = this.doAliPay(body, "alipay.trade.wap.pay", nil)
+	if err != nil {
+		//log.Println("err::", err.Error())
+		return err
+	}
+	log.Println("Result:", string(bytes))
+	return nil
 }
 
 //alipay.trade.orderinfo.sync(支付宝订单信息同步接口)
@@ -102,8 +114,53 @@ func (this *aliPayClient) ZhimaCreditScoreGet() {
 
 }
 
+/*
+https://openapi.alipay.com/gateway.do?timestamp=2013-01-01 08:08:08&method=alipay.trade.wap.pay&app_id=1990&sign_type=RSA2&sign=ERITJKEIJKJHKKKKKKKHJEREEEEEEEEEEE&version=1.0&biz_content=
+  {
+    "body":"对一笔交易的具体描述信息。如果是多种商品，请将商品描述字符串累加传给body。",
+    "subject":"大乐透",
+    "out_trade_no":"70501111111S001111119",
+    "timeout_express":"90m",
+    "total_amount":9.00,
+    "product_code":"QUICK_WAP_WAY"
+  }
+*/
 //向支付宝发送请求
 func (this *aliPayClient) doAliPay(body BodyMap, method string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
+	//===============获取签名===================
+	timeStamp := time.Now().Format(TimeLayout)
+	pKey := FormatPrivateKey(this.privateKey)
+	sign, err := getRsaSign(this.AppId, this.SignType, this.Charset, method, timeStamp, pKey, body)
+	if err != nil {
+		return nil, err
+	}
+	log.Println("rsaSign:", sign)
+	//===============生成参数===================
+	b := new(aliPayPublicBody)
+	b.AppId = this.AppId
+	b.Method = method
+	b.Format = "JSON"
+	b.ReturnUrl = this.ReturnUrl
+	b.Charset = this.Charset
+	b.SignType = this.SignType
+	b.Timestamp = timeStamp
+	b.Version = "1.0"
+	b.NotifyUrl = this.NotifyUrl
+	b.BizContent = body
+	b.Sign = sign
 
+	//===============发起请求===================
+	agent := HttpAgent()
+	if !this.isProd {
+		//沙箱环境
+		agent.Post(zfb_sanbox_base_url)
+	} else {
+		//正式环境
+		agent.Post(zfb_base_url)
+	}
+	_, bytes, errs := agent.EndBytes()
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
 	return bytes, nil
 }

@@ -20,8 +20,8 @@ type weChatClient struct {
 //    MchID：商户ID
 //    apiKey：API秘钥值
 //    isProd：是否是正式环境
-func NewWeChatClient(appId, mchId, apiKey string, isProd bool) *weChatClient {
-	client := new(weChatClient)
+func NewWeChatClient(appId, mchId, apiKey string, isProd bool) (client *weChatClient) {
+	client = new(weChatClient)
 	client.AppId = appId
 	client.MchId = mchId
 	client.apiKey = apiKey

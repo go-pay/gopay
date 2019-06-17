@@ -1,6 +1,7 @@
 package gopay
 
 import (
+	"bytes"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -155,4 +156,64 @@ func PKCS7UnPadding(plainText []byte) []byte {
 	length := len(plainText)
 	unpadding := int(plainText[length-1])   //找到Byte数组最后的填充byte
 	return plainText[:(length - unpadding)] //只截取返回有效数字内的byte数组
+}
+
+//格式化秘钥
+func FormatPrivateKey(privateKey string) (pKey string) {
+	buffer := new(bytes.Buffer)
+	buffer.WriteString("-----BEGIN RSA PRIVATE KEY-----\n")
+
+	rawLen := 64
+	keyLen := len(privateKey)
+	raws := keyLen / rawLen
+	temp := keyLen % rawLen
+
+	if temp > 0 {
+		raws++
+	}
+	start := 0
+	end := start + rawLen
+	for i := 0; i < raws; i++ {
+		if i == raws-1 {
+			buffer.WriteString(privateKey[start:])
+		} else {
+			buffer.WriteString(privateKey[start:end])
+		}
+		buffer.WriteString("\n")
+		start += rawLen
+		end = start + rawLen
+	}
+	buffer.WriteString("-----END RSA PRIVATE KEY-----\n")
+	pKey = buffer.String()
+	return
+}
+
+//格式化秘钥
+func FormatPublickKey(publickKey string) (pKey string) {
+	buffer := new(bytes.Buffer)
+	buffer.WriteString("-----BEGIN PUBLIC KEY-----\n")
+
+	rawLen := 64
+	keyLen := len(publickKey)
+	raws := keyLen / rawLen
+	temp := keyLen % rawLen
+
+	if temp > 0 {
+		raws++
+	}
+	start := 0
+	end := start + rawLen
+	for i := 0; i < raws; i++ {
+		if i == raws-1 {
+			buffer.WriteString(publickKey[start:])
+		} else {
+			buffer.WriteString(publickKey[start:end])
+		}
+		buffer.WriteString("\n")
+		start += rawLen
+		end = start + rawLen
+	}
+	buffer.WriteString("-----END PUBLIC KEY-----\n")
+	pKey = buffer.String()
+	return
 }
