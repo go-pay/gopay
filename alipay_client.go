@@ -2,6 +2,7 @@ package gopay
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"log"
 	"time"
 )
@@ -127,15 +128,15 @@ https://openapi.alipay.com/gateway.do?timestamp=2013-01-01 08:08:08&method=alipa
 */
 //向支付宝发送请求
 func (this *aliPayClient) doAliPay(body BodyMap, method string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
-	//===============获取签名===================
-	timeStamp := time.Now().Format(TimeLayout)
-	pKey := FormatPrivateKey(this.privateKey)
-	sign, err := getRsaSign(this.AppId, this.SignType, this.Charset, method, timeStamp, pKey, body)
+	//===============转换body参数===================
+	bodyStr, err := json.Marshal(body)
 	if err != nil {
+		log.Println("json.Marshal:", err)
 		return nil, err
 	}
-	log.Println("rsaSign:", sign)
+	//log.Println("bodyStr:", string(bodyStr))
 	//===============生成参数===================
+	timeStamp := time.Now().Format(TimeLayout)
 	b := new(aliPayPublicBody)
 	b.AppId = this.AppId
 	b.Method = method
@@ -146,9 +147,16 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string, tlsConfig ...*tl
 	b.Timestamp = timeStamp
 	b.Version = "1.0"
 	b.NotifyUrl = this.NotifyUrl
-	b.BizContent = body
-	b.Sign = sign
+	b.BizContent = string(bodyStr)
+	//===============获取签名===================
 
+	pKey := FormatPrivateKey(this.privateKey)
+	sign, err := getRsaSign(b, pKey)
+	if err != nil {
+		return nil, err
+	}
+	log.Println("rsaSign:", sign)
+	b.Sign = sign
 	//===============发起请求===================
 	agent := HttpAgent()
 	if !this.isProd {
@@ -158,7 +166,14 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string, tlsConfig ...*tl
 		//正式环境
 		agent.Post(zfb_base_url)
 	}
-	_, bytes, errs := agent.EndBytes()
+	//log.Println("HttpBody:", *b)
+	_, bytes, errs := agent.
+		Set("app_id", b.AppId).
+		Set("", b.Method).
+		Set("", b.AppId).
+		Set("", b.AppId).
+		Set("biz_content", b.BizContent).
+		EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
