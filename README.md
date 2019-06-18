@@ -361,6 +361,8 @@ fmt.Println("Response：", wxRsp)
 
 支付宝官方文档：[官方文档](https://docs.open.alipay.com/)
 
+支付宝RSA秘钥生成文档：[生成 RSA 密钥](https://docs.open.alipay.com/291/105971/)
+
 支付宝在线调试：[在线调试地址](https://openhome.alipay.com/platform/demoManage.htm)
 
 沙箱环境使用说明：[文档地址](https://docs.open.alipay.com/200/105311)
