@@ -18,7 +18,7 @@ func (bm BodyMap) Set(key string, value interface{}) {
 //获取参数
 func (bm BodyMap) Get(key string) string {
 	if bm == nil {
-		return ""
+		return null
 	}
 	v := bm[key]
 	value, ok := v.(int)
@@ -75,8 +75,8 @@ func ParseDateTime(timeStr string) (datetime time.Time) {
 func FormatDateTime(timeStr string) (formatTime string) {
 	//2019-01-04T15:40:00Z
 	//2019-01-18 20:51:30+08:00
-	if timeStr == "" {
-		return ""
+	if timeStr == null {
+		return null
 	}
 	replace := strings.Replace(timeStr, "T", " ", 1)
 	formatTime = replace[:19]
@@ -86,8 +86,8 @@ func FormatDateTime(timeStr string) (formatTime string) {
 //格式化
 func FormatDate(dateStr string) (formatDate string) {
 	//2020-12-30T00:00:00+08:00
-	if dateStr == "" {
-		return ""
+	if dateStr == null {
+		return null
 	}
 	split := strings.Split(dateStr, "T")
 	formatDate = split[0]

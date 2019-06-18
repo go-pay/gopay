@@ -2,7 +2,6 @@ package gopay
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/parnurzeal/gorequest"
 	"log"
 	"time"
@@ -76,21 +75,14 @@ func (this *aliPayClient) AliPayTradeQuery() {
 }
 
 //alipay.trade.app.pay(app支付接口2.0)
-func (this *aliPayClient) AliPayTradeAppPay(body BodyMap) (aRsp *AliPayTradePayAppResponse, err error) {
+func (this *aliPayClient) AliPayTradeAppPay(body BodyMap) (payParam string, err error) {
 	var bytes []byte
 	bytes, err = this.doAliPay(body, "alipay.trade.app.pay")
 	if err != nil {
-		//log.Println("err::", err.Error())
-		return nil, err
+		return null, err
 	}
-	fmt.Println("bytes::", string(bytes))
-	rsp := new(AliPayTradePayAppResponse)
-	err = json.Unmarshal(bytes, rsp)
-	if err != nil {
-		log.Println("解析出错：", err)
-		return nil, err
-	}
-	return rsp, nil
+	payParam = string(bytes)
+	return payParam, nil
 }
 
 //alipay.trade.wap.pay(手机网站支付接口2.0)
@@ -143,12 +135,12 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 	if this.ReturnUrl != null {
 		reqBody.Set("return_url", this.ReturnUrl)
 	}
-	if this.Charset == "" {
+	if this.Charset == null {
 		reqBody.Set("charset", "utf-8")
 	} else {
 		reqBody.Set("charset", this.Charset)
 	}
-	if this.SignType == "" {
+	if this.SignType == null {
 		reqBody.Set("sign_type", "RSA2")
 	} else {
 		reqBody.Set("sign_type", this.SignType)
@@ -170,6 +162,9 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 	//===============发起请求===================
 	urlParam := FormatAliPayURLParam(reqBody)
 	//fmt.Println("urlParam:", urlParam)
+	if method == "alipay.trade.app.pay" {
+		return []byte(urlParam), nil
+	}
 	var url string
 	agent := gorequest.New()
 	if !this.isProd {

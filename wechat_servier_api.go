@@ -101,7 +101,7 @@ func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotify
 	newBody := make(BodyMap)
 	for k, v := range body {
 		vStr := convert2String(v)
-		if vStr != "" && vStr != "0" {
+		if vStr != null && vStr != "0" {
 			newBody.Set(k, v)
 		}
 	}

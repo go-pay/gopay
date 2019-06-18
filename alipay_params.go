@@ -76,13 +76,13 @@ func getRsaSign(body BodyMap, privateKey string) (sign string, err error) {
 	//解析秘钥
 	block, _ := pem.Decode([]byte(privateKey))
 	if block == nil {
-		return "", errors.New("秘钥错误")
+		return null, errors.New("秘钥错误")
 	}
 	//log.Println(block.Type)
 	key, err = x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
 		//log.Println("x509.ParsePKCS1PrivateKey:", err)
-		return "", err
+		return null, err
 	}
 
 	switch body.Get("sign_type") {
@@ -96,12 +96,12 @@ func getRsaSign(body BodyMap, privateKey string) (sign string, err error) {
 	//fmt.Println("原始字符串：",signStr)
 	_, err = h.Write([]byte(signStr))
 	if err != nil {
-		return "", err
+		return null, err
 	}
 	encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, key, crypto.SHA256, h.Sum(nil))
 	if err != nil {
 		//log.Println("rsa.SignPKCS1v15:", err)
-		return "", err
+		return null, err
 	}
 	secretData := base64.StdEncoding.EncodeToString(encryptedBytes)
 	return secretData, nil

@@ -64,7 +64,7 @@ func getSanBoxSign(mchId, nonceStr, apiKey, signType string) (key string, err er
 	//沙箱环境：获取key后，重新计算Sign
 	key, err = getSanBoxSignKey(mchId, nonceStr, sanboxSign)
 	if err != nil {
-		return "", err
+		return null, err
 	}
 	return
 }
@@ -83,15 +83,15 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 		Type("xml").
 		SendString(reqXml).EndBytes()
 	if len(errorList) > 0 {
-		return "", errorList[0]
+		return null, errorList[0]
 	}
 	keyResponse := new(getSignKeyResponse)
 	err = xml.Unmarshal(byteList, keyResponse)
 	if err != nil {
-		return "", err
+		return null, err
 	}
 	if keyResponse.ReturnCode == "FAIL" {
-		return "", errors.New(keyResponse.Retmsg)
+		return null, errors.New(keyResponse.Retmsg)
 	}
 	return keyResponse.SandboxSignkey, nil
 }

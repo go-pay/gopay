@@ -276,12 +276,12 @@ func (this *weChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePa
 		pkcsPool := x509.NewCertPool()
 		pkcs, err := ioutil.ReadFile(pkcs12FilePath)
 		if err != nil {
-			return "", err
+			return null, err
 		}
 		pkcsPool.AppendCertsFromPEM(pkcs)
 		certificate, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
 		if err != nil {
-			return "", err
+			return null, err
 		}
 		tlsConfig := new(tls.Config)
 		tlsConfig.Certificates = []tls.Certificate{certificate}
@@ -294,7 +294,7 @@ func (this *weChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePa
 	}
 
 	if err != nil {
-		return "", err
+		return null, err
 	}
 	wxRsp = string(bytes)
 	return wxRsp, nil
@@ -312,12 +312,12 @@ func (this *weChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFileP
 		pkcsPool := x509.NewCertPool()
 		pkcs, err := ioutil.ReadFile(pkcs12FilePath)
 		if err != nil {
-			return "", err
+			return null, err
 		}
 		pkcsPool.AppendCertsFromPEM(pkcs)
 		certificate, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
 		if err != nil {
-			return "", err
+			return null, err
 		}
 		tlsConfig := new(tls.Config)
 		tlsConfig.Certificates = []tls.Certificate{certificate}
@@ -330,7 +330,7 @@ func (this *weChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFileP
 	}
 
 	if err != nil {
-		return "", err
+		return null, err
 	}
 
 	wxRsp = string(bytes)
