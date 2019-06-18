@@ -45,6 +45,13 @@ const (
 	SignType_MD5         = "MD5"
 	SignType_HMAC_SHA256 = "HMAC-SHA256"
 
+	//Debug数据
+	ApiKey    = "GFDS8j98rewnmgl45wHTt980jg543wmg"
+	AppID     = "wxdaa2ab9ef87b5497"
+	APPSecret = "65f42f625a788ed52f6e2e159304879c"
+	MchID     = "1368139502"
+	MchID2    = "1526665601"
+	OpenID    = "o0Df70H2Q0fY8JXh1aFPIRyOBgu8"
 	//
 	//===========================================================================================
 	//
