@@ -9,25 +9,22 @@ import (
 )
 
 type aliPayClient struct {
-	AppId           string
-	aliPayPublicKey string
-	privateKey      string
-	ReturnUrl       string
-	NotifyUrl       string
-	Charset         string
-	SignType        string
-	isProd          bool
+	AppId      string
+	privateKey string
+	ReturnUrl  string
+	NotifyUrl  string
+	Charset    string
+	SignType   string
+	isProd     bool
 }
 
 //初始化支付宝客户端
 //    appId：应用ID
-//    aliPayPublicKey：支付宝公钥
 //    privateKey：应用私钥
 //    isProd：是否是正式环境
-func NewAliPayClient(appId, aliPayPublicKey, privateKey string, isProd bool) (client *aliPayClient) {
+func NewAliPayClient(appId, privateKey string, isProd bool) (client *aliPayClient) {
 	client = new(aliPayClient)
 	client.AppId = appId
-	client.aliPayPublicKey = aliPayPublicKey
 	client.privateKey = privateKey
 	client.isProd = isProd
 	return client
