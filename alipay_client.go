@@ -1,8 +1,9 @@
 package gopay
 
 import (
-	"crypto/tls"
 	"encoding/json"
+	"fmt"
+	"github.com/parnurzeal/gorequest"
 	"log"
 	"time"
 )
@@ -78,21 +79,34 @@ func (this *aliPayClient) AliPayTradeQuery() {
 }
 
 //alipay.trade.app.pay(app支付接口2.0)
-func (this *aliPayClient) AliPayTradeAppPay() {
-
+func (this *aliPayClient) AliPayTradeAppPay(body BodyMap) (aRsp *AliPayTradePayAppResponse, err error) {
+	var bytes []byte
+	bytes, err = this.doAliPay(body, "alipay.trade.app.pay")
+	if err != nil {
+		//log.Println("err::", err.Error())
+		return nil, err
+	}
+	fmt.Println("bytes::", string(bytes))
+	rsp := new(AliPayTradePayAppResponse)
+	err = json.Unmarshal(bytes, rsp)
+	if err != nil {
+		log.Println("解析出错：", err)
+		return nil, err
+	}
+	return rsp, nil
 }
 
 //alipay.trade.wap.pay(手机网站支付接口2.0)
-func (this *aliPayClient) AliPayTradeWapPay(body BodyMap) (err error) {
+func (this *aliPayClient) AliPayTradeWapPay(body BodyMap) (payUrl string, err error) {
 	var bytes []byte
-
-	bytes, err = this.doAliPay(body, "alipay.trade.wap.pay", nil)
+	bytes, err = this.doAliPay(body, "alipay.trade.wap.pay")
 	if err != nil {
 		//log.Println("err::", err.Error())
-		return err
+		return null, err
 	}
-	log.Println("Result:", string(bytes))
-	return nil
+	payUrl = string(bytes)
+	//fmt.Println("URL::", payUrl)
+	return payUrl, nil
 }
 
 //alipay.trade.orderinfo.sync(支付宝订单信息同步接口)
@@ -115,67 +129,73 @@ func (this *aliPayClient) ZhimaCreditScoreGet() {
 
 }
 
-/*
-https://openapi.alipay.com/gateway.do?timestamp=2013-01-01 08:08:08&method=alipay.trade.wap.pay&app_id=1990&sign_type=RSA2&sign=ERITJKEIJKJHKKKKKKKHJEREEEEEEEEEEE&version=1.0&biz_content=
-  {
-    "body":"对一笔交易的具体描述信息。如果是多种商品，请将商品描述字符串累加传给body。",
-    "subject":"大乐透",
-    "out_trade_no":"70501111111S001111119",
-    "timeout_express":"90m",
-    "total_amount":9.00,
-    "product_code":"QUICK_WAP_WAY"
-  }
-*/
 //向支付宝发送请求
-func (this *aliPayClient) doAliPay(body BodyMap, method string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
+func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, err error) {
 	//===============转换body参数===================
 	bodyStr, err := json.Marshal(body)
 	if err != nil {
 		log.Println("json.Marshal:", err)
 		return nil, err
 	}
-	//log.Println("bodyStr:", string(bodyStr))
+	//fmt.Println(string(bodyStr))
 	//===============生成参数===================
-	timeStamp := time.Now().Format(TimeLayout)
-	b := new(aliPayPublicBody)
-	b.AppId = this.AppId
-	b.Method = method
-	b.Format = "JSON"
-	b.ReturnUrl = this.ReturnUrl
-	b.Charset = this.Charset
-	b.SignType = this.SignType
-	b.Timestamp = timeStamp
-	b.Version = "1.0"
-	b.NotifyUrl = this.NotifyUrl
-	b.BizContent = string(bodyStr)
+	reqBody := make(BodyMap)
+	reqBody.Set("app_id", this.AppId)
+	reqBody.Set("method", method)
+	reqBody.Set("format", "JSON")
+	if this.ReturnUrl != null {
+		reqBody.Set("return_url", this.ReturnUrl)
+	}
+	if this.Charset == "" {
+		reqBody.Set("charset", "utf-8")
+	} else {
+		reqBody.Set("charset", this.Charset)
+	}
+	if this.SignType == "" {
+		reqBody.Set("sign_type", "RSA2")
+	} else {
+		reqBody.Set("sign_type", this.SignType)
+	}
+	reqBody.Set("timestamp", time.Now().Format(TimeLayout))
+	reqBody.Set("version", "1.0")
+	if this.NotifyUrl != null {
+		reqBody.Set("notify_url", this.NotifyUrl)
+	}
+	reqBody.Set("biz_content", string(bodyStr))
 	//===============获取签名===================
-
 	pKey := FormatPrivateKey(this.privateKey)
-	sign, err := getRsaSign(b, pKey)
+	sign, err := getRsaSign(reqBody, pKey)
 	if err != nil {
 		return nil, err
 	}
-	log.Println("rsaSign:", sign)
-	b.Sign = sign
+	reqBody.Set("sign", sign)
+	//fmt.Println("rsaSign:", sign)
 	//===============发起请求===================
-	agent := HttpAgent()
+	urlParam := FormatAliPayURLParam(reqBody)
+	//fmt.Println("urlParam:", urlParam)
+	var url string
+	agent := gorequest.New()
 	if !this.isProd {
 		//沙箱环境
-		agent.Post(zfb_sanbox_base_url)
+		url = zfb_sanbox_base_url
+		//fmt.Println(url)
+		agent.Post(url)
 	} else {
 		//正式环境
-		agent.Post(zfb_base_url)
+		url = zfb_base_url
+		//fmt.Println(url)
+		agent.Post(url)
 	}
-	//log.Println("HttpBody:", *b)
-	_, bytes, errs := agent.
-		Set("app_id", b.AppId).
-		Set("", b.Method).
-		Set("", b.AppId).
-		Set("", b.AppId).
-		Set("biz_content", b.BizContent).
+	rsp, b, errs := agent.
+		Type("form-data").
+		SendString(urlParam).
 		EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
-	return bytes, nil
+	if method == "alipay.trade.wap.pay" {
+		//fmt.Println("rsp:::", rsp.Request.URL)
+		return []byte(rsp.Request.URL.String()), nil
+	}
+	return b, nil
 }
