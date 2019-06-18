@@ -9,22 +9,22 @@
 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank"><img src="https://img.shields.io/badge/License-Apache 2-blue.svg"/></a>
 
 ## 微信支付
-* 统一下单：gopay.UnifiedOrder()
+* 统一下单：client.UnifiedOrder()
     * JSAPI - JSAPI支付（或小程序支付）
     * NATIVE - Native支付
     * APP - app支付
     * MWEB - H5支付
-* 提交付款码支付：gopay.Micropay()
-* 查询订单：gopay.QueryOrder()
-* 关闭订单：gopay.CloseOrder()
-* 撤销订单：gopay.Reverse()
-* 申请退款：gopay.Refund()
-* 查询退款：gopay.QueryRefund()
-* 下载对账单：gopay.DownloadBill()
-* 下载资金账单：gopay.DownloadFundFlow()
-* 拉取订单评价数据：gopay.BatchQueryComment()
+* 提交付款码支付：client.Micropay()
+* 查询订单：client.QueryOrder()
+* 关闭订单：client.CloseOrder()
+* 撤销订单：client.Reverse()
+* 申请退款：client.Refund()
+* 查询退款：client.QueryRefund()
+* 下载对账单：client.DownloadBill()
+* 下载资金账单：client.DownloadFundFlow()
+* 拉取订单评价数据：client.BatchQueryComment()
 
-## 公共API
+## 微信公共API
 * gopay.ParseNotifyResult() => 解析并返回微信支付通知的参数
 * gopay.VerifyPayResultSign() => 支付通知的签名验证和参数签名后的Sign
 * gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
@@ -33,20 +33,29 @@
 * gopay.GetWeChatUserInfo() => 微信公众号：获取用户基本信息(UnionID机制)
 * gopay.DecryptOpenDataToStruct() => 加密数据，解密到指定结构体
 
-## 安装
+## 支付宝支付
+
+* 手机网站支付：client.AliPayTradeWapPay()
+* APP支付：client.AliPayTradeAppPay()（未完成）
+
+## 支付宝公共API
+
+* coming
+
+# 安装
 
 ```bash
 $ go get -u github.com/iGoogle-ink/gopay
 ```
 
-## 文档
+# 文档
 
 * 未完成，有问题+微信
 
 微信：
 <img width="260" height="260" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_jerry.png"/>
 
-## 微信支付
+# 微信支付
 
 <font color='#0088ff'>注意：具体参数根据请求的不同而不同，请参考微信官方文档的参数说明！</font>
 
@@ -345,9 +354,13 @@ if err != nil {
 fmt.Println("Response：", wxRsp)
 ```
 
-## 支付宝支付
+# 支付宝支付
 
 <font color='#0088ff'>注意：具体请求参数根据请求的不同而不同，请参考支付宝官方文档的参数说明！</font>
+
+支付宝官方文档：[官方文档](https://docs.open.alipay.com/)
+
+支付宝在线调试：[在线调试地址](https://openhome.alipay.com/platform/demoManage.htm)
 
 沙箱环境使用说明：[文档地址](https://docs.open.alipay.com/200/105311)
 

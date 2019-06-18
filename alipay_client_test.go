@@ -50,7 +50,7 @@ func TestAliPayClient_AliPayTradeWapPay(t *testing.T) {
 	body.Set("subject", "测试支付")
 	body.Set("out_trade_no", "GYWX201901301040355706100410")
 	body.Set("quit_url", "https://www.igoogle.ink")
-	body.Set("total_amount", "10.00")
+	body.Set("total_amount", "100.00")
 	body.Set("product_code", "QUICK_WAP_WAY")
 	//手机网站支付请求
 	payUrl, err := client.AliPayTradeWapPay(body)
