@@ -40,7 +40,8 @@
 
 ## 支付宝公共API
 
-* coming
+* gopay.FormatPrivateKey() => 格式化应用私钥
+* gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
 
 # 安装
 
