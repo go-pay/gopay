@@ -106,7 +106,7 @@ func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotify
 		}
 	}
 
-	signStr := sortSignParams(apiKey, newBody)
+	signStr := sortWeChatSignParams(apiKey, newBody)
 	var hashSign []byte
 	if signType == SignType_MD5 {
 		hash := md5.New()
