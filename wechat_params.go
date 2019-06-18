@@ -15,7 +15,7 @@ import (
 
 //本地通过支付参数计算Sign值
 func getLocalSign(apiKey string, signType string, body BodyMap) (sign string) {
-	signStr := sortSignParams(apiKey, body)
+	signStr := sortWeChatSignParams(apiKey, body)
 	//fmt.Println("signStr:", signStr)
 	var hashSign []byte
 	if signType == SignType_MD5 {
@@ -32,7 +32,7 @@ func getLocalSign(apiKey string, signType string, body BodyMap) (sign string) {
 }
 
 //获取根据Key排序后的请求参数字符串
-func sortSignParams(apiKey string, body BodyMap) string {
+func sortWeChatSignParams(apiKey string, body BodyMap) string {
 	keyList := make([]string, 0)
 	for k := range body {
 		keyList = append(keyList, k)
