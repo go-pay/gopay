@@ -367,6 +367,8 @@ fmt.Println("Response：", wxRsp)
 
 ### 手机网站支付
 
+* 手机网站支付是通过服务端获取支付URL后，然后返回给客户端，请求URL地址即可打开支付页面
+
 > 文档说明[手机网站支付-请求参数说明](https://docs.open.alipay.com/203/107090/) 
 
 > 文档说明[手机网站支付接口2.0](https://docs.open.alipay.com/api_1/alipay.trade.wap.pay/) 
