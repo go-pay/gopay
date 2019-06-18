@@ -3,34 +3,8 @@ package gopay
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/smartwalle/alipay"
-	"log"
 	"testing"
 )
-
-func TestPay(t *testing.T) {
-	//网页&移动应用
-	AlipayAppId := "2016091200494382"
-	aliPayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp8gueNlkbiDidz6FBQEBpqoRgH8h7JtsPtYW0nzAqy1MME4mFnDSMfSKlreUomS3a55gmBopL1eF4/Km/dEnaL5tCY9+24SKn1D4iyls+lvz/ZjvUjVwxoUYBh8kkcxMZSDeDz8//o+9qZTrICVP2a4sBB8T0XmU4gxfw8FsmtoomBH1nLk3AO7wgRN2a3+SRSAmxrhIGDmF1lljSlhY32eJpJ2TZQKaWNW+7yDBU/0Wt3kQVY84vr14yYagnSCiIfqyVFqePayRtmVJDr5qvSXr51tdqs2zKZCu+26X7JAF4BSsaq4gmY5DmDTm4TohCnBduI1+bPGD+igVmtl05wIDAQAB"
-	privateKey := "MIIEowIBAAKCAQEAxcVdmw2Rie/nPjylx/VOIKJa4bofSZhdikpb38vVQvVOjgiV6xfhNTpv5dA5+Sdx6O2lF+KKngkC0sdbY3jWTWgk0fx5rTB1M6wzqZxJdchU8HcGm/dIIq5aBnet4RjsYU++3q0cQbZSUMzznMgf1Lz7gHFZS3IIYUMAZloYpcklqxJNXq1ZREthW96FbZyn1rbycdXjlpEbqIHDJuVqUL74eh+53xL9Tj8GCOoRBA0iqlPLVL4JpL7e4E6defftaypqB2aC0fJO8trNrbWCYxsIyeFjZeRKqVzYMFc+RFfDyIK3yC3hjzMOKoxWXkYw4uml/Qrkwt7NVvCzvR9NeQIDAQABAoIBABbBqAywWf/KOAyEQ/snMc81f0mb9f+s5Y6FEd9FgAuNWHWlbUK447QRPlDuTc1qiYPo3GdMLPEUTlvcjpp6jAYqJpp297VC7yl79hHdJuLDo2pr97m4kXdUIo299acCDCkCWQ8cUjUJep1Lh/iRWoBLIpFb+Y9h1q8CW6hrU4y3zZYRaww3rjj7zl19vaEXF5uf/mmsoIToa2bl3vVW4GK1utkhF8iiK5VvBgiWEmTCVpNCCOKbv5Ma8xDrip0CqzCghqIYVTOwqS65FOoGrwzq/4Ivli2/tjnfm6BZcgbxUf6CoKj4ism8P3r5io9yrj/9RXkihjuPw6DmTWVYkLUCgYEA8ECyT9oi2b04c9RzE5s2nzO87TqI/zL0yhSd7Xlmn4JfNg49YI0TXfyupJ7BQSyuu/DAGdiLPWSoHolDhtDBLSaA9l1x26iGcs/ihu8H5jIz0De1NuM4Ef3vLD6LF9khCpzqnyWyCcOFh384Tu3q7kqmncF4Mqj/zJtglfed15sCgYEA0rvZc5ECUZuT0MyRU4Mj2IrRwc6aqO2tnxqEevZRnfmnTWiGfT8Op2CvHw9hKnQdWJUYqWrudG63HVx8/8Lvyx8XZlXVlKjU92rlaek6dO1Pw/z4DTuxE6WPoup2WfA1kjzrmhdTNzacrj6pJt/38HPRdhLnWVMkHTE6bBEkgnsCgYEA0zneS4xaRZsyDcxEHIHDBTdErEFhfxU62IxFySqKCkViFjFwzvlZhLGKjhsxh26UdZIWIuMakDB2CtrdrqLMpDiM+41udBP3mOuimsV+6WlL2o2P2iDtBAyBAiI+wgnZHe6V7LQEksb/GADG7cYJXdXuJRaa6ddhhm84/MDGWm8CgYAzISrQdGWIoWPK7GdySMZAuuXLzTIPPKO8j7WHFA6XcsRZ7rt61frbN4Ul1xhvMX8RSBOUv4Ids+Mv94nIkGaX9PI7fSX2DMSnR0NkYBcz2YRZ/B2/MDV1m9zu3U5b4gFNewR6/Z/OLKz1RfTKntrMd31h1ZJWROrlPlV7dOlT0wKBgEKY2m8grGRWFOmaMlDuN/fICtcv2KCDmC+ogs/QlGjsIld8YXkOrZiDr3u3V4YYlqJqKSmiJm2pDffDC7xtAiJ3o2dU9MH5RoLkefJSnDC3npKUY7iu7oBpsJJ0vFFWTkH8KHnnfWhElBSU9vPXakxIHLXLltF27hn3Ry4N826k"
-	client, err := alipay.New(AlipayAppId, aliPayPublicKey, privateKey, false)
-	if err != nil {
-		log.Println("err:", err)
-		return
-	}
-
-	p := alipay.TradeWapPay{}
-	p.NotifyURL = "https://api.iguiyu.com"
-	p.Subject = "测试支付"
-	p.OutTradeNo = "GYWX201901301040355706100402"
-	p.TotalAmount = "0.01"
-	p.ProductCode = "QUICK_WAP_WAY"
-	payURL, err := client.TradeWapPay(p)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("支付URL：", payURL)
-}
 
 func TestAliPayClient_AliPayTradeWapPay(t *testing.T) {
 	//aliPayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1wn1sU/8Q0rYLlZ6sq3enrPZw2ptp6FecHR2bBFLjJ+sKzepROd0bKddgj+Mr1ffr3Ej78mLdWV8IzLfpXUi945DkrQcOUWLY0MHhYVG2jSs/qzFfpzmtut2Cl2TozYpE84zom9ei06u2AXLMBkU6VpznZl+R4qIgnUfByt3Ix5b3h4Cl6gzXMAB1hJrrrCkq+WvWb3Fy0vmk/DUbJEz8i8mQPff2gsHBE1nMPvHVAMw1GMk9ImB4PxucVek4ZbUzVqxZXphaAgUXFK2FSFU+Q+q1SPvHbUsjtIyL+cLA6H/6ybFF9Ffp27Y14AHPw29+243/SpMisbGcj2KD+evBwIDAQAB"
@@ -55,7 +29,7 @@ func TestAliPayClient_AliPayTradeWapPay(t *testing.T) {
 	//手机网站支付请求
 	payUrl, err := client.AliPayTradeWapPay(body)
 	if err != nil {
-		log.Println("err:", err)
+		fmt.Println("err:", err)
 		return
 	}
 	fmt.Println("payUrl:", payUrl)
@@ -70,14 +44,14 @@ func TestAliPayClient_AliPayTradeAppPay(t *testing.T) {
 		SetNotifyUrl("https://www.igoogle.ink")
 
 	body := make(BodyMap)
-	body.Set("subject", "测试支付")
-	body.Set("out_trade_no", "GYWX201901301040355706100405")
+	body.Set("subject", "测试APP支付")
+	body.Set("out_trade_no", "GYWX201901301040355706100411")
 	body.Set("total_amount", "1.00")
 	body.Set("product_code", "QUICK_MSECURITY_PAY")
 
 	aRsp, err := client.AliPayTradeAppPay(body)
 	if err != nil {
-		log.Println("err2:", err)
+		fmt.Println("err2:", err)
 		return
 	}
 	fmt.Println("aRsp:", aRsp)

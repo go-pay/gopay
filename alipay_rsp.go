@@ -6,11 +6,11 @@
 package gopay
 
 type AliPayTradePayAppResponse struct {
-	AlipayTradeWapPayResponse AliPayInfo `json:"alipay_trade_wap_pay_response"`
-	Sign                      string     `json:"sign"`
+	AlipayTradeAppPayResponse AliPayAppInfo `json:"alipay_trade_app_pay_response"`
+	Sign                      string        `json:"sign"`
 }
 
-type AliPayInfo struct {
+type AliPayAppInfo struct {
 	Code            string `json:"code"`
 	Msg             string `json:"msg"`
 	SubCode         string `json:"sub_code"`
