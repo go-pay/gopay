@@ -43,12 +43,12 @@ func TestAliPayClient_AliPayTradeWapPay(t *testing.T) {
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType("RSA2").
-		SetReturnUrl("https://api.iguiyu.com").
-		SetNotifyUrl("https://api.iguiyu.com")
+		SetReturnUrl("https://www.igoogle.ink").
+		SetNotifyUrl("https://www.igoogle.ink")
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "测试支付")
-	body.Set("out_trade_no", "GYWX201901301040355706100409")
+	body.Set("out_trade_no", "GYWX201901301040355706100410")
 	body.Set("quit_url", "https://www.igoogle.ink")
 	body.Set("total_amount", "10.00")
 	body.Set("product_code", "QUICK_WAP_WAY")
@@ -67,7 +67,7 @@ func TestAliPayClient_AliPayTradeAppPay(t *testing.T) {
 	client := NewAliPayClient("2016091200494382", privateKey, false)
 	client.SetCharset("utf-8").
 		SetSignType("RSA2").
-		SetNotifyUrl("https://api.iguiyu.com")
+		SetNotifyUrl("https://www.igoogle.ink")
 
 	body := make(BodyMap)
 	body.Set("subject", "测试支付")

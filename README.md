@@ -367,8 +367,8 @@ client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 //配置公共参数
 client.SetCharset("utf-8").
 	SetSignType("RSA2").
-	SetReturnUrl("https://api.iguiyu.com").
-	SetNotifyUrl("https://api.iguiyu.com")
+	SetReturnUrl("https://www.igoogle.ink").
+	SetNotifyUrl("https://www.igoogle.ink")
 //请求参数
 body := make(gopay.BodyMap)
 body.Set("subject", "测试支付")
