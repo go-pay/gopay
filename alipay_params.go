@@ -65,7 +65,7 @@ func (this *aliPayClient) SetSignType(signType string) (client *aliPayClient) {
 	return this
 }
 
-//获取蚕食签名
+//获取参数签名
 func getRsaSign(body BodyMap, privateKey string) (sign string, err error) {
 	var (
 		h              hash.Hash

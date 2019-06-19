@@ -2,6 +2,7 @@ package gopay
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/parnurzeal/gorequest"
 	"log"
 	"time"
@@ -187,6 +188,9 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 	}
 	if method == "alipay.trade.wap.pay" {
 		//fmt.Println("rsp:::", rsp.Request.URL)
+		if rsp.Request.URL.String() == zfb_base_url || rsp.Request.URL.String() == zfb_sanbox_base_url {
+			return nil, errors.New("请求手机网站支付出错，请检查各个参数或秘钥是否正确")
+		}
 		return []byte(rsp.Request.URL.String()), nil
 	}
 	return b, nil
