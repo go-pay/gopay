@@ -359,7 +359,7 @@ fmt.Println("Response：", wxRsp)
 
 <font color='#0088ff'>注意：具体请求参数根据请求的不同而不同，请参考支付宝官方文档的参数说明！</font>
 
-支付宝官方文档：[官方文档](https://docs.open.alipay.com/)
+支付宝官方文档：[官方文档](https://docs.open.alipay.com/catalog)
 
 支付宝RSA秘钥生成文档：[生成 RSA 密钥](https://docs.open.alipay.com/291/105971/)
 
