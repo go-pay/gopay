@@ -129,6 +129,7 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
 	signStr := sortAliPaySignParams(newBody)
+	log.Println("签名字符串：", signStr)
 	err = verifyAliPaySign(signStr, notifyRsp.Sign, "RSA", pKey)
 	if err != nil {
 		return false, err
