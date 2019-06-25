@@ -3,7 +3,6 @@ package gopay
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/smartwalle/alipay"
 	"testing"
 )
 
@@ -78,7 +77,7 @@ func TestAliPayClient_AliPayTradePagePay(t *testing.T) {
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "网站测试支付")
-	body.Set("out_trade_no", "GYWX201901301040355706100433")
+	body.Set("out_trade_no", "GYWX201901301040355706100435")
 	body.Set("quit_url", "https://www.igoogle.ink")
 	body.Set("total_amount", "88.88")
 	body.Set("product_code", "FAST_INSTANT_TRADE_PAY")
@@ -143,5 +142,4 @@ func TestJsonToString(t *testing.T) {
 		return
 	}
 	fmt.Println("string:", string(bs))
-	alipay.AckNotification()
 }
