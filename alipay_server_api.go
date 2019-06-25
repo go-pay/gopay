@@ -164,6 +164,7 @@ func jsonToString(v interface{}) (str string) {
 		fmt.Println("err:", err)
 		return ""
 	}
+	//[{"fundChannel":"ALIPAYACCOUNT","amount":"100.00"}]
 	//log.Println("string:", string(bs))
 	s := string(bs)
 	if s == "null" {
@@ -267,7 +268,7 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 
 	h = hashs.New()
 	h.Write([]byte(signData))
-
+	log.Println("publicKey:", publicKey)
 	err = rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
 	log.Println("rsa.VerifyPKCS1v15:", err)
 	return

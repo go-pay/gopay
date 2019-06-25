@@ -41,17 +41,17 @@ type AliPayNotifyRequest struct {
 }
 
 type FundBillListInfo struct {
-	FundChannel string `json:"fundChannel"`
 	Amount      string `json:"amount"`
+	FundChannel string `json:"fundChannel"`
 }
 
 type VoucherDetailListInfo struct {
-	Name               string `json:"name"`
-	Type               string `json:"type"`
 	Amount             string `json:"amount"`
-	MerchantContribute string `json:"merchant_contribute"`
-	OtherContribute    string `json:"other_contribute"`
 	Memo               string `json:"memo"`
+	MerchantContribute string `json:"merchant_contribute"`
+	Name               string `json:"name"`
+	OtherContribute    string `json:"other_contribute"`
+	Type               string `json:"type"`
 }
 
 type AliPayTradePayAppResponse struct {
