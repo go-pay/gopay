@@ -25,7 +25,7 @@ func (bm BodyMap) Get(key string) string {
 		value := strconv.Itoa(value)
 		return value
 	}
-	return v.(string)
+	return ""
 }
 
 //删除参数
