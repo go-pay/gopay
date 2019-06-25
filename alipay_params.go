@@ -16,6 +16,7 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"errors"
+	"fmt"
 	"hash"
 	"net/url"
 	"sort"
@@ -99,7 +100,7 @@ func getRsaSign(body BodyMap, signType, privateKey string) (sign string, err err
 	}
 
 	signStr = sortAliPaySignParams(body)
-	//fmt.Println("原始字符串：",signStr)
+	fmt.Println("原始字符串：", signStr)
 	_, err = h.Write([]byte(signStr))
 	if err != nil {
 		return null, err
@@ -143,6 +144,6 @@ func FormatAliPayURLParam(body BodyMap) (urlParam string) {
 		v.Add(key, value.(string))
 	}
 	urlParam = v.Encode()
-	//fmt.Println("Encode后参数:", urlParam)
+	fmt.Println("Encode后参数:", urlParam)
 	return
 }

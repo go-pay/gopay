@@ -18,6 +18,7 @@ import (
 	"hash"
 	"log"
 	"net/http"
+	"net/url"
 )
 
 //解析支付宝支付完成后的Notify信息
@@ -129,8 +130,12 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
 	signStr := sortAliPaySignParams(newBody)
-	log.Println("签名字符串：", signStr)
-	err = verifyAliPaySign(signStr, notifyRsp.Sign, notifyRsp.SignType, pKey)
+	v := url.Values{}
+	v.Set("signStr", signStr)
+	encode := v.Encode()
+	signData := encode[7:]
+	log.Println("签名字符串：", signData)
+	err = verifyAliPaySign(signData, notifyRsp.Sign, notifyRsp.SignType, pKey)
 	if err != nil {
 		return false, err
 	}
