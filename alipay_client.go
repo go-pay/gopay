@@ -31,47 +31,47 @@ func NewAliPayClient(appId, privateKey string, isProd bool) (client *aliPayClien
 }
 
 //alipay.trade.fastpay.refund.query(统一收单交易退款查询)
-func (this *aliPayClient) AliPayTradeFastPayRefundQuery() {
+func (this *aliPayClient) AliPayTradeFastPayRefundQuery(body BodyMap) {
 
 }
 
 //alipay.trade.order.settle(统一收单交易结算接口)
-func (this *aliPayClient) AliPayTradeOrderSettle() {
+func (this *aliPayClient) AliPayTradeOrderSettle(body BodyMap) {
 
 }
 
 //alipay.trade.close(统一收单交易关闭接口)
-func (this *aliPayClient) AliPayTradeClose() {
+func (this *aliPayClient) AliPayTradeClose(body BodyMap) {
 
 }
 
 //alipay.trade.cancel(统一收单交易撤销接口)
-func (this *aliPayClient) AliPayTradeCancel() {
+func (this *aliPayClient) AliPayTradeCancel(body BodyMap) {
 
 }
 
 //alipay.trade.refund(统一收单交易退款接口)
-func (this *aliPayClient) AliPayTradeRefund() {
+func (this *aliPayClient) AliPayTradeRefund(body BodyMap) {
 
 }
 
 //alipay.trade.precreate(统一收单线下交易预创建)
-func (this *aliPayClient) AliPayTradePrecreate() {
+func (this *aliPayClient) AliPayTradePrecreate(body BodyMap) {
 
 }
 
 //alipay.trade.create(统一收单交易创建接口)
-func (this *aliPayClient) AliPayTradeCreate() {
+func (this *aliPayClient) AliPayTradeCreate(body BodyMap) {
 
 }
 
 //alipay.trade.pay(统一收单交易支付接口)
-func (this *aliPayClient) AliPayTradePay() {
+func (this *aliPayClient) AliPayTradePay(body BodyMap) {
 
 }
 
 //alipay.trade.query(统一收单线下交易查询)
-func (this *aliPayClient) AliPayTradeQuery() {
+func (this *aliPayClient) AliPayTradeQuery(body BodyMap) {
 
 }
 
@@ -102,23 +102,33 @@ func (this *aliPayClient) AliPayTradeWapPay(body BodyMap) (payUrl string, err er
 	return payUrl, nil
 }
 
-//alipay.trade.orderinfo.sync(支付宝订单信息同步接口)
-func (this *aliPayClient) AliPayTradeOrderinfoSync() {
-
+//alipay.trade.page.pay(统一收单下单并支付页面接口)
+func (this *aliPayClient) AliPayTradePagePay(body BodyMap) (payUrl string, err error) {
+	var bytes []byte
+	bytes, err = this.doAliPay(body, "alipay.trade.wap.pay")
+	if err != nil {
+		//log.Println("err::", err.Error())
+		return null, err
+	}
+	payUrl = string(bytes)
+	if payUrl == zfb_sanbox_base_url || payUrl == zfb_base_url {
+		return null, errors.New("请求失败，请查看文档并检查参数")
+	}
+	return payUrl, nil
 }
 
-//alipay.trade.page.pay(统一收单下单并支付页面接口)
-func (this *aliPayClient) AliPayTradePagePay() {
+//alipay.trade.orderinfo.sync(支付宝订单信息同步接口)
+func (this *aliPayClient) AliPayTradeOrderinfoSync(body BodyMap) {
 
 }
 
 //zhima.credit.score.brief.get(芝麻分普惠版)
-func (this *aliPayClient) ZhimaCreditScoreBriefGet() {
+func (this *aliPayClient) ZhimaCreditScoreBriefGet(body BodyMap) {
 
 }
 
 //zhima.credit.score.get(芝麻分)
-func (this *aliPayClient) ZhimaCreditScoreGet() {
+func (this *aliPayClient) ZhimaCreditScoreGet(body BodyMap) {
 
 }
 
@@ -182,7 +192,7 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 		//fmt.Println(url)
 		agent.Post(url)
 	}
-	rsp, b, errs := agent.
+	rsp, bs, errs := agent.
 		Type("form-data").
 		SendString(urlParam).
 		EndBytes()
@@ -190,11 +200,11 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 		return nil, errs[0]
 	}
 	if method == "alipay.trade.wap.pay" {
-		//fmt.Println("rsp:::", rsp.Request.URL)
+		//fmt.Println("rsp:::", rsp.Body)
 		if rsp.Request.URL.String() == zfb_base_url || rsp.Request.URL.String() == zfb_sanbox_base_url {
 			return nil, errors.New("请求手机网站支付出错，请检查各个参数或秘钥是否正确")
 		}
 		return []byte(rsp.Request.URL.String()), nil
 	}
-	return b, nil
+	return bs, nil
 }
