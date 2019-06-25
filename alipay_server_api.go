@@ -127,33 +127,16 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 		}
 	}
 
-	sss := sortAliPaySignParams(body)
-	log.Println("sss:", sss)
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
 	signData := sortAliPaySignParams(newBody)
-	//signData := encodeBody(newBody)
 
-	log.Println("签名字符串：", signData)
+	//log.Println("签名字符串：", signData)
 	err = verifyAliPaySign(signData, notifyRsp.Sign, notifyRsp.SignType, pKey)
 	if err != nil {
 		return false, err
 	}
 	return true, nil
 }
-
-//func encodeBody(body BodyMap) (signData string) {
-//	keyList := make([]string, 0)
-//	for k := range body {
-//		keyList = append(keyList, k)
-//	}
-//	sort.Strings(keyList)
-//
-//	urlV := url.Values{}
-//	for _, k := range keyList {
-//		urlV.Add(k, body.Get(k))
-//	}
-//	return urlV.Encode()
-//}
 
 func jsonToString(v interface{}) (str string) {
 	if v == nil {
@@ -164,8 +147,6 @@ func jsonToString(v interface{}) (str string) {
 		fmt.Println("err:", err)
 		return ""
 	}
-	//[{"fundChannel":"ALIPAYACCOUNT","amount":"100.00"}]
-	//log.Println("string:", string(bs))
 	s := string(bs)
 	if s == "null" {
 		return ""
@@ -268,8 +249,6 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 
 	h = hashs.New()
 	h.Write([]byte(signData))
-	log.Println("publicKey:", publicKey)
-	err = rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
-	log.Println("rsa.VerifyPKCS1v15:", err)
-	return
+
+	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
 }
