@@ -7,8 +7,17 @@ package gopay
 
 import (
 	"bytes"
+	"crypto"
+	"crypto/rsa"
+	"crypto/sha1"
+	"crypto/sha256"
+	"crypto/x509"
+	"encoding/base64"
 	"encoding/json"
+	"encoding/pem"
+	"errors"
 	"fmt"
+	"hash"
 	"net/http"
 )
 
@@ -76,8 +85,8 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest,
 //    aliPayPublicKey：支付宝公钥
 //    notifyRsp：利用 gopay.ParseAliPayNotifyResult() 得到的结构体
 //    返回参数ok：是否验证通过
-//    返回参数sign：根据参数计算的sign值，非支付宝返回参数中的Sign
-func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyRequest) (ok bool, sign string) {
+//    返回参数err：错误信息
+func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyRequest) (ok bool, err error) {
 	body := make(BodyMap)
 	body.Set("notify_time", notifyRsp.NotifyTime)
 	body.Set("notify_type", notifyRsp.NotifyType)
@@ -119,12 +128,12 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 		}
 	}
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
-	sign, err := getRsaSign(newBody, "RSA", pKey)
+	signStr := sortAliPaySignParams(newBody)
+	err = verifyAliPaySign(signStr, notifyRsp.Sign, notifyRsp.SignType, pKey)
 	if err != nil {
-		return false, err.Error()
+		return false, err
 	}
-	ok = sign == notifyRsp.Sign
-	return
+	return true, nil
 }
 
 func jsonToString(v interface{}) (str string) {
@@ -197,5 +206,45 @@ func FormatAliPayPublicKey(publicKey string) (pKey string) {
 	}
 	buffer.WriteString("-----END PUBLIC KEY-----\n")
 	pKey = buffer.String()
+	return
+}
+
+func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err error) {
+	var (
+		h     hash.Hash
+		hashs crypto.Hash
+	)
+	signBytes, err := base64.StdEncoding.DecodeString(sign)
+	//解析秘钥
+	block, _ := pem.Decode([]byte(aliPayPublicKey))
+	if block == nil {
+		return errors.New("支付宝公钥Decode错误")
+	}
+	//log.Println(block.Type)
+	key, err := x509.ParsePKIXPublicKey(block.Bytes)
+	if err != nil {
+		//log.Println("x509.ParsePKIXPublicKey:", err)
+		return err
+	}
+	publicKey, ok := key.(*rsa.PublicKey)
+	if !ok {
+		return errors.New("支付宝公钥转换错误")
+	}
+	switch signType {
+	case "RSA":
+		h = sha1.New()
+		hashs = crypto.SHA1
+	case "RSA2":
+		h = sha256.New()
+		hashs = crypto.SHA256
+	default:
+		h = sha256.New()
+		hashs = crypto.SHA256
+	}
+	_, err = h.Write([]byte(signData))
+	if err != nil {
+		return err
+	}
+	err = rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
 	return
 }

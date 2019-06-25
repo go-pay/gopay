@@ -70,6 +70,7 @@ func getRsaSign(body BodyMap, signType, privateKey string) (sign string, err err
 	var (
 		h              hash.Hash
 		key            *rsa.PrivateKey
+		hashs          crypto.Hash
 		signStr        string
 		encryptedBytes []byte
 	)
@@ -88,10 +89,13 @@ func getRsaSign(body BodyMap, signType, privateKey string) (sign string, err err
 	switch signType {
 	case "RSA":
 		h = sha1.New()
+		hashs = crypto.SHA1
 	case "RSA2":
 		h = sha256.New()
+		hashs = crypto.SHA256
 	default:
 		h = sha256.New()
+		hashs = crypto.SHA256
 	}
 
 	signStr = sortAliPaySignParams(body)
@@ -100,7 +104,7 @@ func getRsaSign(body BodyMap, signType, privateKey string) (sign string, err err
 	if err != nil {
 		return null, err
 	}
-	encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, key, crypto.SHA256, h.Sum(nil))
+	encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, key, hashs, h.Sum(nil))
 	if err != nil {
 		//log.Println("rsa.SignPKCS1v15:", err)
 		return null, err
