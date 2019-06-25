@@ -9,7 +9,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -24,6 +23,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest,
 	notifyRsp.Version = req.FormValue("version")
 	notifyRsp.SignType = req.FormValue("sign_type")
 	notifyRsp.Sign = req.FormValue("sign")
+	notifyRsp.AuthAppId = req.FormValue("auth_app_id")
 	notifyRsp.TradeNo = req.FormValue("trade_no")
 	notifyRsp.OutTradeNo = req.FormValue("out_trade_no")
 	notifyRsp.OutBizNo = req.FormValue("out_biz_no")
@@ -45,7 +45,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest,
 	notifyRsp.GmtRefund = req.FormValue("gmt_refund")
 	notifyRsp.GmtClose = req.FormValue("gmt_close")
 	billList := req.FormValue("fund_bill_list")
-	log.Println("billList:", billList)
+	//log.Println("billList:", billList)
 	if billList != null {
 		bills := make([]FundBillListInfo, 0)
 		err = json.Unmarshal([]byte(billList), &bills)
@@ -58,7 +58,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest,
 	}
 	notifyRsp.PassbackParams = req.FormValue("passback_params")
 	detailList := req.FormValue("voucher_detail_list")
-	log.Println("detailList:", detailList)
+	//log.Println("detailList:", detailList)
 	if detailList != null {
 		details := make([]VoucherDetailListInfo, 0)
 		err = json.Unmarshal([]byte(detailList), &details)
@@ -125,6 +125,9 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 }
 
 func jsonToString(v interface{}) (str string) {
+	if v == nil {
+		return ""
+	}
 	bs, err := json.Marshal(v)
 	if err != nil {
 		fmt.Println("err:", err)

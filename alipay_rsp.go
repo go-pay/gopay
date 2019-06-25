@@ -14,6 +14,7 @@ type AliPayNotifyRequest struct {
 	Version           string                  `json:"version"`
 	SignType          string                  `json:"sign_type"`
 	Sign              string                  `json:"sign"`
+	AuthAppId         string                  `json:"auth_app_id"`
 	TradeNo           string                  `json:"trade_no"`
 	OutTradeNo        string                  `json:"out_trade_no"`
 	OutBizNo          string                  `json:"out_biz_no"`
@@ -40,7 +41,7 @@ type AliPayNotifyRequest struct {
 }
 
 type FundBillListInfo struct {
-	FundChannel string `json:"fund_channel"`
+	FundChannel string `json:"fundChannel"`
 	Amount      string `json:"amount"`
 }
 
