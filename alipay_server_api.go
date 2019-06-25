@@ -116,8 +116,8 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 			newBody.Set(k, v)
 		}
 	}
-
-	sign, err := getRsaSign(newBody, aliPayPublicKey)
+	pKey := FormatAliPayPublicKey(aliPayPublicKey)
+	sign, err := getRsaSign(newBody, pKey)
 	if err != nil {
 		return false, ""
 	}
@@ -169,12 +169,12 @@ func FormatPrivateKey(privateKey string) (pKey string) {
 }
 
 //格式化秘钥
-func FormatAliPayPublicKey(publickKey string) (pKey string) {
+func FormatAliPayPublicKey(publicKey string) (pKey string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("-----BEGIN PUBLIC KEY-----\n")
 
 	rawLen := 64
-	keyLen := len(publickKey)
+	keyLen := len(publicKey)
 	raws := keyLen / rawLen
 	temp := keyLen % rawLen
 
@@ -185,9 +185,9 @@ func FormatAliPayPublicKey(publickKey string) (pKey string) {
 	end := start + rawLen
 	for i := 0; i < raws; i++ {
 		if i == raws-1 {
-			buffer.WriteString(publickKey[start:])
+			buffer.WriteString(publicKey[start:])
 		} else {
-			buffer.WriteString(publickKey[start:end])
+			buffer.WriteString(publicKey[start:end])
 		}
 		buffer.WriteString("\n")
 		start += rawLen
