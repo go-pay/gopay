@@ -96,6 +96,9 @@ func (this *aliPayClient) AliPayTradeWapPay(body BodyMap) (payUrl string, err er
 	}
 	payUrl = string(bytes)
 	//fmt.Println("URL::", payUrl)
+	if payUrl == zfb_sanbox_base_url || payUrl == zfb_base_url {
+		return null, errors.New("请求失败，请查看文档并检查参数")
+	}
 	return payUrl, nil
 }
 
