@@ -119,7 +119,7 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 		}
 	}
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
-	sign, err := getRsaSign(newBody, notifyRsp.SignType, pKey)
+	sign, err := getRsaSign(newBody, "RSA", pKey)
 	if err != nil {
 		return false, err.Error()
 	}
