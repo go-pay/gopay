@@ -167,7 +167,7 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 	reqBody.Set("biz_content", string(bodyStr))
 	//===============获取签名===================
 	pKey := FormatPrivateKey(this.privateKey)
-	sign, err := getRsaSign(reqBody, pKey)
+	sign, err := getRsaSign(reqBody, reqBody.Get("sign_type"), pKey)
 	if err != nil {
 		return nil, err
 	}

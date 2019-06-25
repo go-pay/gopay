@@ -85,6 +85,8 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 	body.Set("app_id", notifyRsp.AppId)
 	body.Set("charset", notifyRsp.Charset)
 	body.Set("version", notifyRsp.Version)
+	//body.Set("sign", notifyRsp.Sign)          //验签时去掉
+	//body.Set("sign_type", notifyRsp.SignType) //验签时去掉
 	body.Set("auth_app_id", notifyRsp.AuthAppId)
 	body.Set("trade_no", notifyRsp.TradeNo)
 	body.Set("out_trade_no", notifyRsp.OutTradeNo)
@@ -117,9 +119,9 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 		}
 	}
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
-	sign, err := getRsaSign(newBody, pKey)
+	sign, err := getRsaSign(newBody, notifyRsp.SignType, pKey)
 	if err != nil {
-		return false, ""
+		return false, err.Error()
 	}
 	ok = sign == notifyRsp.Sign
 	return

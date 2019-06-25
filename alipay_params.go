@@ -66,7 +66,7 @@ func (this *aliPayClient) SetSignType(signType string) (client *aliPayClient) {
 }
 
 //获取参数签名
-func getRsaSign(body BodyMap, privateKey string) (sign string, err error) {
+func getRsaSign(body BodyMap, signType, privateKey string) (sign string, err error) {
 	var (
 		h              hash.Hash
 		key            *rsa.PrivateKey
@@ -85,13 +85,13 @@ func getRsaSign(body BodyMap, privateKey string) (sign string, err error) {
 		return null, err
 	}
 
-	switch body.Get("sign_type") {
+	switch signType {
 	case "RSA":
 		h = sha1.New()
 	case "RSA2":
 		h = sha256.New()
 	default:
-		h = sha1.New()
+		h = sha256.New()
 	}
 
 	signStr = sortAliPaySignParams(body)
