@@ -18,11 +18,12 @@ func TestAliPayClient_AliPayTradeWapPay(t *testing.T) {
 	client.SetCharset("utf-8").
 		SetSignType("RSA2").
 		//SetReturnUrl("https://www.igoogle.ink").
-		SetNotifyUrl("https://api.iguiyu.com/gy_pay/alipay/notify")
+		//SetNotifyUrl("https://api.iguiyu.com/gy_pay/alipay/notify").
+		SetNotifyUrl("https://gytmp.iguiyu.com/park-api/pay/alipay/notify")
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "手机网站测试支付")
-	body.Set("out_trade_no", "GYWX201901301040355706100410")
+	body.Set("out_trade_no", "GYWX201901301040355706100423")
 	body.Set("quit_url", "https://www.igoogle.ink")
 	body.Set("total_amount", "100.00")
 	body.Set("product_code", "QUICK_WAP_WAY")
@@ -46,7 +47,7 @@ func TestAliPayClient_AliPayTradeAppPay(t *testing.T) {
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType("RSA2").
-		SetNotifyUrl("https://www.igoogle.ink")
+		SetNotifyUrl("https://gytmp.iguiyu.com/park-api/pay/alipay/notify")
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "测试APP支付")
@@ -72,11 +73,11 @@ func TestAliPayClient_AliPayTradePagePay(t *testing.T) {
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType("RSA2").
-		SetNotifyUrl("https://gytmp.iguiyu.com/park-api/pay/wechat/notify")
+		SetNotifyUrl("https://gytmp.iguiyu.com/park-api/pay/alipay/notify")
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "网站测试支付")
-	body.Set("out_trade_no", "GYWX201901301040355706100418")
+	body.Set("out_trade_no", "GYWX201901301040355706100425")
 	body.Set("quit_url", "https://www.igoogle.ink")
 	body.Set("total_amount", "88.88")
 	body.Set("product_code", "FAST_INSTANT_TRADE_PAY")

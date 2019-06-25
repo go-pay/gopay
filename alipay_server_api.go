@@ -15,12 +15,58 @@ import (
 //解析支付宝支付完成后的Notify信息
 func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest, err error) {
 	notifyRsp = new(AliPayNotifyRequest)
-	defer req.Body.Close()
-	err = json.NewDecoder(req.Body).Decode(notifyRsp)
-	if err != nil {
-		return nil, err
+	notifyRsp.NotifyTime = req.FormValue("notify_time")
+	notifyRsp.NotifyType = req.FormValue("notify_type")
+	notifyRsp.NotifyId = req.FormValue("notify_id")
+	notifyRsp.AppId = req.FormValue("app_id")
+	notifyRsp.Charset = req.FormValue("charset")
+	notifyRsp.Version = req.FormValue("version")
+	notifyRsp.SignType = req.FormValue("sign_type")
+	notifyRsp.Sign = req.FormValue("sign")
+	notifyRsp.TradeNo = req.FormValue("trade_no")
+	notifyRsp.OutTradeNo = req.FormValue("out_trade_no")
+	notifyRsp.OutBizNo = req.FormValue("out_biz_no")
+	notifyRsp.BuyerId = req.FormValue("buyer_id")
+	notifyRsp.BuyerLogonId = req.FormValue("buyer_logon_id")
+	notifyRsp.SellerId = req.FormValue("seller_id")
+	notifyRsp.SellerEmail = req.FormValue("seller_email")
+	notifyRsp.TradeStatus = req.FormValue("trade_status")
+	notifyRsp.TotalAmount = req.FormValue("total_amount")
+	notifyRsp.ReceiptAmount = req.FormValue("receipt_amount")
+	notifyRsp.InvoiceAmount = req.FormValue("invoice_amount")
+	notifyRsp.BuyerPayAmount = req.FormValue("buyer_pay_amount")
+	notifyRsp.PointAmount = req.FormValue("point_amount")
+	notifyRsp.RefundFee = req.FormValue("refund_fee")
+	notifyRsp.Subject = req.FormValue("subject")
+	notifyRsp.Body = req.FormValue("body")
+	notifyRsp.GmtCreate = req.FormValue("gmt_create")
+	notifyRsp.GmtPayment = req.FormValue("gmt_payment")
+	notifyRsp.GmtRefund = req.FormValue("gmt_refund")
+	notifyRsp.GmtClose = req.FormValue("gmt_close")
+	billList := req.FormValue("fund_bill_list")
+	if billList != null {
+		bills := make([]FundBillListInfo, 0)
+		err = json.Unmarshal([]byte(billList), bills)
+		if err != nil {
+			return nil, err
+		}
+		notifyRsp.FundBillList = bills
+	} else {
+		notifyRsp.FundBillList = nil
 	}
-	return
+	notifyRsp.PassbackParams = req.FormValue("passback_params")
+	detailList := req.FormValue("voucher_detail_list")
+	if detailList != null {
+		details := make([]VoucherDetailListInfo, 0)
+		err = json.Unmarshal([]byte(detailList), details)
+		if err != nil {
+			return nil, err
+		}
+		notifyRsp.VoucherDetailList = details
+	} else {
+		notifyRsp.VoucherDetailList = nil
+	}
+	return notifyRsp, err
 }
 
 //支付通知的签名验证和参数签名后的Sign
