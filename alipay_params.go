@@ -90,6 +90,8 @@ func getRsaSign(body BodyMap, privateKey string) (sign string, err error) {
 		h = sha1.New()
 	case "RSA2":
 		h = sha256.New()
+	default:
+		h = sha1.New()
 	}
 
 	signStr = sortAliPaySignParams(body)
