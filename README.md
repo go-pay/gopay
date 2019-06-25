@@ -193,9 +193,10 @@ fmt.Println("CountryCode:", phone.CountryCode)
 fmt.Println("Watermark:", phone.Watermark)
 ```
 
-### 付款结果回调,需回复微信平台是否成功
+### 微信付款结果异步通知,需回复微信平台是否成功
 
 > 代码中return写法，由于本人用的[Echo Web框架](https://github.com/labstack/echo)，有兴趣的可以尝试一下
+
 ```go
 rsp := new(gopay.WeChatNotifyResponse) //回复微信的数据
 
@@ -353,6 +354,16 @@ if err != nil {
 	return
 }
 fmt.Println("ok:", ok)
+```
+
+### 支付宝付款结果异步通知,需回复支付宝平台是否成功
+
+* 程序执行完后必须打印输出“success”（不包含引号）。如果商户反馈给支付宝的字符不是success这7个字符，支付宝服务器会不断重发通知，直到超过24小时22分钟。一般情况下，25小时以内完成8次通知（通知的间隔频率一般是：4m,10m,10m,1h,2h,6h,15h）
+
+> 代码中return写法，由于本人用的[Echo Web框架](https://github.com/labstack/echo)，有兴趣的可以尝试一下
+
+```go
+return c.String(http.StatusOK, "success")
 ```
 
 ### 手机网站支付
