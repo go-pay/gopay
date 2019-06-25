@@ -24,11 +24,11 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest,
 }
 
 //支付通知的签名验证和参数签名后的Sign
-//    alipayPublickKey：支付宝公钥
+//    aliPayPublicKey：支付宝公钥
 //    notifyRsp：利用 gopay.ParseAliPayNotifyResult() 得到的结构体
 //    返回参数ok：是否验证通过
 //    返回参数sign：根据参数计算的sign值，非支付宝返回参数中的Sign
-func VerifyAliPayResultSign(alipayPublickKey string, notifyRsp *AliPayNotifyRequest) (ok bool, sign string) {
+func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyRequest) (ok bool, sign string) {
 	body := make(BodyMap)
 	body.Set("notify_time", notifyRsp.NotifyTime)
 	body.Set("notify_type", notifyRsp.NotifyType)
@@ -67,7 +67,7 @@ func VerifyAliPayResultSign(alipayPublickKey string, notifyRsp *AliPayNotifyRequ
 		}
 	}
 
-	sign, err := getRsaSign(newBody, alipayPublickKey)
+	sign, err := getRsaSign(newBody, aliPayPublicKey)
 	if err != nil {
 		return false, ""
 	}
