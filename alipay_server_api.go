@@ -85,6 +85,7 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 	body.Set("app_id", notifyRsp.AppId)
 	body.Set("charset", notifyRsp.Charset)
 	body.Set("version", notifyRsp.Version)
+	body.Set("auth_app_id", notifyRsp.AuthAppId)
 	body.Set("trade_no", notifyRsp.TradeNo)
 	body.Set("out_trade_no", notifyRsp.OutTradeNo)
 	body.Set("out_biz_no", notifyRsp.OutBizNo)
