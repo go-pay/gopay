@@ -119,7 +119,7 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 	body.Set("fund_bill_list", jsonToString(notifyRsp.FundBillList))
 	body.Set("passback_params", notifyRsp.PassbackParams)
 	body.Set("voucher_detail_list", jsonToString(notifyRsp.VoucherDetailList))
-	log.Println("body.get:", body.Get("voucher_detail_list"))
+
 	newBody := make(BodyMap)
 	for k, v := range body {
 		if v != null {
@@ -130,7 +130,7 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
 	signStr := sortAliPaySignParams(newBody)
 	log.Println("签名字符串：", signStr)
-	err = verifyAliPaySign(signStr, notifyRsp.Sign, "RSA", pKey)
+	err = verifyAliPaySign(signStr, notifyRsp.Sign, notifyRsp.SignType, pKey)
 	if err != nil {
 		return false, err
 	}
