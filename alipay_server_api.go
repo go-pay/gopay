@@ -9,8 +9,6 @@ import (
 	"bytes"
 	"crypto"
 	"crypto/rsa"
-	"crypto/sha1"
-	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
@@ -128,6 +126,7 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 			newBody.Set(k, v)
 		}
 	}
+
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
 	signStr := sortAliPaySignParams(newBody)
 	err = verifyAliPaySign(signStr, notifyRsp.Sign, "RSA", pKey)
@@ -216,12 +215,14 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 		hashs crypto.Hash
 	)
 	signBytes, err := base64.StdEncoding.DecodeString(sign)
+	if err != nil {
+		return err
+	}
 	//解析秘钥
 	block, _ := pem.Decode([]byte(aliPayPublicKey))
 	if block == nil {
 		return errors.New("支付宝公钥Decode错误")
 	}
-	//log.Println(block.Type)
 	key, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
 		log.Println("x509.ParsePKIXPublicKey:", err)
@@ -231,22 +232,19 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 	if !ok {
 		return errors.New("支付宝公钥转换错误")
 	}
+	//判断签名方式
 	switch signType {
 	case "RSA":
-		h = sha1.New()
 		hashs = crypto.SHA1
 	case "RSA2":
-		h = sha256.New()
 		hashs = crypto.SHA256
 	default:
-		h = sha256.New()
 		hashs = crypto.SHA256
 	}
-	_, err = h.Write([]byte(signData))
-	if err != nil {
-		log.Println("h.Write:", err)
-		return err
-	}
+
+	h = hashs.New()
+	h.Write([]byte(signData))
+
 	err = rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
 	log.Println("rsa.VerifyPKCS1v15:", err)
 	return
