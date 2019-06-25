@@ -30,7 +30,7 @@ func HttpAgent() (agent *gorequest.SuperAgent) {
 	return
 }
 
-//解析支付完成后的回调信息
+//解析支付完成后的Notify信息
 func ParseNotifyResult(req *http.Request) (notifyRsp *WeChatNotifyRequest, err error) {
 	notifyRsp = new(WeChatNotifyRequest)
 	defer req.Body.Close()
@@ -67,7 +67,6 @@ func (this *WeChatNotifyResponse) ToXmlString() (xmlStr string) {
 //    返回参数ok：是否验证通过
 //    返回参数sign：根据参数计算的sign值，非微信返回参数中的Sign
 func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotifyRequest) (ok bool, sign string) {
-
 	body := make(BodyMap)
 	body.Set("return_code", notifyRsp.ReturnCode)
 	body.Set("return_msg", notifyRsp.ReturnMsg)
@@ -92,7 +91,7 @@ func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotify
 	body.Set("coupon_count", notifyRsp.CouponCount)
 	body.Set("coupon_type_0", notifyRsp.CouponType0)
 	body.Set("coupon_id_0", notifyRsp.CouponId0)
-	body.Set("coupon_fee_$n", notifyRsp.CouponFee0)
+	body.Set("coupon_fee_0", notifyRsp.CouponFee0)
 	body.Set("transaction_id", notifyRsp.TransactionId)
 	body.Set("out_trade_no", notifyRsp.OutTradeNo)
 	body.Set("attach", notifyRsp.Attach)
@@ -106,18 +105,8 @@ func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotify
 		}
 	}
 
-	signStr := sortWeChatSignParams(apiKey, newBody)
-	var hashSign []byte
-	if signType == SignType_MD5 {
-		hash := md5.New()
-		hash.Write([]byte(signStr))
-		hashSign = hash.Sum(nil)
-	} else {
-		hash := hmac.New(sha256.New, []byte(apiKey))
-		hash.Write([]byte(signStr))
-		hashSign = hash.Sum(nil)
-	}
-	sign = strings.ToUpper(hex.EncodeToString(hashSign))
+	sign = getLocalSign(apiKey, signType, newBody)
+
 	ok = sign == notifyRsp.Sign
 	return
 }
