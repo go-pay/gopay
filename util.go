@@ -19,13 +19,16 @@ func (bm BodyMap) Get(key string) string {
 	if bm == nil {
 		return null
 	}
-	v := bm[key]
+	v, ok := bm[key]
+	if !ok {
+		return null
+	}
 	value, ok := v.(int)
 	if ok {
 		value := strconv.Itoa(value)
 		return value
 	}
-	return ""
+	return v.(string)
 }
 
 //删除参数
