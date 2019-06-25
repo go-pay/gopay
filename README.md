@@ -25,8 +25,8 @@
 * 拉取订单评价数据：client.BatchQueryComment()
 
 ## 微信公共API
-* gopay.ParseNotifyResult() => 解析并返回微信支付通知的参数
-* gopay.VerifyPayResultSign() => 支付通知的签名验证和参数签名后的Sign
+* gopay.ParseNotifyResult() => 解析并返回微信支付异步通知的参数
+* gopay.VerifyPayResultSign() => 微信支付异步通知的签名验证和返回参数验签后的Sign
 * gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
 * gopay.GetAccessToken() => 获取小程序全局唯一后台接口调用凭据
 * gopay.GetPaidUnionId() => 用户支付完成后，获取该用户的 UnionId，无需用户授权
@@ -42,6 +42,8 @@
 
 * gopay.FormatPrivateKey() => 格式化应用私钥
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
+* gopay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数
+* gopay.VerifyAliPayResultSign() => 支付宝支付异步通知的签名验证和返回参数验签后的Sign
 
 # 安装
 
