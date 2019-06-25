@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"hash"
+	"log"
 	"net/http"
 )
 
@@ -223,7 +224,7 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 	//log.Println(block.Type)
 	key, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
-		//log.Println("x509.ParsePKIXPublicKey:", err)
+		log.Println("x509.ParsePKIXPublicKey:", err)
 		return err
 	}
 	publicKey, ok := key.(*rsa.PublicKey)
@@ -243,8 +244,10 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 	}
 	_, err = h.Write([]byte(signData))
 	if err != nil {
+		log.Println("h.Write:", err)
 		return err
 	}
 	err = rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
+	log.Println("rsa.VerifyPKCS1v15:", err)
 	return
 }
