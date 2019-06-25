@@ -77,7 +77,7 @@ func TestAliPayClient_AliPayTradePagePay(t *testing.T) {
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "网站测试支付")
-	body.Set("out_trade_no", "GYWX201901301040355706100425")
+	body.Set("out_trade_no", "GYWX201901301040355706100426")
 	body.Set("quit_url", "https://www.igoogle.ink")
 	body.Set("total_amount", "88.88")
 	body.Set("product_code", "FAST_INSTANT_TRADE_PAY")
