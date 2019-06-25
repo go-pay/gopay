@@ -145,12 +145,13 @@ sign := gopay.GetH5PaySign(appid, partnerid, wxRsp.NonceStr, prepayid, gopay.Sig
 fmt.Println("sign：", sign)
 ```
 
-### 支付结果异步通知：参数解析和Sign值的验证
+### 1、支付结果异步通知参数解析；2、参数解析和Sign值的验证
 
 > 微信支付后的异步通知文档[支付结果通知](https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_7&index=8)
 
 ```go
-//解析支付完成后的回调信息
+//解析支付完成后的异步通知参数信息
+//此处 c.Request() 为 *http.Request
 notifyRsp, err := gopay.ParseNotifyResult(c.Request())
 if err != nil {
     fmt.Println("err:", err)
@@ -313,49 +314,6 @@ if err != nil {
 fmt.Println("Response：", wxRsp)
 ```
 
-### 查询订单
-```go
-client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
-
-//初始化参数结构体
-body := make(gopay.BodyMap)
-body.Set("out_trade_no", "CC68aTofMIwVKkVR5UruoBLFFXTAqBfv")
-body.Set("nonce_str", gopay.GetRandomString(32))
-body.Set("sign_type", gopay.SignType_MD5)
-
-//请求查询订单
-wxRsp, err := client.QueryOrder(body)
-if err != nil {
-	fmt.Println("Error:", err)
-	return
-}
-fmt.Println("Response：", wxRsp)
-```
-
-### 下载账单
-```go
-//初始化微信客户端
-//    appId：应用ID
-//    mchID：商户ID
-//    apiKey：API秘钥值
-//    isProd：是否是正式环境
-client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
-
-//初始化参数结构体
-body := make(gopay.BodyMap)
-body.Set("nonce_str", gopay.GetRandomString(32))
-body.Set("sign_type", gopay.SignType_MD5)
-body.Set("bill_date", "20190122")
-body.Set("bill_type", "ALL")
-
-//请求下载账单，成功后得到结果（string类型）
-wxRsp, err := client.DownloadBill(body)
-if err != nil {
-	fmt.Println("Error:", err)
-}
-fmt.Println("Response：", wxRsp)
-```
-
 # 支付宝支付
 
 <font color='#0088ff'>注意：具体请求参数根据请求的不同而不同，请参考支付宝官方文档的参数说明！</font>
@@ -368,18 +326,22 @@ fmt.Println("Response：", wxRsp)
 
 沙箱环境使用说明：[文档地址](https://docs.open.alipay.com/200/105311)
 
-### 支付结果异步通知：验签操作
+
+### 1、支付结果异步通知参数解析；2、验签操作
 
 > 支付宝支付后的异步通知验签文档[支付结果通知](https://docs.open.alipay.com/200/106120)
 
 ```go
-//解析支付完成后的回调信息
+//解析支付完成后的异步通知参数信息
+//此处 c.Request() 为 *http.Request
 notifyRsp, err := gopay.ParseAliPayNotifyResult(c.Request())
 if err != nil {
-    fmt.Println("err:", err)
+    fmt.Println("gopay.ParseAliPayNotifyResult:", err)
+    return
 }
 fmt.Println("notifyRsp:", notifyRsp)
 
+aliPayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1wn1sU/8Q0rYLlZ6sq3enrPZw2ptp6FecHR2bBFLjJ+sKzepROd0bKddgj+Mr1ffr3Ej78mLdWV8IzLfpXUi945DkrQcOUWLY0MHhYVG2jSs/qzFfpzmtut2Cl2TozYpE84zom9ei06u2AXLMBkU6VpznZl+R4qIgnUfByt3Ix5b3h4Cl6gzXMAB1hJrrrCkq+WvWb3Fy0vmk/DUbJEz8i8mQPff2gsHBE1nMPvHVAMw1GMk9ImB4PxucVek4ZbUzVqxZXphaAgUXFK2FSFU+Q+q1SPvHbUsjtIyL+cLA6H/6ybFF9Ffp27Y14AHPw29+243/SpMisbGcj2KD+evBwIDAQAB"
 //支付通知的签名验证和参数签名后的Sign
 //    aliPayPublicKey：支付宝公钥
 //    notifyRsp：利用 gopay.ParseAliPayNotifyResult() 得到的结构体
@@ -387,14 +349,11 @@ fmt.Println("notifyRsp:", notifyRsp)
 //    返回参数err：错误信息
 ok, err := gopay.VerifyAliPayResultSign(aliPayPublicKey, notifyRsp)
 if err != nil {
-	log.Println("signErr:", err)
+	log.Println("gopay.VerifyAliPayResultSign:", err)
 	return
 }
-log.Println("ok:", ok)
+fmt.Println("ok:", ok)
 ```
-
-
-
 
 ### 手机网站支付
 
