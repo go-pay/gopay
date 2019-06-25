@@ -17,8 +17,8 @@ func TestAliPayClient_AliPayTradeWapPay(t *testing.T) {
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType("RSA2").
-		SetReturnUrl("https://www.igoogle.ink").
-		SetNotifyUrl("https://www.igoogle.ink")
+		//SetReturnUrl("https://www.igoogle.ink").
+		SetNotifyUrl("https://api.iguiyu.com/gy_pay/alipay/notify")
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "测试支付")
@@ -91,4 +91,26 @@ func TestFormatAliPayPublicKey(t *testing.T) {
 
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
 	fmt.Println(pKey)
+}
+
+type List struct {
+	BillList []FundBillListInfo `json:"bill_list"`
+}
+
+func TestJsonToString(t *testing.T) {
+
+	list := new(List)
+	infos := make([]FundBillListInfo, 0)
+
+	infos = append(infos, FundBillListInfo{FundChannel: "iguiyu", Amount: "1.0.0"})
+	infos = append(infos, FundBillListInfo{FundChannel: "Jerry", Amount: "2.0.2"})
+
+	list.BillList = infos
+
+	bs, err := json.Marshal(list)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("string:", string(bs))
 }
