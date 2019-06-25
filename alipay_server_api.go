@@ -18,8 +18,6 @@ import (
 	"hash"
 	"log"
 	"net/http"
-	"net/url"
-	"sort"
 )
 
 //解析支付宝支付完成后的Notify信息
@@ -129,8 +127,11 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 		}
 	}
 
+	sss := sortAliPaySignParams(body)
+	log.Println("sss:", sss)
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
-	signData := encodeBody(newBody)
+	signData := sortAliPaySignParams(newBody)
+	//signData := encodeBody(newBody)
 
 	log.Println("签名字符串：", signData)
 	err = verifyAliPaySign(signData, notifyRsp.Sign, notifyRsp.SignType, pKey)
@@ -140,19 +141,19 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 	return true, nil
 }
 
-func encodeBody(body BodyMap) (signData string) {
-	keyList := make([]string, 0)
-	for k := range body {
-		keyList = append(keyList, k)
-	}
-	sort.Strings(keyList)
-
-	urlV := url.Values{}
-	for _, k := range keyList {
-		urlV.Add(k, body.Get(k))
-	}
-	return urlV.Encode()
-}
+//func encodeBody(body BodyMap) (signData string) {
+//	keyList := make([]string, 0)
+//	for k := range body {
+//		keyList = append(keyList, k)
+//	}
+//	sort.Strings(keyList)
+//
+//	urlV := url.Values{}
+//	for _, k := range keyList {
+//		urlV.Add(k, body.Get(k))
+//	}
+//	return urlV.Encode()
+//}
 
 func jsonToString(v interface{}) (str string) {
 	if v == nil {
