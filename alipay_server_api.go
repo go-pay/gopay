@@ -19,6 +19,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"sort"
 )
 
 //解析支付宝支付完成后的Notify信息
@@ -129,17 +130,28 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 	}
 
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
-	signStr := sortAliPaySignParams(newBody)
-	v := url.Values{}
-	v.Set("signStr", signStr)
-	encode := v.Encode()
-	signData := encode[7:]
+	signData := encodeBody(newBody)
+
 	log.Println("签名字符串：", signData)
 	err = verifyAliPaySign(signData, notifyRsp.Sign, notifyRsp.SignType, pKey)
 	if err != nil {
 		return false, err
 	}
 	return true, nil
+}
+
+func encodeBody(body BodyMap) (signData string) {
+	keyList := make([]string, 0)
+	for k := range body {
+		keyList = append(keyList, k)
+	}
+	sort.Strings(keyList)
+
+	urlV := url.Values{}
+	for _, k := range keyList {
+		urlV.Add(k, body.Get(k))
+	}
+	return urlV.Encode()
 }
 
 func jsonToString(v interface{}) (str string) {
