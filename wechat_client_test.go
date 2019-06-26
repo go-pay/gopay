@@ -15,7 +15,7 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 	//    MchID：商户ID
 	//    apiKey：API秘钥值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(AppID, MchID, ApiKey, false)
+	client := NewWeChatClient(AppID, MchID_iguiyu, ApiKey_iguiyu, false)
 
 	//初始化参数Map
 	body := make(BodyMap)
@@ -53,7 +53,7 @@ func TestWeChatClient_QueryOrder(t *testing.T) {
 	//    MchID：商户ID
 	//    apiKey：API秘钥值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(AppID, MchID, ApiKey, false)
+	client := NewWeChatClient(AppID, MchID_iguiyu, ApiKey_iguiyu, false)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -75,7 +75,7 @@ func TestWeChatClient_CloseOrder(t *testing.T) {
 	//    MchID：商户ID
 	//    ApiKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(AppID, MchID, ApiKey, false)
+	client := NewWeChatClient(AppID, MchID_iguiyu, ApiKey_iguiyu, false)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -97,25 +97,25 @@ func TestWeChatClient_Refund(t *testing.T) {
 	//    MchID：商户ID
 	//    ApiKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(AppID, MchID, ApiKey, true)
+	client := NewWeChatClient(AppID, MchID_iguiyu, ApiKey_iguiyu, true)
 
 	//初始化参数结构体
 	body := make(BodyMap)
-	body.Set("out_trade_no", "GYWX201906262259301513873050")
+	body.Set("out_trade_no", "GYWX201906270003381182639498")
 	body.Set("nonce_str", GetRandomString(32))
 	body.Set("sign_type", SignType_MD5)
 	s := GetRandomString(64)
 	fmt.Println("s:", s)
 	body.Set("out_refund_no", s)
-	body.Set("total_fee", 1500)
-	body.Set("refund_fee", 1500)
+	body.Set("total_fee", 700)
+	body.Set("refund_fee", 700)
 
 	//请求申请退款（沙箱环境下，证书路径参数可传空）
 	//    body：参数Body
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, err := client.Refund(body, "cert/apiclient_cert.pem", "cert/apiclient_key.pem", "cert/apiclient_cert.p12")
+	wxRsp, err := client.Refund(body, Cert_iguiyu+"/apiclient_cert.pem", Cert_iguiyu+"/apiclient_key.pem", Cert_iguiyu+"/apiclient_cert.p12")
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
@@ -128,7 +128,7 @@ func TestWeChatClient_QueryRefund(t *testing.T) {
 	//    MchID：商户ID
 	//    ApiKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(AppID, MchID, ApiKey, false)
+	client := NewWeChatClient(AppID, MchID_iguiyu, ApiKey_iguiyu, false)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -150,7 +150,7 @@ func TestWeChatClient_DownloadBill(t *testing.T) {
 	//    MchID：商户ID
 	//    ApiKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(AppID, MchID, ApiKey, false)
+	client := NewWeChatClient(AppID, MchID_iguiyu, ApiKey_iguiyu, false)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -173,7 +173,7 @@ func TestWeChatClient_DownloadFundFlow(t *testing.T) {
 	//    MchID：商户ID
 	//    ApiKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(AppID, MchID, ApiKey, false)
+	client := NewWeChatClient(AppID, MchID_iguiyu, ApiKey_iguiyu, false)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -196,7 +196,7 @@ func TestWeChatClient_BatchQueryComment(t *testing.T) {
 	//    MchID：商户ID
 	//    ApiKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(AppID, MchID, ApiKey, false)
+	client := NewWeChatClient(AppID, MchID_iguiyu, ApiKey_iguiyu, false)
 
 	//初始化参数结构体
 	body := make(BodyMap)
@@ -220,7 +220,7 @@ func TestWeChatClient_Micropay(t *testing.T) {
 	//    MchID：商户ID
 	//    ApiKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(AppID, MchID, ApiKey, false)
+	client := NewWeChatClient(AppID, MchID_iguiyu, ApiKey_iguiyu, false)
 
 	//初始化参数Map
 	body := make(BodyMap)
@@ -248,7 +248,7 @@ func TestWeChatClient_Reverse(t *testing.T) {
 	//    MchID：商户ID
 	//    ApiKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(AppID, MchID, ApiKey, false)
+	client := NewWeChatClient(AppID, MchID_iguiyu, ApiKey_iguiyu, false)
 
 	//初始化参数Map
 	body := make(BodyMap)
