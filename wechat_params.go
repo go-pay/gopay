@@ -18,12 +18,12 @@ func getLocalSign(apiKey string, signType string, body BodyMap) (sign string) {
 	signStr := sortWeChatSignParams(apiKey, body)
 	//fmt.Println("signStr:", signStr)
 	var hashSign []byte
-	if signType == SignType_MD5 {
-		hash := md5.New()
+	if signType == SignType_HMAC_SHA256 {
+		hash := hmac.New(sha256.New, []byte(apiKey))
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	} else {
-		hash := hmac.New(sha256.New, []byte(apiKey))
+		hash := md5.New()
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	}

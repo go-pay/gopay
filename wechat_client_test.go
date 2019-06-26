@@ -97,18 +97,18 @@ func TestWeChatClient_Refund(t *testing.T) {
 	//    MchID：商户ID
 	//    ApiKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(AppID, MchID2, ApiKey2, true)
+	client := NewWeChatClient(AppID, MchID, ApiKey, true)
 
 	//初始化参数结构体
 	body := make(BodyMap)
-	body.Set("out_trade_no", "GYWX201906262222504974571772")
+	body.Set("out_trade_no", "GYWX201906262259301513873050")
 	body.Set("nonce_str", GetRandomString(32))
 	body.Set("sign_type", SignType_MD5)
 	s := GetRandomString(64)
 	fmt.Println("s:", s)
 	body.Set("out_refund_no", s)
-	body.Set("total_fee", 500)
-	body.Set("refund_fee", 500)
+	body.Set("total_fee", 1500)
+	body.Set("refund_fee", 1500)
 
 	//请求申请退款（沙箱环境下，证书路径参数可传空）
 	//    body：参数Body
