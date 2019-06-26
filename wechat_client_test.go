@@ -26,11 +26,11 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 	body.Set("out_trade_no", number)
 	body.Set("total_fee", 10)
 	body.Set("spbill_create_ip", "124.77.173.62")
-	body.Set("notify_url", "http://www.igoogle.ink")
+	body.Set("notify_url", "http://www.gopay.ink")
 	body.Set("trade_type", TradeType_H5)
 	body.Set("device_info", "WEB")
 	body.Set("sign_type", SignType_MD5)
-	//body.Set("scene_info", `{"h5_info": {"type":"Wap","wap_url": "http://www.igoogle.ink","wap_name": "测试支付"}}`)
+	//body.Set("scene_info", `{"h5_info": {"type":"Wap","wap_url": "http://www.gopay.ink","wap_name": "测试支付"}}`)
 	//body.Set("openid", OpenID)
 
 	//请求支付下单，成功后得到结果

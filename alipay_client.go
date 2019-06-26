@@ -80,7 +80,7 @@ func (this *aliPayClient) AliPayTradeQuery(body BodyMap) {
 func (this *aliPayClient) AliPayTradeAppPay(body BodyMap) (payParam string, err error) {
 	var bytes []byte
 	//===============product_code值===================
-	body.Set("product_code", "QUICK_MSECURITY_PAY")
+	//body.Set("product_code", "QUICK_MSECURITY_PAY")
 	bytes, err = this.doAliPay(body, "alipay.trade.app.pay")
 	if err != nil {
 		return null, err
