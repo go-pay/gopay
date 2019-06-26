@@ -46,13 +46,6 @@ const (
 	SignType_HMAC_SHA256 = "HMAC-SHA256"
 
 	//Debug数据
-	ApiKey    = "fsdf"
-	ApiKey2   = "dfhfghj"
-	AppID     = "wxdaa2ab9ef87b5497"
-	APPSecret = "fghfghj"
-	MchID     = "1368139502"
-	MchID2    = "1526665601"
-	OpenID    = "o0Df70H2Q0fY8JXh1aFPIRyOBgu8"
 	//
 	//===========================================================================================
 	//
