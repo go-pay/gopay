@@ -3,7 +3,7 @@
 
 # GoPay
 
-<a href="https://www.igoogle.ink" target="_blank"><img src="https://img.shields.io/badge/Author-Jerry-blue.svg"/></a>
+<a href="https://www.gopay.ink" target="_blank"><img src="https://img.shields.io/badge/Author-Jerry-blue.svg"/></a>
 <a href="https://golang.org" target="_blank"><img src="https://img.shields.io/badge/Golang-1.11+-brightgreen.svg"/></a>
 <img src="https://img.shields.io/badge/Build-passing-brightgreen.svg"/>
 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank"><img src="https://img.shields.io/badge/License-Apache 2-blue.svg"/></a>
@@ -224,11 +224,11 @@ log.Println("Number:", number)
 body.Set("out_trade_no", number)
 body.Set("total_fee", 1)
 body.Set("spbill_create_ip", "127.0.0.1")   //终端IP
-body.Set("notify_url", "http://www.igoogle.ink")
+body.Set("notify_url", "http://www.gopay.ink")
 body.Set("trade_type", gopay.TradeType_JsApi)
 body.Set("device_info", "WEB")
 body.Set("sign_type", gopay.SignType_MD5)
-//body.Set("scene_info", `{"h5_info": {"type":"Wap","wap_url": "http://www.igoogle.ink","wap_name": "测试支付"}}`)
+//body.Set("scene_info", `{"h5_info": {"type":"Wap","wap_url": "http://www.gopay.ink","wap_name": "测试支付"}}`)
 body.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu6")
 
 //发起下单请求
@@ -271,7 +271,7 @@ log.Println("Number:", number)
 body.Set("out_trade_no", number)
 body.Set("total_fee", 1)
 body.Set("spbill_create_ip", "127.0.0.1")
-body.Set("notify_url", "http://www.igoogle.ink")
+body.Set("notify_url", "http://www.gopay.ink")
 body.Set("auth_code", "120061098828009406")
 body.Set("sign_type", gopay.SignType_MD5)
 
@@ -384,13 +384,14 @@ client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 //配置公共参数
 client.SetCharset("utf-8").
 	SetSignType("RSA2").
-	SetReturnUrl("https://www.igoogle.ink").
-	SetNotifyUrl("https://www.igoogle.ink")
+	//SetAppAuthToken("").
+	//SetReturnUrl("https://www.gopay.ink").
+	SetNotifyUrl("https://www.gopay.ink")
 //请求参数
 body := make(gopay.BodyMap)
 body.Set("subject", "测试支付")
 body.Set("out_trade_no", "GYWX201901301040355706100409")
-body.Set("quit_url", "https://www.igoogle.ink")
+body.Set("quit_url", "https://www.gopay.ink")
 body.Set("total_amount", "10.00")
 body.Set("product_code", "QUICK_WAP_WAY")
 //手机网站支付请求
@@ -420,13 +421,14 @@ client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 //配置公共参数
 client.SetCharset("utf-8").
 	SetSignType("RSA2").
-	SetNotifyUrl("https://www.igoogle.ink")
+	//SetAppAuthToken("").
+	//SetReturnUrl("https://www.gopay.ink").
+	SetNotifyUrl("https://www.gopay.ink")
 //请求参数
 body := make(gopay.BodyMap)
 body.Set("subject", "测试APP支付")
 body.Set("out_trade_no", "GYWX201901301040355706100411")
 body.Set("total_amount", "1.00")
-body.Set("product_code", "QUICK_MSECURITY_PAY")
 //手机APP支付参数请求
 payParam, err := client.AliPayTradeAppPay(body)
 if err != nil {
@@ -454,12 +456,13 @@ client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 //配置公共参数
 client.SetCharset("utf-8").
 	SetSignType("RSA2").
-	SetNotifyUrl("https://www.igoogle.ink")
+	//SetAppAuthToken("").
+	//SetReturnUrl("https://www.gopay.ink").
+	SetNotifyUrl("https://www.gopay.ink")
 //请求参数
 body := make(gopay.BodyMap)
 body.Set("subject", "网站测试支付")
 body.Set("out_trade_no", "GYWX201901301040355706100418")
-body.Set("quit_url", "https://www.igoogle.ink")
 body.Set("total_amount", "88.88")
 body.Set("product_code", "FAST_INSTANT_TRADE_PAY")
 
