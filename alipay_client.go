@@ -9,13 +9,14 @@ import (
 )
 
 type aliPayClient struct {
-	AppId      string
-	privateKey string
-	ReturnUrl  string
-	NotifyUrl  string
-	Charset    string
-	SignType   string
-	isProd     bool
+	AppId        string
+	privateKey   string
+	ReturnUrl    string
+	NotifyUrl    string
+	Charset      string
+	SignType     string
+	AppAuthToken string
+	isProd       bool
 }
 
 //初始化支付宝客户端
@@ -78,6 +79,8 @@ func (this *aliPayClient) AliPayTradeQuery(body BodyMap) {
 //alipay.trade.app.pay(app支付接口2.0)
 func (this *aliPayClient) AliPayTradeAppPay(body BodyMap) (payParam string, err error) {
 	var bytes []byte
+	//===============product_code值===================
+	body.Set("product_code", "QUICK_MSECURITY_PAY")
 	bytes, err = this.doAliPay(body, "alipay.trade.app.pay")
 	if err != nil {
 		return null, err
@@ -89,6 +92,8 @@ func (this *aliPayClient) AliPayTradeAppPay(body BodyMap) (payParam string, err 
 //alipay.trade.wap.pay(手机网站支付接口2.0)
 func (this *aliPayClient) AliPayTradeWapPay(body BodyMap) (payUrl string, err error) {
 	var bytes []byte
+	//===============product_code值===================
+	body.Set("product_code", "QUICK_WAP_WAY")
 	bytes, err = this.doAliPay(body, "alipay.trade.wap.pay")
 	if err != nil {
 		//log.Println("err::", err.Error())
@@ -105,7 +110,9 @@ func (this *aliPayClient) AliPayTradeWapPay(body BodyMap) (payUrl string, err er
 //alipay.trade.page.pay(统一收单下单并支付页面接口)
 func (this *aliPayClient) AliPayTradePagePay(body BodyMap) (payUrl string, err error) {
 	var bytes []byte
-	bytes, err = this.doAliPay(body, "alipay.trade.wap.pay")
+	//===============product_code值===================
+	body.Set("product_code", "FAST_INSTANT_TRADE_PAY")
+	bytes, err = this.doAliPay(body, "alipay.trade.page.pay")
 	if err != nil {
 		//log.Println("err::", err.Error())
 		return null, err
@@ -142,42 +149,54 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 	}
 	//fmt.Println(string(bodyStr))
 	//===============生成参数===================
-	reqBody := make(BodyMap)
-	reqBody.Set("app_id", this.AppId)
-	reqBody.Set("method", method)
-	reqBody.Set("format", "JSON")
+	pubBody := make(BodyMap)
+	pubBody.Set("app_id", this.AppId)
+	pubBody.Set("method", method)
+	pubBody.Set("format", "JSON")
 	if this.ReturnUrl != null {
-		reqBody.Set("return_url", this.ReturnUrl)
+		pubBody.Set("return_url", this.ReturnUrl)
 	}
 	if this.Charset == null {
-		reqBody.Set("charset", "utf-8")
+		pubBody.Set("charset", "utf-8")
 	} else {
-		reqBody.Set("charset", this.Charset)
+		pubBody.Set("charset", this.Charset)
 	}
 	if this.SignType == null {
-		reqBody.Set("sign_type", "RSA2")
+		pubBody.Set("sign_type", "RSA2")
 	} else {
-		reqBody.Set("sign_type", this.SignType)
+		pubBody.Set("sign_type", this.SignType)
 	}
-	reqBody.Set("timestamp", time.Now().Format(TimeLayout))
-	reqBody.Set("version", "1.0")
+	pubBody.Set("timestamp", time.Now().Format(TimeLayout))
+	pubBody.Set("version", "1.0")
 	if this.NotifyUrl != null {
-		reqBody.Set("notify_url", this.NotifyUrl)
+		pubBody.Set("notify_url", this.NotifyUrl)
 	}
-	reqBody.Set("biz_content", string(bodyStr))
+	if this.AppAuthToken != null {
+		pubBody.Set("app_auth_token", this.AppAuthToken)
+	}
+	pubBody.Set("biz_content", string(bodyStr))
 	//===============获取签名===================
 	pKey := FormatPrivateKey(this.privateKey)
-	sign, err := getRsaSign(reqBody, reqBody.Get("sign_type"), pKey)
+	sign, err := getRsaSign(pubBody, pubBody.Get("sign_type"), pKey)
 	if err != nil {
 		return nil, err
 	}
-	reqBody.Set("sign", sign)
+	pubBody.Set("sign", sign)
 	//fmt.Println("rsaSign:", sign)
 	//===============发起请求===================
-	urlParam := FormatAliPayURLParam(reqBody)
+	urlParam := FormatAliPayURLParam(pubBody)
 	//fmt.Println("urlParam:", urlParam)
 	if method == "alipay.trade.app.pay" {
 		return []byte(urlParam), nil
+	}
+	if method == "alipay.trade.page.pay" {
+		if !this.isProd {
+			//沙箱环境
+			return []byte(zfb_sanbox_base_url + "?" + urlParam), nil
+		} else {
+			//正式环境
+			return []byte(zfb_base_url + "?" + urlParam), nil
+		}
 	}
 	var url string
 	agent := gorequest.New()

@@ -65,6 +65,12 @@ func (this *aliPayClient) SetSignType(signType string) (client *aliPayClient) {
 	return this
 }
 
+//设置应用授权
+func (this *aliPayClient) SetAppAuthToken(appAuthToken string) (client *aliPayClient) {
+	this.AppAuthToken = appAuthToken
+	return this
+}
+
 //获取参数签名
 func getRsaSign(body BodyMap, signType, privateKey string) (sign string, err error) {
 	var (

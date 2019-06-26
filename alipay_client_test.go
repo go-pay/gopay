@@ -23,7 +23,7 @@ func TestAliPayClient_AliPayTradeWapPay(t *testing.T) {
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "手机网站测试支付")
-	body.Set("out_trade_no", "GYWX201901301040355706100447")
+	body.Set("out_trade_no", "GYWX201901301040355706100448")
 	body.Set("quit_url", "https://www.igoogle.ink")
 	body.Set("total_amount", "100.00")
 	body.Set("product_code", "QUICK_WAP_WAY")
@@ -77,8 +77,7 @@ func TestAliPayClient_AliPayTradePagePay(t *testing.T) {
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "网站测试支付")
-	body.Set("out_trade_no", "GYWX201901301040355706100448")
-	body.Set("quit_url", "https://www.igoogle.ink")
+	body.Set("out_trade_no", "GYWX201901301040355706100449")
 	body.Set("total_amount", "88.88")
 	body.Set("product_code", "FAST_INSTANT_TRADE_PAY")
 
