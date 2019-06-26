@@ -129,8 +129,8 @@ func TestJsonToString(t *testing.T) {
 	list := new(List)
 	infos := make([]FundBillListInfo, 0)
 
-	infos = append(infos, FundBillListInfo{FundChannel: "iguiyu", Amount: "1.0.0"})
-	infos = append(infos, FundBillListInfo{FundChannel: "Jerry", Amount: "2.0.2"})
+	infos = append(infos, FundBillListInfo{Amount: "1.0.0", FundChannel: "iguiyu"})
+	infos = append(infos, FundBillListInfo{Amount: "2.0.2", FundChannel: "Jerry"})
 
 	list.BillList = infos
 
