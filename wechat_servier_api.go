@@ -135,12 +135,12 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey strin
 	signStr := buffer.String()
 
 	var hashSign []byte
-	if signType == SignType_MD5 {
-		hash := md5.New()
+	if signType == SignType_HMAC_SHA256 {
+		hash := hmac.New(sha256.New, []byte(apiKey))
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	} else {
-		hash := hmac.New(sha256.New, []byte(apiKey))
+		hash := md5.New()
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	}
@@ -172,12 +172,12 @@ func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string)
 	signStr := buffer.String()
 
 	var hashSign []byte
-	if signType == SignType_MD5 {
-		hash := md5.New()
+	if signType == SignType_HMAC_SHA256 {
+		hash := hmac.New(sha256.New, []byte(apiKey))
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	} else {
-		hash := hmac.New(sha256.New, []byte(apiKey))
+		hash := md5.New()
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	}
@@ -212,12 +212,12 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 	signStr := buffer.String()
 
 	var hashSign []byte
-	if signType == SignType_MD5 {
-		hash := md5.New()
+	if signType == SignType_HMAC_SHA256 {
+		hash := hmac.New(sha256.New, []byte(apiKey))
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	} else {
-		hash := hmac.New(sha256.New, []byte(apiKey))
+		hash := md5.New()
 		hash.Write([]byte(signStr))
 		hashSign = hash.Sum(nil)
 	}

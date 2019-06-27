@@ -5,8 +5,10 @@ import (
 	"encoding/hex"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestWeChatClient_UnifiedOrder(t *testing.T) {
@@ -27,11 +29,11 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 	body.Set("total_fee", 10)
 	body.Set("spbill_create_ip", "124.77.173.62")
 	body.Set("notify_url", "http://www.gopay.ink")
-	body.Set("trade_type", TradeType_H5)
+	body.Set("trade_type", TradeType_JsApi)
 	body.Set("device_info", "WEB")
 	body.Set("sign_type", SignType_MD5)
 	//body.Set("scene_info", `{"h5_info": {"type":"Wap","wap_url": "http://www.gopay.ink","wap_name": "测试支付"}}`)
-	//body.Set("openid", OpenID)
+	body.Set("openid", OpenID)
 
 	//请求支付下单，成功后得到结果
 	wxRsp, err := client.UnifiedOrder(body)
@@ -39,12 +41,12 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 		fmt.Println("Error:", err)
 	}
 	fmt.Println("wxRsp:", *wxRsp)
-	//timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
-	////获取小程序需要的paySign
-	//pac := "prepay_id=" + wxRsp.PrepayId
-	//paySign := GetMiniPaySign(AppID, wxRsp.NonceStr, pac, SignType_MD5, timeStamp, ApiKey)
-	//fmt.Println("paySign:", paySign)
-	//fmt.Println("Response:", wxRsp)
+	timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
+	//获取小程序需要的paySign
+	pac := "prepay_id=" + wxRsp.PrepayId
+	paySign := GetMiniPaySign(AppID, wxRsp.NonceStr, pac, SignType_MD5, timeStamp, ApiKey_iguiyu)
+	fmt.Println("paySign:", paySign)
+	fmt.Println("Response:", wxRsp)
 }
 
 func TestWeChatClient_QueryOrder(t *testing.T) {
