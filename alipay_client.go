@@ -67,8 +67,21 @@ func (this *aliPayClient) AliPayTradeCreate(body BodyMap) {
 }
 
 //alipay.trade.pay(统一收单交易支付接口)
-func (this *aliPayClient) AliPayTradePay(body BodyMap) {
+func (this *aliPayClient) AliPayTradePay(body BodyMap) (aliRsp *AliPayTradePayResponse, err error) {
+	var bytes []byte
+	//===============product_code值===================
+	//body.Set("product_code", "FACE_TO_FACE_PAYMENT")
+	bytes, err = this.doAliPay(body, "alipay.trade.pay")
+	if err != nil {
+		return nil, err
+	}
 
+	aliRsp = new(AliPayTradePayResponse)
+	err = json.Unmarshal(bytes, aliRsp)
+	if err != nil {
+		return nil, err
+	}
+	return aliRsp, nil
 }
 
 //alipay.trade.query(统一收单线下交易查询)
