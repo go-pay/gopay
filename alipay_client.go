@@ -76,6 +76,7 @@ func (this *aliPayClient) AliPayTradePay(body BodyMap) (aliRsp *AliPayTradePayRe
 		return nil, err
 	}
 
+	//log.Println("string::::", string(bytes))
 	aliRsp = new(AliPayTradePayResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
@@ -170,7 +171,7 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 		pubBody.Set("return_url", this.ReturnUrl)
 	}
 	if this.Charset == null {
-		pubBody.Set("charset", "utf-8")
+		pubBody.Set("charset", "UTF-8")
 	} else {
 		pubBody.Set("charset", this.Charset)
 	}

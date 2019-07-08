@@ -42,7 +42,7 @@ type AliPayNotifyRequest struct {
 
 type FundBillListInfo struct {
 	Amount      string `json:"amount"`
-	FundChannel string `json:"fundChannel"`
+	FundChannel string `json:"fund_channel"`
 	BankCode    string `json:"bank_code,omitempty"`
 	RealAmount  string `json:"real_amount,omitempty"`
 }
@@ -62,20 +62,21 @@ type AliPayTradePayResponse struct {
 }
 
 type AlipayTradePayResponseInfo struct {
-	Code           string           `json:"code"`
-	Msg            string           `json:"msg"`
-	SubCode        string           `json:"sub_code"`
-	SubMsg         string           `json:"sub_msg"`
-	TradeNo        string           `json:"trade_no"`
-	OutTradeNo     string           `json:"out_trade_no"`
-	BuyerLogonId   string           `json:"buyer_logon_id"`
-	SettleAmount   string           `json:"settle_amount"`
-	TotalAmount    string           `json:"total_amount"`
-	ReceiptAmount  string           `json:"receipt_amount"`
-	BuyerPayAmount string           `json:"buyer_pay_amount"`
-	PointAmount    string           `json:"point_amount"`
-	InvoiceAmount  string           `json:"invoice_amount"`
-	GmtPayment     string           `json:"gmt_payment"`
-	BuyerUserId    string           `json:"buyer_user_id"`
-	FundBillList   FundBillListInfo `json:"fund_bill_list"`
+	Code           string             `json:"code"`
+	Msg            string             `json:"msg"`
+	SubCode        string             `json:"sub_code"`
+	SubMsg         string             `json:"sub_msg"`
+	TradeNo        string             `json:"trade_no"`
+	OutTradeNo     string             `json:"out_trade_no"`
+	BuyerLogonId   string             `json:"buyer_logon_id"`
+	BuyerPayAmount string             `json:"buyer_pay_amount"`
+	BuyerUserId    string             `json:"buyer_user_id"`
+	BuyerUserType  string             `json:"buyer_user_type"`
+	SettleAmount   string             `json:"settle_amount"`
+	TotalAmount    string             `json:"total_amount"`
+	ReceiptAmount  string             `json:"receipt_amount"`
+	PointAmount    string             `json:"point_amount"`
+	InvoiceAmount  string             `json:"invoice_amount"`
+	GmtPayment     string             `json:"gmt_payment"`
+	FundBillList   []FundBillListInfo `json:"fund_bill_list"`
 }

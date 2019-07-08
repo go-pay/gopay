@@ -15,23 +15,24 @@ func TestAliPayClient_AliPayTradePay(t *testing.T) {
 	//    isProd：是否是正式环境
 	client := NewAliPayClient("2016091200494382", privateKey, false)
 	//配置公共参数
-	client.SetCharset("utf-8").
+	client.SetCharset("UTF-8").
 		SetSignType("RSA2").
 		SetNotifyUrl("https://api.iguiyu.com/gy_pay/alipay/notify")
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "条码支付")
 	body.Set("scene", "bar_code")
-	body.Set("auth_code", "282489472673898043")
-	body.Set("out_trade_no", "GYWX201901301040355706100451")
-	body.Set("total_amount", "1.00")
-	//手机APP支付参数请求
+	body.Set("auth_code", "285860185283886370")
+	body.Set("out_trade_no", "GYWX201901301040355706100456")
+	body.Set("total_amount", "10.00")
+	body.Set("timeout_express", "2m")
+	//条码支付
 	aliRsp, err := client.AliPayTradePay(body)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
-	fmt.Println("aliRsp:", aliRsp)
+	fmt.Println("aliRsp:", *aliRsp)
 }
 
 func TestAliPayClient_AliPayTradeWapPay(t *testing.T) {
@@ -43,7 +44,7 @@ func TestAliPayClient_AliPayTradeWapPay(t *testing.T) {
 	//    isProd：是否是正式环境
 	client := NewAliPayClient("2016091200494382", privateKey, false)
 	//配置公共参数
-	client.SetCharset("utf-8").
+	client.SetCharset("UTF-8").
 		SetSignType("RSA2").
 		//SetReturnUrl("https://www.gopay.ink").
 		SetNotifyUrl("https://api.iguiyu.com/gy_pay/alipay/notify")
@@ -72,7 +73,7 @@ func TestAliPayClient_AliPayTradeAppPay(t *testing.T) {
 	//    isProd：是否是正式环境
 	client := NewAliPayClient("2016091200494382", privateKey, false)
 	//配置公共参数
-	client.SetCharset("utf-8").
+	client.SetCharset("UTF-8").
 		SetSignType("RSA2").
 		SetNotifyUrl("https://api.iguiyu.com/gy_pay/alipay/notify")
 	//请求参数
@@ -97,7 +98,7 @@ func TestAliPayClient_AliPayTradePagePay(t *testing.T) {
 	//    isProd：是否是正式环境
 	client := NewAliPayClient("2016091200494382", privateKey, false)
 	//配置公共参数
-	client.SetCharset("utf-8").
+	client.SetCharset("UTF-8").
 		SetSignType("RSA2").
 		SetNotifyUrl("https://api.iguiyu.com/gy_pay/alipay/notify")
 	//请求参数

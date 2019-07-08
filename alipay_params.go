@@ -25,7 +25,7 @@ import (
 //	Method     string `json:"method"`      //接口名称
 //	Format     string `json:"format"`      //仅支持 JSON
 //	ReturnUrl  string `json:"return_url"`  //HTTP/HTTPS开头字符串
-//	Charset    string `json:"charset"`     //请求使用的编码格式，如utf-8,gbk,gb2312等，推荐使用 utf-8
+//	Charset    string `json:"charset"`     //请求使用的编码格式，如UTF-8,GBK,GB2312等，推荐使用 UTF-8
 //	SignType   string `json:"sign_type"`   //商户生成签名字符串所使用的签名算法类型，目前支持RSA2和RSA，推荐使用 RSA2
 //	Sign       string `json:"sign"`        //商户请求参数的签名串
 //	Timestamp  string `json:"timestamp"`   //发送请求的时间，格式"yyyy-MM-dd HH:mm:ss"
@@ -45,10 +45,10 @@ func (this *aliPayClient) SetNotifyUrl(url string) (client *aliPayClient) {
 	return this
 }
 
-//设置编码格式，如utf-8,gbk,gb2312等，推荐使用 utf-8
+//设置编码格式，如UTF-8,GBK,GB2312等，推荐使用 UTF-8
 func (this *aliPayClient) SetCharset(charset string) (client *aliPayClient) {
 	if charset == null {
-		this.Charset = "utf-8"
+		this.Charset = "UTF-8"
 	} else {
 		this.Charset = charset
 	}
