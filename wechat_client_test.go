@@ -103,14 +103,14 @@ func TestWeChatClient_Refund(t *testing.T) {
 
 	//初始化参数结构体
 	body := make(BodyMap)
-	body.Set("out_trade_no", "GYWX201906270003381182639498")
+	body.Set("out_trade_no", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")
 	body.Set("nonce_str", GetRandomString(32))
 	body.Set("sign_type", SignType_MD5)
 	s := GetRandomString(64)
 	fmt.Println("s:", s)
 	body.Set("out_refund_no", s)
-	body.Set("total_fee", 700)
-	body.Set("refund_fee", 700)
+	body.Set("total_fee", 1)
+	body.Set("refund_fee", 1)
 
 	//请求申请退款（沙箱环境下，证书路径参数可传空）
 	//    body：参数Body
@@ -222,7 +222,7 @@ func TestWeChatClient_Micropay(t *testing.T) {
 	//    MchID：商户ID
 	//    ApiKey：Key值
 	//    isProd：是否是正式环境
-	client := NewWeChatClient(AppID, MchID_iguiyu, ApiKey_iguiyu, false)
+	client := NewWeChatClient(AppID, MchID_iguiyu, ApiKey_iguiyu, true)
 
 	//初始化参数Map
 	body := make(BodyMap)
@@ -233,7 +233,7 @@ func TestWeChatClient_Micropay(t *testing.T) {
 	body.Set("out_trade_no", number)
 	body.Set("total_fee", 1)
 	body.Set("spbill_create_ip", "124.77.173.62")
-	body.Set("auth_code", "120061098828009406")
+	body.Set("auth_code", "134518243599425392")
 	body.Set("sign_type", SignType_MD5)
 
 	//请求支付，成功后得到结果
