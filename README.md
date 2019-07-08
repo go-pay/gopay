@@ -37,6 +37,7 @@
 
 * 手机网站支付：client.AliPayTradeWapPay()
 * APP支付：client.AliPayTradeAppPay()
+* 当面付-条码支付：client.AliPayTradePay()
 
 ## 支付宝公共API
 
@@ -382,7 +383,7 @@ privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7Y
 //    isProd：是否是正式环境
 client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 //配置公共参数
-client.SetCharset("utf-8").
+client.SetCharset("UTF-8").
 	SetSignType("RSA2").
 	//SetAppAuthToken("").
 	//SetReturnUrl("https://www.gopay.ink").
@@ -419,7 +420,7 @@ privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7Y
 //    isProd：是否是正式环境
 client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 //配置公共参数
-client.SetCharset("utf-8").
+client.SetCharset("UTF-8").
 	SetSignType("RSA2").
 	//SetAppAuthToken("").
 	//SetReturnUrl("https://www.gopay.ink").
@@ -454,7 +455,7 @@ privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7Y
 //    isProd：是否是正式环境
 client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 //配置公共参数
-client.SetCharset("utf-8").
+client.SetCharset("UTF-8").
 	SetSignType("RSA2").
 	//SetAppAuthToken("").
 	//SetReturnUrl("https://www.gopay.ink").
@@ -473,6 +474,45 @@ if err != nil {
 	return
 }
 fmt.Println("payUrl:", payUrl)
+```
+
+### 当面付-条码支付
+
+* 商家使用扫码枪等条码识别设备扫描用户支付宝钱包上的条码/二维码，完成收款。
+
+> 文档说明[当面付-条码支付](https://docs.open.alipay.com/194) 
+
+> 文档说明[统一收单交易支付接口](https://docs.open.alipay.com/api_1/alipay.trade.pay) 
+
+```go
+privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7YDHu5nMuxY6un+dLfo91OFOEg+RI+WTOPoM4xJtsOaJwQ1lpjycoeLq1OyetGW5Q8wO+iLWJASaMQM/t/aXR/JHaguycJyqlHSlxANvKKs/tOHx9AhW3LqumaCwz71CDF/+70scYuZG/7wxSjmrbRBswxd1Sz9KHdcdjqT8pmieyPqnM24EKBexHDmQ0ySXvLJJy6eu1dJsPIz+ivX6HEfDXmSmJ71AZVqZyCI1MhK813R5E7XCv5NOtskTe3y8uiIhgGpZSdB77DOyPLcmVayzFVLAQ3AOBDmsY6wIDAQABAoIBAHjsNq31zAw9FcR9orQJlPVd7vlJEt6Pybvmg8hNESfanO+16rpwg2kOEkS8zxgqoJ1tSzJgXu23fgzl3Go5fHcoVDWPAhUAOFre9+M7onh2nPXDd6Hbq6v8OEmFapSaf2b9biHnBHq5Chk08v/r74l501w3PVVOiPqulJrK1oVb+0/YmCvVFpGatBcNaefKUEcA+vekWPL7Yl46k6XeUvRfTwomCD6jpYLUhsAKqZiQJhMGoaLglZvkokQMF/4G78K7FbbVLMM1+JDh8zJ/DDVdY2vHREUcCGhl4mCVQtkzIbpxG++vFg7/g/fDI+PquG22hFILTDdtt2g2fV/4wmkCgYEA6goRQYSiM03y8Tt/M4u1Mm7OWYCksqAsU7rzQllHekIN3WjD41Xrjv6uklsX3sTG1syo7Jr9PGE1xQgjDEIyO8h/3lDQyLyycYnyUPGNNMX8ZjmGwcM51DQ/QfIrY/CXjnnW+MVpmNclAva3L33KXCWjw20VsROV1EA8LCL94BUCgYEA3wH4ANpzo7NqXf+2WlPPMuyRrF0QPIRGlFBNtaKFy0mvoclkREPmK7+N4NIGtMf5JNODS5HkFRgmU4YNdupA2I8lIYpD+TsIobZxGUKUkYzRZYZ1m1ttL69YYvCVz9Xosw/VoQ+RrW0scS5yUKqFMIUOV2R/Imi//c5TdKx6VP8CgYAnJ1ADugC4vI2sNdvt7618pnT3HEJxb8J6r4gKzYzbszlGlURQQAuMfKcP7RVtO1ZYkRyhmLxM4aZxNA9I+boVrlFWDAchzg+8VuunBwIslgLHx0/4EoUWLzd1/OGtco6oU1HXhI9J9pRGjqfO1iiIifN/ujwqx7AFNknayG/YkQKBgD6yNgA/ak12rovYzXKdp14Axn+39k2dPp6J6R8MnyLlB3yruwW6NSbNhtzTD1GZ+wCQepQvYvlPPc8zm+t3tl1r+Rtx3ORf5XBZc3iPkGdPOLubTssrrAnA+U9vph61W+OjqwLJ9sHUNK9pSHhHSIS4k6ycM2YAHyIC9NGTgB0PAoGAJjwd1DgMaQldtWnuXjvohPOo8cQudxXYcs6zVRbx6vtjKe2v7e+eK1SSVrR5qFV9AqxDfGwq8THenRa0LC3vNNplqostuehLhkWCKE7Y75vXMR7N6KU1kdoVWgN4BhXSwuRxmHMQfSY7q3HG3rDGz7mzXo1FVMr/uE4iDGm0IXY="
+//初始化支付宝客户端
+//    appId：应用ID
+//    privateKey：应用秘钥
+//    isProd：是否是正式环境
+client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
+//配置公共参数
+client.SetCharset("UTF-8").
+	SetSignType("RSA2").
+	//SetAppAuthToken("").
+	//SetReturnUrl("https://www.gopay.ink").
+	SetNotifyUrl("https://www.gopay.ink")
+//请求参数
+body := make(gopay.BodyMap)
+body.Set("subject", "条码支付")
+body.Set("scene", "bar_code")
+body.Set("auth_code", "285860185283886370")
+body.Set("out_trade_no", "GYWX201901301040355706100456")
+body.Set("total_amount", "10.00")
+body.Set("timeout_express", "2m")
+
+//当面付-条码支付
+aliRsp, err := client.AliPayTradePay(body)
+if err != nil {
+	fmt.Println("err:", err)
+	return
+}
+fmt.Println("aliRsp:", *aliRsp)
 ```
 
 ## License
