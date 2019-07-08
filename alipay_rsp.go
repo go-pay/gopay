@@ -43,6 +43,8 @@ type AliPayNotifyRequest struct {
 type FundBillListInfo struct {
 	Amount      string `json:"amount"`
 	FundChannel string `json:"fundChannel"`
+	BankCode    string `json:"bank_code,omitempty"`
+	RealAmount  string `json:"real_amount,omitempty"`
 }
 
 type VoucherDetailListInfo struct {
@@ -54,19 +56,26 @@ type VoucherDetailListInfo struct {
 	Type               string `json:"type"`
 }
 
-type AliPayTradePayAppResponse struct {
-	AlipayTradeAppPayResponse AliPayAppInfo `json:"alipay_trade_app_pay_response"`
-	Sign                      string        `json:"sign"`
+type AliPayTradePayResponse struct {
+	AlipayTradePayResponse AlipayTradePayResponseInfo `json:"alipay_trade_pay_response"`
+	Sign                   string                     `json:"sign"`
 }
 
-type AliPayAppInfo struct {
-	Code            string `json:"code"`
-	Msg             string `json:"msg"`
-	SubCode         string `json:"sub_code"`
-	SubMsg          string `json:"sub_msg"`
-	OutTradeNo      string `json:"out_trade_no"`
-	TradeNo         string `json:"trade_no"`
-	TotalAmount     string `json:"total_amount"`
-	SellerId        string `json:"seller_id"`
-	MerchantOrderNo string `json:"merchant_order_no"`
+type AlipayTradePayResponseInfo struct {
+	Code           string           `json:"code"`
+	Msg            string           `json:"msg"`
+	SubCode        string           `json:"sub_code"`
+	SubMsg         string           `json:"sub_msg"`
+	TradeNo        string           `json:"trade_no"`
+	OutTradeNo     string           `json:"out_trade_no"`
+	BuyerLogonId   string           `json:"buyer_logon_id"`
+	SettleAmount   string           `json:"settle_amount"`
+	TotalAmount    string           `json:"total_amount"`
+	ReceiptAmount  string           `json:"receipt_amount"`
+	BuyerPayAmount string           `json:"buyer_pay_amount"`
+	PointAmount    string           `json:"point_amount"`
+	InvoiceAmount  string           `json:"invoice_amount"`
+	GmtPayment     string           `json:"gmt_payment"`
+	BuyerUserId    string           `json:"buyer_user_id"`
+	FundBillList   FundBillListInfo `json:"fund_bill_list"`
 }
