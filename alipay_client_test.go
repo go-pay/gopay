@@ -22,7 +22,7 @@ func TestAliPayClient_AliPayTradePay(t *testing.T) {
 	body := make(BodyMap)
 	body.Set("subject", "条码支付")
 	body.Set("scene", "bar_code")
-	body.Set("auth_code", "285860185283886370")
+	body.Set("auth_code", "285860185283886375")
 	body.Set("out_trade_no", "GYWX201901301040355706100456")
 	body.Set("total_amount", "10.00")
 	body.Set("timeout_express", "2m")

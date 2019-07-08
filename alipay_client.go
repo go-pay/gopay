@@ -3,7 +3,9 @@ package gopay
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/parnurzeal/gorequest"
+	"golang.org/x/text/encoding/simplifiedchinese"
 	"log"
 	"time"
 )
@@ -76,11 +78,16 @@ func (this *aliPayClient) AliPayTradePay(body BodyMap) (aliRsp *AliPayTradePayRe
 		return nil, err
 	}
 
-	//log.Println("string::::", string(bytes))
+	convertBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
+	//log.Println("convertBytes::::", string(convertBytes))
 	aliRsp = new(AliPayTradePayResponse)
-	err = json.Unmarshal(bytes, aliRsp)
+	err = json.Unmarshal(convertBytes, aliRsp)
 	if err != nil {
 		return nil, err
+	}
+	if aliRsp.AlipayTradePayResponse.Code != "10000" {
+		info := aliRsp.AlipayTradePayResponse
+		return nil, fmt.Errorf("code:%v,msg:%v,sub_code:%v,sub_msg:%v.", info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	return aliRsp, nil
 }
