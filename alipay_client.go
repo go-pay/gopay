@@ -93,8 +93,30 @@ func (this *aliPayClient) AliPayTradePay(body BodyMap) (aliRsp *AliPayTradePayRe
 }
 
 //alipay.trade.query(统一收单线下交易查询)
-func (this *aliPayClient) AliPayTradeQuery(body BodyMap) {
-
+func (this *aliPayClient) AliPayTradeQuery(body BodyMap) (aliRsp *AliPayTradeQueryResponse, err error) {
+	var bytes []byte
+	trade1 := body.Get("out_trade_no")
+	trade2 := body.Get("trade_no")
+	if trade1 == null && trade2 == null {
+		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
+	}
+	bytes, err = this.doAliPay(body, "alipay.trade.query")
+	if err != nil {
+		return nil, err
+	}
+	convertBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
+	//log.Println("convertBytes::::", string(convertBytes))
+	aliRsp = new(AliPayTradeQueryResponse)
+	err = json.Unmarshal(convertBytes, aliRsp)
+	if err != nil {
+		return nil, err
+	}
+	if aliRsp.AlipayTradePayResponse.Code != "10000" {
+		info := aliRsp.AlipayTradePayResponse
+		log.Println("aliRsp:", aliRsp)
+		return nil, fmt.Errorf("code:%v,msg:%v,sub_code:%v,sub_msg:%v.", info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	return aliRsp, nil
 }
 
 //alipay.trade.app.pay(app支付接口2.0)
