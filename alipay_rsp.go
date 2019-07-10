@@ -67,39 +67,54 @@ type AliPayTradePayResponse struct {
 }
 
 type AliPayTradeQueryResponse struct {
-	AlipayTradePayResponse AlipayTradeResponseInfo `json:"alipay_trade_query_response"`
-	Sign                   string                  `json:"sign"`
+	AlipayTradeQueryResponse AlipayTradeResponseInfo `json:"alipay_trade_query_response"`
+	Sign                     string                  `json:"sign"`
+}
+
+type AliPayTradeCreateResponse struct {
+	AliPayTradeCreateResponse AlipayTradeResponseInfo `json:"alipay_trade_create_response"`
+	Sign                      string                  `json:"sign"`
+}
+
+type AliPayTradeCloseResponse struct {
+	AlipayTradeCloseResponse AlipayTradeResponseInfo `json:"alipay_trade_close_response"`
+	Sign                     string                  `json:"sign"`
+}
+
+type AliPayTradeCancelResponse struct {
+	AliPayTradeCancelResponse AlipayTradeResponseInfo `json:"alipay_trade_cancel_response"`
+	Sign                      string                  `json:"sign"`
 }
 
 type AlipayTradeResponseInfo struct {
-	Code                string                  `json:"code"`
-	Msg                 string                  `json:"msg"`
+	Code                string                  `json:"code,omitempty"`
+	Msg                 string                  `json:"msg,omitempty"`
 	SubCode             string                  `json:"sub_code,omitempty"`
 	SubMsg              string                  `json:"sub_msg,omitempty"`
-	TradeNo             string                  `json:"trade_no"`
-	OutTradeNo          string                  `json:"out_trade_no"`
-	BuyerLogonId        string                  `json:"buyer_logon_id"`
+	TradeNo             string                  `json:"trade_no,omitempty"`
+	OutTradeNo          string                  `json:"out_trade_no,omitempty"`
+	BuyerLogonId        string                  `json:"buyer_logon_id,omitempty"`
 	TradeStatus         string                  `json:"trade_status,omitempty"`
 	SettleAmount        string                  `json:"settle_amount,omitempty"`
 	PayCurrency         string                  `json:"pay_currency,omitempty"`
 	PayAmount           string                  `json:"pay_amount,omitempty"`
 	SettleTransRate     string                  `json:"settle_trans_rate,omitempty"`
 	TransPayRate        string                  `json:"trans_pay_rate,omitempty"`
-	TotalAmount         string                  `json:"total_amount"`
+	TotalAmount         string                  `json:"total_amount,omitempty"`
 	TransCurrency       string                  `json:"trans_currency,omitempty"`
 	SettleCurrency      string                  `json:"settle_currency,omitempty"`
-	ReceiptAmount       string                  `json:"receipt_amount"`
-	BuyerPayAmount      string                  `json:"buyer_pay_amount"`
-	PointAmount         string                  `json:"point_amount"`
-	InvoiceAmount       string                  `json:"invoice_amount"`
+	ReceiptAmount       string                  `json:"receipt_amount,omitempty"`
+	BuyerPayAmount      string                  `json:"buyer_pay_amount,omitempty"`
+	PointAmount         string                  `json:"point_amount,omitempty"`
+	InvoiceAmount       string                  `json:"invoice_amount,omitempty"`
 	SendPayDate         string                  `json:"send_pay_date,omitempty"`
-	GmtPayment          string                  `json:"gmt_payment"`
-	FundBillList        []FundBillListInfo      `json:"fund_bill_list"`
+	GmtPayment          string                  `json:"gmt_payment,omitempty"`
+	FundBillList        []FundBillListInfo      `json:"fund_bill_list,omitempty"`
 	CardBalance         string                  `json:"card_balance,omitempty"`
 	TerminalId          string                  `json:"terminal_id,omitempty"`
 	StoreId             string                  `json:"store_id,omitempty"`
 	StoreName           string                  `json:"store_name,omitempty"`
-	BuyerUserId         string                  `json:"buyer_user_id"`
+	BuyerUserId         string                  `json:"buyer_user_id,omitempty"`
 	DiscountGoodsDetail string                  `json:"discount_goods_detail,omitempty"`
 	VoucherDetailList   []VoucherDetailListInfo `json:"voucher_detail_list,omitempty"`
 	AdvanceAmount       string                  `json:"advance_amount,omitempty"`
@@ -116,4 +131,8 @@ type AlipayTradeResponseInfo struct {
 	Body                string                  `json:"body,omitempty"`
 	AlipaySubMerchantId string                  `json:"alipay_sub_merchant_id,omitempty"`
 	ExtInfos            string                  `json:"ext_infos,omitempty"`
+	RetryFlag           string                  `json:"retry_flag,omitempty"`
+	Action              string                  `json:"action,omitempty"`
+	GmtRefundPay        string                  `json:"gmt_refund_pay,omitempty"`
+	RefundSettlementId  string                  `json:"refund_settlement_id,omitempty"`
 }
