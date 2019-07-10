@@ -37,8 +37,11 @@
 
 * 手机网站支付：client.AliPayTradeWapPay()
 * APP支付：client.AliPayTradeAppPay()
-* 当面付-条码支付：client.AliPayTradePay()
+* 统一收单交易支付接口(当面付)：client.AliPayTradePay()
+* 统一收单交易创建接口：client.AliPayTradeCreate()
 * 统一收单线下交易查询：client.AliPayTradeQuery()
+* 统一收单交易关闭接口：client.AliPayTradeClose()
+* 统一收单交易撤销接口：client.AliPayTradeCancel()
 
 ## 支付宝公共API
 
