@@ -32,6 +32,7 @@
 * gopay.GetPaidUnionId() => 用户支付完成后，获取该用户的 UnionId，无需用户授权
 * gopay.GetWeChatUserInfo() => 微信公众号：获取用户基本信息(UnionID机制)
 * gopay.DecryptOpenDataToStruct() => 加密数据，解密到指定结构体
+* gopay.GetOpenIdByAuthCode() => 授权码查询openid
 
 ## 支付宝支付
 
