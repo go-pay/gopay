@@ -339,3 +339,19 @@ func TestDecryptOpenDataToStruct(t *testing.T) {
 	fmt.Println("CountryCode:", phone.CountryCode)
 	fmt.Println("Watermark:", phone.Watermark)
 }
+
+func TestGetOpenIdByAuthCode(t *testing.T) {
+	openIdRsp, err := GetOpenIdByAuthCode(AppID, MchID_iguiyu, "135127679952609396", ApiKey_iguiyu, GetRandomString(32))
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("ReturnCode:", openIdRsp.ReturnCode)
+	fmt.Println("ReturnMsg:", openIdRsp.ReturnMsg)
+	fmt.Println("ResultCode:", openIdRsp.ResultCode)
+	fmt.Println("Appid:", openIdRsp.Appid)
+	fmt.Println("MchId:", openIdRsp.MchId)
+	fmt.Println("NonceStr:", openIdRsp.NonceStr)
+	fmt.Println("err_code:", openIdRsp.ErrCode)
+	fmt.Println("Openid:", openIdRsp.Openid)
+}

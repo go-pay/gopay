@@ -299,6 +299,40 @@ func GetAccessToken(appId, appSecret string) (accessToken *AccessToken, err erro
 	}
 }
 
+//授权码查询openid(AccessToken:157字符)
+//    appId:APPID
+//    mchId:商户号
+//    authCode:用户授权码
+//    nonceStr:随即字符串
+func GetOpenIdByAuthCode(appId, mchId, authCode, apiKey, nonceStr string) (openIdRsp *OpenIdByAuthCodeRsp, err error) {
+
+	url := "https://api.mch.weixin.qq.com/tools/authcodetoopenid"
+	body := make(BodyMap)
+	body.Set("appid", appId)
+	body.Set("mch_id", mchId)
+	body.Set("auth_code", authCode)
+	body.Set("nonce_str", nonceStr)
+	sign := getLocalSign(apiKey, SignType_MD5, body)
+
+	body.Set("sign", sign)
+	reqXML := generateXml(body)
+	//===============发起请求===================
+	agent := gorequest.New()
+	agent.Post(url)
+	agent.Type("xml")
+	agent.SendString(reqXML)
+	_, bs, errs := agent.EndBytes()
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	openIdRsp = new(OpenIdByAuthCodeRsp)
+	err = xml.Unmarshal(bs, openIdRsp)
+	if err != nil {
+		return nil, err
+	}
+	return openIdRsp, nil
+}
+
 //用户支付完成后，获取该用户的 UnionId，无需用户授权。
 //    accessToken：接口调用凭据
 //    openId：用户的OpenID

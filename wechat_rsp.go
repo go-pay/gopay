@@ -268,3 +268,15 @@ type watermarkInfo struct {
 	Appid     string `json:"appid"`
 	Timestamp int    `json:"timestamp"`
 }
+
+type OpenIdByAuthCodeRsp struct {
+	ReturnCode string `xml:"return_code"`
+	ReturnMsg  string `xml:"return_msg"`
+	Appid      string `xml:"appid"`
+	MchId      string `xml:"mch_id"`
+	NonceStr   string `xml:"nonce_str"`
+	Sign       string `xml:"sign"`
+	ResultCode string `xml:"result_code"`
+	ErrCode    string `xml:"err_code"`
+	Openid     string `xml:"openid"` //用户唯一标识
+}
