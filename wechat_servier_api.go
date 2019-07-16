@@ -112,6 +112,12 @@ func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotify
 }
 
 //JSAPI支付，统一下单获取支付参数后，再次计算出小程序用的paySign
+//    appId：APPID
+//    nonceStr：随即字符串
+//    prepayId：统一下单成功后得到的值
+//    signType：签名类型
+//    timeStamp：时间
+//    apiKey：API秘钥值
 func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("appId=")
@@ -149,6 +155,12 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey strin
 }
 
 //JSAPI支付，统一下单获取支付参数后，再次计算出微信内H5支付需要用的paySign
+//    appId：APPID
+//    nonceStr：随即字符串
+//    prepayId：统一下单成功后得到的值
+//    signType：签名类型
+//    timeStamp：时间
+//    apiKey：API秘钥值
 func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("appId=")
@@ -186,7 +198,13 @@ func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string)
 }
 
 //APP支付，统一下单获取支付参数后，再次计算APP支付所需要的的sign
+//    appId：APPID
+//    partnerid：partnerid
+//    nonceStr：随即字符串
+//    prepayId：统一下单成功后得到的值
 //    signType：此处签名方式，务必与统一下单时用的签名方式一致
+//    timeStamp：时间
+//    apiKey：API秘钥值
 func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, apiKey string) (paySign string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("appid=")
@@ -302,9 +320,10 @@ func GetAccessToken(appId, appSecret string) (accessToken *AccessToken, err erro
 //授权码查询openid(AccessToken:157字符)
 //    appId:APPID
 //    mchId:商户号
+//    apiKey:ApiKey
 //    authCode:用户授权码
 //    nonceStr:随即字符串
-func GetOpenIdByAuthCode(appId, mchId, authCode, apiKey, nonceStr string) (openIdRsp *OpenIdByAuthCodeRsp, err error) {
+func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openIdRsp *OpenIdByAuthCodeRsp, err error) {
 
 	url := "https://api.mch.weixin.qq.com/tools/authcodetoopenid"
 	body := make(BodyMap)
