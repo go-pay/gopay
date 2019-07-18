@@ -403,7 +403,7 @@ privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7Y
 //    isProd：是否是正式环境
 client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 //配置公共参数
-client.SetCharset("UTF-8").
+client.SetCharset("utf-8").
 	SetSignType("RSA2").
 	//SetAppAuthToken("").
 	//SetReturnUrl("https://www.gopay.ink").
@@ -440,7 +440,7 @@ privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7Y
 //    isProd：是否是正式环境
 client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 //配置公共参数
-client.SetCharset("UTF-8").
+client.SetCharset("utf-8").
 	SetSignType("RSA2").
 	//SetAppAuthToken("").
 	//SetReturnUrl("https://www.gopay.ink").
@@ -475,7 +475,7 @@ privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7Y
 //    isProd：是否是正式环境
 client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 //配置公共参数
-client.SetCharset("UTF-8").
+client.SetCharset("utf-8").
 	SetSignType("RSA2").
 	//SetAppAuthToken("").
 	//SetReturnUrl("https://www.gopay.ink").
@@ -512,7 +512,7 @@ privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7Y
 //    isProd：是否是正式环境
 client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 //配置公共参数
-client.SetCharset("UTF-8").
+client.SetCharset("utf-8").
 	SetSignType("RSA2").
 	//SetAppAuthToken("").
 	//SetReturnUrl("https://www.gopay.ink").

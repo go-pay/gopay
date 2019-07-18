@@ -280,7 +280,7 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 		pubBody.Set("return_url", this.ReturnUrl)
 	}
 	if this.Charset == null {
-		pubBody.Set("charset", "UTF-8")
+		pubBody.Set("charset", "utf-8")
 	} else {
 		pubBody.Set("charset", this.Charset)
 	}
