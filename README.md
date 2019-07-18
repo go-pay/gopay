@@ -41,6 +41,7 @@
 ## 支付宝支付
 
 * 手机网站支付：client.AliPayTradeWapPay()
+* 电脑网站支付：client.AliPayTradePagePay()
 * APP支付：client.AliPayTradeAppPay()
 * 统一收单交易支付接口(当面付)：client.AliPayTradePay()
 * 统一收单交易创建接口：client.AliPayTradeCreate()
