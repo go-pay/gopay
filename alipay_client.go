@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/parnurzeal/gorequest"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"log"
 	"time"
@@ -322,7 +321,7 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 		}
 	}
 	var url string
-	agent := gorequest.New()
+	agent := HttpAgent()
 	if !this.isProd {
 		//沙箱环境
 		url = zfb_sanbox_base_url
