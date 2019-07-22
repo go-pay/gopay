@@ -534,7 +534,6 @@ if err != nil {
 }
 fmt.Println("aliRsp:", *aliRsp)
 ```
-
 ## License
 ```
 Copyright 2019 Jerry
