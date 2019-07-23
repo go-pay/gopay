@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"golang.org/x/text/encoding/simplifiedchinese"
 	"log"
 	"time"
 )
@@ -56,10 +55,10 @@ func (this *aliPayClient) AliPayTradeCreate(body BodyMap) (aliRsp *AliPayTradeCr
 		return nil, err
 	}
 
-	convertBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
+	//convertBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
 	//log.Println("AliPayTradeCreate::::", string(convertBytes))
 	aliRsp = new(AliPayTradeCreateResponse)
-	err = json.Unmarshal(convertBytes, aliRsp)
+	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
 		return nil, err
 	}
@@ -82,10 +81,10 @@ func (this *aliPayClient) AliPayTradeClose(body BodyMap) (aliRsp *AliPayTradeClo
 	if err != nil {
 		return nil, err
 	}
-	convertBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
+	//convertBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
 	//log.Println("AliPayTradeClose::::", string(convertBytes))
 	aliRsp = new(AliPayTradeCloseResponse)
-	err = json.Unmarshal(convertBytes, aliRsp)
+	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
 		return nil, err
 	}
@@ -108,10 +107,10 @@ func (this *aliPayClient) AliPayTradeCancel(body BodyMap) (aliRsp *AliPayTradeCa
 	if err != nil {
 		return nil, err
 	}
-	convertBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
+	//convertBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
 	//log.Println("AliPayTradeCancel::::", string(convertBytes))
 	aliRsp = new(AliPayTradeCancelResponse)
-	err = json.Unmarshal(convertBytes, aliRsp)
+	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
 		return nil, err
 	}
@@ -146,10 +145,10 @@ func (this *aliPayClient) AliPayTradePay(body BodyMap) (aliRsp *AliPayTradePayRe
 		return nil, err
 	}
 
-	convertBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
+	//convertBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
 	//log.Println("convertBytes::::", string(convertBytes))
 	aliRsp = new(AliPayTradePayResponse)
-	err = json.Unmarshal(convertBytes, aliRsp)
+	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
 		return nil, err
 	}
@@ -172,10 +171,10 @@ func (this *aliPayClient) AliPayTradeQuery(body BodyMap) (aliRsp *AliPayTradeQue
 	if err != nil {
 		return nil, err
 	}
-	convertBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
+	//convertBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
 	//log.Println("AliPayTradeQuery::::", string(convertBytes))
 	aliRsp = new(AliPayTradeQueryResponse)
-	err = json.Unmarshal(convertBytes, aliRsp)
+	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
 		return nil, err
 	}

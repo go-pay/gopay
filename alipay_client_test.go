@@ -51,15 +51,16 @@ func TestAliPayClient_AliPayTradeCreate(t *testing.T) {
 	body := make(BodyMap)
 	body.Set("subject", "创建订单")
 	body.Set("buyer_id", "2088102168654131")
-	body.Set("out_trade_no", "GYWX201901301040355706100459")
+	body.Set("out_trade_no", "GZ201901301040355706100464")
 	body.Set("total_amount", "101.00")
-	//条码支付
+	//创建订单
 	aliRsp, err := client.AliPayTradeCreate(body)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
 	fmt.Println("aliRsp:", *aliRsp)
+	fmt.Println("aliRsp.TradeNo:", aliRsp.AliPayTradeCreateResponse.TradeNo)
 }
 
 func TestAliPayClient_AliPayTradeClose(t *testing.T) {
@@ -150,7 +151,7 @@ func TestAliPayClient_AliPayTradeWapPay(t *testing.T) {
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "手机网站测试支付")
-	body.Set("out_trade_no", "GYWX201901301040355706100450")
+	body.Set("out_trade_no", "GYWX201901301040355706100461")
 	body.Set("quit_url", "https://www.gopay.ink")
 	body.Set("total_amount", "100.00")
 	body.Set("product_code", "QUICK_WAP_WAY")
