@@ -42,7 +42,7 @@ type AliPayNotifyRequest struct {
 
 type FundBillListInfo struct {
 	Amount      string `json:"amount"`
-	FundChannel string `json:"fund_channel"`
+	FundChannel string `json:"fundChannel"`
 	BankCode    string `json:"bank_code,omitempty"`
 	RealAmount  string `json:"real_amount,omitempty"`
 }
