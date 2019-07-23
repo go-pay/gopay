@@ -151,7 +151,7 @@ func TestAliPayClient_AliPayTradeWapPay(t *testing.T) {
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "手机网站测试支付")
-	body.Set("out_trade_no", "GZ201901301040355701")
+	body.Set("out_trade_no", "GZ201901301040355702")
 	body.Set("quit_url", "https://www.gopay.ink")
 	body.Set("total_amount", "10.00")
 	body.Set("product_code", "QUICK_WAP_WAY")
