@@ -130,7 +130,7 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
 	signData := sortAliPaySignParams(newBody)
 
-	//log.Println("签名字符串：", signData)
+	log.Println("签名字符串：", signData)
 	err = verifyAliPaySign(signData, notifyRsp.Sign, notifyRsp.SignType, pKey)
 	if err != nil {
 		return false, err
