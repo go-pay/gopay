@@ -51,6 +51,7 @@
 
 ## 支付宝公共API
 
+* gopay.AlipaySystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
 * gopay.FormatPrivateKey() => 格式化应用私钥
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
 * gopay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数
@@ -75,6 +76,7 @@ $ go get -u github.com/iGoogle-ink/gopay
 
 参考文档：[微信支付文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 
+---
 ### 获取微信用户OpenId、UnionId、SessionKey
 
 ```go
@@ -335,6 +337,7 @@ if err != nil {
 }
 fmt.Println("Response：", wxRsp)
 ```
+---
 
 # 支付宝支付
 
@@ -348,6 +351,26 @@ fmt.Println("Response：", wxRsp)
 
 沙箱环境使用说明：[文档地址](https://docs.open.alipay.com/200/105311)
 
+---
+
+### 换取授权访问令牌（得到access_token，user_id等信息）
+
+> 支付宝换取授权访问令牌文档[换取授权访问令牌](https://docs.open.alipay.com/api_9/alipay.system.oauth.token)
+
+```go
+privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7YDHu5nMuxY6un+dLfo91OFOEg+RI+WTOPoM4xJtsOaJwQ1lpjycoeLq1OyetGW5Q8wO+iLWJASaMQM/t/aXR/JHaguycJyqlHSlxANvKKs/tOHx9AhW3LqumaCwz71CDF/+70scYuZG/7wxSjmrbRBswxd1Sz9KHdcdjqT8pmieyPqnM24EKBexHDmQ0ySXvLJJy6eu1dJsPIz+ivX6HEfDXmSmJ71AZVqZyCI1MhK813R5E7XCv5NOtskTe3y8uiIhgGpZSdB77DOyPLcmVayzFVLAQ3AOBDmsY6wIDAQABAoIBAHjsNq31zAw9FcR9orQJlPVd7vlJEt6Pybvmg8hNESfanO+16rpwg2kOEkS8zxgqoJ1tSzJgXu23fgzl3Go5fHcoVDWPAhUAOFre9+M7onh2nPXDd6Hbq6v8OEmFapSaf2b9biHnBHq5Chk08v/r74l501w3PVVOiPqulJrK1oVb+0/YmCvVFpGatBcNaefKUEcA+vekWPL7Yl46k6XeUvRfTwomCD6jpYLUhsAKqZiQJhMGoaLglZvkokQMF/4G78K7FbbVLMM1+JDh8zJ/DDVdY2vHREUcCGhl4mCVQtkzIbpxG++vFg7/g/fDI+PquG22hFILTDdtt2g2fV/4wmkCgYEA6goRQYSiM03y8Tt/M4u1Mm7OWYCksqAsU7rzQllHekIN3WjD41Xrjv6uklsX3sTG1syo7Jr9PGE1xQgjDEIyO8h/3lDQyLyycYnyUPGNNMX8ZjmGwcM51DQ/QfIrY/CXjnnW+MVpmNclAva3L33KXCWjw20VsROV1EA8LCL94BUCgYEA3wH4ANpzo7NqXf+2WlPPMuyRrF0QPIRGlFBNtaKFy0mvoclkREPmK7+N4NIGtMf5JNODS5HkFRgmU4YNdupA2I8lIYpD+TsIobZxGUKUkYzRZYZ1m1ttL69YYvCVz9Xosw/VoQ+RrW0scS5yUKqFMIUOV2R/Imi//c5TdKx6VP8CgYAnJ1ADugC4vI2sNdvt7618pnT3HEJxb8J6r4gKzYzbszlGlURQQAuMfKcP7RVtO1ZYkRyhmLxM4aZxNA9I+boVrlFWDAchzg+8VuunBwIslgLHx0/4EoUWLzd1/OGtco6oU1HXhI9J9pRGjqfO1iiIifN/ujwqx7AFNknayG/YkQKBgD6yNgA/ak12rovYzXKdp14Axn+39k2dPp6J6R8MnyLlB3yruwW6NSbNhtzTD1GZ+wCQepQvYvlPPc8zm+t3tl1r+Rtx3ORf5XBZc3iPkGdPOLubTssrrAnA+U9vph61W+OjqwLJ9sHUNK9pSHhHSIS4k6ycM2YAHyIC9NGTgB0PAoGAJjwd1DgMaQldtWnuXjvohPOo8cQudxXYcs6zVRbx6vtjKe2v7e+eK1SSVrR5qFV9AqxDfGwq8THenRa0LC3vNNplqostuehLhkWCKE7Y75vXMR7N6KU1kdoVWgN4BhXSwuRxmHMQfSY7q3HG3rDGz7mzXo1FVMr/uE4iDGm0IXY="
+//换取授权访问令牌（默认使用utf-8，RSA2）
+//    appId：应用ID
+//    privateKey：应用私钥
+//    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
+//    codeOrToken：支付宝授权码或refresh_token
+rsp, err := gopay.AlipaySystemOauthToken("2016091200494382", privateKey, "authorization_code", "06e8961891d647c0ac99bb1cebe7SE69")
+if err != nil {
+	fmt.Println("gopay.AlipaySystemOauthToken:",err)
+	return
+}
+fmt.Println("rsp:", *rsp)
+```
 
 ### 1、支付结果异步通知参数解析；2、验签操作
 
