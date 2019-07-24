@@ -18,6 +18,7 @@ import (
 	"hash"
 	"log"
 	"net/http"
+	"time"
 )
 
 //解析支付宝支付完成后的Notify信息
@@ -251,4 +252,80 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 	h.Write([]byte(signData))
 
 	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
+}
+
+//换取授权访问令牌（默认使用utf-8，RSA2）
+//    appId：应用ID
+//    privateKey：应用私钥
+//    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
+//    codeOrToken：支付宝授权码或refresh_token
+func AlipaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (rsp *AlipaySystemOauthTokenResponse, err error) {
+	var bs []byte
+	body := make(BodyMap)
+	if "authorization_code" == grantType {
+		body.Set("grant_type", "authorization_code")
+		body.Set("code", codeOrToken)
+	} else if "refresh_token" == grantType {
+		body.Set("grant_type", "refresh_token")
+		body.Set("refresh_token", codeOrToken)
+	} else {
+		body.Set("grant_type", "authorization_code")
+		body.Set("code", codeOrToken)
+	}
+	bs, err = doAliPay(appId, privateKey, body, "alipay.system.oauth.token")
+	if err != nil {
+		return nil, err
+	}
+	//fmt.Println("bs:", string(bs))
+	rsp = new(AlipaySystemOauthTokenResponse)
+	err = json.Unmarshal(bs, rsp)
+	if err != nil {
+		return nil, err
+	}
+	if rsp.AlipaySystemOauthTokenResponse.AccessToken != "" {
+		return rsp, nil
+	} else {
+
+		return
+	}
+}
+
+//向支付宝发送请求
+func doAliPay(appId, privateKey string, body BodyMap, method string) (bytes []byte, err error) {
+	//===============生成参数===================
+	//pubBody := make(BodyMap)
+	body.Set("app_id", appId)
+	body.Set("method", method)
+	body.Set("format", "JSON")
+	body.Set("charset", "utf-8")
+	body.Set("sign_type", "RSA2")
+	body.Set("timestamp", time.Now().Format(TimeLayout))
+	body.Set("version", "1.0")
+	//pubBody.Set("biz_content", string(bodyStr))
+	//===============获取签名===================
+	pKey := FormatPrivateKey(privateKey)
+	sign, err := getRsaSign(body, "RSA2", pKey)
+	if err != nil {
+		return nil, err
+	}
+	body.Set("sign", sign)
+	//fmt.Println("rsaSign:", sign)
+	//===============发起请求===================
+	urlParam := FormatAliPayURLParam(body)
+	//fmt.Println("urlParam:", urlParam)
+
+	var url string
+	agent := HttpAgent()
+	//正式环境
+	url = zfb_base_url
+	//fmt.Println(url)
+	agent.Post(url)
+	_, bs, errs := agent.
+		Type("form-data").
+		SendString(urlParam).
+		EndBytes()
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	return bs, nil
 }
