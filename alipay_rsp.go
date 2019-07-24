@@ -136,3 +136,29 @@ type AlipayTradeResponseInfo struct {
 	GmtRefundPay        string                  `json:"gmt_refund_pay,omitempty"`
 	RefundSettlementId  string                  `json:"refund_settlement_id,omitempty"`
 }
+
+type AlipaySystemOauthTokenResponse struct {
+	AlipaySystemOauthTokenResponse OauthTokenInfo      `json:"alipay_system_oauth_token_response,omitempty"`
+	ErrorResponse                  AlipayErrorResponse `json:"error_response,omitempty"`
+	Sign                           string              `json:"sign"`
+}
+
+type AlipayErrorResponse struct {
+	Code    string `json:"code,omitempty"`
+	Msg     string `json:"msg,omitempty"`
+	SubCode string `json:"sub_code,omitempty"`
+	SubMsg  string `json:"sub_msg,omitempty"`
+}
+
+type OauthTokenInfo struct {
+	//Code         string `json:"code,omitempty"`
+	//Msg          string `json:"msg,omitempty"`
+	//SubCode      string `json:"sub_code,omitempty"`
+	//SubMsg       string `json:"sub_msg,omitempty"`
+	AccessToken  string `json:"access_token,omitempty"`
+	AlipayUserId string `json:"alipay_user_id,omitempty"`
+	ExpiresIn    int    `json:"expires_in,omitempty"`
+	ReExpiresIn  int    `json:"re_expires_in,omitempty"`
+	RefreshToken string `json:"refresh_token,omitempty"`
+	UserId       string `json:"user_id,omitempty"`
+}
