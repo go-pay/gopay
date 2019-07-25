@@ -70,6 +70,8 @@ $ go get -u github.com/iGoogle-ink/gopay
 
 微信：
 <img width="260" height="260" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_jerry.png"/>
+讨论群（如过期请加微信）：
+<img width="260" height="260" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_gopay.png"/>
 
 # 微信支付
 
