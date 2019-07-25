@@ -205,7 +205,7 @@ func TestAliPayClient_AliPayTradePagePay(t *testing.T) {
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "网站测试支付")
-	body.Set("out_trade_no", "GYWX201901301040355706100464")
+	body.Set("out_trade_no", "GYWX201901301040355706100465")
 	body.Set("total_amount", "88.88")
 	body.Set("product_code", "FAST_INSTANT_TRADE_PAY")
 
@@ -263,7 +263,7 @@ func TestAlipaySystemOauthToken(t *testing.T) {
 	//fmt.Println("rsp:", rsp.ErrorResponse.SubMsg)
 }
 
-func TestVerifyAliPayResultSign(t *testing.T) {
+func TestDecryptAliPayOpenDataToStruct(t *testing.T) {
 	data := "MkvuiIZsGOC8S038cu/JIpoRKnF+ZFjoIRGf5d/K4+ctYjCtb/eEkwgrdB5TeH/93bxff1Ylb+SE+UGStlpvcg=="
 	key := "TDftre9FpItr46e9BVNJcw=="
 	rsp := new(PhoneNumberResponse)
