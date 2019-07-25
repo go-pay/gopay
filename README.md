@@ -66,7 +66,7 @@ $ go get -u github.com/iGoogle-ink/gopay
 
 # 文档
 
-* 未完成，有问题+微信。另外，仅 Fork 的同志顺手点个星呗
+* 文档未完成，有问题+微信群。另外，仅 Fork 的同志顺手点个星呗
 
 微信：
 <img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_jerry.png"/>
