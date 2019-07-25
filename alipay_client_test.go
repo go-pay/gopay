@@ -263,6 +263,22 @@ func TestAlipaySystemOauthToken(t *testing.T) {
 	//fmt.Println("rsp:", rsp.ErrorResponse.SubMsg)
 }
 
+func TestVerifyAliPayResultSign(t *testing.T) {
+	data := "MkvuiIZsGOC8S038cu/JIpoRKnF+ZFjoIRGf5d/K4+ctYjCtb/eEkwgrdB5TeH/93bxff1Ylb+SE+UGStlpvcg=="
+	key := "TDftre9FpItr46e9BVNJcw=="
+	rsp := new(PhoneNumberResponse)
+	err := DecryptAliPayOpenDataToStruct(data, key, rsp)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("rsp.Code:", rsp.Code)
+	fmt.Println("rsp.Msg:", rsp.Msg)
+	fmt.Println("rsp.SubCode:", rsp.SubCode)
+	fmt.Println("rsp.SubMsg:", rsp.SubMsg)
+	fmt.Println("rsp.Mobile:", rsp.Mobile)
+}
+
 type List struct {
 	BillList []FundBillListInfo `json:"bill_list"`
 }
