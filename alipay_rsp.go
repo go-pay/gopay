@@ -162,3 +162,11 @@ type OauthTokenInfo struct {
 	RefreshToken string `json:"refresh_token,omitempty"`
 	UserId       string `json:"user_id,omitempty"`
 }
+
+type PhoneNumberResponse struct {
+	Code    string `json:"code,omitempty"`
+	Msg     string `json:"msg,omitempty"`
+	SubCode string `json:"sub_code,omitempty"`
+	SubMsg  string `json:"sub_msg,omitempty"`
+	Mobile  string `json:"mobile,omitempty"`
+}
