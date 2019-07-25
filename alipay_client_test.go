@@ -52,7 +52,7 @@ func TestAliPayClient_AliPayTradeCreate(t *testing.T) {
 	body := make(BodyMap)
 	body.Set("subject", "创建订单")
 	body.Set("buyer_id", "2088802095984694")
-	body.Set("out_trade_no", "GZ201901301040355706100468")
+	body.Set("out_trade_no", "GZ201901301040355706100469")
 	body.Set("total_amount", "0.01")
 	//创建订单
 	aliRsp, err := client.AliPayTradeCreate(body)
@@ -152,7 +152,7 @@ func TestAliPayClient_AliPayTradeWapPay(t *testing.T) {
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "手机网站测试支付")
-	body.Set("out_trade_no", "GYWX201901301040355706100463")
+	body.Set("out_trade_no", "GZ201901301040355706100470")
 	body.Set("quit_url", "https://www.gopay.ink")
 	body.Set("total_amount", "100.00")
 	body.Set("product_code", "QUICK_WAP_WAY")
@@ -180,7 +180,7 @@ func TestAliPayClient_AliPayTradeAppPay(t *testing.T) {
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "测试APP支付")
-	body.Set("out_trade_no", "GYWX201901301040355706100411")
+	body.Set("out_trade_no", "GZ201901301040355706100469")
 	body.Set("total_amount", "1.00")
 	//手机APP支付参数请求
 	payParam, err := client.AliPayTradeAppPay(body)
@@ -205,7 +205,7 @@ func TestAliPayClient_AliPayTradePagePay(t *testing.T) {
 	//请求参数
 	body := make(BodyMap)
 	body.Set("subject", "网站测试支付")
-	body.Set("out_trade_no", "GYWX201901301040355706100465")
+	body.Set("out_trade_no", "GZ201901301040355706100469")
 	body.Set("total_amount", "88.88")
 	body.Set("product_code", "FAST_INSTANT_TRADE_PAY")
 
