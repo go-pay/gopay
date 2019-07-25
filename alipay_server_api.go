@@ -57,7 +57,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest,
 	notifyRsp.GmtRefund = req.FormValue("gmt_refund")
 	notifyRsp.GmtClose = req.FormValue("gmt_close")
 	billList := req.FormValue("fund_bill_list")
-	//log.Println("billList:", billList)
+	log.Println("billList:", billList)
 	if billList != null {
 		bills := make([]FundBillListInfo, 0)
 		err = json.Unmarshal([]byte(billList), &bills)
@@ -70,7 +70,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest,
 	}
 	notifyRsp.PassbackParams = req.FormValue("passback_params")
 	detailList := req.FormValue("voucher_detail_list")
-	//log.Println("detailList:", detailList)
+	log.Println("detailList:", detailList)
 	if detailList != null {
 		details := make([]VoucherDetailListInfo, 0)
 		err = json.Unmarshal([]byte(detailList), &details)

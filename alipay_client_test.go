@@ -52,8 +52,8 @@ func TestAliPayClient_AliPayTradeCreate(t *testing.T) {
 	body := make(BodyMap)
 	body.Set("subject", "创建订单")
 	body.Set("buyer_id", "2088802095984694")
-	body.Set("out_trade_no", "GZ201901301040355706100466")
-	body.Set("total_amount", "101.00")
+	body.Set("out_trade_no", "GZ201901301040355706100468")
+	body.Set("total_amount", "0.01")
 	//创建订单
 	aliRsp, err := client.AliPayTradeCreate(body)
 	if err != nil {
