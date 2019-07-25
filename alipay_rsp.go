@@ -6,52 +6,52 @@
 package gopay
 
 type AliPayNotifyRequest struct {
-	NotifyTime        string                  `json:"notify_time"`
-	NotifyType        string                  `json:"notify_type"`
-	NotifyId          string                  `json:"notify_id"`
-	AppId             string                  `json:"app_id"`
-	Charset           string                  `json:"charset"`
-	Version           string                  `json:"version"`
-	SignType          string                  `json:"sign_type"`
-	Sign              string                  `json:"sign"`
-	AuthAppId         string                  `json:"auth_app_id"`
-	TradeNo           string                  `json:"trade_no"`
-	OutTradeNo        string                  `json:"out_trade_no"`
-	OutBizNo          string                  `json:"out_biz_no"`
-	BuyerId           string                  `json:"buyer_id"`
-	BuyerLogonId      string                  `json:"buyer_logon_id"`
-	SellerId          string                  `json:"seller_id"`
-	SellerEmail       string                  `json:"seller_email"`
-	TradeStatus       string                  `json:"trade_status"`
-	TotalAmount       string                  `json:"total_amount"`
-	ReceiptAmount     string                  `json:"receipt_amount"`
-	InvoiceAmount     string                  `json:"invoice_amount"`
-	BuyerPayAmount    string                  `json:"buyer_pay_amount"`
-	PointAmount       string                  `json:"point_amount"`
-	RefundFee         string                  `json:"refund_fee"`
-	Subject           string                  `json:"subject"`
-	Body              string                  `json:"body"`
-	GmtCreate         string                  `json:"gmt_create"`
-	GmtPayment        string                  `json:"gmt_payment"`
-	GmtRefund         string                  `json:"gmt_refund"`
-	GmtClose          string                  `json:"gmt_close"`
-	FundBillList      []FundBillListInfo      `json:"fund_bill_list"`
-	PassbackParams    string                  `json:"passback_params"`
-	VoucherDetailList []VoucherDetailListInfo `json:"voucher_detail_list"`
+	NotifyTime        string                  `json:"notify_time,omitempty"`
+	NotifyType        string                  `json:"notify_type,omitempty"`
+	NotifyId          string                  `json:"notify_id,omitempty"`
+	AppId             string                  `json:"app_id,omitempty"`
+	Charset           string                  `json:"charset,omitempty"`
+	Version           string                  `json:"version,omitempty"`
+	SignType          string                  `json:"sign_type,omitempty"`
+	Sign              string                  `json:"sign,omitempty"`
+	AuthAppId         string                  `json:"auth_app_id,omitempty"`
+	TradeNo           string                  `json:"trade_no,omitempty"`
+	OutTradeNo        string                  `json:"out_trade_no,omitempty"`
+	OutBizNo          string                  `json:"out_biz_no,omitempty"`
+	BuyerId           string                  `json:"buyer_id,omitempty"`
+	BuyerLogonId      string                  `json:"buyer_logon_id,omitempty"`
+	SellerId          string                  `json:"seller_id,omitempty"`
+	SellerEmail       string                  `json:"seller_email,omitempty"`
+	TradeStatus       string                  `json:"trade_status,omitempty"`
+	TotalAmount       string                  `json:"total_amount,omitempty"`
+	ReceiptAmount     string                  `json:"receipt_amount,omitempty"`
+	InvoiceAmount     string                  `json:"invoice_amount,omitempty"`
+	BuyerPayAmount    string                  `json:"buyer_pay_amount,omitempty"`
+	PointAmount       string                  `json:"point_amount,omitempty"`
+	RefundFee         string                  `json:"refund_fee,omitempty"`
+	Subject           string                  `json:"subject,omitempty"`
+	Body              string                  `json:"body,omitempty"`
+	GmtCreate         string                  `json:"gmt_create,omitempty"`
+	GmtPayment        string                  `json:"gmt_payment,omitempty"`
+	GmtRefund         string                  `json:"gmt_refund,omitempty"`
+	GmtClose          string                  `json:"gmt_close,omitempty"`
+	FundBillList      []FundBillListInfo      `json:"fund_bill_list,omitempty"`
+	PassbackParams    string                  `json:"passback_params,omitempty"`
+	VoucherDetailList []VoucherDetailListInfo `json:"voucher_detail_list,omitempty"`
 }
 
 type FundBillListInfo struct {
-	Amount      string `json:"amount"`
-	FundChannel string `json:"fundChannel"`
+	Amount      string `json:"amount,omitempty"`
+	FundChannel string `json:"fundChannel,omitempty"`
 	BankCode    string `json:"bank_code,omitempty"`
 	RealAmount  string `json:"real_amount,omitempty"`
 }
 
 type VoucherDetailListInfo struct {
-	Id                         string `json:"id"`
-	Name                       string `json:"name"`
-	Type                       string `json:"type"`
-	Amount                     string `json:"amount"`
+	Id                         string `json:"id,omitempty"`
+	Name                       string `json:"name,omitempty"`
+	Type                       string `json:"type,omitempty"`
+	Amount                     string `json:"amount,omitempty"`
 	MerchantContribute         string `json:"merchant_contribute,omitempty"`
 	OtherContribute            string `json:"other_contribute,omitempty"`
 	Memo                       string `json:"memo,omitempty"`
