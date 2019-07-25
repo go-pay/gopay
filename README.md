@@ -56,6 +56,7 @@
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
 * gopay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数
 * gopay.VerifyAliPayResultSign() => 支付宝支付异步通知的签名验证和返回参数验签后的Sign
+* gopay.DecryptAliPayOpenDataToStruct() => 支付宝小程序敏感加密数据解析
 
 # 安装
 
@@ -370,6 +371,29 @@ if err != nil {
 	return
 }
 fmt.Println("rsp:", *rsp)
+```
+
+### 支付宝（小程序）敏感加密数据解析
+
+> 拿小程序获取手机号为例
+
+获取用户手机号文档:[获取用户手机号](https://docs.alipay.com/mini/api/getphonenumber)
+
+敏感信息加解密官方文档:[敏感信息加解密方法](https://docs.alipay.com/mini/introduce/aes)
+```go
+data := "MkvuiIZsGOC8S038cu/JIpoRKnF+ZFjoIRGf5d/K4+ctYjCtb/eEkwgrdB5TeH/93bxff1Ylb+SE+UGStlpvcg=="
+key := "TDftre9FpItr46e9BVNJcw=="
+rsp := new(gopay.PhoneNumberResponse)
+err := gopay.DecryptAliPayOpenDataToStruct(data, key, rsp)
+if err != nil {
+	fmt.Println("err:", err)
+	return
+}
+fmt.Println("rsp.Code:", rsp.Code)
+fmt.Println("rsp.Msg:", rsp.Msg)
+fmt.Println("rsp.SubCode:", rsp.SubCode)
+fmt.Println("rsp.SubMsg:", rsp.SubMsg)
+fmt.Println("rsp.Mobile:", rsp.Mobile)
 ```
 
 ### 1、支付结果异步通知参数解析；2、验签操作
