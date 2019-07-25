@@ -313,10 +313,10 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 	if method == "alipay.trade.page.pay" {
 		if !this.isProd {
 			//沙箱环境
-			return []byte(zfb_sanbox_base_url + "?" + urlParam), nil
+			return []byte(zfb_sanbox_base_url_2 + "?" + urlParam), nil
 		} else {
 			//正式环境
-			return []byte(zfb_base_url + "?" + urlParam), nil
+			return []byte(zfb_base_url_2 + "?" + urlParam), nil
 		}
 	}
 	var url string

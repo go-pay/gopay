@@ -49,8 +49,8 @@ const (
 	//
 	//===========================================================================================
 	//
-	//zfb_base_url        = "https://openapi.alipay.com/gateway.do"
-	zfb_base_url = "https://openapi.alipay.com/gateway.do?charset=utf-8"
-	//zfb_sanbox_base_url = "https://openapi.alipaydev.com/gateway.do"
-	zfb_sanbox_base_url = "https://openapi.alipaydev.com/gateway.do?charset=utf-8"
+	zfb_base_url_2        = "https://openapi.alipay.com/gateway.do"
+	zfb_sanbox_base_url_2 = "https://openapi.alipaydev.com/gateway.do"
+	zfb_base_url          = "https://openapi.alipay.com/gateway.do?charset=utf-8"
+	zfb_sanbox_base_url   = "https://openapi.alipaydev.com/gateway.do?charset=utf-8"
 )
