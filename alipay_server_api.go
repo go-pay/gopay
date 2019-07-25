@@ -8,6 +8,8 @@ package gopay
 import (
 	"bytes"
 	"crypto"
+	"crypto/aes"
+	"crypto/cipher"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/base64"
@@ -18,6 +20,7 @@ import (
 	"hash"
 	"log"
 	"net/http"
+	"reflect"
 	"time"
 )
 
@@ -79,6 +82,45 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest,
 		notifyRsp.VoucherDetailList = nil
 	}
 	return notifyRsp, err
+}
+
+//解密支付宝开放数据
+//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
+//    sessionKey:会话密钥
+//    beanPtr:需要解析到的结构体指针
+func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{}) (err error) {
+	//验证参数类型
+	beanValue := reflect.ValueOf(beanPtr)
+	if beanValue.Kind() != reflect.Ptr {
+		return errors.New("传入参数类型必须是以指针形式")
+	}
+	//验证interface{}类型
+	if beanValue.Elem().Kind() != reflect.Struct {
+		return errors.New("传入interface{}必须是结构体")
+	}
+	aesKey, _ := base64.StdEncoding.DecodeString(secretKey)
+	ivKey := []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	secretData, _ := base64.StdEncoding.DecodeString(encryptedData)
+
+	block, err := aes.NewCipher(aesKey)
+	if err != nil {
+		return err
+	}
+	if len(secretData)%len(aesKey) != 0 {
+		return errors.New("encryptedData is error")
+	}
+
+	blockMode := cipher.NewCBCDecrypter(block, ivKey)
+	originData := make([]byte, len(secretData))
+	blockMode.CryptBlocks(originData, secretData)
+	originData = PKCS5UnPadding(originData)
+	//fmt.Println("originDataStr:", string(originData))
+	//解析
+	err = json.Unmarshal(originData, beanPtr)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 //支付通知的签名验证和参数签名后的Sign
