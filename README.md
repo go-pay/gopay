@@ -56,7 +56,7 @@
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
 * gopay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数
 * gopay.VerifyAliPayResultSign() => 支付宝支付异步通知的签名验证和返回参数验签后的Sign
-* gopay.DecryptAliPayOpenDataToStruct() => 支付宝小程序敏感加密数据解析
+* gopay.DecryptAliPayOpenDataToStruct() => 支付宝小程序敏感加密数据解析到结构体
 
 # 安装
 
