@@ -239,7 +239,7 @@ func (this *aliPayClient) AliPayTradePagePay(body BodyMap) (payUrl string, err e
 		return null, err
 	}
 	payUrl = string(bytes)
-	if payUrl == zfb_sanbox_base_url || payUrl == zfb_base_url {
+	if payUrl == zfb_sanbox_base_url_2 || payUrl == zfb_base_url_2 {
 		return null, errors.New("请求失败，请查看文档并检查参数")
 	}
 	return payUrl, nil
@@ -341,7 +341,7 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 	}
 	if method == "alipay.trade.wap.pay" {
 		//fmt.Println("rsp:::", rsp.Body)
-		if rsp.Request.URL.String() == zfb_base_url || rsp.Request.URL.String() == zfb_sanbox_base_url {
+		if rsp.Request.URL.String() == zfb_sanbox_base_url_2 || rsp.Request.URL.String() == zfb_base_url_2 {
 			return nil, errors.New("请求手机网站支付出错，请检查各个参数或秘钥是否正确")
 		}
 		return []byte(rsp.Request.URL.String()), nil
