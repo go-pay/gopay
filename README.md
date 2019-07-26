@@ -597,12 +597,12 @@ privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7Y
 //    appId：应用ID
 //    privateKey：应用秘钥
 //    isProd：是否是正式环境
-client := NewAliPayClient("2016091200494382", privateKey, false)
+client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 //配置公共参数
 client.SetCharset("utf-8").
 	SetSignType("RSA2")
 //请求参数
-body := make(BodyMap)
+body := make(gopay.BodyMap)
 body.Set("out_trade_no", "GZ201907261437329516")
 body.Set("refund_amount", "100.00")
 body.Set("refund_reason", "测试支付退款")
