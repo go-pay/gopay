@@ -59,7 +59,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest,
 	billList := req.FormValue("fund_bill_list")
 	//log.Println("billList:", billList)
 	if billList != null {
-		bills := make([]FundBillListInfo, 0)
+		bills := make([]fundBillListInfo, 0)
 		err = json.Unmarshal([]byte(billList), &bills)
 		if err != nil {
 			return nil, err
@@ -72,7 +72,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest,
 	detailList := req.FormValue("voucher_detail_list")
 	//log.Println("detailList:", detailList)
 	if detailList != null {
-		details := make([]VoucherDetailListInfo, 0)
+		details := make([]voucherDetailListInfo, 0)
 		err = json.Unmarshal([]byte(detailList), &details)
 		if err != nil {
 			return nil, err
