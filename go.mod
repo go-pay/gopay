@@ -2,7 +2,12 @@ module github.com/iGoogle-ink/gopay
 
 go 1.12
 
-require github.com/parnurzeal/gorequest v0.2.15
+require (
+	github.com/moul/http2curl v1.0.0 // indirect
+	github.com/parnurzeal/gorequest v0.2.15
+	github.com/pkg/errors v0.8.1 // indirect
+	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2 // indirect
+)
 
 replace (
 	golang.org/x/crypto => github.com/golang/crypto v0.0.0-20190701094942-4def268fd1a4
