@@ -162,8 +162,8 @@ type oauthTokenInfo struct {
 type PhoneNumberResponse struct {
 	Code    string `json:"code,omitempty"`
 	Msg     string `json:"msg,omitempty"`
-	SubCode string `json:"sub_code,omitempty"`
-	SubMsg  string `json:"sub_msg,omitempty"`
+	SubCode string `json:"subCode,omitempty"`
+	SubMsg  string `json:"subMsg,omitempty"`
 	Mobile  string `json:"mobile,omitempty"`
 }
 
