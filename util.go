@@ -2,6 +2,7 @@ package gopay
 
 import (
 	"math/rand"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -10,8 +11,31 @@ import (
 type BodyMap map[string]interface{}
 
 //设置参数
+//    value：仅支持类型 string,int,int64,float32,float64,ptr,struct,map 类型，其他类型一律设置空字符串
 func (bm BodyMap) Set(key string, value interface{}) {
-	bm[key] = value
+	//验证参数类型
+	vKind := reflect.ValueOf(value).Kind()
+	//fmt.Println("vKind:", vKind)
+	switch vKind {
+	case reflect.String:
+		bm[key] = value.(string)
+	case reflect.Int:
+		bm[key] = Int2String(value.(int))
+	case reflect.Int64:
+		bm[key] = Int642String(value.(int64))
+	case reflect.Float32:
+		bm[key] = Float32ToString(value.(float32))
+	case reflect.Float64:
+		bm[key] = Float64ToString(value.(float64))
+	case reflect.Ptr:
+		bm[key] = jsonToString(value)
+	case reflect.Struct:
+		bm[key] = jsonToString(value)
+	case reflect.Map:
+		bm[key] = jsonToString(value)
+	default:
+		bm[key] = ""
+	}
 }
 
 //获取参数
@@ -19,16 +43,11 @@ func (bm BodyMap) Get(key string) string {
 	if bm == nil {
 		return null
 	}
-	v, ok := bm[key]
+	value, ok := bm[key]
 	if !ok {
 		return null
 	}
-	value, ok := v.(int)
-	if ok {
-		value := strconv.Itoa(value)
-		return value
-	}
-	return v.(string)
+	return value.(string)
 }
 
 //删除参数
@@ -49,23 +68,23 @@ func GetRandomString(length int) string {
 	return string(result)
 }
 
-func convert2String(value interface{}) (valueStr string) {
-	switch v := value.(type) {
-	case int:
-		valueStr = Int2String(v)
-	case int64:
-		valueStr = Int642String(v)
-	case float64:
-		valueStr = Float64ToString(v)
-	case float32:
-		valueStr = Float32ToString(v)
-	case string:
-		valueStr = v
-	default:
-		valueStr = null
-	}
-	return
-}
+//func convert2String(value interface{}) (valueStr string) {
+//	switch v := value.(type) {
+//	case int:
+//		valueStr = Int2String(v)
+//	case int64:
+//		valueStr = Int642String(v)
+//	case float64:
+//		valueStr = Float64ToString(v)
+//	case float32:
+//		valueStr = Float32ToString(v)
+//	case string:
+//		valueStr = v
+//	default:
+//		valueStr = null
+//	}
+//	return
+//}
 
 //解析时间
 func ParseDateTime(timeStr string) (datetime time.Time) {
