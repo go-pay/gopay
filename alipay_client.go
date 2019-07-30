@@ -362,7 +362,7 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 	if this.AppAuthToken != null {
 		pubBody.Set("app_auth_token", this.AppAuthToken)
 	}
-	fmt.Println("biz_content", string(bodyStr))
+	//fmt.Println("biz_content", string(bodyStr))
 	pubBody.Set("biz_content", string(bodyStr))
 	//===============获取签名===================
 	pKey := FormatPrivateKey(this.privateKey)
