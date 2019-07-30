@@ -32,8 +32,29 @@ func NewAliPayClient(appId, privateKey string, isProd bool) (client *aliPayClien
 }
 
 //alipay.trade.fastpay.refund.query(统一收单交易退款查询)
-func (this *aliPayClient) AliPayTradeFastPayRefundQuery(body BodyMap) {
-
+//    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query
+func (this *aliPayClient) AliPayTradeFastPayRefundQuery(body BodyMap) (aliRsp *AlipayTradeFastpayRefundQueryResponse, err error) {
+	var bytes []byte
+	trade1 := body.Get("out_trade_no")
+	trade2 := body.Get("trade_no")
+	if trade1 == null && trade2 == null {
+		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
+	}
+	bytes, err = this.doAliPay(body, "alipay.trade.fastpay.refund.query")
+	if err != nil {
+		return nil, err
+	}
+	//log.Println("AliPayTradeFastPayRefundQuery::::", string(bytes))
+	aliRsp = new(AlipayTradeFastpayRefundQueryResponse)
+	err = json.Unmarshal(bytes, aliRsp)
+	if err != nil {
+		return nil, err
+	}
+	if aliRsp.AlipayTradeFastpayRefundQueryResponse.Code != "10000" {
+		info := aliRsp.AlipayTradeFastpayRefundQueryResponse
+		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	return aliRsp, nil
 }
 
 //alipay.trade.order.settle(统一收单交易结算接口)
