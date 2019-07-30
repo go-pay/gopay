@@ -49,6 +49,7 @@
 * 统一收单交易关闭接口：client.AliPayTradeClose()
 * 统一收单交易撤销接口：client.AliPayTradeCancel()
 * 统一收单交易退款接口：client.AliPayTradeRefund()
+* 统一收单交易退款查询：client.AliPayTradeFastPayRefundQuery()
 
 ## 支付宝公共API
 
