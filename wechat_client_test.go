@@ -47,7 +47,6 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 	pac := "prepay_id=" + wxRsp.PrepayId
 	paySign := GetMiniPaySign(AppID, wxRsp.NonceStr, pac, SignType_MD5, timeStamp, ApiKey_iguiyu)
 	fmt.Println("paySign:", paySign)
-	fmt.Println("Response:", wxRsp)
 }
 
 func TestWeChatClient_QueryOrder(t *testing.T) {
