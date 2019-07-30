@@ -11,7 +11,7 @@ import (
 type BodyMap map[string]interface{}
 
 //设置参数
-//    value：仅支持类型 string,int,int64,float32,float64,ptr,struct,map 类型，其他类型一律设置空字符串
+//    value：仅支持类型 string,int,int64,float32,float64,ptr,struct,slice,map 类型，其他类型一律设置空字符串
 func (bm BodyMap) Set(key string, value interface{}) {
 	//验证参数类型
 	vKind := reflect.ValueOf(value).Kind()
@@ -32,6 +32,8 @@ func (bm BodyMap) Set(key string, value interface{}) {
 	case reflect.Struct:
 		bm[key] = jsonToString(value)
 	case reflect.Map:
+		bm[key] = jsonToString(value)
+	case reflect.Slice:
 		bm[key] = jsonToString(value)
 	default:
 		bm[key] = ""
