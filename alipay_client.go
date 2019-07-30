@@ -33,7 +33,7 @@ func NewAliPayClient(appId, privateKey string, isProd bool) (client *aliPayClien
 
 //alipay.trade.fastpay.refund.query(统一收单交易退款查询)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query
-func (this *aliPayClient) AliPayTradeFastPayRefundQuery(body BodyMap) (aliRsp *AlipayTradeFastpayRefundQueryResponse, err error) {
+func (this *aliPayClient) AliPayTradeFastPayRefundQuery(body BodyMap) (aliRsp *AliPayTradeFastpayRefundQueryResponse, err error) {
 	var bytes []byte
 	trade1 := body.Get("out_trade_no")
 	trade2 := body.Get("trade_no")
@@ -45,21 +45,42 @@ func (this *aliPayClient) AliPayTradeFastPayRefundQuery(body BodyMap) (aliRsp *A
 		return nil, err
 	}
 	//log.Println("AliPayTradeFastPayRefundQuery::::", string(bytes))
-	aliRsp = new(AlipayTradeFastpayRefundQueryResponse)
+	aliRsp = new(AliPayTradeFastpayRefundQueryResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
 		return nil, err
 	}
-	if aliRsp.AlipayTradeFastpayRefundQueryResponse.Code != "10000" {
-		info := aliRsp.AlipayTradeFastpayRefundQueryResponse
+	if aliRsp.AliPayTradeFastpayRefundQueryResponse.Code != "10000" {
+		info := aliRsp.AliPayTradeFastpayRefundQueryResponse
 		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	return aliRsp, nil
 }
 
 //alipay.trade.order.settle(统一收单交易结算接口)
-func (this *aliPayClient) AliPayTradeOrderSettle(body BodyMap) {
-
+//    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.order.settle
+func (this *aliPayClient) AliPayTradeOrderSettle(body BodyMap) (aliRsp *AliPayTradeOrderSettleResponse, err error) {
+	var bytes []byte
+	trade1 := body.Get("out_request_no")
+	trade2 := body.Get("trade_no")
+	if trade1 == null || trade2 == null {
+		return nil, errors.New("out_request_no or trade_no are not allowed to be null")
+	}
+	bytes, err = this.doAliPay(body, "alipay.trade.order.settle")
+	if err != nil {
+		return nil, err
+	}
+	//log.Println("AliPayTradeFastPayRefundQuery::::", string(bytes))
+	aliRsp = new(AliPayTradeOrderSettleResponse)
+	err = json.Unmarshal(bytes, aliRsp)
+	if err != nil {
+		return nil, err
+	}
+	if aliRsp.AliPayTradeOrderSettleResponse.Code != "10000" {
+		info := aliRsp.AliPayTradeOrderSettleResponse
+		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	return aliRsp, nil
 }
 
 //alipay.trade.create(统一收单交易创建接口)
@@ -110,8 +131,8 @@ func (this *aliPayClient) AliPayTradeClose(body BodyMap) (aliRsp *AliPayTradeClo
 	if err != nil {
 		return nil, err
 	}
-	if aliRsp.AlipayTradeCloseResponse.Code != "10000" {
-		info := aliRsp.AlipayTradeCloseResponse
+	if aliRsp.AliPayTradeCloseResponse.Code != "10000" {
+		info := aliRsp.AliPayTradeCloseResponse
 		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	return aliRsp, nil
@@ -145,7 +166,7 @@ func (this *aliPayClient) AliPayTradeCancel(body BodyMap) (aliRsp *AliPayTradeCa
 
 //alipay.trade.refund(统一收单交易退款接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.refund
-func (this *aliPayClient) AliPayTradeRefund(body BodyMap) (aliRsp *AlipayTradeRefundResponse, err error) {
+func (this *aliPayClient) AliPayTradeRefund(body BodyMap) (aliRsp *AliPayTradeRefundResponse, err error) {
 	var bytes []byte
 	trade1 := body.Get("out_trade_no")
 	trade2 := body.Get("trade_no")
@@ -157,7 +178,7 @@ func (this *aliPayClient) AliPayTradeRefund(body BodyMap) (aliRsp *AlipayTradeRe
 		return nil, err
 	}
 	//log.Println("AliPayTradeCancel::::", string(bytes))
-	aliRsp = new(AlipayTradeRefundResponse)
+	aliRsp = new(AliPayTradeRefundResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
 		return nil, err
@@ -195,8 +216,8 @@ func (this *aliPayClient) AliPayTradePay(body BodyMap) (aliRsp *AliPayTradePayRe
 	if err != nil {
 		return nil, err
 	}
-	if aliRsp.AlipayTradePayResponse.Code != "10000" {
-		info := aliRsp.AlipayTradePayResponse
+	if aliRsp.AliPayTradePayResponse.Code != "10000" {
+		info := aliRsp.AliPayTradePayResponse
 		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	return aliRsp, nil
@@ -221,8 +242,8 @@ func (this *aliPayClient) AliPayTradeQuery(body BodyMap) (aliRsp *AliPayTradeQue
 	if err != nil {
 		return nil, err
 	}
-	if aliRsp.AlipayTradeQueryResponse.Code != "10000" {
-		info := aliRsp.AlipayTradeQueryResponse
+	if aliRsp.AliPayTradeQueryResponse.Code != "10000" {
+		info := aliRsp.AliPayTradeQueryResponse
 		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	return aliRsp, nil
@@ -341,6 +362,7 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 	if this.AppAuthToken != null {
 		pubBody.Set("app_auth_token", this.AppAuthToken)
 	}
+	fmt.Println("biz_content", string(bodyStr))
 	pubBody.Set("biz_content", string(bodyStr))
 	//===============获取签名===================
 	pKey := FormatPrivateKey(this.privateKey)
