@@ -132,8 +132,8 @@ func sortAliPaySignParams(body BodyMap) string {
 		buffer.WriteString(k)
 		buffer.WriteString("=")
 
-		valueStr := convert2String(body[k])
-		buffer.WriteString(valueStr)
+		//valueStr := convert2String(body[k])
+		buffer.WriteString(body.Get(k))
 		buffer.WriteString("&")
 	}
 	s := buffer.String()
