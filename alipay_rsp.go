@@ -62,12 +62,12 @@ type voucherDetailListInfo struct {
 }
 
 type AliPayTradePayResponse struct {
-	AlipayTradePayResponse alipayTradeResponseInfo `json:"alipay_trade_pay_response"`
+	AliPayTradePayResponse alipayTradeResponseInfo `json:"alipay_trade_pay_response"`
 	Sign                   string                  `json:"sign"`
 }
 
 type AliPayTradeQueryResponse struct {
-	AlipayTradeQueryResponse alipayTradeResponseInfo `json:"alipay_trade_query_response"`
+	AliPayTradeQueryResponse alipayTradeResponseInfo `json:"alipay_trade_query_response"`
 	Sign                     string                  `json:"sign"`
 }
 
@@ -77,7 +77,7 @@ type AliPayTradeCreateResponse struct {
 }
 
 type AliPayTradeCloseResponse struct {
-	AlipayTradeCloseResponse alipayTradeResponseInfo `json:"alipay_trade_close_response"`
+	AliPayTradeCloseResponse alipayTradeResponseInfo `json:"alipay_trade_close_response"`
 	Sign                     string                  `json:"sign"`
 }
 
@@ -137,8 +137,8 @@ type alipayTradeResponseInfo struct {
 	RefundSettlementId  string                  `json:"refund_settlement_id,omitempty"`
 }
 
-type AlipaySystemOauthTokenResponse struct {
-	AlipaySystemOauthTokenResponse oauthTokenInfo      `json:"alipay_system_oauth_token_response,omitempty"`
+type AliPaySystemOauthTokenResponse struct {
+	AliPaySystemOauthTokenResponse oauthTokenInfo      `json:"alipay_system_oauth_token_response,omitempty"`
 	ErrorResponse                  alipayErrorResponse `json:"error_response,omitempty"`
 	Sign                           string              `json:"sign"`
 }
@@ -167,7 +167,7 @@ type PhoneNumberResponse struct {
 	Mobile  string `json:"mobile,omitempty"`
 }
 
-type AlipayTradeRefundResponse struct {
+type AliPayTradeRefundResponse struct {
 	AlipayTradeRefundResponse refundResponse `json:"alipay_trade_refund_response"`
 	Sign                      string         `json:"sign"`
 }
@@ -207,8 +207,8 @@ type presetPayToolInfo struct {
 	AssertTypeCode string   `json:"assert_type_code,omitempty"`
 }
 
-type AlipayTradeFastpayRefundQueryResponse struct {
-	AlipayTradeFastpayRefundQueryResponse refundQueryResponse `json:"alipay_trade_fastpay_refund_query_response"`
+type AliPayTradeFastpayRefundQueryResponse struct {
+	AliPayTradeFastpayRefundQueryResponse refundQueryResponse `json:"alipay_trade_fastpay_refund_query_response"`
 	Sign                                  string              `json:"sign"`
 }
 
@@ -241,4 +241,16 @@ type RefundRoyaltyResult struct {
 	TransOutEmail string `json:"trans_out_email,omitempty"`
 	TransIn       string `json:"trans_in,omitempty"`
 	TransInEmail  string `json:"trans_in_email,omitempty"`
+}
+
+type AliPayTradeOrderSettleResponse struct {
+	AliPayTradeOrderSettleResponse orderSettleResponse `json:"alipay_trade_order_settle_response"`
+	Sign                           string              `json:"sign"`
+}
+type orderSettleResponse struct {
+	Code    string `json:"code,omitempty"`
+	Msg     string `json:"msg,omitempty"`
+	SubCode string `json:"sub_code,omitempty"`
+	SubMsg  string `json:"sub_msg,omitempty"`
+	TradeNo string `json:"trade_no,omitempty"`
 }
