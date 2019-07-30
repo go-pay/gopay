@@ -28,13 +28,13 @@ func (bm BodyMap) Set(key string, value interface{}) {
 	case reflect.Float64:
 		bm[key] = Float64ToString(value.(float64))
 	case reflect.Ptr:
-		bm[key] = jsonToString(value)
+		bm[key] = value
 	case reflect.Struct:
-		bm[key] = jsonToString(value)
+		bm[key] = value
 	case reflect.Map:
-		bm[key] = jsonToString(value)
+		bm[key] = value
 	case reflect.Slice:
-		bm[key] = jsonToString(value)
+		bm[key] = value
 	default:
 		bm[key] = ""
 	}
@@ -49,7 +49,11 @@ func (bm BodyMap) Get(key string) string {
 	if !ok {
 		return null
 	}
-	return value.(string)
+	_, ok2 := value.(string)
+	if ok2 {
+		return value.(string)
+	}
+	return jsonToString(value)
 }
 
 //删除参数
