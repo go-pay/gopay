@@ -301,7 +301,7 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 //    privateKey：应用私钥
 //    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
 //    codeOrToken：支付宝授权码或refresh_token
-func AlipaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (rsp *AlipaySystemOauthTokenResponse, err error) {
+func AlipaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (rsp *AliPaySystemOauthTokenResponse, err error) {
 	var bs []byte
 	body := make(BodyMap)
 	if "authorization_code" == grantType {
@@ -319,12 +319,12 @@ func AlipaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 		return nil, err
 	}
 	//fmt.Println("bs:", string(bs))
-	rsp = new(AlipaySystemOauthTokenResponse)
+	rsp = new(AliPaySystemOauthTokenResponse)
 	err = json.Unmarshal(bs, rsp)
 	if err != nil {
 		return nil, err
 	}
-	if rsp.AlipaySystemOauthTokenResponse.AccessToken != "" {
+	if rsp.AliPaySystemOauthTokenResponse.AccessToken != "" {
 		return rsp, nil
 	} else {
 
