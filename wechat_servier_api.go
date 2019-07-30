@@ -98,10 +98,10 @@ func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotify
 	body.Set("time_end", notifyRsp.TimeEnd)
 
 	newBody := make(BodyMap)
-	for k, v := range body {
-		vStr := convert2String(v)
+	for key := range body {
+		vStr := body.Get(key)
 		if vStr != null && vStr != "0" {
-			newBody.Set(k, v)
+			newBody.Set(key, vStr)
 		}
 	}
 
