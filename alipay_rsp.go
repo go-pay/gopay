@@ -206,3 +206,39 @@ type presetPayToolInfo struct {
 	Amount         []string `json:"amount,omitempty"`
 	AssertTypeCode string   `json:"assert_type_code,omitempty"`
 }
+
+type AlipayTradeFastpayRefundQueryResponse struct {
+	AlipayTradeFastpayRefundQueryResponse refundQueryResponse `json:"alipay_trade_fastpay_refund_query_response"`
+	Sign                                  string              `json:"sign"`
+}
+
+type refundQueryResponse struct {
+	Code                         string                `json:"code,omitempty"`
+	Msg                          string                `json:"msg,omitempty"`
+	SubCode                      string                `json:"sub_code,omitempty"`
+	SubMsg                       string                `json:"sub_msg,omitempty"`
+	TradeNo                      string                `json:"trade_no,omitempty"`
+	OutTradeNo                   string                `json:"out_trade_no,omitempty"`
+	OutRequestNo                 string                `json:"out_request_no,omitempty"`
+	RefundReason                 string                `json:"refund_reason,omitempty"`
+	TotalAmount                  string                `json:"total_amount,omitempty"`
+	RefundAmount                 string                `json:"refund_amount,omitempty"`
+	RefundRoyaltys               []RefundRoyaltyResult `json:"refund_royaltys,omitempty"`
+	GmtRefundPay                 string                `json:"gmt_refund_pay,omitempty"`
+	RefundDetailItemList         []tradeFundBill       `json:"refund_detail_item_list,omitempty"`
+	SendBackFee                  string                `json:"send_back_fee,omitempty"`
+	RefundSettlementId           string                `json:"refund_settlement_id,omitempty"`
+	PresentRefundBuyerAmount     string                `json:"present_refund_buyer_amount,omitempty"`
+	PresentRefundDiscountAmount  string                `json:"present_refund_discount_amount,omitempty"`
+	PresentRefundMdiscountAmount string                `json:"present_refund_mdiscount_amount,omitempty"`
+}
+
+type RefundRoyaltyResult struct {
+	RefundAmount  string `json:"refund_amount,omitempty"`
+	RoyaltyType   string `json:"royalty_type,omitempty"`
+	ResultCode    string `json:"result_code,omitempty"`
+	TransOut      string `json:"trans_out,omitempty"`
+	TransOutEmail string `json:"trans_out_email,omitempty"`
+	TransIn       string `json:"trans_in,omitempty"`
+	TransInEmail  string `json:"trans_in_email,omitempty"`
+}
