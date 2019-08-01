@@ -8,7 +8,6 @@ import (
 	"encoding/hex"
 	"encoding/xml"
 	"errors"
-	"github.com/parnurzeal/gorequest"
 	"sort"
 	"strings"
 )
@@ -78,7 +77,7 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 
 	reqXml := generateXml(reqs)
 	//fmt.Println("req:::", reqXml)
-	_, byteList, errorList := gorequest.New().
+	_, byteList, errorList := HttpAgent().
 		Post(wxURL_SanBox_GetSignKey).
 		Type("xml").
 		SendString(reqXml).EndBytes()

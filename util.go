@@ -1,6 +1,8 @@
 package gopay
 
 import (
+	"crypto/tls"
+	"github.com/parnurzeal/gorequest"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -59,6 +61,13 @@ func (bm BodyMap) Get(key string) string {
 //删除参数
 func (bm BodyMap) Remove(key string) {
 	delete(bm, key)
+}
+
+//HttpAgent
+func HttpAgent() (agent *gorequest.SuperAgent) {
+	agent = gorequest.New()
+	agent.TLSClientConfig(&tls.Config{InsecureSkipVerify: true})
+	return
 }
 
 //获取随机字符串

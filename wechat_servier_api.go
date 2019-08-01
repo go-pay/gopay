@@ -12,7 +12,6 @@ import (
 	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha256"
-	"crypto/tls"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
@@ -23,12 +22,6 @@ import (
 	"reflect"
 	"strings"
 )
-
-func HttpAgent() (agent *gorequest.SuperAgent) {
-	agent = gorequest.New()
-	agent.TLSClientConfig(&tls.Config{InsecureSkipVerify: true})
-	return
-}
 
 //解析支付完成后的Notify信息
 func ParseNotifyResult(req *http.Request) (notifyRsp *WeChatNotifyRequest, err error) {

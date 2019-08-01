@@ -79,6 +79,7 @@ func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderR
 	}
 
 	wxRsp = new(WeChatUnifiedOrderResponse)
+	//fmt.Println("bytes:", string(bytes))
 	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
 		return nil, err
@@ -347,7 +348,7 @@ func (this *weChatClient) doWeChat(body BodyMap, url string, tlsConfig ...*tls.C
 		//沙箱环境
 		body.Set("sign_type", SignType_MD5)
 		//从微信接口获取SanBoxSignKey
-		key, err := getSanBoxSign(this.MchId, body.Get("nonce_str"), this.apiKey, body.Get("sign_type"))
+		key, err := getSanBoxSign(this.MchId, body.Get("nonce_str"), this.apiKey, SignType_MD5)
 		if err != nil {
 			return nil, err
 		}
@@ -359,6 +360,7 @@ func (this *weChatClient) doWeChat(body BodyMap, url string, tlsConfig ...*tls.C
 	}
 	body.Set("sign", sign)
 	reqXML := generateXml(body)
+	//fmt.Println("reqXML:",reqXML)
 	//===============发起请求===================
 	agent := gorequest.New()
 
