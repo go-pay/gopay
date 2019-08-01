@@ -244,21 +244,29 @@ return c.String(http.StatusOK, rsp.ToXmlString())
 //    isProd：是否是正式环境
 client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
 
+number := gopay.GetRandomString(32)
+fmt.Println("out_trade_no:", number)
 //初始化参数Map
 body := make(gopay.BodyMap)
 body.Set("nonce_str", gopay.GetRandomString(32))
 body.Set("body", "测试支付")
-number := gopay.GetRandomString(32)
-log.Println("Number:", number)
 body.Set("out_trade_no", number)
 body.Set("total_fee", 1)
-body.Set("spbill_create_ip", "127.0.0.1")   //终端IP
+body.Set("spbill_create_ip", "127.0.0.1")
 body.Set("notify_url", "http://www.gopay.ink")
-body.Set("trade_type", gopay.TradeType_JsApi)
+body.Set("trade_type", gopay.TradeType_H5)
 body.Set("device_info", "WEB")
 body.Set("sign_type", gopay.SignType_MD5)
-//body.Set("scene_info", `{"h5_info": {"type":"Wap","wap_url": "http://www.gopay.ink","wap_name": "测试支付"}}`)
-body.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu6")
+
+//sceneInfo := make(map[string]map[string]string)
+//h5Info := make(map[string]string)
+//h5Info["type"] = "Wap"
+//h5Info["wap_url"] = "http://www.gopay.ink"
+//h5Info["wap_name"] = "H5测试支付"
+//sceneInfo["h5_info"] = h5Info
+//body.Set("scene_info", sceneInfo)
+
+body.Set("openid", OpenID)
 
 //发起下单请求
 wxRsp, err := client.UnifiedOrder(body)
