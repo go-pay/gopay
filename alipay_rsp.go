@@ -254,3 +254,33 @@ type orderSettleResponse struct {
 	SubMsg  string `json:"sub_msg,omitempty"`
 	TradeNo string `json:"trade_no,omitempty"`
 }
+
+type AlipayTradePrecreateResponse struct {
+	AlipayTradePrecreateResponse precreateResponse `json:"alipay_trade_precreate_response"`
+	Sign                         string            `json:"sign"`
+}
+
+type precreateResponse struct {
+	Code       string `json:"code,omitempty"`
+	Msg        string `json:"msg,omitempty"`
+	SubCode    string `json:"sub_code,omitempty"`
+	SubMsg     string `json:"sub_msg,omitempty"`
+	OutTradeNo string `json:"out_trade_no,omitempty"`
+	QrCode     string `json:"qr_code,omitempty"`
+}
+
+type AliPayTradePageRefundResponse struct {
+	AliPayTradePageRefundResponse pageRefundResponse `json:"alipay_trade_page_refund_response"`
+	Sign                          string             `json:"sign"`
+}
+
+type pageRefundResponse struct {
+	Code         string `json:"code,omitempty"`
+	Msg          string `json:"msg,omitempty"`
+	SubCode      string `json:"sub_code,omitempty"`
+	SubMsg       string `json:"sub_msg,omitempty"`
+	TradeNo      string `json:"trade_no,omitempty"`
+	OutTradeNo   string `json:"out_trade_no,omitempty"`
+	OutRequestNo string `json:"out_request_no,omitempty"`
+	RefundAmount string `json:"refund_amount,omitempty"`
+}
