@@ -203,7 +203,7 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 	buffer.WriteString("appid=")
 	buffer.WriteString(appid)
 
-	buffer.WriteString("&nonceStr=")
+	buffer.WriteString("&noncestr=")
 	buffer.WriteString(noncestr)
 
 	buffer.WriteString("&package=Sign=WXPay")
@@ -214,7 +214,7 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 	buffer.WriteString("&prepayid=")
 	buffer.WriteString(prepayid)
 
-	buffer.WriteString("&timeStamp=")
+	buffer.WriteString("&timestamp=")
 	buffer.WriteString(timestamp)
 
 	buffer.WriteString("&key=")
