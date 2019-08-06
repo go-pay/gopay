@@ -40,11 +40,11 @@
 
 ## 支付宝支付
 
-* 手机网站支付接口2.0(手机网站支付)：client.AliPayTradeWapPay()
-* 统一收单下单并支付页面接口(电脑网站支付)：client.AliPayTradePagePay()
-* APP支付接口2.0(APP支付)：client.AliPayTradeAppPay()
-* 统一收单交易支付接口(当面付)：client.AliPayTradePay()
-* 统一收单交易创建接口(小程序支付)：client.AliPayTradeCreate()
+* 手机网站支付接口2.0（手机网站支付）：client.AliPayTradeWapPay()
+* 统一收单下单并支付页面接口（电脑网站支付）：client.AliPayTradePagePay()
+* APP支付接口2.0（APP支付）：client.AliPayTradeAppPay()
+* 统一收单交易支付接口（当面付）：client.AliPayTradePay()
+* 统一收单交易创建接口（小程序支付）：client.AliPayTradeCreate()
 * 统一收单线下交易查询：client.AliPayTradeQuery()
 * 统一收单交易关闭接口：client.AliPayTradeClose()
 * 统一收单交易撤销接口：client.AliPayTradeCancel()
