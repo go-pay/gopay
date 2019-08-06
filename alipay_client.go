@@ -70,7 +70,7 @@ func (this *aliPayClient) AliPayTradeOrderSettle(body BodyMap) (aliRsp *AliPayTr
 	if err != nil {
 		return nil, err
 	}
-	//log.Println("AliPayTradeFastPayRefundQuery::::", string(bytes))
+	//log.Println("AliPayTradeOrderSettle::::", string(bytes))
 	aliRsp = new(AliPayTradeOrderSettleResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
@@ -92,14 +92,11 @@ func (this *aliPayClient) AliPayTradeCreate(body BodyMap) (aliRsp *AliPayTradeCr
 	if trade1 == null && trade2 == null {
 		return nil, errors.New("out_trade_no and buyer_id are not allowed to be null at the same time")
 	}
-	//===============product_code值===================
 	bytes, err = this.doAliPay(body, "alipay.trade.create")
 	if err != nil {
 		return nil, err
 	}
-
-	//convertBytes, _ := simplifiedchinese.GBK.NewDecoder().Bytes(bytes)
-	//log.Println("AliPayTradeCreate::::", string(convertBytes))
+	//log.Println("AliPayTradeCreateResponse::::", string(convertBytes))
 	aliRsp = new(AliPayTradeCreateResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
@@ -125,7 +122,7 @@ func (this *aliPayClient) AliPayTradeClose(body BodyMap) (aliRsp *AliPayTradeClo
 	if err != nil {
 		return nil, err
 	}
-	//log.Println("AliPayTradeCancel::::", string(bytes))
+	//log.Println("AliPayTradeCloseResponse::::", string(bytes))
 	aliRsp = new(AliPayTradeCloseResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
@@ -177,7 +174,7 @@ func (this *aliPayClient) AliPayTradeRefund(body BodyMap) (aliRsp *AliPayTradeRe
 	if err != nil {
 		return nil, err
 	}
-	//log.Println("AliPayTradeCancel::::", string(bytes))
+	//log.Println("AliPayTradeRefundResponse::::", string(bytes))
 	aliRsp = new(AliPayTradeRefundResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
@@ -190,9 +187,55 @@ func (this *aliPayClient) AliPayTradeRefund(body BodyMap) (aliRsp *AliPayTradeRe
 	return aliRsp, nil
 }
 
-//alipay.trade.precreate(统一收单线下交易预创建)
-func (this *aliPayClient) AliPayTradePrecreate(body BodyMap) {
+//alipay.trade.refund(统一收单退款页面接口)
+//    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.page.refund
+func (this *aliPayClient) AliPayTradePageRefund(body BodyMap) (aliRsp *AliPayTradePageRefundResponse, err error) {
+	var bytes []byte
+	trade1 := body.Get("out_trade_no")
+	trade2 := body.Get("trade_no")
+	if trade1 == null && trade2 == null {
+		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
+	}
+	bytes, err = this.doAliPay(body, "	alipay.trade.page.refund")
+	if err != nil {
+		return nil, err
+	}
+	//log.Println("AliPayTradePageRefundResponse::::", string(bytes))
+	aliRsp = new(AliPayTradePageRefundResponse)
+	err = json.Unmarshal(bytes, aliRsp)
+	if err != nil {
+		return nil, err
+	}
+	if aliRsp.AliPayTradePageRefundResponse.Code != "10000" {
+		info := aliRsp.AliPayTradePageRefundResponse
+		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	return aliRsp, nil
+}
 
+//alipay.trade.precreate(统一收单线下交易预创建)
+//    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.precreate
+func (this *aliPayClient) AliPayTradePrecreate(body BodyMap) (aliRsp *AlipayTradePrecreateResponse, err error) {
+	var bytes []byte
+	trade1 := body.Get("out_trade_no")
+	if trade1 == null {
+		return nil, errors.New("out_trade_no is not allowed to be null")
+	}
+	bytes, err = this.doAliPay(body, "alipay.trade.precreate")
+	if err != nil {
+		return nil, err
+	}
+	//log.Println("AlipayTradePrecreateResponse::::", string(convertBytes))
+	aliRsp = new(AlipayTradePrecreateResponse)
+	err = json.Unmarshal(bytes, aliRsp)
+	if err != nil {
+		return nil, err
+	}
+	if aliRsp.AlipayTradePrecreateResponse.Code != "10000" {
+		info := aliRsp.AlipayTradePrecreateResponse
+		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	return aliRsp, nil
 }
 
 //alipay.trade.pay(统一收单交易支付接口)
@@ -210,7 +253,7 @@ func (this *aliPayClient) AliPayTradePay(body BodyMap) (aliRsp *AliPayTradePayRe
 		return nil, err
 	}
 
-	//log.Println("AliPayTradeCancel::::", string(bytes))
+	//log.Println("AliPayTradePayResponse::::", string(bytes))
 	aliRsp = new(AliPayTradePayResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
@@ -236,7 +279,7 @@ func (this *aliPayClient) AliPayTradeQuery(body BodyMap) (aliRsp *AliPayTradeQue
 	if err != nil {
 		return nil, err
 	}
-	//log.Println("AliPayTradeCancel::::", string(bytes))
+	//log.Println("AliPayTradeQueryResponse::::", string(bytes))
 	aliRsp = new(AliPayTradeQueryResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
