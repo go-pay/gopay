@@ -1,0 +1,12 @@
+language: go
+
+go:
+  - 1.11.x
+  - 1.12.x
+  - tip
+
+install:
+  - go get github.com/pkg/errors
+
+script:
+  - cd $TRAVIS_BUILD_DIR && go test ./...
