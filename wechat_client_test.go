@@ -26,7 +26,7 @@ func TestWeChatClient_UnifiedOrder(t *testing.T) {
 	body.Set("out_trade_no", number)
 	body.Set("total_fee", 1)
 	body.Set("spbill_create_ip", "127.0.0.1")
-	body.Set("notify_url", "https://api.iguiyu.com/gy_pay/wechat/testnotify")
+	body.Set("notify_url", "http://www.gopay.ink")
 	body.Set("trade_type", TradeType_Native)
 	body.Set("device_info", "WEB")
 	body.Set("sign_type", SignType_MD5)
