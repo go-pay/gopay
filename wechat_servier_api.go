@@ -13,10 +13,37 @@ import (
 	"encoding/xml"
 	"errors"
 	"github.com/parnurzeal/gorequest"
+	"io/ioutil"
 	"net/http"
 	"reflect"
 	"strings"
 )
+
+//解析微信支付完成后的Notify参数到BodyMap，并验证Sign值
+//    req：*http.Request
+//    apiKey：API秘钥值
+//    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
+//    返回参数bm：Notify请求的参数
+//    返回参数ok：是否验证通过
+//    返回参数sign：根据参数计算的sign值，非微信返回参数中的Sign
+//    返回参数err：错误信息
+func ParseWeChatNotifyParamAndVerifySign(req *http.Request, apiKey string, signType string) (bm BodyMap, ok bool, sign string, err error) {
+	bs, err := ioutil.ReadAll(req.Body)
+	defer req.Body.Close()
+	if err != nil {
+		return nil, false, null, err
+	}
+	//获取Notify请求参数
+	bm = make(BodyMap)
+	err = xml.Unmarshal(bs, &bm)
+	if err != nil {
+		return nil, false, null, err
+	}
+	//验证Sign值
+	sign = getLocalSign(apiKey, signType, bm)
+	ok = sign == bm.Get("sign")
+	return
+}
 
 //解析支付完成后的Notify信息
 func ParseNotifyResult(req *http.Request) (notifyRsp *WeChatNotifyRequest, err error) {
@@ -26,25 +53,6 @@ func ParseNotifyResult(req *http.Request) (notifyRsp *WeChatNotifyRequest, err e
 	if err != nil {
 		return nil, err
 	}
-	return
-}
-
-type WeChatNotifyResponse struct {
-	ReturnCode string `xml:"return_code"`
-	ReturnMsg  string `xml:"return_msg"`
-}
-
-//返回数据给微信
-func (this *WeChatNotifyResponse) ToXmlString() (xmlStr string) {
-	buffer := new(bytes.Buffer)
-	buffer.WriteString("<xml><return_code><![CDATA[")
-	buffer.WriteString(this.ReturnCode)
-	buffer.WriteString("]]></return_code>")
-
-	buffer.WriteString("<return_msg><![CDATA[")
-	buffer.WriteString(this.ReturnMsg)
-	buffer.WriteString("]]></return_msg></xml>")
-	xmlStr = buffer.String()
 	return
 }
 
@@ -96,6 +104,25 @@ func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotify
 	sign = getLocalSign(apiKey, signType, newBody)
 
 	ok = sign == notifyRsp.Sign
+	return
+}
+
+type WeChatNotifyResponse struct {
+	ReturnCode string `xml:"return_code"`
+	ReturnMsg  string `xml:"return_msg"`
+}
+
+//返回数据给微信
+func (this *WeChatNotifyResponse) ToXmlString() (xmlStr string) {
+	buffer := new(bytes.Buffer)
+	buffer.WriteString("<xml><return_code><![CDATA[")
+	buffer.WriteString(this.ReturnCode)
+	buffer.WriteString("]]></return_code>")
+
+	buffer.WriteString("<return_msg><![CDATA[")
+	buffer.WriteString(this.ReturnMsg)
+	buffer.WriteString("]]></return_msg></xml>")
+	xmlStr = buffer.String()
 	return
 }
 

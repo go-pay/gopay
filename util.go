@@ -2,7 +2,10 @@ package gopay
 
 import (
 	"crypto/tls"
+	"encoding/xml"
+	"fmt"
 	"github.com/parnurzeal/gorequest"
+	"io"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -61,6 +64,61 @@ func (bm BodyMap) Get(key string) string {
 //删除参数
 func (bm BodyMap) Remove(key string) {
 	delete(bm, key)
+}
+
+type xmlMapEntry struct {
+	XMLName xml.Name
+	Value   string `xml:",chardata"`
+}
+
+func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+	if len(bm) == 0 {
+		return nil
+	}
+
+	err := e.EncodeToken(start)
+	if err != nil {
+		return err
+	}
+	var value string
+	for k, v := range bm {
+		//验证参数类型
+		fmt.Println("k:", k)
+		vKind := reflect.ValueOf(v).Kind()
+		//fmt.Println("vKind:", vKind)
+		switch vKind {
+		case reflect.String:
+			value = v.(string)
+		case reflect.Int:
+			value = Int2String(v.(int))
+		case reflect.Int64:
+			value = Int642String(v.(int64))
+		case reflect.Float32:
+			value = Float32ToString(v.(float32))
+		case reflect.Float64:
+			value = Float64ToString(v.(float64))
+		default:
+			value = ""
+		}
+		e.Encode(xmlMapEntry{XMLName: xml.Name{Local: k}, Value: value})
+	}
+
+	return e.EncodeToken(start.End())
+}
+
+func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+	for {
+		var e xmlMapEntry
+		err := d.Decode(&e)
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			return err
+		}
+		bm.Set(e.XMLName.Local, e.Value)
+		//(*bm)[e.XMLName.Local] = e.Value
+	}
+	return nil
 }
 
 //HttpAgent
