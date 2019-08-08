@@ -1,8 +1,3 @@
-//==================================
-//  * Name：Jerry
-//  * Tel：18017448610
-//  * DateTime：2019/1/16 0:30
-//==================================
 package gopay
 
 type AliPayNotifyRequest struct {

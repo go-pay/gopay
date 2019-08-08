@@ -1,8 +1,3 @@
-//==================================
-//  * Name：Jerry
-//  * Tel：18017448610
-//  * DateTime：2019/1/13 14:03
-//==================================
 package gopay
 
 type WeChatUnifiedOrderResponse struct {
