@@ -30,8 +30,8 @@
 * gopay.GetH5PaySign() => 获取微信内H5支付所需要的paySign
 * gopay.GetAppPaySign() => 获取APP支付所需要的paySign
 * gopay.ParseWeChatNotifyParamAndVerifySign() => 解析并返回微信支付异步通知的参数，并验证Sign值
-* gopay.ParseNotifyResult() => 解析并返回微信支付异步通知的参数（已废弃）
-* gopay.VerifyPayResultSign() => 微信支付异步通知的签名验证和返回参数验签后的Sign（已废弃）
+* （已废弃）gopay.ParseNotifyResult() => 解析并返回微信支付异步通知的参数
+* （已废弃）gopay.VerifyPayResultSign() => 微信支付异步通知的签名验证和返回参数验签后的Sign
 * gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
 * gopay.GetAccessToken() => 获取小程序全局唯一后台接口调用凭据
 * gopay.GetPaidUnionId() => 用户支付完成后，获取该用户的 UnionId，无需用户授权
