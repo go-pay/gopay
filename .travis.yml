@@ -4,7 +4,7 @@ go:
   - tip
 
 install:
-  - go get github.com/pkg/errors
+  - go get -u github.com/iGoogle-ink/gopay
 
 script:
-  - cd $TRAVIS_BUILD_DIR && go test ./...
+  - go test ./...
