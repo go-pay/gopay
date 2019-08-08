@@ -109,8 +109,12 @@ type WeChatRefundResponse struct {
 	CouponType2         string `xml:"coupon_type_2,omitempty"`
 	CouponRefundFee     int    `xml:"coupon_refund_fee,omitempty"`
 	CouponRefundFee0    int    `xml:"coupon_refund_fee_0,omitempty"`
+	CouponRefundFee1    int    `xml:"coupon_refund_fee_1,omitempty"`
+	CouponRefundFee2    int    `xml:"coupon_refund_fee_2,omitempty"`
 	CouponRefundCount   int    `xml:"coupon_refund_count,omitempty"`
 	CouponRefundId0     string `xml:"coupon_refund_id_0,omitempty"`
+	CouponRefundId1     string `xml:"coupon_refund_id_1,omitempty"`
+	CouponRefundId2     string `xml:"coupon_refund_id_2,omitempty"`
 }
 
 type WeChatQueryRefundResponse struct {
@@ -138,17 +142,41 @@ type WeChatQueryRefundResponse struct {
 	RefundId1            string `xml:"refund_id_1,omitempty"`
 	RefundId2            string `xml:"refund_id_2,omitempty"`
 	RefundChannel0       string `xml:"refund_channel_0,omitempty"`
+	RefundChannel1       string `xml:"refund_channel_1,omitempty"`
+	RefundChannel2       string `xml:"refund_channel_2,omitempty"`
 	RefundFee0           int    `xml:"refund_fee_0,omitempty"`
+	RefundFee1           int    `xml:"refund_fee_1,omitempty"`
+	RefundFee2           int    `xml:"refund_fee_2,omitempty"`
 	SettlementRefundFee0 int    `xml:"settlement_refund_fee_0,omitempty"`
+	SettlementRefundFee1 int    `xml:"settlement_refund_fee_1,omitempty"`
+	SettlementRefundFee2 int    `xml:"settlement_refund_fee_2,omitempty"`
 	CouponType00         string `xml:"coupon_type_0_0,omitempty"`
+	CouponType01         string `xml:"coupon_type_0_1,omitempty"`
+	CouponType02         string `xml:"coupon_type_0_2,omitempty"`
 	CouponRefundFee0     int    `xml:"coupon_refund_fee_0,omitempty"`
+	CouponRefundFee1     int    `xml:"coupon_refund_fee_1,omitempty"`
+	CouponRefundFee2     int    `xml:"coupon_refund_fee_2,omitempty"`
 	CouponRefundCount0   int    `xml:"coupon_refund_count_0,omitempty"`
+	CouponRefundCount1   int    `xml:"coupon_refund_count_1,omitempty"`
+	CouponRefundCount2   int    `xml:"coupon_refund_count_2,omitempty"`
 	CouponRefundId00     string `xml:"coupon_refund_id_0_0,omitempty"`
+	CouponRefundId01     string `xml:"coupon_refund_id_0_1,omitempty"`
+	CouponRefundId02     string `xml:"coupon_refund_id_0_2,omitempty"`
 	CouponRefundFee00    int    `xml:"coupon_refund_fee_0_0,omitempty"`
+	CouponRefundFee01    int    `xml:"coupon_refund_fee_0_1,omitempty"`
+	CouponRefundFee02    int    `xml:"coupon_refund_fee_0_2,omitempty"`
 	RefundStatus0        string `xml:"refund_status_0,omitempty"`
+	RefundStatus1        string `xml:"refund_status_1,omitempty"`
+	RefundStatus2        string `xml:"refund_status_2,omitempty"`
 	RefundAccount0       string `xml:"refund_account_0,omitempty"`
+	RefundAccount1       string `xml:"refund_account_1,omitempty"`
+	RefundAccount2       string `xml:"refund_account_2,omitempty"`
 	RefundRecvAccout0    string `xml:"refund_recv_accout_0,omitempty"`
+	RefundRecvAccout1    string `xml:"refund_recv_accout_1,omitempty"`
+	RefundRecvAccout2    string `xml:"refund_recv_accout_2,omitempty"`
 	RefundSuccessTime0   string `xml:"refund_success_time_0,omitempty"`
+	RefundSuccessTime1   string `xml:"refund_success_time_1,omitempty"`
+	RefundSuccessTime2   string `xml:"refund_success_time_2,omitempty"`
 }
 
 type WeChatMicropayResponse struct {

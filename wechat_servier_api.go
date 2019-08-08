@@ -19,11 +19,11 @@ import (
 	"strings"
 )
 
-//解析并返回微信支付异步通知的结果
+//解析微信支付异步通知的结果到BodyMap
 //    req：*http.Request
 //    返回参数bm：Notify请求的参数
 //    返回参数err：错误信息
-func ParseWeChatNotifyResult(req *http.Request) (bm BodyMap, err error) {
+func ParseWeChatNotifyResultToBodyMap(req *http.Request) (bm BodyMap, err error) {
 	bs, err := ioutil.ReadAll(req.Body)
 	defer req.Body.Close()
 	if err != nil {
@@ -39,13 +39,13 @@ func ParseWeChatNotifyResult(req *http.Request) (bm BodyMap, err error) {
 	return
 }
 
-//验证微信支付异步通知的Sign值
+//通过BodyMap验证微信支付异步通知的Sign值
 //    apiKey：API秘钥值
 //    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
 //    bm：通过 gopay.ParseWeChatNotifyResult() 得到的BodyMap
 //    返回参数ok：是否验证通过
 //    返回参数sign：计算出的sign值，非微信返回参数中的Sign
-func VerifyWeChatResultSign(apiKey string, signType string, bm BodyMap) (ok bool, sign string) {
+func VerifyWeChatResultSignByBodyMap(apiKey string, signType string, bm BodyMap) (ok bool, sign string) {
 	//验证Sign值的BodyMap
 	bmNew := make(BodyMap)
 	for key := range bm {
@@ -60,9 +60,11 @@ func VerifyWeChatResultSign(apiKey string, signType string, bm BodyMap) (ok bool
 	return
 }
 
-//解析并返回微信支付异步通知的参数
-//    已废弃，请使用新方法替换：ParseWeChatNotifyParamAndVerifySign
-func ParseNotifyResult(req *http.Request) (notifyRsp *WeChatNotifyRequest, err error) {
+//解析微信支付异步通知的参数
+//    req：*http.Request
+//    返回参数notifyRsp：Notify请求的参数
+//    返回参数err：错误信息
+func ParseWeChatNotifyResult(req *http.Request) (notifyRsp *WeChatNotifyRequest, err error) {
 	notifyRsp = new(WeChatNotifyRequest)
 	defer req.Body.Close()
 	err = xml.NewDecoder(req.Body).Decode(notifyRsp)
@@ -72,14 +74,13 @@ func ParseNotifyResult(req *http.Request) (notifyRsp *WeChatNotifyRequest, err e
 	return
 }
 
-//支付通知的签名验证和参数签名后的Sign
-//    已废弃，请使用新方法替换：ParseWeChatNotifyParamAndVerifySign
+//验证微信支付异步通知的Sign值
 //    apiKey：API秘钥值
 //    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
-//    notifyRsp：利用 gopay.ParseNotifyResult() 得到的结构体
+//    notifyRsp：利用 gopay.ParseWeChatNotifyResult() 得到的结构体
 //    返回参数ok：是否验证通过
 //    返回参数sign：根据参数计算的sign值，非微信返回参数中的Sign
-func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotifyRequest) (ok bool, sign string) {
+func VerifyWeChatResultSign(apiKey string, signType string, notifyRsp *WeChatNotifyRequest) (ok bool, sign string) {
 	body := make(BodyMap)
 	body.Set("return_code", notifyRsp.ReturnCode)
 	body.Set("return_msg", notifyRsp.ReturnMsg)
@@ -103,8 +104,14 @@ func VerifyPayResultSign(apiKey string, signType string, notifyRsp *WeChatNotify
 	body.Set("coupon_fee", notifyRsp.CouponFee)
 	body.Set("coupon_count", notifyRsp.CouponCount)
 	body.Set("coupon_type_0", notifyRsp.CouponType0)
+	body.Set("coupon_type_1", notifyRsp.CouponType1)
+	body.Set("coupon_type_2", notifyRsp.CouponType2)
 	body.Set("coupon_id_0", notifyRsp.CouponId0)
+	body.Set("coupon_id_1", notifyRsp.CouponId1)
+	body.Set("coupon_id_2", notifyRsp.CouponId2)
 	body.Set("coupon_fee_0", notifyRsp.CouponFee0)
+	body.Set("coupon_fee_1", notifyRsp.CouponFee1)
+	body.Set("coupon_fee_2", notifyRsp.CouponFee2)
 	body.Set("transaction_id", notifyRsp.TransactionId)
 	body.Set("out_trade_no", notifyRsp.OutTradeNo)
 	body.Set("attach", notifyRsp.Attach)

@@ -29,10 +29,10 @@
 * gopay.GetMiniPaySign() => 获取微信小程序支付所需要的paySign
 * gopay.GetH5PaySign() => 获取微信内H5支付所需要的paySign
 * gopay.GetAppPaySign() => 获取APP支付所需要的paySign
-* gopay.ParseWeChatNotifyResult() => 解析并返回微信支付异步通知的结果
+* gopay.ParseWeChatNotifyResultToBodyMap() => 解析微信支付异步通知的结果到BodyMap
+* gopay.ParseWeChatNotifyResult() => 解析微信支付异步通知的参数
+* gopay.VerifyWeChatResultSignByBodyMap() => 通过BodyMap验证微信支付异步通知的Sign值
 * gopay.VerifyWeChatResultSign() => 验证微信支付异步通知的Sign值
-* （已过时）gopay.ParseNotifyResult() => 解析并返回微信支付异步通知的参数
-* （已过时）gopay.VerifyPayResultSign() => 微信支付异步通知的签名验证和返回参数验签后的Sign
 * gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
 * gopay.GetAccessToken() => 获取小程序全局唯一后台接口调用凭据
 * gopay.GetPaidUnionId() => 用户支付完成后，获取该用户的 UnionId，无需用户授权
@@ -189,7 +189,7 @@ fmt.Println("paySign：", paySign)
 //    req：*http.Request
 //    返回参数bm：Notify请求的参数
 //    返回参数err：错误信息
-bm, err := gopay.ParseWeChatNotifyResult(c.Request())
+bm, err := gopay.ParseWeChatNotifyResultToBodyMap(c.Request())
 if err != nil {
     fmt.Println("err:", err)
     return
@@ -198,10 +198,10 @@ if err != nil {
 //验证微信支付异步通知的Sign值
 //    apiKey：API秘钥值
 //    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
-//    bm：通过 gopay.ParseWeChatNotifyResult() 得到的BodyMap
+//    bm：通过 gopay.ParseWeChatNotifyResultToBodyMap() 得到的BodyMap
 //    返回参数ok：是否验证通过
 //    返回参数sign：计算出的sign值，非微信返回参数中的Sign
-ok, sign := gopay.VerifyWeChatResultSign("192006250b4c09247ec02edce69f6a2d", gopay.SignType_MD5, bm)
+ok, sign := gopay.VerifyWeChatResultSignByBodyMap("192006250b4c09247ec02edce69f6a2d", gopay.SignType_MD5, bm)
 fmt.Println("ok:", ok)
 fmt.Println("sign:", sign)
 ```
