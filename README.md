@@ -214,6 +214,7 @@ fmt.Println("sign:", sign)
 notifyRsp, err := gopay.ParseWeChatNotifyResult(c.Request())
 if err != nil {
     fmt.Println("err:", err)
+    return
 }
 fmt.Println("notifyRsp:", notifyRsp)
 
