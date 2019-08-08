@@ -41,8 +41,14 @@ type WeChatQueryOrderResponse struct {
 	CouponFee          int    `xml:"coupon_fee,omitempty"`
 	CouponCount        int    `xml:"coupon_count,omitempty"`
 	CouponType0        string `xml:"coupon_type_0,omitempty"`
+	CouponType1        string `xml:"coupon_type_1,omitempty"`
+	CouponType2        string `xml:"coupon_type_2,omitempty"`
 	CouponId0          string `xml:"coupon_id_0,omitempty"`
+	CouponId1          string `xml:"coupon_id_1,omitempty"`
+	CouponId2          string `xml:"coupon_id_2,omitempty"`
 	CouponFee0         int    `xml:"coupon_fee_0,omitempty"`
+	CouponFee1         int    `xml:"coupon_fee_1,omitempty"`
+	CouponFee2         int    `xml:"coupon_fee_2,omitempty"`
 	TransactionId      string `xml:"transaction_id,omitempty"`
 	OutTradeNo         string `xml:"out_trade_no,omitempty"`
 	Attach             string `xml:"attach,omitempty"`
@@ -99,6 +105,8 @@ type WeChatRefundResponse struct {
 	CashFeeType         string `xml:"cash_fee_type,omitempty"`
 	CashRefundFee       int    `xml:"cash_refund_fee,omitempty"`
 	CouponType0         string `xml:"coupon_type_0,omitempty"`
+	CouponType1         string `xml:"coupon_type_1,omitempty"`
+	CouponType2         string `xml:"coupon_type_2,omitempty"`
 	CouponRefundFee     int    `xml:"coupon_refund_fee,omitempty"`
 	CouponRefundFee0    int    `xml:"coupon_refund_fee_0,omitempty"`
 	CouponRefundCount   int    `xml:"coupon_refund_count,omitempty"`
@@ -124,7 +132,11 @@ type WeChatQueryRefundResponse struct {
 	CashFee              int    `xml:"cash_fee,omitempty"`
 	RefundCount          int    `xml:"refund_count,omitempty"`
 	OutRefundNo0         string `xml:"out_refund_no_0,omitempty"`
+	OutRefundNo1         string `xml:"out_refund_no_1,omitempty"`
+	OutRefundNo2         string `xml:"out_refund_no_2,omitempty"`
 	RefundId0            string `xml:"refund_id_0,omitempty"`
+	RefundId1            string `xml:"refund_id_1,omitempty"`
+	RefundId2            string `xml:"refund_id_2,omitempty"`
 	RefundChannel0       string `xml:"refund_channel_0,omitempty"`
 	RefundFee0           int    `xml:"refund_fee_0,omitempty"`
 	SettlementRefundFee0 int    `xml:"settlement_refund_fee_0,omitempty"`
@@ -200,8 +212,14 @@ type WeChatNotifyRequest struct {
 	CouponFee          int    `xml:"coupon_fee,omitempty"`
 	CouponCount        int    `xml:"coupon_count,omitempty"`
 	CouponType0        string `xml:"coupon_type_0,omitempty"`
+	CouponType1        string `xml:"coupon_type_1,omitempty"`
+	CouponType2        string `xml:"coupon_type_2,omitempty"`
 	CouponId0          string `xml:"coupon_id_0,omitempty"`
+	CouponId1          string `xml:"coupon_id_1,omitempty"`
+	CouponId2          string `xml:"coupon_id_2,omitempty"`
 	CouponFee0         int    `xml:"coupon_fee_0,omitempty"`
+	CouponFee1         int    `xml:"coupon_fee_1,omitempty"`
+	CouponFee2         int    `xml:"coupon_fee_2,omitempty"`
 	TransactionId      string `xml:"transaction_id,omitempty"`
 	OutTradeNo         string `xml:"out_trade_no,omitempty"`
 	Attach             string `xml:"attach,omitempty"`

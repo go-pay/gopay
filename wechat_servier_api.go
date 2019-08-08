@@ -19,27 +19,34 @@ import (
 	"strings"
 )
 
-//解析并返回微信支付异步通知的参数，并验证Sign值
+//解析并返回微信支付异步通知的结果
 //    req：*http.Request
-//    apiKey：API秘钥值
-//    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
 //    返回参数bm：Notify请求的参数
-//    返回参数ok：是否验证通过
-//    返回参数sign：根据参数计算的sign值，非微信返回参数中的Sign
 //    返回参数err：错误信息
-func ParseWeChatNotifyParamAndVerifySign(req *http.Request, apiKey string, signType string) (bm BodyMap, ok bool, sign string, err error) {
+func ParseWeChatNotifyResult(req *http.Request) (bm BodyMap, err error) {
 	bs, err := ioutil.ReadAll(req.Body)
 	defer req.Body.Close()
 	if err != nil {
-		return nil, false, null, err
+		return nil, err
 	}
 	//获取Notify请求参数
 	bm = make(BodyMap)
 	err = xml.Unmarshal(bs, &bm)
 	if err != nil {
-		return nil, false, null, err
+		return nil, err
 	}
-	//新BodyMap
+
+	return
+}
+
+//验证微信支付异步通知的Sign值
+//    apiKey：API秘钥值
+//    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
+//    bm：通过 gopay.ParseWeChatNotifyResult() 得到的BodyMap
+//    返回参数ok：是否验证通过
+//    返回参数sign：计算出的sign值，非微信返回参数中的Sign
+func VerifyWeChatResultSign(apiKey string, signType string, bm BodyMap) (ok bool, sign string) {
+	//验证Sign值的BodyMap
 	bmNew := make(BodyMap)
 	for key := range bm {
 		if key != "sign" {

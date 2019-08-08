@@ -141,24 +141,6 @@ func GetRandomString(length int) string {
 	return string(result)
 }
 
-//func convert2String(value interface{}) (valueStr string) {
-//	switch v := value.(type) {
-//	case int:
-//		valueStr = Int2String(v)
-//	case int64:
-//		valueStr = Int642String(v)
-//	case float64:
-//		valueStr = Float64ToString(v)
-//	case float32:
-//		valueStr = Float32ToString(v)
-//	case string:
-//		valueStr = v
-//	default:
-//		valueStr = null
-//	}
-//	return
-//}
-
 //解析时间
 func ParseDateTime(timeStr string) (datetime time.Time) {
 	datetime, _ = time.ParseInLocation(TimeLayout, timeStr, time.Local)
