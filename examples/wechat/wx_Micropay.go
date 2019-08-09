@@ -1,8 +1,3 @@
-//==================================
-//  * Name：Jerry
-//  * DateTime：2019/8/9 15:46
-//  * Desc：
-//==================================
 package wechat
 
 import (
@@ -10,7 +5,7 @@ import (
 	"github.com/iGoogle-ink/gopay"
 )
 
-func main() {
+func Micropay() {
 	//初始化微信客户端
 	//    appId：应用ID
 	//    MchID：商户ID

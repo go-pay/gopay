@@ -1,8 +1,3 @@
-//==================================
-//  * Name：Jerry
-//  * DateTime：2019/8/9 16:32
-//  * Desc：
-//==================================
 package wechat
 
 import (
@@ -10,15 +5,6 @@ import (
 	"github.com/iGoogle-ink/gopay"
 	"net/http"
 )
-
-func main() {
-	Code2Session()
-	GetAccessToken()
-	GetPaidUnionId()
-	GetWeChatUserInfo()
-	DecryptOpenDataToStruct()
-	GetOpenIdByAuthCode()
-}
 
 func Code2Session() {
 	//获取微信用户的OpenId、SessionKey、UnionId

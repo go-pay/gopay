@@ -5,7 +5,7 @@ import (
 	"github.com/iGoogle-ink/gopay"
 )
 
-func main() {
+func UnifiedOrder() {
 	//初始化微信客户端
 	//    appId：应用ID
 	//    MchID：商户ID

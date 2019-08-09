@@ -1,8 +1,3 @@
-//==================================
-//  * Name：Jerry
-//  * DateTime：2019/8/9 16:22
-//  * Desc：
-//==================================
 package wechat
 
 import (
@@ -10,7 +5,7 @@ import (
 	"github.com/iGoogle-ink/gopay"
 )
 
-func main() {
+func DownloadFundFlow() {
 	//初始化微信客户端
 	//    appId：应用ID
 	//    MchID：商户ID
@@ -33,5 +28,4 @@ func main() {
 		return
 	}
 	fmt.Println("wxRsp：", wxRsp)
-
 }
