@@ -35,7 +35,7 @@
 * gopay.VerifyWeChatResultSign() => 验证微信支付异步通知的Sign值
 * gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
 * gopay.GetAccessToken() => 获取小程序全局唯一后台接口调用凭据
-* gopay.GetPaidUnionId() => 用户支付完成后，获取该用户的 UnionId，无需用户授权
+* gopay.GetPaidUnionId() => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
 * gopay.GetWeChatUserInfo() => 微信公众号：获取用户基本信息(UnionID机制)
 * gopay.DecryptOpenDataToStruct() => 加密数据，解密到指定结构体
 * gopay.GetOpenIdByAuthCode() => 授权码查询openid

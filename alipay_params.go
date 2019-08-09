@@ -28,6 +28,16 @@ import (
 //	NotifyUrl  string `json:"notify_url"`  //支付宝服务器主动通知商户服务器里指定的页面http/https路径。
 //	BizContent string `json:"biz_content"` //业务请求参数的集合，最大长度不限，除公共参数外所有请求参数都必须放在这个参数中传递，具体参照各产品快速接入文档
 
+type OpenApiRoyaltyDetailInfoPojo struct {
+	RoyaltyType  string `json:"royalty_type,omitempty"`
+	TransOut     string `json:"trans_out,omitempty"`
+	TransOutType string `json:"trans_out_type,omitempty"`
+	TransInType  string `json:"trans_in_type,omitempty"`
+	TransIn      string `json:"trans_in"`
+	Amount       string `json:"amount,omitempty"`
+	Desc         string `json:"desc,omitempty"`
+}
+
 //设置支付后的ReturnUrl
 func (this *aliPayClient) SetReturnUrl(url string) (client *aliPayClient) {
 	this.ReturnUrl = url

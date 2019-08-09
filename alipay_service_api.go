@@ -20,37 +20,37 @@ import (
 )
 
 //解析支付宝支付完成后的Notify信息
-func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest, err error) {
-	notifyRsp = new(AliPayNotifyRequest)
-	notifyRsp.NotifyTime = req.FormValue("notify_time")
-	notifyRsp.NotifyType = req.FormValue("notify_type")
-	notifyRsp.NotifyId = req.FormValue("notify_id")
-	notifyRsp.AppId = req.FormValue("app_id")
-	notifyRsp.Charset = req.FormValue("charset")
-	notifyRsp.Version = req.FormValue("version")
-	notifyRsp.SignType = req.FormValue("sign_type")
-	notifyRsp.Sign = req.FormValue("sign")
-	notifyRsp.AuthAppId = req.FormValue("auth_app_id")
-	notifyRsp.TradeNo = req.FormValue("trade_no")
-	notifyRsp.OutTradeNo = req.FormValue("out_trade_no")
-	notifyRsp.OutBizNo = req.FormValue("out_biz_no")
-	notifyRsp.BuyerId = req.FormValue("buyer_id")
-	notifyRsp.BuyerLogonId = req.FormValue("buyer_logon_id")
-	notifyRsp.SellerId = req.FormValue("seller_id")
-	notifyRsp.SellerEmail = req.FormValue("seller_email")
-	notifyRsp.TradeStatus = req.FormValue("trade_status")
-	notifyRsp.TotalAmount = req.FormValue("total_amount")
-	notifyRsp.ReceiptAmount = req.FormValue("receipt_amount")
-	notifyRsp.InvoiceAmount = req.FormValue("invoice_amount")
-	notifyRsp.BuyerPayAmount = req.FormValue("buyer_pay_amount")
-	notifyRsp.PointAmount = req.FormValue("point_amount")
-	notifyRsp.RefundFee = req.FormValue("refund_fee")
-	notifyRsp.Subject = req.FormValue("subject")
-	notifyRsp.Body = req.FormValue("body")
-	notifyRsp.GmtCreate = req.FormValue("gmt_create")
-	notifyRsp.GmtPayment = req.FormValue("gmt_payment")
-	notifyRsp.GmtRefund = req.FormValue("gmt_refund")
-	notifyRsp.GmtClose = req.FormValue("gmt_close")
+func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest, err error) {
+	notifyReq = new(AliPayNotifyRequest)
+	notifyReq.NotifyTime = req.FormValue("notify_time")
+	notifyReq.NotifyType = req.FormValue("notify_type")
+	notifyReq.NotifyId = req.FormValue("notify_id")
+	notifyReq.AppId = req.FormValue("app_id")
+	notifyReq.Charset = req.FormValue("charset")
+	notifyReq.Version = req.FormValue("version")
+	notifyReq.SignType = req.FormValue("sign_type")
+	notifyReq.Sign = req.FormValue("sign")
+	notifyReq.AuthAppId = req.FormValue("auth_app_id")
+	notifyReq.TradeNo = req.FormValue("trade_no")
+	notifyReq.OutTradeNo = req.FormValue("out_trade_no")
+	notifyReq.OutBizNo = req.FormValue("out_biz_no")
+	notifyReq.BuyerId = req.FormValue("buyer_id")
+	notifyReq.BuyerLogonId = req.FormValue("buyer_logon_id")
+	notifyReq.SellerId = req.FormValue("seller_id")
+	notifyReq.SellerEmail = req.FormValue("seller_email")
+	notifyReq.TradeStatus = req.FormValue("trade_status")
+	notifyReq.TotalAmount = req.FormValue("total_amount")
+	notifyReq.ReceiptAmount = req.FormValue("receipt_amount")
+	notifyReq.InvoiceAmount = req.FormValue("invoice_amount")
+	notifyReq.BuyerPayAmount = req.FormValue("buyer_pay_amount")
+	notifyReq.PointAmount = req.FormValue("point_amount")
+	notifyReq.RefundFee = req.FormValue("refund_fee")
+	notifyReq.Subject = req.FormValue("subject")
+	notifyReq.Body = req.FormValue("body")
+	notifyReq.GmtCreate = req.FormValue("gmt_create")
+	notifyReq.GmtPayment = req.FormValue("gmt_payment")
+	notifyReq.GmtRefund = req.FormValue("gmt_refund")
+	notifyReq.GmtClose = req.FormValue("gmt_close")
 	billList := req.FormValue("fund_bill_list")
 	//log.Println("billList:", billList)
 	if billList != null {
@@ -59,11 +59,11 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest,
 		if err != nil {
 			return nil, err
 		}
-		notifyRsp.FundBillList = bills
+		notifyReq.FundBillList = bills
 	} else {
-		notifyRsp.FundBillList = nil
+		notifyReq.FundBillList = nil
 	}
-	notifyRsp.PassbackParams = req.FormValue("passback_params")
+	notifyReq.PassbackParams = req.FormValue("passback_params")
 	detailList := req.FormValue("voucher_detail_list")
 	//log.Println("detailList:", detailList)
 	if detailList != null {
@@ -72,17 +72,18 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyRsp *AliPayNotifyRequest,
 		if err != nil {
 			return nil, err
 		}
-		notifyRsp.VoucherDetailList = details
+		notifyReq.VoucherDetailList = details
 	} else {
-		notifyRsp.VoucherDetailList = nil
+		notifyReq.VoucherDetailList = nil
 	}
-	return notifyRsp, err
+	return notifyReq, err
 }
 
 //解密支付宝开放数据
 //    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 //    sessionKey:会话密钥
 //    beanPtr:需要解析到的结构体指针
+//    文档：https://docs.alipay.com/mini/introduce/aes
 func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{}) (err error) {
 	//验证参数类型
 	beanValue := reflect.ValueOf(beanPtr)
@@ -120,43 +121,43 @@ func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr inte
 
 //支付通知的签名验证和参数签名后的Sign
 //    aliPayPublicKey：支付宝公钥
-//    notifyRsp：利用 gopay.ParseAliPayNotifyResult() 得到的结构体
+//    notifyReq：利用 gopay.ParseAliPayNotifyResult() 得到的结构体
 //    返回参数ok：是否验证通过
 //    返回参数err：错误信息
-func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyRequest) (ok bool, err error) {
+func VerifyAliPayResultSign(aliPayPublicKey string, notifyReq *AliPayNotifyRequest) (ok bool, err error) {
 	body := make(BodyMap)
-	body.Set("notify_time", notifyRsp.NotifyTime)
-	body.Set("notify_type", notifyRsp.NotifyType)
-	body.Set("notify_id", notifyRsp.NotifyId)
-	body.Set("app_id", notifyRsp.AppId)
-	body.Set("charset", notifyRsp.Charset)
-	body.Set("version", notifyRsp.Version)
-	//body.Set("sign", notifyRsp.Sign)          //验签时去掉
-	//body.Set("sign_type", notifyRsp.SignType) //验签时去掉
-	body.Set("auth_app_id", notifyRsp.AuthAppId)
-	body.Set("trade_no", notifyRsp.TradeNo)
-	body.Set("out_trade_no", notifyRsp.OutTradeNo)
-	body.Set("out_biz_no", notifyRsp.OutBizNo)
-	body.Set("buyer_id", notifyRsp.BuyerId)
-	body.Set("buyer_logon_id", notifyRsp.BuyerLogonId)
-	body.Set("seller_id", notifyRsp.SellerId)
-	body.Set("seller_email", notifyRsp.SellerEmail)
-	body.Set("trade_status", notifyRsp.TradeStatus)
-	body.Set("total_amount", notifyRsp.TotalAmount)
-	body.Set("receipt_amount", notifyRsp.ReceiptAmount)
-	body.Set("invoice_amount", notifyRsp.InvoiceAmount)
-	body.Set("buyer_pay_amount", notifyRsp.BuyerPayAmount)
-	body.Set("point_amount", notifyRsp.PointAmount)
-	body.Set("refund_fee", notifyRsp.RefundFee)
-	body.Set("subject", notifyRsp.Subject)
-	body.Set("body", notifyRsp.Body)
-	body.Set("gmt_create", notifyRsp.GmtCreate)
-	body.Set("gmt_payment", notifyRsp.GmtPayment)
-	body.Set("gmt_refund", notifyRsp.GmtRefund)
-	body.Set("gmt_close", notifyRsp.GmtClose)
-	body.Set("fund_bill_list", jsonToString(notifyRsp.FundBillList))
-	body.Set("passback_params", notifyRsp.PassbackParams)
-	body.Set("voucher_detail_list", jsonToString(notifyRsp.VoucherDetailList))
+	body.Set("notify_time", notifyReq.NotifyTime)
+	body.Set("notify_type", notifyReq.NotifyType)
+	body.Set("notify_id", notifyReq.NotifyId)
+	body.Set("app_id", notifyReq.AppId)
+	body.Set("charset", notifyReq.Charset)
+	body.Set("version", notifyReq.Version)
+	//body.Set("sign", notifyReq.Sign)          //验签时去掉
+	//body.Set("sign_type", notifyReq.SignType) //验签时去掉
+	body.Set("auth_app_id", notifyReq.AuthAppId)
+	body.Set("trade_no", notifyReq.TradeNo)
+	body.Set("out_trade_no", notifyReq.OutTradeNo)
+	body.Set("out_biz_no", notifyReq.OutBizNo)
+	body.Set("buyer_id", notifyReq.BuyerId)
+	body.Set("buyer_logon_id", notifyReq.BuyerLogonId)
+	body.Set("seller_id", notifyReq.SellerId)
+	body.Set("seller_email", notifyReq.SellerEmail)
+	body.Set("trade_status", notifyReq.TradeStatus)
+	body.Set("total_amount", notifyReq.TotalAmount)
+	body.Set("receipt_amount", notifyReq.ReceiptAmount)
+	body.Set("invoice_amount", notifyReq.InvoiceAmount)
+	body.Set("buyer_pay_amount", notifyReq.BuyerPayAmount)
+	body.Set("point_amount", notifyReq.PointAmount)
+	body.Set("refund_fee", notifyReq.RefundFee)
+	body.Set("subject", notifyReq.Subject)
+	body.Set("body", notifyReq.Body)
+	body.Set("gmt_create", notifyReq.GmtCreate)
+	body.Set("gmt_payment", notifyReq.GmtPayment)
+	body.Set("gmt_refund", notifyReq.GmtRefund)
+	body.Set("gmt_close", notifyReq.GmtClose)
+	body.Set("fund_bill_list", jsonToString(notifyReq.FundBillList))
+	body.Set("passback_params", notifyReq.PassbackParams)
+	body.Set("voucher_detail_list", jsonToString(notifyReq.VoucherDetailList))
 
 	newBody := make(BodyMap)
 	for k, v := range body {
@@ -169,7 +170,7 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyRsp *AliPayNotifyReque
 	signData := sortAliPaySignParams(newBody)
 
 	//log.Println("签名字符串：", signData)
-	err = verifyAliPaySign(signData, notifyRsp.Sign, notifyRsp.SignType, pKey)
+	err = verifyAliPaySign(signData, notifyReq.Sign, notifyReq.SignType, pKey)
 	if err != nil {
 		return false, err
 	}
@@ -192,7 +193,7 @@ func jsonToString(v interface{}) (str string) {
 	return s
 }
 
-//格式化秘钥
+//格式化应用秘钥
 func FormatPrivateKey(privateKey string) (pKey string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("-----BEGIN RSA PRIVATE KEY-----\n")
@@ -222,7 +223,7 @@ func FormatPrivateKey(privateKey string) (pKey string) {
 	return
 }
 
-//格式化秘钥
+//格式化支付宝公钥
 func FormatAliPayPublicKey(publicKey string) (pKey string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("-----BEGIN PUBLIC KEY-----\n")
@@ -296,6 +297,7 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 //    privateKey：应用私钥
 //    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
 //    codeOrToken：支付宝授权码或refresh_token
+//    文档：https://docs.open.alipay.com/api_9/alipay.system.oauth.token
 func AlipaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (rsp *AliPaySystemOauthTokenResponse, err error) {
 	var bs []byte
 	body := make(BodyMap)

@@ -154,6 +154,8 @@ func (this *WeChatNotifyResponse) ToXmlString() (xmlStr string) {
 //    signType：签名类型
 //    timeStamp：时间
 //    apiKey：API秘钥值
+//
+//    微信小程序支付API：https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html
 func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("appId=")
@@ -190,13 +192,15 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey strin
 	return
 }
 
-//JSAPI支付，统一下单获取支付参数后，再次计算出微信内H5支付需要用的paySign
+//微信内H5支付，统一下单获取支付参数后，再次计算出微信内H5支付需要用的paySign
 //    appId：APPID
 //    nonceStr：随即字符串
 //    prepayId：统一下单成功后得到的值
 //    signType：签名类型
 //    timeStamp：时间
 //    apiKey：API秘钥值
+//
+//    微信内H5支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6
 func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("appId=")
@@ -241,6 +245,8 @@ func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string)
 //    signType：此处签名方式，务必与统一下单时用的签名方式一致
 //    timeStamp：时间
 //    apiKey：API秘钥值
+//
+//    APP支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12
 func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, apiKey string) (paySign string) {
 	buffer := new(bytes.Buffer)
 	buffer.WriteString("appid=")
@@ -284,6 +290,7 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 //    iv:加密算法的初始向量
 //    sessionKey:会话密钥
 //    beanPtr:需要解析到的结构体指针
+//    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr interface{}) (err error) {
 	//验证参数类型
 	beanValue := reflect.ValueOf(beanPtr)
@@ -321,10 +328,11 @@ func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr inter
 	return nil
 }
 
-//获取微信用户的OpenId、SessionKey、UnionId
+//获取微信小程序用户的OpenId、SessionKey、UnionId
 //    appId:APPID
 //    appSecret:AppSecret
 //    wxCode:小程序调用wx.login 获取的code
+//    文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
 func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp, err error) {
 	sessionRsp = new(Code2SessionRsp)
 	url := "https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + appSecret + "&js_code=" + wxCode + "&grant_type=authorization_code"
@@ -340,6 +348,7 @@ func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp,
 //获取小程序全局唯一后台接口调用凭据(AccessToken:157字符)
 //    appId:APPID
 //    appSecret:AppSecret
+//    获取access_token文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140183
 func GetAccessToken(appId, appSecret string) (accessToken *AccessToken, err error) {
 	accessToken = new(AccessToken)
 	url := "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appId + "&secret=" + appSecret
@@ -359,6 +368,7 @@ func GetAccessToken(appId, appSecret string) (accessToken *AccessToken, err erro
 //    apiKey:ApiKey
 //    authCode:用户授权码
 //    nonceStr:随即字符串
+//    文档：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_13&index=9
 func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openIdRsp *OpenIdByAuthCodeRsp, err error) {
 
 	url := "https://api.mch.weixin.qq.com/tools/authcodetoopenid"
@@ -388,10 +398,11 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 	return openIdRsp, nil
 }
 
-//用户支付完成后，获取该用户的 UnionId，无需用户授权。
+//微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权。
 //    accessToken：接口调用凭据
 //    openId：用户的OpenID
 //    transactionId：微信支付订单号
+//    文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/user-info/auth.getPaidUnionId.html
 func GetPaidUnionId(accessToken, openId, transactionId string) (unionId *PaidUnionId, err error) {
 	unionId = new(PaidUnionId)
 	url := "https://api.weixin.qq.com/wxa/getpaidunionid?access_token=" + accessToken + "&openid=" + openId + "&transaction_id=" + transactionId
@@ -409,6 +420,7 @@ func GetPaidUnionId(accessToken, openId, transactionId string) (unionId *PaidUni
 //    accessToken：接口调用凭据
 //    openId：用户的OpenID
 //    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
+//    获取用户基本信息(UnionID机制)文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140839
 func GetWeChatUserInfo(accessToken, openId string, lang ...string) (userInfo *WeChatUserInfo, err error) {
 	userInfo = new(WeChatUserInfo)
 	var url string
