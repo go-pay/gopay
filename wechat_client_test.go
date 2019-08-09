@@ -9,51 +9,51 @@ import (
 	"testing"
 )
 
-func TestWeChatClient_UnifiedOrder(t *testing.T) {
-	//初始化微信客户端
-	//    appId：应用ID
-	//    MchID：商户ID
-	//    apiKey：API秘钥值
-	//    isProd：是否是正式环境
-	client := NewWeChatClient(AppID, MchID_iguiyu, ApiKey_iguiyu, false)
-
-	number := GetRandomString(32)
-	fmt.Println("out_trade_no:", number)
-	//初始化参数Map
-	body := make(BodyMap)
-	body.Set("nonce_str", GetRandomString(32))
-	body.Set("body", "测试支付")
-	body.Set("out_trade_no", number)
-	body.Set("total_fee", 1)
-	body.Set("spbill_create_ip", "127.0.0.1")
-	body.Set("notify_url", "http://www.gopay.ink")
-	body.Set("trade_type", TradeType_Native)
-	body.Set("device_info", "WEB")
-	body.Set("sign_type", SignType_MD5)
-
-	//sceneInfo := make(map[string]map[string]string)
-	//h5Info := make(map[string]string)
-	//h5Info["type"] = "Wap"
-	//h5Info["wap_url"] = "http://www.gopay.ink"
-	//h5Info["wap_name"] = "H5测试支付"
-	//sceneInfo["h5_info"] = h5Info
-	//body.Set("scene_info", sceneInfo)
-	//
-	//body.Set("openid", OpenID)
-
-	//请求支付下单，成功后得到结果
-	wxRsp, err := client.UnifiedOrder(body)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-	fmt.Println("wxRsp:", *wxRsp)
-	//timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
-	////获取小程序需要的paySign
-	//pac := "prepay_id=" + wxRsp.PrepayId
-	//paySign := GetMiniPaySign(AppID, wxRsp.NonceStr, pac, SignType_MD5, timeStamp, ApiKey_iguiyu)
-	//fmt.Println("paySign:", paySign)
-}
+//func TestWeChatClient_UnifiedOrder(t *testing.T) {
+//	//初始化微信客户端
+//	//    appId：应用ID
+//	//    MchID：商户ID
+//	//    apiKey：API秘钥值
+//	//    isProd：是否是正式环境
+//	client := NewWeChatClient("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", false)
+//
+//	number := GetRandomString(32)
+//	fmt.Println("out_trade_no:", number)
+//	//初始化参数Map
+//	body := make(BodyMap)
+//	body.Set("nonce_str", GetRandomString(32))
+//	body.Set("body", "Native支付")
+//	body.Set("out_trade_no", number)
+//	body.Set("total_fee", 1)
+//	body.Set("spbill_create_ip", "127.0.0.1")
+//	body.Set("notify_url", "http://www.gopay.ink")
+//	body.Set("trade_type", TradeType_Native)
+//	body.Set("device_info", "WEB")
+//	body.Set("sign_type", SignType_MD5)
+//
+//	//sceneInfo := make(map[string]map[string]string)
+//	//h5Info := make(map[string]string)
+//	//h5Info["type"] = "Wap"
+//	//h5Info["wap_url"] = "http://www.gopay.ink"
+//	//h5Info["wap_name"] = "H5测试支付"
+//	//sceneInfo["h5_info"] = h5Info
+//	//body.Set("scene_info", sceneInfo)
+//	//
+//	//body.Set("openid", OpenID)
+//
+//	//请求支付下单，成功后得到结果
+//	wxRsp, err := client.UnifiedOrder(body)
+//	if err != nil {
+//		fmt.Println("Error:", err)
+//		return
+//	}
+//	fmt.Println("wxRsp:", *wxRsp)
+//	//timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
+//	////获取小程序需要的paySign
+//	//pac := "prepay_id=" + wxRsp.PrepayId
+//	//paySign := GetMiniPaySign(AppID, wxRsp.NonceStr, pac, SignType_MD5, timeStamp, ApiKey_iguiyu)
+//	//fmt.Println("paySign:", paySign)
+//}
 
 //
 //func TestWeChatClient_QueryOrder(t *testing.T) {
