@@ -1,323 +1,332 @@
 package gopay
 
 type WeChatUnifiedOrderResponse struct {
-	ReturnCode string `xml:"return_code,omitempty"`
-	ReturnMsg  string `xml:"return_msg,omitempty"`
-	Appid      string `xml:"appid,omitempty"`
-	MchId      string `xml:"mch_id,omitempty"`
-	DeviceInfo string `xml:"device_info,omitempty"`
-	NonceStr   string `xml:"nonce_str,omitempty"`
-	Sign       string `xml:"sign,omitempty"`
-	ResultCode string `xml:"result_code,omitempty"`
-	ErrCode    string `xml:"err_code,omitempty"`
-	ErrCodeDes string `xml:"err_code_des,omitempty"`
-	TradeType  string `xml:"trade_type,omitempty"`
-	PrepayId   string `xml:"prepay_id,omitempty"`
-	CodeUrl    string `xml:"code_url,omitempty"`
-	MwebUrl    string `xml:"mweb_url,omitempty"`
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	Appid      string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId      string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	DeviceInfo string `xml:"device_info,omitempty" json:"device_info,omitempty"`
+	NonceStr   string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign       string `xml:"sign,omitempty" json:"sign,omitempty"`
+	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode    string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	TradeType  string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
+	PrepayId   string `xml:"prepay_id,omitempty" json:"prepay_id,omitempty"`
+	CodeUrl    string `xml:"code_url,omitempty" json:"code_url,omitempty"`
+	MwebUrl    string `xml:"mweb_url,omitempty" json:"mweb_url,omitempty"`
 }
 
 type WeChatQueryOrderResponse struct {
-	ReturnCode         string `xml:"return_code,omitempty"`
-	ReturnMsg          string `xml:"return_msg,omitempty"`
-	Appid              string `xml:"appid,omitempty"`
-	MchId              string `xml:"mch_id,omitempty"`
-	NonceStr           string `xml:"nonce_str,omitempty"`
-	Sign               string `xml:"sign,omitempty"`
-	ResultCode         string `xml:"result_code,omitempty"`
-	ErrCode            string `xml:"err_code,omitempty"`
-	ErrCodeDes         string `xml:"err_code_des,omitempty"`
-	DeviceInfo         string `xml:"device_info,omitempty"`
-	Openid             string `xml:"openid,omitempty"`
-	IsSubscribe        string `xml:"is_subscribe,omitempty"`
-	TradeType          string `xml:"trade_type,omitempty"`
-	TradeState         string `xml:"trade_state,omitempty"`
-	BankType           string `xml:"bank_type,omitempty"`
-	TotalFee           int    `xml:"total_fee,omitempty"`
-	SettlementTotalFee int    `xml:"settlement_total_fee,omitempty"`
-	FeeType            string `xml:"fee_type,omitempty"`
-	CashFee            int    `xml:"cash_fee,omitempty"`
-	CashFeeType        string `xml:"cash_fee_type,omitempty"`
-	CouponFee          int    `xml:"coupon_fee,omitempty"`
-	CouponCount        int    `xml:"coupon_count,omitempty"`
-	CouponType0        string `xml:"coupon_type_0,omitempty"`
-	CouponType1        string `xml:"coupon_type_1,omitempty"`
-	CouponType2        string `xml:"coupon_type_2,omitempty"`
-	CouponId0          string `xml:"coupon_id_0,omitempty"`
-	CouponId1          string `xml:"coupon_id_1,omitempty"`
-	CouponId2          string `xml:"coupon_id_2,omitempty"`
-	CouponFee0         int    `xml:"coupon_fee_0,omitempty"`
-	CouponFee1         int    `xml:"coupon_fee_1,omitempty"`
-	CouponFee2         int    `xml:"coupon_fee_2,omitempty"`
-	TransactionId      string `xml:"transaction_id,omitempty"`
-	OutTradeNo         string `xml:"out_trade_no,omitempty"`
-	Attach             string `xml:"attach,omitempty"`
-	TimeEnd            string `xml:"time_end,omitempty"`
-	TradeStateDesc     string `xml:"trade_state_desc,omitempty"`
+	ReturnCode         string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg          string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	Appid              string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId              string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	NonceStr           string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign               string `xml:"sign,omitempty" json:"sign,omitempty"`
+	ResultCode         string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode            string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes         string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	DeviceInfo         string `xml:"device_info,omitempty" json:"device_info,omitempty"`
+	Openid             string `xml:"openid,omitempty" json:"openid,omitempty"`
+	IsSubscribe        string `xml:"is_subscribe,omitempty" json:"is_subscribe,omitempty"`
+	TradeType          string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
+	TradeState         string `xml:"trade_state,omitempty" json:"trade_state,omitempty"`
+	BankType           string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
+	TotalFee           int    `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
+	SettlementTotalFee int    `xml:"settlement_total_fee,omitempty" json:"settlement_total_fee,omitempty"`
+	FeeType            string `xml:"fee_type,omitempty" json:"fee_type,omitempty"`
+	CashFee            int    `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
+	CashFeeType        string `xml:"cash_fee_type,omitempty" json:"cash_fee_type,omitempty"`
+	CouponFee          int    `xml:"coupon_fee,omitempty" json:"coupon_fee,omitempty"`
+	CouponCount        int    `xml:"coupon_count,omitempty" json:"coupon_count,omitempty"`
+	CouponType0        string `xml:"coupon_type_0,omitempty" json:"coupon_type_0,omitempty"`
+	CouponType1        string `xml:"coupon_type_1,omitempty" json:"coupon_type_1,omitempty"`
+	CouponType2        string `xml:"coupon_type_2,omitempty" json:"coupon_type_2,omitempty"`
+	CouponId0          string `xml:"coupon_id_0,omitempty" json:"coupon_id_0,omitempty"`
+	CouponId1          string `xml:"coupon_id_1,omitempty" json:"coupon_id_1,omitempty"`
+	CouponId2          string `xml:"coupon_id_2,omitempty" json:"coupon_id_2,omitempty"`
+	CouponFee0         int    `xml:"coupon_fee_0,omitempty" json:"coupon_fee_0,omitempty"`
+	CouponFee1         int    `xml:"coupon_fee_1,omitempty" json:"coupon_fee_1,omitempty"`
+	CouponFee2         int    `xml:"coupon_fee_2,omitempty" json:"coupon_fee_2,omitempty"`
+	TransactionId      string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
+	OutTradeNo         string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
+	Attach             string `xml:"attach,omitempty" json:"attach,omitempty"`
+	TimeEnd            string `xml:"time_end,omitempty" json:"time_end,omitempty"`
+	TradeStateDesc     string `xml:"trade_state_desc,omitempty" json:"trade_state_desc,omitempty"`
 }
 
 type WeChatCloseOrderResponse struct {
-	ReturnCode string `xml:"return_code,omitempty"`
-	ReturnMsg  string `xml:"return_msg,omitempty"`
-	Appid      string `xml:"appid,omitempty"`
-	MchId      string `xml:"mch_id,omitempty"`
-	DeviceInfo string `xml:"device_info,omitempty"`
-	NonceStr   string `xml:"nonce_str,omitempty"`
-	Sign       string `xml:"sign,omitempty"`
-	ResultCode string `xml:"result_code,omitempty"`
-	ErrCode    string `xml:"err_code,omitempty"`
-	ErrCodeDes string `xml:"err_code_des,omitempty"`
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	Appid      string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId      string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	DeviceInfo string `xml:"device_info,omitempty" json:"device_info,omitempty"`
+	NonceStr   string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign       string `xml:"sign,omitempty" json:"sign,omitempty"`
+	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode    string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
 }
 
 type WeChatReverseResponse struct {
-	ReturnCode string `xml:"return_code,omitempty"`
-	ReturnMsg  string `xml:"return_msg,omitempty"`
-	Appid      string `xml:"appid,omitempty"`
-	MchId      string `xml:"mch_id,omitempty"`
-	NonceStr   string `xml:"nonce_str,omitempty"`
-	Sign       string `xml:"sign,omitempty"`
-	ResultCode string `xml:"result_code,omitempty"`
-	ErrCode    string `xml:"err_code,omitempty"`
-	ErrCodeDes string `xml:"err_code_des,omitempty"`
-	Recall     string `xml:"recall,omitempty"`
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	Appid      string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId      string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	NonceStr   string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign       string `xml:"sign,omitempty" json:"sign,omitempty"`
+	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode    string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	Recall     string `xml:"recall,omitempty" json:"recall,omitempty"`
 }
 
 type WeChatRefundResponse struct {
-	ReturnCode          string `xml:"return_code,omitempty"`
-	ReturnMsg           string `xml:"return_msg,omitempty"`
-	ResultCode          string `xml:"result_code,omitempty"`
-	ErrCode             string `xml:"err_code,omitempty"`
-	ErrCodeDes          string `xml:"err_code_des,omitempty"`
-	Appid               string `xml:"appid,omitempty"`
-	MchId               string `xml:"mch_id,omitempty"`
-	NonceStr            string `xml:"nonce_str,omitempty"`
-	Sign                string `xml:"sign,omitempty"`
-	TransactionId       string `xml:"transaction_id,omitempty"`
-	OutTradeNo          string `xml:"out_trade_no,omitempty"`
-	OutRefundNo         string `xml:"out_refund_no,omitempty"`
-	RefundId            string `xml:"refund_id,omitempty"`
-	RefundFee           int    `xml:"refund_fee,omitempty"`
-	SettlementRefundFee int    `xml:"settlement_refund_fee,omitempty"`
-	TotalFee            int    `xml:"total_fee,omitempty"`
-	SettlementTotalFee  int    `xml:"settlement_total_fee,omitempty"`
-	FeeType             string `xml:"fee_type,omitempty"`
-	CashFee             int    `xml:"cash_fee,omitempty"`
-	CashFeeType         string `xml:"cash_fee_type,omitempty"`
-	CashRefundFee       int    `xml:"cash_refund_fee,omitempty"`
-	CouponType0         string `xml:"coupon_type_0,omitempty"`
-	CouponType1         string `xml:"coupon_type_1,omitempty"`
-	CouponType2         string `xml:"coupon_type_2,omitempty"`
-	CouponRefundFee     int    `xml:"coupon_refund_fee,omitempty"`
-	CouponRefundFee0    int    `xml:"coupon_refund_fee_0,omitempty"`
-	CouponRefundFee1    int    `xml:"coupon_refund_fee_1,omitempty"`
-	CouponRefundFee2    int    `xml:"coupon_refund_fee_2,omitempty"`
-	CouponRefundCount   int    `xml:"coupon_refund_count,omitempty"`
-	CouponRefundId0     string `xml:"coupon_refund_id_0,omitempty"`
-	CouponRefundId1     string `xml:"coupon_refund_id_1,omitempty"`
-	CouponRefundId2     string `xml:"coupon_refund_id_2,omitempty"`
+	ReturnCode          string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg           string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode          string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode             string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes          string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	Appid               string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId               string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	NonceStr            string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign                string `xml:"sign,omitempty" json:"sign,omitempty"`
+	TransactionId       string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
+	OutTradeNo          string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
+	OutRefundNo         string `xml:"out_refund_no,omitempty" json:"out_refund_no,omitempty"`
+	RefundId            string `xml:"refund_id,omitempty" json:"refund_id,omitempty"`
+	RefundFee           int    `xml:"refund_fee,omitempty" json:"refund_fee,omitempty"`
+	SettlementRefundFee int    `xml:"settlement_refund_fee,omitempty" json:"settlement_refund_fee,omitempty"`
+	TotalFee            int    `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
+	SettlementTotalFee  int    `xml:"settlement_total_fee,omitempty" json:"settlement_total_fee,omitempty"`
+	FeeType             string `xml:"fee_type,omitempty" json:"fee_type,omitempty"`
+	CashFee             int    `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
+	CashFeeType         string `xml:"cash_fee_type,omitempty" json:"cash_fee_type,omitempty"`
+	CashRefundFee       int    `xml:"cash_refund_fee,omitempty" json:"cash_refund_fee,omitempty"`
+	CouponType0         string `xml:"coupon_type_0,omitempty" json:"coupon_type_0,omitempty"`
+	CouponType1         string `xml:"coupon_type_1,omitempty" json:"coupon_type_1,omitempty"`
+	CouponType2         string `xml:"coupon_type_2,omitempty" json:"coupon_type_2,omitempty"`
+	CouponRefundFee     int    `xml:"coupon_refund_fee,omitempty" json:"coupon_refund_fee,omitempty"`
+	CouponRefundFee0    int    `xml:"coupon_refund_fee_0,omitempty" json:"coupon_refund_fee_0,omitempty"`
+	CouponRefundFee1    int    `xml:"coupon_refund_fee_1,omitempty" json:"coupon_refund_fee_1,omitempty"`
+	CouponRefundFee2    int    `xml:"coupon_refund_fee_2,omitempty" json:"coupon_refund_fee_2,omitempty"`
+	CouponRefundCount   int    `xml:"coupon_refund_count,omitempty" json:"coupon_refund_count,omitempty"`
+	CouponRefundId0     string `xml:"coupon_refund_id_0,omitempty" json:"coupon_refund_id_0,omitempty"`
+	CouponRefundId1     string `xml:"coupon_refund_id_1,omitempty" json:"coupon_refund_id_1,omitempty"`
+	CouponRefundId2     string `xml:"coupon_refund_id_2,omitempty" json:"coupon_refund_id_2,omitempty"`
 }
 
 type WeChatQueryRefundResponse struct {
-	ReturnCode           string `xml:"return_code,omitempty"`
-	ReturnMsg            string `xml:"return_msg,omitempty"`
-	ResultCode           string `xml:"result_code,omitempty"`
-	ErrCode              string `xml:"err_code,omitempty"`
-	ErrCodeDes           string `xml:"err_code_des,omitempty"`
-	Appid                string `xml:"appid,omitempty"`
-	MchId                string `xml:"mch_id,omitempty"`
-	NonceStr             string `xml:"nonce_str,omitempty"`
-	Sign                 string `xml:"sign,omitempty"`
-	TotalRefundCount     int    `xml:"total_refund_count,omitempty"`
-	TransactionId        string `xml:"transaction_id,omitempty"`
-	OutTradeNo           string `xml:"out_trade_no,omitempty"`
-	TotalFee             int    `xml:"total_fee,omitempty"`
-	SettlementTotalFee   int    `xml:"settlement_total_fee,omitempty"`
-	FeeType              string `xml:"fee_type,omitempty"`
-	CashFee              int    `xml:"cash_fee,omitempty"`
-	RefundCount          int    `xml:"refund_count,omitempty"`
-	OutRefundNo0         string `xml:"out_refund_no_0,omitempty"`
-	OutRefundNo1         string `xml:"out_refund_no_1,omitempty"`
-	OutRefundNo2         string `xml:"out_refund_no_2,omitempty"`
-	RefundId0            string `xml:"refund_id_0,omitempty"`
-	RefundId1            string `xml:"refund_id_1,omitempty"`
-	RefundId2            string `xml:"refund_id_2,omitempty"`
-	RefundChannel0       string `xml:"refund_channel_0,omitempty"`
-	RefundChannel1       string `xml:"refund_channel_1,omitempty"`
-	RefundChannel2       string `xml:"refund_channel_2,omitempty"`
-	RefundFee0           int    `xml:"refund_fee_0,omitempty"`
-	RefundFee1           int    `xml:"refund_fee_1,omitempty"`
-	RefundFee2           int    `xml:"refund_fee_2,omitempty"`
-	SettlementRefundFee0 int    `xml:"settlement_refund_fee_0,omitempty"`
-	SettlementRefundFee1 int    `xml:"settlement_refund_fee_1,omitempty"`
-	SettlementRefundFee2 int    `xml:"settlement_refund_fee_2,omitempty"`
-	CouponType00         string `xml:"coupon_type_0_0,omitempty"`
-	CouponType01         string `xml:"coupon_type_0_1,omitempty"`
-	CouponType02         string `xml:"coupon_type_0_2,omitempty"`
-	CouponRefundFee0     int    `xml:"coupon_refund_fee_0,omitempty"`
-	CouponRefundFee1     int    `xml:"coupon_refund_fee_1,omitempty"`
-	CouponRefundFee2     int    `xml:"coupon_refund_fee_2,omitempty"`
-	CouponRefundCount0   int    `xml:"coupon_refund_count_0,omitempty"`
-	CouponRefundCount1   int    `xml:"coupon_refund_count_1,omitempty"`
-	CouponRefundCount2   int    `xml:"coupon_refund_count_2,omitempty"`
-	CouponRefundId00     string `xml:"coupon_refund_id_0_0,omitempty"`
-	CouponRefundId01     string `xml:"coupon_refund_id_0_1,omitempty"`
-	CouponRefundId02     string `xml:"coupon_refund_id_0_2,omitempty"`
-	CouponRefundFee00    int    `xml:"coupon_refund_fee_0_0,omitempty"`
-	CouponRefundFee01    int    `xml:"coupon_refund_fee_0_1,omitempty"`
-	CouponRefundFee02    int    `xml:"coupon_refund_fee_0_2,omitempty"`
-	RefundStatus0        string `xml:"refund_status_0,omitempty"`
-	RefundStatus1        string `xml:"refund_status_1,omitempty"`
-	RefundStatus2        string `xml:"refund_status_2,omitempty"`
-	RefundAccount0       string `xml:"refund_account_0,omitempty"`
-	RefundAccount1       string `xml:"refund_account_1,omitempty"`
-	RefundAccount2       string `xml:"refund_account_2,omitempty"`
-	RefundRecvAccout0    string `xml:"refund_recv_accout_0,omitempty"`
-	RefundRecvAccout1    string `xml:"refund_recv_accout_1,omitempty"`
-	RefundRecvAccout2    string `xml:"refund_recv_accout_2,omitempty"`
-	RefundSuccessTime0   string `xml:"refund_success_time_0,omitempty"`
-	RefundSuccessTime1   string `xml:"refund_success_time_1,omitempty"`
-	RefundSuccessTime2   string `xml:"refund_success_time_2,omitempty"`
+	ReturnCode           string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg            string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode           string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode              string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes           string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	Appid                string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId                string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	NonceStr             string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign                 string `xml:"sign,omitempty" json:"sign,omitempty"`
+	TotalRefundCount     int    `xml:"total_refund_count,omitempty" json:"total_refund_count,omitempty"`
+	TransactionId        string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
+	OutTradeNo           string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
+	TotalFee             int    `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
+	SettlementTotalFee   int    `xml:"settlement_total_fee,omitempty" json:"settlement_total_fee,omitempty"`
+	FeeType              string `xml:"fee_type,omitempty" json:"fee_type,omitempty"`
+	CashFee              int    `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
+	RefundCount          int    `xml:"refund_count,omitempty" json:"refund_count,omitempty"`
+	OutRefundNo0         string `xml:"out_refund_no_0,omitempty" json:"out_refund_no_0,omitempty"`
+	OutRefundNo1         string `xml:"out_refund_no_1,omitempty" json:"out_refund_no_1,omitempty"`
+	OutRefundNo2         string `xml:"out_refund_no_2,omitempty" json:"out_refund_no_2,omitempty"`
+	RefundId0            string `xml:"refund_id_0,omitempty" json:"refund_id_0,omitempty"`
+	RefundId1            string `xml:"refund_id_1,omitempty" json:"refund_id_1,omitempty"`
+	RefundId2            string `xml:"refund_id_2,omitempty" json:"refund_id_2,omitempty"`
+	RefundChannel0       string `xml:"refund_channel_0,omitempty" json:"refund_channel_0,omitempty"`
+	RefundChannel1       string `xml:"refund_channel_1,omitempty" json:"refund_channel_1,omitempty"`
+	RefundChannel2       string `xml:"refund_channel_2,omitempty" json:"refund_channel_2,omitempty"`
+	RefundFee0           int    `xml:"refund_fee_0,omitempty" json:"refund_fee_0,omitempty"`
+	RefundFee1           int    `xml:"refund_fee_1,omitempty" json:"refund_fee_1,omitempty"`
+	RefundFee2           int    `xml:"refund_fee_2,omitempty" json:"refund_fee_2,omitempty"`
+	SettlementRefundFee0 int    `xml:"settlement_refund_fee_0,omitempty" json:"settlement_refund_fee_0,omitempty"`
+	SettlementRefundFee1 int    `xml:"settlement_refund_fee_1,omitempty" json:"settlement_refund_fee_1,omitempty"`
+	SettlementRefundFee2 int    `xml:"settlement_refund_fee_2,omitempty" json:"settlement_refund_fee_2,omitempty"`
+	CouponType00         string `xml:"coupon_type_0_0,omitempty" json:"coupon_type_0_0,omitempty"`
+	CouponType01         string `xml:"coupon_type_0_1,omitempty" json:"coupon_type_0_1,omitempty"`
+	CouponType02         string `xml:"coupon_type_0_2,omitempty" json:"coupon_type_0_2,omitempty"`
+	CouponType10         string `xml:"coupon_type_1_0,omitempty" json:"coupon_type_1_0,omitempty"`
+	CouponType11         string `xml:"coupon_type_1_1,omitempty" json:"coupon_type_1_1,omitempty"`
+	CouponType12         string `xml:"coupon_type_1_2,omitempty" json:"coupon_type_1_2,omitempty"`
+	CouponRefundFee0     int    `xml:"coupon_refund_fee_0,omitempty" json:"coupon_refund_fee_0,omitempty"`
+	CouponRefundFee1     int    `xml:"coupon_refund_fee_1,omitempty" json:"coupon_refund_fee_1,omitempty"`
+	CouponRefundFee2     int    `xml:"coupon_refund_fee_2,omitempty" json:"coupon_refund_fee_2,omitempty"`
+	CouponRefundCount0   int    `xml:"coupon_refund_count_0,omitempty" json:"coupon_refund_count_0,omitempty"`
+	CouponRefundCount1   int    `xml:"coupon_refund_count_1,omitempty" json:"coupon_refund_count_1,omitempty"`
+	CouponRefundCount2   int    `xml:"coupon_refund_count_2,omitempty" json:"coupon_refund_count_2,omitempty"`
+	CouponRefundId00     string `xml:"coupon_refund_id_0_0,omitempty" json:"coupon_refund_id_0_0,omitempty"`
+	CouponRefundId01     string `xml:"coupon_refund_id_0_1,omitempty" json:"coupon_refund_id_0_1,omitempty"`
+	CouponRefundId02     string `xml:"coupon_refund_id_0_2,omitempty" json:"coupon_refund_id_0_2,omitempty"`
+	CouponRefundId10     string `xml:"coupon_refund_id_1_0,omitempty" json:"coupon_refund_id_1_0,omitempty"`
+	CouponRefundId11     string `xml:"coupon_refund_id_1_1,omitempty" json:"coupon_refund_id_1_1,omitempty"`
+	CouponRefundId12     string `xml:"coupon_refund_id_1_2,omitempty" json:"coupon_refund_id_1_2,omitempty"`
+	CouponRefundFee00    int    `xml:"coupon_refund_fee_0_0,omitempty" json:"coupon_refund_fee_0_0,omitempty"`
+	CouponRefundFee01    int    `xml:"coupon_refund_fee_0_1,omitempty" json:"coupon_refund_fee_0_1,omitempty"`
+	CouponRefundFee02    int    `xml:"coupon_refund_fee_0_2,omitempty" json:"coupon_refund_fee_0_2,omitempty"`
+	CouponRefundFee10    int    `xml:"coupon_refund_fee_1_0,omitempty" json:"coupon_refund_fee_1_0,omitempty"`
+	CouponRefundFee11    int    `xml:"coupon_refund_fee_1_1,omitempty" json:"coupon_refund_fee_1_1,omitempty"`
+	CouponRefundFee12    int    `xml:"coupon_refund_fee_1_2,omitempty" json:"coupon_refund_fee_1_2,omitempty"`
+	RefundStatus0        string `xml:"refund_status_0,omitempty" json:"refund_status_0,omitempty"`
+	RefundStatus1        string `xml:"refund_status_1,omitempty" json:"refund_status_1,omitempty"`
+	RefundStatus2        string `xml:"refund_status_2,omitempty" json:"refund_status_2,omitempty"`
+	RefundAccount0       string `xml:"refund_account_0,omitempty" json:"refund_account_0,omitempty"`
+	RefundAccount1       string `xml:"refund_account_1,omitempty" json:"refund_account_1,omitempty"`
+	RefundAccount2       string `xml:"refund_account_2,omitempty" json:"refund_account_2,omitempty"`
+	RefundRecvAccout0    string `xml:"refund_recv_accout_0,omitempty" json:"refund_recv_accout_0,omitempty"`
+	RefundRecvAccout1    string `xml:"refund_recv_accout_1,omitempty" json:"refund_recv_accout_1,omitempty"`
+	RefundRecvAccout2    string `xml:"refund_recv_accout_2,omitempty" json:"refund_recv_accout_2,omitempty"`
+	RefundSuccessTime0   string `xml:"refund_success_time_0,omitempty" json:"refund_success_time_0,omitempty"`
+	RefundSuccessTime1   string `xml:"refund_success_time_1,omitempty" json:"refund_success_time_1,omitempty"`
+	RefundSuccessTime2   string `xml:"refund_success_time_2,omitempty" json:"refund_success_time_2,omitempty"`
 }
 
 type WeChatMicropayResponse struct {
-	ReturnCode         string `xml:"return_code,omitempty"`
-	ReturnMsg          string `xml:"return_msg,omitempty"`
-	Appid              string `xml:"appid,omitempty"`
-	MchId              string `xml:"mch_id,omitempty"`
-	DeviceInfo         string `xml:"device_info,omitempty"`
-	NonceStr           string `xml:"nonce_str,omitempty"`
-	Sign               string `xml:"sign,omitempty"`
-	ResultCode         string `xml:"result_code,omitempty"`
-	ErrCode            string `xml:"err_code,omitempty"`
-	ErrCodeDes         string `xml:"err_code_des,omitempty"`
-	Openid             string `xml:"openid,omitempty"`
-	IsSubscribe        string `xml:"is_subscribe,omitempty"`
-	TradeType          string `xml:"trade_type,omitempty"`
-	BankType           string `xml:"bank_type,omitempty"`
-	FeeType            string `xml:"fee_type,omitempty"`
-	TotalFee           int    `xml:"total_fee,omitempty"`
-	SettlementTotalFee int    `xml:"settlement_total_fee,omitempty"`
-	CouponFee          int    `xml:"coupon_fee,omitempty"`
-	CashFeeType        string `xml:"cash_fee_type,omitempty"`
-	CashFee            int    `xml:"cash_fee,omitempty"`
-	TransactionId      string `xml:"transaction_id,omitempty"`
-	OutTradeNo         string `xml:"out_trade_no,omitempty"`
-	Attach             string `xml:"attach,omitempty"`
-	TimeEnd            string `xml:"time_end,omitempty"`
-	PromotionDetail    string `xml:"promotion_detail,omitempty"`
+	ReturnCode         string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg          string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	Appid              string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId              string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	DeviceInfo         string `xml:"device_info,omitempty" json:"device_info,omitempty"`
+	NonceStr           string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign               string `xml:"sign,omitempty" json:"sign,omitempty"`
+	ResultCode         string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode            string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes         string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	Openid             string `xml:"openid,omitempty" json:"openid,omitempty"`
+	IsSubscribe        string `xml:"is_subscribe,omitempty" json:"is_subscribe,omitempty"`
+	TradeType          string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
+	BankType           string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
+	FeeType            string `xml:"fee_type,omitempty" json:"fee_type,omitempty"`
+	TotalFee           int    `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
+	SettlementTotalFee int    `xml:"settlement_total_fee,omitempty" json:"settlement_total_fee,omitempty"`
+	CouponFee          int    `xml:"coupon_fee,omitempty" json:"coupon_fee,omitempty"`
+	CashFeeType        string `xml:"cash_fee_type,omitempty" json:"cash_fee_type,omitempty"`
+	CashFee            int    `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
+	TransactionId      string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
+	OutTradeNo         string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
+	Attach             string `xml:"attach,omitempty" json:"attach,omitempty"`
+	TimeEnd            string `xml:"time_end,omitempty" json:"time_end,omitempty"`
+	PromotionDetail    string `xml:"promotion_detail,omitempty" json:"promotion_detail,omitempty"`
 }
 
 type getSignKeyResponse struct {
-	ReturnCode     string `xml:"return_code,omitempty"`
-	ReturnMsg      string `xml:"return_msg,omitempty"`
-	Retmsg         string `xml:"retmsg,omitempty"`
-	Retcode        string `xml:"retcode,omitempty"`
-	MchId          string `xml:"mch_id,omitempty"`
-	SandboxSignkey string `xml:"sandbox_signkey,omitempty"`
+	ReturnCode     string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg      string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	Retmsg         string `xml:"retmsg,omitempty" json:"retmsg,omitempty"`
+	Retcode        string `xml:"retcode,omitempty" json:"retcode,omitempty"`
+	MchId          string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	SandboxSignkey string `xml:"sandbox_signkey,omitempty" json:"sandbox_signkey,omitempty"`
 }
 
 type WeChatNotifyRequest struct {
-	ReturnCode         string `xml:"return_code,omitempty"`
-	ReturnMsg          string `xml:"return_msg,omitempty"`
-	ResultCode         string `xml:"result_code,omitempty"`
-	ErrCode            string `xml:"err_code,omitempty"`
-	ErrCodeDes         string `xml:"err_code_des,omitempty"`
-	Appid              string `xml:"appid,omitempty"`
-	MchId              string `xml:"mch_id,omitempty"`
-	DeviceInfo         string `xml:"device_info,omitempty"`
-	NonceStr           string `xml:"nonce_str,omitempty"`
-	Sign               string `xml:"sign,omitempty"`
-	SignType           string `xml:"sign_type,omitempty"`
-	Openid             string `xml:"openid,omitempty"`
-	IsSubscribe        string `xml:"is_subscribe,omitempty"`
-	TradeType          string `xml:"trade_type,omitempty"`
-	BankType           string `xml:"bank_type,omitempty"`
-	TotalFee           int    `xml:"total_fee,omitempty"`
-	SettlementTotalFee int    `xml:"settlement_total_fee,omitempty"`
-	FeeType            string `xml:"fee_type,omitempty"`
-	CashFee            int    `xml:"cash_fee,omitempty"`
-	CashFeeType        string `xml:"cash_fee_type,omitempty"`
-	CouponFee          int    `xml:"coupon_fee,omitempty"`
-	CouponCount        int    `xml:"coupon_count,omitempty"`
-	CouponType0        string `xml:"coupon_type_0,omitempty"`
-	CouponType1        string `xml:"coupon_type_1,omitempty"`
-	CouponType2        string `xml:"coupon_type_2,omitempty"`
-	CouponId0          string `xml:"coupon_id_0,omitempty"`
-	CouponId1          string `xml:"coupon_id_1,omitempty"`
-	CouponId2          string `xml:"coupon_id_2,omitempty"`
-	CouponFee0         int    `xml:"coupon_fee_0,omitempty"`
-	CouponFee1         int    `xml:"coupon_fee_1,omitempty"`
-	CouponFee2         int    `xml:"coupon_fee_2,omitempty"`
-	TransactionId      string `xml:"transaction_id,omitempty"`
-	OutTradeNo         string `xml:"out_trade_no,omitempty"`
-	Attach             string `xml:"attach,omitempty"`
-	TimeEnd            string `xml:"time_end,omitempty"`
+	ReturnCode         string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg          string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode         string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode            string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes         string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	Appid              string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId              string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	DeviceInfo         string `xml:"device_info,omitempty" json:"device_info,omitempty"`
+	NonceStr           string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign               string `xml:"sign,omitempty" json:"sign,omitempty"`
+	SignType           string `xml:"sign_type,omitempty" json:"sign_type,omitempty"`
+	Openid             string `xml:"openid,omitempty" json:"openid,omitempty"`
+	IsSubscribe        string `xml:"is_subscribe,omitempty" json:"is_subscribe,omitempty"`
+	TradeType          string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
+	BankType           string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
+	TotalFee           int    `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
+	SettlementTotalFee int    `xml:"settlement_total_fee,omitempty" json:"settlement_total_fee,omitempty"`
+	FeeType            string `xml:"fee_type,omitempty" json:"fee_type,omitempty"`
+	CashFee            int    `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
+	CashFeeType        string `xml:"cash_fee_type,omitempty" json:"cash_fee_type,omitempty"`
+	CouponFee          int    `xml:"coupon_fee,omitempty" json:"coupon_fee,omitempty"`
+	CouponCount        int    `xml:"coupon_count,omitempty" json:"coupon_count,omitempty"`
+	CouponType0        string `xml:"coupon_type_0,omitempty" json:"coupon_type_0,omitempty"`
+	CouponType1        string `xml:"coupon_type_1,omitempty" json:"coupon_type_1,omitempty"`
+	CouponType2        string `xml:"coupon_type_2,omitempty" json:"coupon_type_2,omitempty"`
+	CouponId0          string `xml:"coupon_id_0,omitempty" json:"coupon_id_0,omitempty"`
+	CouponId1          string `xml:"coupon_id_1,omitempty" json:"coupon_id_1,omitempty"`
+	CouponId2          string `xml:"coupon_id_2,omitempty" json:"coupon_id_2,omitempty"`
+	CouponFee0         int    `xml:"coupon_fee_0,omitempty" json:"coupon_fee_0,omitempty"`
+	CouponFee1         int    `xml:"coupon_fee_1,omitempty" json:"coupon_fee_1,omitempty"`
+	CouponFee2         int    `xml:"coupon_fee_2,omitempty" json:"coupon_fee_2,omitempty"`
+	TransactionId      string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
+	OutTradeNo         string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
+	Attach             string `xml:"attach,omitempty" json:"attach,omitempty"`
+	TimeEnd            string `xml:"time_end,omitempty" json:"time_end,omitempty"`
 }
 
 type Code2SessionRsp struct {
-	SessionKey string `json:"session_key"` //会话密钥
-	ExpiresIn  int    `json:"expires_in"`  //SessionKey超时时间（秒）
-	Openid     string `json:"openid"`      //用户唯一标识
-	Unionid    string `json:"unionid"`     //用户在开放平台的唯一标识符
-	Errcode    int    `json:"errcode"`     //错误码
-	Errmsg     string `json:"errmsg"`      //错误信息
+	SessionKey string `json:"session_key,omitempty"` //会话密钥
+	ExpiresIn  int    `json:"expires_in,omitempty"`  //SessionKey超时时间（秒）
+	Openid     string `json:"openid,omitempty"`      //用户唯一标识
+	Unionid    string `json:"unionid,omitempty"`     //用户在开放平台的唯一标识符
+	Errcode    int    `json:"errcode,omitempty"`     //错误码
+	Errmsg     string `json:"errmsg,omitempty"`      //错误信息
 }
 
 type PaidUnionId struct {
-	Unionid string `json:"unionid"` //用户在开放平台的唯一标识符
-	Errcode int    `json:"errcode"` //错误码
-	Errmsg  string `json:"errmsg"`  //错误信息
+	Unionid string `json:"unionid,omitempty"` //用户在开放平台的唯一标识符
+	Errcode int    `json:"errcode,omitempty"` //错误码
+	Errmsg  string `json:"errmsg,omitempty"`  //错误信息
 }
 
 type AccessToken struct {
-	AccessToken string `json:"access_token"` //获取到的凭证
-	ExpiresIn   int    `json:"expires_in"`   //SessionKey超时时间（秒）
-	Errcode     int    `json:"errcode"`      //错误码
-	Errmsg      string `json:"errmsg"`       //错误信息
+	AccessToken string `json:"access_token,omitempty"` //获取到的凭证
+	ExpiresIn   int    `json:"expires_in,omitempty"`   //SessionKey超时时间（秒）
+	Errcode     int    `json:"errcode,omitempty"`      //错误码
+	Errmsg      string `json:"errmsg,omitempty"`       //错误信息
 }
 
 type WeChatUserInfo struct {
-	Subscribe      int    `json:"subscribe"`       //用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。
-	Openid         string `json:"openid"`          //用户唯一标识
-	Nickname       string `json:"nickname"`        //用户的昵称
-	Sex            int    `json:"sex"`             //用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
-	Language       string `json:"language"`        //用户的语言，简体中文为zh_CN
-	City           string `json:"city"`            //用户所在城市
-	Province       string `json:"province"`        //用户所在省份
-	Country        string `json:"country"`         //用户所在国家
-	Headimgurl     string `json:"headimgurl"`      //用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空。若用户更换头像，原有头像URL将失效。
-	SubscribeTime  int    `json:"subscribe_time"`  //用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间
-	Unionid        string `json:"unionid"`         //只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。
-	Remark         string `json:"remark"`          //公众号运营者对粉丝的备注，公众号运营者可在微信公众平台用户管理界面对粉丝添加备注
-	Groupid        int    `json:"groupid"`         //用户所在的分组ID（兼容旧的用户分组接口）
-	TagidList      []int  `json:"tagid_list"`      //用户被打上的标签ID列表
-	SubscribeScene string `json:"subscribe_scene"` //返回用户关注的渠道来源，ADD_SCENE_SEARCH 公众号搜索，ADD_SCENE_ACCOUNT_MIGRATION 公众号迁移，ADD_SCENE_PROFILE_CARD 名片分享，ADD_SCENE_QR_CODE 扫描二维码，ADD_SCENEPROFILE LINK 图文页内名称点击，ADD_SCENE_PROFILE_ITEM 图文页右上角菜单，ADD_SCENE_PAID 支付后关注，ADD_SCENE_OTHERS 其他
-	QrScene        int    `json:"qr_scene"`        //二维码扫码场景（开发者自定义）
-	QrSceneStr     string `json:"qr_scene_str"`    //二维码扫码场景描述（开发者自定义）
-	Errcode        int    `json:"errcode"`         //错误码
-	Errmsg         string `json:"errmsg"`          //错误信息
+	Subscribe      int    `json:"subscribe,omitempty"`       //用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。
+	Openid         string `json:"openid,omitempty"`          //用户唯一标识
+	Nickname       string `json:"nickname,omitempty"`        //用户的昵称
+	Sex            int    `json:"sex,omitempty"`             //用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
+	Language       string `json:"language,omitempty"`        //用户的语言，简体中文为zh_CN
+	City           string `json:"city,omitempty"`            //用户所在城市
+	Province       string `json:"province,omitempty"`        //用户所在省份
+	Country        string `json:"country,omitempty"`         //用户所在国家
+	Headimgurl     string `json:"headimgurl,omitempty"`      //用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空。若用户更换头像，原有头像URL将失效。
+	SubscribeTime  int    `json:"subscribe_time,omitempty"`  //用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间
+	Unionid        string `json:"unionid,omitempty"`         //只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。
+	Remark         string `json:"remark,omitempty"`          //公众号运营者对粉丝的备注，公众号运营者可在微信公众平台用户管理界面对粉丝添加备注
+	Groupid        int    `json:"groupid,omitempty"`         //用户所在的分组ID（兼容旧的用户分组接口）
+	TagidList      []int  `json:"tagid_list,omitempty"`      //用户被打上的标签ID列表
+	SubscribeScene string `json:"subscribe_scene,omitempty"` //返回用户关注的渠道来源，ADD_SCENE_SEARCH 公众号搜索，ADD_SCENE_ACCOUNT_MIGRATION 公众号迁移，ADD_SCENE_PROFILE_CARD 名片分享，ADD_SCENE_QR_CODE 扫描二维码，ADD_SCENEPROFILE LINK 图文页内名称点击，ADD_SCENE_PROFILE_ITEM 图文页右上角菜单，ADD_SCENE_PAID 支付后关注，ADD_SCENE_OTHERS 其他
+	QrScene        int    `json:"qr_scene,omitempty"`        //二维码扫码场景（开发者自定义）
+	QrSceneStr     string `json:"qr_scene_str,omitempty"`    //二维码扫码场景描述（开发者自定义）
+	Errcode        int    `json:"errcode,omitempty"`         //错误码
+	Errmsg         string `json:"errmsg,omitempty"`          //错误信息
 }
 
 type WeChatUserPhone struct {
-	PhoneNumber     string        `json:"phoneNumber"`
-	PurePhoneNumber string        `json:"purePhoneNumber"`
-	CountryCode     string        `json:"countryCode"`
-	Watermark       watermarkInfo `json:"watermark"`
+	PhoneNumber     string        `json:"phoneNumber,omitempty"`
+	PurePhoneNumber string        `json:"purePhoneNumber,omitempty"`
+	CountryCode     string        `json:"countryCode,omitempty"`
+	Watermark       watermarkInfo `json:"watermark,omitempty"`
 }
 
 type watermarkInfo struct {
-	Appid     string `json:"appid"`
-	Timestamp int    `json:"timestamp"`
+	Appid     string `json:"appid,omitempty"`
+	Timestamp int    `json:"timestamp,omitempty"`
 }
 
 type OpenIdByAuthCodeRsp struct {
-	ReturnCode string `xml:"return_code,omitempty"`
-	ReturnMsg  string `xml:"return_msg,omitempty"`
-	Appid      string `xml:"appid,omitempty"`
-	MchId      string `xml:"mch_id,omitempty"`
-	NonceStr   string `xml:"nonce_str,omitempty"`
-	Sign       string `xml:"sign,omitempty"`
-	ResultCode string `xml:"result_code,omitempty"`
-	ErrCode    string `xml:"err_code,omitempty"`
-	Openid     string `xml:"openid,omitempty"` //用户唯一标识
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	Appid      string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId      string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	NonceStr   string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign       string `xml:"sign,omitempty" json:"sign,omitempty"`
+	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode    string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	Openid     string `xml:"openid,omitempty" json:"openid,omitempty"` //用户唯一标识
 }
