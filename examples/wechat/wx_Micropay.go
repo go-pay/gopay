@@ -1,9 +1,9 @@
 //==================================
 //  * Name：Jerry
-//  * DateTime：2019/8/9 16:21
+//  * DateTime：2019/8/9 15:46
 //  * Desc：
 //==================================
-package main
+package wechat
 
 import (
 	"fmt"
@@ -18,18 +18,23 @@ func main() {
 	//    isProd：是否是正式环境
 	client := gopay.NewWeChatClient("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", false)
 
-	//初始化参数结构体
+	//初始化参数Map
 	body := make(gopay.BodyMap)
 	body.Set("nonce_str", gopay.GetRandomString(32))
+	body.Set("body", "扫用户付款码支付")
+	number := gopay.GetRandomString(32)
+	fmt.Println("out_trade_no:", number)
+	body.Set("out_trade_no", number)
+	body.Set("total_fee", 1)
+	body.Set("spbill_create_ip", "127.0.0.1")
+	body.Set("auth_code", "134520934756401971")
 	body.Set("sign_type", gopay.SignType_MD5)
-	body.Set("bill_date", "20190722")
-	body.Set("bill_type", "ALL")
 
-	//请求下载对账单，成功后得到结果（string类型字符串）
-	wxRsp, err := client.DownloadBill(body)
+	//请求支付，成功后得到结果
+	wxRsp, err := client.Micropay(body)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	fmt.Println("wxRsp：", wxRsp)
+	fmt.Println("Response:", wxRsp)
 }

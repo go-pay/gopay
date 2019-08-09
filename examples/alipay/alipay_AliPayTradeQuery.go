@@ -3,7 +3,7 @@
 //  * DateTime：2019/8/9 17:13
 //  * Desc：
 //==================================
-package main
+package alipay
 
 import (
 	"fmt"
@@ -20,21 +20,16 @@ func main() {
 	client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 	//配置公共参数
 	client.SetCharset("utf-8").
-		SetSignType("RSA2").
-		//SetReturnUrl("https://www.gopay.ink").
-		SetNotifyUrl("https://www.gopay.ink")
+		SetSignType("RSA2")
 	//请求参数
 	body := make(gopay.BodyMap)
-	body.Set("subject", "手机网站测试支付")
-	body.Set("out_trade_no", "GZ201901301040355703")
-	body.Set("quit_url", "https://www.gopay.ink")
-	body.Set("total_amount", "100.00")
-	body.Set("product_code", "QUICK_WAP_WAY")
-	//手机网站支付请求
-	payUrl, err := client.AliPayTradeWapPay(body)
+	body.Set("out_trade_no", "GYWX201901301040355706100457")
+
+	//查询订单
+	aliRsp, err := client.AliPayTradeQuery(body)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
-	fmt.Println("payUrl:", payUrl)
+	fmt.Println("aliRsp:", *aliRsp)
 }

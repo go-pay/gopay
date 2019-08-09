@@ -1,9 +1,9 @@
 //==================================
 //  * Name：Jerry
-//  * DateTime：2019/8/9 17:12
+//  * DateTime：2019/8/9 17:16
 //  * Desc：
 //==================================
-package main
+package alipay
 
 import (
 	"fmt"
@@ -20,13 +20,14 @@ func main() {
 	client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 	//配置公共参数
 	client.SetCharset("utf-8").
-		SetSignType("RSA2").
-		SetNotifyUrl("https://www.gopay.ink")
+		SetSignType("RSA2")
 	//请求参数
 	body := make(gopay.BodyMap)
-	body.Set("out_trade_no", "GYWX201901301040355706100457")
-	//撤销支付订单
-	aliRsp, err := client.AliPayTradeCancel(body)
+	body.Set("out_trade_no", "GZ201907301420334577")
+	body.Set("refund_amount", "5")
+	body.Set("refund_reason", "测试退款")
+	//发起退款请求
+	aliRsp, err := client.AliPayTradeRefund(body)
 	if err != nil {
 		fmt.Println("err:", err)
 		return

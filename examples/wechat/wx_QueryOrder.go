@@ -1,9 +1,9 @@
 //==================================
 //  * Name：Jerry
-//  * DateTime：2019/8/9 16:28
+//  * DateTime：2019/8/9 16:08
 //  * Desc：
 //==================================
-package main
+package wechat
 
 import (
 	"fmt"
@@ -14,21 +14,21 @@ func main() {
 	//初始化微信客户端
 	//    appId：应用ID
 	//    MchID：商户ID
-	//    ApiKey：Key值
+	//    apiKey：API秘钥值
 	//    isProd：是否是正式环境
 	client := gopay.NewWeChatClient("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", false)
 
-	//初始化参数Map
+	//初始化参数结构体
 	body := make(gopay.BodyMap)
+	body.Set("out_trade_no", "GW201908091551421156")
 	body.Set("nonce_str", gopay.GetRandomString(32))
-	body.Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B")
 	body.Set("sign_type", gopay.SignType_MD5)
 
-	//请求撤销订单，成功后得到结果，沙箱环境下，证书路径参数可传空
-	wxRsp, err := client.Reverse(body, "", "", "")
+	//请求订单查询，成功后得到结果
+	wxRsp, err := client.QueryOrder(body)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	fmt.Println("Response:", wxRsp)
+	fmt.Println("wxRsp：", *wxRsp)
 }

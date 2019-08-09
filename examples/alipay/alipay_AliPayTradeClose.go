@@ -1,9 +1,9 @@
 //==================================
 //  * Name：Jerry
-//  * DateTime：2019/8/9 17:10
+//  * DateTime：2019/8/9 17:11
 //  * Desc：
 //==================================
-package main
+package alipay
 
 import (
 	"fmt"
@@ -24,16 +24,12 @@ func main() {
 		SetNotifyUrl("https://www.gopay.ink")
 	//请求参数
 	body := make(gopay.BodyMap)
-	body.Set("subject", "创建订单")
-	body.Set("buyer_id", "2088802095984694")
-	body.Set("out_trade_no", "GZ201901301040355706")
-	body.Set("total_amount", "0.01")
-	//创建订单
-	aliRsp, err := client.AliPayTradeCreate(body)
+	body.Set("out_trade_no", "GYWX201901301040355706100459")
+	//条码支付
+	aliRsp, err := client.AliPayTradeClose(body)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
 	fmt.Println("aliRsp:", *aliRsp)
-	fmt.Println("aliRsp.TradeNo:", aliRsp.AliPayTradeCreateResponse.TradeNo)
 }

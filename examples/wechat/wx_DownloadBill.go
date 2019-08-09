@@ -1,9 +1,9 @@
 //==================================
 //  * Name：Jerry
-//  * DateTime：2019/8/9 16:24
+//  * DateTime：2019/8/9 16:21
 //  * Desc：
 //==================================
-package main
+package wechat
 
 import (
 	"fmt"
@@ -16,23 +16,20 @@ func main() {
 	//    MchID：商户ID
 	//    ApiKey：Key值
 	//    isProd：是否是正式环境
-	//    好像不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 	client := gopay.NewWeChatClient("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", false)
 
 	//初始化参数结构体
 	body := make(gopay.BodyMap)
 	body.Set("nonce_str", gopay.GetRandomString(32))
-	body.Set("sign_type", gopay.SignType_HMAC_SHA256)
-	body.Set("begin_time", "20190120000000")
-	body.Set("end_time", "20190122174000")
-	body.Set("offset", "0")
+	body.Set("sign_type", gopay.SignType_MD5)
+	body.Set("bill_date", "20190722")
+	body.Set("bill_type", "ALL")
 
-	//请求拉取订单评价数据，成功后得到结果，沙箱环境下，证书路径参数可传空
-	wxRsp, err := client.BatchQueryComment(body, "", "", "")
+	//请求下载对账单，成功后得到结果（string类型字符串）
+	wxRsp, err := client.DownloadBill(body)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	fmt.Println("Response：", wxRsp)
-
+	fmt.Println("wxRsp：", wxRsp)
 }

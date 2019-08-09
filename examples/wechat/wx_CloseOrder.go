@@ -3,7 +3,7 @@
 //  * DateTime：2019/8/9 16:12
 //  * Desc：
 //==================================
-package main
+package wechat
 
 import (
 	"fmt"
