@@ -41,10 +41,7 @@ func sortWeChatSignParams(apiKey string, body BodyMap) string {
 	for _, k := range keyList {
 		buffer.WriteString(k)
 		buffer.WriteString("=")
-
-		//valueStr := convert2String(body[k])
 		buffer.WriteString(body.Get(k))
-
 		buffer.WriteString("&")
 	}
 	buffer.WriteString("key=")
@@ -104,10 +101,7 @@ func generateXml(bm BodyMap) (reqXml string) {
 		buffer.WriteString("<")
 		buffer.WriteString(key)
 		buffer.WriteString("><![CDATA[")
-
-		//valueStr := convert2String(v)
 		buffer.WriteString(bm.Get(key))
-
 		buffer.WriteString("]]></")
 		buffer.WriteString(key)
 		buffer.WriteString(">")
