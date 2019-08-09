@@ -42,13 +42,10 @@ type WeChatQueryOrderResponse struct {
 	CouponCount        int    `xml:"coupon_count,omitempty" json:"coupon_count,omitempty"`
 	CouponType0        string `xml:"coupon_type_0,omitempty" json:"coupon_type_0,omitempty"`
 	CouponType1        string `xml:"coupon_type_1,omitempty" json:"coupon_type_1,omitempty"`
-	CouponType2        string `xml:"coupon_type_2,omitempty" json:"coupon_type_2,omitempty"`
 	CouponId0          string `xml:"coupon_id_0,omitempty" json:"coupon_id_0,omitempty"`
 	CouponId1          string `xml:"coupon_id_1,omitempty" json:"coupon_id_1,omitempty"`
-	CouponId2          string `xml:"coupon_id_2,omitempty" json:"coupon_id_2,omitempty"`
 	CouponFee0         int    `xml:"coupon_fee_0,omitempty" json:"coupon_fee_0,omitempty"`
 	CouponFee1         int    `xml:"coupon_fee_1,omitempty" json:"coupon_fee_1,omitempty"`
-	CouponFee2         int    `xml:"coupon_fee_2,omitempty" json:"coupon_fee_2,omitempty"`
 	TransactionId      string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
 	OutTradeNo         string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
 	Attach             string `xml:"attach,omitempty" json:"attach,omitempty"`
@@ -106,15 +103,12 @@ type WeChatRefundResponse struct {
 	CashRefundFee       int    `xml:"cash_refund_fee,omitempty" json:"cash_refund_fee,omitempty"`
 	CouponType0         string `xml:"coupon_type_0,omitempty" json:"coupon_type_0,omitempty"`
 	CouponType1         string `xml:"coupon_type_1,omitempty" json:"coupon_type_1,omitempty"`
-	CouponType2         string `xml:"coupon_type_2,omitempty" json:"coupon_type_2,omitempty"`
 	CouponRefundFee     int    `xml:"coupon_refund_fee,omitempty" json:"coupon_refund_fee,omitempty"`
 	CouponRefundFee0    int    `xml:"coupon_refund_fee_0,omitempty" json:"coupon_refund_fee_0,omitempty"`
 	CouponRefundFee1    int    `xml:"coupon_refund_fee_1,omitempty" json:"coupon_refund_fee_1,omitempty"`
-	CouponRefundFee2    int    `xml:"coupon_refund_fee_2,omitempty" json:"coupon_refund_fee_2,omitempty"`
 	CouponRefundCount   int    `xml:"coupon_refund_count,omitempty" json:"coupon_refund_count,omitempty"`
 	CouponRefundId0     string `xml:"coupon_refund_id_0,omitempty" json:"coupon_refund_id_0,omitempty"`
 	CouponRefundId1     string `xml:"coupon_refund_id_1,omitempty" json:"coupon_refund_id_1,omitempty"`
-	CouponRefundId2     string `xml:"coupon_refund_id_2,omitempty" json:"coupon_refund_id_2,omitempty"`
 }
 
 type WeChatQueryRefundResponse struct {
@@ -137,55 +131,38 @@ type WeChatQueryRefundResponse struct {
 	RefundCount          int    `xml:"refund_count,omitempty" json:"refund_count,omitempty"`
 	OutRefundNo0         string `xml:"out_refund_no_0,omitempty" json:"out_refund_no_0,omitempty"`
 	OutRefundNo1         string `xml:"out_refund_no_1,omitempty" json:"out_refund_no_1,omitempty"`
-	OutRefundNo2         string `xml:"out_refund_no_2,omitempty" json:"out_refund_no_2,omitempty"`
 	RefundId0            string `xml:"refund_id_0,omitempty" json:"refund_id_0,omitempty"`
 	RefundId1            string `xml:"refund_id_1,omitempty" json:"refund_id_1,omitempty"`
-	RefundId2            string `xml:"refund_id_2,omitempty" json:"refund_id_2,omitempty"`
 	RefundChannel0       string `xml:"refund_channel_0,omitempty" json:"refund_channel_0,omitempty"`
 	RefundChannel1       string `xml:"refund_channel_1,omitempty" json:"refund_channel_1,omitempty"`
-	RefundChannel2       string `xml:"refund_channel_2,omitempty" json:"refund_channel_2,omitempty"`
 	RefundFee0           int    `xml:"refund_fee_0,omitempty" json:"refund_fee_0,omitempty"`
 	RefundFee1           int    `xml:"refund_fee_1,omitempty" json:"refund_fee_1,omitempty"`
-	RefundFee2           int    `xml:"refund_fee_2,omitempty" json:"refund_fee_2,omitempty"`
 	SettlementRefundFee0 int    `xml:"settlement_refund_fee_0,omitempty" json:"settlement_refund_fee_0,omitempty"`
 	SettlementRefundFee1 int    `xml:"settlement_refund_fee_1,omitempty" json:"settlement_refund_fee_1,omitempty"`
-	SettlementRefundFee2 int    `xml:"settlement_refund_fee_2,omitempty" json:"settlement_refund_fee_2,omitempty"`
 	CouponType00         string `xml:"coupon_type_0_0,omitempty" json:"coupon_type_0_0,omitempty"`
 	CouponType01         string `xml:"coupon_type_0_1,omitempty" json:"coupon_type_0_1,omitempty"`
-	CouponType02         string `xml:"coupon_type_0_2,omitempty" json:"coupon_type_0_2,omitempty"`
 	CouponType10         string `xml:"coupon_type_1_0,omitempty" json:"coupon_type_1_0,omitempty"`
 	CouponType11         string `xml:"coupon_type_1_1,omitempty" json:"coupon_type_1_1,omitempty"`
-	CouponType12         string `xml:"coupon_type_1_2,omitempty" json:"coupon_type_1_2,omitempty"`
 	CouponRefundFee0     int    `xml:"coupon_refund_fee_0,omitempty" json:"coupon_refund_fee_0,omitempty"`
 	CouponRefundFee1     int    `xml:"coupon_refund_fee_1,omitempty" json:"coupon_refund_fee_1,omitempty"`
-	CouponRefundFee2     int    `xml:"coupon_refund_fee_2,omitempty" json:"coupon_refund_fee_2,omitempty"`
 	CouponRefundCount0   int    `xml:"coupon_refund_count_0,omitempty" json:"coupon_refund_count_0,omitempty"`
 	CouponRefundCount1   int    `xml:"coupon_refund_count_1,omitempty" json:"coupon_refund_count_1,omitempty"`
-	CouponRefundCount2   int    `xml:"coupon_refund_count_2,omitempty" json:"coupon_refund_count_2,omitempty"`
 	CouponRefundId00     string `xml:"coupon_refund_id_0_0,omitempty" json:"coupon_refund_id_0_0,omitempty"`
 	CouponRefundId01     string `xml:"coupon_refund_id_0_1,omitempty" json:"coupon_refund_id_0_1,omitempty"`
-	CouponRefundId02     string `xml:"coupon_refund_id_0_2,omitempty" json:"coupon_refund_id_0_2,omitempty"`
 	CouponRefundId10     string `xml:"coupon_refund_id_1_0,omitempty" json:"coupon_refund_id_1_0,omitempty"`
 	CouponRefundId11     string `xml:"coupon_refund_id_1_1,omitempty" json:"coupon_refund_id_1_1,omitempty"`
-	CouponRefundId12     string `xml:"coupon_refund_id_1_2,omitempty" json:"coupon_refund_id_1_2,omitempty"`
 	CouponRefundFee00    int    `xml:"coupon_refund_fee_0_0,omitempty" json:"coupon_refund_fee_0_0,omitempty"`
 	CouponRefundFee01    int    `xml:"coupon_refund_fee_0_1,omitempty" json:"coupon_refund_fee_0_1,omitempty"`
-	CouponRefundFee02    int    `xml:"coupon_refund_fee_0_2,omitempty" json:"coupon_refund_fee_0_2,omitempty"`
 	CouponRefundFee10    int    `xml:"coupon_refund_fee_1_0,omitempty" json:"coupon_refund_fee_1_0,omitempty"`
 	CouponRefundFee11    int    `xml:"coupon_refund_fee_1_1,omitempty" json:"coupon_refund_fee_1_1,omitempty"`
-	CouponRefundFee12    int    `xml:"coupon_refund_fee_1_2,omitempty" json:"coupon_refund_fee_1_2,omitempty"`
 	RefundStatus0        string `xml:"refund_status_0,omitempty" json:"refund_status_0,omitempty"`
 	RefundStatus1        string `xml:"refund_status_1,omitempty" json:"refund_status_1,omitempty"`
-	RefundStatus2        string `xml:"refund_status_2,omitempty" json:"refund_status_2,omitempty"`
 	RefundAccount0       string `xml:"refund_account_0,omitempty" json:"refund_account_0,omitempty"`
 	RefundAccount1       string `xml:"refund_account_1,omitempty" json:"refund_account_1,omitempty"`
-	RefundAccount2       string `xml:"refund_account_2,omitempty" json:"refund_account_2,omitempty"`
 	RefundRecvAccout0    string `xml:"refund_recv_accout_0,omitempty" json:"refund_recv_accout_0,omitempty"`
 	RefundRecvAccout1    string `xml:"refund_recv_accout_1,omitempty" json:"refund_recv_accout_1,omitempty"`
-	RefundRecvAccout2    string `xml:"refund_recv_accout_2,omitempty" json:"refund_recv_accout_2,omitempty"`
 	RefundSuccessTime0   string `xml:"refund_success_time_0,omitempty" json:"refund_success_time_0,omitempty"`
 	RefundSuccessTime1   string `xml:"refund_success_time_1,omitempty" json:"refund_success_time_1,omitempty"`
-	RefundSuccessTime2   string `xml:"refund_success_time_2,omitempty" json:"refund_success_time_2,omitempty"`
 }
 
 type WeChatMicropayResponse struct {
@@ -250,13 +227,10 @@ type WeChatNotifyRequest struct {
 	CouponCount        int    `xml:"coupon_count,omitempty" json:"coupon_count,omitempty"`
 	CouponType0        string `xml:"coupon_type_0,omitempty" json:"coupon_type_0,omitempty"`
 	CouponType1        string `xml:"coupon_type_1,omitempty" json:"coupon_type_1,omitempty"`
-	CouponType2        string `xml:"coupon_type_2,omitempty" json:"coupon_type_2,omitempty"`
 	CouponId0          string `xml:"coupon_id_0,omitempty" json:"coupon_id_0,omitempty"`
 	CouponId1          string `xml:"coupon_id_1,omitempty" json:"coupon_id_1,omitempty"`
-	CouponId2          string `xml:"coupon_id_2,omitempty" json:"coupon_id_2,omitempty"`
 	CouponFee0         int    `xml:"coupon_fee_0,omitempty" json:"coupon_fee_0,omitempty"`
 	CouponFee1         int    `xml:"coupon_fee_1,omitempty" json:"coupon_fee_1,omitempty"`
-	CouponFee2         int    `xml:"coupon_fee_2,omitempty" json:"coupon_fee_2,omitempty"`
 	TransactionId      string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
 	OutTradeNo         string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
 	Attach             string `xml:"attach,omitempty" json:"attach,omitempty"`
