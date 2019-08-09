@@ -62,12 +62,12 @@ func VerifyWeChatResultSignByBodyMap(apiKey string, signType string, bm BodyMap)
 
 //解析微信支付异步通知的参数
 //    req：*http.Request
-//    返回参数notifyRsp：Notify请求的参数
+//    返回参数notifyReq：Notify请求的参数
 //    返回参数err：错误信息
-func ParseWeChatNotifyResult(req *http.Request) (notifyRsp *WeChatNotifyRequest, err error) {
-	notifyRsp = new(WeChatNotifyRequest)
+func ParseWeChatNotifyResult(req *http.Request) (notifyReq *WeChatNotifyRequest, err error) {
+	notifyReq = new(WeChatNotifyRequest)
 	defer req.Body.Close()
-	err = xml.NewDecoder(req.Body).Decode(notifyRsp)
+	err = xml.NewDecoder(req.Body).Decode(notifyReq)
 	if err != nil {
 		return nil, err
 	}
@@ -77,45 +77,45 @@ func ParseWeChatNotifyResult(req *http.Request) (notifyRsp *WeChatNotifyRequest,
 //验证微信支付异步通知的Sign值
 //    apiKey：API秘钥值
 //    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
-//    notifyRsp：利用 gopay.ParseWeChatNotifyResult() 得到的结构体
+//    notifyReq：利用 gopay.ParseWeChatNotifyResult() 得到的结构体
 //    返回参数ok：是否验证通过
 //    返回参数sign：根据参数计算的sign值，非微信返回参数中的Sign
-func VerifyWeChatResultSign(apiKey string, signType string, notifyRsp *WeChatNotifyRequest) (ok bool, sign string) {
+func VerifyWeChatResultSign(apiKey string, signType string, notifyReq *WeChatNotifyRequest) (ok bool, sign string) {
 	body := make(BodyMap)
-	body.Set("return_code", notifyRsp.ReturnCode)
-	body.Set("return_msg", notifyRsp.ReturnMsg)
-	body.Set("appid", notifyRsp.Appid)
-	body.Set("mch_id", notifyRsp.MchId)
-	body.Set("device_info", notifyRsp.DeviceInfo)
-	body.Set("nonce_str", notifyRsp.NonceStr)
-	body.Set("sign_type", notifyRsp.SignType)
-	body.Set("result_code", notifyRsp.ResultCode)
-	body.Set("err_code", notifyRsp.ErrCode)
-	body.Set("err_code_des", notifyRsp.ErrCodeDes)
-	body.Set("openid", notifyRsp.Openid)
-	body.Set("is_subscribe", notifyRsp.IsSubscribe)
-	body.Set("trade_type", notifyRsp.TradeType)
-	body.Set("bank_type", notifyRsp.BankType)
-	body.Set("total_fee", notifyRsp.TotalFee)
-	body.Set("settlement_total_fee", notifyRsp.SettlementTotalFee)
-	body.Set("fee_type", notifyRsp.FeeType)
-	body.Set("cash_fee", notifyRsp.CashFee)
-	body.Set("cash_fee_type", notifyRsp.CashFeeType)
-	body.Set("coupon_fee", notifyRsp.CouponFee)
-	body.Set("coupon_count", notifyRsp.CouponCount)
-	body.Set("coupon_type_0", notifyRsp.CouponType0)
-	body.Set("coupon_type_1", notifyRsp.CouponType1)
-	body.Set("coupon_type_2", notifyRsp.CouponType2)
-	body.Set("coupon_id_0", notifyRsp.CouponId0)
-	body.Set("coupon_id_1", notifyRsp.CouponId1)
-	body.Set("coupon_id_2", notifyRsp.CouponId2)
-	body.Set("coupon_fee_0", notifyRsp.CouponFee0)
-	body.Set("coupon_fee_1", notifyRsp.CouponFee1)
-	body.Set("coupon_fee_2", notifyRsp.CouponFee2)
-	body.Set("transaction_id", notifyRsp.TransactionId)
-	body.Set("out_trade_no", notifyRsp.OutTradeNo)
-	body.Set("attach", notifyRsp.Attach)
-	body.Set("time_end", notifyRsp.TimeEnd)
+	body.Set("return_code", notifyReq.ReturnCode)
+	body.Set("return_msg", notifyReq.ReturnMsg)
+	body.Set("appid", notifyReq.Appid)
+	body.Set("mch_id", notifyReq.MchId)
+	body.Set("device_info", notifyReq.DeviceInfo)
+	body.Set("nonce_str", notifyReq.NonceStr)
+	body.Set("sign_type", notifyReq.SignType)
+	body.Set("result_code", notifyReq.ResultCode)
+	body.Set("err_code", notifyReq.ErrCode)
+	body.Set("err_code_des", notifyReq.ErrCodeDes)
+	body.Set("openid", notifyReq.Openid)
+	body.Set("is_subscribe", notifyReq.IsSubscribe)
+	body.Set("trade_type", notifyReq.TradeType)
+	body.Set("bank_type", notifyReq.BankType)
+	body.Set("total_fee", notifyReq.TotalFee)
+	body.Set("settlement_total_fee", notifyReq.SettlementTotalFee)
+	body.Set("fee_type", notifyReq.FeeType)
+	body.Set("cash_fee", notifyReq.CashFee)
+	body.Set("cash_fee_type", notifyReq.CashFeeType)
+	body.Set("coupon_fee", notifyReq.CouponFee)
+	body.Set("coupon_count", notifyReq.CouponCount)
+	body.Set("coupon_type_0", notifyReq.CouponType0)
+	body.Set("coupon_type_1", notifyReq.CouponType1)
+	body.Set("coupon_type_2", notifyReq.CouponType2)
+	body.Set("coupon_id_0", notifyReq.CouponId0)
+	body.Set("coupon_id_1", notifyReq.CouponId1)
+	body.Set("coupon_id_2", notifyReq.CouponId2)
+	body.Set("coupon_fee_0", notifyReq.CouponFee0)
+	body.Set("coupon_fee_1", notifyReq.CouponFee1)
+	body.Set("coupon_fee_2", notifyReq.CouponFee2)
+	body.Set("transaction_id", notifyReq.TransactionId)
+	body.Set("out_trade_no", notifyReq.OutTradeNo)
+	body.Set("attach", notifyReq.Attach)
+	body.Set("time_end", notifyReq.TimeEnd)
 
 	newBody := make(BodyMap)
 	for key := range body {
@@ -127,7 +127,7 @@ func VerifyWeChatResultSign(apiKey string, signType string, notifyRsp *WeChatNot
 
 	sign = getLocalSign(apiKey, signType, newBody)
 
-	ok = sign == notifyRsp.Sign
+	ok = sign == notifyReq.Sign
 	return
 }
 

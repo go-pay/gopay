@@ -185,28 +185,6 @@ fmt.Println("paySign：", paySign)
 > 微信支付后的异步通知文档：[支付结果通知](https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_7&index=8)
 
 ```go
-//解析微信支付异步通知的结果到BodyMap
-//    req：*http.Request
-//    返回参数bm：Notify请求的参数
-//    返回参数err：错误信息
-bm, err := gopay.ParseWeChatNotifyResultToBodyMap(c.Request())
-if err != nil {
-    fmt.Println("err:", err)
-    return
-}
-
-//通过BodyMap验证微信支付异步通知的Sign值
-//    apiKey：API秘钥值
-//    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
-//    bm：通过 gopay.ParseWeChatNotifyResult() 得到的BodyMap
-//    返回参数ok：是否验证通过
-//    返回参数sign：计算出的sign值，非微信返回参数中的Sign
-ok, sign := gopay.VerifyWeChatResultSignByBodyMap("192006250b4c09247ec02edce69f6a2d", gopay.SignType_MD5, bm)
-fmt.Println("ok:", ok)
-fmt.Println("sign:", sign)
-```
-或者
-```go
 //解析微信支付异步通知的参数
 //    req：*http.Request
 //    返回参数notifyRsp：Notify请求的参数
@@ -227,6 +205,28 @@ fmt.Println("notifyRsp:", notifyRsp)
 ok, sign := gopay.VerifyWeChatResultSign("192006250b4c09247ec02edce69f6a2d", "MD5", notifyRsp)
 log.Println("ok:", ok)
 log.Println("sign:", sign)
+```
+或者
+```go
+//解析微信支付异步通知的结果到BodyMap
+//    req：*http.Request
+//    返回参数bm：Notify请求的参数
+//    返回参数err：错误信息
+bm, err := gopay.ParseWeChatNotifyResultToBodyMap(c.Request())
+if err != nil {
+    fmt.Println("err:", err)
+    return
+}
+
+//通过BodyMap验证微信支付异步通知的Sign值
+//    apiKey：API秘钥值
+//    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
+//    bm：通过 gopay.ParseWeChatNotifyResult() 得到的BodyMap
+//    返回参数ok：是否验证通过
+//    返回参数sign：计算出的sign值，非微信返回参数中的Sign
+ok, sign := gopay.VerifyWeChatResultSignByBodyMap("192006250b4c09247ec02edce69f6a2d", gopay.SignType_MD5, bm)
+fmt.Println("ok:", ok)
+fmt.Println("sign:", sign)
 ```
 
 ### 加密数据，解密到指定结构体
