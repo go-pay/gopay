@@ -3,6 +3,8 @@ package wechat
 import (
 	"fmt"
 	"github.com/iGoogle-ink/gopay"
+	"strconv"
+	"time"
 )
 
 func UnifiedOrder() {
@@ -45,17 +47,17 @@ func UnifiedOrder() {
 	}
 	fmt.Println("wxRsp:", *wxRsp)
 
-	//timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
+	timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
 
-	////获取小程序支付需要的paySign
+	//获取小程序支付需要的paySign
 	//pac := "prepay_id=" + wxRsp.PrepayId
 	//paySign := gopay.GetMiniPaySign("wxdaa2ab9ef87b5497", wxRsp.NonceStr, pac, gopay.SignType_MD5, timeStamp, "GFDS8j98rewnmgl45wHTt980jg543abc")
 	//fmt.Println("paySign:", paySign)
 
 	//获取H5支付需要的paySign
-	//pac := "prepay_id=" + wxRsp.PrepayId
-	//paySign := gopay.GetH5PaySign("wxdaa2ab9ef87b5497", wxRsp.NonceStr, pac, gopay.SignType_MD5, timeStamp, "GFDS8j98rewnmgl45wHTt980jg543abc")
-	//fmt.Println("paySign:", paySign)
+	pac := "prepay_id=" + wxRsp.PrepayId
+	paySign := gopay.GetH5PaySign("wxdaa2ab9ef87b5497", wxRsp.NonceStr, pac, gopay.SignType_MD5, timeStamp, "GFDS8j98rewnmgl45wHTt980jg543abc")
+	fmt.Println("paySign:", paySign)
 
 	//获取小程序需要的paySign
 	//paySign := gopay.GetAppPaySign("wxdaa2ab9ef87b5497","", wxRsp.NonceStr, wxRsp.PrepayId, gopay.SignType_MD5, timeStamp, "GFDS8j98rewnmgl45wHTt980jg543abc")
