@@ -12,6 +12,25 @@ import (
 	"strings"
 )
 
+type Country int
+
+//设置支付国家（默认：中国国内）
+//    根据支付地区情况设置国家
+//    country：<China：中国国内，SoutheastAsia：东南亚，Other：其他国家>
+func (this *weChatClient) SetCountry(country Country) (client *weChatClient) {
+	switch country {
+	case China:
+		this.baseURL = wx_base_url_ch
+	case SoutheastAsia:
+		this.baseURL = wx_base_url_hk
+	case Other:
+		this.baseURL = wx_base_url_us
+	default:
+		this.baseURL = wx_base_url_ch
+	}
+	return this
+}
+
 //本地通过支付参数计算Sign值
 func getLocalSign(apiKey string, signType string, body BodyMap) (sign string) {
 	signStr := sortWeChatSignParams(apiKey, body)
@@ -75,7 +94,7 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 	reqXml := generateXml(reqs)
 	//fmt.Println("req:::", reqXml)
 	_, byteList, errorList := HttpAgent().
-		Post(wxURL_SanBox_GetSignKey).
+		Post(wx_SanBox_GetSignKey).
 		Type("xml").
 		SendString(reqXml).EndBytes()
 	if len(errorList) > 0 {
