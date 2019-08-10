@@ -9,6 +9,11 @@
 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank"><img src="https://img.shields.io/badge/License-Apache 2-blue.svg"/></a>
 
 ## 微信支付
+
+* client := gopay.NewWeChatClient() => 初始化微信支付客户端
+* client的其他配置
+    * client.SetCountry() => 设置国家地区，默认中国国内
+
 * 统一下单：client.UnifiedOrder()
     * JSAPI - JSAPI支付（或小程序支付）
     * NATIVE - Native支付
@@ -42,6 +47,14 @@
 
 ## 支付宝支付
 
+* client := gopay.NewAliPayClient() => 初始化支付宝支付客户端
+* client的其他配置
+    * client.SetReturnUrl() => 设置返回URL
+    * client.SetNotifyUrl() => 设置异步通知URL
+    * client.SetCharset() => 设置字符编码，默认 utf-8
+    * client.SetSignType() => 设置签名类型，默认 RSA2
+    * client.SetAppAuthToken() => 设置应用授权
+
 * 手机网站支付接口2.0（手机网站支付）：client.AliPayTradeWapPay()
 * 统一收单下单并支付页面接口（电脑网站支付）：client.AliPayTradePagePay()
 * APP支付接口2.0（APP支付）：client.AliPayTradeAppPay()
@@ -58,7 +71,7 @@
 
 ## 支付宝公共API
 
-* gopay.AlipaySystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
+* gopay.AliPaySystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
 * gopay.FormatPrivateKey() => 格式化应用私钥
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
 * gopay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数
