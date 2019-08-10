@@ -8,11 +8,13 @@
 <img src="https://api.travis-ci.org/iGoogle-ink/gopay.svg?branch=master"/>
 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank"><img src="https://img.shields.io/badge/License-Apache 2-blue.svg"/></a>
 
-## 微信支付
+## 微信Client
 
 * client := gopay.NewWeChatClient() => 初始化微信支付客户端
 * client的其他配置
     * client.SetCountry() => 设置国家地区，默认中国国内
+
+## 微信支付API
 
 * 统一下单：client.UnifiedOrder()
     * JSAPI - JSAPI支付（或小程序支付）
@@ -45,7 +47,9 @@
 * gopay.DecryptOpenDataToStruct() => 加密数据，解密到指定结构体
 * gopay.GetOpenIdByAuthCode() => 授权码查询openid
 
-## 支付宝支付
+---
+
+## 支付宝Client
 
 * client := gopay.NewAliPayClient() => 初始化支付宝支付客户端
 * client的其他配置
@@ -54,6 +58,8 @@
     * client.SetCharset() => 设置字符编码，默认 utf-8
     * client.SetSignType() => 设置签名类型，默认 RSA2
     * client.SetAppAuthToken() => 设置应用授权
+
+## 支付宝支付API
 
 * 手机网站支付接口2.0（手机网站支付）：client.AliPayTradeWapPay()
 * 统一收单下单并支付页面接口（电脑网站支付）：client.AliPayTradePagePay()
