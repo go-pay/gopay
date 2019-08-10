@@ -15,7 +15,7 @@ func Refund() {
 
 	//初始化参数结构体
 	body := make(gopay.BodyMap)
-	body.Set("out_trade_no", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")
+	body.Set("out_trade_no", "SdZBAqJHBQGKVwb7aMR2mUwC588NG2Sd")
 	body.Set("nonce_str", gopay.GetRandomString(32))
 	body.Set("sign_type", gopay.SignType_MD5)
 	s := gopay.GetRandomString(64)
@@ -29,7 +29,7 @@ func Refund() {
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, err := client.Refund(body, "/apiclient_cert.pem", "/apiclient_key.pem", "/apiclient_cert.p12")
+	wxRsp, err := client.Refund(body, "iguiyu_cert/apiclient_cert.pem", "iguiyu_cert/apiclient_key.pem", "iguiyu_cert/apiclient_cert.p12")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
