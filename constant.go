@@ -5,34 +5,43 @@ const (
 	TimeLayout string = "2006-01-02 15:04:05"
 	DateLayout string = "2006-01-02"
 
+	//微信
+	//===========================================================================================
+
+	//境外国家地区
+	China         Country = 1 //中国国内
+	SoutheastAsia Country = 2 //东南亚
+	Other         Country = 3 //其他国家
+
 	//URL
-	wx_base_url        = "https://api.mch.weixin.qq.com/"
-	wx_sanbox_base_url = "https://api.mch.weixin.qq.com/sandboxnew/"
+	wx_base_url_ch = "https://api.mch.weixin.qq.com/"   //中国国内
+	wx_base_url_hk = "https://apihk.mch.weixin.qq.com/" //东南亚
+	wx_base_url_us = "https://apius.mch.weixin.qq.com/" //其他
 
 	//正式
-	wxURL_Micropay          = wx_base_url + "pay/micropay"                    //提交付款码支付
-	wxURL_UnifiedOrder      = wx_base_url + "pay/unifiedorder"                //统一下单
-	wxURL_OrderQuery        = wx_base_url + "pay/orderquery"                  //查询订单
-	wxURL_CloseOrder        = wx_base_url + "pay/closeorder"                  //关闭订单
-	wxURL_Refund            = wx_base_url + "secapi/pay/refund"               //申请退款
-	wxURL_Reverse           = wx_base_url + "secapi/pay/reverse"              //撤销订单
-	wxURL_RefundQuery       = wx_base_url + "pay/refundquery"                 //查询退款
-	wxURL_DownloadBill      = wx_base_url + "pay/downloadbill"                //下载对账单
-	wxURL_DownloadFundFlow  = wx_base_url + "pay/downloadfundflow"            //下载资金账单
-	wxURL_BatchQueryComment = wx_base_url + "billcommentsp/batchquerycomment" //拉取订单评价数据
+	wx_Micropay          = "pay/micropay"                    //提交付款码支付
+	wx_UnifiedOrder      = "pay/unifiedorder"                //统一下单
+	wx_OrderQuery        = "pay/orderquery"                  //查询订单
+	wx_CloseOrder        = "pay/closeorder"                  //关闭订单
+	wx_Refund            = "secapi/pay/refund"               //申请退款
+	wx_Reverse           = "secapi/pay/reverse"              //撤销订单
+	wx_RefundQuery       = "pay/refundquery"                 //查询退款
+	wx_DownloadBill      = "pay/downloadbill"                //下载对账单
+	wx_DownloadFundFlow  = "pay/downloadfundflow"            //下载资金账单
+	wx_BatchQueryComment = "billcommentsp/batchquerycomment" //拉取订单评价数据
 
 	//SanBox
-	wxURL_SanBox_GetSignKey        = wx_sanbox_base_url + "pay/getsignkey"
-	wxURL_SanBox_Micropay          = wx_sanbox_base_url + "pay/micropay"
-	wxURL_SanBox_UnifiedOrder      = wx_sanbox_base_url + "pay/unifiedorder"
-	wxURL_SanBox_OrderQuery        = wx_sanbox_base_url + "pay/orderquery"
-	wxURL_SanBox_CloseOrder        = wx_sanbox_base_url + "pay/closeorder"
-	wxURL_SanBox_Refund            = wx_sanbox_base_url + "pay/refund"
-	wxURL_SanBox_Reverse           = wx_sanbox_base_url + "pay/reverse"
-	wxURL_SanBox_RefundQuery       = wx_sanbox_base_url + "pay/refundquery"
-	wxURL_SanBox_DownloadBill      = wx_sanbox_base_url + "pay/downloadbill"
-	wxURL_SanBox_DownloadFundFlow  = wx_sanbox_base_url + "pay/downloadfundflow"
-	wxURL_SanBox_BatchQueryComment = wx_sanbox_base_url + "billcommentsp/batchquerycomment"
+	wx_SanBox_GetSignKey        = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
+	wx_SanBox_Micropay          = "sandboxnew/pay/micropay"
+	wx_SanBox_UnifiedOrder      = "sandboxnew/pay/unifiedorder"
+	wx_SanBox_OrderQuery        = "sandboxnew/pay/orderquery"
+	wx_SanBox_CloseOrder        = "sandboxnew/pay/closeorder"
+	wx_SanBox_Refund            = "sandboxnew/pay/refund"
+	wx_SanBox_Reverse           = "sandboxnew/pay/reverse"
+	wx_SanBox_RefundQuery       = "sandboxnew/pay/refundquery"
+	wx_SanBox_DownloadBill      = "sandboxnew/pay/downloadbill"
+	wx_SanBox_DownloadFundFlow  = "sandboxnew/pay/downloadfundflow"
+	wx_SanBox_BatchQueryComment = "sandboxnew/billcommentsp/batchquerycomment"
 
 	//支付类型
 	TradeType_Mini   = "JSAPI"
@@ -45,12 +54,12 @@ const (
 	SignType_MD5         = "MD5"
 	SignType_HMAC_SHA256 = "HMAC-SHA256"
 
-	//Debug数据
-	//
+	//支付宝
 	//===========================================================================================
-	//
-	zfb_base_url_2        = "https://openapi.alipay.com/gateway.do"
-	zfb_sanbox_base_url_2 = "https://openapi.alipaydev.com/gateway.do"
-	zfb_base_url          = "https://openapi.alipay.com/gateway.do?charset=utf-8"
-	zfb_sanbox_base_url   = "https://openapi.alipaydev.com/gateway.do?charset=utf-8"
+
+	//URL
+	zfb_base_url             = "https://openapi.alipay.com/gateway.do"
+	zfb_sanbox_base_url      = "https://openapi.alipaydev.com/gateway.do"
+	zfb_base_url_utf8        = "https://openapi.alipay.com/gateway.do?charset=utf-8"
+	zfb_sanbox_base_url_utf8 = "https://openapi.alipaydev.com/gateway.do?charset=utf-8"
 )
