@@ -4,15 +4,15 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/xml"
-	"github.com/parnurzeal/gorequest"
 	"io/ioutil"
 )
 
 type weChatClient struct {
-	AppId  string
-	MchId  string
-	apiKey string
-	isProd bool
+	AppId   string
+	MchId   string
+	apiKey  string
+	baseURL string
+	isProd  bool
 }
 
 //初始化微信客户端 ok
@@ -35,15 +35,12 @@ func (this *weChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse,
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		tlsConfig := new(tls.Config)
-		tlsConfig.InsecureSkipVerify = true
-
-		bytes, err = this.doWeChat(body, wxURL_Micropay, tlsConfig)
+		bytes, err = this.doWeChat(body, wx_Micropay)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		bytes, err = this.doWeChat(body, wxURL_SanBox_Micropay)
+		bytes, err = this.doWeChat(body, wx_SanBox_Micropay)
 		if err != nil {
 			return nil, err
 		}
@@ -63,16 +60,13 @@ func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderR
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		tlsConfig := new(tls.Config)
-		tlsConfig.InsecureSkipVerify = true
-
-		bytes, err = this.doWeChat(body, wxURL_UnifiedOrder, tlsConfig)
+		bytes, err = this.doWeChat(body, wx_UnifiedOrder)
 		if err != nil {
 			return nil, err
 		}
 	} else {
 		body.Set("total_fee", 101)
-		bytes, err = this.doWeChat(body, wxURL_SanBox_UnifiedOrder)
+		bytes, err = this.doWeChat(body, wx_SanBox_UnifiedOrder)
 		if err != nil {
 			return nil, err
 		}
@@ -93,14 +87,12 @@ func (this *weChatClient) QueryOrder(body BodyMap) (wxRsp *WeChatQueryOrderRespo
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		tlsConfig := new(tls.Config)
-		tlsConfig.InsecureSkipVerify = true
-		bytes, err = this.doWeChat(body, wxURL_OrderQuery, tlsConfig)
+		bytes, err = this.doWeChat(body, wx_OrderQuery)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		bytes, err = this.doWeChat(body, wxURL_SanBox_OrderQuery)
+		bytes, err = this.doWeChat(body, wx_SanBox_OrderQuery)
 		if err != nil {
 			return nil, err
 		}
@@ -120,14 +112,12 @@ func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderRespo
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		tlsConfig := new(tls.Config)
-		tlsConfig.InsecureSkipVerify = true
-		bytes, err = this.doWeChat(body, wxURL_CloseOrder, tlsConfig)
+		bytes, err = this.doWeChat(body, wx_CloseOrder)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		bytes, err = this.doWeChat(body, wxURL_SanBox_CloseOrder)
+		bytes, err = this.doWeChat(body, wx_SanBox_CloseOrder)
 		if err != nil {
 			return nil, err
 		}
@@ -162,12 +152,12 @@ func (this *weChatClient) Reverse(body BodyMap, certFilePath, keyFilePath, pkcs1
 		tlsConfig.RootCAs = pkcsPool
 		tlsConfig.InsecureSkipVerify = true
 
-		bytes, err = this.doWeChat(body, wxURL_Reverse, tlsConfig)
+		bytes, err = this.doWeChat(body, wx_Reverse, tlsConfig)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		bytes, err = this.doWeChat(body, wxURL_SanBox_Reverse)
+		bytes, err = this.doWeChat(body, wx_SanBox_Reverse)
 		if err != nil {
 			return nil, err
 		}
@@ -202,12 +192,12 @@ func (this *weChatClient) Refund(body BodyMap, certFilePath, keyFilePath, pkcs12
 		tlsConfig.RootCAs = pkcsPool
 		tlsConfig.InsecureSkipVerify = true
 
-		bytes, err = this.doWeChat(body, wxURL_Refund, tlsConfig)
+		bytes, err = this.doWeChat(body, wx_Refund, tlsConfig)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		bytes, err = this.doWeChat(body, wxURL_SanBox_Refund)
+		bytes, err = this.doWeChat(body, wx_SanBox_Refund)
 		if err != nil {
 			return nil, err
 		}
@@ -227,14 +217,12 @@ func (this *weChatClient) QueryRefund(body BodyMap) (wxRsp *WeChatQueryRefundRes
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		tlsConfig := new(tls.Config)
-		tlsConfig.InsecureSkipVerify = true
-		bytes, err = this.doWeChat(body, wxURL_RefundQuery, tlsConfig)
+		bytes, err = this.doWeChat(body, wx_RefundQuery)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		bytes, err = this.doWeChat(body, wxURL_SanBox_RefundQuery)
+		bytes, err = this.doWeChat(body, wx_SanBox_RefundQuery)
 		if err != nil {
 			return nil, err
 		}
@@ -254,11 +242,9 @@ func (this *weChatClient) DownloadBill(body BodyMap) (wxRsp string, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
-		tlsConfig := new(tls.Config)
-		tlsConfig.InsecureSkipVerify = true
-		bytes, err = this.doWeChat(body, wxURL_DownloadBill, tlsConfig)
+		bytes, err = this.doWeChat(body, wx_DownloadBill)
 	} else {
-		bytes, err = this.doWeChat(body, wxURL_SanBox_DownloadBill)
+		bytes, err = this.doWeChat(body, wx_SanBox_DownloadBill)
 	}
 	wxRsp = string(bytes)
 	if err != nil {
@@ -289,9 +275,9 @@ func (this *weChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePa
 		tlsConfig.RootCAs = pkcsPool
 		tlsConfig.InsecureSkipVerify = true
 
-		bytes, err = this.doWeChat(body, wxURL_DownloadFundFlow, tlsConfig)
+		bytes, err = this.doWeChat(body, wx_DownloadFundFlow, tlsConfig)
 	} else {
-		bytes, err = this.doWeChat(body, wxURL_SanBox_DownloadFundFlow)
+		bytes, err = this.doWeChat(body, wx_SanBox_DownloadFundFlow)
 	}
 
 	if err != nil {
@@ -325,9 +311,9 @@ func (this *weChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFileP
 		tlsConfig.RootCAs = pkcsPool
 		tlsConfig.InsecureSkipVerify = true
 
-		bytes, err = this.doWeChat(body, wxURL_BatchQueryComment, tlsConfig)
+		bytes, err = this.doWeChat(body, wx_BatchQueryComment, tlsConfig)
 	} else {
-		bytes, err = this.doWeChat(body, wxURL_SanBox_BatchQueryComment)
+		bytes, err = this.doWeChat(body, wx_SanBox_BatchQueryComment)
 	}
 
 	if err != nil {
@@ -339,7 +325,7 @@ func (this *weChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFileP
 }
 
 //向微信发送请求 ok
-func (this *weChatClient) doWeChat(body BodyMap, url string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
+func (this *weChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
 	var sign string
 	body.Set("appid", this.AppId)
 	body.Set("mch_id", this.MchId)
@@ -362,13 +348,17 @@ func (this *weChatClient) doWeChat(body BodyMap, url string, tlsConfig ...*tls.C
 	reqXML := generateXml(body)
 	//fmt.Println("reqXML:",reqXML)
 	//===============发起请求===================
-	agent := gorequest.New()
+	agent := HttpAgent()
 
 	if this.isProd && tlsConfig != nil {
 		agent.TLSClientConfig(tlsConfig[0])
 	}
 
-	agent.Post(url)
+	if this.baseURL != null {
+		agent.Post(this.baseURL + path)
+	} else {
+		agent.Post(wx_base_url_ch + path)
+	}
 	agent.Type("xml")
 	agent.SendString(reqXML)
 	_, bytes, errs := agent.EndBytes()
