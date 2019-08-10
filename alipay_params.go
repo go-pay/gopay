@@ -50,7 +50,7 @@ func (this *aliPayClient) SetNotifyUrl(url string) (client *aliPayClient) {
 	return this
 }
 
-//设置编码格式，如utf-8,gbk,gb2312等，推荐使用 utf-8
+//设置编码格式，如utf-8,gbk,gb2312等，默认推荐使用 utf-8
 func (this *aliPayClient) SetCharset(charset string) (client *aliPayClient) {
 	if charset == null {
 		this.Charset = "utf-8"
@@ -60,7 +60,7 @@ func (this *aliPayClient) SetCharset(charset string) (client *aliPayClient) {
 	return this
 }
 
-//设置签名算法类型，目前支持RSA2和RSA，推荐使用 RSA2
+//设置签名算法类型，目前支持RSA2和RSA，默认推荐使用 RSA2
 func (this *aliPayClient) SetSignType(signType string) (client *aliPayClient) {
 	if signType == null {
 		this.SignType = "RSA2"
