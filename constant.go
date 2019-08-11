@@ -10,13 +10,15 @@ const (
 
 	//境外国家地区
 	China         Country = 1 //中国国内
-	SoutheastAsia Country = 2 //东南亚
-	Other         Country = 3 //其他国家
+	China2        Country = 2 //中国国内（冗灾方案）
+	SoutheastAsia Country = 3 //东南亚
+	Other         Country = 4 //其他国家
 
 	//URL
-	wx_base_url_ch = "https://api.mch.weixin.qq.com/"   //中国国内
-	wx_base_url_hk = "https://apihk.mch.weixin.qq.com/" //东南亚
-	wx_base_url_us = "https://apius.mch.weixin.qq.com/" //其他
+	wx_base_url_ch  = "https://api.mch.weixin.qq.com/"   //中国国内
+	wx_base_url_ch2 = "https://api2.mch.weixin.qq.com/"  //中国国内
+	wx_base_url_hk  = "https://apihk.mch.weixin.qq.com/" //东南亚
+	wx_base_url_us  = "https://apius.mch.weixin.qq.com/" //其他
 
 	//正式
 	wx_Micropay          = "pay/micropay"                    //提交付款码支付
