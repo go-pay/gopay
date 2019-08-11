@@ -3,53 +3,53 @@
 
 # GoPay
 
-[中文](https://github.com/iGoogle-ink/gopay/blob/master/README_CN.md)
+[English Document](https://github.com/iGoogle-ink/gopay/blob/master/README.md)
 
-The Golang SDK for WeChat and AliPay
+微信和支付宝的Golang版本SDK
 
 <a href="https://www.gopay.ink" target="_blank"><img src="https://img.shields.io/badge/Author-Jerry-blue.svg"/></a>
 <a href="https://golang.org" target="_blank"><img src="https://img.shields.io/badge/Golang-1.11+-brightgreen.svg"/></a>
 <img src="https://api.travis-ci.org/iGoogle-ink/gopay.svg?branch=master"/>
 <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank"><img src="https://img.shields.io/badge/License-Apache 2-blue.svg"/></a>
 
-## WeChat Client
+## 微信Client
 
-* client := gopay.NewWeChatClient() => Init WeChat Payment Client
-* client's other configuration
-    * client.SetCountry() => set country area，default China
+* client := gopay.NewWeChatClient() => 初始化微信支付客户端
+* client的其他配置
+    * client.SetCountry() => 设置国家地区，默认中国国内
 
-## WeChat Payment API
+## 微信支付API
 
-* UnifiedOrder：client.UnifiedOrder()
-    * JSAPI - JSAPI Payment（or WeChat Applet Payment）
-    * NATIVE - Native Payment
-    * APP - App Payment
-    * MWEB - H5 Payment
-* Micropay：client.Micropay()
-* QueryOrder：client.QueryOrder()
-* CloseOrder：client.CloseOrder()
-* Reverse：client.Reverse()
-* Refund：client.Refund()
-* QueryRefund：client.QueryRefund()
-* DownloadBill：client.DownloadBill()
-* DownloadFundFlow：client.DownloadFundFlow()
-* BatchQueryComment：client.BatchQueryComment()
+* 统一下单：client.UnifiedOrder()
+    * JSAPI - JSAPI支付（或小程序支付）
+    * NATIVE - Native支付
+    * APP - app支付
+    * MWEB - H5支付
+* 提交付款码支付：client.Micropay()
+* 查询订单：client.QueryOrder()
+* 关闭订单：client.CloseOrder()
+* 撤销订单：client.Reverse()
+* 申请退款：client.Refund()
+* 查询退款：client.QueryRefund()
+* 下载对账单：client.DownloadBill()
+* 下载资金账单：client.DownloadFundFlow()
+* 拉取订单评价数据：client.BatchQueryComment()
 
-## WeChat Public API
+## 微信公共API
 
-* gopay.GetMiniPaySign() => Obtain the paySign required for WeChat Applet Payment
-* gopay.GetH5PaySign() => Obtain the paySign required for H5 Payment in WeChat
-* gopay.GetAppPaySign() => Obtain the paySign required for App Payment
-* gopay.ParseWeChatNotifyResultToBodyMap() => Parse the parameters of WeChat Payment asynchronous notification to BodyMap
-* gopay.ParseWeChatNotifyResult() => Parse the parameters of WeChat Payment asynchronous notification to Struct
-* gopay.VerifyWeChatResultSignByBodyMap() => Verify the Sign of WeChat Payment asynchronous notification by BodyMap
-* gopay.VerifyWeChatResultSign() => Verify the Sign of WeChat Payment asynchronous notification by Struct
-* gopay.Code2Session() => Login certificate verification：Obtain WeChat user's OpenId, UnionId, SessionKey
-* gopay.GetAccessToken() => Obtain WeChat Applet's global unique access token
-* gopay.GetPaidUnionId() => After the WeChat Applet user's payment is completed, obtain the UnionId of the user without authorization
-* gopay.GetWeChatUserInfo() => WeChat Official Account：Obtain Basic User Information (UnionID System)
-* gopay.DecryptOpenDataToStruct() => Decrypt encrypted data to the specified struct
-* gopay.GetOpenIdByAuthCode() => Authorization code query openid
+* gopay.GetMiniPaySign() => 获取微信小程序支付所需要的paySign
+* gopay.GetH5PaySign() => 获取微信内H5支付所需要的paySign
+* gopay.GetAppPaySign() => 获取APP支付所需要的paySign
+* gopay.ParseWeChatNotifyResultToBodyMap() => 解析微信支付异步通知的参数到BodyMap
+* gopay.ParseWeChatNotifyResult() => 解析微信支付异步通知的参数
+* gopay.VerifyWeChatResultSignByBodyMap() => 通过BodyMap验证微信支付异步通知的Sign值
+* gopay.VerifyWeChatResultSign() => 验证微信支付异步通知的Sign值
+* gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
+* gopay.GetAccessToken() => 获取小程序全局唯一后台接口调用凭据
+* gopay.GetPaidUnionId() => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
+* gopay.GetWeChatUserInfo() => 微信公众号：获取用户基本信息(UnionID机制)
+* gopay.DecryptOpenDataToStruct() => 加密数据，解密到指定结构体
+* gopay.GetOpenIdByAuthCode() => 授权码查询openid
 
 ---
 
