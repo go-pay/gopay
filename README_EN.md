@@ -3,7 +3,7 @@
 
 # GoPay
 
-[中文文档](https://github.com/iGoogle-ink/gopay/blob/master/README_CN.md)
+[中文文档](https://github.com/iGoogle-ink/gopay/blob/master/README.md)
 
 The Golang SDK for WeChat and AliPay
 

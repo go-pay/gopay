@@ -3,7 +3,7 @@
 
 # GoPay
 
-[English Document](https://github.com/iGoogle-ink/gopay/blob/master/README.md)
+[English Document](https://github.com/iGoogle-ink/gopay/blob/master/README_EN.md)
 
 微信和支付宝的Golang版本SDK
 
