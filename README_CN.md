@@ -3,6 +3,8 @@
 
 # GoPay
 
+[English](https://github.com/iGoogle-ink/gopay/blob/master/README.md)
+
 <a href="https://www.gopay.ink" target="_blank"><img src="https://img.shields.io/badge/Author-Jerry-blue.svg"/></a>
 <a href="https://golang.org" target="_blank"><img src="https://img.shields.io/badge/Golang-1.11+-brightgreen.svg"/></a>
 <img src="https://api.travis-ci.org/iGoogle-ink/gopay.svg?branch=master"/>
