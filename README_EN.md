@@ -21,11 +21,11 @@ The Golang SDK for WeChat and AliPay
 ## WeChat Payment API
 
 * UnifiedOrder：client.UnifiedOrder()
-    * JSAPI - JSAPI Payment（or WeChat Applet Payment）
+    * JSAPI - Official Account Payment（or WeChat Applet Payment）
     * NATIVE - Native Payment
-    * APP - App Payment
+    * APP - In-App Payment
     * MWEB - H5 Payment
-* Micropay：client.Micropay()
+* Quick Pay：client.Micropay()
 * QueryOrder：client.QueryOrder()
 * CloseOrder：client.CloseOrder()
 * Reverse：client.Reverse()
@@ -53,66 +53,66 @@ The Golang SDK for WeChat and AliPay
 
 ---
 
-## 支付宝Client
+## Alipay Client
 
-* client := gopay.NewAliPayClient() => 初始化支付宝支付客户端
-* client的其他配置
-    * client.SetReturnUrl() => 设置返回URL
-    * client.SetNotifyUrl() => 设置异步通知URL
-    * client.SetCharset() => 设置字符编码，默认 utf-8
-    * client.SetSignType() => 设置签名类型，默认 RSA2
-    * client.SetAppAuthToken() => 设置应用授权
+* client := gopay.NewAliPayClient() => Init Alipay Payment Client
+* client's other configuration
+    * client.SetReturnUrl() => set the return URL
+    * client.SetNotifyUrl() => set the asynchronous notification URL
+    * client.SetCharset() => set the character,default utf-8
+    * client.SetSignType() => set the sign type,default RSA2
+    * client.SetAppAuthToken() => set the app auth token
 
-## 支付宝支付API
+## Alipay Payment API
 
-* 手机网站支付接口2.0（手机网站支付）：client.AliPayTradeWapPay()
-* 统一收单下单并支付页面接口（电脑网站支付）：client.AliPayTradePagePay()
-* APP支付接口2.0（APP支付）：client.AliPayTradeAppPay()
-* 统一收单交易支付接口（当面付）：client.AliPayTradePay()
-* 统一收单交易创建接口（小程序支付）：client.AliPayTradeCreate()
-* 统一收单线下交易查询：client.AliPayTradeQuery()
-* 统一收单交易关闭接口：client.AliPayTradeClose()
-* 统一收单交易撤销接口：client.AliPayTradeCancel()
-* 统一收单交易退款接口：client.AliPayTradeRefund()
-* 统一收单退款页面接口：client.AliPayTradePageRefund()
-* 统一收单交易退款查询：client.AliPayTradeFastPayRefundQuery()
-* 统一收单交易结算接口：client.AliPayTradeOrderSettle()
-* 统一收单线下交易预创建：client.AliPayTradePrecreate()
+* alipay.trade.wap.pay（Wap Payment）：client.AliPayTradeWapPay()
+* alipay.trade.page.pay（PC Web Payment）：client.AliPayTradePagePay()
+* alipay.trade.app.pay（In-App Payment）：client.AliPayTradeAppPay()
+* alipay.trade.pay（Scan Payment）：client.AliPayTradePay()
+* alipay.trade.create（Alipay Applet Payment）：client.AliPayTradeCreate()
+* alipay.trade.query：client.AliPayTradeQuery()
+* alipay.trade.close：client.AliPayTradeClose()
+* alipay.trade.cancel：client.AliPayTradeCancel()
+* alipay.trade.refund：client.AliPayTradeRefund()
+* alipay.trade.page.refund：client.AliPayTradePageRefund()
+* alipay.trade.fastpay.refund.query：client.AliPayTradeFastPayRefundQuery()
+* alipay.trade.order.settle：client.AliPayTradeOrderSettle()
+* alipay.trade.precreate：client.AliPayTradePrecreate()
 
-## 支付宝公共API
+## Alipay Public API
 
-* gopay.AliPaySystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
-* gopay.FormatPrivateKey() => 格式化应用私钥
-* gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
-* gopay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数
-* gopay.VerifyAliPayResultSign() => 支付宝支付异步通知的签名验证和返回参数验签后的Sign
-* gopay.DecryptAliPayOpenDataToStruct() => 支付宝小程序敏感加密数据解析到结构体
+* gopay.AliPaySystemOauthToken() => Obtain authorized access token（obtain access_token, user_id and so on）
+* gopay.FormatPrivateKey() => Format private key
+* gopay.FormatAliPayPublicKey() => Format alipay public key
+* gopay.ParseAliPayNotifyResult() => Parse the parameters of Alipay Payment asynchronous notification to Struct
+* gopay.VerifyAliPayResultSign() => Verify the Sign of Alipay Payment asynchronous notification by Struct
+* gopay.DecryptAliPayOpenDataToStruct() => Decrypt alipay applet encrypted data to the specified struct
 
-# 安装
+# Install
 
 ```bash
 $ go get -u github.com/iGoogle-ink/gopay
 ```
 
-# 文档
+# Document
 
 * [GoDoc](https://godoc.org/github.com/iGoogle-ink/gopay)
 
-* 有问题+微信群。另外，仅 Fork 的同志顺手点个星呗
+* If you have any questions, Please add Wechat Group. Please click a star.
 
-微信：
+My WeChat QrCode：
 <img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_jerry.png"/>
-讨论群（如过期请加微信）：
+WeChat Group（Invalid, please add my WeChat）：
 <img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_gopay.png"/>
 
-# 微信支付
+# WeChat Payment
 
-<font color='#0088ff'>注意：具体参数根据请求的不同而不同，请参考微信官方文档的参数说明！</font>
+<font color='#0088ff'>Attention：Specific parameters vary depending on the request. Please refer to the parameter description in the official document of Wechat.</font>
 
-参考文档：[微信支付文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
+Reference Documents：[WeChat Payment Documents](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 
 ---
-### 获取微信用户OpenId、UnionId、SessionKey
+### Obtain WeChat user's OpenId, UnionId, SessionKey
 
 ```go
 userIdRsp, err := gopay.Code2Session(appID, secretKey, "")
@@ -125,59 +125,57 @@ fmt.Println("UnionID:", userIdRsp.Unionid)
 fmt.Println("SessionKey:", userIdRsp.SessionKey)
 ```
 
-### 微信小程序支付，统一下单成功后，需要进一步获取微信小程序支付所需要的paySign
+### WeChat Applet Payment, After the success of the unified order, Obtain the paySign required for WeChat Applet Payment
 
-* 小程序支付所需要的参数，paySign由后端计算
+* GetMiniPaySign
     * timeStamp
     * nonceStr
     * package 
     * signType
     * paySign
 
-> 微信小程序支付官方文档：[微信小程序支付API](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html)
+> WeChat Applet Payment Document：[Document](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html)
 ```go
 timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
-packages := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一下单成功后得到
+packages := "prepay_id=" + wxRsp.PrepayId   // wxRsp.PrepayId
 //    appId：APPID
-//    nonceStr：随即字符串
-//    prepayId：统一下单成功后得到的值
-//    signType：签名类型
-//    timeStamp：时间
-//    apiKey：API秘钥值
+//    nonceStr：
+//    prepayId：
+//    signType：
+//    timeStamp：
+//    apiKey：API KEY
 paySign := gopay.GetMiniPaySign(AppID, wxRsp.NonceStr, packages, gopay.SignType_MD5, timeStamp, ApiKey)
 
-//微信小程序支付需要的参数信息
 fmt.Println("paySign：", paySign)
 ```
 
-### 微信内H5支付，统一下单成功后，需要进一步获取微信内H5支付所需要的paySign
+### WeChat H5 Payment, After the success of the unified order, Obtain the paySign required for WeChat H5 Payment
 
-* 微信内H5支付所需要的参数，paySign由后端计算
+* GetH5PaySign
     * appId
     * timeStamp
     * nonceStr
     * package 
     * signType
     * paySign
-> 微信内H5支付官方文档：[微信内H5支付文档](https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6)
+> WeChat H5 Payment Document：[Document](https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6)
 ```go
 timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
-packages := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一下单成功后得到
+packages := "prepay_id=" + wxRsp.PrepayId   // wxRsp.PrepayId
 //    appId：APPID
-//    nonceStr：随即字符串
-//    prepayId：统一下单成功后得到的值
-//    signType：签名类型
-//    timeStamp：时间
-//    apiKey：API秘钥值
+//    nonceStr：
+//    prepayId：
+//    signType：
+//    timeStamp：
+//    apiKey：API KEY
 paySign := gopay.GetH5PaySign(AppID, wxRsp.NonceStr, packages, gopay.SignType_MD5, timeStamp, ApiKey)
 
-//微信内H5支付需要的参数信息
 fmt.Println("paySign：", paySign)
 ```
 
-### APP支付，统一下单成功后，需要进一步获取APP支付所需要的paySign
+### WeChat In-App Payment, After the success of the unified order, Obtain the paySign required for WeChat In-App Payment
 
-* APP支付所需要的参数，paySign由后端计算
+* GetAppPaySign
     * appid
     * partnerid
     * noncestr
@@ -185,21 +183,20 @@ fmt.Println("paySign：", paySign)
     * package 
     * timestamp
     * sign
-> APP支付官方文档：[APP端调起支付的参数列表文档](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12)
+> WeChat In-App Payment Document：[Document](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12)
 ```go
 timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
-//注意：signType：此处签名方式，务必与统一下单时用的签名方式一致
-//注意：package：参数因为是固定值，不需开发者再传入
+//注意：signType：sign type must be the same as when unified order
+//注意：package：The parameter is a fixed value and does not need to be passed in again.
 //    appId：APPID
-//    partnerid：partnerid
-//    nonceStr：随即字符串
-//    prepayId：统一下单成功后得到的值
-//    signType：此处签名方式，务必与统一下单时用的签名方式一致
-//    timeStamp：时间
-//    apiKey：API秘钥值
+//    partnerid：
+//    nonceStr：
+//    prepayId：
+//    signType：sign type must be the same as when unified order
+//    timeStamp：
+//    apiKey：API KEY
 paySign := gopay.GetAppPaySign(appid, partnerid, wxRsp.NonceStr, prepayid, gopay.SignType_MD5, timeStamp, apiKey)
 
-//APP支付需要的参数信息
 fmt.Println("paySign：", paySign)
 ```
 

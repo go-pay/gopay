@@ -85,7 +85,7 @@
 * gopay.FormatPrivateKey() => 格式化应用私钥
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
 * gopay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数
-* gopay.VerifyAliPayResultSign() => 支付宝支付异步通知的签名验证和返回参数验签后的Sign
+* gopay.VerifyAliPayResultSign() => 支付宝支付异步通知的签名验证
 * gopay.DecryptAliPayOpenDataToStruct() => 支付宝小程序敏感加密数据解析到结构体
 
 # 安装
@@ -98,7 +98,7 @@ $ go get -u github.com/iGoogle-ink/gopay
 
 * [GoDoc](https://godoc.org/github.com/iGoogle-ink/gopay)
 
-* 有问题+微信群。另外，仅 Fork 的同志顺手点个星呗
+* 有问题请加微信群。另外，仅 Fork 的同志顺手点个星呗
 
 微信：
 <img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_jerry.png"/>
