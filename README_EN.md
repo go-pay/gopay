@@ -102,7 +102,7 @@ $ go get -u github.com/iGoogle-ink/gopay
 
 WeChat QrCode：
 <img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_jerry.png"/>
-WeChat Group（Invalid, add my WeChat）：
+WeChat Group：
 <img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_gopay.png"/>
 
 # WeChat Payment
