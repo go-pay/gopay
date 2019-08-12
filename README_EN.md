@@ -100,9 +100,9 @@ $ go get -u github.com/iGoogle-ink/gopay
 
 * If you have any questions, Please add Wechat Group. Please click a star.
 
-My WeChat QrCode：
+WeChat QrCode：
 <img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_jerry.png"/>
-WeChat Group（Invalid, please add my WeChat）：
+WeChat Group（Invalid, add my WeChat）：
 <img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_gopay.png"/>
 
 # WeChat Payment
