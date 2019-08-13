@@ -15,7 +15,7 @@ func AliPayTradePrecreate() {
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType("RSA2").
-		SetNotifyUrl("https://api.iguiyu.com/gy_pay/alipay/notify")
+		SetNotifyUrl("https://www.gopay.ink")
 	//请求参数
 	body := make(gopay.BodyMap)
 	body.Set("subject", "预创建创建订单")
