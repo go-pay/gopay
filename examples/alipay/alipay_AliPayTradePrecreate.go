@@ -19,7 +19,7 @@ func AliPayTradePrecreate() {
 	//请求参数
 	body := make(gopay.BodyMap)
 	body.Set("subject", "预创建创建订单")
-	body.Set("out_trade_no", "GZ201901301040355703")
+	body.Set("out_trade_no", "GZ201907301040355704")
 	body.Set("total_amount", "100")
 	//创建订单
 	aliRsp, err := client.AliPayTradePrecreate(body)

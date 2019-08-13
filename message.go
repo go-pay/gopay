@@ -3,6 +3,7 @@ package gopay
 const (
 	SUCCESS = "SUCCESS"
 	FAIL    = "FAIL"
+	OK      = "OK"
 )
 
 type ReturnMessage struct {

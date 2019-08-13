@@ -280,8 +280,8 @@ fmt.Println("Watermark:", phone.Watermark)
 ```go
 rsp := new(gopay.WeChatNotifyResponse) // the struct return WeChat Platform
 
-rsp.ReturnCode = "SUCCESS"
-rsp.ReturnMsg = "OK"
+rsp.ReturnCode = gopay.SUCCESS
+rsp.ReturnMsg = gopay.OK
 
 return c.String(http.StatusOK, rsp.ToXmlString())
 ```

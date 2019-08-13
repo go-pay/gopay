@@ -283,8 +283,8 @@ fmt.Println("Watermark:", phone.Watermark)
 ```go
 rsp := new(gopay.WeChatNotifyResponse) //回复微信的数据
 
-rsp.ReturnCode = "SUCCESS"
-rsp.ReturnMsg = "OK"
+rsp.ReturnCode = gopay.SUCCESS
+rsp.ReturnMsg = gopay.OK
 
 return c.String(http.StatusOK, rsp.ToXmlString())
 ```
