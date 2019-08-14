@@ -56,7 +56,7 @@ The Golang SDK for WeChat and AliPay
 ## Alipay Client
 
 * client := gopay.NewAliPayClient() => Init Alipay Payment Client
-* client's other configuration
+* client request some settings of Common Parameters
     * client.SetReturnUrl() => set the return URL
     * client.SetNotifyUrl() => set the asynchronous notification URL
     * client.SetCharset() => set the character,default utf-8

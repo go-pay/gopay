@@ -56,7 +56,7 @@
 ## 支付宝Client
 
 * client := gopay.NewAliPayClient() => 初始化支付宝支付客户端
-* client的其他配置
+* client请求部分公共参数的设置
     * client.SetReturnUrl() => 设置返回URL
     * client.SetNotifyUrl() => 设置异步通知URL
     * client.SetCharset() => 设置字符编码，默认 utf-8
