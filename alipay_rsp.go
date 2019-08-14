@@ -279,3 +279,32 @@ type pageRefundResponse struct {
 	OutRequestNo string `json:"out_request_no,omitempty"`
 	RefundAmount string `json:"refund_amount,omitempty"`
 }
+
+type AlipayFundTransToaccountTransferResponse struct {
+	AlipayFundTransToaccountTransferResponse transToaccountTransferResponse `json:"alipay_fund_trans_toaccount_transfer_response"`
+	Sign                                     string                         `json:"sign"`
+}
+
+type transToaccountTransferResponse struct {
+	Code     string `json:"code,omitempty"`
+	Msg      string `json:"msg,omitempty"`
+	SubCode  string `json:"sub_code,omitempty"`
+	SubMsg   string `json:"sub_msg,omitempty"`
+	OutBizNo string `json:"out_biz_no,omitempty"`
+	OrderId  string `json:"order_id,omitempty"`
+	PayDate  string `json:"pay_date,omitempty"`
+}
+
+type ZhimaCreditScoreGetResponse struct {
+	ZhimaCreditScoreGetResponse scoreGetResponse `json:"zhima_credit_score_get_response"`
+	Sign                        string           `json:"sign"`
+}
+
+type scoreGetResponse struct {
+	Code    string `json:"code,omitempty"`
+	Msg     string `json:"msg,omitempty"`
+	SubCode string `json:"sub_code,omitempty"`
+	SubMsg  string `json:"sub_msg,omitempty"`
+	BizNo   string `json:"biz_no,omitempty"`
+	ZmScore string `json:"zm_score,omitempty"`
+}
