@@ -16,6 +16,7 @@ type aliPayClient struct {
 	Charset      string
 	SignType     string
 	AppAuthToken string
+	AuthToken    string
 	isProd       bool
 }
 
@@ -348,19 +349,96 @@ func (this *aliPayClient) AliPayTradePagePay(body BodyMap) (payUrl string, err e
 	return payUrl, nil
 }
 
+//alipay.fund.trans.toaccount.transfer(单笔转账到支付宝账户接口)
+//    文档地址：https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer
+func (this *aliPayClient) AlipayFundTransToaccountTransfer(body BodyMap) (aliRsp *AlipayFundTransToaccountTransferResponse, err error) {
+	var bytes []byte
+	trade1 := body.Get("out_biz_no")
+	if trade1 == null {
+		return nil, errors.New("out_biz_no is not allowed to be null")
+	}
+	bytes, err = this.doAliPay(body, "alipay.fund.trans.toaccount.transfer")
+	if err != nil {
+		return nil, err
+	}
+	//log.Println("AlipayFundTransToaccountTransferResponse::::", string(convertBytes))
+	aliRsp = new(AlipayFundTransToaccountTransferResponse)
+	err = json.Unmarshal(bytes, aliRsp)
+	if err != nil {
+		return nil, err
+	}
+	if aliRsp.AlipayFundTransToaccountTransferResponse.Code != "10000" {
+		info := aliRsp.AlipayFundTransToaccountTransferResponse
+		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	return aliRsp, nil
+}
+
 //alipay.trade.orderinfo.sync(支付宝订单信息同步接口)
+//    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.orderinfo.sync
 func (this *aliPayClient) AliPayTradeOrderinfoSync(body BodyMap) {
 
 }
 
-//zhima.credit.score.brief.get(芝麻分普惠版)
-func (this *aliPayClient) ZhimaCreditScoreBriefGet(body BodyMap) {
+//alipay.system.oauth.token(换取授权访问令牌)
+//    文档地址：https://docs.open.alipay.com/api_9/alipay.system.oauth.token/
+func (this *aliPayClient) AliPaySystemOauthToken(body BodyMap) (aliRsp *AliPaySystemOauthTokenResponse, err error) {
+	var bytes []byte
+	grantType := body.Get("grant_type")
+	if grantType == null {
+		return nil, errors.New("grant_type is not allowed to be null")
+	}
+	code := body.Get("code")
+	refreshToken := body.Get("refresh_token")
+	if code == null && refreshToken == null {
+		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
+	}
 
+	bytes, err = this.doAliPay(body, "alipay.system.oauth.token")
+	if err != nil {
+		return nil, err
+	}
+	//log.Println("AliPaySystemOauthToken::::", string(convertBytes))
+	aliRsp = new(AliPaySystemOauthTokenResponse)
+	err = json.Unmarshal(bytes, aliRsp)
+	if err != nil {
+		return nil, err
+	}
+	if aliRsp.AliPaySystemOauthTokenResponse.AccessToken == null {
+		info := aliRsp.ErrorResponse
+		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	return aliRsp, nil
 }
 
 //zhima.credit.score.get(芝麻分)
-func (this *aliPayClient) ZhimaCreditScoreGet(body BodyMap) {
+//    文档地址：https://docs.open.alipay.com/api_8/zhima.credit.score.get
+func (this *aliPayClient) ZhimaCreditScoreGet(body BodyMap) (aliRsp *ZhimaCreditScoreGetResponse, err error) {
+	var bytes []byte
 
+	trade1 := body.Get("product_code")
+	if trade1 == null {
+		body.Set("product_code", "w1010100100000000001")
+	}
+	trade2 := body.Get("transaction_id")
+	if trade2 == null {
+		return nil, errors.New("transaction_id is not allowed to be null")
+	}
+	bytes, err = this.doAliPay(body, "zhima.credit.score.get")
+	if err != nil {
+		return nil, err
+	}
+	//log.Println("ZhimaCreditScoreGet::::", string(convertBytes))
+	aliRsp = new(ZhimaCreditScoreGetResponse)
+	err = json.Unmarshal(bytes, aliRsp)
+	if err != nil {
+		return nil, err
+	}
+	if aliRsp.ZhimaCreditScoreGetResponse.Code != "10000" {
+		info := aliRsp.ZhimaCreditScoreGetResponse
+		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	return aliRsp, nil
 }
 
 //向支付宝发送请求
@@ -397,6 +475,9 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 	}
 	if this.AppAuthToken != null {
 		pubBody.Set("app_auth_token", this.AppAuthToken)
+	}
+	if this.AuthToken != null {
+		pubBody.Set("auth_token", this.AuthToken)
 	}
 	//fmt.Println("biz_content", string(bodyStr))
 	pubBody.Set("biz_content", string(bodyStr))
