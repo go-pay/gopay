@@ -62,13 +62,14 @@ The Golang SDK for WeChat and AliPay
     * client.SetCharset() => set the character,default utf-8
     * client.SetSignType() => set the sign type,default RSA2
     * client.SetAppAuthToken() => set the app auth token
+    * client.SetAuthToken() => set the personal information auth token
 
 ## Alipay Payment API
 
 * alipay.trade.wap.pay（Wap Payment）：client.AliPayTradeWapPay()
 * alipay.trade.page.pay（PC Web Payment）：client.AliPayTradePagePay()
 * alipay.trade.app.pay（In-App Payment）：client.AliPayTradeAppPay()
-* alipay.trade.pay（Scan Payment）：client.AliPayTradePay()
+* alipay.trade.pay（Merchant Scan User）：client.AliPayTradePay()
 * alipay.trade.create（Alipay Applet Payment）：client.AliPayTradeCreate()
 * alipay.trade.query：client.AliPayTradeQuery()
 * alipay.trade.close：client.AliPayTradeClose()
@@ -77,11 +78,13 @@ The Golang SDK for WeChat and AliPay
 * alipay.trade.page.refund：client.AliPayTradePageRefund()
 * alipay.trade.fastpay.refund.query：client.AliPayTradeFastPayRefundQuery()
 * alipay.trade.order.settle：client.AliPayTradeOrderSettle()
-* alipay.trade.precreate：client.AliPayTradePrecreate()
+* alipay.trade.precreate（User Scan Merchant）：client.AliPayTradePrecreate()
+* alipay.fund.trans.toaccount.transfer：client.AlipayFundTransToaccountTransfer()
+* alipay.system.oauth.token（obtain access_token, user_id and so on）：client.AliPaySystemOauthToken()
+* zhima.credit.score.get：client.ZhimaCreditScoreGet()
 
 ## Alipay Public API
 
-* gopay.AliPaySystemOauthToken() => Obtain authorized access token（obtain access_token, user_id and so on）
 * gopay.FormatPrivateKey() => Format private key
 * gopay.FormatAliPayPublicKey() => Format alipay public key
 * gopay.ParseAliPayNotifyResult() => Parse the parameters of Alipay Payment asynchronous notification to Struct

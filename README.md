@@ -62,6 +62,7 @@
     * client.SetCharset() => 设置字符编码，默认 utf-8
     * client.SetSignType() => 设置签名类型，默认 RSA2
     * client.SetAppAuthToken() => 设置应用授权
+    * client.SetAuthToken() => 设置个人信息授权
 
 ## 支付宝支付API
 
@@ -78,10 +79,12 @@
 * 统一收单交易退款查询：client.AliPayTradeFastPayRefundQuery()
 * 统一收单交易结算接口：client.AliPayTradeOrderSettle()
 * 统一收单线下交易预创建（用户扫商品收款码）：client.AliPayTradePrecreate()
+* 单笔转账到支付宝账户接口（商户给支付宝用户转账）：client.AlipayFundTransToaccountTransfer()
+* 换取授权访问令牌（获取access_token，user_id等信息）：client.AliPaySystemOauthToken()
+* 获取芝麻信用分：client.ZhimaCreditScoreGet()
 
 ## 支付宝公共API
 
-* gopay.AliPaySystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
 * gopay.FormatPrivateKey() => 格式化应用私钥
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
 * gopay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数
