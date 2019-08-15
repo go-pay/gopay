@@ -656,7 +656,7 @@ fmt.Println("aliRsp:", *aliRsp)
 
 ### 支付宝小程序支付
 
-* 支付宝小程序支付时 buyer_id 为必传参数，需要提前获取获取方法如下两种，下面示例代码使用的第二种
+* 支付宝小程序支付时 buyer_id 为必传参数，需要提前获取，获取方法如下两种，下面示例代码使用的第二种
     * gopay.AliPaySystemOauthToken()
     * client.AliPaySystemOauthToken()
 
