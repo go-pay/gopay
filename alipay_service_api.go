@@ -331,7 +331,6 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 //向支付宝发送请求
 func doAliPay(appId, privateKey string, body BodyMap, method string) (bytes []byte, err error) {
 	//===============生成参数===================
-	//pubBody := make(BodyMap)
 	body.Set("app_id", appId)
 	body.Set("method", method)
 	body.Set("format", "JSON")
@@ -339,7 +338,6 @@ func doAliPay(appId, privateKey string, body BodyMap, method string) (bytes []by
 	body.Set("sign_type", "RSA2")
 	body.Set("timestamp", time.Now().Format(TimeLayout))
 	body.Set("version", "1.0")
-	//pubBody.Set("biz_content", string(bodyStr))
 	//===============获取签名===================
 	pKey := FormatPrivateKey(privateKey)
 	sign, err := getRsaSign(body, "RSA2", pKey)
@@ -350,7 +348,6 @@ func doAliPay(appId, privateKey string, body BodyMap, method string) (bytes []by
 	//fmt.Println("rsaSign:", sign)
 	//===============发起请求===================
 	urlParam := FormatAliPayURLParam(body)
-	//fmt.Println("urlParam:", urlParam)
 
 	var url string
 	agent := HttpAgent()
