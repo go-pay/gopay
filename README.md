@@ -85,6 +85,7 @@
 
 ## 支付宝公共API
 
+* gopay.AliPaySystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
 * gopay.FormatPrivateKey() => 格式化应用私钥
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
 * gopay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数

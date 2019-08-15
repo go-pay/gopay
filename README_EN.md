@@ -85,6 +85,7 @@ The Golang SDK for WeChat and AliPay
 
 ## Alipay Public API
 
+* gopay.AliPaySystemOauthToken() => Obtain authorized access token（obtain access_token, user_id and so on）
 * gopay.FormatPrivateKey() => Format private key
 * gopay.FormatAliPayPublicKey() => Format alipay public key
 * gopay.ParseAliPayNotifyResult() => Parse the parameters of Alipay Payment asynchronous notification to Struct
