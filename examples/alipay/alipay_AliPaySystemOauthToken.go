@@ -14,11 +14,12 @@ func AliPaySystemOauthToken() {
 	client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 	//配置公共参数
 	client.SetCharset("utf-8").
-		SetSignType("RSA2")
+		SetSignType("RSA2").
+		SetNotifyUrl("https://www.gopay.ink")
 	//请求参数
 	body := make(gopay.BodyMap)
 	body.Set("grant_type", "authorization_code")
-	body.Set("code", "d063be42d4f34f33bff3fd898b53RB69")
+	body.Set("code", "46523714c2654d0583d91aaa862aOF69")
 
 	//创建订单
 	aliRsp, err := client.AliPaySystemOauthToken(body)
@@ -29,11 +30,10 @@ func AliPaySystemOauthToken() {
 	fmt.Println("aliRsp:", *aliRsp)
 
 	//支付宝小程序创建订单
-	client.SetNotifyUrl("https://www.gopay.ink")
 	body2 := make(gopay.BodyMap)
 	body2.Set("subject", "创建订单")
 	body2.Set("buyer_id", aliRsp.AliPaySystemOauthTokenResponse.UserId)
-	body2.Set("out_trade_no", "GZ201901301040355707")
+	body2.Set("out_trade_no", "GZ201901301040355708")
 	body2.Set("total_amount", "0.01")
 
 	rsp, err := client.AliPayTradeCreate(body2)
@@ -41,5 +41,6 @@ func AliPaySystemOauthToken() {
 		fmt.Println("err:", err)
 		return
 	}
-	fmt.Println("aliRsp222:", *rsp)
+	fmt.Println("rsp:", *rsp)
+	fmt.Println("TradeNo:", rsp.AliPayTradeCreateResponse.TradeNo)
 }
