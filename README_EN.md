@@ -80,6 +80,7 @@ The Golang SDK for WeChat and AliPay
 * alipay.trade.order.settle：client.AliPayTradeOrderSettle()
 * alipay.trade.precreate（User Scan Merchant）：client.AliPayTradePrecreate()
 * alipay.fund.trans.toaccount.transfer：client.AlipayFundTransToaccountTransfer()
+* alipay.system.oauth.token（obtain access_token, user_id and so on）：client.AliPaySystemOauthToken()
 * zhima.credit.score.get：client.ZhimaCreditScoreGet()
 
 ## Alipay Public API

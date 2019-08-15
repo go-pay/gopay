@@ -311,7 +311,7 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 		body.Set("grant_type", "authorization_code")
 		body.Set("code", codeOrToken)
 	}
-	bs, err = doAliPay(appId, privateKey, body, "alipay.system.oauth.token")
+	bs, err = aliPaySystemOauthToken(appId, privateKey, body, "alipay.system.oauth.token")
 	if err != nil {
 		return nil, err
 	}
@@ -329,7 +329,7 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 }
 
 //向支付宝发送请求
-func doAliPay(appId, privateKey string, body BodyMap, method string) (bytes []byte, err error) {
+func aliPaySystemOauthToken(appId, privateKey string, body BodyMap, method string) (bytes []byte, err error) {
 	//===============生成参数===================
 	body.Set("app_id", appId)
 	body.Set("method", method)
