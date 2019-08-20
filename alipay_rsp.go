@@ -308,3 +308,31 @@ type scoreGetResponse struct {
 	BizNo   string `json:"biz_no,omitempty"`
 	ZmScore string `json:"zm_score,omitempty"`
 }
+
+type AlipayOpenAuthTokenAppResponse struct {
+	AlipayOpenAuthTokenAppResponse authTokenAppResponse `json:"alipay_open_auth_token_app_response"`
+	Sign                           string               `json:"sign"`
+}
+
+type authTokenAppResponse struct {
+	Code            string      `json:"code,omitempty"`
+	Msg             string      `json:"msg,omitempty"`
+	SubCode         string      `json:"sub_code,omitempty"`
+	SubMsg          string      `json:"sub_msg,omitempty"`
+	UserId          string      `json:"user_id,omitempty"`
+	AuthAppId       string      `json:"auth_app_id,omitempty"`
+	AppAuthToken    string      `json:"app_auth_token,omitempty"`
+	AppRefreshToken string      `json:"app_refresh_token,omitempty"`
+	ExpiresIn       int         `json:"expires_in,omitempty"`
+	ReExpiresIn     int         `json:"re_expires_in,omitempty"`
+	Tokens          []tokenInfo `json:"tokens,omitempty"`
+}
+
+type tokenInfo struct {
+	AppAuthToken    string `json:"app_auth_token,omitempty"`
+	AppRefreshToken string `json:"app_refresh_token,omitempty"`
+	AuthAppId       string `json:"auth_app_id,omitempty"`
+	ExpiresIn       int    `json:"expires_in,omitempty"`
+	ReExpiresIn     int    `json:"re_expires_in,omitempty"`
+	UserId          string `json:"user_id,omitempty"`
+}

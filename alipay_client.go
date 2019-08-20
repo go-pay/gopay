@@ -97,7 +97,7 @@ func (this *aliPayClient) AliPayTradeCreate(body BodyMap) (aliRsp *AliPayTradeCr
 	if err != nil {
 		return nil, err
 	}
-	//log.Println("AliPayTradeCreateResponse::::", string(convertBytes))
+	//log.Println("AliPayTradeCreateResponse::::", string(bytes))
 	aliRsp = new(AliPayTradeCreateResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
@@ -226,7 +226,7 @@ func (this *aliPayClient) AliPayTradePrecreate(body BodyMap) (aliRsp *AlipayTrad
 	if err != nil {
 		return nil, err
 	}
-	//log.Println("AlipayTradePrecreateResponse::::", string(convertBytes))
+	//log.Println("AlipayTradePrecreateResponse::::", string(bytes))
 	aliRsp = new(AlipayTradePrecreateResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
@@ -361,7 +361,7 @@ func (this *aliPayClient) AlipayFundTransToaccountTransfer(body BodyMap) (aliRsp
 	if err != nil {
 		return nil, err
 	}
-	//log.Println("AlipayFundTransToaccountTransferResponse::::", string(convertBytes))
+	//log.Println("AlipayFundTransToaccountTransferResponse::::", string(bytes))
 	aliRsp = new(AlipayFundTransToaccountTransferResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
@@ -381,7 +381,7 @@ func (this *aliPayClient) AliPayTradeOrderinfoSync(body BodyMap) {
 }
 
 //alipay.system.oauth.token(换取授权访问令牌)
-//    文档地址：https://docs.open.alipay.com/api_9/alipay.system.oauth.token/
+//    文档地址：https://docs.open.alipay.com/api_9/alipay.system.oauth.token
 func (this *aliPayClient) AliPaySystemOauthToken(body BodyMap) (aliRsp *AliPaySystemOauthTokenResponse, err error) {
 	var bytes []byte
 	grantType := body.Get("grant_type")
@@ -398,7 +398,7 @@ func (this *aliPayClient) AliPaySystemOauthToken(body BodyMap) (aliRsp *AliPaySy
 	if err != nil {
 		return nil, err
 	}
-	//log.Println("AliPaySystemOauthToken::::", string(convertBytes))
+	//log.Println("AliPaySystemOauthToken::::", string(bytes))
 	aliRsp = new(AliPaySystemOauthTokenResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
@@ -409,6 +409,38 @@ func (this *aliPayClient) AliPaySystemOauthToken(body BodyMap) (aliRsp *AliPaySy
 		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	return aliRsp, nil
+}
+
+//alipay.open.auth.token.app(换取应用授权令牌)
+//    文档地址：https://docs.open.alipay.com/api_9/alipay.open.auth.token.app
+func (this *aliPayClient) AlipayOpenAuthTokenApp(body BodyMap) (aliRsp *AlipayOpenAuthTokenAppResponse, err error) {
+	var bs []byte
+	grantType := body.Get("grant_type")
+	if grantType == null {
+		return nil, errors.New("grant_type is not allowed to be null")
+	}
+	code := body.Get("code")
+	refreshToken := body.Get("refresh_token")
+	if code == null && refreshToken == null {
+		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
+	}
+
+	bs, err = this.doAliPay(body, "alipay.open.auth.token.app")
+	if err != nil {
+		return nil, err
+	}
+	//log.Println("AlipayOpenAuthTokenApp::::", string(bs))
+	aliRsp = new(AlipayOpenAuthTokenAppResponse)
+	err = json.Unmarshal(bs, aliRsp)
+	if err != nil {
+		return nil, err
+	}
+	if aliRsp.AlipayOpenAuthTokenAppResponse.Code != "10000" {
+		info := aliRsp.AlipayOpenAuthTokenAppResponse
+		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	return aliRsp, nil
+
 }
 
 //zhima.credit.score.get(芝麻分)
@@ -428,7 +460,7 @@ func (this *aliPayClient) ZhimaCreditScoreGet(body BodyMap) (aliRsp *ZhimaCredit
 	if err != nil {
 		return nil, err
 	}
-	//log.Println("ZhimaCreditScoreGet::::", string(convertBytes))
+	//log.Println("ZhimaCreditScoreGet::::", string(bytes))
 	aliRsp = new(ZhimaCreditScoreGetResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
