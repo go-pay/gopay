@@ -19,7 +19,7 @@ func AlipayOpenAuthTokenApp() {
 	//请求参数
 	body := make(gopay.BodyMap)
 	body.Set("grant_type", "authorization_code")
-	body.Set("code", "445267b68cc54ef3a08343f186769X93")
+	body.Set("code", "866185490c4e40efa9f71efea6766X02")
 	//发起请求
 	aliRsp, err := client.AlipayOpenAuthTokenApp(body)
 	if err != nil {
