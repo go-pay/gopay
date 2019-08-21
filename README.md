@@ -441,7 +441,7 @@ body.Set("amount", 1)                 //企业付款金额，单位为分
 body.Set("desc", "测试转账")              //企业付款备注，必填。注意：备注中的敏感词会被转成字符*
 body.Set("spbill_create_ip", "127.0.0.1")
 
-//请求申请退款（沙箱环境下，证书路径参数可传空）
+//请求转账
 //    body：参数Body
 //    certFilePath：cert证书路径
 //    keyFilePath：Key证书路径
