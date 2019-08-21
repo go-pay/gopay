@@ -324,6 +324,62 @@ func (this *weChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFileP
 	return wxRsp, nil
 }
 
+//企业向微信用户个人付款
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_1
+//    此方法未支持沙箱环境，默认正式环境，转账请慎重
+func (this *weChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatTransfersResponse, err error) {
+	var bytes []byte
+	var sign string
+	body.Set("mch_appid", this.AppId)
+	body.Set("mchid", this.MchId)
+
+	agent := HttpAgent()
+
+	//正式环境
+	pkcsPool := x509.NewCertPool()
+	pkcs, err := ioutil.ReadFile(pkcs12FilePath)
+	if err != nil {
+		return nil, err
+	}
+	pkcsPool.AppendCertsFromPEM(pkcs)
+	certificate, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
+	if err != nil {
+		return nil, err
+	}
+	tlsConfig := new(tls.Config)
+	tlsConfig.Certificates = []tls.Certificate{certificate}
+	tlsConfig.RootCAs = pkcsPool
+	tlsConfig.InsecureSkipVerify = true
+
+	agent.TLSClientConfig(tlsConfig)
+
+	//本地计算Sign
+	sign = getLocalSign(this.apiKey, SignType_MD5, body)
+
+	body.Set("sign", sign)
+	reqXML := generateXml(body)
+
+	if this.baseURL != null {
+		agent.Post(this.baseURL + wx_Transfers)
+	} else {
+		agent.Post(wx_base_url_ch + wx_Transfers)
+	}
+	agent.Type("xml")
+	agent.SendString(reqXML)
+
+	_, bytes, errs := agent.EndBytes()
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+
+	wxRsp = new(WeChatTransfersResponse)
+	err = xml.Unmarshal(bytes, wxRsp)
+	if err != nil {
+		return nil, err
+	}
+	return wxRsp, nil
+}
+
 //向微信发送请求 ok
 func (this *weChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
 	var sign string
