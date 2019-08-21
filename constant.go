@@ -21,16 +21,17 @@ const (
 	wx_base_url_us  = "https://apius.mch.weixin.qq.com/" //其他
 
 	//正式
-	wx_Micropay          = "pay/micropay"                    //提交付款码支付
-	wx_UnifiedOrder      = "pay/unifiedorder"                //统一下单
-	wx_OrderQuery        = "pay/orderquery"                  //查询订单
-	wx_CloseOrder        = "pay/closeorder"                  //关闭订单
-	wx_Refund            = "secapi/pay/refund"               //申请退款
-	wx_Reverse           = "secapi/pay/reverse"              //撤销订单
-	wx_RefundQuery       = "pay/refundquery"                 //查询退款
-	wx_DownloadBill      = "pay/downloadbill"                //下载对账单
-	wx_DownloadFundFlow  = "pay/downloadfundflow"            //下载资金账单
-	wx_BatchQueryComment = "billcommentsp/batchquerycomment" //拉取订单评价数据
+	wx_Micropay          = "pay/micropay"                          //提交付款码支付
+	wx_UnifiedOrder      = "pay/unifiedorder"                      //统一下单
+	wx_OrderQuery        = "pay/orderquery"                        //查询订单
+	wx_CloseOrder        = "pay/closeorder"                        //关闭订单
+	wx_Refund            = "secapi/pay/refund"                     //申请退款
+	wx_Reverse           = "secapi/pay/reverse"                    //撤销订单
+	wx_RefundQuery       = "pay/refundquery"                       //查询退款
+	wx_DownloadBill      = "pay/downloadbill"                      //下载对账单
+	wx_DownloadFundFlow  = "pay/downloadfundflow"                  //下载资金账单
+	wx_BatchQueryComment = "billcommentsp/batchquerycomment"       //拉取订单评价数据
+	wx_Transfers         = "mmpaymkttransfers/promotion/transfers" //企业向微信用户个人付款
 
 	//SanBox
 	wx_SanBox_GetSignKey        = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
@@ -44,6 +45,7 @@ const (
 	wx_SanBox_DownloadBill      = "sandboxnew/pay/downloadbill"
 	wx_SanBox_DownloadFundFlow  = "sandboxnew/pay/downloadfundflow"
 	wx_SanBox_BatchQueryComment = "sandboxnew/billcommentsp/batchquerycomment"
+	wx_SanBox_Transfers         = "sandboxnew/mmpaymkttransfers/promotion/transfers"
 
 	//支付类型
 	TradeType_Mini   = "JSAPI"

@@ -34,6 +34,7 @@
 * 下载对账单：client.DownloadBill()
 * 下载资金账单：client.DownloadFundFlow()
 * 拉取订单评价数据：client.BatchQueryComment()
+* 企业向微信用户个人付款：client.Transfer()
 
 ## 微信公共API
 
@@ -410,6 +411,49 @@ if err != nil {
 }
 fmt.Println("Response：", wxRsp)
 ```
+
+### 企业向微信用户个人付款
+
+参数说明文档：[企业付款](https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2)
+
+注意：默认只支持正式环境，isProd 请填写 true
+
+```go
+//初始化微信客户端
+//    appId：应用ID
+//    MchID：商户ID
+//    ApiKey：Key值
+//    isProd：是否是正式环境（企业转账到个人账户，默认正式环境）
+client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", true)
+
+nonceStr := gopay.GetRandomString(32)
+partnerTradeNo := gopay.GetRandomString(32)
+
+fmt.Println("partnerTradeNo:", partnerTradeNo)
+//初始化参数结构体
+body := make(gopay.BodyMap)
+body.Set("nonce_str", nonceStr)
+body.Set("partner_trade_no", partnerTradeNo)
+body.Set("openid", openid)
+body.Set("check_name", "FORCE_CHECK") // NO_CHECK：不校验真实姓名 , FORCE_CHECK：强校验真实姓名
+body.Set("re_user_name", "付明明")       //收款用户真实姓名。 如果check_name设置为FORCE_CHECK，则必填用户真实姓名
+body.Set("amount", 1)                 //企业付款金额，单位为分
+body.Set("desc", "测试转账")              //企业付款备注，必填。注意：备注中的敏感词会被转成字符*
+body.Set("spbill_create_ip", "127.0.0.1")
+
+//请求申请退款（沙箱环境下，证书路径参数可传空）
+//    body：参数Body
+//    certFilePath：cert证书路径
+//    keyFilePath：Key证书路径
+//    pkcs12FilePath：p12证书路径
+wxRsp, err := client.Transfer(body, "apiclient_cert.pem", "apiclient_key.pem", "apiclient_cert.p12")
+if err != nil {
+    fmt.Println("Error:", err)
+    return
+}
+fmt.Println("wxRsp：", *wxRsp)
+```
+
 ---
 
 # 支付宝支付
