@@ -193,6 +193,21 @@ type WeChatMicropayResponse struct {
 	PromotionDetail    string `xml:"promotion_detail,omitempty" json:"promotion_detail,omitempty"`
 }
 
+type WeChatTransfersResponse struct {
+	ReturnCode     string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg      string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	MchAppid       string `xml:"mch_appid,omitempty" json:"mch_appid,omitempty"`
+	Mchid          string `xml:"mchid,omitempty" json:"mchid,omitempty"`
+	DeviceInfo     string `xml:"device_info,omitempty" json:"device_info,omitempty"`
+	NonceStr       string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	ResultCode     string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode        string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes     string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	PartnerTradeNo string `xml:"partner_trade_no,omitempty" json:"partner_trade_no,omitempty"`
+	PaymentNo      string `xml:"payment_no,omitempty" json:"payment_no,omitempty"`
+	PaymentTime    string `xml:"payment_time,omitempty" json:"payment_time,omitempty"`
+}
+
 type getSignKeyResponse struct {
 	ReturnCode     string `xml:"return_code,omitempty" json:"return_code,omitempty"`
 	ReturnMsg      string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
