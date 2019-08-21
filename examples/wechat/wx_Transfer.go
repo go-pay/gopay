@@ -3,14 +3,14 @@
 //  * DateTime：2019/8/21 21:02
 //  * Desc：
 //==================================
-package main
+package wechat
 
 import (
 	"fmt"
 	"github.com/iGoogle-ink/gopay"
 )
 
-func main() {
+func Transfer() {
 	//初始化微信客户端
 	//    appId：应用ID
 	//    MchID：商户ID
