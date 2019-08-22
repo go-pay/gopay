@@ -7,10 +7,10 @@
 
 微信和支付宝的Golang版本SDK
 
-<a href="https://www.gopay.ink" target="_blank"><img src="https://img.shields.io/badge/Author-Jerry-blue.svg"/></a>
-<a href="https://golang.org" target="_blank"><img src="https://img.shields.io/badge/Golang-1.11+-brightgreen.svg"/></a>
-<img src="https://api.travis-ci.org/iGoogle-ink/gopay.svg?branch=master"/>
-<a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank"><img src="https://img.shields.io/badge/License-Apache 2-blue.svg"/></a>
+[![](https://img.shields.io/badge/Author-Jerry-blue.svg)](https://www.gopay.ink)
+[![](https://img.shields.io/badge/Golang-1.11+-brightgreen.svg)](https://golang.org)
+[![](https://api.travis-ci.org/iGoogle-ink/gopay.svg?branch=master)]()
+[![](https://img.shields.io/badge/License-Apache_2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 ## 微信Client
 
