@@ -549,19 +549,23 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 		//fmt.Println(url)
 		agent.Post(url)
 	}
-	rsp, bs, errs := agent.
+	res, bs, errs := agent.
 		Type("form-data").
 		SendString(urlParam).
 		EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
+	//fmt.Println("res:", res.StatusCode)
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %v", res.StatusCode)
+	}
 	if method == "alipay.trade.wap.pay" {
 		//fmt.Println("rsp:::", rsp.Body)
-		if rsp.Request.URL.String() == zfb_sanbox_base_url || rsp.Request.URL.String() == zfb_base_url {
+		if res.Request.URL.String() == zfb_sanbox_base_url || res.Request.URL.String() == zfb_base_url {
 			return nil, errors.New("请求手机网站支付出错，请检查各个参数或秘钥是否正确")
 		}
-		return []byte(rsp.Request.URL.String()), nil
+		return []byte(res.Request.URL.String()), nil
 	}
 	return bs, nil
 }

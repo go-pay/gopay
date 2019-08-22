@@ -16,7 +16,7 @@ The Golang SDK for WeChat and AliPay
 
 * client := gopay.NewWeChatClient() => Init WeChat Payment Client
 * client's other configuration
-    * client.SetCountry() => set country area，default China
+    * client.SetCountry() => set country area，default China（gopay.China、gopay.China2、gopay.SoutheastAsia、gopay.Other）
 
 ## WeChat Payment API
 

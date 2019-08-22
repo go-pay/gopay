@@ -16,7 +16,7 @@
 
 * client := gopay.NewWeChatClient() => 初始化微信支付客户端
 * client的其他配置
-    * client.SetCountry() => 设置国家地区，默认中国国内
+    * client.SetCountry() => 设置国家地区，默认中国国内（gopay.China、gopay.China2、gopay.SoutheastAsia、gopay.Other）
 
 ## 微信支付API
 

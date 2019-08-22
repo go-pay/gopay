@@ -15,6 +15,9 @@ func UnifiedOrder() {
 	//    isProd：是否是正式环境
 	client := gopay.NewWeChatClient("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", false)
 
+	//设置国家
+	client.SetCountry(gopay.SoutheastAsia)
+
 	number := gopay.GetRandomString(32)
 	fmt.Println("out_trade_no:", number)
 	//初始化参数Map
@@ -46,6 +49,7 @@ func UnifiedOrder() {
 		return
 	}
 	fmt.Println("wxRsp:", *wxRsp)
+	fmt.Println("wxRsp.MwebUrl:", wxRsp.MwebUrl)
 
 	timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
 

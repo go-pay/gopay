@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/xml"
+	"fmt"
 	"io/ioutil"
 )
 
@@ -76,6 +77,7 @@ func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderR
 	//fmt.Println("bytes:", string(bytes))
 	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
+		//fmt.Println("xml.Unmarshal.Err:", err)
 		return nil, err
 	}
 	return wxRsp, nil
@@ -392,6 +394,7 @@ func (this *weChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.
 		//从微信接口获取SanBoxSignKey
 		key, err := getSanBoxSign(this.MchId, body.Get("nonce_str"), this.apiKey, SignType_MD5)
 		if err != nil {
+			//fmt.Println("getSanBoxSign:", err)
 			return nil, err
 		}
 		sign = getLocalSign(key, body.Get("sign_type"), body)
@@ -417,9 +420,14 @@ func (this *weChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.
 	}
 	agent.Type("xml")
 	agent.SendString(reqXML)
-	_, bytes, errs := agent.EndBytes()
+	res, bytes, errs := agent.EndBytes()
 	if len(errs) > 0 {
+		//fmt.Println("errs[0]:", errs[0])
 		return nil, errs[0]
+	}
+	//fmt.Println("res:", res.StatusCode)
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %v", res.StatusCode)
 	}
 	return bytes, nil
 }
