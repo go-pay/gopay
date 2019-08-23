@@ -30,6 +30,11 @@ func NewWeChatClient(appId, mchId, apiKey string, isProd bool) (client *weChatCl
 	return client
 }
 
+//获取版本号
+func (this *weChatClient) GetVersion() (version string) {
+	return Version
+}
+
 //提交付款码支付 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
 func (this *weChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse, err error) {
