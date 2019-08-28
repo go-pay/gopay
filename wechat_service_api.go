@@ -318,7 +318,9 @@ func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr inter
 	plainText := make([]byte, len(cipherText))
 	blockMode.CryptBlocks(plainText, cipherText)
 	//fmt.Println("plainText1:", plainText)
-	plainText = PKCS7UnPadding(plainText)
+	if len(plainText) > 0 {
+		plainText = PKCS7UnPadding(plainText)
+	}
 	//fmt.Println("plainText:", plainText)
 	//解析
 	err = json.Unmarshal(plainText, beanPtr)
