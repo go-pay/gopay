@@ -228,16 +228,26 @@ func Int642String(intNum int64) (int64Str string) {
 
 //解密填充模式（去除补全码） PKCS7UnPadding
 //解密时，需要在最后面去掉加密时添加的填充byte
-func PKCS7UnPadding(plainText []byte) []byte {
-	length := len(plainText)
-	unpadding := int(plainText[length-1])   //找到Byte数组最后的填充byte
-	return plainText[:(length - unpadding)] //只截取返回有效数字内的byte数组
+func PKCS7UnPadding(origData []byte) (bs []byte) {
+	length := len(origData)
+	unpaddingNumber := int(origData[length-1]) //找到Byte数组最后的填充byte 数字
+	if unpaddingNumber <= 7 {
+		bs = origData[:(length - unpaddingNumber)] //只截取返回有效数字内的byte数组
+	} else {
+		bs = origData
+	}
+	return
 }
 
 //解密填充模式（去除补全码） PKCS5UnPadding
 //解密时，需要在最后面去掉加密时添加的填充byte
-func PKCS5UnPadding(origData []byte) []byte {
+func PKCS5UnPadding(origData []byte) (bs []byte) {
 	length := len(origData)
-	unpadding := int(origData[length-1])   //找到Byte数组最后的填充byte
-	return origData[:(length - unpadding)] //只截取返回有效数字内的byte数组
+	unpaddingNumber := int(origData[length-1]) //找到Byte数组最后的填充byte
+	if unpaddingNumber <= 5 {
+		bs = origData[:(length - unpaddingNumber)] //只截取返回有效数字内的byte数组
+	} else {
+		bs = origData
+	}
+	return
 }

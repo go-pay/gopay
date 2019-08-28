@@ -84,6 +84,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest,
 //    sessionKey:会话密钥
 //    beanPtr:需要解析到的结构体指针
 //    文档：https://docs.alipay.com/mini/introduce/aes
+//    文档：https://docs.open.alipay.com/common/104567
 func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{}) (err error) {
 	//验证参数类型
 	beanValue := reflect.ValueOf(beanPtr)
@@ -109,7 +110,10 @@ func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr inte
 	blockMode := cipher.NewCBCDecrypter(block, ivKey)
 	originData := make([]byte, len(secretData))
 	blockMode.CryptBlocks(originData, secretData)
-	originData = PKCS5UnPadding(originData)
+
+	if len(originData) > 0 {
+		originData = PKCS5UnPadding(originData)
+	}
 	//fmt.Println("originDataStr:", string(originData))
 	//解析
 	err = json.Unmarshal(originData, beanPtr)
