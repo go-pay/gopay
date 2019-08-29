@@ -8,6 +8,7 @@ import (
 	"io"
 	"math/rand"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -119,6 +120,45 @@ func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 		//(*bm)[e.XMLName.Local] = e.Value
 	}
 	return nil
+}
+
+// ("bar=baz&foo=quux") sorted by key.
+func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
+	var buf strings.Builder
+	keyList := make([]string, 0, len(bm))
+	for k := range bm {
+		keyList = append(keyList, k)
+	}
+	sort.Strings(keyList)
+	for _, k := range keyList {
+		buf.WriteString(k)
+		buf.WriteByte('=')
+		buf.WriteString(bm.Get(k))
+		buf.WriteByte('&')
+	}
+	buf.WriteString("key")
+	buf.WriteByte('=')
+	buf.WriteString(apiKey)
+	return buf.String()
+}
+
+// ("bar=baz&foo=quux") sorted by key.
+func (bm BodyMap) EncodeAliPaySignParams() string {
+	var buf strings.Builder
+	keyList := make([]string, 0, len(bm))
+	for k := range bm {
+		keyList = append(keyList, k)
+	}
+	sort.Strings(keyList)
+	for _, k := range keyList {
+		buf.WriteString(k)
+		buf.WriteByte('=')
+		buf.WriteString(bm.Get(k))
+		buf.WriteByte('&')
+	}
+	s := buf.String()
+	i := buf.Len()
+	return s[:i-1]
 }
 
 //HttpAgent

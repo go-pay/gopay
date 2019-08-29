@@ -1,7 +1,6 @@
 package gopay
 
 import (
-	"bytes"
 	"crypto"
 	"crypto/aes"
 	"crypto/cipher"
@@ -16,6 +15,7 @@ import (
 	"log"
 	"net/http"
 	"reflect"
+	"strings"
 	"time"
 )
 
@@ -171,7 +171,8 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyReq *AliPayNotifyReque
 	}
 
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
-	signData := sortAliPaySignParams(newBody)
+	//signData := sortAliPaySignParams(newBody)
+	signData := newBody.EncodeAliPaySignParams()
 
 	//log.Println("签名字符串：", signData)
 	err = verifyAliPaySign(signData, notifyReq.Sign, notifyReq.SignType, pKey)
@@ -199,7 +200,7 @@ func jsonToString(v interface{}) (str string) {
 
 //格式化应用秘钥
 func FormatPrivateKey(privateKey string) (pKey string) {
-	buffer := new(bytes.Buffer)
+	var buffer strings.Builder
 	buffer.WriteString("-----BEGIN RSA PRIVATE KEY-----\n")
 
 	rawLen := 64
@@ -218,7 +219,7 @@ func FormatPrivateKey(privateKey string) (pKey string) {
 		} else {
 			buffer.WriteString(privateKey[start:end])
 		}
-		buffer.WriteString("\n")
+		buffer.WriteByte('\n')
 		start += rawLen
 		end = start + rawLen
 	}
@@ -229,7 +230,7 @@ func FormatPrivateKey(privateKey string) (pKey string) {
 
 //格式化支付宝公钥
 func FormatAliPayPublicKey(publicKey string) (pKey string) {
-	buffer := new(bytes.Buffer)
+	var buffer strings.Builder
 	buffer.WriteString("-----BEGIN PUBLIC KEY-----\n")
 
 	rawLen := 64
@@ -248,7 +249,7 @@ func FormatAliPayPublicKey(publicKey string) (pKey string) {
 		} else {
 			buffer.WriteString(publicKey[start:end])
 		}
-		buffer.WriteString("\n")
+		buffer.WriteByte('\n')
 		start += rawLen
 		end = start + rawLen
 	}

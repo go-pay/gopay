@@ -212,8 +212,6 @@ type WeChatTransfersResponse struct {
 type getSignKeyResponse struct {
 	ReturnCode     string `xml:"return_code,omitempty" json:"return_code,omitempty"`
 	ReturnMsg      string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
-	Retmsg         string `xml:"retmsg,omitempty" json:"retmsg,omitempty"`
-	Retcode        string `xml:"retcode,omitempty" json:"retcode,omitempty"`
 	MchId          string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
 	SandboxSignkey string `xml:"sandbox_signkey,omitempty" json:"sandbox_signkey,omitempty"`
 }

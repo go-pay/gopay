@@ -1,14 +1,13 @@
 package gopay
 
 import (
-	"bytes"
 	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/xml"
 	"errors"
-	"sort"
+	"fmt"
 	"strings"
 )
 
@@ -34,9 +33,9 @@ func (this *weChatClient) SetCountry(country Country) (client *weChatClient) {
 }
 
 //本地通过支付参数计算Sign值
-func getLocalSign(apiKey string, signType string, body BodyMap) (sign string) {
-	signStr := sortWeChatSignParams(apiKey, body)
-	//fmt.Println("signStr:", signStr)
+func getLocalSign(apiKey string, signType string, bm BodyMap) (sign string) {
+	signStr := bm.EncodeWeChatSignParams(apiKey)
+	fmt.Println("signStr:", signStr)
 	var hashSign []byte
 	if signType == SignType_HMAC_SHA256 {
 		hash := hmac.New(sha256.New, []byte(apiKey))
@@ -49,25 +48,6 @@ func getLocalSign(apiKey string, signType string, body BodyMap) (sign string) {
 	}
 	sign = strings.ToUpper(hex.EncodeToString(hashSign))
 	return
-}
-
-//获取根据Key排序后的请求参数字符串
-func sortWeChatSignParams(apiKey string, body BodyMap) string {
-	keyList := make([]string, 0)
-	for k := range body {
-		keyList = append(keyList, k)
-	}
-	sort.Strings(keyList)
-	buffer := new(bytes.Buffer)
-	for _, k := range keyList {
-		buffer.WriteString(k)
-		buffer.WriteString("=")
-		buffer.WriteString(body.Get(k))
-		buffer.WriteString("&")
-	}
-	buffer.WriteString("key=")
-	buffer.WriteString(apiKey)
-	return buffer.String()
 }
 
 //从微信提供的接口获取：SandboxSignKey
@@ -108,24 +88,24 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 		return null, err
 	}
 	if keyResponse.ReturnCode == "FAIL" {
-		return null, errors.New(keyResponse.Retmsg)
+		return null, errors.New(keyResponse.ReturnMsg)
 	}
 	return keyResponse.SandboxSignkey, nil
 }
 
 //生成请求XML的Body体
 func generateXml(bm BodyMap) (reqXml string) {
-	buffer := new(bytes.Buffer)
+	var buffer strings.Builder
 	buffer.WriteString("<xml>")
 
 	for key := range bm {
-		buffer.WriteString("<")
+		buffer.WriteByte('<')
 		buffer.WriteString(key)
 		buffer.WriteString("><![CDATA[")
 		buffer.WriteString(bm.Get(key))
 		buffer.WriteString("]]></")
 		buffer.WriteString(key)
-		buffer.WriteString(">")
+		buffer.WriteByte('>')
 	}
 	buffer.WriteString("</xml>")
 	reqXml = buffer.String()

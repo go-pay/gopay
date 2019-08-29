@@ -1,7 +1,6 @@
 package gopay
 
 import (
-	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/hmac"
@@ -152,7 +151,7 @@ type WeChatNotifyResponse struct {
 
 //返回数据给微信
 func (this *WeChatNotifyResponse) ToXmlString() (xmlStr string) {
-	buffer := new(bytes.Buffer)
+	var buffer strings.Builder
 	buffer.WriteString("<xml><return_code><![CDATA[")
 	buffer.WriteString(this.ReturnCode)
 	buffer.WriteString("]]></return_code>")
@@ -174,7 +173,7 @@ func (this *WeChatNotifyResponse) ToXmlString() (xmlStr string) {
 //
 //    微信小程序支付API：https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html
 func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
-	buffer := new(bytes.Buffer)
+	var buffer strings.Builder
 	buffer.WriteString("appId=")
 	buffer.WriteString(appId)
 
@@ -219,7 +218,7 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey strin
 //
 //    微信内H5支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6
 func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
-	buffer := new(bytes.Buffer)
+	var buffer strings.Builder
 	buffer.WriteString("appId=")
 	buffer.WriteString(appId)
 
@@ -265,7 +264,7 @@ func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string)
 //
 //    APP支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12
 func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, apiKey string) (paySign string) {
-	buffer := new(bytes.Buffer)
+	var buffer strings.Builder
 	buffer.WriteString("appid=")
 	buffer.WriteString(appid)
 

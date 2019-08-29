@@ -4,8 +4,10 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"io/ioutil"
+	"strings"
 )
 
 type weChatClient struct {
@@ -434,5 +436,9 @@ func (this *weChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %v", res.StatusCode)
 	}
+	if strings.Contains(string(bytes), "HTML") {
+		return nil, errors.New(string(bytes))
+	}
+	//fmt.Println("bytes:", string(bytes))
 	return bytes, nil
 }

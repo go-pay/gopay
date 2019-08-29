@@ -1,7 +1,6 @@
 package gopay
 
 import (
-	"bytes"
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
@@ -13,7 +12,6 @@ import (
 	"errors"
 	"hash"
 	"net/url"
-	"sort"
 )
 
 //	AppId      string `json:"app_id"`      //支付宝分配给开发者的应用ID
@@ -83,7 +81,7 @@ func (this *aliPayClient) SetAuthToken(authToken string) (client *aliPayClient) 
 }
 
 //获取参数签名
-func getRsaSign(body BodyMap, signType, privateKey string) (sign string, err error) {
+func getRsaSign(bm BodyMap, signType, privateKey string) (sign string, err error) {
 	var (
 		h              hash.Hash
 		key            *rsa.PrivateKey
@@ -115,7 +113,8 @@ func getRsaSign(body BodyMap, signType, privateKey string) (sign string, err err
 		hashs = crypto.SHA256
 	}
 
-	signStr = sortAliPaySignParams(body)
+	//signStr = sortAliPaySignParams(bm)
+	signStr = bm.EncodeAliPaySignParams()
 	//fmt.Println("原始字符串：", signStr)
 	_, err = h.Write([]byte(signStr))
 	if err != nil {
@@ -128,27 +127,6 @@ func getRsaSign(body BodyMap, signType, privateKey string) (sign string, err err
 	}
 	secretData := base64.StdEncoding.EncodeToString(encryptedBytes)
 	return secretData, nil
-}
-
-//获取根据Key排序后的请求参数字符串
-func sortAliPaySignParams(body BodyMap) string {
-	keyList := make([]string, 0)
-	for k := range body {
-		keyList = append(keyList, k)
-	}
-	sort.Strings(keyList)
-	//fmt.Println(keyList)
-	buffer := new(bytes.Buffer)
-	for _, k := range keyList {
-		buffer.WriteString(k)
-		buffer.WriteString("=")
-		buffer.WriteString(body.Get(k))
-		buffer.WriteString("&")
-	}
-	s := buffer.String()
-	i := buffer.Len()
-	//fmt.Println("排序后参数：", s[:i-1])
-	return s[:i-1]
 }
 
 //格式化请求URL参数
