@@ -9,6 +9,7 @@
 
 [![](https://img.shields.io/badge/Author-Jerry-blue.svg)](https://www.gopay.ink)
 [![](https://img.shields.io/badge/Golang-1.11+-brightgreen.svg)](https://golang.org)
+[![](https://img.shields.io/badge/Version-1.3.0-blue.svg)](https://www.gopay.ink)
 [![](https://api.travis-ci.org/iGoogle-ink/gopay.svg?branch=master)]()
 [![](https://img.shields.io/badge/License-Apache_2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 

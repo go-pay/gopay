@@ -9,6 +9,7 @@ The Golang SDK for WeChat and AliPay
 
 [![](https://img.shields.io/badge/Author-Jerry-blue.svg)](https://www.gopay.ink)
 [![](https://img.shields.io/badge/Golang-1.11+-brightgreen.svg)](https://golang.org)
+[![](https://img.shields.io/badge/Version-1.3.0-blue.svg)](https://www.gopay.ink)
 [![](https://api.travis-ci.org/iGoogle-ink/gopay.svg?branch=master)]()
 [![](https://img.shields.io/badge/License-Apache_2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
@@ -42,8 +43,8 @@ The Golang SDK for WeChat and AliPay
 * gopay.GetAppPaySign() => Obtain the paySign required for App Payment
 * gopay.ParseWeChatNotifyResultToBodyMap() => Parse the parameters of WeChat Payment asynchronous notification to BodyMap
 * gopay.ParseWeChatNotifyResult() => Parse the parameters of WeChat Payment asynchronous notification to Struct
-* gopay.VerifyWeChatResultSignByBodyMap() => Verify the Sign of WeChat Payment asynchronous notification by BodyMap
-* gopay.VerifyWeChatResultSign() => Verify the Sign of WeChat Payment asynchronous notification by Struct
+* （**Deprecated**）gopay.VerifyWeChatResultSign()
+* gopay.VerifyWeChatSign() =>Verify WeChat Response Sign
 * gopay.Code2Session() => Login certificate verification：Obtain WeChat user's OpenId, UnionId, SessionKey
 * gopay.GetAccessToken() => Obtain WeChat Applet's global unique access token
 * gopay.GetPaidUnionId() => After the WeChat Applet user's payment is completed, obtain the UnionId of the user without authorization
@@ -209,10 +210,10 @@ fmt.Println("paySign：", paySign)
 > WeChat Payment asynchronous notification document：[Notification of Payment Result](https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_7&index=8)
 
 ```go
-//Parse the parameters of WeChat Payment asynchronous notification
+//解析微信支付异步通知的参数
 //    req：*http.Request
-//    return：notifyRsp
-//    return：error
+//    返回参数notifyRsp：Notify请求的参数
+//    返回参数err：错误信息
 notifyRsp, err := gopay.ParseWeChatNotifyResult(c.Request())
 if err != nil {
     fmt.Println("err:", err)
@@ -220,37 +221,41 @@ if err != nil {
 }
 fmt.Println("notifyRsp:", notifyRsp)
 
-//Verify the Sign of WeChat Payment asynchronous notification
-//    apiKey：API KEY
-//    signType：MD5 or HMAC-SHA256（default please write MD5）
-//    notifyRsp：Struct obtained by gopay.ParseWeChatNotifyResult()
-//    return：Is passed
-//    return：Sign value calculated from parameters, Sign in non-Wechat return parameters
-ok, sign := gopay.VerifyWeChatResultSign("192006250b4c09247ec02edce69f6a2d", "MD5", notifyRsp)
-log.Println("ok:", ok)
-log.Println("sign:", sign)
+//验证微信API返回结果或异步通知结果的Sign值
+//    apiKey：API秘钥值
+//    signType：签名类型（调用API方法时填写的类型）
+//    bean：微信API返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
+//    返回参数ok：是否验签通过
+//    返回参数err：错误信息
+ok, err := gopay.VerifyWeChatSign("192006250b4c09247ec02edce69f6a2d", "MD5", notifyRsp)
+if err != nil {
+    fmt.Println("err:", err)
+}
+fmt.Println("ok:", ok)
 ```
-or
+或者
 ```go
-//Parse the parameters of WeChat Payment asynchronous notification to BodyMap
+//解析微信支付异步通知的结果到BodyMap
 //    req：*http.Request
-//    return：notifyRsp
-//    return：error
+//    返回参数bm：Notify请求的参数
+//    返回参数err：错误信息
 bm, err := gopay.ParseWeChatNotifyResultToBodyMap(c.Request())
 if err != nil {
     fmt.Println("err:", err)
     return
 }
 
-//Verify the Sign of WeChat Payment asynchronous notification by BodyMap
-//    apiKey：API KEY
-//    signType：MD5 or HMAC-SHA256（default please write MD5）
-//    notifyRsp：Struct obtained by gopay.ParseWeChatNotifyResult()
-//    return：Is passed
-//    return：Sign value calculated from parameters, Sign in non-Wechat return parameters
-ok, sign := gopay.VerifyWeChatResultSignByBodyMap("192006250b4c09247ec02edce69f6a2d", gopay.SignType_MD5, bm)
+//验证微信API返回结果或异步通知结果的Sign值
+//    apiKey：API秘钥值
+//    signType：签名类型（调用API方法时填写的类型）
+//    bean：微信API返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
+//    返回参数ok：是否验签通过
+//    返回参数err：错误信息
+ok, err := gopay.VerifyWeChatSign("192006250b4c09247ec02edce69f6a2d", gopay.SignType_MD5, bm)
+if err != nil {
+    fmt.Println("err:", err)
+}
 fmt.Println("ok:", ok)
-fmt.Println("sign:", sign)
 ```
 
 ### Decrypt encrypted data to the specified struct
