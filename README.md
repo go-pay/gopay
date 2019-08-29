@@ -9,7 +9,7 @@
 
 [![](https://img.shields.io/badge/Author-Jerry-blue.svg)](https://www.gopay.ink)
 [![](https://img.shields.io/badge/Golang-1.11+-brightgreen.svg)](https://golang.org)
-[![](https://img.shields.io/badge/Version-1.3.1-blue.svg)](https://www.gopay.ink)
+[![](https://img.shields.io/badge/Version-1.3.1-blue.svg)](https://github.com/iGoogle-ink/gopay)
 [![](https://api.travis-ci.org/iGoogle-ink/gopay.svg?branch=master)]()
 [![](https://img.shields.io/badge/License-Apache_2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
@@ -108,7 +108,7 @@ $ go get -u github.com/iGoogle-ink/gopay
 
 * [GoDoc](https://godoc.org/github.com/iGoogle-ink/gopay)
 
-* 有问题请加微信群。另外，仅 Fork 的同志顺手点个星呗
+* 有问题请加微信群。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！另外，仅 Fork 的同志顺手点个星呗，您的支持给了我源源不断的动力
 
 微信：
 <img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_jerry.png"/>
