@@ -7,7 +7,6 @@ import (
 	"encoding/hex"
 	"encoding/xml"
 	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -35,7 +34,7 @@ func (this *weChatClient) SetCountry(country Country) (client *weChatClient) {
 //本地通过支付参数计算Sign值
 func getLocalSign(apiKey string, signType string, bm BodyMap) (sign string) {
 	signStr := bm.EncodeWeChatSignParams(apiKey)
-	fmt.Println("signStr:", signStr)
+	//fmt.Println("signStr:", signStr)
 	var hashSign []byte
 	if signType == SignType_HMAC_SHA256 {
 		hash := hmac.New(sha256.New, []byte(apiKey))
