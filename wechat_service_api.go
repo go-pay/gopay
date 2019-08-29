@@ -106,10 +106,10 @@ func VerifyWeChatResultSign(apiKey, signType string, notifyReq *WeChatNotifyRequ
 	return
 }
 
-//验证微信API返回结果或异步通知结果的Sign值
+//微信同步返回参数验签或异步通知参数验签
 //    apiKey：API秘钥值
 //    signType：签名类型（调用API方法时填写的类型）
-//    bean：微信API返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
+//    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
 func VerifyWeChatSign(apiKey, signType string, bean interface{}) (ok bool, err error) {
