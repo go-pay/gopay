@@ -79,7 +79,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest,
 	return notifyReq, err
 }
 
-//支付通知的签名验证和参数签名后的Sign
+//支付通知的签名验证和参数签名后的Sign（Deprecated）
 //    aliPayPublicKey：支付宝公钥
 //    notifyReq：利用 gopay.ParseAliPayNotifyResult() 得到的结构体
 //    返回参数ok：是否验证通过
@@ -137,19 +137,31 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyReq *AliPayNotifyReque
 	return true, nil
 }
 
-//验证支付宝API返回结果或异步通知结果的Sign值
+//支付宝同步返回验签或异步通知验签
 //    aliPayPublicKey：支付宝公钥
-//    bean：支付宝API返回的结构体 aliRsp 或 异步通知解析的结构体 notifyReq
+//    bean： 同步返回验签时，此参数为 aliRsp.SignData ；异步通知验签时，此参数为异步通知解析的结构体 notifyReq
+//    syncSign：同步返回验签时，此参数必传，即：aliRsp.Sign ；异步通知验签时，不传此参数，否则会出错。
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
-func VerifyAliPaySign(aliPayPublicKey string, bean interface{}) (ok bool, err error) {
+//    验签文档：https://docs.open.alipay.com/200/106120
+func VerifyAliPaySign(aliPayPublicKey string, bean interface{}, syncSign ...string) (ok bool, err error) {
 	if bean == nil {
 		return false, errors.New("bean is nil")
 	}
 	var (
-		bm BodyMap
-		bs []byte
+		bodySign     string
+		bodySignType string
+		pKey         string
+		signData     string
+		bm           BodyMap
+		bs           []byte
 	)
+	if len(syncSign) > 0 {
+		bodySign = syncSign[0]
+		bodySignType = "RSA2"
+		signData = bean.(string)
+		goto Verify
+	}
 
 	bs, err = json.Marshal(bean)
 	if err != nil {
@@ -162,14 +174,18 @@ func VerifyAliPaySign(aliPayPublicKey string, bean interface{}) (ok bool, err er
 		return false, err
 	}
 
-	pKey := FormatAliPayPublicKey(aliPayPublicKey)
-	bodySign := bm.Get("sign")
-	bodySignType := bm.Get("sign_type")
+	bodySign = bm.Get("sign")
+	bodySignType = bm.Get("sign_type")
 	bm.Remove("sign")
 	bm.Remove("sign_type")
 
-	signData := bm.EncodeAliPaySignParams()
+	signData = bm.EncodeAliPaySignParams()
 
+Verify:
+	//fmt.Println("signData:", signData)
+	//fmt.Println("bodySign:", bodySign)
+	//fmt.Println("bodySignType:", bodySignType)
+	pKey = FormatAliPayPublicKey(aliPayPublicKey)
 	err = verifyAliPaySign(signData, bodySign, bodySignType, pKey)
 	if err != nil {
 		return false, err
