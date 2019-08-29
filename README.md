@@ -44,7 +44,7 @@
 * gopay.GetAppPaySign() => 获取APP支付所需要的paySign
 * gopay.ParseWeChatNotifyResultToBodyMap() => 解析微信支付异步通知的参数到BodyMap
 * gopay.ParseWeChatNotifyResult() => 解析微信支付异步通知的参数
-* （**Deprecated**）gopay.VerifyWeChatResultSign() => 验证微信支付异步通知的Sign值
+* （**Deprecated**）gopay.VerifyWeChatResultSign()
 * gopay.VerifyWeChatSign() => 验证微信API返回结果或异步通知结果的Sign值
 * gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
 * gopay.GetAccessToken() => 获取小程序全局唯一后台接口调用凭据
