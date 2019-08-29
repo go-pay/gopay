@@ -22,7 +22,7 @@ func Micropay() {
 	body.Set("out_trade_no", number)
 	body.Set("total_fee", 1)
 	body.Set("spbill_create_ip", "127.0.0.1")
-	body.Set("auth_code", "134520934756401971")
+	body.Set("auth_code", "134580044289978001")
 	body.Set("sign_type", gopay.SignType_MD5)
 
 	//请求支付，成功后得到结果
@@ -31,5 +31,11 @@ func Micropay() {
 		fmt.Println("Error:", err)
 		return
 	}
-	fmt.Println("Response:", wxRsp)
+	fmt.Println("Response:", *wxRsp)
+
+	ok, err := gopay.VerifyWeChatSign("GFDS8j98rewnmgl45wHTt980jg543abc", gopay.SignType_MD5, wxRsp)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("同步验签结果：", ok)
 }
