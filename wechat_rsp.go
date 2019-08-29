@@ -135,6 +135,7 @@ type WeChatQueryRefundResponse struct {
 	RefundId1            string `xml:"refund_id_1,omitempty" json:"refund_id_1,omitempty"`
 	RefundChannel0       string `xml:"refund_channel_0,omitempty" json:"refund_channel_0,omitempty"`
 	RefundChannel1       string `xml:"refund_channel_1,omitempty" json:"refund_channel_1,omitempty"`
+	RefundFee            int    `xml:"refund_fee,omitempty" json:"refund_fee,omitempty"`
 	RefundFee0           int    `xml:"refund_fee_0,omitempty" json:"refund_fee_0,omitempty"`
 	RefundFee1           int    `xml:"refund_fee_1,omitempty" json:"refund_fee_1,omitempty"`
 	SettlementRefundFee0 int    `xml:"settlement_refund_fee_0,omitempty" json:"settlement_refund_fee_0,omitempty"`
