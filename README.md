@@ -45,8 +45,8 @@
 * gopay.GetAppPaySign() => 获取APP支付所需要的paySign
 * gopay.ParseWeChatNotifyResultToBodyMap() => 解析微信支付异步通知的参数到BodyMap
 * gopay.ParseWeChatNotifyResult() => 解析微信支付异步通知的参数
+* gopay.VerifyWeChatSign() => 微信同步返回参数验签或异步通知参数验签
 * （**Deprecated**）gopay.VerifyWeChatResultSign()
-* gopay.VerifyWeChatSign() => 验证微信API返回结果或异步通知结果的Sign值
 * gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
 * gopay.GetAccessToken() => 获取小程序全局唯一后台接口调用凭据
 * gopay.GetPaidUnionId() => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
@@ -94,7 +94,8 @@
 * gopay.FormatPrivateKey() => 格式化应用私钥
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
 * gopay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数
-* gopay.VerifyAliPayResultSign() => 支付宝支付异步通知的签名验证
+* gopay.VerifyAliPaySign() => 支付宝同步返回参数验签或异步通知参数验签
+* （**Deprecated**）gopay.VerifyAliPayResultSign()
 * gopay.DecryptAliPayOpenDataToStruct() => 支付宝小程序敏感加密数据解析到结构体
 
 # 安装
@@ -212,29 +213,31 @@ paySign := gopay.GetAppPaySign(appid, partnerid, wxRsp.NonceStr, prepayid, gopay
 fmt.Println("paySign：", paySign)
 ```
 
-### 1、解析并返回微信支付异步通知的参数，2、验证Sign值
+### 1、解析并返回微信支付异步通知的参数，2、同步返回/异步通知 参数验签
 
 > 微信支付后的异步通知文档：[支付结果通知](https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_7&index=8)
+
+* 异步验签操作
 
 ```go
 //解析微信支付异步通知的参数
 //    req：*http.Request
 //    返回参数notifyRsp：Notify请求的参数
 //    返回参数err：错误信息
-notifyRsp, err := gopay.ParseWeChatNotifyResult(c.Request())
+notifyReq, err := gopay.ParseWeChatNotifyResult(c.Request())
 if err != nil {
     fmt.Println("err:", err)
     return
 }
 fmt.Println("notifyRsp:", notifyRsp)
 
-//验证微信API返回结果或异步通知结果的Sign值
+//同步返回/异步通知 参数验签
 //    apiKey：API秘钥值
 //    signType：签名类型（调用API方法时填写的类型）
-//    bean：微信API返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
+//    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
-ok, err := gopay.VerifyWeChatSign("192006250b4c09247ec02edce69f6a2d", "MD5", notifyRsp)
+ok, err := gopay.VerifyWeChatSign("192006250b4c09247ec02edce69f6a2d", "MD5", notifyReq)
 if err != nil {
     fmt.Println("err:", err)
 }
@@ -242,7 +245,7 @@ fmt.Println("ok:", ok)
 ```
 或者
 ```go
-//解析微信支付异步通知的结果到BodyMap
+//同步返回/异步通知 参数验签
 //    req：*http.Request
 //    返回参数bm：Notify请求的参数
 //    返回参数err：错误信息
@@ -252,10 +255,10 @@ if err != nil {
     return
 }
 
-//验证微信API返回结果或异步通知结果的Sign值
+//同步返回/异步通知 参数验签
 //    apiKey：API秘钥值
 //    signType：签名类型（调用API方法时填写的类型）
-//    bean：微信API返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
+//    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
 ok, err := gopay.VerifyWeChatSign("192006250b4c09247ec02edce69f6a2d", gopay.SignType_MD5, bm)
@@ -263,6 +266,30 @@ if err != nil {
     fmt.Println("err:", err)
 }
 fmt.Println("ok:", ok)
+```
+
+* 同步验签操作
+
+```go
+//请求支付，成功后得到结果
+wxRsp, err := client.Micropay(body)
+if err != nil {
+    fmt.Println("Error:", err)
+    return
+}
+fmt.Println("Response:", *wxRsp)
+
+//同步返回/异步通知 参数验签
+//    apiKey：API秘钥值
+//    signType：签名类型（调用API方法时填写的类型）
+//    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
+//    返回参数ok：是否验签通过
+//    返回参数err：错误信息
+ok, err := gopay.VerifyWeChatSign("GFDS8j98rewnmgl45wHTt980jg543abc", gopay.SignType_MD5, wxRsp)
+if err != nil {
+    fmt.Println("err:", err)
+}
+fmt.Println("同步验签结果：", ok)
 ```
 
 ### 加密数据，解密到指定结构体
@@ -519,9 +546,36 @@ fmt.Println("rsp.SubMsg:", rsp.SubMsg)
 fmt.Println("rsp.Mobile:", rsp.Mobile)
 ```
 
-### 1、支付结果异步通知参数解析；2、验签操作
+### 1、支付结果异步通知参数解析；2、同步返回/异步通知 参数验签
 
-> 支付宝支付后的异步通知验签文档：[支付结果通知](https://docs.open.alipay.com/200/106120)
+> 支付宝支付后的同步/异步通知验签文档：[支付结果通知](https://docs.open.alipay.com/200/106120)
+
+* 同步返回参数验签（请注意看参数注释）
+
+```go
+//请求条码支付
+aliRsp, err := client.AliPayTradePay(body)
+if err != nil {
+    fmt.Println("err:", err)
+    return
+}
+fmt.Println("aliRsp:", *aliRsp)
+
+aliPayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1wn1sU/8Q0rYLlZ6sq3enrPZw2ptp6FecHR2bBFLjJ+sKzepROd0bKddgj+Mr1ffr3Ej78mLdWV8IzLfpXUi945DkrQcOUWLY0MHhYVG2jSs/qzFfpzmtut2Cl2TozYpE84zom9ei06u2AXLMBkU6VpznZl+R4qIgnUfByt3Ix5b3h4Cl6gzXMAB1hJrrrCkq+WvWb3Fy0vmk/DUbJEz8i8mQPff2gsHBE1nMPvHVAMw1GMk9ImB4PxucVek4ZbUzVqxZXphaAgUXFK2FSFU+Q+q1SPvHbUsjtIyL+cLA6H/6ybFF9Ffp27Y14AHPw29+243/SpMisbGcj2KD+evBwIDAQAB"
+//支付宝同步返回验签或异步通知验签
+//    aliPayPublicKey：支付宝公钥
+//    bean： 同步返回验签时，此参数为 aliRsp.SignData ；异步通知验签时，此参数为异步通知解析的结构体 notifyReq
+//    syncSign：同步返回验签时，此参数必传，即：aliRsp.Sign ；异步通知验签时，不传此参数，否则会出错。
+//    返回参数ok：是否验签通过
+//    返回参数err：错误信息
+ok, err := gopay.VerifyAliPaySign(alipayPublicKey, aliRsp.SignData, aliRsp.Sign)
+if err != nil {
+    fmt.Println("gopay.VerifyAliPayResultSign:", err)
+}
+fmt.Println("同步返回验签：", ok)
+```
+
+* 异步返回参数验签（请注意看参数注释）
 
 ```go
 //解析支付完成后的异步通知参数信息
@@ -534,17 +588,17 @@ if err != nil {
 fmt.Println("notifyRsp:", notifyRsp)
 
 aliPayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1wn1sU/8Q0rYLlZ6sq3enrPZw2ptp6FecHR2bBFLjJ+sKzepROd0bKddgj+Mr1ffr3Ej78mLdWV8IzLfpXUi945DkrQcOUWLY0MHhYVG2jSs/qzFfpzmtut2Cl2TozYpE84zom9ei06u2AXLMBkU6VpznZl+R4qIgnUfByt3Ix5b3h4Cl6gzXMAB1hJrrrCkq+WvWb3Fy0vmk/DUbJEz8i8mQPff2gsHBE1nMPvHVAMw1GMk9ImB4PxucVek4ZbUzVqxZXphaAgUXFK2FSFU+Q+q1SPvHbUsjtIyL+cLA6H/6ybFF9Ffp27Y14AHPw29+243/SpMisbGcj2KD+evBwIDAQAB"
-//验签操作
+//支付宝同步返回验签或异步通知验签
 //    aliPayPublicKey：支付宝公钥
-//    notifyRsp：利用 gopay.ParseAliPayNotifyResult() 得到的结构体
-//    返回参数ok：是否验证通过
+//    bean： 同步返回验签时，此参数为 aliRsp.SignData ；异步通知验签时，此参数为异步通知解析的结构体 notifyReq
+//    syncSign：同步返回验签时，此参数必传，即：aliRsp.Sign ；异步通知验签时，不传此参数，否则会出错。
+//    返回参数ok：是否验签通过
 //    返回参数err：错误信息
-ok, err := gopay.VerifyAliPayResultSign(aliPayPublicKey, notifyRsp)
+ok, err := gopay.VerifyAliPaySign(aliPayPublicKey, notifyRsp)
 if err != nil {
-	log.Println("gopay.VerifyAliPayResultSign:", err)
-	return
+	fmt.Println("gopay.VerifyAliPayResultSign:", err)
 }
-fmt.Println("ok:", ok)
+fmt.Println("异步返回验签:", ok)
 ```
 
 ### 支付宝付款结果异步通知,需回复支付宝平台是否成功
