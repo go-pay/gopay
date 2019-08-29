@@ -37,7 +37,7 @@ type AliPayNotifyRequest struct {
 
 type fundBillListInfo struct {
 	Amount      string `json:"amount,omitempty"`
-	FundChannel string `json:"fundChannel,omitempty"`
+	FundChannel string `json:"fundChannel,omitempty"` //异步通知里是 fundChannel
 	BankCode    string `json:"bank_code,omitempty"`
 	RealAmount  string `json:"real_amount,omitempty"`
 }
@@ -58,26 +58,31 @@ type voucherDetailListInfo struct {
 
 type AliPayTradePayResponse struct {
 	AliPayTradePayResponse alipayTradeResponseInfo `json:"alipay_trade_pay_response"`
+	SignData               string                  `json:"-"`
 	Sign                   string                  `json:"sign"`
 }
 
 type AliPayTradeQueryResponse struct {
 	AliPayTradeQueryResponse alipayTradeResponseInfo `json:"alipay_trade_query_response"`
+	SignData                 string                  `json:"-"`
 	Sign                     string                  `json:"sign"`
 }
 
 type AliPayTradeCreateResponse struct {
 	AliPayTradeCreateResponse alipayTradeResponseInfo `json:"alipay_trade_create_response"`
+	SignData                  string                  `json:"-"`
 	Sign                      string                  `json:"sign"`
 }
 
 type AliPayTradeCloseResponse struct {
 	AliPayTradeCloseResponse alipayTradeResponseInfo `json:"alipay_trade_close_response"`
+	SignData                 string                  `json:"-"`
 	Sign                     string                  `json:"sign"`
 }
 
 type AliPayTradeCancelResponse struct {
 	AliPayTradeCancelResponse alipayTradeResponseInfo `json:"alipay_trade_cancel_response"`
+	SignData                  string                  `json:"-"`
 	Sign                      string                  `json:"sign"`
 }
 
@@ -135,6 +140,7 @@ type alipayTradeResponseInfo struct {
 type AliPaySystemOauthTokenResponse struct {
 	AliPaySystemOauthTokenResponse oauthTokenInfo      `json:"alipay_system_oauth_token_response,omitempty"`
 	ErrorResponse                  alipayErrorResponse `json:"error_response,omitempty"`
+	SignData                       string              `json:"-"`
 	Sign                           string              `json:"sign"`
 }
 
@@ -164,6 +170,7 @@ type PhoneNumberResponse struct {
 
 type AliPayTradeRefundResponse struct {
 	AlipayTradeRefundResponse refundResponse `json:"alipay_trade_refund_response"`
+	SignData                  string         `json:"-"`
 	Sign                      string         `json:"sign"`
 }
 
@@ -190,7 +197,7 @@ type refundResponse struct {
 }
 
 type tradeFundBill struct {
-	FundChannel string `json:"fund_channel,omitempty"`
+	FundChannel string `json:"fund_channel,omitempty"` //同步通知里是 fund_channel
 	BankCode    string `json:"bank_code,omitempty"`
 	Amount      string `json:"amount,omitempty"`
 	RealAmount  string `json:"real_amount,omitempty"`
@@ -204,6 +211,7 @@ type presetPayToolInfo struct {
 
 type AliPayTradeFastpayRefundQueryResponse struct {
 	AliPayTradeFastpayRefundQueryResponse refundQueryResponse `json:"alipay_trade_fastpay_refund_query_response"`
+	SignData                              string              `json:"-"`
 	Sign                                  string              `json:"sign"`
 }
 
@@ -240,6 +248,7 @@ type RefundRoyaltyResult struct {
 
 type AliPayTradeOrderSettleResponse struct {
 	AliPayTradeOrderSettleResponse orderSettleResponse `json:"alipay_trade_order_settle_response"`
+	SignData                       string              `json:"-"`
 	Sign                           string              `json:"sign"`
 }
 type orderSettleResponse struct {
@@ -252,6 +261,7 @@ type orderSettleResponse struct {
 
 type AlipayTradePrecreateResponse struct {
 	AlipayTradePrecreateResponse precreateResponse `json:"alipay_trade_precreate_response"`
+	SignData                     string            `json:"-"`
 	Sign                         string            `json:"sign"`
 }
 
@@ -266,6 +276,7 @@ type precreateResponse struct {
 
 type AliPayTradePageRefundResponse struct {
 	AliPayTradePageRefundResponse pageRefundResponse `json:"alipay_trade_page_refund_response"`
+	SignData                      string             `json:"-"`
 	Sign                          string             `json:"sign"`
 }
 
@@ -282,6 +293,7 @@ type pageRefundResponse struct {
 
 type AlipayFundTransToaccountTransferResponse struct {
 	AlipayFundTransToaccountTransferResponse transToaccountTransferResponse `json:"alipay_fund_trans_toaccount_transfer_response"`
+	SignData                                 string                         `json:"-"`
 	Sign                                     string                         `json:"sign"`
 }
 
@@ -297,6 +309,7 @@ type transToaccountTransferResponse struct {
 
 type ZhimaCreditScoreGetResponse struct {
 	ZhimaCreditScoreGetResponse scoreGetResponse `json:"zhima_credit_score_get_response"`
+	SignData                    string           `json:"-"`
 	Sign                        string           `json:"sign"`
 }
 
@@ -311,6 +324,7 @@ type scoreGetResponse struct {
 
 type AlipayOpenAuthTokenAppResponse struct {
 	AlipayOpenAuthTokenAppResponse authTokenAppResponse `json:"alipay_open_auth_token_app_response"`
+	SignData                       string               `json:"-"`
 	Sign                           string               `json:"sign"`
 }
 
