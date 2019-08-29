@@ -39,27 +39,6 @@ func ParseWeChatNotifyResultToBodyMap(req *http.Request) (bm BodyMap, err error)
 	return
 }
 
-//通过BodyMap验证微信支付异步通知的Sign值
-//    apiKey：API秘钥值
-//    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
-//    bm：通过 gopay.ParseWeChatNotifyResult() 得到的BodyMap
-//    返回参数ok：是否验证通过
-//    返回参数sign：计算出的sign值，非微信返回参数中的Sign
-func VerifyWeChatResultSignByBodyMap(apiKey string, signType string, bm BodyMap) (ok bool, sign string) {
-	//验证Sign值的BodyMap
-	bmNew := make(BodyMap)
-	for key := range bm {
-		if key != "sign" {
-			vStr := bm.Get(key)
-			bmNew.Set(key, vStr)
-		}
-	}
-	//验证Sign值
-	sign = getLocalSign(apiKey, signType, bmNew)
-	ok = sign == bm.Get("sign")
-	return
-}
-
 //解析微信支付异步通知的参数
 //    req：*http.Request
 //    返回参数notifyReq：Notify请求的参数
@@ -74,13 +53,13 @@ func ParseWeChatNotifyResult(req *http.Request) (notifyReq *WeChatNotifyRequest,
 	return
 }
 
-//验证微信支付异步通知的Sign值
+//验证微信支付异步通知的Sign值（Deprecated）
 //    apiKey：API秘钥值
 //    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
 //    notifyReq：利用 gopay.ParseWeChatNotifyResult() 得到的结构体
 //    返回参数ok：是否验证通过
 //    返回参数sign：根据参数计算的sign值，非微信返回参数中的Sign
-func VerifyWeChatResultSign(apiKey string, signType string, notifyReq *WeChatNotifyRequest) (ok bool, sign string) {
+func VerifyWeChatResultSign(apiKey, signType string, notifyReq *WeChatNotifyRequest) (ok bool, sign string) {
 	body := make(BodyMap)
 	body.Set("return_code", notifyReq.ReturnCode)
 	body.Set("return_msg", notifyReq.ReturnMsg)
@@ -126,6 +105,44 @@ func VerifyWeChatResultSign(apiKey string, signType string, notifyReq *WeChatNot
 
 	ok = sign == notifyReq.Sign
 	return
+}
+
+//验证微信API返回结果或异步通知结果的Sign值
+//    apiKey：API秘钥值
+//    signType：签名类型（调用API方法时填写的类型）
+//    bean：微信API返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
+//    返回参数ok：是否验签通过
+//    返回参数err：错误信息
+func VerifyWeChatSign(apiKey, signType string, bean interface{}) (ok bool, err error) {
+	if bean == nil {
+		return false, errors.New("wxRsp is nil")
+	}
+	var (
+		bodyMaps BodyMap
+		bs       []byte
+	)
+	kind := reflect.ValueOf(bean).Kind()
+	if kind == reflect.Map {
+		bodyMaps = bean.(BodyMap)
+		goto Verify
+	}
+
+	bs, err = json.Marshal(bean)
+	if err != nil {
+		return false, err
+	}
+
+	bodyMaps = make(BodyMap)
+	err = json.Unmarshal(bs, &bodyMaps)
+	if err != nil {
+		return false, err
+	}
+Verify:
+	bodySign := bodyMaps.Get("sign")
+	bodyMaps.Remove("sign")
+	sign := getLocalSign(apiKey, signType, bodyMaps)
+	//fmt.Println("sign:", sign)
+	return sign == bodySign, nil
 }
 
 type WeChatNotifyResponse struct {
