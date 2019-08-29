@@ -117,12 +117,12 @@ func VerifyWeChatSign(apiKey, signType string, bean interface{}) (ok bool, err e
 		return false, errors.New("bean is nil")
 	}
 	var (
-		bodyMaps BodyMap
-		bs       []byte
+		bm BodyMap
+		bs []byte
 	)
 	kind := reflect.ValueOf(bean).Kind()
 	if kind == reflect.Map {
-		bodyMaps = bean.(BodyMap)
+		bm = bean.(BodyMap)
 		goto Verify
 	}
 
@@ -131,15 +131,15 @@ func VerifyWeChatSign(apiKey, signType string, bean interface{}) (ok bool, err e
 		return false, err
 	}
 
-	bodyMaps = make(BodyMap)
-	err = json.Unmarshal(bs, &bodyMaps)
+	bm = make(BodyMap)
+	err = json.Unmarshal(bs, &bm)
 	if err != nil {
 		return false, err
 	}
 Verify:
-	bodySign := bodyMaps.Get("sign")
-	bodyMaps.Remove("sign")
-	sign := getLocalSign(apiKey, signType, bodyMaps)
+	bodySign := bm.Get("sign")
+	bm.Remove("sign")
+	sign := getLocalSign(apiKey, signType, bm)
 	//fmt.Println("sign:", sign)
 	return sign == bodySign, nil
 }

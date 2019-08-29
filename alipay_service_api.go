@@ -79,50 +79,6 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest,
 	return notifyReq, err
 }
 
-//解密支付宝开放数据
-//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
-//    sessionKey:会话密钥
-//    beanPtr:需要解析到的结构体指针
-//    文档：https://docs.alipay.com/mini/introduce/aes
-//    文档：https://docs.open.alipay.com/common/104567
-func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{}) (err error) {
-	//验证参数类型
-	beanValue := reflect.ValueOf(beanPtr)
-	if beanValue.Kind() != reflect.Ptr {
-		return errors.New("传入参数类型必须是以指针形式")
-	}
-	//验证interface{}类型
-	if beanValue.Elem().Kind() != reflect.Struct {
-		return errors.New("传入interface{}必须是结构体")
-	}
-	aesKey, _ := base64.StdEncoding.DecodeString(secretKey)
-	ivKey := []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-	secretData, _ := base64.StdEncoding.DecodeString(encryptedData)
-
-	block, err := aes.NewCipher(aesKey)
-	if err != nil {
-		return err
-	}
-	if len(secretData)%len(aesKey) != 0 {
-		return errors.New("encryptedData is error")
-	}
-
-	blockMode := cipher.NewCBCDecrypter(block, ivKey)
-	originData := make([]byte, len(secretData))
-	blockMode.CryptBlocks(originData, secretData)
-
-	if len(originData) > 0 {
-		originData = PKCS5UnPadding(originData)
-	}
-	//fmt.Println("originDataStr:", string(originData))
-	//解析
-	err = json.Unmarshal(originData, beanPtr)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 //支付通知的签名验证和参数签名后的Sign
 //    aliPayPublicKey：支付宝公钥
 //    notifyReq：利用 gopay.ParseAliPayNotifyResult() 得到的结构体
@@ -171,7 +127,6 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyReq *AliPayNotifyReque
 	}
 
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
-	//signData := sortAliPaySignParams(newBody)
 	signData := newBody.EncodeAliPaySignParams()
 
 	//log.Println("签名字符串：", signData)
@@ -180,6 +135,85 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyReq *AliPayNotifyReque
 		return false, err
 	}
 	return true, nil
+}
+
+//验证支付宝API返回结果或异步通知结果的Sign值
+//    aliPayPublicKey：支付宝公钥
+//    bean：支付宝API返回的结构体 aliRsp 或 异步通知解析的结构体 notifyReq
+//    返回参数ok：是否验签通过
+//    返回参数err：错误信息
+func VerifyAliPaySign(aliPayPublicKey string, bean interface{}) (ok bool, err error) {
+	if bean == nil {
+		return false, errors.New("bean is nil")
+	}
+	var (
+		bm BodyMap
+		bs []byte
+	)
+
+	bs, err = json.Marshal(bean)
+	if err != nil {
+		return false, err
+	}
+
+	bm = make(BodyMap)
+	err = json.Unmarshal(bs, &bm)
+	if err != nil {
+		return false, err
+	}
+
+	pKey := FormatAliPayPublicKey(aliPayPublicKey)
+	bodySign := bm.Get("sign")
+	bodySignType := bm.Get("sign_type")
+	bm.Remove("sign")
+	bm.Remove("sign_type")
+
+	signData := bm.EncodeAliPaySignParams()
+
+	err = verifyAliPaySign(signData, bodySign, bodySignType, pKey)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err error) {
+	var (
+		h     hash.Hash
+		hashs crypto.Hash
+	)
+	signBytes, err := base64.StdEncoding.DecodeString(sign)
+	if err != nil {
+		return err
+	}
+	//解析秘钥
+	block, _ := pem.Decode([]byte(aliPayPublicKey))
+	if block == nil {
+		return errors.New("支付宝公钥Decode错误")
+	}
+	key, err := x509.ParsePKIXPublicKey(block.Bytes)
+	if err != nil {
+		log.Println("x509.ParsePKIXPublicKey:", err)
+		return err
+	}
+	publicKey, ok := key.(*rsa.PublicKey)
+	if !ok {
+		return errors.New("支付宝公钥转换错误")
+	}
+	//判断签名方式
+	switch signType {
+	case "RSA":
+		hashs = crypto.SHA1
+	case "RSA2":
+		hashs = crypto.SHA256
+	default:
+		hashs = crypto.SHA256
+	}
+
+	h = hashs.New()
+	h.Write([]byte(signData))
+
+	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
 }
 
 func jsonToString(v interface{}) (str string) {
@@ -258,43 +292,48 @@ func FormatAliPayPublicKey(publicKey string) (pKey string) {
 	return
 }
 
-func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err error) {
-	var (
-		h     hash.Hash
-		hashs crypto.Hash
-	)
-	signBytes, err := base64.StdEncoding.DecodeString(sign)
+//解密支付宝开放数据
+//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
+//    sessionKey:会话密钥
+//    beanPtr:需要解析到的结构体指针
+//    文档：https://docs.alipay.com/mini/introduce/aes
+//    文档：https://docs.open.alipay.com/common/104567
+func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{}) (err error) {
+	//验证参数类型
+	beanValue := reflect.ValueOf(beanPtr)
+	if beanValue.Kind() != reflect.Ptr {
+		return errors.New("传入参数类型必须是以指针形式")
+	}
+	//验证interface{}类型
+	if beanValue.Elem().Kind() != reflect.Struct {
+		return errors.New("传入interface{}必须是结构体")
+	}
+	aesKey, _ := base64.StdEncoding.DecodeString(secretKey)
+	ivKey := []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	secretData, _ := base64.StdEncoding.DecodeString(encryptedData)
+
+	block, err := aes.NewCipher(aesKey)
 	if err != nil {
 		return err
 	}
-	//解析秘钥
-	block, _ := pem.Decode([]byte(aliPayPublicKey))
-	if block == nil {
-		return errors.New("支付宝公钥Decode错误")
+	if len(secretData)%len(aesKey) != 0 {
+		return errors.New("encryptedData is error")
 	}
-	key, err := x509.ParsePKIXPublicKey(block.Bytes)
+
+	blockMode := cipher.NewCBCDecrypter(block, ivKey)
+	originData := make([]byte, len(secretData))
+	blockMode.CryptBlocks(originData, secretData)
+
+	if len(originData) > 0 {
+		originData = PKCS5UnPadding(originData)
+	}
+	//fmt.Println("originDataStr:", string(originData))
+	//解析
+	err = json.Unmarshal(originData, beanPtr)
 	if err != nil {
-		log.Println("x509.ParsePKIXPublicKey:", err)
 		return err
 	}
-	publicKey, ok := key.(*rsa.PublicKey)
-	if !ok {
-		return errors.New("支付宝公钥转换错误")
-	}
-	//判断签名方式
-	switch signType {
-	case "RSA":
-		hashs = crypto.SHA1
-	case "RSA2":
-		hashs = crypto.SHA256
-	default:
-		hashs = crypto.SHA256
-	}
-
-	h = hashs.New()
-	h.Write([]byte(signData))
-
-	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
+	return nil
 }
 
 //换取授权访问令牌（默认使用utf-8，RSA2）
