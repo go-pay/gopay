@@ -16,14 +16,15 @@ func AliPayTradePay() {
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType("RSA2").
+		//SetAppAuthToken("201908BB03f542de8ecc42b985900f5080407abc").
 		SetNotifyUrl("https://www.gopay.ink")
 	//请求参数
 	body := make(gopay.BodyMap)
 	body.Set("subject", "条码支付")
 	body.Set("scene", "bar_code")
-	body.Set("auth_code", "284680185023768373")
-	body.Set("out_trade_no", "GYWX201901301040355706100458")
-	body.Set("total_amount", "100.00")
+	body.Set("auth_code", "286248566432274952")
+	body.Set("out_trade_no", "GZ201901301040361014")
+	body.Set("total_amount", "0.01")
 	body.Set("timeout_express", "2m")
 	//条码支付
 	aliRsp, err := client.AliPayTradePay(body)
@@ -32,4 +33,10 @@ func AliPayTradePay() {
 		return
 	}
 	fmt.Println("aliRsp:", *aliRsp)
+	alipayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp8gueNlkbiDidz6FBQEBpqoRgH8h7JtsPtYW0nzAqy1MME4mFnDSMfSKlreUomS3a55gmBopL1eF4/Km/dEnaL5tCY9+24SKn1D4iyls+lvz/ZjvUjVwxoUYBh8kkcxMZSDeDz8//o+9qZTrICVP2a4sBB8T0XmU4gxfw8FsmtoomBH1nLk3AO7wgRN2a3+SRSAmxrhIGDmF1lljSlhY32eJpJ2TZQKaWNW+7yDBU/0Wt3kQVY84vr14yYagnSCiIfqyVFqePayRtmVJDr5qvSXr51tdqs2zKZCu+26X7JAF4BSsaq4gmY5DmDTm4TohCnBduI1+bPGD+igVmtl05wIDAQAB"
+	ok, err := gopay.VerifyAliPaySign(alipayPublicKey, aliRsp.SignData, aliRsp.Sign)
+	if err != nil {
+		fmt.Println("err:::", err)
+	}
+	fmt.Println("同步返回验签：", ok)
 }
