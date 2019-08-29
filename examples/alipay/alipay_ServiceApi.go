@@ -47,7 +47,7 @@ func DecryptAliPayOpenDataToStruct() {
 	fmt.Println("rsp.Mobile:", rsp.Mobile)
 }
 
-func ParseAliPayNotifyResultAndVerifyAliPayResultSign(req *http.Request) {
+func ParseAliPayNotifyResultAndVerifyAliPaySign(req *http.Request) {
 	aliPayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1wn1sU/8Q0rYLlZ6sq3enrPZw2ptp6FecHR2bBFLjJ+sKzepROd0bKddgj+Mr1ffr3Ej78mLdWV8IzLfpXUi945DkrQcOUWLY0MHhYVG2jSs/qzFfpzmtut2Cl2TozYpE84zom9ei06u2AXLMBkU6VpznZl+R4qIgnUfByt3Ix5b3h4Cl6gzXMAB1hJrrrCkq+WvWb3Fy0vmk/DUbJEz8i8mQPff2gsHBE1nMPvHVAMw1GMk9ImB4PxucVek4ZbUzVqxZXphaAgUXFK2FSFU+Q+q1SPvHbUsjtIyL+cLA6H/6ybFF9Ffp27Y14AHPw29+243/SpMisbGcj2KD+evBwIDAQAB"
 
 	//解析请求参数
@@ -58,7 +58,7 @@ func ParseAliPayNotifyResultAndVerifyAliPayResultSign(req *http.Request) {
 	fmt.Println("notifyReq:", *notifyReq)
 
 	//验签
-	ok, err := gopay.VerifyAliPayResultSign(aliPayPublicKey, notifyReq)
+	ok, err := gopay.VerifyAliPaySign(aliPayPublicKey, notifyReq)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
