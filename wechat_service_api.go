@@ -115,7 +115,7 @@ func VerifyWeChatResultSign(apiKey, signType string, notifyReq *WeChatNotifyRequ
 //    返回参数err：错误信息
 func VerifyWeChatSign(apiKey, signType string, bean interface{}) (ok bool, err error) {
 	if bean == nil {
-		return false, errors.New("wxRsp is nil")
+		return false, errors.New("bean is nil")
 	}
 	var (
 		bodyMaps BodyMap
