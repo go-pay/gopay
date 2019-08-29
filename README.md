@@ -551,7 +551,7 @@ fmt.Println("rsp.Mobile:", rsp.Mobile)
 > 支付宝支付后的同步/异步通知验签文档：[支付结果通知](https://docs.open.alipay.com/200/106120)
 
 * 同步返回参数验签（请注意看参数注释）
-
+    * 注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
 ```go
 //请求条码支付
 aliRsp, err := client.AliPayTradePay(body)
