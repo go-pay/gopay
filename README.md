@@ -122,8 +122,9 @@ $ go get -u github.com/iGoogle-ink/gopay
 参考文档：[微信支付文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 
 ---
-### 获取微信用户OpenId、UnionId、SessionKey
+### 微信小程序：获取用户OpenId、UnionId、SessionKey
 
+> 官方文档：[code2Session](https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html)
 ```go
 userIdRsp, err := gopay.Code2Session(appID, secretKey, "")
 if err != nil {
@@ -133,6 +134,85 @@ if err != nil {
 fmt.Println("OpenID:", userIdRsp.Openid)
 fmt.Println("UnionID:", userIdRsp.Unionid)
 fmt.Println("SessionKey:", userIdRsp.SessionKey)
+```
+
+### 加密数据，解密到指定结构体
+
+> 拿小程序获取手机号为例
+
+button按钮获取手机号码：[button组件文档](https://developers.weixin.qq.com/miniprogram/dev/component/button.html)
+
+微信解密算法文档：[解密算法文档](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html)
+```go
+data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
+iv := "Cds8j3VYoGvnTp1BrjXdJg=="
+sessionKey := "lyY4HPQbaOYzZdG+JcYK9w=="
+
+phone := new(gopay.WeChatUserPhone)
+err := gopay.DecryptOpenDataToStruct(data, iv, sessionKey, phone)
+if err != nil {
+	fmt.Println("err:", err)
+	return
+}
+fmt.Println("PhoneNumber:", phone.PhoneNumber)
+fmt.Println("PurePhoneNumber:", phone.PurePhoneNumber)
+fmt.Println("CountryCode:", phone.CountryCode)
+fmt.Println("Watermark:", phone.Watermark)
+```
+
+### 统一下单
+```go
+//初始化微信客户端
+//    appId：应用ID
+//    mchID：商户ID
+//    apiKey：API秘钥值
+//    isProd：是否是正式环境
+client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
+
+number := gopay.GetRandomString(32)
+fmt.Println("out_trade_no:", number)
+//初始化参数Map
+body := make(gopay.BodyMap)
+body.Set("nonce_str", gopay.GetRandomString(32))
+body.Set("body", "测试支付")
+body.Set("out_trade_no", number)
+body.Set("total_fee", 1)
+body.Set("spbill_create_ip", "127.0.0.1")
+body.Set("notify_url", "http://www.gopay.ink")
+body.Set("trade_type", gopay.TradeType_H5)
+body.Set("device_info", "WEB")
+body.Set("sign_type", gopay.SignType_MD5)
+
+sceneInfo := make(map[string]map[string]string)
+h5Info := make(map[string]string)
+h5Info["type"] = "Wap"
+h5Info["wap_url"] = "http://www.gopay.ink"
+h5Info["wap_name"] = "H5测试支付"
+sceneInfo["h5_info"] = h5Info
+body.Set("scene_info", sceneInfo)
+
+//body.Set("openid", OpenID)
+
+//发起下单请求
+wxRsp, err := client.UnifiedOrder(body)
+if err != nil {
+	fmt.Println("Error:", err)
+	return
+}
+fmt.Println("ReturnCode：", wxRsp.ReturnCode)
+fmt.Println("ReturnMsg：", wxRsp.ReturnMsg)
+fmt.Println("Appid：", wxRsp.Appid)
+fmt.Println("MchId：", wxRsp.MchId)
+fmt.Println("DeviceInfo：", wxRsp.DeviceInfo)
+fmt.Println("NonceStr：", wxRsp.NonceStr)
+fmt.Println("Sign：", wxRsp.Sign)
+fmt.Println("ResultCode：", wxRsp.ResultCode)
+fmt.Println("ErrCode：", wxRsp.ErrCode)
+fmt.Println("ErrCodeDes：", wxRsp.ErrCodeDes)
+fmt.Println("PrepayId：", wxRsp.PrepayId)
+fmt.Println("TradeType：", wxRsp.TradeType)
+fmt.Println("CodeUrl:", wxRsp.CodeUrl)
+fmt.Println("MwebUrl:", wxRsp.MwebUrl)
 ```
 
 ### 微信小程序支付，统一下单成功后，需要进一步获取微信小程序支付所需要的paySign
@@ -213,7 +293,7 @@ paySign := gopay.GetAppPaySign(appid, partnerid, wxRsp.NonceStr, prepayid, gopay
 fmt.Println("paySign：", paySign)
 ```
 
-### 1、解析并返回微信支付异步通知的参数，2、同步返回/异步通知 参数验签
+### 1、解析微信支付异步通知的参数，2、同步返回/异步通知 参数验签
 
 > 微信支付后的异步通知文档：[支付结果通知](https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_7&index=8)
 
@@ -292,31 +372,7 @@ if err != nil {
 fmt.Println("同步验签结果：", ok)
 ```
 
-### 加密数据，解密到指定结构体
-
-> 拿小程序获取手机号为例
-
-button按钮获取手机号码：[button组件文档](https://developers.weixin.qq.com/miniprogram/dev/component/button.html)
-
-微信解密算法文档：[解密算法文档](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html)
-```go
-data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
-iv := "Cds8j3VYoGvnTp1BrjXdJg=="
-sessionKey := "lyY4HPQbaOYzZdG+JcYK9w=="
-
-phone := new(gopay.WeChatUserPhone)
-err := gopay.DecryptOpenDataToStruct(data, iv, sessionKey, phone)
-if err != nil {
-	fmt.Println("err:", err)
-	return
-}
-fmt.Println("PhoneNumber:", phone.PhoneNumber)
-fmt.Println("PurePhoneNumber:", phone.PurePhoneNumber)
-fmt.Println("CountryCode:", phone.CountryCode)
-fmt.Println("Watermark:", phone.Watermark)
-```
-
-### 微信付款结果异步通知,需回复微信平台是否成功
+### 微信支付异步通知处理完后,需回复微信平台固定数据
 
 > 代码中return写法，由于本人用的 [Echo Web框架](https://github.com/labstack/echo)，有兴趣的可以尝试一下
 
@@ -327,61 +383,6 @@ rsp.ReturnCode = gopay.SUCCESS
 rsp.ReturnMsg = gopay.OK
 
 return c.String(http.StatusOK, rsp.ToXmlString())
-```
-
-### 统一下单
-```go
-//初始化微信客户端
-//    appId：应用ID
-//    mchID：商户ID
-//    apiKey：API秘钥值
-//    isProd：是否是正式环境
-client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
-
-number := gopay.GetRandomString(32)
-fmt.Println("out_trade_no:", number)
-//初始化参数Map
-body := make(gopay.BodyMap)
-body.Set("nonce_str", gopay.GetRandomString(32))
-body.Set("body", "测试支付")
-body.Set("out_trade_no", number)
-body.Set("total_fee", 1)
-body.Set("spbill_create_ip", "127.0.0.1")
-body.Set("notify_url", "http://www.gopay.ink")
-body.Set("trade_type", gopay.TradeType_H5)
-body.Set("device_info", "WEB")
-body.Set("sign_type", gopay.SignType_MD5)
-
-sceneInfo := make(map[string]map[string]string)
-h5Info := make(map[string]string)
-h5Info["type"] = "Wap"
-h5Info["wap_url"] = "http://www.gopay.ink"
-h5Info["wap_name"] = "H5测试支付"
-sceneInfo["h5_info"] = h5Info
-body.Set("scene_info", sceneInfo)
-
-body.Set("openid", OpenID)
-
-//发起下单请求
-wxRsp, err := client.UnifiedOrder(body)
-if err != nil {
-	fmt.Println("Error:", err)
-	return
-}
-fmt.Println("ReturnCode：", wxRsp.ReturnCode)
-fmt.Println("ReturnMsg：", wxRsp.ReturnMsg)
-fmt.Println("Appid：", wxRsp.Appid)
-fmt.Println("MchId：", wxRsp.MchId)
-fmt.Println("DeviceInfo：", wxRsp.DeviceInfo)
-fmt.Println("NonceStr：", wxRsp.NonceStr)
-fmt.Println("Sign：", wxRsp.Sign)
-fmt.Println("ResultCode：", wxRsp.ResultCode)
-fmt.Println("ErrCode：", wxRsp.ErrCode)
-fmt.Println("ErrCodeDes：", wxRsp.ErrCodeDes)
-fmt.Println("PrepayId：", wxRsp.PrepayId)
-fmt.Println("TradeType：", wxRsp.TradeType)
-fmt.Println("CodeUrl:", wxRsp.CodeUrl)
-fmt.Println("MwebUrl:", wxRsp.MwebUrl)
 ```
 
 ### 提交付款码支付
@@ -448,7 +449,7 @@ fmt.Println("Response：", wxRsp)
 
 ### 企业向微信用户个人付款
 
-参数说明文档：[企业付款](https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2)
+> 参数说明文档：[企业付款](https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2)
 
 注意：默认只支持正式环境，isProd 请填写 true
 
@@ -505,6 +506,8 @@ fmt.Println("wxRsp：", *wxRsp)
 ---
 
 ### 换取授权访问令牌（得到access_token，user_id等信息）
+
+两种方式，另一种见下面 **支付宝小程序支付**
 
 > 支付宝换取授权访问令牌文档：[换取授权访问令牌](https://docs.open.alipay.com/api_9/alipay.system.oauth.token)
 
@@ -787,7 +790,7 @@ body := make(gopay.BodyMap)
 body.Set("grant_type", "authorization_code")
 body.Set("code", "46523714c2654d0583d91aaa862aOF69")
 
-//创建订单
+//换取授权访问令牌（得到access_token，user_id等信息）
 aliRsp, err := client.AliPaySystemOauthToken(body)
 if err != nil {
     fmt.Println("err:", err)
@@ -802,7 +805,7 @@ body2.Set("buyer_id", aliRsp.AliPaySystemOauthTokenResponse.UserId)
 body2.Set("out_trade_no", "GZ201901301040355708")
 body2.Set("total_amount", "0.01")
 
-rsp, err := client.AliPayTradeCreate(body2)
+aliRsp2, err := client.AliPayTradeCreate(body2)
 if err != nil {
     fmt.Println("err:", err)
     return
@@ -814,7 +817,7 @@ fmt.Println("TradeNo:", rsp.AliPayTradeCreateResponse.TradeNo)
 
 ### 统一收单交易退款接口
 
-* 交易订单退款接口，具体条件请看官方文档介绍
+注意：交易订单退款接口，具体条件请看官方文档介绍
 
 > 文档说明：[统一收单交易退款接口](https://docs.open.alipay.com/api_1/alipay.trade.refund) 
 
