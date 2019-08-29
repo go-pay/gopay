@@ -114,7 +114,7 @@ func GetOpenIdByAuthCode() {
 }
 
 //解析notify参数、验签、返回数据到微信
-func ParseWeChatNotifyResultAndVerifyWeChatResultSign(req *http.Request) string {
+func ParseWeChatNotifyResultAndVerifyWeChatSign(req *http.Request) string {
 	rsp := new(gopay.WeChatNotifyResponse)
 
 	//解析参数
@@ -125,26 +125,27 @@ func ParseWeChatNotifyResultAndVerifyWeChatResultSign(req *http.Request) string 
 	fmt.Println("notifyReq:", *notifyReq)
 
 	//验签
-	ok, sign := gopay.VerifyWeChatResultSign("GFDS8j98rewnmgl45wHTt980jg543abc", gopay.SignType_MD5, notifyReq)
+	ok, err := gopay.VerifyWeChatSign("GFDS8j98rewnmgl45wHTt980jg543abc", gopay.SignType_MD5, notifyReq)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
 	fmt.Println("微信验签是否通过:", ok)
-	fmt.Println("计算的sign:", sign)
+
+	//或者
+
+	bodyMap, err := gopay.ParseWeChatNotifyResultToBodyMap(req)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("bodyMap:", bodyMap)
+
+	ok, err = gopay.VerifyWeChatSign("GFDS8j98rewnmgl45wHTt980jg543abc", gopay.SignType_MD5, bodyMap)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("微信验签是否通过:", ok)
 
 	rsp.ReturnCode = gopay.SUCCESS
 	rsp.ReturnMsg = "OK"
 	return rsp.ToXmlString()
-}
-
-//BodyMap 解析notify参数、验签
-func ParseWeChatNotifyResultToBodyMapAndVerifyWeChatResultSignByBodyMap(req *http.Request) {
-	//解析到BodyMap
-	bm, err := gopay.ParseWeChatNotifyResultToBodyMap(req)
-	if err != nil {
-		fmt.Println("err:", err)
-	}
-	fmt.Println("bm:", bm)
-
-	//验签
-	ok, sign := gopay.VerifyWeChatResultSignByBodyMap("GFDS8j98rewnmgl45wHTt980jg543abc", gopay.SignType_MD5, bm)
-	fmt.Println("微信验签是否通过:", ok)
-	fmt.Println("计算的sign:", sign)
 }
