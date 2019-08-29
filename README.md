@@ -44,8 +44,8 @@
 * gopay.GetAppPaySign() => 获取APP支付所需要的paySign
 * gopay.ParseWeChatNotifyResultToBodyMap() => 解析微信支付异步通知的参数到BodyMap
 * gopay.ParseWeChatNotifyResult() => 解析微信支付异步通知的参数
-* gopay.VerifyWeChatResultSignByBodyMap() => 通过BodyMap验证微信支付异步通知的Sign值
-* gopay.VerifyWeChatResultSign() => 验证微信支付异步通知的Sign值
+* （Deprecated）gopay.VerifyWeChatResultSign() => 验证微信支付异步通知的Sign值
+* gopay.VerifyWeChatSign() => 验证微信API返回结果或异步通知结果的Sign值
 * gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
 * gopay.GetAccessToken() => 获取小程序全局唯一后台接口调用凭据
 * gopay.GetPaidUnionId() => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
@@ -227,15 +227,17 @@ if err != nil {
 }
 fmt.Println("notifyRsp:", notifyRsp)
 
-//验证微信支付异步通知的Sign值
+//验证微信API返回结果或异步通知结果的Sign值
 //    apiKey：API秘钥值
-//    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
-//    notifyRsp：利用 gopay.ParseWeChatNotifyResult() 得到的结构体
-//    返回参数ok：是否验证通过
-//    返回参数sign：根据参数计算的sign值，非微信返回参数中的Sign
-ok, sign := gopay.VerifyWeChatResultSign("192006250b4c09247ec02edce69f6a2d", "MD5", notifyRsp)
-log.Println("ok:", ok)
-log.Println("sign:", sign)
+//    signType：签名类型（调用API方法时填写的类型）
+//    bean：微信API返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
+//    返回参数ok：是否验签通过
+//    返回参数err：错误信息
+ok, err := gopay.VerifyWeChatSign("192006250b4c09247ec02edce69f6a2d", "MD5", notifyRsp)
+if err != nil {
+    fmt.Println("err:", err)
+}
+fmt.Println("ok:", ok)
 ```
 或者
 ```go
@@ -249,15 +251,17 @@ if err != nil {
     return
 }
 
-//通过BodyMap验证微信支付异步通知的Sign值
+//验证微信API返回结果或异步通知结果的Sign值
 //    apiKey：API秘钥值
-//    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
-//    bm：通过 gopay.ParseWeChatNotifyResult() 得到的BodyMap
-//    返回参数ok：是否验证通过
-//    返回参数sign：计算出的sign值，非微信返回参数中的Sign
-ok, sign := gopay.VerifyWeChatResultSignByBodyMap("192006250b4c09247ec02edce69f6a2d", gopay.SignType_MD5, bm)
+//    signType：签名类型（调用API方法时填写的类型）
+//    bean：微信API返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
+//    返回参数ok：是否验签通过
+//    返回参数err：错误信息
+ok, err := gopay.VerifyWeChatSign("192006250b4c09247ec02edce69f6a2d", gopay.SignType_MD5, bm)
+if err != nil {
+    fmt.Println("err:", err)
+}
 fmt.Println("ok:", ok)
-fmt.Println("sign:", sign)
 ```
 
 ### 加密数据，解密到指定结构体
