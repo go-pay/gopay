@@ -110,7 +110,7 @@ import (
 )
 
 func main() {
-  fmt.Println("GoPay Version: ", gopay.Version)
+    fmt.Println("GoPay Version: ", gopay.Version)
 }
 ```
 
