@@ -46,7 +46,6 @@
 * gopay.ParseWeChatNotifyResultToBodyMap() => 解析微信支付异步通知的参数到BodyMap
 * gopay.ParseWeChatNotifyResult() => 解析微信支付异步通知的参数
 * gopay.VerifyWeChatSign() => 微信同步返回参数验签或异步通知参数验签
-* （**Deprecated**）gopay.VerifyWeChatResultSign()
 * gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
 * gopay.GetAccessToken() => 获取小程序全局唯一后台接口调用凭据
 * gopay.GetPaidUnionId() => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
@@ -95,7 +94,6 @@
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
 * gopay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数
 * gopay.VerifyAliPaySign() => 支付宝同步返回参数验签或异步通知参数验签
-* （**Deprecated**）gopay.VerifyAliPayResultSign()
 * gopay.DecryptAliPayOpenDataToStruct() => 支付宝小程序敏感加密数据解析到结构体
 
 # 安装
