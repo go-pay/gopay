@@ -105,8 +105,8 @@ $ go get -u github.com/iGoogle-ink/gopay
 package main
 
 import (
-	"fmt"
-	"github.com/iGoogle-ink/gopay"
+    "fmt"
+    "github.com/iGoogle-ink/gopay"
 )
 
 func main() {
