@@ -13,13 +13,11 @@
 [![](https://api.travis-ci.org/iGoogle-ink/gopay.svg?branch=master)]()
 [![](https://img.shields.io/badge/License-Apache_2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
-## 微信Client
+### 微信Client
 
 * client := gopay.NewWeChatClient() => 初始化微信支付客户端
-* client的其他配置
-    * client.SetCountry() => 设置国家地区，默认中国国内（gopay.China、gopay.China2、gopay.SoutheastAsia、gopay.Other）
 
-## 微信支付API
+### 微信支付API
 
 * 统一下单：client.UnifiedOrder()
     * JSAPI - JSAPI支付（或小程序支付）
@@ -37,7 +35,7 @@
 * 拉取订单评价数据：client.BatchQueryComment()
 * 企业向微信用户个人付款：client.Transfer()
 
-## 微信公共API
+### 微信公共API
 
 * gopay.GetWeChatParamSign() => 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
 * gopay.GetWeChatSanBoxParamSign() => 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
@@ -56,18 +54,11 @@
 
 ---
 
-## 支付宝Client
+### 支付宝Client
 
 * client := gopay.NewAliPayClient() => 初始化支付宝支付客户端
-* client请求部分公共参数的设置
-    * client.SetReturnUrl() => 设置返回URL
-    * client.SetNotifyUrl() => 设置异步通知URL
-    * client.SetCharset() => 设置字符编码，默认 utf-8
-    * client.SetSignType() => 设置签名类型，默认 RSA2
-    * client.SetAppAuthToken() => 设置应用授权
-    * client.SetAuthToken() => 设置个人信息授权
 
-## 支付宝支付API
+### 支付宝支付API
 
 * 手机网站支付接口2.0（手机网站支付）：client.AliPayTradeWapPay()
 * 统一收单下单并支付页面接口（电脑网站支付）：client.AliPayTradePagePay()
@@ -87,7 +78,7 @@
 * 换取应用授权令牌（获取app_auth_token，auth_app_id，user_id等信息）：client.AlipayOpenAuthTokenApp()
 * 获取芝麻信用分：client.ZhimaCreditScoreGet()
 
-## 支付宝公共API
+### 支付宝公共API
 
 * gopay.AliPaySystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
 * gopay.FormatPrivateKey() => 格式化应用私钥
@@ -96,13 +87,13 @@
 * gopay.VerifyAliPaySign() => 支付宝同步返回参数验签或异步通知参数验签
 * gopay.DecryptAliPayOpenDataToStruct() => 支付宝小程序敏感加密数据解析到结构体
 
-# 安装
+# 一、安装
 
 ```bash
 $ go get -u github.com/iGoogle-ink/gopay
 ```
 
-## 查看 GoPay 版本
+* #### 查看 GoPay 版本
 
 ```go
 package main
@@ -117,7 +108,7 @@ func main() {
 }
 ```
 
-# 文档
+# 二、文档说明
 
 * [GoDoc](https://godoc.org/github.com/iGoogle-ink/gopay)
 
@@ -130,7 +121,7 @@ func main() {
 
 ---
 
-# 1、初始化GoPay客户端并做配置
+## 1、初始化GoPay客户端并做配置
 
 * #### 微信客户端
 
@@ -176,7 +167,7 @@ client.SetCharset("utf-8").                 //设置字符编码，不设置默�
 	SetAuthToken("")                        //设置个人信息授权
 ```
 
-# 2、初始化并赋值BodyMap（client的方法所需的入参）
+## 2、初始化并赋值BodyMap（client的方法所需的入参）
 
 * #### 微信请求参数
 
@@ -227,7 +218,7 @@ bm.Set("total_amount", "100.00")
 bm.Set("product_code", "QUICK_WAP_WAY")
 ```
 
-# 3、client 方法调用
+## 3、client 方法调用
 
 * #### 微信 client 
 ```go
@@ -277,7 +268,7 @@ aliRsp, err := client.AlipayOpenAuthTokenApp(bm)
 aliRsp, err := client.ZhimaCreditScoreGet(bm)
 ```
 
-# 4、微信统一下单后，获取微信小程序支付、APP支付、微信内H5支付所需要的 paySign
+## 4、微信统一下单后，获取微信小程序支付、APP支付、微信内H5支付所需要的 paySign
 
 * #### 微信（只有微信需要此操作）
 微信小程序支付官方文档：[微信小程序支付API](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html)
@@ -324,7 +315,7 @@ packages := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一�
 paySign := gopay.GetMiniPaySign(AppID, wxRsp.NonceStr, packages, gopay.SignType_MD5, timeStamp, apiKey)
 ```
 
-# 5、同步返回参数验签Sign、异步通知参数解析和验签Sign、异步通知返回
+## 5、同步返回参数验签Sign、异步通知参数解析和验签Sign、异步通知返回
 
 异步参数需要先解析，解析出来的结构体或BodyMap再验签
 
@@ -394,7 +385,7 @@ ok, err = gopay.VerifyAliPaySign(alipayPublicKey, notifyReq)
 return c.String(http.StatusOK, "success")   //此写法是 echo 框架返回客户端数据的写法
 ```
 
-# 6、微信、支付宝 公共API（仅部分说明）
+## 6、微信、支付宝 公共API（仅部分说明）
 
 * #### 微信 公共API
 
