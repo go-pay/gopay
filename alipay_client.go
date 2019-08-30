@@ -33,11 +33,6 @@ func NewAliPayClient(appId, privateKey string, isProd bool) (client *aliPayClien
 	return client
 }
 
-//获取版本号
-func (this *aliPayClient) GetVersion() (version string) {
-	return Version
-}
-
 //alipay.trade.fastpay.refund.query(统一收单交易退款查询)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query
 func (this *aliPayClient) AliPayTradeFastPayRefundQuery(body BodyMap) (aliRsp *AliPayTradeFastpayRefundQueryResponse, err error) {
