@@ -39,6 +39,7 @@
 
 ## 微信公共API
 
+* gopay.GetWeChatParamSign() => 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
 * gopay.GetMiniPaySign() => 获取微信小程序支付所需要的paySign
 * gopay.GetH5PaySign() => 获取微信内H5支付所需要的paySign
 * gopay.GetAppPaySign() => 获取APP支付所需要的paySign

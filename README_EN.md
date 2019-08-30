@@ -38,12 +38,12 @@ The Golang SDK for WeChat and AliPay
 
 ## WeChat Public API
 
+* gopay.GetWeChatParamSign() => 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
 * gopay.GetMiniPaySign() => Obtain the paySign required for WeChat Applet Payment
 * gopay.GetH5PaySign() => Obtain the paySign required for H5 Payment in WeChat
 * gopay.GetAppPaySign() => Obtain the paySign required for App Payment
 * gopay.ParseWeChatNotifyResultToBodyMap() => Parse the parameters of WeChat Payment asynchronous notification to BodyMap
 * gopay.ParseWeChatNotifyResult() => Parse the parameters of WeChat Payment asynchronous notification to Struct
-* （**Deprecated**）gopay.VerifyWeChatResultSign()
 * gopay.VerifyWeChatSign() =>Verify WeChat Response Sign
 * gopay.Code2Session() => Login certificate verification：Obtain WeChat user's OpenId, UnionId, SessionKey
 * gopay.GetAccessToken() => Obtain WeChat Applet's global unique access token
@@ -90,7 +90,7 @@ The Golang SDK for WeChat and AliPay
 * gopay.FormatPrivateKey() => Format private key
 * gopay.FormatAliPayPublicKey() => Format alipay public key
 * gopay.ParseAliPayNotifyResult() => Parse the parameters of Alipay Payment asynchronous notification to Struct
-* gopay.VerifyAliPayResultSign() => Verify the Sign of Alipay Payment asynchronous notification by Struct
+* gopay.VerifyAliPaySign() => Verify Alipay Response Sign
 * gopay.DecryptAliPayOpenDataToStruct() => Decrypt alipay applet encrypted data to the specified struct
 
 # Install
