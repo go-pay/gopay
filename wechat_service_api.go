@@ -48,6 +48,32 @@ func GetWeChatParamSign(appId, mchId, apiKey string, bm BodyMap) (sign string) {
 	return
 }
 
+//获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
+//    注意：沙箱环境默认 sign_type 为 MD5
+//    appId：应用ID
+//    mchId：商户ID
+//    apiKey：API秘钥值
+//    返回参数 sign：通过Appid、MchId、ApiKey和BodyMap中的参数计算出的Sign值
+func GetWeChatSanBoxParamSign(appId, mchId, apiKey string, bm BodyMap) (sign string, err error) {
+	bm.Set("appid", appId)
+	bm.Set("mch_id", mchId)
+	bm.Set("sign_type", SignType_MD5)
+
+	//从微信接口获取SanBox的ApiKey
+	sanBoxApiKey, err := getSanBoxKey(mchId, GetRandomString(32), apiKey, SignType_MD5)
+	if err != nil {
+		return null, err
+	}
+	signStr := bm.EncodeWeChatSignParams(sanBoxApiKey)
+	//fmt.Println("signStr:", signStr)
+
+	hash := md5.New()
+	hash.Write([]byte(signStr))
+	hashSign := hash.Sum(nil)
+	sign = strings.ToUpper(hex.EncodeToString(hashSign))
+	return sign, nil
+}
+
 //解析微信支付异步通知的结果到BodyMap
 //    req：*http.Request
 //    返回参数bm：Notify请求的参数
@@ -130,7 +156,7 @@ func VerifyWeChatResultSign(apiKey, signType string, notifyReq *WeChatNotifyRequ
 		}
 	}
 
-	sign = getLocalSign(apiKey, signType, newBody)
+	sign = getWeChatReleaseSign(apiKey, signType, newBody)
 
 	ok = sign == notifyReq.Sign
 	return
@@ -169,7 +195,7 @@ func VerifyWeChatSign(apiKey, signType string, bean interface{}) (ok bool, err e
 Verify:
 	bodySign := bm.Get("sign")
 	bm.Remove("sign")
-	sign := getLocalSign(apiKey, signType, bm)
+	sign := getWeChatReleaseSign(apiKey, signType, bm)
 	//fmt.Println("sign:", sign)
 	return sign == bodySign, nil
 }
@@ -425,7 +451,7 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 	body.Set("mch_id", mchId)
 	body.Set("auth_code", authCode)
 	body.Set("nonce_str", nonceStr)
-	sign := getLocalSign(apiKey, SignType_MD5, body)
+	sign := getWeChatReleaseSign(apiKey, SignType_MD5, body)
 
 	body.Set("sign", sign)
 	reqXML := generateXml(body)
