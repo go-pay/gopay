@@ -100,7 +100,7 @@
 $ go get -u github.com/iGoogle-ink/gopay
 ```
 
-# 查看 GoPay 版本
+## 查看 GoPay 版本
 
 ```go
 package main

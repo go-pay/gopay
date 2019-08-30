@@ -99,7 +99,7 @@ The Golang SDK for WeChat and AliPay
 $ go get -u github.com/iGoogle-ink/gopay
 ```
 
-# View the GoPay version
+## View the GoPay version
 
 ```go
 package main
