@@ -18,6 +18,36 @@ import (
 	"strings"
 )
 
+//获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
+//    注意：BodyMap中如无 sign_type 参数，默认赋值 sign_type 为 MD5
+//    appId：应用ID
+//    mchId：商户ID
+//    apiKey：API秘钥值
+//    返回参数 sign：通过Appid、MchId、ApiKey和BodyMap中的参数计算出的Sign值
+func GetWeChatParamSign(appId, mchId, apiKey string, bm BodyMap) (sign string) {
+	bm.Set("appid", appId)
+	bm.Set("mch_id", mchId)
+	signType := bm.Get("sign_type")
+	if signType == null {
+		bm.Set("sign_type", SignType_MD5)
+	}
+	signStr := bm.EncodeWeChatSignParams(apiKey)
+	//fmt.Println("signStr:", signStr)
+
+	var hashSign []byte
+	if signType == SignType_HMAC_SHA256 {
+		hash := hmac.New(sha256.New, []byte(apiKey))
+		hash.Write([]byte(signStr))
+		hashSign = hash.Sum(nil)
+	} else {
+		hash := md5.New()
+		hash.Write([]byte(signStr))
+		hashSign = hash.Sum(nil)
+	}
+	sign = strings.ToUpper(hex.EncodeToString(hashSign))
+	return
+}
+
 //解析微信支付异步通知的结果到BodyMap
 //    req：*http.Request
 //    返回参数bm：Notify请求的参数
