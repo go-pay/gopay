@@ -4,7 +4,7 @@ const (
 	null       string = ""
 	TimeLayout string = "2006-01-02 15:04:05"
 	DateLayout string = "2006-01-02"
-	Version    string = "1.3.1"
+	Version    string = "1.3.2"
 	//微信
 	//===========================================================================================
 
