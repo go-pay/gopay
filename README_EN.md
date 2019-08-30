@@ -99,6 +99,21 @@ The Golang SDK for WeChat and AliPay
 $ go get -u github.com/iGoogle-ink/gopay
 ```
 
+# View the GoPay version
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/iGoogle-ink/gopay"
+)
+
+func main() {
+  fmt.Println("GoPay Version: ", gopay.Version)
+}
+```
+
 # Document
 
 * [GoDoc](https://godoc.org/github.com/iGoogle-ink/gopay)

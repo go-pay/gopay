@@ -17,7 +17,6 @@
 
 * client := gopay.NewWeChatClient() => 初始化微信支付客户端
 * client的其他配置
-    * client.GetVersion() => 获取当前GoPay版本号
     * client.SetCountry() => 设置国家地区，默认中国国内（gopay.China、gopay.China2、gopay.SoutheastAsia、gopay.Other）
 
 ## 微信支付API
@@ -59,7 +58,6 @@
 
 * client := gopay.NewAliPayClient() => 初始化支付宝支付客户端
 * client请求部分公共参数的设置
-    * client.GetVersion() => 获取当前GoPay版本号
     * client.SetReturnUrl() => 设置返回URL
     * client.SetNotifyUrl() => 设置异步通知URL
     * client.SetCharset() => 设置字符编码，默认 utf-8
@@ -100,6 +98,21 @@
 
 ```bash
 $ go get -u github.com/iGoogle-ink/gopay
+```
+
+# 查看 GoPay 版本
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/iGoogle-ink/gopay"
+)
+
+func main() {
+  fmt.Println("GoPay Version: ", gopay.Version)
+}
 ```
 
 # 文档
