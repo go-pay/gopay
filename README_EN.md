@@ -39,6 +39,7 @@ The Golang SDK for WeChat and AliPay
 ## WeChat Public API
 
 * gopay.GetWeChatParamSign() => 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
+* gopay.GetWeChatSanBoxParamSign() => 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
 * gopay.GetMiniPaySign() => Obtain the paySign required for WeChat Applet Payment
 * gopay.GetH5PaySign() => Obtain the paySign required for H5 Payment in WeChat
 * gopay.GetAppPaySign() => Obtain the paySign required for App Payment

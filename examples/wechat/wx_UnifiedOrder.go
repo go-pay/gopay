@@ -10,7 +10,7 @@ import (
 func UnifiedOrder() {
 	//初始化微信客户端
 	//    appId：应用ID
-	//    MchID：商户ID
+	//    mchId：商户ID
 	//    apiKey：API秘钥值
 	//    isProd：是否是正式环境
 	client := gopay.NewWeChatClient("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", false)

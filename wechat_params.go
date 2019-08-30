@@ -31,8 +31,8 @@ func (this *weChatClient) SetCountry(country Country) (client *weChatClient) {
 	return this
 }
 
-//本地通过支付参数计算Sign值
-func getLocalSign(apiKey string, signType string, bm BodyMap) (sign string) {
+//获取微信支付正式环境Sign值
+func getWeChatReleaseSign(apiKey string, signType string, bm BodyMap) (sign string) {
 	signStr := bm.EncodeWeChatSignParams(apiKey)
 	//fmt.Println("signStr:", signStr)
 	var hashSign []byte
@@ -49,15 +49,32 @@ func getLocalSign(apiKey string, signType string, bm BodyMap) (sign string) {
 	return
 }
 
+//获取微信支付沙箱环境Sign值
+func getWeChatSignBoxSign(mchId, apiKey string, bm BodyMap) (sign string, err error) {
+
+	//从微信接口获取SanBox的ApiKey
+	sanBoxApiKey, err := getSanBoxKey(mchId, GetRandomString(32), apiKey, SignType_MD5)
+	if err != nil {
+		return null, err
+	}
+	signStr := bm.EncodeWeChatSignParams(sanBoxApiKey)
+	//fmt.Println("signStr:", signStr)
+	hash := md5.New()
+	hash.Write([]byte(signStr))
+	hashSign := hash.Sum(nil)
+	sign = strings.ToUpper(hex.EncodeToString(hashSign))
+	return sign, nil
+}
+
 //从微信提供的接口获取：SandboxSignKey
-func getSanBoxSign(mchId, nonceStr, apiKey, signType string) (key string, err error) {
+func getSanBoxKey(mchId, nonceStr, apiKey, signType string) (key string, err error) {
 	body := make(BodyMap)
 	body.Set("mch_id", mchId)
 	body.Set("nonce_str", nonceStr)
 
 	//计算沙箱参数Sign
-	sanboxSign := getLocalSign(apiKey, signType, body)
-	//沙箱环境：获取key后，重新计算Sign
+	sanboxSign := getWeChatReleaseSign(apiKey, signType, body)
+	//沙箱环境：获取沙箱环境ApiKey
 	key, err = getSanBoxSignKey(mchId, nonceStr, sanboxSign)
 	if err != nil {
 		return null, err

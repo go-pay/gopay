@@ -330,7 +330,7 @@ func (this *weChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFileP
 
 //企业向微信用户个人付款
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_1
-//    此方法未支持沙箱环境，默认正式环境，转账请慎重
+//    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
 func (this *weChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatTransfersResponse, err error) {
 	var bytes []byte
 	var sign string
@@ -358,7 +358,7 @@ func (this *weChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs
 	agent.TLSClientConfig(tlsConfig)
 
 	//本地计算Sign
-	sign = getLocalSign(this.apiKey, SignType_MD5, body)
+	sign = getWeChatReleaseSign(this.apiKey, SignType_MD5, body)
 
 	body.Set("sign", sign)
 	reqXML := generateXml(body)
@@ -390,22 +390,27 @@ func (this *weChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.
 	body.Set("appid", this.AppId)
 	body.Set("mch_id", this.MchId)
 	//===============生成参数===================
+	if body.Get("sign") != null {
+		goto GoRequest
+	}
+
+	//计算Sign值
 	if !this.isProd {
 		//沙箱环境
 		body.Set("sign_type", SignType_MD5)
-		//从微信接口获取SanBoxSignKey
-		key, err := getSanBoxSign(this.MchId, body.Get("nonce_str"), this.apiKey, SignType_MD5)
+		//沙箱环境Sign值
+		sign, err = getWeChatSignBoxSign(this.MchId, this.apiKey, body)
 		if err != nil {
-			//fmt.Println("getSanBoxSign:", err)
+			//fmt.Println("getWeChatSignBoxSign:", err)
 			return nil, err
 		}
-		sign = getLocalSign(key, body.Get("sign_type"), body)
 	} else {
 		//正式环境
-		//本地计算Sign
-		sign = getLocalSign(this.apiKey, body.Get("sign_type"), body)
+		sign = getWeChatReleaseSign(this.apiKey, body.Get("sign_type"), body)
 	}
 	body.Set("sign", sign)
+
+GoRequest:
 	reqXML := generateXml(body)
 	//fmt.Println("reqXML:",reqXML)
 	//===============发起请求===================
