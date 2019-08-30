@@ -372,7 +372,7 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 		body.Set("grant_type", "authorization_code")
 		body.Set("code", codeOrToken)
 	}
-	bs, err = aliPaySystemOauthToken(appId, privateKey, body, "alipay.system.oauth.token")
+	bs, err = aliPaySystemOauthToken(appId, privateKey, body, "alipay.system.oauth.token", true)
 	if err != nil {
 		return nil, err
 	}
@@ -390,7 +390,7 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 }
 
 //向支付宝发送请求
-func aliPaySystemOauthToken(appId, privateKey string, body BodyMap, method string) (bytes []byte, err error) {
+func aliPaySystemOauthToken(appId, privateKey string, body BodyMap, method string, isProd bool) (bytes []byte, err error) {
 	//===============生成参数===================
 	body.Set("app_id", appId)
 	body.Set("method", method)
@@ -412,10 +412,17 @@ func aliPaySystemOauthToken(appId, privateKey string, body BodyMap, method strin
 
 	var url string
 	agent := HttpAgent()
-	//正式环境
-	url = zfb_base_url_utf8
-	//fmt.Println(url)
-	agent.Post(url)
+	if !isProd {
+		//沙箱环境
+		url = zfb_sanbox_base_url_utf8
+		//fmt.Println(url)
+		agent.Post(url)
+	} else {
+		//正式环境
+		url = zfb_base_url_utf8
+		//fmt.Println(url)
+		agent.Post(url)
+	}
 	_, bs, errs := agent.
 		Type("form-data").
 		SendString(urlParam).
