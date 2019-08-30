@@ -346,8 +346,8 @@ body.Set("openid", OpenID)
 //Request
 wxRsp, err := client.UnifiedOrder(body)
 if err != nil {
-	fmt.Println("Error:", err)
-	return
+    fmt.Println("Error:", err)
+    return
 }
 fmt.Println("ReturnCode：", wxRsp.ReturnCode)
 fmt.Println("ReturnMsg：", wxRsp.ReturnMsg)
