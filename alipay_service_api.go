@@ -311,7 +311,7 @@ func FormatAliPayPublicKey(publicKey string) (pKey string) {
 
 //解密支付宝开放数据
 //    encryptedData:包括敏感数据在内的完整用户信息的加密数据
-//    sessionKey:会话密钥
+//    secretKey:AES密钥，支付宝管理平台配置
 //    beanPtr:需要解析到的结构体指针
 //    文档：https://docs.alipay.com/mini/introduce/aes
 //    文档：https://docs.open.alipay.com/common/104567

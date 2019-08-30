@@ -160,7 +160,7 @@ type oauthTokenInfo struct {
 	UserId       string `json:"user_id,omitempty"`
 }
 
-type PhoneNumberResponse struct {
+type AliPayUserPhone struct {
 	Code    string `json:"code,omitempty"`
 	Msg     string `json:"msg,omitempty"`
 	SubCode string `json:"subCode,omitempty"`

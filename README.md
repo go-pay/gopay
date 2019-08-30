@@ -9,7 +9,7 @@
 
 [![](https://img.shields.io/badge/Author-Jerry-blue.svg)](https://www.gopay.ink)
 [![](https://img.shields.io/badge/Golang-1.11+-brightgreen.svg)](https://golang.org)
-[![](https://img.shields.io/badge/Version-1.3.2-blue.svg)](https://github.com/iGoogle-ink/gopay)
+[![](https://img.shields.io/badge/Version-1.3.1-blue.svg)](https://github.com/iGoogle-ink/gopay)
 [![](https://api.travis-ci.org/iGoogle-ink/gopay.svg?branch=master)]()
 [![](https://img.shields.io/badge/License-Apache_2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
@@ -128,734 +128,324 @@ func main() {
 微信：
 <img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_jerry.png"/>
 
-# 微信支付
-
-<font color='#0088ff'>注意：具体参数根据请求的不同而不同，请参考微信官方文档的参数说明！</font>
-
-参考文档：[微信支付文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
-
----
-### 微信小程序：获取用户OpenId、UnionId、SessionKey
-
-> 官方文档：[code2Session](https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html)
-```go
-userIdRsp, err := gopay.Code2Session(appID, secretKey, "")
-if err != nil {
-	fmt.Println("Error:", err)
-	return
-}
-fmt.Println("OpenID:", userIdRsp.Openid)
-fmt.Println("UnionID:", userIdRsp.Unionid)
-fmt.Println("SessionKey:", userIdRsp.SessionKey)
-```
-
-### 加密数据，解密到指定结构体
-
-> 拿小程序获取手机号为例
-
-button按钮获取手机号码：[button组件文档](https://developers.weixin.qq.com/miniprogram/dev/component/button.html)
-
-微信解密算法文档：[解密算法文档](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html)
-```go
-data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
-iv := "Cds8j3VYoGvnTp1BrjXdJg=="
-sessionKey := "lyY4HPQbaOYzZdG+JcYK9w=="
-
-phone := new(gopay.WeChatUserPhone)
-err := gopay.DecryptOpenDataToStruct(data, iv, sessionKey, phone)
-if err != nil {
-	fmt.Println("err:", err)
-	return
-}
-fmt.Println("PhoneNumber:", phone.PhoneNumber)
-fmt.Println("PurePhoneNumber:", phone.PurePhoneNumber)
-fmt.Println("CountryCode:", phone.CountryCode)
-fmt.Println("Watermark:", phone.Watermark)
-```
-
-### 统一下单
-```go
-//初始化微信客户端
-//    appId：应用ID
-//    mchID：商户ID
-//    apiKey：API秘钥值
-//    isProd：是否是正式环境
-client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
-
-number := gopay.GetRandomString(32)
-fmt.Println("out_trade_no:", number)
-//初始化参数Map
-body := make(gopay.BodyMap)
-body.Set("nonce_str", gopay.GetRandomString(32))
-body.Set("body", "测试支付")
-body.Set("out_trade_no", number)
-body.Set("total_fee", 1)
-body.Set("spbill_create_ip", "127.0.0.1")
-body.Set("notify_url", "http://www.gopay.ink")
-body.Set("trade_type", gopay.TradeType_H5)
-body.Set("device_info", "WEB")
-body.Set("sign_type", gopay.SignType_MD5)
-
-sceneInfo := make(map[string]map[string]string)
-h5Info := make(map[string]string)
-h5Info["type"] = "Wap"
-h5Info["wap_url"] = "http://www.gopay.ink"
-h5Info["wap_name"] = "H5测试支付"
-sceneInfo["h5_info"] = h5Info
-body.Set("scene_info", sceneInfo)
-
-//body.Set("openid", OpenID)
-
-//发起下单请求
-wxRsp, err := client.UnifiedOrder(body)
-if err != nil {
-    fmt.Println("Error:", err)
-    return
-}
-fmt.Println("ReturnCode：", wxRsp.ReturnCode)
-fmt.Println("ReturnMsg：", wxRsp.ReturnMsg)
-fmt.Println("Appid：", wxRsp.Appid)
-fmt.Println("MchId：", wxRsp.MchId)
-fmt.Println("DeviceInfo：", wxRsp.DeviceInfo)
-fmt.Println("NonceStr：", wxRsp.NonceStr)
-fmt.Println("Sign：", wxRsp.Sign)
-fmt.Println("ResultCode：", wxRsp.ResultCode)
-fmt.Println("ErrCode：", wxRsp.ErrCode)
-fmt.Println("ErrCodeDes：", wxRsp.ErrCodeDes)
-fmt.Println("PrepayId：", wxRsp.PrepayId)
-fmt.Println("TradeType：", wxRsp.TradeType)
-fmt.Println("CodeUrl:", wxRsp.CodeUrl)
-fmt.Println("MwebUrl:", wxRsp.MwebUrl)
-```
-
-### 微信小程序支付，统一下单成功后，需要进一步获取微信小程序支付所需要的paySign
-
-* 小程序支付所需要的参数，paySign由后端计算
-    * timeStamp
-    * nonceStr
-    * package 
-    * signType
-    * paySign
-
-> 微信小程序支付官方文档：[微信小程序支付API](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html)
-```go
-timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
-packages := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一下单成功后得到
-//    appId：APPID
-//    nonceStr：随即字符串
-//    prepayId：统一下单成功后得到的值
-//    signType：签名类型
-//    timeStamp：时间
-//    apiKey：API秘钥值
-paySign := gopay.GetMiniPaySign(AppID, wxRsp.NonceStr, packages, gopay.SignType_MD5, timeStamp, ApiKey)
-
-//微信小程序支付需要的参数信息
-fmt.Println("paySign：", paySign)
-```
-
-### 微信内H5支付，统一下单成功后，需要进一步获取微信内H5支付所需要的paySign
-
-* 微信内H5支付所需要的参数，paySign由后端计算
-    * appId
-    * timeStamp
-    * nonceStr
-    * package 
-    * signType
-    * paySign
-> 微信内H5支付官方文档：[微信内H5支付文档](https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6)
-```go
-timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
-packages := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一下单成功后得到
-//    appId：APPID
-//    nonceStr：随即字符串
-//    prepayId：统一下单成功后得到的值
-//    signType：签名类型
-//    timeStamp：时间
-//    apiKey：API秘钥值
-paySign := gopay.GetH5PaySign(AppID, wxRsp.NonceStr, packages, gopay.SignType_MD5, timeStamp, ApiKey)
-
-//微信内H5支付需要的参数信息
-fmt.Println("paySign：", paySign)
-```
-
-### APP支付，统一下单成功后，需要进一步获取APP支付所需要的paySign
-
-* APP支付所需要的参数，paySign由后端计算
-    * appid
-    * partnerid
-    * noncestr
-    * prepayid
-    * package 
-    * timestamp
-    * sign
-> APP支付官方文档：[APP端调起支付的参数列表文档](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12)
-```go
-timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
-//注意：signType：此处签名方式，务必与统一下单时用的签名方式一致
-//注意：package：参数因为是固定值，不需开发者再传入
-//    appId：APPID
-//    partnerid：partnerid
-//    nonceStr：随即字符串
-//    prepayId：统一下单成功后得到的值
-//    signType：此处签名方式，务必与统一下单时用的签名方式一致
-//    timeStamp：时间
-//    apiKey：API秘钥值
-paySign := gopay.GetAppPaySign(appid, partnerid, wxRsp.NonceStr, prepayid, gopay.SignType_MD5, timeStamp, apiKey)
-
-//APP支付需要的参数信息
-fmt.Println("paySign：", paySign)
-```
-
-### 1、解析微信支付异步通知的参数，2、同步返回/异步通知 参数验签
-
-> 微信支付后的异步通知文档：[支付结果通知](https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_7&index=8)
-
-* 异步验签操作
-
-```go
-//解析微信支付异步通知的参数
-//    req：*http.Request
-//    返回参数notifyRsp：Notify请求的参数
-//    返回参数err：错误信息
-notifyReq, err := gopay.ParseWeChatNotifyResult(c.Request())
-if err != nil {
-    fmt.Println("err:", err)
-    return
-}
-fmt.Println("notifyRsp:", notifyRsp)
-
-//同步返回/异步通知 参数验签
-//    apiKey：API秘钥值
-//    signType：签名类型（调用API方法时填写的类型）
-//    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
-//    返回参数ok：是否验签通过
-//    返回参数err：错误信息
-ok, err := gopay.VerifyWeChatSign("192006250b4c09247ec02edce69f6a2d", "MD5", notifyReq)
-if err != nil {
-    fmt.Println("err:", err)
-}
-fmt.Println("ok:", ok)
-```
-或者
-```go
-//同步返回/异步通知 参数验签
-//    req：*http.Request
-//    返回参数bm：Notify请求的参数
-//    返回参数err：错误信息
-bm, err := gopay.ParseWeChatNotifyResultToBodyMap(c.Request())
-if err != nil {
-    fmt.Println("err:", err)
-    return
-}
-
-//同步返回/异步通知 参数验签
-//    apiKey：API秘钥值
-//    signType：签名类型（调用API方法时填写的类型）
-//    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
-//    返回参数ok：是否验签通过
-//    返回参数err：错误信息
-ok, err := gopay.VerifyWeChatSign("192006250b4c09247ec02edce69f6a2d", gopay.SignType_MD5, bm)
-if err != nil {
-    fmt.Println("err:", err)
-}
-fmt.Println("ok:", ok)
-```
-
-* 同步验签操作
-
-```go
-//请求支付，成功后得到结果
-wxRsp, err := client.Micropay(body)
-if err != nil {
-    fmt.Println("Error:", err)
-    return
-}
-fmt.Println("Response:", *wxRsp)
-
-//同步返回/异步通知 参数验签
-//    apiKey：API秘钥值
-//    signType：签名类型（调用API方法时填写的类型）
-//    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
-//    返回参数ok：是否验签通过
-//    返回参数err：错误信息
-ok, err := gopay.VerifyWeChatSign("GFDS8j98rewnmgl45wHTt980jg543abc", gopay.SignType_MD5, wxRsp)
-if err != nil {
-    fmt.Println("err:", err)
-}
-fmt.Println("同步验签结果：", ok)
-```
-
-### 微信支付异步通知处理完后，需回复微信平台固定数据
-
-> 代码中return写法，由于本人用的 [Echo Web框架](https://github.com/labstack/echo)，有兴趣的可以尝试一下
-
-```go
-rsp := new(gopay.WeChatNotifyResponse) //回复微信的数据
-
-rsp.ReturnCode = gopay.SUCCESS
-rsp.ReturnMsg = gopay.OK
-
-return c.String(http.StatusOK, rsp.ToXmlString())
-```
-
-### 提交付款码支付
-```go
-//初始化微信客户端
-//    appId：应用ID
-//    mchID：商户ID
-//    apiKey：API秘钥值
-//    isProd：是否是正式环境
-client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
-
-//初始化参数Map
-body := make(gopay.BodyMap)
-body.Set("nonce_str", gopay.GetRandomString(32))
-body.Set("body", "扫用户付款码支付")
-number := gopay.GetRandomString(32)
-log.Println("Number:", number)
-body.Set("out_trade_no", number)
-body.Set("total_fee", 1)
-body.Set("spbill_create_ip", "127.0.0.1")
-body.Set("notify_url", "http://www.gopay.ink")
-body.Set("auth_code", "120061098828009406")
-body.Set("sign_type", gopay.SignType_MD5)
-
-//请求支付，成功后得到结果
-wxRsp, err := client.Micropay(body)
-if err != nil {
-	fmt.Println("Error:", err)
-}
-fmt.Println("Response:", wxRsp)
-```
-
-### 申请退款
-```go
-//初始化微信客户端
-//    appId：应用ID
-//    mchID：商户ID
-//    apiKey：API秘钥值
-//    isProd：是否是正式环境
-client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", false)
-
-//初始化参数结构体
-body := make(gopay.BodyMap)
-body.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ")
-body.Set("nonce_str", gopay.GetRandomString(32))
-body.Set("sign_type", gopay.SignType_MD5)
-s := gopay.GetRandomString(64)
-fmt.Println("s:", s)
-body.Set("out_refund_no", s)
-body.Set("total_fee", 101)
-body.Set("refund_fee", 101)
-
-//请求申请退款（沙箱环境下，证书路径参数可传空）
-//    body：参数Body
-//    certFilePath：cert证书路径
-//    keyFilePath：Key证书路径
-//    pkcs12FilePath：p12证书路径
-wxRsp, err := client.Refund(body, "", "", "")
-if err != nil {
-	fmt.Println("Error:", err)
-}
-fmt.Println("Response：", wxRsp)
-```
-
-### 企业向微信用户个人付款
-
-> 参数说明文档：[企业付款](https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2)
-
-注意：默认只支持正式环境，isProd 请填写 true
-
-```go
-//初始化微信客户端
-//    appId：应用ID
-//    MchID：商户ID
-//    ApiKey：Key值
-//    isProd：是否是正式环境（企业转账到个人账户，默认正式环境）
-client := gopay.NewWeChatClient("wxd678efh567hg6787", "1230000109", "192006250b4c09247ec02edce69f6a2d", true)
-
-nonceStr := gopay.GetRandomString(32)
-partnerTradeNo := gopay.GetRandomString(32)
-
-fmt.Println("partnerTradeNo:", partnerTradeNo)
-//初始化参数结构体
-body := make(gopay.BodyMap)
-body.Set("nonce_str", nonceStr)
-body.Set("partner_trade_no", partnerTradeNo)
-body.Set("openid", openid)
-body.Set("check_name", "FORCE_CHECK") // NO_CHECK：不校验真实姓名 , FORCE_CHECK：强校验真实姓名
-body.Set("re_user_name", "付明明")       //收款用户真实姓名。 如果check_name设置为FORCE_CHECK，则必填用户真实姓名
-body.Set("amount", 1)                 //企业付款金额，单位为分
-body.Set("desc", "测试转账")              //企业付款备注，必填。注意：备注中的敏感词会被转成字符*
-body.Set("spbill_create_ip", "127.0.0.1")
-
-//请求转账
-//    body：参数Body
-//    certFilePath：cert证书路径
-//    keyFilePath：Key证书路径
-//    pkcs12FilePath：p12证书路径
-wxRsp, err := client.Transfer(body, "apiclient_cert.pem", "apiclient_key.pem", "apiclient_cert.p12")
-if err != nil {
-    fmt.Println("Error:", err)
-    return
-}
-fmt.Println("wxRsp：", *wxRsp)
-```
-
 ---
 
-# 支付宝支付
+# 1、初始化GoPay客户端并做配置
 
-<font color='#0088ff'>注意：具体请求参数根据请求的不同而不同，请参考支付宝官方文档的参数说明！</font>
+* #### 微信客户端
+
+微信官方文档：[官方文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
+```go
+//初始化微信客户端
+//    appId：应用ID
+//    mchId：商户ID
+//    apiKey：API秘钥值
+//    isProd：是否是正式环境
+client := gopay.NewWeChatClient("wxdaa2ab9ef87b5497", mchId, apiKey, false)
+
+//设置国家：不设置默认 中国国内
+//    gopay.China：中国国内
+//    gopay.China2：中国国内备用
+//    gopay.SoutheastAsia：东南亚
+//    gopay.Other：其他国家
+client.SetCountry(gopay.China)
+```
+
+* #### 支付宝
 
 支付宝官方文档：[官方文档](https://docs.open.alipay.com/catalog)
 
 支付宝RSA秘钥生成文档：[生成 RSA 密钥](https://docs.open.alipay.com/291/105971/)
 
-支付宝在线调试：[在线调试地址](https://openhome.alipay.com/platform/demoManage.htm)
-
 沙箱环境使用说明：[文档地址](https://docs.open.alipay.com/200/105311)
 
----
-
-### 换取授权访问令牌（得到access_token，user_id等信息）
-
-两种方式，另一种见下面 **支付宝小程序支付**
-
-> 支付宝换取授权访问令牌文档：[换取授权访问令牌](https://docs.open.alipay.com/api_9/alipay.system.oauth.token)
-
 ```go
-privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7YDHu5nMuxY6un+dLfo91OFOEg+RI+WTOPoM4xJtsOaJwQ1lpjycoeLq1OyetGW5Q8wO+iLWJASaMQM/t/aXR/JHaguycJyqlHSlxANvKKs/tOHx9AhW3LqumaCwz71CDF/+70scYuZG/7wxSjmrbRBswxd1Sz9KHdcdjqT8pmieyPqnM24EKBexHDmQ0ySXvLJJy6eu1dJsPIz+ivX6HEfDXmSmJ71AZVqZyCI1MhK813R5E7XCv5NOtskTe3y8uiIhgGpZSdB77DOyPLcmVayzFVLAQ3AOBDmsY6wIDAQABAoIBAHjsNq31zAw9FcR9orQJlPVd7vlJEt6Pybvmg8hNESfanO+16rpwg2kOEkS8zxgqoJ1tSzJgXu23fgzl3Go5fHcoVDWPAhUAOFre9+M7onh2nPXDd6Hbq6v8OEmFapSaf2b9biHnBHq5Chk08v/r74l501w3PVVOiPqulJrK1oVb+0/YmCvVFpGatBcNaefKUEcA+vekWPL7Yl46k6XeUvRfTwomCD6jpYLUhsAKqZiQJhMGoaLglZvkokQMF/4G78K7FbbVLMM1+JDh8zJ/DDVdY2vHREUcCGhl4mCVQtkzIbpxG++vFg7/g/fDI+PquG22hFILTDdtt2g2fV/4wmkCgYEA6goRQYSiM03y8Tt/M4u1Mm7OWYCksqAsU7rzQllHekIN3WjD41Xrjv6uklsX3sTG1syo7Jr9PGE1xQgjDEIyO8h/3lDQyLyycYnyUPGNNMX8ZjmGwcM51DQ/QfIrY/CXjnnW+MVpmNclAva3L33KXCWjw20VsROV1EA8LCL94BUCgYEA3wH4ANpzo7NqXf+2WlPPMuyRrF0QPIRGlFBNtaKFy0mvoclkREPmK7+N4NIGtMf5JNODS5HkFRgmU4YNdupA2I8lIYpD+TsIobZxGUKUkYzRZYZ1m1ttL69YYvCVz9Xosw/VoQ+RrW0scS5yUKqFMIUOV2R/Imi//c5TdKx6VP8CgYAnJ1ADugC4vI2sNdvt7618pnT3HEJxb8J6r4gKzYzbszlGlURQQAuMfKcP7RVtO1ZYkRyhmLxM4aZxNA9I+boVrlFWDAchzg+8VuunBwIslgLHx0/4EoUWLzd1/OGtco6oU1HXhI9J9pRGjqfO1iiIifN/ujwqx7AFNknayG/YkQKBgD6yNgA/ak12rovYzXKdp14Axn+39k2dPp6J6R8MnyLlB3yruwW6NSbNhtzTD1GZ+wCQepQvYvlPPc8zm+t3tl1r+Rtx3ORf5XBZc3iPkGdPOLubTssrrAnA+U9vph61W+OjqwLJ9sHUNK9pSHhHSIS4k6ycM2YAHyIC9NGTgB0PAoGAJjwd1DgMaQldtWnuXjvohPOo8cQudxXYcs6zVRbx6vtjKe2v7e+eK1SSVrR5qFV9AqxDfGwq8THenRa0LC3vNNplqostuehLhkWCKE7Y75vXMR7N6KU1kdoVWgN4BhXSwuRxmHMQfSY7q3HG3rDGz7mzXo1FVMr/uE4iDGm0IXY="
+//初始化支付宝客户端
+//    appId：应用ID
+//    privateKey：应用秘钥
+//    isProd：是否是正式环境
+client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
+
+//设置支付宝请求 公共参数
+//    注意：具体设置哪些参数，根据不同的方法而不同，此处列举出所以设置参数
+client.SetCharset("utf-8").                 //设置字符编码，不设置默认 utf-8
+	SetSignType("RSA2").                    //设置签名类型，不设置默认 RSA2
+	SetReturnUrl("https://www.gopay.ink").  //设置返回URL
+	SetNotifyUrl("https://www.gopay.ink").  //设置异步通知URL
+	SetAppAuthToken("").                    //设置第三方应用授权
+	SetAuthToken("")                        //设置个人信息授权
+```
+
+# 2、初始化并赋值BodyMap（client的方法所需的入参）
+
+* #### 微信请求参数
+
+具体参数请根据不同接口查看：[微信支付接口文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
+```go
+//初始化 BodyMap
+bm := make(gopay.BodyMap)
+bm.Set("nonce_str", gopay.GetRandomString(32))
+bm.Set("body", "小程序测试支付")
+bm.Set("out_trade_no", number)
+bm.Set("total_fee", 1)
+bm.Set("spbill_create_ip", "127.0.0.1")
+bm.Set("notify_url", "http://www.gopay.ink")
+bm.Set("trade_type", gopay.TradeType_Mini)
+bm.Set("device_info", "WEB")
+bm.Set("sign_type", gopay.SignType_MD5)
+bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
+
+//嵌套json格式数据（例如：H5支付的 scene_info 参数）
+h5Info := make(map[string]string)
+h5Info["type"] = "Wap"
+h5Info["wap_url"] = "http://www.gopay.ink"
+h5Info["wap_name"] = "H5测试支付"
+
+sceneInfo := make(map[string]map[string]string)
+sceneInfo["h5_info"] = h5Info
+
+bm.Set("scene_info", sceneInfo)
+
+//参数 sign ，可单独生成赋值到BodyMap中；也可不传sign参数，client内部会自动获取
+//如需单独赋值 sign 参数，需通过下面方法，最后获取sign值并在最后赋值此参数
+sign := gopay.GetWeChatParamSign("wxdaa2ab9ef87b5497", mchId, apiKey, body)
+//sign, _ := gopay.GetWeChatSanBoxParamSign("wxdaa2ab9ef87b5497", mchId, apiKey, body)
+bm.Set("sign", sign)
+```
+
+* #### 支付宝请求参数
+
+具体参数请根据不同接口查看：[支付宝支付API接口文档](https://docs.open.alipay.com/api_1/alipay.trade.wap.pay)
+```go
+//此时李
+//初始化 BodyMap
+bm := make(gopay.BodyMap)
+bm.Set("subject", "手机网站测试支付")
+bm.Set("out_trade_no", "GZ201901301040355703")
+bm.Set("quit_url", "https://www.gopay.ink")
+bm.Set("total_amount", "100.00")
+bm.Set("product_code", "QUICK_WAP_WAY")
+```
+
+# 3、client 方法调用
+
+* #### 微信 client 
+```go
+wxRsp, err := client.UnifiedOrder(bm)
+wxRsp, err := client.Micropay(bm)
+wxRsp, err := client.QueryOrder(bm)
+wxRsp, err := client.CloseOrder(bm)
+wxRsp, err := client.Reverse(bm, "apiclient_cert.pem", "apiclient_key.pem", "apiclient_cert.p12")
+wxRsp, err := client.Refund(bm, "apiclient_cert.pem", "apiclient_key.pem", "apiclient_cert.p12")
+wxRsp, err := client.QueryRefund(bm)
+wxRsp, err := client.DownloadBill(bm)
+wxRsp, err := client.DownloadFundFlow(bm, "apiclient_cert.pem", "apiclient_key.pem", "apiclient_cert.p12")
+wxRsp, err := client.BatchQueryComment(bm, "apiclient_cert.pem", "apiclient_key.pem", "apiclient_cert.p12")
+wxRsp, err := client.Transfer(bm, "apiclient_cert.pem", "apiclient_key.pem", "apiclient_cert.p12")
+```
+
+* #### 支付宝 client
+```go
+//手机网站支付是通过服务端获取支付URL后，然后返回给客户端，请求URL地址即可打开支付页面
+payUrl, err := client.AliPayTradeWapPay(bm)
+
+//电脑网站支付是通过服务端获取支付URL后，然后返回给客户端，请求URL地址即可打开支付页面
+payUrl, err := client.AliPayTradePagePay(bm)
+
+//APP支付是通过服务端获取支付参数后，然后通过Android/iOS客户端的SDK调用支付功能
+payParam, err := client.AliPayTradeAppPay(bm)
+
+//商家使用扫码枪等条码识别设备扫描用户支付宝钱包上的条码/二维码，完成收款
+aliRsp, err := client.AliPayTradePay(bm)
+
+//支付宝小程序支付时 buyer_id 为必传参数，需要提前获取，获取方法如下两种
+//    1、gopay.AliPaySystemOauthToken()     返回取值：rsp.AliPaySystemOauthTokenResponse.UserId
+//    2、client.AliPaySystemOauthToken()    返回取值：aliRsp.AliPaySystemOauthTokenResponse.UserId
+aliRsp, err := client.AliPayTradeCreate(bm)
+
+aliRsp, err := client.AliPayTradeQuery(bm)
+aliRsp, err := client.AliPayTradeClose(bm)
+aliRsp, err := client.AliPayTradeCancel(bm)
+aliRsp, err := client.AliPayTradeRefund(bm)
+aliRsp, err := client.AliPayTradePageRefund(bm)
+aliRsp, err := client.AliPayTradeFastPayRefundQuery(bm)
+aliRsp, err := client.AliPayTradeOrderSettle(bm)
+aliRsp, err := client.AliPayTradePrecreate(bm)
+aliRsp, err := client.AlipayFundTransToaccountTransfer(bm)
+aliRsp, err := client.AliPaySystemOauthToken(bm)
+aliRsp, err := client.AlipayOpenAuthTokenApp(bm)
+aliRsp, err := client.ZhimaCreditScoreGet(bm)
+```
+
+# 4、微信统一下单后，获取微信小程序支付、APP支付、微信内H5支付所需要的 paySign
+
+* #### 微信（只有微信需要此操作）
+微信小程序支付官方文档：[微信小程序支付API](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html)
+
+APP支付官方文档：[APP端调起支付的参数列表文档](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12)
+
+微信内H5支付官方文档：[微信内H5支付文档](https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6)
+```go
+//====微信小程序 paySign====
+timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
+prepayId := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一下单成功后得到
+//获取微信小程序支付的 paySign
+//    appId：APPID
+//    nonceStr：随即字符串
+//    prepayId：统一下单成功后得到的值
+//    signType：签名方式，务必与统一下单时用的签名方式一致
+//    timeStamp：时间
+//    apiKey：API秘钥值
+paySign := gopay.GetMiniPaySign(AppID, wxRsp.NonceStr, prepayId, gopay.SignType_MD5, timeStamp, apiKey)
+
+//====APP支付 paySign====
+timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
+//获取APP支付的 paySign
+//注意：package 参数因为是固定值，无需开发者再传入
+//    appId：APPID
+//    partnerid：partnerid
+//    nonceStr：随即字符串
+//    prepayId：统一下单成功后得到的值
+//    signType：签名方式，务必与统一下单时用的签名方式一致
+//    timeStamp：时间
+//    apiKey：API秘钥值
+paySign := gopay.GetAppPaySign(appid, partnerid, wxRsp.NonceStr, wxRsp.PrepayId, gopay.SignType_MD5, timeStamp, apiKey)
+
+//====微信内H5支付 paySign====
+timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
+packages := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一下单成功后得到
+//获取微信内H5支付 paySign
+//    appId：APPID
+//    nonceStr：随即字符串
+//    packages：统一下单成功后拼接得到的值
+//    signType：签名方式，务必与统一下单时用的签名方式一致
+//    timeStamp：时间
+//    apiKey：API秘钥值
+paySign := gopay.GetMiniPaySign(AppID, wxRsp.NonceStr, packages, gopay.SignType_MD5, timeStamp, apiKey)
+```
+
+# 5、同步返回参数验签Sign、异步通知参数解析和验签Sign、异步通知返回
+
+异步参数需要先解析，解析出来的结构体或BodyMap再验签
+
+[Echo Web框架](https://github.com/labstack/echo)，有兴趣的可以尝试一下
+
+异步通知处理完后，需回复平台固定数据
+
+* #### 微信
+```go
+//====同步返回参数验签Sign====
+wxRsp, err := client.UnifiedOrder(bm)
+//微信同步返回参数验签或异步通知参数验签
+//    apiKey：API秘钥值
+//    signType：签名类型（调用API方法时填写的类型）
+//    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
+//    返回参数 ok：是否验签通过
+//    返回参数 err：错误信息
+ok, err := gopay.VerifyWeChatSign(apiKey, gopay.SignType_MD5, wxRsp)
+
+//====异步通知参数解析和验签Sign====
+//解析异步通知的参数
+//    req：*http.Request
+//    返回参数 notifyReq：通知的参数
+//    返回参数 err：错误信息
+notifyReq, err := gopay.ParseWeChatNotifyResult(c.Request())    //c.Request()是 echo 框架的获取 *http.Request 的写法
+//验签操作
+ok, err := gopay.VerifyWeChatSign(apiKey, gopay.SignType_MD5, notifyReq)
+
+//==异步通知，返回给微信平台的信息==
+rsp := new(gopay.WeChatNotifyResponse) //回复微信的数据
+rsp.ReturnCode = gopay.SUCCESS
+rsp.ReturnMsg = gopay.OK
+return c.String(http.StatusOK, rsp.ToXmlString())   //此写法是 echo 框架返回客户端数据的写法
+```
+
+* #### 支付宝
+
+支付宝的**同步返回**验签，参数请注意看注释
+
+APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
+
+支付宝支付后的同步/异步通知验签文档：[支付结果通知](https://docs.open.alipay.com/200/106120)
+```go
+//====同步返回参数验签Sign====
+aliRsp, err := client.AliPayTradePay(bm)
+//支付宝同步返回验签或异步通知验签
+//    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
+//    aliPayPublicKey：支付宝公钥
+//    bean： 同步返回验签时，此参数为 aliRsp.SignData ；异步通知验签时，此参数为异步通知解析的结构体 notifyReq
+//    syncSign：同步返回验签时，此参数必传，即：aliRsp.Sign ；异步通知验签时，不要传此参数，否则会出错。
+//    返回参数ok：是否验签通过
+//    返回参数err：错误信息
+ok, err := gopay.VerifyAliPaySign(alipayPublicKey, aliRsp.SignData, aliRsp.Sign)
+
+//====异步通知参数解析和验签Sign====
+//解析异步通知的参数
+//    req：*http.Request
+//    返回参数 notifyReq：通知的参数
+//    返回参数 err：错误信息
+notifyReq, err = gopay.ParseAliPayNotifyResult(c.Request())     //c.Request()是 echo 框架的获取
+//验签操作
+ok, err = gopay.VerifyAliPaySign(alipayPublicKey, notifyReq)
+
+//==异步通知，返回支付宝平台的信息==
+//    文档：https://docs.open.alipay.com/203/105286
+//    程序执行完后必须打印输出“success”（不包含引号）。如果商户反馈给支付宝的字符不是success这7个字符，支付宝服务器会不断重发通知，直到超过24小时22分钟。一般情况下，25小时以内完成8次通知（通知的间隔频率一般是：4m,10m,10m,1h,2h,6h,15h）
+return c.String(http.StatusOK, "success")   //此写法是 echo 框架返回客户端数据的写法
+```
+
+# 6、微信、支付宝 公共API（仅部分说明）
+
+* #### 微信 公共API
+
+官方文档：[code2Session](https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html)
+
+button按钮获取手机号码：[button组件文档](https://developers.weixin.qq.com/miniprogram/dev/component/button.html)
+
+微信解密算法文档：[解密算法文档](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html)
+```go
+//获取微信小程序用户的OpenId、SessionKey、UnionId
+//    appId：微信小程序的APPID
+//    appSecret：微信小程序的AppSecret
+//    wxCode：小程序调用wx.login 获取的code
+sessionRsp, err := gopay.Code2Session(appId, appSecret, wxCode)
+
+//解密微信加密数据到指定结构体
+//    以小程序获取手机号为例
+phone := new(gopay.WeChatUserPhone)
+//解密开放数据
+//    encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
+//    iv：加密算法的初始向量，小程序获取到
+//    sessionKey：会话密钥，通过 gopay.Code2Session() 方法获取到
+//    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
+err := gopay.DecryptOpenDataToStruct(encryptedData, iv, sessionKey, phone)
+fmt.Println(*phone)
+```
+
+* #### 支付宝 公共API
+
+支付宝换取授权访问令牌文档：[换取授权访问令牌](https://docs.open.alipay.com/api_9/alipay.system.oauth.token)
+
+获取用户手机号文档：[获取用户手机号](https://docs.alipay.com/mini/api/getphonenumber)
+
+支付宝加解密文档：[AES配置文档](https://docs.alipay.com/mini/introduce/aes)，[AES加解密文档](https://docs.open.alipay.com/common/104567)
+```go
 //换取授权访问令牌（默认使用utf-8，RSA2）
 //    appId：应用ID
 //    privateKey：应用私钥
 //    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
 //    codeOrToken：支付宝授权码或refresh_token
-rsp, err := gopay.AlipaySystemOauthToken("2016091200494382", privateKey, "authorization_code", "06e8961891d647c0ac99bb1cebe7SE69")
-if err != nil {
-	fmt.Println("gopay.AlipaySystemOauthToken:",err)
-	return
-}
-fmt.Println("rsp:", *rsp)
-```
+rsp, err := gopay.AlipaySystemOauthToken(appId, privateKey, grantType, codeOrToken)
 
-### 支付宝（小程序）敏感加密数据解析
-
-> 拿小程序获取手机号为例
-
-获取用户手机号文档：[获取用户手机号](https://docs.alipay.com/mini/api/getphonenumber)
-
-敏感信息加解密官方文档：[敏感信息加解密方法](https://docs.alipay.com/mini/introduce/aes)
-```go
-data := "MkvuiIZsGOC8S038cu/JIpoRKnF+ZFjoIRGf5d/K4+ctYjCtb/eEkwgrdB5TeH/93bxff1Ylb+SE+UGStlpvcg=="
-key := "TDftre9FpItr46e9BVNJcw=="
-rsp := new(gopay.PhoneNumberResponse)
-err := gopay.DecryptAliPayOpenDataToStruct(data, key, rsp)
-if err != nil {
-	fmt.Println("err:", err)
-	return
-}
-fmt.Println("rsp.Code:", rsp.Code)
-fmt.Println("rsp.Msg:", rsp.Msg)
-fmt.Println("rsp.SubCode:", rsp.SubCode)
-fmt.Println("rsp.SubMsg:", rsp.SubMsg)
-fmt.Println("rsp.Mobile:", rsp.Mobile)
-```
-
-### 1、支付结果异步通知参数解析；2、同步返回/异步通知 参数验签
-
-> 支付宝支付后的同步/异步通知验签文档：[支付结果通知](https://docs.open.alipay.com/200/106120)
-
-* 同步返回参数验签（请注意看参数注释）
-    * 注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
-```go
-//请求条码支付
-aliRsp, err := client.AliPayTradePay(body)
-if err != nil {
-    fmt.Println("err:", err)
-    return
-}
-fmt.Println("aliRsp:", *aliRsp)
-
-aliPayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1wn1sU/8Q0rYLlZ6sq3enrPZw2ptp6FecHR2bBFLjJ+sKzepROd0bKddgj+Mr1ffr3Ej78mLdWV8IzLfpXUi945DkrQcOUWLY0MHhYVG2jSs/qzFfpzmtut2Cl2TozYpE84zom9ei06u2AXLMBkU6VpznZl+R4qIgnUfByt3Ix5b3h4Cl6gzXMAB1hJrrrCkq+WvWb3Fy0vmk/DUbJEz8i8mQPff2gsHBE1nMPvHVAMw1GMk9ImB4PxucVek4ZbUzVqxZXphaAgUXFK2FSFU+Q+q1SPvHbUsjtIyL+cLA6H/6ybFF9Ffp27Y14AHPw29+243/SpMisbGcj2KD+evBwIDAQAB"
-//支付宝同步返回验签或异步通知验签
-//    aliPayPublicKey：支付宝公钥
-//    bean： 同步返回验签时，此参数为 aliRsp.SignData ；异步通知验签时，此参数为异步通知解析的结构体 notifyReq
-//    syncSign：同步返回验签时，此参数必传，即：aliRsp.Sign ；异步通知验签时，不传此参数，否则会出错。
-//    返回参数ok：是否验签通过
-//    返回参数err：错误信息
-ok, err := gopay.VerifyAliPaySign(alipayPublicKey, aliRsp.SignData, aliRsp.Sign)
-if err != nil {
-    fmt.Println("gopay.VerifyAliPayResultSign:", err)
-}
-fmt.Println("同步返回验签：", ok)
-```
-
-* 异步返回参数验签（请注意看参数注释）
-
-```go
-//解析支付完成后的异步通知参数信息
-//此处 c.Request() 为 *http.Request
-notifyRsp, err := gopay.ParseAliPayNotifyResult(c.Request())
-if err != nil {
-    fmt.Println("gopay.ParseAliPayNotifyResult:", err)
-    return
-}
-fmt.Println("notifyRsp:", notifyRsp)
-
-aliPayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1wn1sU/8Q0rYLlZ6sq3enrPZw2ptp6FecHR2bBFLjJ+sKzepROd0bKddgj+Mr1ffr3Ej78mLdWV8IzLfpXUi945DkrQcOUWLY0MHhYVG2jSs/qzFfpzmtut2Cl2TozYpE84zom9ei06u2AXLMBkU6VpznZl+R4qIgnUfByt3Ix5b3h4Cl6gzXMAB1hJrrrCkq+WvWb3Fy0vmk/DUbJEz8i8mQPff2gsHBE1nMPvHVAMw1GMk9ImB4PxucVek4ZbUzVqxZXphaAgUXFK2FSFU+Q+q1SPvHbUsjtIyL+cLA6H/6ybFF9Ffp27Y14AHPw29+243/SpMisbGcj2KD+evBwIDAQAB"
-//支付宝同步返回验签或异步通知验签
-//    aliPayPublicKey：支付宝公钥
-//    bean： 同步返回验签时，此参数为 aliRsp.SignData ；异步通知验签时，此参数为异步通知解析的结构体 notifyReq
-//    syncSign：同步返回验签时，此参数必传，即：aliRsp.Sign ；异步通知验签时，不传此参数，否则会出错。
-//    返回参数ok：是否验签通过
-//    返回参数err：错误信息
-ok, err := gopay.VerifyAliPaySign(aliPayPublicKey, notifyRsp)
-if err != nil {
-	fmt.Println("gopay.VerifyAliPayResultSign:", err)
-}
-fmt.Println("异步返回验签:", ok)
-```
-
-### 支付宝付款结果异步通知，需回复支付宝平台是否成功
-
-* 程序执行完后必须打印输出“success”（不包含引号）。如果商户反馈给支付宝的字符不是success这7个字符，支付宝服务器会不断重发通知，直到超过24小时22分钟。一般情况下，25小时以内完成8次通知（通知的间隔频率一般是：4m,10m,10m,1h,2h,6h,15h）
-
-> 代码中return写法，由于本人用的 [Echo Web框架](https://github.com/labstack/echo)，有兴趣的可以尝试一下
-
-```go
-return c.String(http.StatusOK, "success")
-```
-
-### 手机网站支付
-
-* 手机网站支付是通过服务端获取支付URL后，然后返回给客户端，请求URL地址即可打开支付页面
-
-> 文档说明：[手机网站支付-请求参数说明](https://docs.open.alipay.com/203/107090/) 
-
-> 文档说明：[手机网站支付接口2.0](https://docs.open.alipay.com/api_1/alipay.trade.wap.pay/) 
-
-```go
-privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7YDHu5nMuxY6un+dLfo91OFOEg+RI+WTOPoM4xJtsOaJwQ1lpjycoeLq1OyetGW5Q8wO+iLWJASaMQM/t/aXR/JHaguycJyqlHSlxANvKKs/tOHx9AhW3LqumaCwz71CDF/+70scYuZG/7wxSjmrbRBswxd1Sz9KHdcdjqT8pmieyPqnM24EKBexHDmQ0ySXvLJJy6eu1dJsPIz+ivX6HEfDXmSmJ71AZVqZyCI1MhK813R5E7XCv5NOtskTe3y8uiIhgGpZSdB77DOyPLcmVayzFVLAQ3AOBDmsY6wIDAQABAoIBAHjsNq31zAw9FcR9orQJlPVd7vlJEt6Pybvmg8hNESfanO+16rpwg2kOEkS8zxgqoJ1tSzJgXu23fgzl3Go5fHcoVDWPAhUAOFre9+M7onh2nPXDd6Hbq6v8OEmFapSaf2b9biHnBHq5Chk08v/r74l501w3PVVOiPqulJrK1oVb+0/YmCvVFpGatBcNaefKUEcA+vekWPL7Yl46k6XeUvRfTwomCD6jpYLUhsAKqZiQJhMGoaLglZvkokQMF/4G78K7FbbVLMM1+JDh8zJ/DDVdY2vHREUcCGhl4mCVQtkzIbpxG++vFg7/g/fDI+PquG22hFILTDdtt2g2fV/4wmkCgYEA6goRQYSiM03y8Tt/M4u1Mm7OWYCksqAsU7rzQllHekIN3WjD41Xrjv6uklsX3sTG1syo7Jr9PGE1xQgjDEIyO8h/3lDQyLyycYnyUPGNNMX8ZjmGwcM51DQ/QfIrY/CXjnnW+MVpmNclAva3L33KXCWjw20VsROV1EA8LCL94BUCgYEA3wH4ANpzo7NqXf+2WlPPMuyRrF0QPIRGlFBNtaKFy0mvoclkREPmK7+N4NIGtMf5JNODS5HkFRgmU4YNdupA2I8lIYpD+TsIobZxGUKUkYzRZYZ1m1ttL69YYvCVz9Xosw/VoQ+RrW0scS5yUKqFMIUOV2R/Imi//c5TdKx6VP8CgYAnJ1ADugC4vI2sNdvt7618pnT3HEJxb8J6r4gKzYzbszlGlURQQAuMfKcP7RVtO1ZYkRyhmLxM4aZxNA9I+boVrlFWDAchzg+8VuunBwIslgLHx0/4EoUWLzd1/OGtco6oU1HXhI9J9pRGjqfO1iiIifN/ujwqx7AFNknayG/YkQKBgD6yNgA/ak12rovYzXKdp14Axn+39k2dPp6J6R8MnyLlB3yruwW6NSbNhtzTD1GZ+wCQepQvYvlPPc8zm+t3tl1r+Rtx3ORf5XBZc3iPkGdPOLubTssrrAnA+U9vph61W+OjqwLJ9sHUNK9pSHhHSIS4k6ycM2YAHyIC9NGTgB0PAoGAJjwd1DgMaQldtWnuXjvohPOo8cQudxXYcs6zVRbx6vtjKe2v7e+eK1SSVrR5qFV9AqxDfGwq8THenRa0LC3vNNplqostuehLhkWCKE7Y75vXMR7N6KU1kdoVWgN4BhXSwuRxmHMQfSY7q3HG3rDGz7mzXo1FVMr/uE4iDGm0IXY="
-//初始化支付宝客户端
-//    appId：应用ID
-//    privateKey：应用秘钥
-//    isProd：是否是正式环境
-client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
-//配置公共参数
-client.SetCharset("utf-8").
-	SetSignType("RSA2").
-	//SetAppAuthToken("").
-	//SetReturnUrl("https://www.gopay.ink").
-	SetNotifyUrl("https://www.gopay.ink")
-//请求参数
-body := make(gopay.BodyMap)
-body.Set("subject", "测试支付")
-body.Set("out_trade_no", "GYWX201901301040355706100409")
-body.Set("quit_url", "https://www.gopay.ink")
-body.Set("total_amount", "10.00")
-body.Set("product_code", "QUICK_WAP_WAY")
-//手机网站支付请求
-payUrl, err := client.AliPayTradeWapPay(body)
-if err != nil {
-	log.Println("err:", err)
-	return
-}
-fmt.Println("payUrl:", payUrl)
-```
-
-### APP支付
-
-* APP支付是通过服务端获取支付参数后，然后通过Android/iOS客户端的SDK调用支付功能
-
-> 文档说明：[APP支付-请求参数说明](https://docs.open.alipay.com/204/105465/) 
-
-> 文档说明：[APP支付接口2.0](https://docs.open.alipay.com/api_1/alipay.trade.app.pay/) 
-
-```go
-privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7YDHu5nMuxY6un+dLfo91OFOEg+RI+WTOPoM4xJtsOaJwQ1lpjycoeLq1OyetGW5Q8wO+iLWJASaMQM/t/aXR/JHaguycJyqlHSlxANvKKs/tOHx9AhW3LqumaCwz71CDF/+70scYuZG/7wxSjmrbRBswxd1Sz9KHdcdjqT8pmieyPqnM24EKBexHDmQ0ySXvLJJy6eu1dJsPIz+ivX6HEfDXmSmJ71AZVqZyCI1MhK813R5E7XCv5NOtskTe3y8uiIhgGpZSdB77DOyPLcmVayzFVLAQ3AOBDmsY6wIDAQABAoIBAHjsNq31zAw9FcR9orQJlPVd7vlJEt6Pybvmg8hNESfanO+16rpwg2kOEkS8zxgqoJ1tSzJgXu23fgzl3Go5fHcoVDWPAhUAOFre9+M7onh2nPXDd6Hbq6v8OEmFapSaf2b9biHnBHq5Chk08v/r74l501w3PVVOiPqulJrK1oVb+0/YmCvVFpGatBcNaefKUEcA+vekWPL7Yl46k6XeUvRfTwomCD6jpYLUhsAKqZiQJhMGoaLglZvkokQMF/4G78K7FbbVLMM1+JDh8zJ/DDVdY2vHREUcCGhl4mCVQtkzIbpxG++vFg7/g/fDI+PquG22hFILTDdtt2g2fV/4wmkCgYEA6goRQYSiM03y8Tt/M4u1Mm7OWYCksqAsU7rzQllHekIN3WjD41Xrjv6uklsX3sTG1syo7Jr9PGE1xQgjDEIyO8h/3lDQyLyycYnyUPGNNMX8ZjmGwcM51DQ/QfIrY/CXjnnW+MVpmNclAva3L33KXCWjw20VsROV1EA8LCL94BUCgYEA3wH4ANpzo7NqXf+2WlPPMuyRrF0QPIRGlFBNtaKFy0mvoclkREPmK7+N4NIGtMf5JNODS5HkFRgmU4YNdupA2I8lIYpD+TsIobZxGUKUkYzRZYZ1m1ttL69YYvCVz9Xosw/VoQ+RrW0scS5yUKqFMIUOV2R/Imi//c5TdKx6VP8CgYAnJ1ADugC4vI2sNdvt7618pnT3HEJxb8J6r4gKzYzbszlGlURQQAuMfKcP7RVtO1ZYkRyhmLxM4aZxNA9I+boVrlFWDAchzg+8VuunBwIslgLHx0/4EoUWLzd1/OGtco6oU1HXhI9J9pRGjqfO1iiIifN/ujwqx7AFNknayG/YkQKBgD6yNgA/ak12rovYzXKdp14Axn+39k2dPp6J6R8MnyLlB3yruwW6NSbNhtzTD1GZ+wCQepQvYvlPPc8zm+t3tl1r+Rtx3ORf5XBZc3iPkGdPOLubTssrrAnA+U9vph61W+OjqwLJ9sHUNK9pSHhHSIS4k6ycM2YAHyIC9NGTgB0PAoGAJjwd1DgMaQldtWnuXjvohPOo8cQudxXYcs6zVRbx6vtjKe2v7e+eK1SSVrR5qFV9AqxDfGwq8THenRa0LC3vNNplqostuehLhkWCKE7Y75vXMR7N6KU1kdoVWgN4BhXSwuRxmHMQfSY7q3HG3rDGz7mzXo1FVMr/uE4iDGm0IXY="
-//初始化支付宝客户端
-//    appId：应用ID
-//    privateKey：应用秘钥
-//    isProd：是否是正式环境
-client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
-//配置公共参数
-client.SetCharset("utf-8").
-	SetSignType("RSA2").
-	//SetAppAuthToken("").
-	//SetReturnUrl("https://www.gopay.ink").
-	SetNotifyUrl("https://www.gopay.ink")
-//请求参数
-body := make(gopay.BodyMap)
-body.Set("subject", "测试APP支付")
-body.Set("out_trade_no", "GYWX201901301040355706100411")
-body.Set("total_amount", "1.00")
-//手机APP支付参数请求
-payParam, err := client.AliPayTradeAppPay(body)
-if err != nil {
-	fmt.Println("err:", err)
-	return
-}
-fmt.Println("payParam:", payParam)
-```
-
-### 电脑网站支付
-
-* 电脑网站支付是通过服务端获取支付URL后，然后返回给客户端，请求URL地址即可打开支付页面
-
-> 文档说明：[电脑网站支付](https://docs.open.alipay.com/270) 
-
-> 文档说明：[统一收单下单并支付页面接口](https://docs.open.alipay.com/api_1/alipay.trade.page.pay) 
-
-```go
-privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7YDHu5nMuxY6un+dLfo91OFOEg+RI+WTOPoM4xJtsOaJwQ1lpjycoeLq1OyetGW5Q8wO+iLWJASaMQM/t/aXR/JHaguycJyqlHSlxANvKKs/tOHx9AhW3LqumaCwz71CDF/+70scYuZG/7wxSjmrbRBswxd1Sz9KHdcdjqT8pmieyPqnM24EKBexHDmQ0ySXvLJJy6eu1dJsPIz+ivX6HEfDXmSmJ71AZVqZyCI1MhK813R5E7XCv5NOtskTe3y8uiIhgGpZSdB77DOyPLcmVayzFVLAQ3AOBDmsY6wIDAQABAoIBAHjsNq31zAw9FcR9orQJlPVd7vlJEt6Pybvmg8hNESfanO+16rpwg2kOEkS8zxgqoJ1tSzJgXu23fgzl3Go5fHcoVDWPAhUAOFre9+M7onh2nPXDd6Hbq6v8OEmFapSaf2b9biHnBHq5Chk08v/r74l501w3PVVOiPqulJrK1oVb+0/YmCvVFpGatBcNaefKUEcA+vekWPL7Yl46k6XeUvRfTwomCD6jpYLUhsAKqZiQJhMGoaLglZvkokQMF/4G78K7FbbVLMM1+JDh8zJ/DDVdY2vHREUcCGhl4mCVQtkzIbpxG++vFg7/g/fDI+PquG22hFILTDdtt2g2fV/4wmkCgYEA6goRQYSiM03y8Tt/M4u1Mm7OWYCksqAsU7rzQllHekIN3WjD41Xrjv6uklsX3sTG1syo7Jr9PGE1xQgjDEIyO8h/3lDQyLyycYnyUPGNNMX8ZjmGwcM51DQ/QfIrY/CXjnnW+MVpmNclAva3L33KXCWjw20VsROV1EA8LCL94BUCgYEA3wH4ANpzo7NqXf+2WlPPMuyRrF0QPIRGlFBNtaKFy0mvoclkREPmK7+N4NIGtMf5JNODS5HkFRgmU4YNdupA2I8lIYpD+TsIobZxGUKUkYzRZYZ1m1ttL69YYvCVz9Xosw/VoQ+RrW0scS5yUKqFMIUOV2R/Imi//c5TdKx6VP8CgYAnJ1ADugC4vI2sNdvt7618pnT3HEJxb8J6r4gKzYzbszlGlURQQAuMfKcP7RVtO1ZYkRyhmLxM4aZxNA9I+boVrlFWDAchzg+8VuunBwIslgLHx0/4EoUWLzd1/OGtco6oU1HXhI9J9pRGjqfO1iiIifN/ujwqx7AFNknayG/YkQKBgD6yNgA/ak12rovYzXKdp14Axn+39k2dPp6J6R8MnyLlB3yruwW6NSbNhtzTD1GZ+wCQepQvYvlPPc8zm+t3tl1r+Rtx3ORf5XBZc3iPkGdPOLubTssrrAnA+U9vph61W+OjqwLJ9sHUNK9pSHhHSIS4k6ycM2YAHyIC9NGTgB0PAoGAJjwd1DgMaQldtWnuXjvohPOo8cQudxXYcs6zVRbx6vtjKe2v7e+eK1SSVrR5qFV9AqxDfGwq8THenRa0LC3vNNplqostuehLhkWCKE7Y75vXMR7N6KU1kdoVWgN4BhXSwuRxmHMQfSY7q3HG3rDGz7mzXo1FVMr/uE4iDGm0IXY="
-//初始化支付宝客户端
-//    appId：应用ID
-//    privateKey：应用秘钥
-//    isProd：是否是正式环境
-client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
-//配置公共参数
-client.SetCharset("utf-8").
-	SetSignType("RSA2").
-	//SetAppAuthToken("").
-	//SetReturnUrl("https://www.gopay.ink").
-	SetNotifyUrl("https://www.gopay.ink")
-//请求参数
-body := make(gopay.BodyMap)
-body.Set("subject", "网站测试支付")
-body.Set("out_trade_no", "GYWX201901301040355706100418")
-body.Set("total_amount", "88.88")
-body.Set("product_code", "FAST_INSTANT_TRADE_PAY")
-
-//电脑网站支付请求
-payUrl, err := client.AliPayTradePagePay(body)
-if err != nil {
-	fmt.Println("err:", err)
-	return
-}
-fmt.Println("payUrl:", payUrl)
-```
-
-### 当面付-条码支付
-
-* 商家使用扫码枪等条码识别设备扫描用户支付宝钱包上的条码/二维码，完成收款。
-
-> 文档说明：[当面付-条码支付](https://docs.open.alipay.com/194) 
-
-> 文档说明：[统一收单交易支付接口](https://docs.open.alipay.com/api_1/alipay.trade.pay) 
-
-```go
-privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7YDHu5nMuxY6un+dLfo91OFOEg+RI+WTOPoM4xJtsOaJwQ1lpjycoeLq1OyetGW5Q8wO+iLWJASaMQM/t/aXR/JHaguycJyqlHSlxANvKKs/tOHx9AhW3LqumaCwz71CDF/+70scYuZG/7wxSjmrbRBswxd1Sz9KHdcdjqT8pmieyPqnM24EKBexHDmQ0ySXvLJJy6eu1dJsPIz+ivX6HEfDXmSmJ71AZVqZyCI1MhK813R5E7XCv5NOtskTe3y8uiIhgGpZSdB77DOyPLcmVayzFVLAQ3AOBDmsY6wIDAQABAoIBAHjsNq31zAw9FcR9orQJlPVd7vlJEt6Pybvmg8hNESfanO+16rpwg2kOEkS8zxgqoJ1tSzJgXu23fgzl3Go5fHcoVDWPAhUAOFre9+M7onh2nPXDd6Hbq6v8OEmFapSaf2b9biHnBHq5Chk08v/r74l501w3PVVOiPqulJrK1oVb+0/YmCvVFpGatBcNaefKUEcA+vekWPL7Yl46k6XeUvRfTwomCD6jpYLUhsAKqZiQJhMGoaLglZvkokQMF/4G78K7FbbVLMM1+JDh8zJ/DDVdY2vHREUcCGhl4mCVQtkzIbpxG++vFg7/g/fDI+PquG22hFILTDdtt2g2fV/4wmkCgYEA6goRQYSiM03y8Tt/M4u1Mm7OWYCksqAsU7rzQllHekIN3WjD41Xrjv6uklsX3sTG1syo7Jr9PGE1xQgjDEIyO8h/3lDQyLyycYnyUPGNNMX8ZjmGwcM51DQ/QfIrY/CXjnnW+MVpmNclAva3L33KXCWjw20VsROV1EA8LCL94BUCgYEA3wH4ANpzo7NqXf+2WlPPMuyRrF0QPIRGlFBNtaKFy0mvoclkREPmK7+N4NIGtMf5JNODS5HkFRgmU4YNdupA2I8lIYpD+TsIobZxGUKUkYzRZYZ1m1ttL69YYvCVz9Xosw/VoQ+RrW0scS5yUKqFMIUOV2R/Imi//c5TdKx6VP8CgYAnJ1ADugC4vI2sNdvt7618pnT3HEJxb8J6r4gKzYzbszlGlURQQAuMfKcP7RVtO1ZYkRyhmLxM4aZxNA9I+boVrlFWDAchzg+8VuunBwIslgLHx0/4EoUWLzd1/OGtco6oU1HXhI9J9pRGjqfO1iiIifN/ujwqx7AFNknayG/YkQKBgD6yNgA/ak12rovYzXKdp14Axn+39k2dPp6J6R8MnyLlB3yruwW6NSbNhtzTD1GZ+wCQepQvYvlPPc8zm+t3tl1r+Rtx3ORf5XBZc3iPkGdPOLubTssrrAnA+U9vph61W+OjqwLJ9sHUNK9pSHhHSIS4k6ycM2YAHyIC9NGTgB0PAoGAJjwd1DgMaQldtWnuXjvohPOo8cQudxXYcs6zVRbx6vtjKe2v7e+eK1SSVrR5qFV9AqxDfGwq8THenRa0LC3vNNplqostuehLhkWCKE7Y75vXMR7N6KU1kdoVWgN4BhXSwuRxmHMQfSY7q3HG3rDGz7mzXo1FVMr/uE4iDGm0IXY="
-//初始化支付宝客户端
-//    appId：应用ID
-//    privateKey：应用秘钥
-//    isProd：是否是正式环境
-client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
-//配置公共参数
-client.SetCharset("utf-8").
-	SetSignType("RSA2").
-	//SetAppAuthToken("").
-	//SetReturnUrl("https://www.gopay.ink").
-	SetNotifyUrl("https://www.gopay.ink")
-//请求参数
-body := make(gopay.BodyMap)
-body.Set("subject", "条码支付")
-body.Set("scene", "bar_code")
-body.Set("auth_code", "285860185283886370")
-body.Set("out_trade_no", "GYWX201901301040355706100456")
-body.Set("total_amount", "10.00")
-body.Set("timeout_express", "2m")
-
-//当面付-条码支付
-aliRsp, err := client.AliPayTradePay(body)
-if err != nil {
-	fmt.Println("err:", err)
-	return
-}
-fmt.Println("aliRsp:", *aliRsp)
-```
-
-
-### 支付宝小程序支付
-
-* 支付宝小程序支付时 buyer_id 为必传参数，需要提前获取，获取方法如下两种，下面示例代码使用的第二种
-    * gopay.AliPaySystemOauthToken()
-    * client.AliPaySystemOauthToken()
-
-> 获取用户user_id文档：[换取授权访问令牌](https://docs.open.alipay.com/api_9/alipay.system.oauth.token) 
-
-> 创建支付订单文档：[统一收单交易创建接口](https://docs.open.alipay.com/api_1/alipay.trade.create) 
-
-> 支付宝小程序支付文档：[小程序唤起支付](https://docs.alipay.com/mini/api/openapi-pay) 
-```go
-privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7YDHu5nMuxY6un+dLfo91OFOEg+RI+WTOPoM4xJtsOaJwQ1lpjycoeLq1OyetGW5Q8wO+iLWJASaMQM/t/aXR/JHaguycJyqlHSlxANvKKs/tOHx9AhW3LqumaCwz71CDF/+70scYuZG/7wxSjmrbRBswxd1Sz9KHdcdjqT8pmieyPqnM24EKBexHDmQ0ySXvLJJy6eu1dJsPIz+ivX6HEfDXmSmJ71AZVqZyCI1MhK813R5E7XCv5NOtskTe3y8uiIhgGpZSdB77DOyPLcmVayzFVLAQ3AOBDmsY6wIDAQABAoIBAHjsNq31zAw9FcR9orQJlPVd7vlJEt6Pybvmg8hNESfanO+16rpwg2kOEkS8zxgqoJ1tSzJgXu23fgzl3Go5fHcoVDWPAhUAOFre9+M7onh2nPXDd6Hbq6v8OEmFapSaf2b9biHnBHq5Chk08v/r74l501w3PVVOiPqulJrK1oVb+0/YmCvVFpGatBcNaefKUEcA+vekWPL7Yl46k6XeUvRfTwomCD6jpYLUhsAKqZiQJhMGoaLglZvkokQMF/4G78K7FbbVLMM1+JDh8zJ/DDVdY2vHREUcCGhl4mCVQtkzIbpxG++vFg7/g/fDI+PquG22hFILTDdtt2g2fV/4wmkCgYEA6goRQYSiM03y8Tt/M4u1Mm7OWYCksqAsU7rzQllHekIN3WjD41Xrjv6uklsX3sTG1syo7Jr9PGE1xQgjDEIyO8h/3lDQyLyycYnyUPGNNMX8ZjmGwcM51DQ/QfIrY/CXjnnW+MVpmNclAva3L33KXCWjw20VsROV1EA8LCL94BUCgYEA3wH4ANpzo7NqXf+2WlPPMuyRrF0QPIRGlFBNtaKFy0mvoclkREPmK7+N4NIGtMf5JNODS5HkFRgmU4YNdupA2I8lIYpD+TsIobZxGUKUkYzRZYZ1m1ttL69YYvCVz9Xosw/VoQ+RrW0scS5yUKqFMIUOV2R/Imi//c5TdKx6VP8CgYAnJ1ADugC4vI2sNdvt7618pnT3HEJxb8J6r4gKzYzbszlGlURQQAuMfKcP7RVtO1ZYkRyhmLxM4aZxNA9I+boVrlFWDAchzg+8VuunBwIslgLHx0/4EoUWLzd1/OGtco6oU1HXhI9J9pRGjqfO1iiIifN/ujwqx7AFNknayG/YkQKBgD6yNgA/ak12rovYzXKdp14Axn+39k2dPp6J6R8MnyLlB3yruwW6NSbNhtzTD1GZ+wCQepQvYvlPPc8zm+t3tl1r+Rtx3ORf5XBZc3iPkGdPOLubTssrrAnA+U9vph61W+OjqwLJ9sHUNK9pSHhHSIS4k6ycM2YAHyIC9NGTgB0PAoGAJjwd1DgMaQldtWnuXjvohPOo8cQudxXYcs6zVRbx6vtjKe2v7e+eK1SSVrR5qFV9AqxDfGwq8THenRa0LC3vNNplqostuehLhkWCKE7Y75vXMR7N6KU1kdoVWgN4BhXSwuRxmHMQfSY7q3HG3rDGz7mzXo1FVMr/uE4iDGm0IXY="
-//初始化支付宝客户端
-//    appId：应用ID
-//    privateKey：应用秘钥
-//    isProd：是否是正式环境
-client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
-//配置公共参数
-client.SetCharset("utf-8").
-    SetSignType("RSA2").
-    SetNotifyUrl("https://www.gopay.ink")
-//请求参数
-body := make(gopay.BodyMap)
-body.Set("grant_type", "authorization_code")
-body.Set("code", "46523714c2654d0583d91aaa862aOF69")
-
-//换取授权访问令牌（得到access_token，user_id等信息）
-aliRsp, err := client.AliPaySystemOauthToken(body)
-if err != nil {
-    fmt.Println("err:", err)
-    return
-}
-fmt.Println("aliRsp:", *aliRsp)
-
-//支付宝小程序创建订单
-body2 := make(gopay.BodyMap)
-body2.Set("subject", "创建订单")
-body2.Set("buyer_id", aliRsp.AliPaySystemOauthTokenResponse.UserId)
-body2.Set("out_trade_no", "GZ201901301040355708")
-body2.Set("total_amount", "0.01")
-
-aliRsp2, err := client.AliPayTradeCreate(body2)
-if err != nil {
-    fmt.Println("err:", err)
-    return
-}
-fmt.Println("rsp:", *rsp)
-//此参数为支付宝小程序支付所需要的参数
-fmt.Println("TradeNo:", rsp.AliPayTradeCreateResponse.TradeNo)
-```
-
-### 统一收单交易退款接口
-
-注意：交易订单退款接口，具体条件请看官方文档介绍
-
-> 文档说明：[统一收单交易退款接口](https://docs.open.alipay.com/api_1/alipay.trade.refund) 
-
-```go
-privateKey := "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7YDHu5nMuxY6un+dLfo91OFOEg+RI+WTOPoM4xJtsOaJwQ1lpjycoeLq1OyetGW5Q8wO+iLWJASaMQM/t/aXR/JHaguycJyqlHSlxANvKKs/tOHx9AhW3LqumaCwz71CDF/+70scYuZG/7wxSjmrbRBswxd1Sz9KHdcdjqT8pmieyPqnM24EKBexHDmQ0ySXvLJJy6eu1dJsPIz+ivX6HEfDXmSmJ71AZVqZyCI1MhK813R5E7XCv5NOtskTe3y8uiIhgGpZSdB77DOyPLcmVayzFVLAQ3AOBDmsY6wIDAQABAoIBAHjsNq31zAw9FcR9orQJlPVd7vlJEt6Pybvmg8hNESfanO+16rpwg2kOEkS8zxgqoJ1tSzJgXu23fgzl3Go5fHcoVDWPAhUAOFre9+M7onh2nPXDd6Hbq6v8OEmFapSaf2b9biHnBHq5Chk08v/r74l501w3PVVOiPqulJrK1oVb+0/YmCvVFpGatBcNaefKUEcA+vekWPL7Yl46k6XeUvRfTwomCD6jpYLUhsAKqZiQJhMGoaLglZvkokQMF/4G78K7FbbVLMM1+JDh8zJ/DDVdY2vHREUcCGhl4mCVQtkzIbpxG++vFg7/g/fDI+PquG22hFILTDdtt2g2fV/4wmkCgYEA6goRQYSiM03y8Tt/M4u1Mm7OWYCksqAsU7rzQllHekIN3WjD41Xrjv6uklsX3sTG1syo7Jr9PGE1xQgjDEIyO8h/3lDQyLyycYnyUPGNNMX8ZjmGwcM51DQ/QfIrY/CXjnnW+MVpmNclAva3L33KXCWjw20VsROV1EA8LCL94BUCgYEA3wH4ANpzo7NqXf+2WlPPMuyRrF0QPIRGlFBNtaKFy0mvoclkREPmK7+N4NIGtMf5JNODS5HkFRgmU4YNdupA2I8lIYpD+TsIobZxGUKUkYzRZYZ1m1ttL69YYvCVz9Xosw/VoQ+RrW0scS5yUKqFMIUOV2R/Imi//c5TdKx6VP8CgYAnJ1ADugC4vI2sNdvt7618pnT3HEJxb8J6r4gKzYzbszlGlURQQAuMfKcP7RVtO1ZYkRyhmLxM4aZxNA9I+boVrlFWDAchzg+8VuunBwIslgLHx0/4EoUWLzd1/OGtco6oU1HXhI9J9pRGjqfO1iiIifN/ujwqx7AFNknayG/YkQKBgD6yNgA/ak12rovYzXKdp14Axn+39k2dPp6J6R8MnyLlB3yruwW6NSbNhtzTD1GZ+wCQepQvYvlPPc8zm+t3tl1r+Rtx3ORf5XBZc3iPkGdPOLubTssrrAnA+U9vph61W+OjqwLJ9sHUNK9pSHhHSIS4k6ycM2YAHyIC9NGTgB0PAoGAJjwd1DgMaQldtWnuXjvohPOo8cQudxXYcs6zVRbx6vtjKe2v7e+eK1SSVrR5qFV9AqxDfGwq8THenRa0LC3vNNplqostuehLhkWCKE7Y75vXMR7N6KU1kdoVWgN4BhXSwuRxmHMQfSY7q3HG3rDGz7mzXo1FVMr/uE4iDGm0IXY="
-//初始化支付宝客户端
-//    appId：应用ID
-//    privateKey：应用秘钥
-//    isProd：是否是正式环境
-client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
-//配置公共参数
-client.SetCharset("utf-8").
-	SetSignType("RSA2")
-//请求参数
-body := make(gopay.BodyMap)
-body.Set("out_trade_no", "GZ201907261437329516")
-body.Set("refund_amount", "100.00")
-body.Set("refund_reason", "测试支付退款")
-//发起退款请求
-aliRsp, err := client.AliPayTradeRefund(body)
-if err != nil {
-	fmt.Println("err:", err)
-	return
-}
-fmt.Println("aliRsp:", *aliRsp)
+//解密支付宝开放数据带到指定结构体
+//    以小程序获取手机号为例
+phone := new(gopay.AliPayUserPhone)
+//解密支付宝开放数据
+//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
+//    secretKey:AES密钥，支付宝管理平台配置
+//    beanPtr:需要解析到的结构体指针
+err := gopay.DecryptAliPayOpenDataToStruct(encryptedData, secretKey, phone)
+fmt.Println(*phone)
 ```
 
 ## License

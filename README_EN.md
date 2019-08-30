@@ -472,7 +472,7 @@ Alipay decryption algorithm document：[Decryption Algorithm](https://docs.alipa
 ```go
 data := "MkvuiIZsGOC8S038cu/JIpoRKnF+ZFjoIRGf5d/K4+ctYjCtb/eEkwgrdB5TeH/93bxff1Ylb+SE+UGStlpvcg=="
 key := "TDftre9FpItr46e9BVNJcw=="
-rsp := new(gopay.PhoneNumberResponse)
+rsp := new(gopay.AliPayUserPhone)
 err := gopay.DecryptAliPayOpenDataToStruct(data, key, rsp)
 if err != nil {
 	fmt.Println("err:", err)

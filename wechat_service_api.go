@@ -267,13 +267,13 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey strin
 //微信内H5支付，统一下单获取支付参数后，再次计算出微信内H5支付需要用的paySign
 //    appId：APPID
 //    nonceStr：随即字符串
-//    prepayId：统一下单成功后得到的值
+//    packages：统一下单成功后拼接得到的值
 //    signType：签名类型
 //    timeStamp：时间
 //    apiKey：API秘钥值
 //
 //    微信内H5支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6
-func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
+func GetH5PaySign(appId, nonceStr, packages, signType, timeStamp, apiKey string) (paySign string) {
 	var buffer strings.Builder
 	buffer.WriteString("appId=")
 	buffer.WriteString(appId)
@@ -282,7 +282,7 @@ func GetH5PaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string)
 	buffer.WriteString(nonceStr)
 
 	buffer.WriteString("&package=")
-	buffer.WriteString(prepayId)
+	buffer.WriteString(packages)
 
 	buffer.WriteString("&signType=")
 	buffer.WriteString(signType)
@@ -358,10 +358,10 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 }
 
 //解密开放数据
-//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
-//    iv:加密算法的初始向量
-//    sessionKey:会话密钥
-//    beanPtr:需要解析到的结构体指针
+//    encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
+//    iv：加密算法的初始向量，小程序获取到
+//    sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
+//    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr interface{}) (err error) {
 	//验证参数类型
