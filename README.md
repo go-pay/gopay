@@ -282,7 +282,7 @@ timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
 prepayId := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一下单成功后得到
 //获取微信小程序支付的 paySign
 //    appId：APPID
-//    nonceStr：随即字符串
+//    nonceStr：随机字符串
 //    prepayId：统一下单成功后得到的值
 //    signType：签名方式，务必与统一下单时用的签名方式一致
 //    timeStamp：时间
@@ -295,7 +295,7 @@ timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
 //注意：package 参数因为是固定值，无需开发者再传入
 //    appId：APPID
 //    partnerid：partnerid
-//    nonceStr：随即字符串
+//    nonceStr：随机字符串
 //    prepayId：统一下单成功后得到的值
 //    signType：签名方式，务必与统一下单时用的签名方式一致
 //    timeStamp：时间
@@ -307,7 +307,7 @@ timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
 packages := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一下单成功后得到
 //获取微信内H5支付 paySign
 //    appId：APPID
-//    nonceStr：随即字符串
+//    nonceStr：随机字符串
 //    packages：统一下单成功后拼接得到的值
 //    signType：签名方式，务必与统一下单时用的签名方式一致
 //    timeStamp：时间
