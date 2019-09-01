@@ -7,11 +7,12 @@
 
 The Golang SDK for WeChat and AliPay
 
-[![](https://img.shields.io/badge/Author-Jerry-blue.svg)](https://www.gopay.ink)
-[![](https://img.shields.io/badge/Golang-1.11+-brightgreen.svg)](https://golang.org)
-[![](https://img.shields.io/badge/Version-1.3.3-blue.svg)](https://www.gopay.ink)
-[![](https://api.travis-ci.org/iGoogle-ink/gopay.svg?branch=master)]()
-[![](https://img.shields.io/badge/License-Apache_2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+![Author](https://img.shields.io/badge/author-Jerry-blue.svg)
+[![Golang](https://img.shields.io/badge/golang-1.11+-brightgreen.svg)](https://golang.org)
+[![Golang](https://img.shields.io/badge/godoc-reference-informational.svg)](https://godoc.org/github.com/iGoogle-ink/gopay)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/iGoogle-ink/gopay)
+![Travis (.org)](https://img.shields.io/travis/iGoogle-ink/gopay)
+![GitHub](https://img.shields.io/github/license/iGoogle-ink/gopay)
 
 ## WeChat Client
 
