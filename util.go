@@ -271,7 +271,11 @@ func Int642String(intNum int64) (int64Str string) {
 func PKCS7UnPadding(origData []byte) (bs []byte) {
 	length := len(origData)
 	unpaddingNumber := int(origData[length-1]) //找到Byte数组最后的填充byte 数字
-	bs = origData[:(length - unpaddingNumber)] //只截取返回有效数字内的byte数组
+	if unpaddingNumber <= 16 {
+		bs = origData[:(length - unpaddingNumber)] //只截取返回有效数字内的byte数组
+	} else {
+		bs = origData
+	}
 	return
 }
 
@@ -280,6 +284,10 @@ func PKCS7UnPadding(origData []byte) (bs []byte) {
 func PKCS5UnPadding(origData []byte) (bs []byte) {
 	length := len(origData)
 	unpaddingNumber := int(origData[length-1]) //找到Byte数组最后的填充byte
-	bs = origData[:(length - unpaddingNumber)] //只截取返回有效数字内的byte数组
+	if unpaddingNumber <= 16 {
+		bs = origData[:(length - unpaddingNumber)] //只截取返回有效数字内的byte数组
+	} else {
+		bs = origData
+	}
 	return
 }
