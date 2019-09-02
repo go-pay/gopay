@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
+	"fmt"
 	"github.com/parnurzeal/gorequest"
 	"io/ioutil"
 	"net/http"
@@ -82,13 +83,13 @@ func ParseWeChatNotifyResultToBodyMap(req *http.Request) (bm BodyMap, err error)
 	bs, err := ioutil.ReadAll(req.Body)
 	defer req.Body.Close()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("ioutil.ReadAll：%v", err.Error())
 	}
 	//获取Notify请求参数
 	bm = make(BodyMap)
 	err = xml.Unmarshal(bs, &bm)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 	}
 
 	return
@@ -103,7 +104,7 @@ func ParseWeChatNotifyResult(req *http.Request) (notifyReq *WeChatNotifyRequest,
 	defer req.Body.Close()
 	err = xml.NewDecoder(req.Body).Decode(notifyReq)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("xml.NewDecoder：%v", err.Error())
 	}
 	return
 }
@@ -184,13 +185,13 @@ func VerifyWeChatSign(apiKey, signType string, bean interface{}) (ok bool, err e
 
 	bs, err = json.Marshal(bean)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("json.Marshal：%v", err.Error())
 	}
 
 	bm = make(BodyMap)
 	err = json.Unmarshal(bs, &bm)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("json.Unmarshal：%v", err.Error())
 	}
 Verify:
 	bodySign := bm.Get("sign")
@@ -363,7 +364,7 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 //    sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
 //    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
-func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr interface{}) (err error) {
+func DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr interface{}) (err error) {
 	//验证参数类型
 	beanValue := reflect.ValueOf(beanPtr)
 	if beanValue.Kind() != reflect.Ptr {
@@ -373,9 +374,9 @@ func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr inter
 	if beanValue.Elem().Kind() != reflect.Struct {
 		return errors.New("传入interface{}必须是结构体")
 	}
+	cipherText, _ := base64.StdEncoding.DecodeString(encryptedData)
 	aesKey, _ := base64.StdEncoding.DecodeString(sessionKey)
 	ivKey, _ := base64.StdEncoding.DecodeString(iv)
-	cipherText, _ := base64.StdEncoding.DecodeString(encryptedData)
 
 	if len(cipherText)%len(aesKey) != 0 {
 		return errors.New("encryptedData is error")
@@ -383,21 +384,20 @@ func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr inter
 	//fmt.Println("cipherText:", cipherText)
 	block, err := aes.NewCipher(aesKey)
 	if err != nil {
-		return err
+		return fmt.Errorf("aes.NewCipher：%v", err.Error())
 	}
 	//解密
 	blockMode := cipher.NewCBCDecrypter(block, ivKey)
 	plainText := make([]byte, len(cipherText))
 	blockMode.CryptBlocks(plainText, cipherText)
-	//fmt.Println("plainText1:", plainText)
 	if len(plainText) > 0 {
 		plainText = PKCS7UnPadding(plainText)
 	}
-	//fmt.Println("plainText:", plainText)
+	//fmt.Println("plainText:", string(plainText))
 	//解析
 	err = json.Unmarshal(plainText, beanPtr)
 	if err != nil {
-		return err
+		return fmt.Errorf("json.Unmarshal：%v", err.Error())
 	}
 	return nil
 }
@@ -467,7 +467,7 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 	openIdRsp = new(OpenIdByAuthCodeRsp)
 	err = xml.Unmarshal(bs, openIdRsp)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 	}
 	return openIdRsp, nil
 }
