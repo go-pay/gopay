@@ -80,3 +80,28 @@ func TestVerifyWeChatResponseSign(t *testing.T) {
 	}
 	fmt.Println("ok:", ok)
 }
+
+func TestDecryptWeChatOpenDataToStruct(t *testing.T) {
+	//data := "HSIMnigFLkuKzFDVtHM2t2s423ZasY0DXst5Cma4Oih8Tke+HRnHX9G+PRey1SLg5ajCPtlguVBRDqOB+DWpHo3Emvza889koLTkV3M9X4tURa1UwQ4eKZ8A1WoGB4hktr3jFyRt2nMccwQLbpL20V1zR/uwvjYHeB4TDh9rsDxMm3WY5YemSW54b+mbp9BD1rTgakWoGaOwrlEaQUIwbg=="
+	//iv := "PYLEcr/lIA/NhK7N6yhDPg=="
+	//session := "jSsUV8GCyJJf5Qnz3noNKA=="
+
+	//data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
+	//iv := "Cds8j3VYoGvnTp1BrjXdJg=="
+	//session := "lyY4HPQbaOYzZdG+JcYK9w=="
+	//phone := new(WeChatUserPhone)
+	////解密开放数据
+	////    encryptedData:包括敏感数据在内的完整用户信息的加密数据
+	////    iv:加密算法的初始向量
+	////    sessionKey:会话密钥
+	////    beanPtr:需要解析到的结构体指针
+	//err := DecryptWeChatOpenDataToStruct(data, iv, session, phone)
+	//if err != nil {
+	//	fmt.Println("err:", err)
+	//	return
+	//}
+	//fmt.Println("PhoneNumber:", phone.PhoneNumber)
+	//fmt.Println("PurePhoneNumber:", phone.PurePhoneNumber)
+	//fmt.Println("CountryCode:", phone.CountryCode)
+	//fmt.Println("Watermark:", phone.Watermark)
+}

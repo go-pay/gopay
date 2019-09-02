@@ -69,7 +69,7 @@ func GetWeChatUserInfo() {
 	fmt.Println("userInfo:", *userInfo)
 }
 
-func DecryptOpenDataToStruct() {
+func DecryptWeChatOpenDataToStruct() {
 	data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
 	iv := "Cds8j3VYoGvnTp1BrjXdJg=="
 	session := "lyY4HPQbaOYzZdG+JcYK9w=="
@@ -80,7 +80,7 @@ func DecryptOpenDataToStruct() {
 	//    iv:加密算法的初始向量
 	//    sessionKey:会话密钥
 	//    beanPtr:需要解析到的结构体指针
-	err := gopay.DecryptOpenDataToStruct(data, iv, session, phone)
+	err := gopay.DecryptWeChatOpenDataToStruct(data, iv, session, phone)
 	if err != nil {
 		fmt.Println("err:", err)
 		return

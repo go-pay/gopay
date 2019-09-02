@@ -51,7 +51,7 @@ The Golang SDK for WeChat and AliPay
 * gopay.GetAccessToken() => Obtain WeChat Applet's global unique access token
 * gopay.GetPaidUnionId() => After the WeChat Applet user's payment is completed, obtain the UnionId of the user without authorization
 * gopay.GetWeChatUserInfo() => WeChat Official Account：Obtain Basic User Information (UnionID System)
-* gopay.DecryptOpenDataToStruct() => Decrypt encrypted data to the specified struct
+* gopay.DecryptWeChatOpenDataToStruct() => Decrypt encrypted data to the specified struct
 * gopay.GetOpenIdByAuthCode() => Authorization code query openid
 
 ---
@@ -288,7 +288,7 @@ iv := "Cds8j3VYoGvnTp1BrjXdJg=="
 sessionKey := "lyY4HPQbaOYzZdG+JcYK9w=="
 
 phone := new(gopay.WeChatUserPhone)
-err := gopay.DecryptOpenDataToStruct(data, iv, sessionKey, phone)
+err := gopay.DecryptWeChatOpenDataToStruct(data, iv, sessionKey, phone)
 if err != nil {
 	fmt.Println("err:", err)
 	return

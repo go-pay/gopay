@@ -50,7 +50,7 @@
 * gopay.GetAccessToken() => 获取小程序全局唯一后台接口调用凭据
 * gopay.GetPaidUnionId() => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
 * gopay.GetWeChatUserInfo() => 微信公众号：获取用户基本信息(UnionID机制)
-* gopay.DecryptOpenDataToStruct() => 加密数据，解密到指定结构体
+* gopay.DecryptWeChatOpenDataToStruct() => 加密数据，解密到指定结构体
 * gopay.GetOpenIdByAuthCode() => 授权码查询openid
 
 ---
@@ -410,7 +410,7 @@ phone := new(gopay.WeChatUserPhone)
 //    iv：加密算法的初始向量，小程序获取到
 //    sessionKey：会话密钥，通过 gopay.Code2Session() 方法获取到
 //    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
-err := gopay.DecryptOpenDataToStruct(encryptedData, iv, sessionKey, phone)
+err := gopay.DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey, phone)
 fmt.Println(*phone)
 ```
 
