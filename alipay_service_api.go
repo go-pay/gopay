@@ -12,7 +12,6 @@ import (
 	"errors"
 	"fmt"
 	"hash"
-	"log"
 	"net/http"
 	"reflect"
 	"strings"
@@ -57,7 +56,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest,
 		bills := make([]fundBillListInfo, 0)
 		err = json.Unmarshal([]byte(billList), &bills)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 		}
 		notifyReq.FundBillList = bills
 	} else {
@@ -70,7 +69,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest,
 		details := make([]voucherDetailListInfo, 0)
 		err = json.Unmarshal([]byte(detailList), &details)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 		}
 		notifyReq.VoucherDetailList = details
 	} else {
@@ -166,13 +165,13 @@ func VerifyAliPaySign(aliPayPublicKey string, bean interface{}, syncSign ...stri
 
 	bs, err = json.Marshal(bean)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("json.Marshal：%v", err.Error())
 	}
 
 	bm = make(BodyMap)
 	err = json.Unmarshal(bs, &bm)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("json.Unmarshal：%v", err.Error())
 	}
 
 	bodySign = bm.Get("sign")
@@ -199,10 +198,7 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 		h     hash.Hash
 		hashs crypto.Hash
 	)
-	signBytes, err := base64.StdEncoding.DecodeString(sign)
-	if err != nil {
-		return err
-	}
+	signBytes, _ := base64.StdEncoding.DecodeString(sign)
 	//解析秘钥
 	block, _ := pem.Decode([]byte(aliPayPublicKey))
 	if block == nil {
@@ -210,8 +206,7 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 	}
 	key, err := x509.ParsePKIXPublicKey(block.Bytes)
 	if err != nil {
-		log.Println("x509.ParsePKIXPublicKey:", err)
-		return err
+		return fmt.Errorf("x509.ParsePKIXPublicKey：%v", err.Error())
 	}
 	publicKey, ok := key.(*rsa.PublicKey)
 	if !ok {
@@ -235,16 +230,16 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 
 func jsonToString(v interface{}) (str string) {
 	if v == nil {
-		return ""
+		return null
 	}
 	bs, err := json.Marshal(v)
 	if err != nil {
-		fmt.Println("err:", err)
-		return ""
+		//fmt.Println("err:", err)
+		return null
 	}
 	s := string(bs)
-	if s == "null" {
-		return ""
+	if s == null {
+		return null
 	}
 	return s
 }
@@ -331,7 +326,7 @@ func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr inte
 
 	block, err := aes.NewCipher(aesKey)
 	if err != nil {
-		return err
+		return fmt.Errorf("aes.NewCipher：%v", err.Error())
 	}
 	if len(secretData)%len(aesKey) != 0 {
 		return errors.New("encryptedData is error")
@@ -348,7 +343,7 @@ func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr inte
 	//解析
 	err = json.Unmarshal(originData, beanPtr)
 	if err != nil {
-		return err
+		return fmt.Errorf("json.Unmarshal：%v", err.Error())
 	}
 	return nil
 }
@@ -380,7 +375,7 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 	rsp = new(AliPaySystemOauthTokenResponse)
 	err = json.Unmarshal(bs, rsp)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("json.Unmarshal：%v", err.Error())
 	}
 	if rsp.AliPaySystemOauthTokenResponse.AccessToken != "" {
 		return rsp, nil
