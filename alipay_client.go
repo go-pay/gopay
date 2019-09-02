@@ -406,7 +406,7 @@ func (this *aliPayClient) AliPaySystemOauthToken(body BodyMap) (aliRsp *AliPaySy
 		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
 	}
 
-	bytes, err = aliPaySystemOauthToken(this.AppId, this.privateKey, body, "alipay.system.oauth.token")
+	bytes, err = aliPaySystemOauthToken(this.AppId, this.privateKey, body, "alipay.system.oauth.token", this.isProd)
 	if err != nil {
 		return nil, err
 	}

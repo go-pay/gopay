@@ -7,11 +7,12 @@
 
 微信和支付宝的Golang版本SDK
 
-[![](https://img.shields.io/badge/Author-Jerry-blue.svg)](https://www.gopay.ink)
-[![](https://img.shields.io/badge/Golang-1.11+-brightgreen.svg)](https://golang.org)
-[![](https://img.shields.io/badge/Version-1.3.2-blue.svg)](https://github.com/iGoogle-ink/gopay)
-[![](https://api.travis-ci.org/iGoogle-ink/gopay.svg?branch=master)]()
-[![](https://img.shields.io/badge/License-Apache_2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+![Author](https://img.shields.io/badge/author-Jerry-blue.svg)
+[![Golang](https://img.shields.io/badge/golang-1.11+-brightgreen.svg)](https://golang.org)
+[![Godoc](https://img.shields.io/badge/godoc-reference-informational.svg)](https://godoc.org/github.com/iGoogle-ink/gopay)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/iGoogle-ink/gopay)
+![Travis (.org)](https://img.shields.io/travis/iGoogle-ink/gopay)
+![License](https://img.shields.io/github/license/iGoogle-ink/gopay)
 
 ### 微信Client
 
@@ -282,7 +283,7 @@ timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
 prepayId := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一下单成功后得到
 //获取微信小程序支付的 paySign
 //    appId：APPID
-//    nonceStr：随即字符串
+//    nonceStr：随机字符串
 //    prepayId：统一下单成功后得到的值
 //    signType：签名方式，务必与统一下单时用的签名方式一致
 //    timeStamp：时间
@@ -295,7 +296,7 @@ timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
 //注意：package 参数因为是固定值，无需开发者再传入
 //    appId：APPID
 //    partnerid：partnerid
-//    nonceStr：随即字符串
+//    nonceStr：随机字符串
 //    prepayId：统一下单成功后得到的值
 //    signType：签名方式，务必与统一下单时用的签名方式一致
 //    timeStamp：时间
@@ -307,7 +308,7 @@ timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
 packages := "prepay_id=" + wxRsp.PrepayId   //此处的 wxRsp.PrepayId ,统一下单成功后得到
 //获取微信内H5支付 paySign
 //    appId：APPID
-//    nonceStr：随即字符串
+//    nonceStr：随机字符串
 //    packages：统一下单成功后拼接得到的值
 //    signType：签名方式，务必与统一下单时用的签名方式一致
 //    timeStamp：时间
