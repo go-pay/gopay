@@ -381,7 +381,7 @@ func DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr
 	if len(cipherText)%len(aesKey) != 0 {
 		return errors.New("encryptedData is error")
 	}
-	//fmt.Println("cipherText:", cipherText)
+	//fmt.Println("cipherText:", string(cipherText))
 	block, err := aes.NewCipher(aesKey)
 	if err != nil {
 		return fmt.Errorf("aes.NewCipher：%v", err.Error())
@@ -390,10 +390,11 @@ func DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr
 	blockMode := cipher.NewCBCDecrypter(block, ivKey)
 	plainText := make([]byte, len(cipherText))
 	blockMode.CryptBlocks(plainText, cipherText)
+	//fmt.Println("plainText1:", plainText)
 	if len(plainText) > 0 {
 		plainText = PKCS7UnPadding(plainText)
 	}
-	//fmt.Println("plainText:", string(plainText))
+	//fmt.Println("plainText2:", string(plainText))
 	//解析
 	err = json.Unmarshal(plainText, beanPtr)
 	if err != nil {
