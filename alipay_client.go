@@ -50,7 +50,7 @@ func (this *aliPayClient) AliPayTradeFastPayRefundQuery(body BodyMap) (aliRsp *A
 	aliRsp = new(AliPayTradeFastpayRefundQueryResponse)
 	err = json.Unmarshal(bytes, aliRsp)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("json.Unmarshal：%v", err.Error())
 	}
 	if aliRsp.AliPayTradeFastpayRefundQueryResponse.Code != "10000" {
 		info := aliRsp.AliPayTradeFastpayRefundQueryResponse
