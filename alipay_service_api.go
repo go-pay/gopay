@@ -4,14 +4,18 @@ import (
 	"crypto"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/md5"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/json"
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"github.com/tjfoc/gmsm/sm2"
 	"hash"
+	"io/ioutil"
 	"net/http"
 	"reflect"
 	"strings"
@@ -136,6 +140,22 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyReq *AliPayNotifyReque
 	return true, nil
 }
 
+/*
+Q：使用公钥证书签名方式下，为什么开放平台网关的响应报文需要携带支付宝公钥证书SN（alipay_cert_sn）？
+**
+A：开发者上传自己的应用公钥证书后，开放平台会为开发者应用自动签发支付宝公钥证书供开发者下载，用来对开放平台网关响应报文做验签。
+
+但是支付宝公钥证书可能因证书到期或者变更CA签发机构等原因，可能会重新签发证书。在重新签发前，开放平台会在门户上提前提醒开发者支付宝应用公钥证书变更时间。
+
+但为避免开发者因未能及时感知支付宝公钥证书变更而导致验签失败，开放平台提供了一种支付宝公钥证书无感知升级机制，具体流程如下：
+1）开放平台网关在响应报文中会多返回支付宝公钥证书SN
+2）开放平台网关提供根据SN下载对应支付宝公钥证书的API接口
+3）开发者在验签过程中，先比较本地使用的支付宝公钥证书SN与开放平台网关响应中SN是否一致。若不一致，可调用支付宝公钥证书下载接口下载对应SN的支付宝公钥证书。
+4）对下载的支付宝公钥证书执行证书链校验，若校验通过，则用该证书验签。
+
+基于该机制可实现支付宝公钥证书变更时开发者无感知，当前开放平台提供的SDK已基于该机制实现对应功能。若开发者未通过SDK接入，须自行实现该功能。
+*/
+
 //支付宝同步返回验签或异步通知验签
 //    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
 //    aliPayPublicKey：支付宝公钥
@@ -244,7 +264,7 @@ func jsonToString(v interface{}) (str string) {
 	return s
 }
 
-//格式化应用秘钥
+//格式化 普通应用秘钥
 func FormatPrivateKey(privateKey string) (pKey string) {
 	var buffer strings.Builder
 	buffer.WriteString("-----BEGIN RSA PRIVATE KEY-----\n")
@@ -274,7 +294,7 @@ func FormatPrivateKey(privateKey string) (pKey string) {
 	return
 }
 
-//格式化支付宝公钥
+//格式化 普通支付宝公钥
 func FormatAliPayPublicKey(publicKey string) (pKey string) {
 	var buffer strings.Builder
 	buffer.WriteString("-----BEGIN PUBLIC KEY-----\n")
@@ -302,6 +322,49 @@ func FormatAliPayPublicKey(publicKey string) (pKey string) {
 	buffer.WriteString("-----END PUBLIC KEY-----\n")
 	pKey = buffer.String()
 	return
+}
+
+//获取证书序列号SN
+//    certPath：X.509证书文件路径
+//    返回 sn：证书序列号
+//    返回 err：error 信息
+func GetCertSN(certPath string) (sn string, err error) {
+	certData, err := ioutil.ReadFile(certPath)
+	if err != nil {
+		panic(err)
+	}
+	block, _ := pem.Decode(certData)
+	if block == nil {
+		return null, errors.New("x509.ParseCertificates：pem Decode error block is null")
+	}
+	var (
+		certs        []*x509.Certificate
+		sm2Certs     []*sm2.Certificate
+		name         string
+		serialNumber string
+	)
+	certs, err = x509.ParseCertificates(block.Bytes)
+	if err != nil {
+		sm2Certs, err = sm2.ParseCertificates(block.Bytes)
+		if err != nil {
+			return null, fmt.Errorf("sm2.ParseCertificates：%v", err.Error())
+		}
+	}
+	if certs != nil {
+		name = certs[0].Issuer.String()
+		serialNumber = certs[0].SerialNumber.String()
+	} else {
+		name = sm2Certs[0].Issuer.String()
+		serialNumber = sm2Certs[0].SerialNumber.String()
+	}
+	//fmt.Println("Name:", name)
+	//fmt.Println("SerialNumber:", serialNumber)
+	m5 := md5.New()
+	m5.Write([]byte(name))
+	m5.Write([]byte(serialNumber))
+	sum := m5.Sum(nil)
+	sn = hex.EncodeToString(sum)
+	return sn, nil
 }
 
 //解密支付宝开放数据
