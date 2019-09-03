@@ -68,5 +68,15 @@ func TestSubString(t *testing.T) {
 	fmt.Println("indexEnd:", indexEnd)
 
 	fmt.Println("sub:", str[index+2:indexEnd])
+}
 
+func TestGetCertSN(t *testing.T) {
+
+	//sn, err := GetCertSN("alipay_cert/alipayCertPublicKey_RSA2.crt")
+	//sn, err := GetCertSN("alipay_cert/appCertPublicKey.crt")
+	//sn, err := GetCertSN("alipay_cert/alipayRootCert.crt")
+	//if err != nil {
+	//	fmt.Println("err:", err)
+	//}
+	//fmt.Println("sn:", sn)
 }

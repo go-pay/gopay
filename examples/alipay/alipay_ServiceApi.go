@@ -64,3 +64,26 @@ func ParseAliPayNotifyResultAndVerifyAliPaySign(req *http.Request) {
 	}
 	log.Println("支付宝验签是否通过:", ok)
 }
+
+func GetCertSN() {
+	sn, err := gopay.GetCertSN("alipay_cert/appCertPublicKey.crt")
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("sn:", sn)
+
+	sn, err = gopay.GetCertSN("alipay_cert/alipayRootCert.crt")
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("sn:", sn)
+
+	sn, err = gopay.GetCertSN("alipay_cert/alipayCertPublicKey_RSA2.crt")
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("sn:", sn)
+}
