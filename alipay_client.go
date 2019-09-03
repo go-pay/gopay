@@ -10,18 +10,21 @@ import (
 )
 
 type aliPayClient struct {
-	AppId        string
-	privateKey   string
-	ReturnUrl    string
-	NotifyUrl    string
-	Charset      string
-	SignType     string
-	AppAuthToken string
-	AuthToken    string
-	isProd       bool
+	AppId            string
+	privateKey       string
+	AlipayRootCertSN string
+	AppCertSN        string
+	ReturnUrl        string
+	NotifyUrl        string
+	Charset          string
+	SignType         string
+	AppAuthToken     string
+	AuthToken        string
+	isProd           bool
 }
 
 //初始化支付宝客户端
+//    注意：如果使用支付宝公钥证书验签，请设置 支付宝根证书SN（client.SetAlipayRootCertSN()）、应用公钥证书SN（client.SetAppCertSN()）
 //    appId：应用ID
 //    privateKey：应用私钥
 //    isProd：是否是正式环境
@@ -502,6 +505,12 @@ func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, e
 	pubBody.Set("app_id", this.AppId)
 	pubBody.Set("method", method)
 	pubBody.Set("format", "JSON")
+	if this.AppCertSN != null {
+		pubBody.Set("app_cert_sn", this.AppCertSN)
+	}
+	if this.AlipayRootCertSN != null {
+		pubBody.Set("alipay_root_cert_sn", this.AlipayRootCertSN)
+	}
 	if this.ReturnUrl != null {
 		pubBody.Set("return_url", this.ReturnUrl)
 	}
