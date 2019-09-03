@@ -164,11 +164,11 @@ client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 client.SetAliPayRootCertSN().               //设置支付宝根证书SN，通过 gopay.GetCertSN() 获取
     SetAppCertSN().                         //设置应用公钥证书SN，通过 gopay.GetCertSN() 获取
     SetCharset("utf-8").                    //设置字符编码，不设置默认 utf-8
-	SetSignType("RSA2").                    //设置签名类型，不设置默认 RSA2
-	SetReturnUrl("https://www.gopay.ink").  //设置返回URL
-	SetNotifyUrl("https://www.gopay.ink").  //设置异步通知URL
-	SetAppAuthToken().                      //设置第三方应用授权
-	SetAuthToken()                          //设置个人信息授权
+    SetSignType("RSA2").                    //设置签名类型，不设置默认 RSA2
+    SetReturnUrl("https://www.gopay.ink").  //设置返回URL
+    SetNotifyUrl("https://www.gopay.ink").  //设置异步通知URL
+    SetAppAuthToken().                      //设置第三方应用授权
+    SetAuthToken()                          //设置个人信息授权
 ```
 
 ## 2、初始化并赋值BodyMap（client的方法所需的入参）
