@@ -36,6 +36,20 @@ type OpenApiRoyaltyDetailInfoPojo struct {
 	Desc         string `json:"desc,omitempty"`
 }
 
+//设置 应用公钥证书SN
+//    appCertSN：应用公钥证书SN，通过 gopay.GetCertSN() 获取
+func (this *aliPayClient) SetAppCertSN(appCertSN string) (client *aliPayClient) {
+	this.AppCertSN = appCertSN
+	return this
+}
+
+//设置 支付宝根证书SN
+//    alipayRootCertSN：支付宝根证书SN，通过 gopay.GetCertSN() 获取
+func (this *aliPayClient) SetAliPayRootCertSN(alipayRootCertSN string) (client *aliPayClient) {
+	this.AlipayRootCertSN = alipayRootCertSN
+	return this
+}
+
 //设置支付后的ReturnUrl
 func (this *aliPayClient) SetReturnUrl(url string) (client *aliPayClient) {
 	this.ReturnUrl = url
