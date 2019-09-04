@@ -321,6 +321,7 @@ type watermarkInfo struct {
 	Timestamp int    `json:"timestamp,omitempty"`
 }
 
+//授权码查询openid 返回
 type OpenIdByAuthCodeRsp struct {
 	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
 	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
@@ -331,4 +332,27 @@ type OpenIdByAuthCodeRsp struct {
 	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`
 	ErrCode    string `xml:"err_code,omitempty" json:"err_code,omitempty"`
 	Openid     string `xml:"openid,omitempty" json:"openid,omitempty"` //用户唯一标识
+}
+
+//App应用微信第三方登录，code换取access_token
+type AppWeChatLoginAccessToken struct {
+	AccessToken  string `json:"access_token,omitempty"`
+	ExpiresIn    int    `json:"expires_in,omitempty"`
+	Openid       string `json:"openid,omitempty"`
+	RefreshToken string `json:"refresh_token,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+	Unionid      string `json:"unionid,omitempty"`
+	Errcode      int    `json:"errcode,omitempty"` //错误码
+	Errmsg       string `json:"errmsg,omitempty"`  //错误信息
+}
+
+//刷新App应用微信第三方登录后，获取的 access_token
+type RefreshAppWeChatLoginAccessTokenRsp struct {
+	AccessToken  string `json:"access_token,omitempty"`
+	ExpiresIn    int    `json:"expires_in,omitempty"`
+	Openid       string `json:"openid,omitempty"`
+	RefreshToken string `json:"refresh_token,omitempty"`
+	Scope        string `json:"scope,omitempty"`
+	Errcode      int    `json:"errcode,omitempty"` //错误码
+	Errmsg       string `json:"errmsg,omitempty"`  //错误信息
 }
