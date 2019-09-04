@@ -24,28 +24,57 @@ func Code2Session() {
 	fmt.Println("Errmsg:", userIdRsp.Errmsg)
 }
 
-func GetAccessToken() {
-	//获取小程序全局唯一后台接口调用凭据(AccessToken:157字符)
-	//    appId:APPID
-	//    appSecret:AppSecret
-	rsp, err := gopay.GetAccessToken("AppID", "APPSecret")
+func GetAppWeChatLoginAccessToken() {
+	accessToken, err := gopay.GetAppWeChatLoginAccessToken("AppID", "AppSecret", "code")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
-	fmt.Println("AccessToken:", rsp.AccessToken)
-	fmt.Println("ExpiresIn:", rsp.ExpiresIn)
-	fmt.Println("Errcode:", rsp.Errcode)
-	fmt.Println("Errmsg:", rsp.Errmsg)
+	fmt.Println("AccessToken:", accessToken.AccessToken)
+	fmt.Println("Openid:", accessToken.Openid)
+	fmt.Println("Unionid:", accessToken.Unionid)
+	fmt.Println("Scope:", accessToken.Scope)
+	fmt.Println("ExpiresIn:", accessToken.ExpiresIn)
+	fmt.Println("Errcode:", accessToken.Errcode)
+	fmt.Println("Errmsg:", accessToken.Errmsg)
 }
 
-func GetPaidUnionId() {
+func RefreshAppWeChatLoginAccessToken() {
+	accessToken, err := gopay.RefreshAppWeChatLoginAccessToken("AppID", "refreshToken")
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("AccessToken:", accessToken.AccessToken)
+	fmt.Println("Openid:", accessToken.Openid)
+	fmt.Println("Scope:", accessToken.Scope)
+	fmt.Println("ExpiresIn:", accessToken.ExpiresIn)
+	fmt.Println("Errcode:", accessToken.Errcode)
+	fmt.Println("Errmsg:", accessToken.Errmsg)
+}
+
+func GetWeChatAppletAccessToken() {
+	//获取小程序全局唯一后台接口调用凭据(AccessToken:157字符)
+	//    appId:APPID
+	//    appSecret:AppSecret
+	accessToken, err := gopay.GetWeChatAppletAccessToken("AppID", "AppSecret")
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("AccessToken:", accessToken.AccessToken)
+	fmt.Println("ExpiresIn:", accessToken.ExpiresIn)
+	fmt.Println("Errcode:", accessToken.Errcode)
+	fmt.Println("Errmsg:", accessToken.Errmsg)
+}
+
+func GetWeChatAppletPaidUnionId() {
 	accessToken := "21_3puo3mxoK6Ry2bR7Dh-qdn41wUP1wClwke8Zhf9a_i39jfWRq9rhNJZZZHaOt_Yad-Gp6u9_46dGW0RbIMz3nANInRI3m-1glvCnGW47v63sjYWV1iyTKOHGwDVxEv78kY-0OfkmkiIveVqAZCZaAAAQTQ"
 	//用户支付完成后，获取该用户的 UnionId，无需用户授权。
 	//    accessToken：接口调用凭据
 	//    openId：用户的OpenID
 	//    transactionId：微信支付订单号
-	rsp, err := gopay.GetPaidUnionId(accessToken, "o0Df70MSI4Ygv2KQ2cLnoMN5CXI8", "4200000326201905256499385970")
+	rsp, err := gopay.GetWeChatAppletPaidUnionId(accessToken, "o0Df70MSI4Ygv2KQ2cLnoMN5CXI8", "4200000326201905256499385970")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
