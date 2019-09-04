@@ -7,8 +7,6 @@
 
 微信和支付宝的Golang版本SDK
 
-[查看版本更新记录](https://github.com/iGoogle-ink/gopay/blob/master/release_note.txt)
-
 ![Author](https://img.shields.io/badge/author-Jerry-blue.svg)
 [![Golang](https://img.shields.io/badge/golang-1.11+-brightgreen.svg)](https://golang.org)
 [![Godoc](https://img.shields.io/badge/godoc-reference-informational.svg)](https://godoc.org/github.com/iGoogle-ink/gopay)
@@ -100,7 +98,7 @@ $ go get -u github.com/iGoogle-ink/gopay
 ```
 
 * #### 查看 GoPay 版本
-
+    * [版本更新记录](https://github.com/iGoogle-ink/gopay/blob/master/release_note.txt)
 ```go
 package main
 
