@@ -403,6 +403,38 @@ func DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr
 	return nil
 }
 
+//App应用微信第三方登录，code换取access_token
+//    appId：应用唯一标识，在微信开放平台提交应用审核通过后获得
+//    appSecret：应用密钥AppSecret，在微信开放平台提交应用审核通过后获得
+//    code：App用户换取access_token的code
+func GetAppWeChatLoginAccessToken(appId, appSecret, code string) (accessToken *AppWeChatLoginAccessToken, err error) {
+	accessToken = new(AppWeChatLoginAccessToken)
+	url := "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type=authorization_code"
+	agent := HttpAgent()
+	_, _, errs := agent.Get(url).EndStruct(accessToken)
+	if len(errs) > 0 {
+		return nil, errs[0]
+	} else {
+		return accessToken, nil
+	}
+}
+
+//刷新App应用微信第三方登录后，获取的 access_token
+//    appId：应用唯一标识，在微信开放平台提交应用审核通过后获得
+//    appSecret：应用密钥AppSecret，在微信开放平台提交应用审核通过后获得
+//    code：App用户换取access_token的code
+func RefreshAppWeChatLoginAccessToken(appId, refreshToken string) (accessToken *RefreshAppWeChatLoginAccessTokenRsp, err error) {
+	accessToken = new(RefreshAppWeChatLoginAccessTokenRsp)
+	url := "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=" + appId + "&grant_type=refresh_token&refresh_token=" + refreshToken
+	agent := HttpAgent()
+	_, _, errs := agent.Get(url).EndStruct(accessToken)
+	if len(errs) > 0 {
+		return nil, errs[0]
+	} else {
+		return accessToken, nil
+	}
+}
+
 //获取微信小程序用户的OpenId、SessionKey、UnionId
 //    appId:APPID
 //    appSecret:AppSecret
@@ -420,11 +452,11 @@ func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp,
 	}
 }
 
-//获取小程序全局唯一后台接口调用凭据(AccessToken:157字符)
+//获取微信小程序全局唯一后台接口调用凭据(AccessToken:157字符)
 //    appId:APPID
 //    appSecret:AppSecret
-//    获取access_token文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140183
-func GetAccessToken(appId, appSecret string) (accessToken *AccessToken, err error) {
+//    获取access_token文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
+func GetWeChatAppletAccessToken(appId, appSecret string) (accessToken *AccessToken, err error) {
 	accessToken = new(AccessToken)
 	url := "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appId + "&secret=" + appSecret
 
@@ -478,7 +510,7 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 //    openId：用户的OpenID
 //    transactionId：微信支付订单号
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/user-info/auth.getPaidUnionId.html
-func GetPaidUnionId(accessToken, openId, transactionId string) (unionId *PaidUnionId, err error) {
+func GetWeChatAppletPaidUnionId(accessToken, openId, transactionId string) (unionId *PaidUnionId, err error) {
 	unionId = new(PaidUnionId)
 	url := "https://api.weixin.qq.com/wxa/getpaidunionid?access_token=" + accessToken + "&openid=" + openId + "&transaction_id=" + transactionId
 
