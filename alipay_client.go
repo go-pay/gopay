@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type aliPayClient struct {
+type AliPayClient struct {
 	AppId            string
 	privateKey       string
 	AlipayRootCertSN string
@@ -28,8 +28,8 @@ type aliPayClient struct {
 //    appId：应用ID
 //    privateKey：应用私钥
 //    isProd：是否是正式环境
-func NewAliPayClient(appId, privateKey string, isProd bool) (client *aliPayClient) {
-	client = new(aliPayClient)
+func NewAliPayClient(appId, privateKey string, isProd bool) (client *AliPayClient) {
+	client = new(AliPayClient)
 	client.AppId = appId
 	client.privateKey = privateKey
 	client.isProd = isProd
@@ -38,7 +38,7 @@ func NewAliPayClient(appId, privateKey string, isProd bool) (client *aliPayClien
 
 //alipay.trade.fastpay.refund.query(统一收单交易退款查询)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query
-func (this *aliPayClient) AliPayTradeFastPayRefundQuery(body BodyMap) (aliRsp *AliPayTradeFastpayRefundQueryResponse, err error) {
+func (this *AliPayClient) AliPayTradeFastPayRefundQuery(body BodyMap) (aliRsp *AliPayTradeFastpayRefundQueryResponse, err error) {
 	var bytes []byte
 	trade1 := body.Get("out_trade_no")
 	trade2 := body.Get("trade_no")
@@ -65,7 +65,7 @@ func (this *aliPayClient) AliPayTradeFastPayRefundQuery(body BodyMap) (aliRsp *A
 
 //alipay.trade.order.settle(统一收单交易结算接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.order.settle
-func (this *aliPayClient) AliPayTradeOrderSettle(body BodyMap) (aliRsp *AliPayTradeOrderSettleResponse, err error) {
+func (this *AliPayClient) AliPayTradeOrderSettle(body BodyMap) (aliRsp *AliPayTradeOrderSettleResponse, err error) {
 	var bytes []byte
 	trade1 := body.Get("out_request_no")
 	trade2 := body.Get("trade_no")
@@ -92,7 +92,7 @@ func (this *aliPayClient) AliPayTradeOrderSettle(body BodyMap) (aliRsp *AliPayTr
 
 //alipay.trade.create(统一收单交易创建接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.create
-func (this *aliPayClient) AliPayTradeCreate(body BodyMap) (aliRsp *AliPayTradeCreateResponse, err error) {
+func (this *AliPayClient) AliPayTradeCreate(body BodyMap) (aliRsp *AliPayTradeCreateResponse, err error) {
 	var bytes []byte
 	trade1 := body.Get("out_trade_no")
 	trade2 := body.Get("buyer_id")
@@ -119,7 +119,7 @@ func (this *aliPayClient) AliPayTradeCreate(body BodyMap) (aliRsp *AliPayTradeCr
 
 //alipay.trade.close(统一收单交易关闭接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.close
-func (this *aliPayClient) AliPayTradeClose(body BodyMap) (aliRsp *AliPayTradeCloseResponse, err error) {
+func (this *AliPayClient) AliPayTradeClose(body BodyMap) (aliRsp *AliPayTradeCloseResponse, err error) {
 	var bytes []byte
 	trade1 := body.Get("out_trade_no")
 	trade2 := body.Get("trade_no")
@@ -146,7 +146,7 @@ func (this *aliPayClient) AliPayTradeClose(body BodyMap) (aliRsp *AliPayTradeClo
 
 //alipay.trade.cancel(统一收单交易撤销接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.cancel
-func (this *aliPayClient) AliPayTradeCancel(body BodyMap) (aliRsp *AliPayTradeCancelResponse, err error) {
+func (this *AliPayClient) AliPayTradeCancel(body BodyMap) (aliRsp *AliPayTradeCancelResponse, err error) {
 	var bytes []byte
 	trade1 := body.Get("out_trade_no")
 	trade2 := body.Get("trade_no")
@@ -173,7 +173,7 @@ func (this *aliPayClient) AliPayTradeCancel(body BodyMap) (aliRsp *AliPayTradeCa
 
 //alipay.trade.refund(统一收单交易退款接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.refund
-func (this *aliPayClient) AliPayTradeRefund(body BodyMap) (aliRsp *AliPayTradeRefundResponse, err error) {
+func (this *AliPayClient) AliPayTradeRefund(body BodyMap) (aliRsp *AliPayTradeRefundResponse, err error) {
 	var bytes []byte
 	trade1 := body.Get("out_trade_no")
 	trade2 := body.Get("trade_no")
@@ -200,7 +200,7 @@ func (this *aliPayClient) AliPayTradeRefund(body BodyMap) (aliRsp *AliPayTradeRe
 
 //alipay.trade.refund(统一收单退款页面接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.page.refund
-func (this *aliPayClient) AliPayTradePageRefund(body BodyMap) (aliRsp *AliPayTradePageRefundResponse, err error) {
+func (this *AliPayClient) AliPayTradePageRefund(body BodyMap) (aliRsp *AliPayTradePageRefundResponse, err error) {
 	var bytes []byte
 	trade1 := body.Get("out_trade_no")
 	trade2 := body.Get("trade_no")
@@ -227,7 +227,7 @@ func (this *aliPayClient) AliPayTradePageRefund(body BodyMap) (aliRsp *AliPayTra
 
 //alipay.trade.precreate(统一收单线下交易预创建)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.precreate
-func (this *aliPayClient) AliPayTradePrecreate(body BodyMap) (aliRsp *AlipayTradePrecreateResponse, err error) {
+func (this *AliPayClient) AliPayTradePrecreate(body BodyMap) (aliRsp *AlipayTradePrecreateResponse, err error) {
 	var bytes []byte
 	trade1 := body.Get("out_trade_no")
 	if trade1 == null {
@@ -253,7 +253,7 @@ func (this *aliPayClient) AliPayTradePrecreate(body BodyMap) (aliRsp *AlipayTrad
 
 //alipay.trade.pay(统一收单交易支付接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.pay
-func (this *aliPayClient) AliPayTradePay(body BodyMap) (aliRsp *AliPayTradePayResponse, err error) {
+func (this *AliPayClient) AliPayTradePay(body BodyMap) (aliRsp *AliPayTradePayResponse, err error) {
 	var bytes []byte
 	trade := body.Get("out_trade_no")
 	if trade == null {
@@ -282,7 +282,7 @@ func (this *aliPayClient) AliPayTradePay(body BodyMap) (aliRsp *AliPayTradePayRe
 
 //alipay.trade.query(统一收单线下交易查询)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.query
-func (this *aliPayClient) AliPayTradeQuery(body BodyMap) (aliRsp *AliPayTradeQueryResponse, err error) {
+func (this *AliPayClient) AliPayTradeQuery(body BodyMap) (aliRsp *AliPayTradeQueryResponse, err error) {
 	var bytes []byte
 	trade1 := body.Get("out_trade_no")
 	trade2 := body.Get("trade_no")
@@ -309,7 +309,7 @@ func (this *aliPayClient) AliPayTradeQuery(body BodyMap) (aliRsp *AliPayTradeQue
 
 //alipay.trade.app.pay(app支付接口2.0)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.app.pay
-func (this *aliPayClient) AliPayTradeAppPay(body BodyMap) (payParam string, err error) {
+func (this *AliPayClient) AliPayTradeAppPay(body BodyMap) (payParam string, err error) {
 	var bytes []byte
 	trade := body.Get("out_trade_no")
 	if trade == null {
@@ -327,7 +327,7 @@ func (this *aliPayClient) AliPayTradeAppPay(body BodyMap) (payParam string, err 
 
 //alipay.trade.wap.pay(手机网站支付接口2.0)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.wap.pay
-func (this *aliPayClient) AliPayTradeWapPay(body BodyMap) (payUrl string, err error) {
+func (this *AliPayClient) AliPayTradeWapPay(body BodyMap) (payUrl string, err error) {
 	var bytes []byte
 	trade := body.Get("out_trade_no")
 	if trade == null {
@@ -346,7 +346,7 @@ func (this *aliPayClient) AliPayTradeWapPay(body BodyMap) (payUrl string, err er
 
 //alipay.trade.page.pay(统一收单下单并支付页面接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.page.pay
-func (this *aliPayClient) AliPayTradePagePay(body BodyMap) (payUrl string, err error) {
+func (this *AliPayClient) AliPayTradePagePay(body BodyMap) (payUrl string, err error) {
 	var bytes []byte
 	trade := body.Get("out_trade_no")
 	if trade == null {
@@ -365,7 +365,7 @@ func (this *aliPayClient) AliPayTradePagePay(body BodyMap) (payUrl string, err e
 
 //alipay.fund.trans.toaccount.transfer(单笔转账到支付宝账户接口)
 //    文档地址：https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer
-func (this *aliPayClient) AlipayFundTransToaccountTransfer(body BodyMap) (aliRsp *AlipayFundTransToaccountTransferResponse, err error) {
+func (this *AliPayClient) AlipayFundTransToaccountTransfer(body BodyMap) (aliRsp *AlipayFundTransToaccountTransferResponse, err error) {
 	var bytes []byte
 	trade1 := body.Get("out_biz_no")
 	if trade1 == null {
@@ -391,13 +391,13 @@ func (this *aliPayClient) AlipayFundTransToaccountTransfer(body BodyMap) (aliRsp
 
 //alipay.trade.orderinfo.sync(支付宝订单信息同步接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.orderinfo.sync
-func (this *aliPayClient) AliPayTradeOrderinfoSync(body BodyMap) {
+func (this *AliPayClient) AliPayTradeOrderinfoSync(body BodyMap) {
 
 }
 
 //alipay.system.oauth.token(换取授权访问令牌)
 //    文档地址：https://docs.open.alipay.com/api_9/alipay.system.oauth.token
-func (this *aliPayClient) AliPaySystemOauthToken(body BodyMap) (aliRsp *AliPaySystemOauthTokenResponse, err error) {
+func (this *AliPayClient) AliPaySystemOauthToken(body BodyMap) (aliRsp *AliPaySystemOauthTokenResponse, err error) {
 	var bytes []byte
 	grantType := body.Get("grant_type")
 	if grantType == null {
@@ -429,7 +429,7 @@ func (this *aliPayClient) AliPaySystemOauthToken(body BodyMap) (aliRsp *AliPaySy
 
 //alipay.open.auth.token.app(换取应用授权令牌)
 //    文档地址：https://docs.open.alipay.com/api_9/alipay.open.auth.token.app
-func (this *aliPayClient) AlipayOpenAuthTokenApp(body BodyMap) (aliRsp *AlipayOpenAuthTokenAppResponse, err error) {
+func (this *AliPayClient) AlipayOpenAuthTokenApp(body BodyMap) (aliRsp *AlipayOpenAuthTokenAppResponse, err error) {
 	var bs []byte
 	grantType := body.Get("grant_type")
 	if grantType == null {
@@ -462,7 +462,7 @@ func (this *aliPayClient) AlipayOpenAuthTokenApp(body BodyMap) (aliRsp *AlipayOp
 
 //zhima.credit.score.get(芝麻分)
 //    文档地址：https://docs.open.alipay.com/api_8/zhima.credit.score.get
-func (this *aliPayClient) ZhimaCreditScoreGet(body BodyMap) (aliRsp *ZhimaCreditScoreGetResponse, err error) {
+func (this *AliPayClient) ZhimaCreditScoreGet(body BodyMap) (aliRsp *ZhimaCreditScoreGetResponse, err error) {
 	var bytes []byte
 
 	trade1 := body.Get("product_code")
@@ -492,7 +492,7 @@ func (this *aliPayClient) ZhimaCreditScoreGet(body BodyMap) (aliRsp *ZhimaCredit
 }
 
 //向支付宝发送请求
-func (this *aliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, err error) {
+func (this *AliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, err error) {
 	//===============转换body参数===================
 	bodyStr, err := json.Marshal(body)
 	if err != nil {

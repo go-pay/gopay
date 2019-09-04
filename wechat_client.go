@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-type weChatClient struct {
+type WeChatClient struct {
 	AppId   string
 	MchId   string
 	apiKey  string
@@ -23,8 +23,8 @@ type weChatClient struct {
 //    mchId：商户ID
 //    apiKey：API秘钥值
 //    isProd：是否是正式环境
-func NewWeChatClient(appId, mchId, apiKey string, isProd bool) (client *weChatClient) {
-	client = new(weChatClient)
+func NewWeChatClient(appId, mchId, apiKey string, isProd bool) (client *WeChatClient) {
+	client = new(WeChatClient)
 	client.AppId = appId
 	client.MchId = mchId
 	client.apiKey = apiKey
@@ -34,7 +34,7 @@ func NewWeChatClient(appId, mchId, apiKey string, isProd bool) (client *weChatCl
 
 //提交付款码支付 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
-func (this *weChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse, err error) {
+func (this *WeChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -59,7 +59,7 @@ func (this *weChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse,
 
 //统一下单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
-func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderResponse, err error) {
+func (this *WeChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -87,7 +87,7 @@ func (this *weChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderR
 
 //查询订单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
-func (this *weChatClient) QueryOrder(body BodyMap) (wxRsp *WeChatQueryOrderResponse, err error) {
+func (this *WeChatClient) QueryOrder(body BodyMap) (wxRsp *WeChatQueryOrderResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -112,7 +112,7 @@ func (this *weChatClient) QueryOrder(body BodyMap) (wxRsp *WeChatQueryOrderRespo
 
 //关闭订单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_3
-func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderResponse, err error) {
+func (this *WeChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -137,7 +137,7 @@ func (this *weChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderRespo
 
 //撤销订单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3
-func (this *weChatClient) Reverse(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatReverseResponse, err error) {
+func (this *WeChatClient) Reverse(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatReverseResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -177,7 +177,7 @@ func (this *weChatClient) Reverse(body BodyMap, certFilePath, keyFilePath, pkcs1
 
 //申请退款 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
-func (this *weChatClient) Refund(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatRefundResponse, err error) {
+func (this *WeChatClient) Refund(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatRefundResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -217,7 +217,7 @@ func (this *weChatClient) Refund(body BodyMap, certFilePath, keyFilePath, pkcs12
 
 //查询退款 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_5
-func (this *weChatClient) QueryRefund(body BodyMap) (wxRsp *WeChatQueryRefundResponse, err error) {
+func (this *WeChatClient) QueryRefund(body BodyMap) (wxRsp *WeChatQueryRefundResponse, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -242,7 +242,7 @@ func (this *weChatClient) QueryRefund(body BodyMap) (wxRsp *WeChatQueryRefundRes
 
 //下载对账单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_6
-func (this *weChatClient) DownloadBill(body BodyMap) (wxRsp string, err error) {
+func (this *WeChatClient) DownloadBill(body BodyMap) (wxRsp string, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -260,7 +260,7 @@ func (this *weChatClient) DownloadBill(body BodyMap) (wxRsp string, err error) {
 //下载资金账单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7
 //    好像不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
-func (this *weChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
+func (this *WeChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -294,7 +294,7 @@ func (this *weChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePa
 //拉取订单评价数据
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_17&index=11
 //    好像不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
-func (this *weChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
+func (this *WeChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
 	var bytes []byte
 	if this.isProd {
 		//正式环境
@@ -331,7 +331,7 @@ func (this *weChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFileP
 //企业向微信用户个人付款
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_1
 //    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
-func (this *weChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatTransfersResponse, err error) {
+func (this *WeChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatTransfersResponse, err error) {
 	var bytes []byte
 	var sign string
 	body.Set("mch_appid", this.AppId)
@@ -385,7 +385,7 @@ func (this *weChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs
 }
 
 //向微信发送请求 ok
-func (this *weChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
+func (this *WeChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
 	var sign string
 	body.Set("appid", this.AppId)
 	body.Set("mch_id", this.MchId)

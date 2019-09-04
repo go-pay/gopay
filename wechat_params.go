@@ -15,7 +15,7 @@ type Country int
 //设置支付国家（默认：中国国内）
 //    根据支付地区情况设置国家
 //    country：<China：中国国内，China2：中国国内（冗灾方案），SoutheastAsia：东南亚，Other：其他国家>
-func (this *weChatClient) SetCountry(country Country) (client *weChatClient) {
+func (this *WeChatClient) SetCountry(country Country) (client *WeChatClient) {
 	switch country {
 	case China:
 		this.baseURL = wx_base_url_ch

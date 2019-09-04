@@ -38,32 +38,32 @@ type OpenApiRoyaltyDetailInfoPojo struct {
 
 //设置 应用公钥证书SN
 //    appCertSN：应用公钥证书SN，通过 gopay.GetCertSN() 获取
-func (this *aliPayClient) SetAppCertSN(appCertSN string) (client *aliPayClient) {
+func (this *AliPayClient) SetAppCertSN(appCertSN string) (client *AliPayClient) {
 	this.AppCertSN = appCertSN
 	return this
 }
 
 //设置 支付宝根证书SN
 //    alipayRootCertSN：支付宝根证书SN，通过 gopay.GetCertSN() 获取
-func (this *aliPayClient) SetAliPayRootCertSN(alipayRootCertSN string) (client *aliPayClient) {
+func (this *AliPayClient) SetAliPayRootCertSN(alipayRootCertSN string) (client *AliPayClient) {
 	this.AlipayRootCertSN = alipayRootCertSN
 	return this
 }
 
 //设置支付后的ReturnUrl
-func (this *aliPayClient) SetReturnUrl(url string) (client *aliPayClient) {
+func (this *AliPayClient) SetReturnUrl(url string) (client *AliPayClient) {
 	this.ReturnUrl = url
 	return this
 }
 
 //设置支付宝服务器主动通知商户服务器里指定的页面http/https路径。
-func (this *aliPayClient) SetNotifyUrl(url string) (client *aliPayClient) {
+func (this *AliPayClient) SetNotifyUrl(url string) (client *AliPayClient) {
 	this.NotifyUrl = url
 	return this
 }
 
 //设置编码格式，如utf-8,gbk,gb2312等，默认推荐使用 utf-8
-func (this *aliPayClient) SetCharset(charset string) (client *aliPayClient) {
+func (this *AliPayClient) SetCharset(charset string) (client *AliPayClient) {
 	if charset == null {
 		this.Charset = "utf-8"
 	} else {
@@ -73,7 +73,7 @@ func (this *aliPayClient) SetCharset(charset string) (client *aliPayClient) {
 }
 
 //设置签名算法类型，目前支持RSA2和RSA，默认推荐使用 RSA2
-func (this *aliPayClient) SetSignType(signType string) (client *aliPayClient) {
+func (this *AliPayClient) SetSignType(signType string) (client *AliPayClient) {
 	if signType == null {
 		this.SignType = "RSA2"
 	} else {
@@ -83,13 +83,13 @@ func (this *aliPayClient) SetSignType(signType string) (client *aliPayClient) {
 }
 
 //设置应用授权
-func (this *aliPayClient) SetAppAuthToken(appAuthToken string) (client *aliPayClient) {
+func (this *AliPayClient) SetAppAuthToken(appAuthToken string) (client *AliPayClient) {
 	this.AppAuthToken = appAuthToken
 	return this
 }
 
 //设置用户信息授权
-func (this *aliPayClient) SetAuthToken(authToken string) (client *aliPayClient) {
+func (this *AliPayClient) SetAuthToken(authToken string) (client *AliPayClient) {
 	this.AuthToken = authToken
 	return this
 }
