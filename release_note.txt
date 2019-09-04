@@ -1,0 +1,21 @@
+版本号：Release 1.3.6
+发布时间：2019/09/05 02:55
+修改记录：
+   (1) 更改微信公共API方法名称：gopay.GetAccessToken() to gopay.GetWeChatAppletAccessToken() => 获取微信小程序全局唯一后台接口调用凭据
+   (2) 更改微信公共API方法名称：gopay.GetPaidUnionId() to gopay.GetWeChatAppletPaidUnionId() => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
+   (3) 新增微信公共API方法：gopay.GetAppWeChatLoginAccessToken() => App应用微信第三方登录，code换取access_token
+   (4) 新增微信公共API方法：gopay.RefreshAppWeChatLoginAccessToken() => 刷新App应用微信第三方登录后，获取的 access_token
+
+
+版本号：Release 1.3.5
+发布时间：2019/09/05 02:10
+修改记录：
+   (1) 支付宝、微信Client 由私有改为公有
+
+
+版本号：Release 1.3.4
+发布时间：2019/09/03 19:26
+修改记录：
+   (1) 新增支付宝公共API方法：gopay.GetCertSN() => 获取证书SN号（app_cert_sn、alipay_root_cert_sn、alipay_cert_sn）
+   (2) 新增支付宝Client方法：client.SetAliPayRootCertSN() => 设置支付宝根证书SN，通过 gopay.GetCertSN() 获取
+   (3) 新增支付宝Client方法：client.SetAppCertSN() => 设置应用公钥证书SN，通过 gopay.GetCertSN() 获取
