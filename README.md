@@ -116,12 +116,12 @@ func main() {
 
 * [GoDoc](https://godoc.org/github.com/iGoogle-ink/gopay)
 
-* 有问题请加微信群。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！另外，仅 Fork 的同志顺手点个星呗，您的支持给了我源源不断的动力
+* 有问题请加群。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！另外，仅 Fork 的同志顺手点个星呗，您的支持给了我源源不断的动力
 
-讨论群（如过期请加微信）：
+QQ群：
+<img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/qq_gopay.png"/>
+微信群：
 <img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_gopay.png"/>
-微信：
-<img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_jerry.png"/>
 
 ---
 
