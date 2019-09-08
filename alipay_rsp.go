@@ -144,6 +144,13 @@ type AliPaySystemOauthTokenResponse struct {
 	Sign                           string              `json:"sign"`
 }
 
+type AliPayUserInfoShareResponse struct {
+	AliPayUserInfoShareResponse aliPayUserInfo      `json:"alipay_user_info_share_response,omitempty"`
+	ErrorResponse               alipayErrorResponse `json:"error_response,omitempty"`
+	SignData                    string              `json:"-"`
+	Sign                        string              `json:"sign"`
+}
+
 type alipayErrorResponse struct {
 	Code    string `json:"code,omitempty"`
 	Msg     string `json:"msg,omitempty"`
@@ -158,6 +165,19 @@ type oauthTokenInfo struct {
 	ReExpiresIn  int    `json:"re_expires_in,omitempty"`
 	RefreshToken string `json:"refresh_token,omitempty"`
 	UserId       string `json:"user_id,omitempty"`
+}
+
+type aliPayUserInfo struct {
+	UserId             string `json:"user_id,omitempty"`
+	Avatar             string `json:"avatar,omitempty"`
+	Province           string `json:"province,omitempty"`
+	City               string `json:"city,omitempty"`
+	NickName           string `json:"nick_name,omitempty"`
+	IsStudentCertified bool   `json:"is_student_certified,omitempty"`
+	UserType           string `json:"user_type,omitempty"`
+	UserStatus         string `json:"user_status,omitempty"`
+	IsCertified        bool   `json:"is_certified,omitempty"`
+	Gender             string `json:"gender,omitempty"`
 }
 
 type AliPayUserPhone struct {
