@@ -434,7 +434,7 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Println("bs:", string(bs))
+	// fmt.Println("bs:", string(bs))
 	rsp = new(AliPaySystemOauthTokenResponse)
 	err = json.Unmarshal(bs, rsp)
 	if err != nil {
@@ -449,6 +449,77 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 
 //向支付宝发送请求
 func aliPaySystemOauthToken(appId, privateKey string, body BodyMap, method string, isProd bool) (bytes []byte, err error) {
+	//===============生成参数===================
+	body.Set("app_id", appId)
+	body.Set("method", method)
+	body.Set("format", "JSON")
+	body.Set("charset", "utf-8")
+	body.Set("sign_type", "RSA2")
+	body.Set("timestamp", time.Now().Format(TimeLayout))
+	body.Set("version", "1.0")
+	//===============获取签名===================
+	pKey := FormatPrivateKey(privateKey)
+	sign, err := getRsaSign(body, "RSA2", pKey)
+	if err != nil {
+		return nil, err
+	}
+	body.Set("sign", sign)
+	// fmt.Println("rsaSign:", sign)
+	//===============发起请求===================
+	urlParam := FormatAliPayURLParam(body)
+
+	var url string
+	agent := HttpAgent()
+	if !isProd {
+		//沙箱环境
+		url = zfb_sanbox_base_url_utf8
+		//fmt.Println(url)
+		agent.Post(url)
+	} else {
+		//正式环境
+		url = zfb_base_url_utf8
+		//fmt.Println(url)
+		agent.Post(url)
+	}
+	_, bs, errs := agent.
+		Type("form-data").
+		SendString(urlParam).
+		EndBytes()
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	return bs, nil
+}
+
+//支付宝会员授权信息查询接口（默认使用utf-8，RSA2）
+//    appId：应用ID
+//    privateKey：应用私钥
+//    accessToken：支付宝accessToken
+//    文档：https://docs.open.alipay.com/api_2/alipay.user.info.share
+func AliPayUserInfoShare(appId, privateKey, accessToken string) (rsp *AliPayUserInfoShareResponse, err error) {
+	var bs []byte
+	body := make(BodyMap)
+	body.Set("auth_token", accessToken)
+
+	bs, err = aliPayUserInfoShare(appId, privateKey, body, "alipay.user.info.share", true)
+	if err != nil {
+		return nil, err
+	}
+	// fmt.Println("bs:", string(bs))
+	rsp = new(AliPayUserInfoShareResponse)
+	err = json.Unmarshal(bs, rsp)
+	if err != nil {
+		return nil, err
+	}
+	if rsp.AliPayUserInfoShareResponse.UserId != "" {
+		return rsp, nil
+	} else {
+		return
+	}
+}
+
+//向支付宝发送请求
+func aliPayUserInfoShare(appId, privateKey string, body BodyMap, method string, isProd bool) (bytes []byte, err error) {
 	//===============生成参数===================
 	body.Set("app_id", appId)
 	body.Set("method", method)
