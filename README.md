@@ -78,7 +78,7 @@
 * 统一收单线下交易预创建（用户扫商品收款码）：client.AliPayTradePrecreate()
 * 单笔转账到支付宝账户接口（商户给支付宝用户转账）：client.AlipayFundTransToaccountTransfer()
 * 换取授权访问令牌（获取access_token，user_id等信息）：client.AliPaySystemOauthToken()
-* 支付宝会员授权信息查询接口（App支付宝登录）：client.AlipayUserInfoShare()
+* **支付宝会员授权信息查询接口（App支付宝登录）**：client.AlipayUserInfoShare()
 * 换取应用授权令牌（获取app_auth_token，auth_app_id，user_id等信息）：client.AlipayOpenAuthTokenApp()
 * 获取芝麻信用分：client.ZhimaCreditScoreGet()
 
