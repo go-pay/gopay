@@ -15,10 +15,11 @@ func AliPayTradeQuery() {
 	client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 	//配置公共参数
 	client.SetCharset("utf-8").
-		SetSignType("RSA2")
+		SetSignType("RSA2").
+		SetAppAuthToken("201908BB03f542de8ecc42b985900f5080407abc")
 	//请求参数
 	body := make(gopay.BodyMap)
-	body.Set("out_trade_no", "GYWX201901301040355706100457")
+	body.Set("out_trade_no", "GZ201909081743431443")
 
 	//查询订单
 	aliRsp, err := client.AliPayTradeQuery(body)
