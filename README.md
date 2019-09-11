@@ -128,7 +128,7 @@ QQ群：
 
 ## 1、初始化GoPay客户端并做配置
 
-* #### 微信客户端
+* #### 微信客户端，如无需更改Appid、Mchid和ApiKey，推荐在 init()方法中初始化，全局适用
 
 微信官方文档：[官方文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 ```go
@@ -147,7 +147,7 @@ client := gopay.NewWeChatClient("wxdaa2ab9ef87b5497", mchId, apiKey, false)
 client.SetCountry(gopay.China)
 ```
 
-* #### 支付宝
+* #### 支付宝，如无需更改Appid和PrivateKey，推荐在 init()方法中初始化，全局适用
 
 支付宝官方文档：[官方文档](https://docs.open.alipay.com/catalog)
 
