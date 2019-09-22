@@ -94,8 +94,18 @@
 
 # 一、安装
 
+gopath 安装
 ```bash
 $ go get -u github.com/iGoogle-ink/gopay
+```
+
+go mod 安装
+```bash
+1、mod 文件的require中添加：github.com/iGoogle-ink/gopay latest，如下
+require (
+    github.com/iGoogle-ink/gopay latest
+)
+2、命令行执行：go list，自动更新依赖库
 ```
 
 * #### 查看 GoPay 版本
