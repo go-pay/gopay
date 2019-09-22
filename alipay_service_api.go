@@ -329,9 +329,11 @@ func FormatAliPayPublicKey(publicKey string) (pKey string) {
 //    返回 sn：证书序列号(app_cert_sn、alipay_root_cert_sn、alipay_cert_sn)
 //    返回 err：error 信息
 func GetCertSN(certPath string) (sn string, err error) {
-	certData, err := ioutil.ReadFile(certPath)
-	if err != nil {
-		panic(err)
+	var (
+		certData []byte
+	)
+	if certData, err = ioutil.ReadFile(certPath); err != nil {
+		return null, fmt.Errorf("ioutil.ReadFile：%v", err.Error())
 	}
 	block, _ := pem.Decode(certData)
 	if block == nil {
