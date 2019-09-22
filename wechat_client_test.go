@@ -123,23 +123,19 @@ func TestDecryptWeChatOpenDataToStruct(t *testing.T) {
 	fmt.Println("Watermark:", userInfo.Watermark)
 }
 
-func TestDecryptWeChatOpenDataToStruct2(t *testing.T) {
-	data := "2GvPXomJA5jkyL/iV6hKC/Y2cvYIB0BciH48hATEjqiHG9qWOHBdyu7jmq5gp9knqg5ZuUclpLUdkvI2UPTvFIG4z1IIZWLzmQkEwTIRdCiEnx+Y6ONSHZHXqR6/1CRV91qMMaEc9AheBc0988OX0pKmMhkynVYb7+duJauHqo/rVRc9119bhLRJixUrZcxHVfGzB7OeN6nhsJXd3OCmqlk0QzSRwHhytsWJoMyNrnllITDLJq/4qSXkbI72FwLu1TwjAOiUTvocfMCtMroQ+u7iylSOxSeykASK3DQGcKtXlFPXN7FxSaTNoOkFMSz5QMwzbwcwXTyGnn9VYqX6MqVqJdCOPVx1ohsIClHR7zRllej5okK7/hEsdJuyNZlIKwW109rWoZvwiD7fiOK3LF0pKwE+3dkTy9v2pyJaz4iP+0GAUWJTtSmINUAsvx2kITMRZytt5T4zAZ0GXodaFJh3q9dHX9WH1iAm8tTGXHpPRiWjQJqf3ccu49iWcf22/jFQPxzn22AQnucSer1Rgw=="
-	iv := "r4rE971rDUbd/+BKZgCCIg=="
-	key:="HtBJjHAJu6qPcUFuLoV7CA=="
-	userInfo := new(WeChatAppletUserInfo)
-	err := DecryptWeChatOpenDataToStruct(data,iv,key,userInfo)
-	if err != nil {
-		_ = fmt.Errorf("%v", err)
-	}
-	fmt.Println("NickName:", userInfo.NickName)
-	fmt.Println("AvatarUrl:", userInfo.AvatarUrl)
-	fmt.Println("Country:", userInfo.Country)
-	fmt.Println("Province:", userInfo.Province)
-	fmt.Println("City:", userInfo.City)
-	fmt.Println("Gender:", userInfo.Gender)
-	fmt.Println("OpenId:", userInfo.OpenId)
-	fmt.Println("UnionId:", userInfo.UnionId)
-	fmt.Println("Watermark:", userInfo.Watermark)
+func TestDecryptWeChatOpenDataToBodyMap(t *testing.T) {
+	data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
+	iv := "Cds8j3VYoGvnTp1BrjXdJg=="
+	session := "lyY4HPQbaOYzZdG+JcYK9w=="
 
+	//解密开放数据
+	//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
+	//    iv:加密算法的初始向量
+	//    sessionKey:会话密钥
+	bm, err := DecryptWeChatOpenDataToBodyMap(data, iv, session)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("WeChatUserPhone:", bm)
 }

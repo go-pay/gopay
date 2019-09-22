@@ -143,6 +143,23 @@ func DecryptWeChatOpenDataToStruct() {
 	fmt.Println("Watermark:", userInfo.Watermark)
 }
 
+func DecryptWeChatOpenDataToBodyMap() {
+	data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
+	iv := "Cds8j3VYoGvnTp1BrjXdJg=="
+	session := "lyY4HPQbaOYzZdG+JcYK9w=="
+
+	//解密开放数据
+	//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
+	//    iv:加密算法的初始向量
+	//    sessionKey:会话密钥
+	bm, err := gopay.DecryptWeChatOpenDataToBodyMap(data, iv, session)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("WeChatUserPhone:", bm)
+}
+
 func GetOpenIdByAuthCode() {
 	//授权码查询openid
 	//    appId:APPID

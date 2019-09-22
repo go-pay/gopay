@@ -3,8 +3,6 @@ package gopay
 import (
 	"crypto/tls"
 	"encoding/xml"
-	"fmt"
-	"github.com/parnurzeal/gorequest"
 	"io"
 	"math/rand"
 	"reflect"
@@ -12,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/parnurzeal/gorequest"
 )
 
 type BodyMap map[string]interface{}
@@ -19,9 +19,7 @@ type BodyMap map[string]interface{}
 //设置参数
 //    value：仅支持类型 string,int,int64,float32,float64,ptr,struct,slice,map 类型，其他类型一律设置空字符串
 func (bm BodyMap) Set(key string, value interface{}) {
-	//验证参数类型
 	vKind := reflect.ValueOf(value).Kind()
-	//fmt.Println("vKind:", vKind)
 	switch vKind {
 	case reflect.String:
 		bm[key] = value.(string)
@@ -51,13 +49,16 @@ func (bm BodyMap) Get(key string) string {
 	if bm == nil {
 		return null
 	}
-	value, ok := bm[key]
-	if !ok {
+	var (
+		value interface{}
+		ok    bool
+		v     string
+	)
+	if value, ok = bm[key]; !ok {
 		return null
 	}
-	_, ok2 := value.(string)
-	if ok2 {
-		return value.(string)
+	if v, ok = value.(string); ok {
+		return v
 	}
 	return jsonToString(value)
 }
@@ -72,21 +73,19 @@ type xmlMapEntry struct {
 	Value   string `xml:",chardata"`
 }
 
-func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
+func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error) {
 	if len(bm) == 0 {
 		return nil
 	}
-
-	err := e.EncodeToken(start)
-	if err != nil {
-		return err
+	var (
+		value string
+		vKind reflect.Kind
+	)
+	if err = e.EncodeToken(start); err != nil {
+		return
 	}
-	var value string
 	for k, v := range bm {
-		//验证参数类型
-		fmt.Println("k:", k)
-		vKind := reflect.ValueOf(v).Kind()
-		//fmt.Println("vKind:", vKind)
+		vKind = reflect.ValueOf(v).Kind()
 		switch vKind {
 		case reflect.String:
 			value = v.(string)
@@ -103,29 +102,30 @@ func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 		}
 		e.Encode(xmlMapEntry{XMLName: xml.Name{Local: k}, Value: value})
 	}
-
 	return e.EncodeToken(start.End())
 }
 
-func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) (err error) {
 	for {
 		var e xmlMapEntry
-		err := d.Decode(&e)
+		err = d.Decode(&e)
 		if err == io.EOF {
 			break
 		} else if err != nil {
-			return err
+			return
 		}
 		bm.Set(e.XMLName.Local, e.Value)
-		//(*bm)[e.XMLName.Local] = e.Value
 	}
-	return nil
+	return
 }
 
 // ("bar=baz&foo=quux") sorted by key.
 func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
-	var buf strings.Builder
-	keyList := make([]string, 0, len(bm))
+	var (
+		buf     strings.Builder
+		keyList []string
+	)
+	keyList = make([]string, 0, len(bm))
 	for k := range bm {
 		keyList = append(keyList, k)
 	}
@@ -144,8 +144,11 @@ func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
 
 // ("bar=baz&foo=quux") sorted by key.
 func (bm BodyMap) EncodeAliPaySignParams() string {
-	var buf strings.Builder
-	keyList := make([]string, 0, len(bm))
+	var (
+		buf     strings.Builder
+		keyList []string
+	)
+	keyList = make([]string, 0, len(bm))
 	for k := range bm {
 		keyList = append(keyList, k)
 	}
@@ -156,25 +159,25 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 		buf.WriteString(bm.Get(k))
 		buf.WriteByte('&')
 	}
-	s := buf.String()
-	i := buf.Len()
-	return s[:i-1]
+	return buf.String()[:buf.Len()]
 }
 
 //HttpAgent
 func HttpAgent() (agent *gorequest.SuperAgent) {
-	agent = gorequest.New()
-	agent.TLSClientConfig(&tls.Config{InsecureSkipVerify: true})
-	return
+	return gorequest.New().TLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 }
 
 //获取随机字符串
 //    length：字符串长度
 func GetRandomString(length int) string {
 	str := "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
-	b := []byte(str)
-	var result []byte
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	var (
+		result []byte
+		b      []byte
+		r      *rand.Rand
+	)
+	b = []byte(str)
+	r = rand.New(rand.NewSource(time.Now().UnixNano()))
 	for i := 0; i < length; i++ {
 		result = append(result, b[r.Intn(len(b))])
 	}
@@ -187,32 +190,16 @@ func ParseDateTime(timeStr string) (datetime time.Time) {
 	return
 }
 
-//格式化Datetime
-func FormatDateTime(timeStr string) (formatTime string) {
-	//2019-01-04T15:40:00Z
-	//2019-01-18 20:51:30+08:00
-	if timeStr == null {
-		return null
-	}
-	replace := strings.Replace(timeStr, "T", " ", 1)
-	formatTime = replace[:19]
-	return
-}
-
-//格式化
-func FormatDate(dateStr string) (formatDate string) {
-	//2020-12-30T00:00:00+08:00
-	if dateStr == null {
-		return null
-	}
-	split := strings.Split(dateStr, "T")
-	formatDate = split[0]
-	return
-}
-
-//字符串转Float
-func String2Float(floatStr string) (floatNum float64) {
+//字符串转Float64
+func String2Float64(floatStr string) (floatNum float64) {
 	floatNum, _ = strconv.ParseFloat(floatStr, 64)
+	return
+}
+
+//字符串转Float32
+func String2Float32(floatStr string) (floatNum float32) {
+	float, _ := strconv.ParseFloat(floatStr, 32)
+	floatNum = float32(float)
 	return
 }
 
@@ -246,6 +233,13 @@ func String2Int(intStr string) (intNum int) {
 	return
 }
 
+//字符串转Int32
+func String2Int32(intStr string) (int32Num int32) {
+	intNum, _ := strconv.Atoi(intStr)
+	int32Num = int32(intNum)
+	return
+}
+
 //字符串转Int64
 func String2Int64(intStr string) (int64Num int64) {
 	intNum, _ := strconv.Atoi(intStr)
@@ -256,6 +250,13 @@ func String2Int64(intStr string) (int64Num int64) {
 //Int转字符串
 func Int2String(intNum int) (intStr string) {
 	intStr = strconv.Itoa(intNum)
+	return
+}
+
+//Int32转字符串
+func Int322String(intNum int32) (int32Str string) {
+	//10, 代表10进制
+	int32Str = strconv.FormatInt(int64(intNum), 10)
 	return
 }
 
@@ -270,9 +271,9 @@ func Int642String(intNum int64) (int64Str string) {
 //解密时，需要在最后面去掉加密时添加的填充byte
 func PKCS7UnPadding(origData []byte) (bs []byte) {
 	length := len(origData)
-	unpaddingNumber := int(origData[length-1]) //找到Byte数组最后的填充byte 数字
-	if unpaddingNumber <= 16 {
-		bs = origData[:(length - unpaddingNumber)] //只截取返回有效数字内的byte数组
+	unPaddingNumber := int(origData[length-1]) //找到Byte数组最后的填充byte 数字
+	if unPaddingNumber <= 16 {
+		bs = origData[:(length - unPaddingNumber)] //只截取返回有效数字内的byte数组
 	} else {
 		bs = origData
 	}
@@ -283,9 +284,9 @@ func PKCS7UnPadding(origData []byte) (bs []byte) {
 //解密时，需要在最后面去掉加密时添加的填充byte
 func PKCS5UnPadding(origData []byte) (bs []byte) {
 	length := len(origData)
-	unpaddingNumber := int(origData[length-1]) //找到Byte数组最后的填充byte
-	if unpaddingNumber <= 16 {
-		bs = origData[:(length - unpaddingNumber)] //只截取返回有效数字内的byte数组
+	unPaddingNumber := int(origData[length-1]) //找到Byte数组最后的填充byte
+	if unPaddingNumber <= 16 {
+		bs = origData[:(length - unPaddingNumber)] //只截取返回有效数字内的byte数组
 	} else {
 		bs = origData
 	}

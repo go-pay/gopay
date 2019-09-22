@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strings"
+
+	"github.com/parnurzeal/gorequest"
 )
 
 type WeChatClient struct {
@@ -24,421 +26,352 @@ type WeChatClient struct {
 //    apiKey：API秘钥值
 //    isProd：是否是正式环境
 func NewWeChatClient(appId, mchId, apiKey string, isProd bool) (client *WeChatClient) {
-	client = new(WeChatClient)
-	client.AppId = appId
-	client.MchId = mchId
-	client.apiKey = apiKey
-	client.isProd = isProd
-	return client
+	return &WeChatClient{
+		AppId:  appId,
+		MchId:  mchId,
+		apiKey: apiKey,
+		isProd: isProd}
 }
 
 //提交付款码支付 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
-func (this *WeChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse, err error) {
-	var bytes []byte
-	if this.isProd {
-		//正式环境
-		bytes, err = this.doWeChat(body, wx_Micropay)
-		if err != nil {
-			return nil, err
-		}
+func (w *WeChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse, err error) {
+	var bs []byte
+	if w.isProd {
+		bs, err = w.doWeChat(body, wx_Micropay)
 	} else {
-		bytes, err = this.doWeChat(body, wx_SanBox_Micropay)
-		if err != nil {
-			return nil, err
-		}
+		bs, err = w.doWeChat(body, wx_SanBox_Micropay)
 	}
-
-	wxRsp = new(WeChatMicropayResponse)
-	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
+		return
+	}
+	wxRsp = new(WeChatMicropayResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 	}
-	return wxRsp, nil
+	return
 }
 
 //统一下单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
-func (this *WeChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderResponse, err error) {
-	var bytes []byte
-	if this.isProd {
-		//正式环境
-		bytes, err = this.doWeChat(body, wx_UnifiedOrder)
-		if err != nil {
-			return nil, err
-		}
+func (w *WeChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderResponse, err error) {
+	var bs []byte
+	if w.isProd {
+		bs, err = w.doWeChat(body, wx_UnifiedOrder)
 	} else {
 		body.Set("total_fee", 101)
-		bytes, err = this.doWeChat(body, wx_SanBox_UnifiedOrder)
-		if err != nil {
-			return nil, err
-		}
+		bs, err = w.doWeChat(body, wx_SanBox_UnifiedOrder)
 	}
-
-	wxRsp = new(WeChatUnifiedOrderResponse)
-	//fmt.Println("bytes:", string(bytes))
-	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
-		//fmt.Println("xml.Unmarshal.Err:", err)
+		return
+	}
+	wxRsp = new(WeChatUnifiedOrderResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 	}
-	return wxRsp, nil
+	return
 }
 
 //查询订单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
-func (this *WeChatClient) QueryOrder(body BodyMap) (wxRsp *WeChatQueryOrderResponse, err error) {
-	var bytes []byte
-	if this.isProd {
-		//正式环境
-		bytes, err = this.doWeChat(body, wx_OrderQuery)
-		if err != nil {
-			return nil, err
-		}
+func (w *WeChatClient) QueryOrder(body BodyMap) (wxRsp *WeChatQueryOrderResponse, err error) {
+	var bs []byte
+	if w.isProd {
+		bs, err = w.doWeChat(body, wx_OrderQuery)
 	} else {
-		bytes, err = this.doWeChat(body, wx_SanBox_OrderQuery)
-		if err != nil {
-			return nil, err
-		}
+		bs, err = w.doWeChat(body, wx_SanBox_OrderQuery)
 	}
-
-	wxRsp = new(WeChatQueryOrderResponse)
-	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
+		return
+	}
+	wxRsp = new(WeChatQueryOrderResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 	}
-	return wxRsp, nil
+	return
 }
 
 //关闭订单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_3
-func (this *WeChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderResponse, err error) {
-	var bytes []byte
-	if this.isProd {
-		//正式环境
-		bytes, err = this.doWeChat(body, wx_CloseOrder)
-		if err != nil {
-			return nil, err
-		}
+func (w *WeChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderResponse, err error) {
+	var bs []byte
+	if w.isProd {
+		bs, err = w.doWeChat(body, wx_CloseOrder)
 	} else {
-		bytes, err = this.doWeChat(body, wx_SanBox_CloseOrder)
-		if err != nil {
-			return nil, err
-		}
+		bs, err = w.doWeChat(body, wx_SanBox_CloseOrder)
 	}
-
-	wxRsp = new(WeChatCloseOrderResponse)
-	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
+		return
+	}
+	wxRsp = new(WeChatCloseOrderResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 	}
-	return wxRsp, nil
+	return
 }
 
 //撤销订单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3
-func (this *WeChatClient) Reverse(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatReverseResponse, err error) {
-	var bytes []byte
-	if this.isProd {
-		//正式环境
-		pkcsPool := x509.NewCertPool()
-		pkcs, err := ioutil.ReadFile(pkcs12FilePath)
-		if err != nil {
+func (w *WeChatClient) Reverse(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatReverseResponse, err error) {
+	var (
+		bs, pkcs    []byte
+		pkcsPool    *x509.CertPool
+		certificate tls.Certificate
+		tlsConfig   *tls.Config
+	)
+	if w.isProd {
+		pkcsPool = x509.NewCertPool()
+		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
 			return nil, fmt.Errorf("ioutil.ReadFile：%v", err.Error())
 		}
 		pkcsPool.AppendCertsFromPEM(pkcs)
-		certificate, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
-		if err != nil {
+		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
 			return nil, fmt.Errorf("tls.LoadX509KeyPair：%v", err.Error())
 		}
-		tlsConfig := new(tls.Config)
-		tlsConfig.Certificates = []tls.Certificate{certificate}
-		tlsConfig.RootCAs = pkcsPool
-		tlsConfig.InsecureSkipVerify = true
-
-		bytes, err = this.doWeChat(body, wx_Reverse, tlsConfig)
-		if err != nil {
-			return nil, err
-		}
+		tlsConfig = &tls.Config{
+			Certificates:       []tls.Certificate{certificate},
+			RootCAs:            pkcsPool,
+			InsecureSkipVerify: true}
+		bs, err = w.doWeChat(body, wx_Reverse, tlsConfig)
 	} else {
-		bytes, err = this.doWeChat(body, wx_SanBox_Reverse)
-		if err != nil {
-			return nil, err
-		}
+		bs, err = w.doWeChat(body, wx_SanBox_Reverse)
 	}
-
-	wxRsp = new(WeChatReverseResponse)
-	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
+		return
+	}
+	wxRsp = new(WeChatReverseResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 	}
-	return wxRsp, nil
+	return
 }
 
 //申请退款 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
-func (this *WeChatClient) Refund(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatRefundResponse, err error) {
-	var bytes []byte
-	if this.isProd {
-		//正式环境
-		pkcsPool := x509.NewCertPool()
-		pkcs, err := ioutil.ReadFile(pkcs12FilePath)
-		if err != nil {
+func (w *WeChatClient) Refund(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatRefundResponse, err error) {
+	var (
+		bs, pkcs    []byte
+		pkcsPool    *x509.CertPool
+		certificate tls.Certificate
+		tlsConfig   *tls.Config
+	)
+	if w.isProd {
+		pkcsPool = x509.NewCertPool()
+		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
 			return nil, fmt.Errorf("ioutil.ReadFile：%v", err.Error())
 		}
 		pkcsPool.AppendCertsFromPEM(pkcs)
-		certificate, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
-		if err != nil {
+		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
 			return nil, fmt.Errorf("tls.LoadX509KeyPair：%v", err.Error())
 		}
-		tlsConfig := new(tls.Config)
-		tlsConfig.Certificates = []tls.Certificate{certificate}
-		tlsConfig.RootCAs = pkcsPool
-		tlsConfig.InsecureSkipVerify = true
-
-		bytes, err = this.doWeChat(body, wx_Refund, tlsConfig)
-		if err != nil {
-			return nil, err
-		}
+		tlsConfig = &tls.Config{
+			Certificates:       []tls.Certificate{certificate},
+			RootCAs:            pkcsPool,
+			InsecureSkipVerify: true}
+		bs, err = w.doWeChat(body, wx_Refund, tlsConfig)
 	} else {
-		bytes, err = this.doWeChat(body, wx_SanBox_Refund)
-		if err != nil {
-			return nil, err
-		}
+		bs, err = w.doWeChat(body, wx_SanBox_Refund)
 	}
-
-	wxRsp = new(WeChatRefundResponse)
-	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
+		return
+	}
+	wxRsp = new(WeChatRefundResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 	}
-	return wxRsp, nil
+	return
 }
 
 //查询退款 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_5
-func (this *WeChatClient) QueryRefund(body BodyMap) (wxRsp *WeChatQueryRefundResponse, err error) {
-	var bytes []byte
-	if this.isProd {
-		//正式环境
-		bytes, err = this.doWeChat(body, wx_RefundQuery)
-		if err != nil {
-			return nil, err
-		}
+func (w *WeChatClient) QueryRefund(body BodyMap) (wxRsp *WeChatQueryRefundResponse, err error) {
+	var bs []byte
+	if w.isProd {
+		bs, err = w.doWeChat(body, wx_RefundQuery)
 	} else {
-		bytes, err = this.doWeChat(body, wx_SanBox_RefundQuery)
-		if err != nil {
-			return nil, err
-		}
+		bs, err = w.doWeChat(body, wx_SanBox_RefundQuery)
 	}
-
-	wxRsp = new(WeChatQueryRefundResponse)
-	err = xml.Unmarshal(bytes, wxRsp)
 	if err != nil {
+		return
+	}
+	wxRsp = new(WeChatQueryRefundResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 	}
-	return wxRsp, nil
+	return
 }
 
 //下载对账单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_6
-func (this *WeChatClient) DownloadBill(body BodyMap) (wxRsp string, err error) {
-	var bytes []byte
-	if this.isProd {
-		//正式环境
-		bytes, err = this.doWeChat(body, wx_DownloadBill)
+func (w *WeChatClient) DownloadBill(body BodyMap) (wxRsp string, err error) {
+	var bs []byte
+	if w.isProd {
+		bs, err = w.doWeChat(body, wx_DownloadBill)
 	} else {
-		bytes, err = this.doWeChat(body, wx_SanBox_DownloadBill)
+		bs, err = w.doWeChat(body, wx_SanBox_DownloadBill)
 	}
-	wxRsp = string(bytes)
 	if err != nil {
-		return wxRsp, err
+		return
 	}
-	return wxRsp, nil
+	wxRsp = string(bs)
+	return
 }
 
 //下载资金账单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7
 //    好像不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
-func (this *WeChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
-	var bytes []byte
-	if this.isProd {
-		//正式环境
-		pkcsPool := x509.NewCertPool()
-		pkcs, err := ioutil.ReadFile(pkcs12FilePath)
-		if err != nil {
+func (w *WeChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
+	var (
+		bs, pkcs    []byte
+		pkcsPool    *x509.CertPool
+		certificate tls.Certificate
+		tlsConfig   *tls.Config
+	)
+	if w.isProd {
+		pkcsPool = x509.NewCertPool()
+		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
 			return null, fmt.Errorf("ioutil.ReadFile：%v", err.Error())
 		}
 		pkcsPool.AppendCertsFromPEM(pkcs)
-		certificate, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
-		if err != nil {
+		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
 			return null, fmt.Errorf("tls.LoadX509KeyPair：%v", err.Error())
 		}
-		tlsConfig := new(tls.Config)
-		tlsConfig.Certificates = []tls.Certificate{certificate}
-		tlsConfig.RootCAs = pkcsPool
-		tlsConfig.InsecureSkipVerify = true
-
-		bytes, err = this.doWeChat(body, wx_DownloadFundFlow, tlsConfig)
+		tlsConfig = &tls.Config{
+			Certificates:       []tls.Certificate{certificate},
+			RootCAs:            pkcsPool,
+			InsecureSkipVerify: true}
+		bs, err = w.doWeChat(body, wx_DownloadFundFlow, tlsConfig)
 	} else {
-		bytes, err = this.doWeChat(body, wx_SanBox_DownloadFundFlow)
+		bs, err = w.doWeChat(body, wx_SanBox_DownloadFundFlow)
 	}
-
 	if err != nil {
-		return null, err
+		return
 	}
-	wxRsp = string(bytes)
-	return wxRsp, nil
+	wxRsp = string(bs)
+	return
 }
 
 //拉取订单评价数据
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_17&index=11
 //    好像不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
-func (this *WeChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
-	var bytes []byte
-	if this.isProd {
-		//正式环境
+func (w *WeChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
+	var (
+		bs, pkcs    []byte
+		pkcsPool    *x509.CertPool
+		certificate tls.Certificate
+		tlsConfig   *tls.Config
+	)
+	if w.isProd {
 		body.Set("sign_type", SignType_HMAC_SHA256)
-
-		pkcsPool := x509.NewCertPool()
-		pkcs, err := ioutil.ReadFile(pkcs12FilePath)
-		if err != nil {
+		pkcsPool = x509.NewCertPool()
+		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
 			return null, fmt.Errorf("ioutil.ReadFile：%v", err.Error())
 		}
 		pkcsPool.AppendCertsFromPEM(pkcs)
-		certificate, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
-		if err != nil {
+		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
 			return null, fmt.Errorf("tls.LoadX509KeyPair：%v", err.Error())
 		}
-		tlsConfig := new(tls.Config)
-		tlsConfig.Certificates = []tls.Certificate{certificate}
-		tlsConfig.RootCAs = pkcsPool
-		tlsConfig.InsecureSkipVerify = true
-
-		bytes, err = this.doWeChat(body, wx_BatchQueryComment, tlsConfig)
+		tlsConfig = &tls.Config{
+			Certificates:       []tls.Certificate{certificate},
+			RootCAs:            pkcsPool,
+			InsecureSkipVerify: true}
+		bs, err = w.doWeChat(body, wx_BatchQueryComment, tlsConfig)
 	} else {
-		bytes, err = this.doWeChat(body, wx_SanBox_BatchQueryComment)
+		bs, err = w.doWeChat(body, wx_SanBox_BatchQueryComment)
 	}
-
 	if err != nil {
-		return null, err
+		return
 	}
-
-	wxRsp = string(bytes)
-	return wxRsp, nil
+	wxRsp = string(bs)
+	return
 }
 
 //企业向微信用户个人付款
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_1
 //    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
-func (this *WeChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatTransfersResponse, err error) {
-	var bytes []byte
-	var sign string
-	body.Set("mch_appid", this.AppId)
-	body.Set("mchid", this.MchId)
-
-	agent := HttpAgent()
-
-	//正式环境
-	pkcsPool := x509.NewCertPool()
-	pkcs, err := ioutil.ReadFile(pkcs12FilePath)
-	if err != nil {
+func (w *WeChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatTransfersResponse, err error) {
+	body.Set("mch_appid", w.AppId)
+	body.Set("mchid", w.MchId)
+	var (
+		bs, pkcs    []byte
+		pkcsPool    *x509.CertPool
+		certificate tls.Certificate
+		tlsConfig   *tls.Config
+		agent       *gorequest.SuperAgent
+		errs        []error
+		res         gorequest.Response
+	)
+	pkcsPool = x509.NewCertPool()
+	if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
 		return nil, fmt.Errorf("ioutil.ReadFile：%v", err.Error())
 	}
 	pkcsPool.AppendCertsFromPEM(pkcs)
-	certificate, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
-	if err != nil {
+	if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
 		return nil, fmt.Errorf("tls.LoadX509KeyPair：%v", err.Error())
 	}
-	tlsConfig := new(tls.Config)
-	tlsConfig.Certificates = []tls.Certificate{certificate}
-	tlsConfig.RootCAs = pkcsPool
-	tlsConfig.InsecureSkipVerify = true
-
-	agent.TLSClientConfig(tlsConfig)
-
-	//本地计算Sign
-	sign = getWeChatReleaseSign(this.apiKey, SignType_MD5, body)
-
-	body.Set("sign", sign)
-	reqXML := generateXml(body)
-
-	if this.baseURL != null {
-		agent.Post(this.baseURL + wx_Transfers)
+	tlsConfig = &tls.Config{
+		Certificates:       []tls.Certificate{certificate},
+		RootCAs:            pkcsPool,
+		InsecureSkipVerify: true}
+	body.Set("sign", getWeChatReleaseSign(w.apiKey, SignType_MD5, body))
+	agent = HttpAgent().TLSClientConfig(tlsConfig)
+	if w.baseURL != null {
+		agent.Post(w.baseURL + wx_Transfers)
 	} else {
 		agent.Post(wx_base_url_ch + wx_Transfers)
 	}
-	agent.Type("xml")
-	agent.SendString(reqXML)
-
-	_, bytes, errs := agent.EndBytes()
-	if len(errs) > 0 {
+	if res, bs, errs = agent.Type("xml").SendString(generateXml(body)).EndBytes(); len(errs) > 0 {
 		return nil, errs[0]
 	}
-
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %v", res.StatusCode)
+	}
 	wxRsp = new(WeChatTransfersResponse)
-	err = xml.Unmarshal(bytes, wxRsp)
-	if err != nil {
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 	}
-	return wxRsp, nil
+	return
 }
 
 //向微信发送请求 ok
-func (this *WeChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
-	var sign string
-	body.Set("appid", this.AppId)
-	body.Set("mch_id", this.MchId)
-	//===============生成参数===================
+func (w *WeChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
+	body.Set("appid", w.AppId)
+	body.Set("mch_id", w.MchId)
+	var (
+		sign string
+		errs []error
+		res  gorequest.Response
+	)
 	if body.Get("sign") != null {
 		goto GoRequest
 	}
-
-	//计算Sign值
-	if !this.isProd {
-		//沙箱环境
+	if !w.isProd {
 		body.Set("sign_type", SignType_MD5)
-		//沙箱环境Sign值
-		sign, err = getWeChatSignBoxSign(this.MchId, this.apiKey, body)
-		if err != nil {
-			//fmt.Println("getWeChatSignBoxSign:", err)
-			return nil, err
+		if sign, err = getWeChatSignBoxSign(w.MchId, w.apiKey, body); err != nil {
+			return
 		}
 	} else {
-		//正式环境
-		sign = getWeChatReleaseSign(this.apiKey, body.Get("sign_type"), body)
+		sign = getWeChatReleaseSign(w.apiKey, body.Get("sign_type"), body)
 	}
 	body.Set("sign", sign)
-
 GoRequest:
-	reqXML := generateXml(body)
-	//fmt.Println("reqXML:",reqXML)
-	//===============发起请求===================
 	agent := HttpAgent()
-
-	if this.isProd && tlsConfig != nil {
+	if w.isProd && tlsConfig != nil {
 		agent.TLSClientConfig(tlsConfig[0])
 	}
-
-	if this.baseURL != null {
-		agent.Post(this.baseURL + path)
+	if w.baseURL != null {
+		agent.Post(w.baseURL + path)
 	} else {
 		agent.Post(wx_base_url_ch + path)
 	}
-	agent.Type("xml")
-	agent.SendString(reqXML)
-	res, bytes, errs := agent.EndBytes()
-	if len(errs) > 0 {
-		//fmt.Println("errs[0]:", errs[0])
+	if res, bytes, errs = agent.Type("xml").SendString(generateXml(body)).EndBytes(); len(errs) > 0 {
 		return nil, errs[0]
 	}
-	//fmt.Println("res:", res.StatusCode)
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %v", res.StatusCode)
 	}
 	if strings.Contains(string(bytes), "HTML") {
 		return nil, errors.New(string(bytes))
 	}
-	//fmt.Println("bytes:", string(bytes))
-	return bytes, nil
+	return
 }

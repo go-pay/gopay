@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/xml"
 	"errors"
+	"hash"
 	"strings"
 )
 
@@ -15,55 +16,48 @@ type Country int
 //设置支付国家（默认：中国国内）
 //    根据支付地区情况设置国家
 //    country：<China：中国国内，China2：中国国内（冗灾方案），SoutheastAsia：东南亚，Other：其他国家>
-func (this *WeChatClient) SetCountry(country Country) (client *WeChatClient) {
+func (w *WeChatClient) SetCountry(country Country) (client *WeChatClient) {
 	switch country {
 	case China:
-		this.baseURL = wx_base_url_ch
+		w.baseURL = wx_base_url_ch
 	case China2:
-		this.baseURL = wx_base_url_ch2
+		w.baseURL = wx_base_url_ch2
 	case SoutheastAsia:
-		this.baseURL = wx_base_url_hk
+		w.baseURL = wx_base_url_hk
 	case Other:
-		this.baseURL = wx_base_url_us
+		w.baseURL = wx_base_url_us
 	default:
-		this.baseURL = wx_base_url_ch
+		w.baseURL = wx_base_url_ch
 	}
-	return this
+	return w
 }
 
 //获取微信支付正式环境Sign值
 func getWeChatReleaseSign(apiKey string, signType string, bm BodyMap) (sign string) {
-	signStr := bm.EncodeWeChatSignParams(apiKey)
-	//fmt.Println("signStr:", signStr)
-	var hashSign []byte
+	var h hash.Hash
 	if signType == SignType_HMAC_SHA256 {
-		hash := hmac.New(sha256.New, []byte(apiKey))
-		hash.Write([]byte(signStr))
-		hashSign = hash.Sum(nil)
+		h = hmac.New(sha256.New, []byte(apiKey))
 	} else {
-		hash := md5.New()
-		hash.Write([]byte(signStr))
-		hashSign = hash.Sum(nil)
+		h = md5.New()
 	}
-	sign = strings.ToUpper(hex.EncodeToString(hashSign))
+	h.Write([]byte(bm.EncodeWeChatSignParams(apiKey)))
+	sign = strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 	return
 }
 
 //获取微信支付沙箱环境Sign值
 func getWeChatSignBoxSign(mchId, apiKey string, bm BodyMap) (sign string, err error) {
-
-	//从微信接口获取SanBox的ApiKey
-	sanBoxApiKey, err := getSanBoxKey(mchId, GetRandomString(32), apiKey, SignType_MD5)
-	if err != nil {
-		return null, err
+	var (
+		sanBoxApiKey string
+		h            hash.Hash
+	)
+	if sanBoxApiKey, err = getSanBoxKey(mchId, GetRandomString(32), apiKey, SignType_MD5); err != nil {
+		return
 	}
-	signStr := bm.EncodeWeChatSignParams(sanBoxApiKey)
-	//fmt.Println("signStr:", signStr)
-	hash := md5.New()
-	hash.Write([]byte(signStr))
-	hashSign := hash.Sum(nil)
-	sign = strings.ToUpper(hex.EncodeToString(hashSign))
-	return sign, nil
+	h = md5.New()
+	h.Write([]byte(bm.EncodeWeChatSignParams(sanBoxApiKey)))
+	sign = strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
+	return
 }
 
 //从微信提供的接口获取：SandboxSignKey
@@ -71,13 +65,9 @@ func getSanBoxKey(mchId, nonceStr, apiKey, signType string) (key string, err err
 	body := make(BodyMap)
 	body.Set("mch_id", mchId)
 	body.Set("nonce_str", nonceStr)
-
-	//计算沙箱参数Sign
-	sanboxSign := getWeChatReleaseSign(apiKey, signType, body)
 	//沙箱环境：获取沙箱环境ApiKey
-	key, err = getSanBoxSignKey(mchId, nonceStr, sanboxSign)
-	if err != nil {
-		return null, err
+	if key, err = getSanBoxSignKey(mchId, nonceStr, getWeChatReleaseSign(apiKey, signType, body)); err != nil {
+		return
 	}
 	return
 }
@@ -88,20 +78,17 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 	reqs.Set("mch_id", mchId)
 	reqs.Set("nonce_str", nonceStr)
 	reqs.Set("sign", sign)
-
-	reqXml := generateXml(reqs)
-	//fmt.Println("req:::", reqXml)
-	_, byteList, errorList := HttpAgent().
-		Post(wx_SanBox_GetSignKey).
-		Type("xml").
-		SendString(reqXml).EndBytes()
-	if len(errorList) > 0 {
+	var (
+		byteList    []byte
+		errorList   []error
+		keyResponse *getSignKeyResponse
+	)
+	if _, byteList, errorList = HttpAgent().Post(wx_SanBox_GetSignKey).Type("xml").SendString(generateXml(reqs)).EndBytes(); len(errorList) > 0 {
 		return null, errorList[0]
 	}
-	keyResponse := new(getSignKeyResponse)
-	err = xml.Unmarshal(byteList, keyResponse)
-	if err != nil {
-		return null, err
+	keyResponse = new(getSignKeyResponse)
+	if err = xml.Unmarshal(byteList, keyResponse); err != nil {
+		return
 	}
 	if keyResponse.ReturnCode == "FAIL" {
 		return null, errors.New(keyResponse.ReturnMsg)
@@ -113,7 +100,6 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 func generateXml(bm BodyMap) (reqXml string) {
 	var buffer strings.Builder
 	buffer.WriteString("<xml>")
-
 	for key := range bm {
 		buffer.WriteByte('<')
 		buffer.WriteString(key)
