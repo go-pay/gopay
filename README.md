@@ -106,7 +106,7 @@ go mod 安装
 require (
     github.com/iGoogle-ink/gopay latest
 )
-2、命令行执行：go list
+2、命令行执行：go list 或 go mod tidy
 ```
 
 * #### 查看 GoPay 版本
