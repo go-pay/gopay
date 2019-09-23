@@ -23,7 +23,7 @@ import (
 //    注意：BodyMap中如无 sign_type 参数，默认赋值 sign_type 为 MD5
 //    appId：应用ID
 //    mchId：商户ID
-//    apiKey：API秘钥值
+//    ApiKey：API秘钥值
 //    返回参数 sign：通过Appid、MchId、ApiKey和BodyMap中的参数计算出的Sign值
 func GetWeChatParamSign(appId, mchId, apiKey string, bm BodyMap) (sign string) {
 	bm.Set("appid", appId)
@@ -50,21 +50,21 @@ func GetWeChatParamSign(appId, mchId, apiKey string, bm BodyMap) (sign string) {
 //    注意：沙箱环境默认 sign_type 为 MD5
 //    appId：应用ID
 //    mchId：商户ID
-//    apiKey：API秘钥值
+//    ApiKey：API秘钥值
 //    返回参数 sign：通过Appid、MchId、ApiKey和BodyMap中的参数计算出的Sign值
 func GetWeChatSanBoxParamSign(appId, mchId, apiKey string, bm BodyMap) (sign string, err error) {
 	bm.Set("appid", appId)
 	bm.Set("mch_id", mchId)
 	bm.Set("sign_type", SignType_MD5)
 	var (
-		sanBoxApiKey string
-		hashMd5      hash.Hash
+		sandBoxApiKey string
+		hashMd5       hash.Hash
 	)
-	if sanBoxApiKey, err = getSanBoxKey(mchId, GetRandomString(32), apiKey, SignType_MD5); err != nil {
+	if sandBoxApiKey, err = getSanBoxKey(mchId, GetRandomString(32), apiKey, SignType_MD5); err != nil {
 		return
 	}
 	hashMd5 = md5.New()
-	hashMd5.Write([]byte(bm.EncodeWeChatSignParams(sanBoxApiKey)))
+	hashMd5.Write([]byte(bm.EncodeWeChatSignParams(sandBoxApiKey)))
 	sign = strings.ToUpper(hex.EncodeToString(hashMd5.Sum(nil)))
 	return
 }
@@ -98,7 +98,7 @@ func ParseWeChatNotifyResult(req *http.Request) (notifyReq *WeChatNotifyRequest,
 }
 
 //验证微信支付异步通知的Sign值（Deprecated）
-//    apiKey：API秘钥值
+//    ApiKey：API秘钥值
 //    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
 //    notifyReq：利用 gopay.ParseWeChatNotifyResult() 得到的结构体
 //    返回参数ok：是否验证通过
@@ -149,7 +149,7 @@ func VerifyWeChatResultSign(apiKey, signType string, notifyReq *WeChatNotifyRequ
 }
 
 //微信同步返回参数验签或异步通知参数验签
-//    apiKey：API秘钥值
+//    ApiKey：API秘钥值
 //    signType：签名类型（调用API方法时填写的类型）
 //    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
 //    返回参数ok：是否验签通过
@@ -206,7 +206,7 @@ func (w *WeChatNotifyResponse) ToXmlString() (xmlStr string) {
 //    prepayId：统一下单成功后得到的值
 //    signType：签名类型
 //    timeStamp：时间
-//    apiKey：API秘钥值
+//    ApiKey：API秘钥值
 //    微信小程序支付API：https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html
 func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
 	var (
@@ -240,7 +240,7 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey strin
 //    packages：统一下单成功后拼接得到的值
 //    signType：签名类型
 //    timeStamp：时间
-//    apiKey：API秘钥值
+//    ApiKey：API秘钥值
 //    微信内H5支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6
 func GetH5PaySign(appId, nonceStr, packages, signType, timeStamp, apiKey string) (paySign string) {
 	var (
@@ -276,7 +276,7 @@ func GetH5PaySign(appId, nonceStr, packages, signType, timeStamp, apiKey string)
 //    prepayId：统一下单成功后得到的值
 //    signType：此处签名方式，务必与统一下单时用的签名方式一致
 //    timeStamp：时间
-//    apiKey：API秘钥值
+//    ApiKey：API秘钥值
 //    APP支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12
 func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, apiKey string) (paySign string) {
 	var (
@@ -314,12 +314,9 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr interface{}) (err error) {
 	var (
-		cipherText []byte
-		aesKey     []byte
-		ivKey      []byte
-		block      cipher.Block
-		blockMode  cipher.BlockMode
-		plainText  []byte
+		cipherText, aesKey, ivKey, plainText []byte
+		block                                cipher.Block
+		blockMode                            cipher.BlockMode
 	)
 	beanValue := reflect.ValueOf(beanPtr)
 	if beanValue.Kind() != reflect.Ptr {
@@ -334,8 +331,7 @@ func DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr
 	if len(cipherText)%len(aesKey) != 0 {
 		return errors.New("encryptedData is error")
 	}
-	block, err = aes.NewCipher(aesKey)
-	if err != nil {
+	if block, err = aes.NewCipher(aesKey); err != nil {
 		return fmt.Errorf("aes.NewCipher：%v", err.Error())
 	}
 	blockMode = cipher.NewCBCDecrypter(block, ivKey)
@@ -357,12 +353,9 @@ func DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func DecryptWeChatOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm BodyMap, err error) {
 	var (
-		cipherText []byte
-		aesKey     []byte
-		ivKey      []byte
-		block      cipher.Block
-		blockMode  cipher.BlockMode
-		plainText  []byte
+		cipherText, aesKey, ivKey, plainText []byte
+		block                                cipher.Block
+		blockMode                            cipher.BlockMode
 	)
 	cipherText, _ = base64.StdEncoding.DecodeString(encryptedData)
 	aesKey, _ = base64.StdEncoding.DecodeString(sessionKey)
@@ -443,7 +436,7 @@ func GetWeChatAppletAccessToken(appId, appSecret string) (accessToken *AccessTok
 //授权码查询openid(AccessToken:157字符)
 //    appId:APPID
 //    mchId:商户号
-//    apiKey:ApiKey
+//    ApiKey:apiKey
 //    authCode:用户授权码
 //    nonceStr:随即字符串
 //    文档：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_13&index=9

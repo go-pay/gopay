@@ -71,12 +71,23 @@ func TestSubString(t *testing.T) {
 }
 
 func TestGetCertSN(t *testing.T) {
-
 	//sn, err := GetCertSN("alipay_cert/alipayCertPublicKey_RSA2.crt")
 	//sn, err := GetCertSN("alipay_cert/appCertPublicKey.crt")
-	//sn, err := GetCertSN("alipay_cert/alipayRootCert.crt")
-	//if err != nil {
-	//	fmt.Println("err:", err)
-	//}
-	//fmt.Println("sn:", sn)
+	sn, err := GetCertSN("alipay_cert/alipayRootCert.crt")
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("sn:", sn)
+}
+
+func TestDecryptAliPayOpenDataToBodyMap(t *testing.T) {
+	data := "MkvuiIZsGOC8S038cu/JIpoRKnF+ZFjoIRGf5d/K4+ctYjCtb/eEkwgrdB5TeH/93bxff1Ylb+SE+UGStlpvcg=="
+	key := "TDftre9FpItr46e9BVNJcw=="
+	bm, err := DecryptAliPayOpenDataToBodyMap(data, key)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("bm:", bm)
 }

@@ -19,15 +19,15 @@ type Country int
 func (w *WeChatClient) SetCountry(country Country) (client *WeChatClient) {
 	switch country {
 	case China:
-		w.baseURL = wx_base_url_ch
+		w.BaseURL = wxBaseUrlCh
 	case China2:
-		w.baseURL = wx_base_url_ch2
+		w.BaseURL = wxBaseUrlCh2
 	case SoutheastAsia:
-		w.baseURL = wx_base_url_hk
+		w.BaseURL = wxBaseUrlHk
 	case Other:
-		w.baseURL = wx_base_url_us
+		w.BaseURL = wxBaseUrlUs
 	default:
-		w.baseURL = wx_base_url_ch
+		w.BaseURL = wxBaseUrlCh
 	}
 	return w
 }
@@ -48,14 +48,14 @@ func getWeChatReleaseSign(apiKey string, signType string, bm BodyMap) (sign stri
 //获取微信支付沙箱环境Sign值
 func getWeChatSignBoxSign(mchId, apiKey string, bm BodyMap) (sign string, err error) {
 	var (
-		sanBoxApiKey string
-		h            hash.Hash
+		sandBoxApiKey string
+		h             hash.Hash
 	)
-	if sanBoxApiKey, err = getSanBoxKey(mchId, GetRandomString(32), apiKey, SignType_MD5); err != nil {
+	if sandBoxApiKey, err = getSanBoxKey(mchId, GetRandomString(32), apiKey, SignType_MD5); err != nil {
 		return
 	}
 	h = md5.New()
-	h.Write([]byte(bm.EncodeWeChatSignParams(sanBoxApiKey)))
+	h.Write([]byte(bm.EncodeWeChatSignParams(sandBoxApiKey)))
 	sign = strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 	return
 }
@@ -83,7 +83,7 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 		errorList   []error
 		keyResponse *getSignKeyResponse
 	)
-	if _, byteList, errorList = HttpAgent().Post(wx_SanBox_GetSignKey).Type("xml").SendString(generateXml(reqs)).EndBytes(); len(errorList) > 0 {
+	if _, byteList, errorList = HttpAgent().Post(wxSandboxGetsignkey).Type("xml").SendString(generateXml(reqs)).EndBytes(); len(errorList) > 0 {
 		return null, errorList[0]
 	}
 	keyResponse = new(getSignKeyResponse)

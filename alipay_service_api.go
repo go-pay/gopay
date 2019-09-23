@@ -13,13 +13,14 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"github.com/tjfoc/gmsm/sm2"
 	"hash"
 	"io/ioutil"
 	"net/http"
 	"reflect"
 	"strings"
 	"time"
+
+	"github.com/tjfoc/gmsm/sm2"
 )
 
 //解析支付宝支付完成后的Notify信息
@@ -55,11 +56,9 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest,
 	notifyReq.GmtRefund = req.FormValue("gmt_refund")
 	notifyReq.GmtClose = req.FormValue("gmt_close")
 	billList := req.FormValue("fund_bill_list")
-	//log.Println("billList:", billList)
 	if billList != null {
 		bills := make([]fundBillListInfo, 0)
-		err = json.Unmarshal([]byte(billList), &bills)
-		if err != nil {
+		if err = json.Unmarshal([]byte(billList), &bills); err != nil {
 			return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 		}
 		notifyReq.FundBillList = bills
@@ -68,18 +67,16 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest,
 	}
 	notifyReq.PassbackParams = req.FormValue("passback_params")
 	detailList := req.FormValue("voucher_detail_list")
-	//log.Println("detailList:", detailList)
 	if detailList != null {
 		details := make([]voucherDetailListInfo, 0)
-		err = json.Unmarshal([]byte(detailList), &details)
-		if err != nil {
+		if err = json.Unmarshal([]byte(detailList), &details); err != nil {
 			return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 		}
 		notifyReq.VoucherDetailList = details
 	} else {
 		notifyReq.VoucherDetailList = nil
 	}
-	return notifyReq, err
+	return
 }
 
 //支付通知的签名验证和参数签名后的Sign（Deprecated）
@@ -121,20 +118,15 @@ func VerifyAliPayResultSign(aliPayPublicKey string, notifyReq *AliPayNotifyReque
 	body.Set("fund_bill_list", jsonToString(notifyReq.FundBillList))
 	body.Set("passback_params", notifyReq.PassbackParams)
 	body.Set("voucher_detail_list", jsonToString(notifyReq.VoucherDetailList))
-
 	newBody := make(BodyMap)
 	for k, v := range body {
 		if v != null {
 			newBody.Set(k, v)
 		}
 	}
-
 	pKey := FormatAliPayPublicKey(aliPayPublicKey)
 	signData := newBody.EncodeAliPaySignParams()
-
-	//log.Println("签名字符串：", signData)
-	err = verifyAliPaySign(signData, notifyReq.Sign, notifyReq.SignType, pKey)
-	if err != nil {
+	if err = verifyAliPaySign(signData, notifyReq.Sign, notifyReq.SignType, pKey); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -182,32 +174,21 @@ func VerifyAliPaySign(aliPayPublicKey string, bean interface{}, syncSign ...stri
 		signData = bean.(string)
 		goto Verify
 	}
-
-	bs, err = json.Marshal(bean)
-	if err != nil {
+	if bs, err = json.Marshal(bean); err != nil {
 		return false, fmt.Errorf("json.Marshal：%v", err.Error())
 	}
-
 	bm = make(BodyMap)
-	err = json.Unmarshal(bs, &bm)
-	if err != nil {
+	if err = json.Unmarshal(bs, &bm); err != nil {
 		return false, fmt.Errorf("json.Unmarshal：%v", err.Error())
 	}
-
 	bodySign = bm.Get("sign")
 	bodySignType = bm.Get("sign_type")
 	bm.Remove("sign")
 	bm.Remove("sign_type")
-
 	signData = bm.EncodeAliPaySignParams()
-
 Verify:
-	//fmt.Println("signData:", signData)
-	//fmt.Println("bodySign:", bodySign)
-	//fmt.Println("bodySignType:", bodySignType)
 	pKey = FormatAliPayPublicKey(aliPayPublicKey)
-	err = verifyAliPaySign(signData, bodySign, bodySignType, pKey)
-	if err != nil {
+	if err = verifyAliPaySign(signData, bodySign, bodySignType, pKey); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -215,24 +196,23 @@ Verify:
 
 func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err error) {
 	var (
-		h     hash.Hash
-		hashs crypto.Hash
+		h         hash.Hash
+		hashs     crypto.Hash
+		block     *pem.Block
+		pubKey    interface{}
+		publicKey *rsa.PublicKey
+		ok        bool
 	)
 	signBytes, _ := base64.StdEncoding.DecodeString(sign)
-	//解析秘钥
-	block, _ := pem.Decode([]byte(aliPayPublicKey))
-	if block == nil {
+	if block, _ = pem.Decode([]byte(aliPayPublicKey)); block == nil {
 		return errors.New("支付宝公钥Decode错误")
 	}
-	key, err := x509.ParsePKIXPublicKey(block.Bytes)
-	if err != nil {
+	if pubKey, err = x509.ParsePKIXPublicKey(block.Bytes); err != nil {
 		return fmt.Errorf("x509.ParsePKIXPublicKey：%v", err.Error())
 	}
-	publicKey, ok := key.(*rsa.PublicKey)
-	if !ok {
+	if publicKey, ok = pubKey.(*rsa.PublicKey); !ok {
 		return errors.New("支付宝公钥转换错误")
 	}
-	//判断签名方式
 	switch signType {
 	case "RSA":
 		hashs = crypto.SHA1
@@ -241,10 +221,8 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 	default:
 		hashs = crypto.SHA256
 	}
-
 	h = hashs.New()
 	h.Write([]byte(signData))
-
 	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
 }
 
@@ -252,28 +230,28 @@ func jsonToString(v interface{}) (str string) {
 	if v == nil {
 		return null
 	}
-	bs, err := json.Marshal(v)
-	if err != nil {
-		//fmt.Println("err:", err)
+	var (
+		bs  []byte
+		err error
+	)
+	if bs, err = json.Marshal(v); err != nil {
 		return null
 	}
-	s := string(bs)
-	if s == null {
+
+	if str = string(bs); str == null {
 		return null
 	}
-	return s
+	return
 }
 
 //格式化 普通应用秘钥
 func FormatPrivateKey(privateKey string) (pKey string) {
 	var buffer strings.Builder
 	buffer.WriteString("-----BEGIN RSA PRIVATE KEY-----\n")
-
 	rawLen := 64
 	keyLen := len(privateKey)
 	raws := keyLen / rawLen
 	temp := keyLen % rawLen
-
 	if temp > 0 {
 		raws++
 	}
@@ -298,12 +276,10 @@ func FormatPrivateKey(privateKey string) (pKey string) {
 func FormatAliPayPublicKey(publicKey string) (pKey string) {
 	var buffer strings.Builder
 	buffer.WriteString("-----BEGIN PUBLIC KEY-----\n")
-
 	rawLen := 64
 	keyLen := len(publicKey)
 	raws := keyLen / rawLen
 	temp := keyLen % rawLen
-
 	if temp > 0 {
 		raws++
 	}
@@ -330,128 +306,147 @@ func FormatAliPayPublicKey(publicKey string) (pKey string) {
 //    返回 err：error 信息
 func GetCertSN(certPath string) (sn string, err error) {
 	var (
-		certData []byte
+		certData           []byte
+		block              *pem.Block
+		certs              []*x509.Certificate
+		sm2Certs           []*sm2.Certificate
+		name, serialNumber string
+		h                  hash.Hash
 	)
 	if certData, err = ioutil.ReadFile(certPath); err != nil {
 		return null, fmt.Errorf("ioutil.ReadFile：%v", err.Error())
 	}
-	block, _ := pem.Decode(certData)
-	if block == nil {
-		return null, errors.New("x509.ParseCertificates：pem Decode error block is null")
+	if block, _ = pem.Decode(certData); block == nil {
+		return null, errors.New("pem.Decode：pem Decode error,block is null")
 	}
-	var (
-		certs        []*x509.Certificate
-		sm2Certs     []*sm2.Certificate
-		name         string
-		serialNumber string
-	)
-	certs, err = x509.ParseCertificates(block.Bytes)
-	if err != nil {
-		sm2Certs, err = sm2.ParseCertificates(block.Bytes)
-		if err != nil {
+	if certs, err = x509.ParseCertificates(block.Bytes); err != nil {
+		if sm2Certs, err = sm2.ParseCertificates(block.Bytes); err != nil {
 			return null, fmt.Errorf("sm2.ParseCertificates：%v", err.Error())
 		}
-	}
-	if certs != nil {
-		name = certs[0].Issuer.String()
-		serialNumber = certs[0].SerialNumber.String()
-	} else {
 		name = sm2Certs[0].Issuer.String()
 		serialNumber = sm2Certs[0].SerialNumber.String()
+		goto Sign
 	}
-	//fmt.Println("Name:", name)
-	//fmt.Println("SerialNumber:", serialNumber)
-	m5 := md5.New()
-	m5.Write([]byte(name))
-	m5.Write([]byte(serialNumber))
-	sum := m5.Sum(nil)
-	sn = hex.EncodeToString(sum)
+	if certs == nil {
+		return null, fmt.Errorf("x509.ParseCertificates：certs is null")
+	}
+	name = certs[0].Issuer.String()
+	serialNumber = certs[0].SerialNumber.String()
+Sign:
+	h = md5.New()
+	h.Write([]byte(name))
+	h.Write([]byte(serialNumber))
+	sn = hex.EncodeToString(h.Sum(nil))
 	return sn, nil
 }
 
-//解密支付宝开放数据
+//解密支付宝开放数据到 结构体
 //    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 //    secretKey:AES密钥，支付宝管理平台配置
 //    beanPtr:需要解析到的结构体指针
 //    文档：https://docs.alipay.com/mini/introduce/aes
 //    文档：https://docs.open.alipay.com/common/104567
 func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{}) (err error) {
-	//验证参数类型
 	beanValue := reflect.ValueOf(beanPtr)
 	if beanValue.Kind() != reflect.Ptr {
 		return errors.New("传入参数类型必须是以指针形式")
 	}
-	//验证interface{}类型
 	if beanValue.Elem().Kind() != reflect.Struct {
 		return errors.New("传入interface{}必须是结构体")
 	}
+	var (
+		block      cipher.Block
+		blockMode  cipher.BlockMode
+		originData []byte
+	)
 	aesKey, _ := base64.StdEncoding.DecodeString(secretKey)
 	ivKey := []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 	secretData, _ := base64.StdEncoding.DecodeString(encryptedData)
-
-	block, err := aes.NewCipher(aesKey)
-	if err != nil {
+	if block, err = aes.NewCipher(aesKey); err != nil {
 		return fmt.Errorf("aes.NewCipher：%v", err.Error())
 	}
 	if len(secretData)%len(aesKey) != 0 {
 		return errors.New("encryptedData is error")
 	}
-
-	blockMode := cipher.NewCBCDecrypter(block, ivKey)
-	originData := make([]byte, len(secretData))
+	blockMode = cipher.NewCBCDecrypter(block, ivKey)
+	originData = make([]byte, len(secretData))
 	blockMode.CryptBlocks(originData, secretData)
-
 	if len(originData) > 0 {
 		originData = PKCS5UnPadding(originData)
 	}
-	//fmt.Println("originDataStr:", string(originData))
-	//解析
-	err = json.Unmarshal(originData, beanPtr)
-	if err != nil {
+	if err = json.Unmarshal(originData, beanPtr); err != nil {
 		return fmt.Errorf("json.Unmarshal：%v", err.Error())
 	}
 	return nil
 }
 
+//解密支付宝开放数据到 BodyMap
+//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
+//    secretKey:AES密钥，支付宝管理平台配置
+//    文档：https://docs.alipay.com/mini/introduce/aes
+//    文档：https://docs.open.alipay.com/common/104567
+func DecryptAliPayOpenDataToBodyMap(encryptedData, secretKey string) (bm BodyMap, err error) {
+	var (
+		aesKey, originData []byte
+		ivKey              = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+		block              cipher.Block
+		blockMode          cipher.BlockMode
+	)
+	aesKey, _ = base64.StdEncoding.DecodeString(secretKey)
+	secretData, _ := base64.StdEncoding.DecodeString(encryptedData)
+	if block, err = aes.NewCipher(aesKey); err != nil {
+		return nil, fmt.Errorf("aes.NewCipher：%v", err.Error())
+	}
+	if len(secretData)%len(aesKey) != 0 {
+		return nil, errors.New("encryptedData is error")
+	}
+	blockMode = cipher.NewCBCDecrypter(block, ivKey)
+	originData = make([]byte, len(secretData))
+	blockMode.CryptBlocks(originData, secretData)
+	if len(originData) > 0 {
+		originData = PKCS5UnPadding(originData)
+	}
+	bm = make(BodyMap)
+	if err = json.Unmarshal(originData, &bm); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal：%v", err.Error())
+	}
+	return
+}
+
 //换取授权访问令牌（默认使用utf-8，RSA2）
 //    appId：应用ID
-//    privateKey：应用私钥
+//    PrivateKey：应用私钥
 //    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
 //    codeOrToken：支付宝授权码或refresh_token
 //    文档：https://docs.open.alipay.com/api_9/alipay.system.oauth.token
 func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (rsp *AliPaySystemOauthTokenResponse, err error) {
 	var bs []byte
-	body := make(BodyMap)
+	bm := make(BodyMap)
 	if "authorization_code" == grantType {
-		body.Set("grant_type", "authorization_code")
-		body.Set("code", codeOrToken)
+		bm.Set("grant_type", "authorization_code")
+		bm.Set("code", codeOrToken)
 	} else if "refresh_token" == grantType {
-		body.Set("grant_type", "refresh_token")
-		body.Set("refresh_token", codeOrToken)
+		bm.Set("grant_type", "refresh_token")
+		bm.Set("refresh_token", codeOrToken)
 	} else {
-		body.Set("grant_type", "authorization_code")
-		body.Set("code", codeOrToken)
+		bm.Set("grant_type", "authorization_code")
+		bm.Set("code", codeOrToken)
 	}
-	bs, err = aliPaySystemOauthToken(appId, privateKey, body, "alipay.system.oauth.token", true)
-	if err != nil {
-		return nil, err
-	}
-	//fmt.Println("bs:", string(bs))
-	rsp = new(AliPaySystemOauthTokenResponse)
-	err = json.Unmarshal(bs, rsp)
-	if err != nil {
-		return nil, fmt.Errorf("json.Unmarshal：%v", err.Error())
-	}
-	if rsp.AliPaySystemOauthTokenResponse.AccessToken != "" {
-		return rsp, nil
-	} else {
+	if bs, err = aliPaySystemOauthToken(appId, privateKey, bm, "alipay.system.oauth.token", true); err != nil {
 		return
 	}
+	rsp = new(AliPaySystemOauthTokenResponse)
+	if err = json.Unmarshal(bs, rsp); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal：%v", err.Error())
+	}
+	if rsp.AliPaySystemOauthTokenResponse.AccessToken == "" {
+		return nil, errors.New("access_token is null")
+	}
+	return
 }
 
 //向支付宝发送请求
 func aliPaySystemOauthToken(appId, privateKey string, body BodyMap, method string, isProd bool) (bytes []byte, err error) {
-	//===============生成参数===================
 	body.Set("app_id", appId)
 	body.Set("method", method)
 	body.Set("format", "JSON")
@@ -459,36 +454,23 @@ func aliPaySystemOauthToken(appId, privateKey string, body BodyMap, method strin
 	body.Set("sign_type", "RSA2")
 	body.Set("timestamp", time.Now().Format(TimeLayout))
 	body.Set("version", "1.0")
-	//===============获取签名===================
+	var (
+		sign, url string
+		errs      []error
+	)
 	pKey := FormatPrivateKey(privateKey)
-	sign, err := getRsaSign(body, "RSA2", pKey)
-	if err != nil {
-		return nil, err
+	if sign, err = getRsaSign(body, "RSA2", pKey); err != nil {
+		return
 	}
 	body.Set("sign", sign)
-	//fmt.Println("rsaSign:", sign)
-	//===============发起请求===================
-	urlParam := FormatAliPayURLParam(body)
-
-	var url string
 	agent := HttpAgent()
 	if !isProd {
-		//沙箱环境
-		url = zfb_sanbox_base_url_utf8
-		//fmt.Println(url)
-		agent.Post(url)
+		url = zfbSandboxBaseUrlUtf8
 	} else {
-		//正式环境
-		url = zfb_base_url_utf8
-		//fmt.Println(url)
-		agent.Post(url)
+		url = zfbBaseUrlUtf8
 	}
-	_, bs, errs := agent.
-		Type("form-data").
-		SendString(urlParam).
-		EndBytes()
-	if len(errs) > 0 {
+	if _, bytes, errs = agent.Post(url).Type("form-data").SendString(FormatAliPayURLParam(body)).EndBytes(); len(errs) > 0 {
 		return nil, errs[0]
 	}
-	return bs, nil
+	return
 }
