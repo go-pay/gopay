@@ -102,11 +102,14 @@ $ go get -u github.com/iGoogle-ink/gopay
 
 go mod 安装
 ```bash
-1、mod 文件的require中添加：github.com/iGoogle-ink/gopay latest，如下
+1、mod 文件的require中添加：github.com/iGoogle-ink/gopay latest ，如下
 require (
     github.com/iGoogle-ink/gopay latest
+    ...
+    ...
 )
-2、命令行执行：go list 或 go mod tidy
+2、命令行执行：go mod tidy 下载依赖包
+3、命令行执行：go list -m all 查看所有依赖包
 ```
 
 * #### 查看 GoPay 版本
