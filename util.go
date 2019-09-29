@@ -159,7 +159,7 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 		buf.WriteString(bm.Get(k))
 		buf.WriteByte('&')
 	}
-	return buf.String()[:buf.Len()]
+	return buf.String()[:buf.Len()-1]
 }
 
 //HttpAgent
