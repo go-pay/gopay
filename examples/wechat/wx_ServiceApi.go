@@ -2,8 +2,9 @@ package wechat
 
 import (
 	"fmt"
-	"github.com/iGoogle-ink/gopay"
 	"net/http"
+
+	"github.com/iGoogle-ink/gopay"
 )
 
 func Code2Session() {

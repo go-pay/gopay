@@ -2,6 +2,7 @@ package alipay
 
 import (
 	"fmt"
+
 	"github.com/iGoogle-ink/gopay"
 )
 
@@ -11,7 +12,7 @@ func AliPayTradeOrderSettle() {
 	//    appId：应用ID
 	//    privateKey：应用秘钥
 	//    isProd：是否是正式环境
-	client := gopay.NewAliPayClient("2016091200494382", privateKey, true)
+	client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType("RSA2")

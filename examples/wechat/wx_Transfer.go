@@ -7,6 +7,7 @@ package wechat
 
 import (
 	"fmt"
+
 	"github.com/iGoogle-ink/gopay"
 )
 
