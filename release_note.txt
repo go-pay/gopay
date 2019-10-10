@@ -1,3 +1,10 @@
+版本号：Release 1.4.0
+发布时间：2019/10/10 13:51
+修改记录：
+   (1) AliPayNotifyRequest 结构体，新增加两个字段：method、timestamp，修复电脑网站支付，配置 return_url 支付成功后，支付宝请求该 return_url 返回参数验签失败的问题
+   (2) 去除支付宝老验签方法 VerifyAliPayResultSign()
+   (3) 去除微信老验签方法 VerifyWeChatResultSign()
+
 版本号：Release 1.3.9
 发布时间：2019/09/30 00:01
 修改记录：

@@ -33,6 +33,8 @@ type AliPayNotifyRequest struct {
 	FundBillList      []fundBillListInfo      `json:"fund_bill_list,omitempty"`
 	PassbackParams    string                  `json:"passback_params,omitempty"`
 	VoucherDetailList []voucherDetailListInfo `json:"voucher_detail_list,omitempty"`
+	Method            string                  `json:"method,omitempty"`    //电脑网站支付 支付宝请求 return_url 同步返回参数
+	Timestamp         string                  `json:"timestamp,omitempty"` //电脑网站支付 支付宝请求 return_url 同步返回参数
 }
 
 type fundBillListInfo struct {

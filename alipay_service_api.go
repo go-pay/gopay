@@ -79,59 +79,6 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest,
 	return
 }
 
-//支付通知的签名验证和参数签名后的Sign（Deprecated）
-//    aliPayPublicKey：支付宝公钥
-//    notifyReq：利用 gopay.ParseAliPayNotifyResult() 得到的结构体
-//    返回参数ok：是否验证通过
-//    返回参数err：错误信息
-func VerifyAliPayResultSign(aliPayPublicKey string, notifyReq *AliPayNotifyRequest) (ok bool, err error) {
-	body := make(BodyMap)
-	body.Set("notify_time", notifyReq.NotifyTime)
-	body.Set("notify_type", notifyReq.NotifyType)
-	body.Set("notify_id", notifyReq.NotifyId)
-	body.Set("app_id", notifyReq.AppId)
-	body.Set("charset", notifyReq.Charset)
-	body.Set("version", notifyReq.Version)
-	//body.Set("sign", notifyReq.Sign)          //验签时去掉
-	//body.Set("sign_type", notifyReq.SignType) //验签时去掉
-	body.Set("auth_app_id", notifyReq.AuthAppId)
-	body.Set("trade_no", notifyReq.TradeNo)
-	body.Set("out_trade_no", notifyReq.OutTradeNo)
-	body.Set("out_biz_no", notifyReq.OutBizNo)
-	body.Set("buyer_id", notifyReq.BuyerId)
-	body.Set("buyer_logon_id", notifyReq.BuyerLogonId)
-	body.Set("seller_id", notifyReq.SellerId)
-	body.Set("seller_email", notifyReq.SellerEmail)
-	body.Set("trade_status", notifyReq.TradeStatus)
-	body.Set("total_amount", notifyReq.TotalAmount)
-	body.Set("receipt_amount", notifyReq.ReceiptAmount)
-	body.Set("invoice_amount", notifyReq.InvoiceAmount)
-	body.Set("buyer_pay_amount", notifyReq.BuyerPayAmount)
-	body.Set("point_amount", notifyReq.PointAmount)
-	body.Set("refund_fee", notifyReq.RefundFee)
-	body.Set("subject", notifyReq.Subject)
-	body.Set("body", notifyReq.Body)
-	body.Set("gmt_create", notifyReq.GmtCreate)
-	body.Set("gmt_payment", notifyReq.GmtPayment)
-	body.Set("gmt_refund", notifyReq.GmtRefund)
-	body.Set("gmt_close", notifyReq.GmtClose)
-	body.Set("fund_bill_list", jsonToString(notifyReq.FundBillList))
-	body.Set("passback_params", notifyReq.PassbackParams)
-	body.Set("voucher_detail_list", jsonToString(notifyReq.VoucherDetailList))
-	newBody := make(BodyMap)
-	for k, v := range body {
-		if v != null {
-			newBody.Set(k, v)
-		}
-	}
-	pKey := FormatAliPayPublicKey(aliPayPublicKey)
-	signData := newBody.EncodeAliPaySignParams()
-	if err = verifyAliPaySign(signData, notifyReq.Sign, notifyReq.SignType, pKey); err != nil {
-		return false, err
-	}
-	return true, nil
-}
-
 /*
 Q：使用公钥证书签名方式下，为什么开放平台网关的响应报文需要携带支付宝公钥证书SN（alipay_cert_sn）？
 **

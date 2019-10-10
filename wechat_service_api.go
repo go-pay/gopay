@@ -97,57 +97,6 @@ func ParseWeChatNotifyResult(req *http.Request) (notifyReq *WeChatNotifyRequest,
 	return
 }
 
-//验证微信支付异步通知的Sign值（Deprecated）
-//    ApiKey：API秘钥值
-//    signType：签名类型 MD5 或 HMAC-SHA256（默认请填写 MD5）
-//    notifyReq：利用 gopay.ParseWeChatNotifyResult() 得到的结构体
-//    返回参数ok：是否验证通过
-//    返回参数sign：根据参数计算的sign值，非微信返回参数中的Sign
-func VerifyWeChatResultSign(apiKey, signType string, notifyReq *WeChatNotifyRequest) (ok bool, sign string) {
-	body := make(BodyMap)
-	body.Set("return_code", notifyReq.ReturnCode)
-	body.Set("return_msg", notifyReq.ReturnMsg)
-	body.Set("appid", notifyReq.Appid)
-	body.Set("mch_id", notifyReq.MchId)
-	body.Set("device_info", notifyReq.DeviceInfo)
-	body.Set("nonce_str", notifyReq.NonceStr)
-	body.Set("sign_type", notifyReq.SignType)
-	body.Set("result_code", notifyReq.ResultCode)
-	body.Set("err_code", notifyReq.ErrCode)
-	body.Set("err_code_des", notifyReq.ErrCodeDes)
-	body.Set("openid", notifyReq.Openid)
-	body.Set("is_subscribe", notifyReq.IsSubscribe)
-	body.Set("trade_type", notifyReq.TradeType)
-	body.Set("bank_type", notifyReq.BankType)
-	body.Set("total_fee", notifyReq.TotalFee)
-	body.Set("settlement_total_fee", notifyReq.SettlementTotalFee)
-	body.Set("fee_type", notifyReq.FeeType)
-	body.Set("cash_fee", notifyReq.CashFee)
-	body.Set("cash_fee_type", notifyReq.CashFeeType)
-	body.Set("coupon_fee", notifyReq.CouponFee)
-	body.Set("coupon_count", notifyReq.CouponCount)
-	body.Set("coupon_type_0", notifyReq.CouponType0)
-	body.Set("coupon_type_1", notifyReq.CouponType1)
-	body.Set("coupon_id_0", notifyReq.CouponId0)
-	body.Set("coupon_id_1", notifyReq.CouponId1)
-	body.Set("coupon_fee_0", notifyReq.CouponFee0)
-	body.Set("coupon_fee_1", notifyReq.CouponFee1)
-	body.Set("transaction_id", notifyReq.TransactionId)
-	body.Set("out_trade_no", notifyReq.OutTradeNo)
-	body.Set("attach", notifyReq.Attach)
-	body.Set("time_end", notifyReq.TimeEnd)
-	newBody := make(BodyMap)
-	for key := range body {
-		vStr := body.Get(key)
-		if vStr != null && vStr != "0" {
-			newBody.Set(key, vStr)
-		}
-	}
-	sign = getWeChatReleaseSign(apiKey, signType, newBody)
-	ok = sign == notifyReq.Sign
-	return
-}
-
 //微信同步返回参数验签或异步通知参数验签
 //    ApiKey：API秘钥值
 //    signType：签名类型（调用API方法时填写的类型）
