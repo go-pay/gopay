@@ -376,7 +376,7 @@ return c.String(http.StatusOK, rsp.ToXmlString())   //此写法是 echo 框架�
 
 支付宝的**同步返回**验签，参数请注意看注释
 
-APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
+APP支付： 暂不支持同步返回验签
 
 支付宝支付后的同步/异步通知验签文档：[支付结果通知](https://docs.open.alipay.com/200/106120)
 ```go
