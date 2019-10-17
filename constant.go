@@ -32,6 +32,13 @@ const (
 	wxDownloadfundflow  = "pay/downloadfundflow"                  //下载资金账单
 	wxBatchquerycomment = "billcommentsp/batchquerycomment"       //拉取订单评价数据
 	wxTransfers         = "mmpaymkttransfers/promotion/transfers" //企业向微信用户个人付款
+	wxEntrustPublic     = "papay/entrustweb"                      //公众号纯签约
+	wxEntrustApp        = "papay/preentrustweb"                   //APP纯签约
+	wxEntrustH5         = "papay/h5entrustweb"                    //H5纯签约
+	wxEntrustQuery      = "papay/querycontract"                   //查询签约关系
+	wxEntrustDelete     = "papay/deletecontract"                  //申请解约
+	wxEntrustApplyPay   = "pay/pappayapply"                       //申请扣款
+	wxEntrustQueryOrder = "pay/paporderquery"                     //查询扣款订单
 
 	//SanBox
 	wxSandboxGetsignkey        = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"

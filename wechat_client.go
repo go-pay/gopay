@@ -20,7 +20,7 @@ type WeChatClient struct {
 	IsProd  bool
 }
 
-//初始化微信客户端 ok
+// 初始化微信客户端 ok
 //    appId：应用ID
 //    mchId：商户ID
 //    ApiKey：API秘钥值
@@ -33,7 +33,7 @@ func NewWeChatClient(appId, mchId, apiKey string, isProd bool) (client *WeChatCl
 		IsProd: isProd}
 }
 
-//提交付款码支付 ok
+// 提交付款码支付 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
 func (w *WeChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse, err error) {
 	var bs []byte
@@ -52,7 +52,7 @@ func (w *WeChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse, er
 	return
 }
 
-//统一下单 ok
+// 统一下单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
 func (w *WeChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderResponse, err error) {
 	var bs []byte
@@ -72,7 +72,7 @@ func (w *WeChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderResp
 	return
 }
 
-//查询订单 ok
+// 查询订单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
 func (w *WeChatClient) QueryOrder(body BodyMap) (wxRsp *WeChatQueryOrderResponse, err error) {
 	var bs []byte
@@ -91,7 +91,7 @@ func (w *WeChatClient) QueryOrder(body BodyMap) (wxRsp *WeChatQueryOrderResponse
 	return
 }
 
-//关闭订单 ok
+// 关闭订单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_3
 func (w *WeChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderResponse, err error) {
 	var bs []byte
@@ -110,7 +110,7 @@ func (w *WeChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderResponse
 	return
 }
 
-//撤销订单 ok
+// 撤销订单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3
 func (w *WeChatClient) Reverse(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatReverseResponse, err error) {
 	var (
@@ -146,7 +146,7 @@ func (w *WeChatClient) Reverse(body BodyMap, certFilePath, keyFilePath, pkcs12Fi
 	return
 }
 
-//申请退款 ok
+// 申请退款 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
 func (w *WeChatClient) Refund(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatRefundResponse, err error) {
 	var (
@@ -182,7 +182,7 @@ func (w *WeChatClient) Refund(body BodyMap, certFilePath, keyFilePath, pkcs12Fil
 	return
 }
 
-//查询退款 ok
+// 查询退款 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_5
 func (w *WeChatClient) QueryRefund(body BodyMap) (wxRsp *WeChatQueryRefundResponse, err error) {
 	var bs []byte
@@ -201,7 +201,7 @@ func (w *WeChatClient) QueryRefund(body BodyMap) (wxRsp *WeChatQueryRefundRespon
 	return
 }
 
-//下载对账单 ok
+// 下载对账单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_6
 func (w *WeChatClient) DownloadBill(body BodyMap) (wxRsp string, err error) {
 	var bs []byte
@@ -217,7 +217,7 @@ func (w *WeChatClient) DownloadBill(body BodyMap) (wxRsp string, err error) {
 	return
 }
 
-//下载资金账单 ok
+// 下载资金账单 ok
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7
 //    好像不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 func (w *WeChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
@@ -251,7 +251,7 @@ func (w *WeChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePath,
 	return
 }
 
-//拉取订单评价数据
+// 拉取订单评价数据
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_17&index=11
 //    好像不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 func (w *WeChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
@@ -286,7 +286,7 @@ func (w *WeChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFilePath
 	return
 }
 
-//企业向微信用户个人付款
+// 企业向微信用户个人付款
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_1
 //    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
 func (w *WeChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatTransfersResponse, err error) {
@@ -331,6 +331,12 @@ func (w *WeChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12F
 		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
 	}
 	return
+}
+
+// 公众号纯签约
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/pap.php?chapter=18_1&index=1
+func (w *WeChatClient) EntrustPublic(body BodyMap) (bs []byte, err error) {
+	bs, err = w.doWeChat(body, wxEntrustPublic)
 }
 
 //向微信发送请求 ok
