@@ -337,6 +337,8 @@ func (w *WeChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12F
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/pap.php?chapter=18_1&index=1
 func (w *WeChatClient) EntrustPublic(body BodyMap) (bs []byte, err error) {
 	bs, err = w.doWeChat(body, wxEntrustPublic)
+
+	return nil, nil
 }
 
 //向微信发送请求 ok
