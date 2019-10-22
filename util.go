@@ -31,16 +31,10 @@ func (bm BodyMap) Set(key string, value interface{}) {
 		bm[key] = Float32ToString(value.(float32))
 	case reflect.Float64:
 		bm[key] = Float64ToString(value.(float64))
-	case reflect.Ptr:
-		bm[key] = value
-	case reflect.Struct:
-		bm[key] = value
-	case reflect.Map:
-		bm[key] = value
-	case reflect.Slice:
+	case reflect.Ptr, reflect.Struct, reflect.Map, reflect.Slice:
 		bm[key] = value
 	default:
-		bm[key] = ""
+		bm[key] = null
 	}
 }
 
