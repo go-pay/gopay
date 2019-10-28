@@ -13,11 +13,14 @@ import (
 )
 
 type WeChatClient struct {
-	AppId   string
-	MchId   string
-	ApiKey  string
-	BaseURL string
-	IsProd  bool
+	AppId      string
+	MchId      string
+	ApiKey     string
+	BaseURL    string
+	CertFile   []byte
+	KeyFile    []byte
+	Pkcs12File []byte
+	IsProd     bool
 }
 
 // 初始化微信客户端 ok

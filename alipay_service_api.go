@@ -173,24 +173,6 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
 }
 
-func jsonToString(v interface{}) (str string) {
-	if v == nil {
-		return null
-	}
-	var (
-		bs  []byte
-		err error
-	)
-	if bs, err = json.Marshal(v); err != nil {
-		return null
-	}
-
-	if str = string(bs); str == null {
-		return null
-	}
-	return
-}
-
 //格式化 普通应用秘钥
 func FormatPrivateKey(privateKey string) (pKey string) {
 	var buffer strings.Builder

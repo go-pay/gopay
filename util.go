@@ -2,6 +2,7 @@ package gopay
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"encoding/xml"
 	"io"
 	"math/rand"
@@ -55,6 +56,21 @@ func (bm BodyMap) Get(key string) string {
 		return v
 	}
 	return jsonToString(value)
+}
+
+func jsonToString(v interface{}) (str string) {
+	if v == nil {
+		return null
+	}
+	var (
+		bs  []byte
+		err error
+	)
+	if bs, err = json.Marshal(v); err != nil {
+		return null
+	}
+	str = string(bs)
+	return
 }
 
 //删除参数
@@ -119,16 +135,17 @@ func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
 		buf     strings.Builder
 		keyList []string
 	)
-	keyList = make([]string, 0, len(bm))
 	for k := range bm {
 		keyList = append(keyList, k)
 	}
 	sort.Strings(keyList)
 	for _, k := range keyList {
-		buf.WriteString(k)
-		buf.WriteByte('=')
-		buf.WriteString(bm.Get(k))
-		buf.WriteByte('&')
+		if v := bm.Get(k); v != null {
+			buf.WriteString(k)
+			buf.WriteByte('=')
+			buf.WriteString(v)
+			buf.WriteByte('&')
+		}
 	}
 	buf.WriteString("key")
 	buf.WriteByte('=')

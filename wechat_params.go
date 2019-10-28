@@ -8,12 +8,13 @@ import (
 	"encoding/xml"
 	"errors"
 	"hash"
+	"io/ioutil"
 	"strings"
 )
 
 type Country int
 
-//设置支付国家（默认：中国国内）
+// 设置支付国家（默认：中国国内）
 //    根据支付地区情况设置国家
 //    country：<China：中国国内，China2：中国国内（冗灾方案），SoutheastAsia：东南亚，Other：其他国家>
 func (w *WeChatClient) SetCountry(country Country) (client *WeChatClient) {
@@ -32,7 +33,27 @@ func (w *WeChatClient) SetCountry(country Country) (client *WeChatClient) {
 	return w
 }
 
-//获取微信支付正式环境Sign值
+// 添加微信证书Bytes
+func (w *WeChatClient) AddCertFileBytes(certFile, keyFile, pkcs12File []byte) {
+	w.CertFile = certFile
+	w.KeyFile = keyFile
+	w.Pkcs12File = pkcs12File
+}
+
+// 添加微信证书Path路径
+func (w *WeChatClient) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath string) {
+	if cert, err := ioutil.ReadFile(certFilePath); err == nil {
+		w.CertFile = cert
+	}
+	if key, err := ioutil.ReadFile(keyFilePath); err == nil {
+		w.KeyFile = key
+	}
+	if pkcs, err := ioutil.ReadFile(pkcs12FilePath); err == nil {
+		w.Pkcs12File = pkcs
+	}
+}
+
+// 获取微信支付正式环境Sign值
 func getWeChatReleaseSign(apiKey string, signType string, bm BodyMap) (sign string) {
 	var h hash.Hash
 	if signType == SignType_HMAC_SHA256 {
@@ -45,7 +66,7 @@ func getWeChatReleaseSign(apiKey string, signType string, bm BodyMap) (sign stri
 	return
 }
 
-//获取微信支付沙箱环境Sign值
+// 获取微信支付沙箱环境Sign值
 func getWeChatSignBoxSign(mchId, apiKey string, bm BodyMap) (sign string, err error) {
 	var (
 		sandBoxApiKey string
@@ -60,7 +81,7 @@ func getWeChatSignBoxSign(mchId, apiKey string, bm BodyMap) (sign string, err er
 	return
 }
 
-//从微信提供的接口获取：SandboxSignKey
+// 从微信提供的接口获取：SandboxSignKey
 func getSanBoxKey(mchId, nonceStr, apiKey, signType string) (key string, err error) {
 	body := make(BodyMap)
 	body.Set("mch_id", mchId)
@@ -72,7 +93,7 @@ func getSanBoxKey(mchId, nonceStr, apiKey, signType string) (key string, err err
 	return
 }
 
-//从微信提供的接口获取：SandboxSignkey
+// 从微信提供的接口获取：SandboxSignkey
 func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 	reqs := make(BodyMap)
 	reqs.Set("mch_id", mchId)
@@ -96,7 +117,7 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 	return keyResponse.SandboxSignkey, nil
 }
 
-//生成请求XML的Body体
+// 生成请求XML的Body体
 func generateXml(bm BodyMap) (reqXml string) {
 	var buffer strings.Builder
 	buffer.WriteString("<xml>")
