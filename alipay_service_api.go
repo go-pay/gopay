@@ -1,6 +1,7 @@
 package gopay
 
 import (
+	"bytes"
 	"crypto"
 	"crypto/aes"
 	"crypto/cipher"
@@ -22,6 +23,19 @@ import (
 
 	"github.com/tjfoc/gmsm/sm2"
 )
+
+// 允许进行 sn 提取的证书签名算法
+var allowSignatureAlgorithm map[string]bool = map[string]bool{
+	"MD2-RSA":       true,
+	"MD5-RSA":       true,
+	"SHA1-RSA":      true,
+	"SHA256-RSA":    true,
+	"SHA384-RSA":    true,
+	"SHA512-RSA":    true,
+	"SHA256-RSAPSS": true,
+	"SHA384-RSAPSS": true,
+	"SHA512-RSAPSS": true,
+}
 
 //解析支付宝支付完成后的Notify信息
 func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest, err error) {
@@ -267,6 +281,41 @@ Sign:
 	h.Write([]byte(serialNumber))
 	sn = hex.EncodeToString(h.Sum(nil))
 	return sn, nil
+}
+
+// GetRootCertSN 阿里根证书 sn 提取
+//    certPath：X.509证书文件路径(appCertPublicKey.crt、alipayRootCert.crt、alipayCertPublicKey_RSA2)
+//    返回 sn：证书序列号(app_cert_sn、alipay_root_cert_sn、alipay_cert_sn)
+//    返回 err：error 信息
+func GetRootCertSN(certPath string) (sn string, err error) {
+	certData, err := ioutil.ReadFile(certPath)
+	if err != nil {
+		return "", err
+	}
+	strs := strings.Split(string(certData), "-----END CERTIFICATE-----")
+	var cert bytes.Buffer
+	for i := 0; i < len(strs); i++ {
+		if strs[i] == "" {
+			continue
+		}
+		if blo, _ := pem.Decode([]byte(strs[i] + "-----END CERTIFICATE-----")); blo != nil {
+			c, err := sm2.ParseCertificate(blo.Bytes)
+			if err != nil {
+				return "", err
+			}
+			si := c.Issuer.String() + c.SerialNumber.String()
+			if !allowSignatureAlgorithm[c.SignatureAlgorithm.String()] {
+				continue
+			}
+			if cert.String() == "" {
+				cert.WriteString(fmt.Sprintf("%x", md5.Sum([]byte(si))))
+			} else {
+				cert.WriteString("_")
+				cert.WriteString(fmt.Sprintf("%x", md5.Sum([]byte(si))))
+			}
+		}
+	}
+	return cert.String(), nil
 }
 
 //解密支付宝开放数据到 结构体
