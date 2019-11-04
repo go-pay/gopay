@@ -243,16 +243,15 @@ func FormatAliPayPublicKey(publicKey string) (pKey string) {
 	return
 }
 
-//获取证书序列号SN
-//    certPath：X.509证书文件路径(appCertPublicKey.crt、alipayRootCert.crt、alipayCertPublicKey_RSA2)
-//    返回 sn：证书序列号(app_cert_sn、alipay_root_cert_sn、alipay_cert_sn)
+// 获取Public证书序列号SN
+//    certPath：X.509证书文件路径(appCertPublicKey.crt、alipayCertPublicKey_RSA2)
+//    返回 sn：证书序列号(app_cert_sn、alipay_cert_sn)
 //    返回 err：error 信息
 func GetCertSN(certPath string) (sn string, err error) {
 	var (
 		certData           []byte
 		block              *pem.Block
 		certs              []*x509.Certificate
-		sm2Certs           []*sm2.Certificate
 		name, serialNumber string
 		h                  hash.Hash
 	)
@@ -263,19 +262,10 @@ func GetCertSN(certPath string) (sn string, err error) {
 		return null, errors.New("pem.Decode：pem Decode error,block is null")
 	}
 	if certs, err = x509.ParseCertificates(block.Bytes); err != nil {
-		if sm2Certs, err = sm2.ParseCertificates(block.Bytes); err != nil {
-			return null, fmt.Errorf("sm2.ParseCertificates：%v", err.Error())
-		}
-		name = sm2Certs[0].Issuer.String()
-		serialNumber = sm2Certs[0].SerialNumber.String()
-		goto Sign
-	}
-	if certs == nil {
-		return null, fmt.Errorf("x509.ParseCertificates：certs is null")
+		return null, fmt.Errorf("x509.ParseCertificates：error is %v", err.Error())
 	}
 	name = certs[0].Issuer.String()
 	serialNumber = certs[0].SerialNumber.String()
-Sign:
 	h = md5.New()
 	h.Write([]byte(name))
 	h.Write([]byte(serialNumber))
@@ -284,8 +274,8 @@ Sign:
 }
 
 // GetRootCertSN 阿里根证书 sn 提取
-//    certPath：X.509证书文件路径(appCertPublicKey.crt、alipayRootCert.crt、alipayCertPublicKey_RSA2)
-//    返回 sn：证书序列号(app_cert_sn、alipay_root_cert_sn、alipay_cert_sn)
+//    certPath：X.509证书文件路径(alipayRootCert.crt)
+//    返回 sn：证书序列号(alipay_root_cert_sn)
 //    返回 err：error 信息
 func GetRootCertSN(certPath string) (sn string, err error) {
 	certData, err := ioutil.ReadFile(certPath)
@@ -318,7 +308,7 @@ func GetRootCertSN(certPath string) (sn string, err error) {
 	return cert.String(), nil
 }
 
-//解密支付宝开放数据到 结构体
+// 解密支付宝开放数据到 结构体
 //    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 //    secretKey:AES密钥，支付宝管理平台配置
 //    beanPtr:需要解析到的结构体指针
