@@ -74,14 +74,16 @@ func GetCertSN() {
 	}
 	fmt.Println("sn:", sn)
 
-	sn, err = gopay.GetCertSN("alipay_cert/alipayRootCert.crt")
+	sn, err = gopay.GetCertSN("alipay_cert/alipayCertPublicKey_RSA2.crt")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
 	fmt.Println("sn:", sn)
+}
 
-	sn, err = gopay.GetCertSN("alipay_cert/alipayCertPublicKey_RSA2.crt")
+func GetRootCertSN() {
+	sn, err := gopay.GetRootCertSN("alipay_cert/alipayRootCert.crt")
 	if err != nil {
 		fmt.Println("err:", err)
 		return

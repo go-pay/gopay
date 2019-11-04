@@ -44,7 +44,7 @@ func (a *AliPayClient) SetAppCertSN(appCertSN string) (client *AliPayClient) {
 }
 
 //设置 支付宝根证书SN
-//    alipayRootCertSN：支付宝根证书SN，通过 gopay.GetCertSN() 获取
+//    alipayRootCertSN：支付宝根证书SN，通过 gopay.GetRootCertSN() 获取
 func (a *AliPayClient) SetAliPayRootCertSN(alipayRootCertSN string) (client *AliPayClient) {
 	a.AlipayRootCertSN = alipayRootCertSN
 	return a
