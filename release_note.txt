@@ -1,7 +1,7 @@
 版本号：Release 1.4.1
 发布时间：2019/11/04 14:28
 修改记录：
-   (1) 支付宝：新增公共API方法：GetRootCertSN()，修复获取支付宝根证书获取 sn 的问题（wziww）
+   (1) 支付宝：修改公共API方法：GetCertSN()，修复获取支付宝根证书获取 sn 的问题（wziww）
    (2) 支付宝：新增Client方法：client.SetAppCertSN()，可自行获取公钥 sn 并赋值
    (3) 支付宝：新增Client方法：client.SetAliPayRootCertSN()，可自行获取根证书 sn 并赋值
 
