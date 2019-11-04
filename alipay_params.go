@@ -36,7 +36,7 @@ type OpenApiRoyaltyDetailInfoPojo struct {
 	Desc         string `json:"desc,omitempty"`
 }
 
-//设置 应用公钥证书SN
+// 设置 应用公钥证书SN
 //    appCertSN：应用公钥证书SN，通过 gopay.GetCertSN() 获取
 func (a *AliPayClient) SetAppCertSN(appCertSN string) (client *AliPayClient) {
 	a.AppCertSN = appCertSN

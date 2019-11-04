@@ -1,22 +1,10 @@
 package gopay
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"strings"
 	"testing"
 )
-
-func TestMd5(t *testing.T) {
-	st := "appid=wxdaa2ab9ef87b5497&nonceStr=9k20rM66parD2U49&package=prepay_id=wx29164301554772fbc70d1d793335446010&signType=MD5&timeStamp=1548751382&key=GFDS8j98rewnmgl45wHTt980jg543wmg"
-	hash := md5.New()
-	hash.Write([]byte(st))
-	sum := hash.Sum(nil)
-	upper := strings.ToUpper(hex.EncodeToString(sum))
-	fmt.Println(" ssad  ", upper)
-}
 
 type Student struct {
 	Name  string `json:"name,omitempty"`

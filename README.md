@@ -85,7 +85,7 @@
 
 ### 支付宝公共API
 
-* gopay.GetCertSN() => 获取证书SN号（app_cert_sn、alipay_cert_sn、alipay_root_cert_sn<支付宝root根证书的sn获取通过 gopay.GetCertSN() 获取>）
+* gopay.GetCertSN() => 获取证书SN号（app_cert_sn、alipay_cert_sn、alipay_root_cert_sn>
 * gopay.AliPaySystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
 * gopay.FormatPrivateKey() => 格式化应用私钥
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
