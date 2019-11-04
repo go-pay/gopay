@@ -85,8 +85,7 @@
 
 ### 支付宝公共API
 
-* gopay.GetCertSN() => 获取应用公钥证书SN（app_cert_sn、alipay_cert_sn）
-* gopay.GetRootCertSN() => 获取支付宝根证书SN（alipay_root_cert_sn）
+* gopay.GetCertSN() => 获取证书SN号（app_cert_sn、alipay_cert_sn、alipay_root_cert_sn>
 * gopay.AliPaySystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
 * gopay.FormatPrivateKey() => 格式化应用私钥
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
@@ -179,7 +178,7 @@ client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 
 //设置支付宝请求 公共参数
 //    注意：具体设置哪些参数，根据不同的方法而不同，此处列举出所以设置参数
-client.SetAliPayRootCertSN().               //设置支付宝根证书SN，通过 gopay.GetRootCertSN() 获取
+client.SetAliPayRootCertSN().               //设置支付宝根证书SN，通过 gopay.GetCertSN() 获取
     SetAppCertSN().                         //设置应用公钥证书SN，通过 gopay.GetCertSN() 获取
     SetCharset("utf-8").                    //设置字符编码，不设置默认 utf-8
     SetSignType("RSA2").                    //设置签名类型，不设置默认 RSA2
