@@ -280,7 +280,10 @@ func GetCertSN(certPath string) (sn string, err error) {
 			}
 		}
 	}
-	return sn, errors.New("failed to get sn,please check your cert")
+	if sn == ""{
+		return "",errors.New("failed to get sn,please check your cert")
+	}
+	return sn, nil
 }
 
 // DecryptAliPayOpenDataToStruct 解密支付宝开放数据到 结构体
