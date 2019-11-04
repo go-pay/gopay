@@ -81,12 +81,3 @@ func GetCertSN() {
 	}
 	fmt.Println("sn:", sn)
 }
-
-func GetRootCertSN() {
-	sn, err := gopay.GetRootCertSN("alipay_cert/alipayRootCert.crt")
-	if err != nil {
-		fmt.Println("err:", err)
-		return
-	}
-	fmt.Println("sn:", sn)
-}

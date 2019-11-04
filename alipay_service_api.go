@@ -1,7 +1,6 @@
 package gopay
 
 import (
-	"bytes"
 	"crypto"
 	"crypto/aes"
 	"crypto/cipher"
@@ -20,8 +19,6 @@ import (
 	"reflect"
 	"strings"
 	"time"
-
-	"github.com/tjfoc/gmsm/sm2"
 )
 
 // 允许进行 sn 提取的证书签名算法
@@ -37,7 +34,7 @@ var allowSignatureAlgorithm map[string]bool = map[string]bool{
 	"SHA512-RSAPSS": true,
 }
 
-//解析支付宝支付完成后的Notify信息
+// ParseAliPayNotifyResult 解析支付宝支付完成后的Notify信息
 func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest, err error) {
 	notifyReq = new(AliPayNotifyRequest)
 	notifyReq.NotifyTime = req.FormValue("notify_time")
@@ -109,7 +106,7 @@ A：开发者上传自己的应用公钥证书后，开放平台会为开发者�
 基于该机制可实现支付宝公钥证书变更时开发者无感知，当前开放平台提供的SDK已基于该机制实现对应功能。若开发者未通过SDK接入，须自行实现该功能。
 */
 
-//支付宝同步返回验签或异步通知验签
+// VerifyAliPaySign 支付宝同步返回验签或异步通知验签
 //    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
 //    aliPayPublicKey：支付宝公钥
 //    bean： 同步返回验签时，此参数为 aliRsp.SignData ；异步通知验签时，此参数为异步通知解析的结构体 notifyReq
@@ -187,7 +184,7 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
 }
 
-//格式化 普通应用秘钥
+// FormatPrivateKey 格式化 普通应用秘钥
 func FormatPrivateKey(privateKey string) (pKey string) {
 	var buffer strings.Builder
 	buffer.WriteString("-----BEGIN RSA PRIVATE KEY-----\n")
@@ -215,7 +212,7 @@ func FormatPrivateKey(privateKey string) (pKey string) {
 	return
 }
 
-//格式化 普通支付宝公钥
+// FormatAliPayPublicKey 格式化 普通支付宝公钥
 func FormatAliPayPublicKey(publicKey string) (pKey string) {
 	var buffer strings.Builder
 	buffer.WriteString("-----BEGIN PUBLIC KEY-----\n")
@@ -243,82 +240,50 @@ func FormatAliPayPublicKey(publicKey string) (pKey string) {
 	return
 }
 
-//获取证书序列号SN
+// GetCertSN 获取证书序列号SN
 //    certPath：X.509证书文件路径(appCertPublicKey.crt、alipayRootCert.crt、alipayCertPublicKey_RSA2)
 //    返回 sn：证书序列号(app_cert_sn、alipay_root_cert_sn、alipay_cert_sn)
 //    返回 err：error 信息
 func GetCertSN(certPath string) (sn string, err error) {
 	var (
 		certData           []byte
-		block              *pem.Block
 		certs              []*x509.Certificate
-		sm2Certs           []*sm2.Certificate
 		name, serialNumber string
 		h                  hash.Hash
 	)
-	if certData, err = ioutil.ReadFile(certPath); err != nil {
-		return null, fmt.Errorf("ioutil.ReadFile：%v", err.Error())
-	}
-	if block, _ = pem.Decode(certData); block == nil {
-		return null, errors.New("pem.Decode：pem Decode error,block is null")
-	}
-	if certs, err = x509.ParseCertificates(block.Bytes); err != nil {
-		if sm2Certs, err = sm2.ParseCertificates(block.Bytes); err != nil {
-			return null, fmt.Errorf("sm2.ParseCertificates：%v", err.Error())
-		}
-		name = sm2Certs[0].Issuer.String()
-		serialNumber = sm2Certs[0].SerialNumber.String()
-		goto Sign
-	}
-	if certs == nil {
-		return null, fmt.Errorf("x509.ParseCertificates：certs is null")
-	}
-	name = certs[0].Issuer.String()
-	serialNumber = certs[0].SerialNumber.String()
-Sign:
-	h = md5.New()
-	h.Write([]byte(name))
-	h.Write([]byte(serialNumber))
-	sn = hex.EncodeToString(h.Sum(nil))
-	return sn, nil
-}
-
-// GetRootCertSN 阿里根证书 sn 提取
-//    certPath：X.509证书文件路径(appCertPublicKey.crt、alipayRootCert.crt、alipayCertPublicKey_RSA2)
-//    返回 sn：证书序列号(app_cert_sn、alipay_root_cert_sn、alipay_cert_sn)
-//    返回 err：error 信息
-func GetRootCertSN(certPath string) (sn string, err error) {
-	certData, err := ioutil.ReadFile(certPath)
+	certData, err = ioutil.ReadFile(certPath)
 	if err != nil {
 		return "", err
 	}
 	strs := strings.Split(string(certData), "-----END CERTIFICATE-----")
-	var cert bytes.Buffer
 	for i := 0; i < len(strs); i++ {
 		if strs[i] == "" {
 			continue
 		}
-		if blo, _ := pem.Decode([]byte(strs[i] + "-----END CERTIFICATE-----")); blo != nil {
-			c, err := sm2.ParseCertificate(blo.Bytes)
-			if err != nil {
-				return "", err
-			}
-			si := c.Issuer.String() + c.SerialNumber.String()
-			if !allowSignatureAlgorithm[c.SignatureAlgorithm.String()] {
+		if block, _ := pem.Decode([]byte(strs[i] + "-----END CERTIFICATE-----")); block != nil {
+			if certs, err = x509.ParseCertificates(block.Bytes); err != nil {
 				continue
 			}
-			if cert.String() == "" {
-				cert.WriteString(fmt.Sprintf("%x", md5.Sum([]byte(si))))
+			if !allowSignatureAlgorithm[certs[0].SignatureAlgorithm.String()] {
+				continue
+			}
+			name = certs[0].Issuer.String()
+			serialNumber = certs[0].SerialNumber.String()
+			h = md5.New()
+			h.Write([]byte(name))
+			h.Write([]byte(serialNumber))
+			if sn == "" {
+				sn += hex.EncodeToString(h.Sum(nil))
 			} else {
-				cert.WriteString("_")
-				cert.WriteString(fmt.Sprintf("%x", md5.Sum([]byte(si))))
+				sn += "_"
+				sn += hex.EncodeToString(h.Sum(nil))
 			}
 		}
 	}
-	return cert.String(), nil
+	return sn, nil
 }
 
-//解密支付宝开放数据到 结构体
+// DecryptAliPayOpenDataToStruct 解密支付宝开放数据到 结构体
 //    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 //    secretKey:AES密钥，支付宝管理平台配置
 //    beanPtr:需要解析到的结构体指针
@@ -358,7 +323,7 @@ func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr inte
 	return nil
 }
 
-//解密支付宝开放数据到 BodyMap
+// DecryptAliPayOpenDataToBodyMap 解密支付宝开放数据到 BodyMap
 //    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 //    secretKey:AES密钥，支付宝管理平台配置
 //    文档：https://docs.alipay.com/mini/introduce/aes
@@ -391,7 +356,7 @@ func DecryptAliPayOpenDataToBodyMap(encryptedData, secretKey string) (bm BodyMap
 	return
 }
 
-//换取授权访问令牌（默认使用utf-8，RSA2）
+// AliPaySystemOauthToken 换取授权访问令牌（默认使用utf-8，RSA2）
 //    appId：应用ID
 //    PrivateKey：应用私钥
 //    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
@@ -423,7 +388,7 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 	return
 }
 
-//向支付宝发送请求
+// aliPaySystemOauthToken 向支付宝发送请求
 func aliPaySystemOauthToken(appId, privateKey string, body BodyMap, method string, isProd bool) (bytes []byte, err error) {
 	body.Set("app_id", appId)
 	body.Set("method", method)
