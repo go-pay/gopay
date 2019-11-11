@@ -251,6 +251,15 @@ type WeChatNotifyRequest struct {
 	TimeEnd            string `xml:"time_end,omitempty" json:"time_end,omitempty"`
 }
 
+type WeChatRefundNotifyRequest struct {
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	Appid      string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId      string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	NonceStr   string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	ReqInfo    string `xml:"req_info,omitempty" json:"req_info,omitempty"`
+}
+
 type Code2SessionRsp struct {
 	SessionKey string `json:"session_key,omitempty"` // 会话密钥
 	ExpiresIn  int    `json:"expires_in,omitempty"`  // SessionKey超时时间（秒）

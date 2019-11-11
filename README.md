@@ -45,6 +45,7 @@
 * gopay.GetAppPaySign() => 获取APP支付所需要的paySign
 * gopay.ParseWeChatNotifyResultToBodyMap() => 解析微信支付异步通知的参数到BodyMap
 * gopay.ParseWeChatNotifyResult() => 解析微信支付异步通知的参数
+* gopay.ParseWeChatRefundNotifyResult() => 解析微信退款异步通知的参数
 * gopay.VerifyWeChatSign() => 微信同步返回参数验签或异步通知参数验签
 * gopay.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
 * gopay.GetWeChatAppletAccessToken() => 获取微信小程序全局唯一后台接口调用凭据
@@ -354,7 +355,7 @@ paySign := gopay.GetMiniPaySign(AppID, wxRsp.NonceStr, packages, gopay.SignType_
 ```go
 //====同步返回参数验签Sign====
 wxRsp, err := client.UnifiedOrder(bm)
-//微信同步返回参数验签或异步通知参数验签
+// 微信同步返回参数验签或异步通知参数验签
 //    apiKey：API秘钥值
 //    signType：签名类型（调用API方法时填写的类型）
 //    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
@@ -362,14 +363,22 @@ wxRsp, err := client.UnifiedOrder(bm)
 //    返回参数 err：错误信息
 ok, err := gopay.VerifyWeChatSign(apiKey, gopay.SignType_MD5, wxRsp)
 
-//====异步通知参数解析和验签Sign====
-//解析异步通知的参数
+//====支付异步通知参数解析和验签Sign====
+// 解析支付异步通知的参数
 //    req：*http.Request
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
 notifyReq, err := gopay.ParseWeChatNotifyResult(c.Request())    //c.Request()是 echo 框架的获取 *http.Request 的写法
 //验签操作
 ok, err := gopay.VerifyWeChatSign(apiKey, gopay.SignType_MD5, notifyReq)
+
+//====退款异步通知参数解析，退款通知无sign，不用验签====
+// 
+// 解析退款异步通知的参数，解析出来的 req_info 是加密数据，需解密
+//    req：*http.Request
+//    返回参数 notifyReq：通知的参数
+//    返回参数 err：错误信息
+notifyReq, err := gopay.ParseWeChatRefundNotifyResult(c.Request())
 
 //==异步通知，返回给微信平台的信息==
 rsp := new(gopay.WeChatNotifyResponse) //回复微信的数据

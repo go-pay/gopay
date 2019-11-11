@@ -97,7 +97,19 @@ func ParseWeChatNotifyResult(req *http.Request) (notifyReq *WeChatNotifyRequest,
 	return
 }
 
-//微信同步返回参数验签或异步通知参数验签
+// 解析微信退款异步通知的参数，解析出来的 req_info 是加密数据，需解密
+//    req：*http.Request
+//    返回参数notifyReq：Notify请求的参数
+//    返回参数err：错误信息
+func ParseWeChatRefundNotifyResult(req *http.Request) (notifyReq *WeChatRefundNotifyRequest, err error) {
+	notifyReq = new(WeChatRefundNotifyRequest)
+	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
+		return nil, fmt.Errorf("xml.NewDecoder：%v", err.Error())
+	}
+	return
+}
+
+// 微信同步返回参数验签或异步通知参数验签
 //    ApiKey：API秘钥值
 //    signType：签名类型（调用API方法时填写的类型）
 //    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
@@ -136,7 +148,7 @@ type WeChatNotifyResponse struct {
 	ReturnMsg  string `xml:"return_msg"`
 }
 
-//返回数据给微信
+// 返回数据给微信
 func (w *WeChatNotifyResponse) ToXmlString() (xmlStr string) {
 	var buffer strings.Builder
 	buffer.WriteString("<xml><return_code><![CDATA[")
@@ -149,7 +161,7 @@ func (w *WeChatNotifyResponse) ToXmlString() (xmlStr string) {
 	return
 }
 
-//JSAPI支付，统一下单获取支付参数后，再次计算出小程序用的paySign
+// JSAPI支付，统一下单获取支付参数后，再次计算出小程序用的paySign
 //    appId：APPID
 //    nonceStr：随即字符串
 //    prepayId：统一下单成功后得到的值
@@ -183,7 +195,7 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey strin
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 }
 
-//微信内H5支付，统一下单获取支付参数后，再次计算出微信内H5支付需要用的paySign
+// 微信内H5支付，统一下单获取支付参数后，再次计算出微信内H5支付需要用的paySign
 //    appId：APPID
 //    nonceStr：随即字符串
 //    packages：统一下单成功后拼接得到的值
@@ -218,7 +230,7 @@ func GetH5PaySign(appId, nonceStr, packages, signType, timeStamp, apiKey string)
 	return
 }
 
-//APP支付，统一下单获取支付参数后，再次计算APP支付所需要的的sign
+// APP支付，统一下单获取支付参数后，再次计算APP支付所需要的的sign
 //    appId：APPID
 //    partnerid：partnerid
 //    nonceStr：随即字符串
@@ -255,7 +267,7 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 	return
 }
 
-//解密开放数据到结构体
+// 解密开放数据到结构体
 //    encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
 //    iv：加密算法的初始向量，小程序获取到
 //    sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
@@ -295,7 +307,7 @@ func DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr
 	return
 }
 
-//解密开放数据到 BodyMap
+// 解密开放数据到 BodyMap
 //    encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
 //    iv：加密算法的初始向量，小程序获取到
 //    sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
@@ -329,7 +341,7 @@ func DecryptWeChatOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm Bo
 	}
 }
 
-//App应用微信第三方登录，code换取access_token
+// App应用微信第三方登录，code换取access_token
 //    appId：应用唯一标识，在微信开放平台提交应用审核通过后获得
 //    appSecret：应用密钥AppSecret，在微信开放平台提交应用审核通过后获得
 //    code：App用户换取access_token的code
@@ -342,7 +354,7 @@ func GetAppWeChatLoginAccessToken(appId, appSecret, code string) (accessToken *A
 	return
 }
 
-//刷新App应用微信第三方登录后，获取的 access_token
+// 刷新App应用微信第三方登录后，获取的 access_token
 //    appId：应用唯一标识，在微信开放平台提交应用审核通过后获得
 //    appSecret：应用密钥AppSecret，在微信开放平台提交应用审核通过后获得
 //    code：App用户换取access_token的code
@@ -355,7 +367,7 @@ func RefreshAppWeChatLoginAccessToken(appId, refreshToken string) (accessToken *
 	return
 }
 
-//获取微信小程序用户的OpenId、SessionKey、UnionId
+// 获取微信小程序用户的OpenId、SessionKey、UnionId
 //    appId:APPID
 //    appSecret:AppSecret
 //    wxCode:小程序调用wx.login 获取的code
@@ -369,7 +381,7 @@ func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp,
 	return
 }
 
-//获取微信小程序全局唯一后台接口调用凭据(AccessToken:157字符)
+// 获取微信小程序全局唯一后台接口调用凭据(AccessToken:157字符)
 //    appId:APPID
 //    appSecret:AppSecret
 //    获取access_token文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
@@ -382,7 +394,7 @@ func GetWeChatAppletAccessToken(appId, appSecret string) (accessToken *AccessTok
 	return
 }
 
-//授权码查询openid(AccessToken:157字符)
+// 授权码查询openid(AccessToken:157字符)
 //    appId:APPID
 //    mchId:商户号
 //    ApiKey:apiKey
@@ -413,7 +425,7 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 	return
 }
 
-//微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权。
+// 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权。
 //    accessToken：接口调用凭据
 //    openId：用户的OpenID
 //    transactionId：微信支付订单号
@@ -427,7 +439,7 @@ func GetWeChatAppletPaidUnionId(accessToken, openId, transactionId string) (unio
 	return
 }
 
-//获取用户基本信息(UnionID机制)
+// 获取用户基本信息(UnionID机制)
 //    accessToken：接口调用凭据
 //    openId：用户的OpenID
 //    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
