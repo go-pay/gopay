@@ -76,11 +76,11 @@ func GetWeChatSanBoxParamSign(appId, mchId, apiKey string, bm BodyMap) (sign str
 func ParseWeChatNotifyResultToBodyMap(req *http.Request) (bm BodyMap, err error) {
 	var bs []byte
 	if bs, err = ioutil.ReadAll(req.Body); err != nil {
-		return nil, fmt.Errorf("ioutil.ReadAll：%v", err.Error())
+		return nil, fmt.Errorf("ioutil.ReadAll：%s", err.Error())
 	}
 	bm = make(BodyMap)
 	if err = xml.Unmarshal(bs, &bm); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 	}
 	return
 }
@@ -92,19 +92,65 @@ func ParseWeChatNotifyResultToBodyMap(req *http.Request) (bm BodyMap, err error)
 func ParseWeChatNotifyResult(req *http.Request) (notifyReq *WeChatNotifyRequest, err error) {
 	notifyReq = new(WeChatNotifyRequest)
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
-		return nil, fmt.Errorf("xml.NewDecoder：%v", err.Error())
+		return nil, fmt.Errorf("xml.NewDecoder：%s", err.Error())
 	}
 	return
 }
 
-// 解析微信退款异步通知的参数，解析出来的 req_info 是加密数据，需解密
+// 解析微信退款异步通知的参数
 //    req：*http.Request
 //    返回参数notifyReq：Notify请求的参数
 //    返回参数err：错误信息
 func ParseWeChatRefundNotifyResult(req *http.Request) (notifyReq *WeChatRefundNotifyRequest, err error) {
 	notifyReq = new(WeChatRefundNotifyRequest)
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
-		return nil, fmt.Errorf("xml.NewDecoder：%v", err.Error())
+		return nil, fmt.Errorf("xml.NewDecoder：%s", err.Error())
+	}
+	return
+}
+
+// 解密微信退款异步通知的加密数据
+//    reqInfo：gopay.ParseWeChatRefundNotifyResult() 方法获取的加密数据 req_info
+//    apiKey：API秘钥值
+//    返回参数refundNotify：RefundNotify请求的加密数据
+//    返回参数err：错误信息
+//    文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_16&index=10
+func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNotify, err error) {
+	var (
+		encryptionB, bs []byte
+		block           cipher.Block
+		blockSize       int
+	)
+	if encryptionB, err = base64.StdEncoding.DecodeString(reqInfo); err != nil {
+		return nil, err
+	}
+	h := md5.New()
+	h.Write([]byte(apiKey))
+	key := strings.ToLower(hex.EncodeToString(h.Sum(nil)))
+	if len(encryptionB)%aes.BlockSize != 0 {
+		return nil, errors.New("encryptedData is error")
+	}
+	if block, err = aes.NewCipher([]byte(key)); err != nil {
+		return nil, err
+	}
+	blockSize = block.BlockSize()
+	func(dst, src []byte) {
+		if len(src)%blockSize != 0 {
+			panic("crypto/cipher: input not full blocks")
+		}
+		if len(dst) < len(src) {
+			panic("crypto/cipher: output smaller than input")
+		}
+		for len(src) > 0 {
+			block.Decrypt(dst, src[:blockSize])
+			src = src[blockSize:]
+			dst = dst[blockSize:]
+		}
+	}(encryptionB, encryptionB)
+	bs = PKCS7UnPadding(encryptionB)
+	refundNotify = new(RefundNotify)
+	if err = xml.Unmarshal(bs, refundNotify); err != nil {
+		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 	}
 	return
 }
@@ -131,11 +177,11 @@ func VerifyWeChatSign(apiKey, signType string, bean interface{}) (ok bool, err e
 		goto Verify
 	}
 	if bs, err = json.Marshal(bean); err != nil {
-		return false, fmt.Errorf("json.Marshal：%v", err.Error())
+		return false, fmt.Errorf("json.Marshal：%s", err.Error())
 	}
 	bm = make(BodyMap)
 	if err = json.Unmarshal(bs, &bm); err != nil {
-		return false, fmt.Errorf("json.Unmarshal：%v", err.Error())
+		return false, fmt.Errorf("json.Unmarshal：%s", err.Error())
 	}
 Verify:
 	bodySign = bm.Get("sign")
@@ -293,7 +339,7 @@ func DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr
 		return errors.New("encryptedData is error")
 	}
 	if block, err = aes.NewCipher(aesKey); err != nil {
-		return fmt.Errorf("aes.NewCipher：%v", err.Error())
+		return fmt.Errorf("aes.NewCipher：%s", err.Error())
 	}
 	blockMode = cipher.NewCBCDecrypter(block, ivKey)
 	plainText = make([]byte, len(cipherText))
@@ -302,7 +348,7 @@ func DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr
 		plainText = PKCS7UnPadding(plainText)
 	}
 	if err = json.Unmarshal(plainText, beanPtr); err != nil {
-		return fmt.Errorf("json.Unmarshal：%v", err.Error())
+		return fmt.Errorf("json.Unmarshal：%s", err.Error())
 	}
 	return
 }
@@ -325,7 +371,7 @@ func DecryptWeChatOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm Bo
 		return nil, errors.New("encryptedData is error")
 	}
 	if block, err = aes.NewCipher(aesKey); err != nil {
-		return nil, fmt.Errorf("aes.NewCipher：%v", err.Error())
+		return nil, fmt.Errorf("aes.NewCipher：%s", err.Error())
 	} else {
 		blockMode = cipher.NewCBCDecrypter(block, ivKey)
 		plainText = make([]byte, len(cipherText))
@@ -335,7 +381,7 @@ func DecryptWeChatOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm Bo
 		}
 		bm = make(BodyMap)
 		if err = json.Unmarshal(plainText, &bm); err != nil {
-			return nil, fmt.Errorf("json.Unmarshal：%v", err.Error())
+			return nil, fmt.Errorf("json.Unmarshal：%s", err.Error())
 		}
 		return
 	}
@@ -420,7 +466,7 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 	}
 	openIdRsp = new(OpenIdByAuthCodeRsp)
 	if err = xml.Unmarshal(bs, openIdRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 	}
 	return
 }

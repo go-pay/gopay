@@ -1,3 +1,9 @@
+版本号：Release 1.4.3
+发布时间：2019/11/12 00:40
+修改记录：
+   (1) 微信：公共API方法：gopay.ParseWeChatRefundNotifyResult()，解析微信退款异步通知的请求参数
+   (2) 微信：公共API方法：gopay.DecryptRefundNotifyReqInfo()，解密微信退款异步通知的加密数据
+   (3) 修改部分小问题
 
 版本号：Release 1.4.2
 发布时间：2019/11/11 16:43

@@ -56,6 +56,7 @@
 * gopay.GetOpenIdByAuthCode() => 授权码查询openid
 * gopay.GetAppWeChatLoginAccessToken() => App应用微信第三方登录，code换取access_token
 * gopay.RefreshAppWeChatLoginAccessToken() => 刷新App应用微信第三方登录后，获取的 access_token
+* gopay.DecryptRefundNotifyReqInfo() => 解密微信退款异步通知的加密数据
 
 ---
 
@@ -379,6 +380,9 @@ ok, err := gopay.VerifyWeChatSign(apiKey, gopay.SignType_MD5, notifyReq)
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
 notifyReq, err := gopay.ParseWeChatRefundNotifyResult(c.Request())
+
+//==解密退款异步通知的加密参数 req_info ==
+refundNotify, err := gopay.DecryptRefundNotifyReqInfo(notifyReq.ReqInfo, apiKey)
 
 //==异步通知，返回给微信平台的信息==
 rsp := new(gopay.WeChatNotifyResponse) //回复微信的数据

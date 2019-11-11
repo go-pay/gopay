@@ -50,7 +50,7 @@ func (w *WeChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse, er
 	}
 	wxRsp = new(WeChatMicropayResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 	}
 	return
 }
@@ -70,7 +70,7 @@ func (w *WeChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderResp
 	}
 	wxRsp = new(WeChatUnifiedOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 	}
 	return
 }
@@ -89,7 +89,7 @@ func (w *WeChatClient) QueryOrder(body BodyMap) (wxRsp *WeChatQueryOrderResponse
 	}
 	wxRsp = new(WeChatQueryOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 	}
 	return
 }
@@ -108,7 +108,7 @@ func (w *WeChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderResponse
 	}
 	wxRsp = new(WeChatCloseOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 	}
 	return
 }
@@ -125,11 +125,11 @@ func (w *WeChatClient) Reverse(body BodyMap, certFilePath, keyFilePath, pkcs12Fi
 	if w.IsProd {
 		pkcsPool = x509.NewCertPool()
 		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
-			return nil, fmt.Errorf("ioutil.ReadFile：%v", err.Error())
+			return nil, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
 		}
 		pkcsPool.AppendCertsFromPEM(pkcs)
 		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
-			return nil, fmt.Errorf("tls.LoadX509KeyPair：%v", err.Error())
+			return nil, fmt.Errorf("tls.LoadX509KeyPair：%s", err.Error())
 		}
 		tlsConfig = &tls.Config{
 			Certificates:       []tls.Certificate{certificate},
@@ -144,7 +144,7 @@ func (w *WeChatClient) Reverse(body BodyMap, certFilePath, keyFilePath, pkcs12Fi
 	}
 	wxRsp = new(WeChatReverseResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 	}
 	return
 }
@@ -161,11 +161,11 @@ func (w *WeChatClient) Refund(body BodyMap, certFilePath, keyFilePath, pkcs12Fil
 	if w.IsProd {
 		pkcsPool = x509.NewCertPool()
 		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
-			return nil, fmt.Errorf("ioutil.ReadFile：%v", err.Error())
+			return nil, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
 		}
 		pkcsPool.AppendCertsFromPEM(pkcs)
 		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
-			return nil, fmt.Errorf("tls.LoadX509KeyPair：%v", err.Error())
+			return nil, fmt.Errorf("tls.LoadX509KeyPair：%s", err.Error())
 		}
 		tlsConfig = &tls.Config{
 			Certificates:       []tls.Certificate{certificate},
@@ -180,7 +180,7 @@ func (w *WeChatClient) Refund(body BodyMap, certFilePath, keyFilePath, pkcs12Fil
 	}
 	wxRsp = new(WeChatRefundResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 	}
 	return
 }
@@ -199,7 +199,7 @@ func (w *WeChatClient) QueryRefund(body BodyMap) (wxRsp *WeChatQueryRefundRespon
 	}
 	wxRsp = new(WeChatQueryRefundResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 	}
 	return
 }
@@ -233,11 +233,11 @@ func (w *WeChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePath,
 	if w.IsProd {
 		pkcsPool = x509.NewCertPool()
 		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
-			return null, fmt.Errorf("ioutil.ReadFile：%v", err.Error())
+			return null, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
 		}
 		pkcsPool.AppendCertsFromPEM(pkcs)
 		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
-			return null, fmt.Errorf("tls.LoadX509KeyPair：%v", err.Error())
+			return null, fmt.Errorf("tls.LoadX509KeyPair：%s", err.Error())
 		}
 		tlsConfig = &tls.Config{
 			Certificates:       []tls.Certificate{certificate},
@@ -268,11 +268,11 @@ func (w *WeChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFilePath
 		body.Set("sign_type", SignType_HMAC_SHA256)
 		pkcsPool = x509.NewCertPool()
 		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
-			return null, fmt.Errorf("ioutil.ReadFile：%v", err.Error())
+			return null, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
 		}
 		pkcsPool.AppendCertsFromPEM(pkcs)
 		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
-			return null, fmt.Errorf("tls.LoadX509KeyPair：%v", err.Error())
+			return null, fmt.Errorf("tls.LoadX509KeyPair：%s", err.Error())
 		}
 		tlsConfig = &tls.Config{
 			Certificates:       []tls.Certificate{certificate},
@@ -306,11 +306,11 @@ func (w *WeChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12F
 	)
 	pkcsPool = x509.NewCertPool()
 	if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
-		return nil, fmt.Errorf("ioutil.ReadFile：%v", err.Error())
+		return nil, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
 	}
 	pkcsPool.AppendCertsFromPEM(pkcs)
 	if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
-		return nil, fmt.Errorf("tls.LoadX509KeyPair：%v", err.Error())
+		return nil, fmt.Errorf("tls.LoadX509KeyPair：%s", err.Error())
 	}
 	tlsConfig = &tls.Config{
 		Certificates:       []tls.Certificate{certificate},
@@ -327,11 +327,11 @@ func (w *WeChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12F
 		return nil, errs[0]
 	}
 	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %v", res.StatusCode)
+		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
 	}
 	wxRsp = new(WeChatTransfersResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 	}
 	return
 }
@@ -379,7 +379,7 @@ GoRequest:
 		return nil, errs[0]
 	}
 	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %v", res.StatusCode)
+		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
 	}
 	if strings.Contains(string(bytes), "HTML") {
 		return nil, errors.New(string(bytes))

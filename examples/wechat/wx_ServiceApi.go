@@ -223,14 +223,22 @@ func ParseWeChatNotifyResultAndVerifyWeChatSign(req *http.Request) string {
 // 解析微信退款异步通知的参数，解析出来的 req_info 是加密数据，需解密
 func ParseWeChatRefundNotifyResult(req *http.Request) string {
 	rsp := new(gopay.WeChatNotifyResponse)
-	//解析参数
+	// 解析参数
 	notifyReq, err := gopay.ParseWeChatRefundNotifyResult(req)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
 	fmt.Println("notifyReq:", *notifyReq)
-	//退款通知无sign，不用验签
-	//返回微信
+	// 退款通知无sign，不用验签
+
+	// 解密退款异步通知的加密数据
+	refundNotify, err := gopay.DecryptRefundNotifyReqInfo(notifyReq.ReqInfo, "GFDS8j98rewnmgl45wHTt980jg543abc")
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("refundNotify:", *refundNotify)
+
+	// 返回微信
 	rsp.ReturnCode = gopay.SUCCESS
 	rsp.ReturnMsg = "OK"
 	return rsp.ToXmlString()

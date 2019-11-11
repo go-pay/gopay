@@ -70,7 +70,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest,
 	if billList != null {
 		bills := make([]fundBillListInfo, 0)
 		if err = json.Unmarshal([]byte(billList), &bills); err != nil {
-			return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
+			return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 		}
 		notifyReq.FundBillList = bills
 	} else {
@@ -81,7 +81,7 @@ func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest,
 	if detailList != null {
 		details := make([]voucherDetailListInfo, 0)
 		if err = json.Unmarshal([]byte(detailList), &details); err != nil {
-			return nil, fmt.Errorf("xml.Unmarshal：%v", err.Error())
+			return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 		}
 		notifyReq.VoucherDetailList = details
 	} else {
@@ -133,11 +133,11 @@ func VerifyAliPaySign(aliPayPublicKey string, bean interface{}, syncSign ...stri
 		goto Verify
 	}
 	if bs, err = json.Marshal(bean); err != nil {
-		return false, fmt.Errorf("json.Marshal：%v", err.Error())
+		return false, fmt.Errorf("json.Marshal：%s", err.Error())
 	}
 	bm = make(BodyMap)
 	if err = json.Unmarshal(bs, &bm); err != nil {
-		return false, fmt.Errorf("json.Unmarshal：%v", err.Error())
+		return false, fmt.Errorf("json.Unmarshal：%s", err.Error())
 	}
 	bodySign = bm.Get("sign")
 	bodySignType = bm.Get("sign_type")
@@ -166,7 +166,7 @@ func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err err
 		return errors.New("支付宝公钥Decode错误")
 	}
 	if pubKey, err = x509.ParsePKIXPublicKey(block.Bytes); err != nil {
-		return fmt.Errorf("x509.ParsePKIXPublicKey：%v", err.Error())
+		return fmt.Errorf("x509.ParsePKIXPublicKey：%s", err.Error())
 	}
 	if publicKey, ok = pubKey.(*rsa.PublicKey); !ok {
 		return errors.New("支付宝公钥转换错误")
@@ -309,7 +309,7 @@ func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr inte
 	ivKey := []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 	secretData, _ := base64.StdEncoding.DecodeString(encryptedData)
 	if block, err = aes.NewCipher(aesKey); err != nil {
-		return fmt.Errorf("aes.NewCipher：%v", err.Error())
+		return fmt.Errorf("aes.NewCipher：%s", err.Error())
 	}
 	if len(secretData)%len(aesKey) != 0 {
 		return errors.New("encryptedData is error")
@@ -321,7 +321,7 @@ func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr inte
 		originData = PKCS5UnPadding(originData)
 	}
 	if err = json.Unmarshal(originData, beanPtr); err != nil {
-		return fmt.Errorf("json.Unmarshal：%v", err.Error())
+		return fmt.Errorf("json.Unmarshal：%s", err.Error())
 	}
 	return nil
 }
@@ -341,7 +341,7 @@ func DecryptAliPayOpenDataToBodyMap(encryptedData, secretKey string) (bm BodyMap
 	aesKey, _ = base64.StdEncoding.DecodeString(secretKey)
 	secretData, _ := base64.StdEncoding.DecodeString(encryptedData)
 	if block, err = aes.NewCipher(aesKey); err != nil {
-		return nil, fmt.Errorf("aes.NewCipher：%v", err.Error())
+		return nil, fmt.Errorf("aes.NewCipher：%s", err.Error())
 	}
 	if len(secretData)%len(aesKey) != 0 {
 		return nil, errors.New("encryptedData is error")
@@ -354,7 +354,7 @@ func DecryptAliPayOpenDataToBodyMap(encryptedData, secretKey string) (bm BodyMap
 	}
 	bm = make(BodyMap)
 	if err = json.Unmarshal(originData, &bm); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal：%v", err.Error())
+		return nil, fmt.Errorf("json.Unmarshal：%s", err.Error())
 	}
 	return
 }
@@ -383,7 +383,7 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 	}
 	rsp = new(AliPaySystemOauthTokenResponse)
 	if err = json.Unmarshal(bs, rsp); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal：%v", err.Error())
+		return nil, fmt.Errorf("json.Unmarshal：%s", err.Error())
 	}
 	if rsp.Response.AccessToken == "" {
 		return nil, errors.New("access_token is null")

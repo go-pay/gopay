@@ -55,7 +55,7 @@ func (a *AliPayClient) AliPayTradeFastPayRefundQuery(body BodyMap) (aliRsp *AliP
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -79,7 +79,7 @@ func (a *AliPayClient) AliPayTradeOrderSettle(body BodyMap) (aliRsp *AliPayTrade
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -103,7 +103,7 @@ func (a *AliPayClient) AliPayTradeCreate(body BodyMap) (aliRsp *AliPayTradeCreat
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -127,7 +127,7 @@ func (a *AliPayClient) AliPayTradeClose(body BodyMap) (aliRsp *AliPayTradeCloseR
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -151,7 +151,7 @@ func (a *AliPayClient) AliPayTradeCancel(body BodyMap) (aliRsp *AliPayTradeCance
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -175,7 +175,7 @@ func (a *AliPayClient) AliPayTradeRefund(body BodyMap) (aliRsp *AliPayTradeRefun
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -199,7 +199,7 @@ func (a *AliPayClient) AliPayTradePageRefund(body BodyMap) (aliRsp *AliPayTradeP
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -221,7 +221,7 @@ func (a *AliPayClient) AliPayTradePrecreate(body BodyMap) (aliRsp *AlipayTradePr
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -243,7 +243,7 @@ func (a *AliPayClient) AliPayTradePay(body BodyMap) (aliRsp *AliPayTradePayRespo
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -267,7 +267,7 @@ func (a *AliPayClient) AliPayTradeQuery(body BodyMap) (aliRsp *AliPayTradeQueryR
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -333,7 +333,7 @@ func (a *AliPayClient) AlipayFundTransToaccountTransfer(body BodyMap) (aliRsp *A
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -364,7 +364,7 @@ func (a *AliPayClient) AliPaySystemOauthToken(body BodyMap) (aliRsp *AliPaySyste
 	}
 	if aliRsp.Response.AccessToken == null {
 		info := aliRsp.ErrorResponse
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -384,7 +384,7 @@ func (a *AliPayClient) AlipayUserInfoShare() (aliRsp *AlipayUserInfoShareRespons
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -409,7 +409,7 @@ func (a *AliPayClient) AliPayOpenAuthTokenApp(body BodyMap) (aliRsp *AliPayOpenA
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -436,7 +436,7 @@ func (a *AliPayClient) ZhimaCreditScoreGet(body BodyMap) (aliRsp *ZhimaCreditSco
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -469,7 +469,7 @@ func (a *AliPayClient) AliPayUserCertifyOpenInit(body BodyMap) (aliRsp *AliPayUs
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -493,7 +493,7 @@ func (a *AliPayClient) AliPayUserCertifyOpenCertify(body BodyMap) (aliRsp *AliPa
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -517,7 +517,7 @@ func (a *AliPayClient) AliPayUserCertifyOpenQuery(body BodyMap) (aliRsp *AliPayU
 	}
 	if aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%v","msg":"%v","sub_code":"%v","sub_msg":"%v"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
 	return
@@ -533,7 +533,7 @@ func (a *AliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, err 
 	)
 	if body != nil {
 		if bodyBs, err = json.Marshal(body); err != nil {
-			return nil, fmt.Errorf("json.Marshal：%v", err.Error())
+			return nil, fmt.Errorf("json.Marshal：%s", err.Error())
 		}
 		bodyStr = string(bodyBs)
 	}
@@ -599,7 +599,7 @@ func (a *AliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, err 
 		return nil, errs[0]
 	}
 	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %v", res.StatusCode)
+		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
 	}
 	if method == "alipay.trade.wap.pay" {
 		if res.Request.URL.String() == zfbSandboxBaseUrl || res.Request.URL.String() == zfbBaseUrl {
