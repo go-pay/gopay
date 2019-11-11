@@ -476,26 +476,19 @@ func (a *AliPayClient) AliPayUserCertifyOpenInit(body BodyMap) (aliRsp *AliPayUs
 }
 
 // alipay.user.certify.open.certify(身份认证开始认证)
-//    文档地址：https://docs.open.alipay.com/api_2/alipay.user.certify.open.certify
-func (a *AliPayClient) AliPayUserCertifyOpenCertify(body BodyMap) (aliRsp *AliPayUserCertifyOpenCertifyResponse, err error) {
+//    API文档地址：https://docs.open.alipay.com/api_2/alipay.user.certify.open.certify
+//    产品文档地址：https://docs.open.alipay.com/20181012100420932508/quickstart
+func (a *AliPayClient) AliPayUserCertifyOpenCertify(body BodyMap) (certifyUrl string, err error) {
 	var (
 		bs []byte
 	)
 	if body.Get("certify_id") == null {
-		return nil, errors.New("certify_id is not allowed to be null")
+		return null, errors.New("certify_id is not allowed to be null")
 	}
 	if bs, err = a.doAliPay(body, "alipay.user.certify.open.certify"); err != nil {
-		return
+		return null, err
 	}
-	aliRsp = new(AliPayUserCertifyOpenCertifyResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
-	}
-	if aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
-	}
-	aliRsp.SignData = getSignData(bs)
+	certifyUrl = string(bs)
 	return
 }
 
@@ -581,6 +574,13 @@ func (a *AliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, err 
 	urlParam = FormatAliPayURLParam(pubBody)
 	if method == "alipay.trade.app.pay" {
 		return []byte(urlParam), nil
+	}
+	if method == "alipay.user.certify.open.certify" {
+		if !a.IsProd {
+			return []byte(zfbSandboxBaseUrl + "?" + urlParam), nil
+		} else {
+			return []byte(zfbBaseUrl + "?" + urlParam), nil
+		}
 	}
 	if method == "alipay.trade.page.pay" {
 		if !a.IsProd {

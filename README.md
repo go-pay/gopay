@@ -85,7 +85,7 @@
 * 换取应用授权令牌（获取app_auth_token，auth_app_id，user_id等信息）：client.AliPayOpenAuthTokenApp()
 * 获取芝麻信用分：client.ZhimaCreditScoreGet()
 * 身份认证初始化服务：client.AliPayUserCertifyOpenInit()
-* 身份认证开始认证：client.AliPayUserCertifyOpenCertify()
+* 身份认证开始认证（获取认证链接）：client.AliPayUserCertifyOpenCertify()
 * 身份认证记录查询：client.AliPayUserCertifyOpenQuery()
 
 ### 支付宝公共API

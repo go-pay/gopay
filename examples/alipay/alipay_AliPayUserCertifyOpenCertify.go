@@ -24,11 +24,11 @@ func AliPayUserCertifyOpenCertify() {
 	bm.Set("certify_id", "OC201809253000000393900404029253")
 
 	//发起请求
-	aliRsp, err := client.AliPayUserCertifyOpenCertify(bm)
+	certifyUrl, err := client.AliPayUserCertifyOpenCertify(bm)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	fmt.Println("certifyUrl:", certifyUrl)
 
 }
