@@ -22,7 +22,7 @@ func AlipayOpenAuthTokenApp() {
 	body.Set("grant_type", "authorization_code")
 	body.Set("code", "866185490c4e40efa9f71efea6766X02")
 	//发起请求
-	aliRsp, err := client.AlipayOpenAuthTokenApp(body)
+	aliRsp, err := client.AliPayOpenAuthTokenApp(body)
 	if err != nil {
 		fmt.Println("err:", err)
 		return

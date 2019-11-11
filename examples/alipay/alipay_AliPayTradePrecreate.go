@@ -29,6 +29,6 @@ func AliPayTradePrecreate() {
 		return
 	}
 	fmt.Println("aliRsp:", *aliRsp)
-	fmt.Println("aliRsp.QrCode:", aliRsp.AlipayTradePrecreateResponse.QrCode)
-	fmt.Println("aliRsp.OutTradeNo:", aliRsp.AlipayTradePrecreateResponse.OutTradeNo)
+	fmt.Println("aliRsp.QrCode:", aliRsp.Response.QrCode)
+	fmt.Println("aliRsp.OutTradeNo:", aliRsp.Response.OutTradeNo)
 }

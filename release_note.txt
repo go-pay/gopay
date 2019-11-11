@@ -1,3 +1,19 @@
+
+版本号：Release 1.4.2
+发布时间：2019/11/11 16:43
+修改记录：
+   (1) 支付宝：新增Client方法：client.AliPayUserCertifyOpenInit()，身份认证初始化服务
+   (2) 支付宝：新增Client方法：client.AliPayUserCertifyOpenCertify()，身份认证开始认证
+   (3) 支付宝：新增Client方法：client.AliPayUserCertifyOpenQuery()，身份认证记录查询
+   (4) 支付宝：所有方法的返回结构体下的 XxxResponse 字段，统一修改为 Response，如：
+       type AliPayTradeCreateResponse struct {
+        Response createResponse `json:"alipay_trade_create_response,omitempty"`
+        SignData string         `json:"-"`
+        Sign     string         `json:"sign"`
+       }
+   (5) 支付宝：修改一些代码格式问题
+   (6) 支付宝：client.AlipayOpenAuthTokenApp() 修改为 client.AliPayOpenAuthTokenApp()
+
 版本号：Release 1.4.1
 发布时间：2019/11/04 14:28
 修改记录：

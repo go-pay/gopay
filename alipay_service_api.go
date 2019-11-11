@@ -280,8 +280,8 @@ func GetCertSN(certPath string) (sn string, err error) {
 			}
 		}
 	}
-	if sn == ""{
-		return "",errors.New("failed to get sn,please check your cert")
+	if sn == "" {
+		return "", errors.New("failed to get sn,please check your cert")
 	}
 	return sn, nil
 }
@@ -385,7 +385,7 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 	if err = json.Unmarshal(bs, rsp); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal：%v", err.Error())
 	}
-	if rsp.AliPaySystemOauthTokenResponse.AccessToken == "" {
+	if rsp.Response.AccessToken == "" {
 		return nil, errors.New("access_token is null")
 	}
 	return

@@ -32,5 +32,5 @@ func AliPayTradeCreate() {
 		return
 	}
 	fmt.Println("aliRsp:", *aliRsp)
-	fmt.Println("aliRsp.TradeNo:", aliRsp.AliPayTradeCreateResponse.TradeNo)
+	fmt.Println("aliRsp.TradeNo:", aliRsp.Response.TradeNo)
 }

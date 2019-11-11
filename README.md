@@ -80,8 +80,11 @@
 * 单笔转账到支付宝账户接口（商户给支付宝用户转账）：client.AlipayFundTransToaccountTransfer()
 * 换取授权访问令牌（获取access_token，user_id等信息）：client.AliPaySystemOauthToken()
 * 支付宝会员授权信息查询接口（App支付宝登录）：client.AlipayUserInfoShare()
-* 换取应用授权令牌（获取app_auth_token，auth_app_id，user_id等信息）：client.AlipayOpenAuthTokenApp()
+* 换取应用授权令牌（获取app_auth_token，auth_app_id，user_id等信息）：client.AliPayOpenAuthTokenApp()
 * 获取芝麻信用分：client.ZhimaCreditScoreGet()
+* 身份认证初始化服务：client.AliPayUserCertifyOpenInit()
+* 身份认证开始认证：client.AliPayUserCertifyOpenCertify()
+* 身份认证记录查询：client.AliPayUserCertifyOpenQuery()
 
 ### 支付宝公共API
 
@@ -130,7 +133,7 @@ func main() {
 # 二、文档说明
 
 * [GoDoc](https://godoc.org/github.com/iGoogle-ink/gopay)
-
+* 所有方法，如有问题，请仔细查看 examples
 * 有问题请加群。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！另外，仅 Fork 的同志顺手点个星呗，您的支持给了我源源不断的动力
 
 QQ群：
@@ -140,7 +143,7 @@ QQ群：
 
 ---
 
-## 1、初始化GoPay客户端并做配置
+## 1、初始化GoPay客户端并做配置(所有https请求，已忽略https双向认证：InsecureSkipVerify: true)
 
 * #### 微信客户端，如无需更改Appid、Mchid和ApiKey，推荐在 init()方法中初始化，全局适用
 
@@ -285,8 +288,11 @@ aliRsp, err := client.AliPayTradeOrderSettle(bm)
 aliRsp, err := client.AliPayTradePrecreate(bm)
 aliRsp, err := client.AlipayFundTransToaccountTransfer(bm)
 aliRsp, err := client.AliPaySystemOauthToken(bm)
-aliRsp, err := client.AlipayOpenAuthTokenApp(bm)
+aliRsp, err := client.AliPayOpenAuthTokenApp(bm)
 aliRsp, err := client.ZhimaCreditScoreGet(bm)
+aliRsp, err := client.AliPayUserCertifyOpenInit(bm)
+aliRsp, err := client.AliPayUserCertifyOpenCertify(bm)
+aliRsp, err := client.AliPayUserCertifyOpenQuery(bm)
 ```
 
 ## 4、微信统一下单后，获取微信小程序支付、APP支付、微信内H5支付所需要的 paySign
