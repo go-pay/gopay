@@ -136,12 +136,12 @@ func main() {
 
 * [GoDoc](https://godoc.org/github.com/iGoogle-ink/gopay)
 * 所有方法，如有问题，请仔细查看 examples
-* 有问题请加QQ群。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
+* 有问题请加QQ群（加群验证答案：gopay）。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 
 QQ群：
 <img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/qq_gopay.png"/>
-JD优惠券微信群：
-<img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/jd_coupon.png"/>
+微信群（满100人无法扫码添加）：
+<img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_gopay.png"/>
 
 ---
 
@@ -510,7 +510,7 @@ fmt.Println(*phone)
 ## 开源不易，讲究的朋友可以给个赞赏
 微信：
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_wx.png"/>
-支付查：
+支付宝：
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_zfb.png"/>
 
 ## License
