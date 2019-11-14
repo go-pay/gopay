@@ -136,12 +136,12 @@ func main() {
 
 * [GoDoc](https://godoc.org/github.com/iGoogle-ink/gopay)
 * 所有方法，如有问题，请仔细查看 examples
-* 有问题请加群。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！另外，仅 Fork 的同志顺手点个星呗，您的支持给了我源源不断的动力
+* 有问题请加QQ群。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 
 QQ群：
-<img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/qq_gopay.png"/>
-微信群：
-<img width="226" height="300" alt="Photo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_gopay.png"/>
+<img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/qq_gopay.png"/>
+JD优惠券微信群：
+<img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/jd_coupon.png"/>
 
 ---
 
@@ -506,6 +506,11 @@ phone := new(gopay.AliPayUserPhone)
 err := gopay.DecryptAliPayOpenDataToStruct(encryptedData, secretKey, phone)
 fmt.Println(*phone)
 ```
+
+## 开源不易，讲究的朋友可以给个赞赏
+
+<img width="300" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_wx.png"/>
+<img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_zfb.png"/>
 
 ## License
 ```
