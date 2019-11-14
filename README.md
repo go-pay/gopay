@@ -508,9 +508,10 @@ fmt.Println(*phone)
 ```
 
 ## 开源不易，讲究的朋友可以给个赞赏
-
-<img width="300" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_wx.png"/>
-<img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_zfb.png"/>
+微信：
+<img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_wx.png"/>
+支付查：
+<img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_zfb.png"/>
 
 ## License
 ```
