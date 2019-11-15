@@ -266,7 +266,7 @@ type oauthTokenInfo struct {
 }
 
 //===================================================
-type AlipayUserInfoShareResponse struct {
+type AliPayUserInfoShareResponse struct {
 	Response *userInfoShare `json:"alipay_user_info_share_response,omitempty"`
 	SignData string         `json:"-"`
 	Sign     string         `json:"sign"`
@@ -380,7 +380,7 @@ type orderSettleResponse struct {
 }
 
 //===================================================
-type AlipayTradePrecreateResponse struct {
+type AliPayTradePrecreateResponse struct {
 	Response *precreateResponse `json:"alipay_trade_precreate_response,omitempty"`
 	SignData string             `json:"-"`
 	Sign     string             `json:"sign"`
@@ -414,7 +414,7 @@ type pageRefundResponse struct {
 }
 
 //===================================================
-type AlipayFundTransToaccountTransferResponse struct {
+type AliPayFundTransToaccountTransferResponse struct {
 	Response *transToaccountTransferResponse `json:"alipay_fund_trans_toaccount_transfer_response,omitempty"`
 	SignData string                          `json:"-"`
 	Sign     string                          `json:"sign"`
