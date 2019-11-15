@@ -138,3 +138,25 @@ func TestDecryptRefundNotifyReqInfo(t *testing.T) {
 	}
 	fmt.Println("refundNotify:", *refundNotify)
 }
+
+func TestBodyMap_Set_Get(t *testing.T) {
+	bm := make(BodyMap)
+	sceneInfo := make(map[string]map[string]string)
+	h5Info := make(map[string]string)
+	h5Info["type"] = "Wap"
+	h5Info["wap_url"] = "http://www.gopay.ink"
+	h5Info["wap_name"] = "H5测试支付"
+	sceneInfo["h5_info"] = h5Info
+	bm.Set("scene_info", sceneInfo)
+	fmt.Println("Get1:", bm.Get("scene_info"))
+
+	bm.Set("student", &Student{
+		Name:  "Jerry",
+		Age:   26,
+		Sign:  "123465",
+		Phone: "123654987",
+	})
+
+	fmt.Println("Get2:", bm.Get("student"))
+
+}

@@ -5,22 +5,22 @@ const (
 	TimeLayout string = "2006-01-02 15:04:05"
 	DateLayout string = "2006-01-02"
 	Version    string = "1.4.3"
-	//微信
-	//===========================================================================================
+	// 微信
+	// ===========================================================================================
 
-	//境外国家地区
-	China         Country = 1 //中国国内
-	China2        Country = 2 //中国国内（冗灾方案）
-	SoutheastAsia Country = 3 //东南亚
-	Other         Country = 4 //其他国家
+	// 境外国家地区
+	China         Country = 1 // 中国国内
+	China2        Country = 2 // 中国国内（冗灾方案）
+	SoutheastAsia Country = 3 // 东南亚
+	Other         Country = 4 // 其他国家
 
-	//URL
+	// URL
 	wxBaseUrlCh  = "https://api.mch.weixin.qq.com/"   //中国国内
 	wxBaseUrlCh2 = "https://api2.mch.weixin.qq.com/"  //中国国内
 	wxBaseUrlHk  = "https://apihk.mch.weixin.qq.com/" //东南亚
 	wxBaseUrlUs  = "https://apius.mch.weixin.qq.com/" //其他
 
-	//正式
+	// 正式
 	wxMicropay          = "pay/micropay"                          //提交付款码支付
 	wxUnifiedorder      = "pay/unifiedorder"                      //统一下单
 	wxOrderquery        = "pay/orderquery"                        //查询订单
@@ -40,7 +40,7 @@ const (
 	wxEntrustApplyPay   = "pay/pappayapply"                       //申请扣款
 	wxEntrustQueryOrder = "pay/paporderquery"                     //查询扣款订单
 
-	//SanBox
+	// SanBox
 	wxSandboxGetsignkey        = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
 	wxSandboxMicropay          = "sandboxnew/pay/micropay"
 	wxSandboxUnifiedorder      = "sandboxnew/pay/unifiedorder"
@@ -53,21 +53,21 @@ const (
 	wxSandboxDownloadfundflow  = "sandboxnew/pay/downloadfundflow"
 	wxSandboxBatchquerycomment = "sandboxnew/billcommentsp/batchquerycomment"
 
-	//支付类型
+	// 支付类型
 	TradeType_Mini   = "JSAPI"
 	TradeType_JsApi  = "JSAPI"
 	TradeType_App    = "APP"
 	TradeType_H5     = "MWEB"
 	TradeType_Native = "NATIVE"
 
-	//签名方式
+	// 签名方式
 	SignType_MD5         = "MD5"
 	SignType_HMAC_SHA256 = "HMAC-SHA256"
 
-	//支付宝
-	//===========================================================================================
+	// 支付宝
+	// ==========================================================================================
 
-	//URL
+	// URL
 	zfbBaseUrl            = "https://openapi.alipay.com/gateway.do"
 	zfbSandboxBaseUrl     = "https://openapi.alipaydev.com/gateway.do"
 	zfbBaseUrlUtf8        = "https://openapi.alipay.com/gateway.do?charset=utf-8"

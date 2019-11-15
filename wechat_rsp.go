@@ -322,23 +322,23 @@ type WeChatUserInfo struct {
 
 // 微信小程序解密后 用户手机号结构体
 type WeChatUserPhone struct {
-	PhoneNumber     string        `json:"phoneNumber,omitempty"`
-	PurePhoneNumber string        `json:"purePhoneNumber,omitempty"`
-	CountryCode     string        `json:"countryCode,omitempty"`
-	Watermark       watermarkInfo `json:"watermark,omitempty"`
+	PhoneNumber     string         `json:"phoneNumber,omitempty"`
+	PurePhoneNumber string         `json:"purePhoneNumber,omitempty"`
+	CountryCode     string         `json:"countryCode,omitempty"`
+	Watermark       *watermarkInfo `json:"watermark,omitempty"`
 }
 
 // 微信小程序解密后 用户信息结构体
 type WeChatAppletUserInfo struct {
-	OpenId    string        `json:"openId,omitempty"`
-	NickName  string        `json:"nickName,omitempty"`
-	Gender    int           `json:"gender,omitempty"`
-	City      string        `json:"city,omitempty"`
-	Province  string        `json:"province,omitempty"`
-	Country   string        `json:"country,omitempty"`
-	AvatarUrl string        `json:"avatarUrl,omitempty"`
-	UnionId   string        `json:"unionId,omitempty"`
-	Watermark watermarkInfo `json:"watermark,omitempty"`
+	OpenId    string         `json:"openId,omitempty"`
+	NickName  string         `json:"nickName,omitempty"`
+	Gender    int            `json:"gender,omitempty"`
+	City      string         `json:"city,omitempty"`
+	Province  string         `json:"province,omitempty"`
+	Country   string         `json:"country,omitempty"`
+	AvatarUrl string         `json:"avatarUrl,omitempty"`
+	UnionId   string         `json:"unionId,omitempty"`
+	Watermark *watermarkInfo `json:"watermark,omitempty"`
 }
 
 type watermarkInfo struct {
