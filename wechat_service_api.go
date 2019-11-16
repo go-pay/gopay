@@ -19,7 +19,7 @@ import (
 	"strings"
 )
 
-//获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
+// 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
 //    注意：BodyMap中如无 sign_type 参数，默认赋值 sign_type 为 MD5
 //    appId：应用ID
 //    mchId：商户ID
@@ -46,7 +46,7 @@ func GetWeChatParamSign(appId, mchId, apiKey string, bm BodyMap) (sign string) {
 	return
 }
 
-//获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
+// 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
 //    注意：沙箱环境默认 sign_type 为 MD5
 //    appId：应用ID
 //    mchId：商户ID
@@ -69,7 +69,7 @@ func GetWeChatSanBoxParamSign(appId, mchId, apiKey string, bm BodyMap) (sign str
 	return
 }
 
-//解析微信支付异步通知的结果到BodyMap
+// 解析微信支付异步通知的结果到BodyMap
 //    req：*http.Request
 //    返回参数bm：Notify请求的参数
 //    返回参数err：错误信息
@@ -85,7 +85,7 @@ func ParseWeChatNotifyResultToBodyMap(req *http.Request) (bm BodyMap, err error)
 	return
 }
 
-//解析微信支付异步通知的参数
+// 解析微信支付异步通知的参数
 //    req：*http.Request
 //    返回参数notifyReq：Notify请求的参数
 //    返回参数err：错误信息

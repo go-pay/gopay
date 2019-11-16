@@ -207,7 +207,7 @@ func (a *AliPayClient) AliPayTradePageRefund(body BodyMap) (aliRsp *AliPayTradeP
 
 // alipay.trade.precreate(统一收单线下交易预创建)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.precreate
-func (a *AliPayClient) AliPayTradePrecreate(body BodyMap) (aliRsp *AlipayTradePrecreateResponse, err error) {
+func (a *AliPayClient) AliPayTradePrecreate(body BodyMap) (aliRsp *AliPayTradePrecreateResponse, err error) {
 	var bs []byte
 	if body.Get("out_trade_no") == null {
 		return nil, errors.New("out_trade_no is not allowed to be null")
@@ -215,7 +215,7 @@ func (a *AliPayClient) AliPayTradePrecreate(body BodyMap) (aliRsp *AlipayTradePr
 	if bs, err = a.doAliPay(body, "alipay.trade.precreate"); err != nil {
 		return
 	}
-	aliRsp = new(AlipayTradePrecreateResponse)
+	aliRsp = new(AliPayTradePrecreateResponse)
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
@@ -319,7 +319,7 @@ func (a *AliPayClient) AliPayTradePagePay(body BodyMap) (payUrl string, err erro
 
 // alipay.fund.trans.toaccount.transfer(单笔转账到支付宝账户接口)
 //    文档地址：https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer
-func (a *AliPayClient) AlipayFundTransToaccountTransfer(body BodyMap) (aliRsp *AlipayFundTransToaccountTransferResponse, err error) {
+func (a *AliPayClient) AliPayFundTransToaccountTransfer(body BodyMap) (aliRsp *AliPayFundTransToaccountTransferResponse, err error) {
 	var bs []byte
 	if body.Get("out_biz_no") == null {
 		return nil, errors.New("out_biz_no is not allowed to be null")
@@ -327,7 +327,7 @@ func (a *AliPayClient) AlipayFundTransToaccountTransfer(body BodyMap) (aliRsp *A
 	if bs, err = a.doAliPay(body, "alipay.fund.trans.toaccount.transfer"); err != nil {
 		return
 	}
-	aliRsp = new(AlipayFundTransToaccountTransferResponse)
+	aliRsp = new(AliPayFundTransToaccountTransferResponse)
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
@@ -373,12 +373,12 @@ func (a *AliPayClient) AliPaySystemOauthToken(body BodyMap) (aliRsp *AliPaySyste
 // alipay.user.info.share(支付宝会员授权信息查询接口)
 //    body：此接口无需body参数
 //    文档地址：https://docs.open.alipay.com/api_2/alipay.user.info.share
-func (a *AliPayClient) AlipayUserInfoShare() (aliRsp *AlipayUserInfoShareResponse, err error) {
+func (a *AliPayClient) AliPayUserInfoShare() (aliRsp *AliPayUserInfoShareResponse, err error) {
 	var bs []byte
 	if bs, err = a.doAliPay(nil, "alipay.user.info.share"); err != nil {
 		return nil, err
 	}
-	aliRsp = new(AlipayUserInfoShareResponse)
+	aliRsp = new(AliPayUserInfoShareResponse)
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}

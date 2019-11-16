@@ -43,26 +43,26 @@ func (a *AliPayClient) SetAppCertSN(appCertSN string) (client *AliPayClient) {
 	return a
 }
 
-//设置 支付宝根证书SN
+// 设置 支付宝根证书SN
 //    alipayRootCertSN：支付宝根证书SN，通过 gopay.GetCertSN() 获取
 func (a *AliPayClient) SetAliPayRootCertSN(alipayRootCertSN string) (client *AliPayClient) {
 	a.AlipayRootCertSN = alipayRootCertSN
 	return a
 }
 
-//设置支付后的ReturnUrl
+// 设置支付后的ReturnUrl
 func (a *AliPayClient) SetReturnUrl(url string) (client *AliPayClient) {
 	a.ReturnUrl = url
 	return a
 }
 
-//设置支付宝服务器主动通知商户服务器里指定的页面http/https路径。
+// 设置支付宝服务器主动通知商户服务器里指定的页面http/https路径。
 func (a *AliPayClient) SetNotifyUrl(url string) (client *AliPayClient) {
 	a.NotifyUrl = url
 	return a
 }
 
-//设置编码格式，如utf-8,gbk,gb2312等，默认推荐使用 utf-8
+// 设置编码格式，如utf-8,gbk,gb2312等，默认推荐使用 utf-8
 func (a *AliPayClient) SetCharset(charset string) (client *AliPayClient) {
 	if charset == null {
 		a.Charset = "utf-8"
@@ -72,7 +72,7 @@ func (a *AliPayClient) SetCharset(charset string) (client *AliPayClient) {
 	return a
 }
 
-//设置签名算法类型，目前支持RSA2和RSA，默认推荐使用 RSA2
+// 设置签名算法类型，目前支持RSA2和RSA，默认推荐使用 RSA2
 func (a *AliPayClient) SetSignType(signType string) (client *AliPayClient) {
 	if signType == null {
 		a.SignType = "RSA2"
@@ -82,19 +82,19 @@ func (a *AliPayClient) SetSignType(signType string) (client *AliPayClient) {
 	return a
 }
 
-//设置应用授权
+// 设置应用授权
 func (a *AliPayClient) SetAppAuthToken(appAuthToken string) (client *AliPayClient) {
 	a.AppAuthToken = appAuthToken
 	return a
 }
 
-//设置用户信息授权
+// 设置用户信息授权
 func (a *AliPayClient) SetAuthToken(authToken string) (client *AliPayClient) {
 	a.AuthToken = authToken
 	return a
 }
 
-//获取参数签名
+// 获取参数签名
 func getRsaSign(bm BodyMap, signType, privateKey string) (sign string, err error) {
 	var (
 		block          *pem.Block
@@ -131,7 +131,7 @@ func getRsaSign(bm BodyMap, signType, privateKey string) (sign string, err error
 	return
 }
 
-//格式化请求URL参数
+// 格式化请求URL参数
 func FormatAliPayURLParam(body BodyMap) (urlParam string) {
 	v := url.Values{}
 	for key, value := range body {

@@ -336,7 +336,7 @@ func (w *WeChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12F
 	return
 }
 
-// 公众号纯签约
+// 公众号纯签约（未完成）
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/pap.php?chapter=18_1&index=1
 func (w *WeChatClient) EntrustPublic(body BodyMap) (bs []byte, err error) {
 	bs, err = w.doWeChat(body, wxEntrustPublic)
@@ -344,7 +344,7 @@ func (w *WeChatClient) EntrustPublic(body BodyMap) (bs []byte, err error) {
 	return nil, nil
 }
 
-//向微信发送请求 ok
+// 向微信发送请求 ok
 func (w *WeChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
 	body.Set("appid", w.AppId)
 	body.Set("mch_id", w.MchId)

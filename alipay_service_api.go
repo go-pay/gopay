@@ -22,7 +22,7 @@ import (
 )
 
 // 允许进行 sn 提取的证书签名算法
-var allowSignatureAlgorithm map[string]bool = map[string]bool{
+var allowSignatureAlgorithm = map[string]bool{
 	"MD2-RSA":       true,
 	"MD5-RSA":       true,
 	"SHA1-RSA":      true,
@@ -34,54 +34,82 @@ var allowSignatureAlgorithm map[string]bool = map[string]bool{
 	"SHA512-RSAPSS": true,
 }
 
+// 解析支付宝支付异步通知的结果到BodyMap
+//    req：*http.Request
+//    返回参数bm：Notify请求的参数
+//    返回参数err：错误信息
+//    文档：https://docs.open.alipay.com/203/105286/
+func ParseAliPayNotifyResultToBodyMap(req *http.Request) (bm BodyMap, err error) {
+	if err = req.ParseForm(); err != nil {
+		return nil, err
+	}
+	var form map[string][]string = req.Form
+	bm = make(BodyMap, len(form))
+	for k, v := range form {
+		if len(v) == 1 {
+			bm.Set(k, v[0])
+		}
+	}
+	return
+}
+
 // ParseAliPayNotifyResult 解析支付宝支付完成后的Notify信息
+//    req：*http.Request
+//    返回参数notifyReq：Notify请求的参数
+//    返回参数err：错误信息
+//    文档：https://docs.open.alipay.com/203/105286/
 func ParseAliPayNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest, err error) {
 	notifyReq = new(AliPayNotifyRequest)
-	notifyReq.NotifyTime = req.FormValue("notify_time")
-	notifyReq.NotifyType = req.FormValue("notify_type")
-	notifyReq.NotifyId = req.FormValue("notify_id")
-	notifyReq.AppId = req.FormValue("app_id")
-	notifyReq.Charset = req.FormValue("charset")
-	notifyReq.Version = req.FormValue("version")
-	notifyReq.SignType = req.FormValue("sign_type")
-	notifyReq.Sign = req.FormValue("sign")
-	notifyReq.AuthAppId = req.FormValue("auth_app_id")
-	notifyReq.TradeNo = req.FormValue("trade_no")
-	notifyReq.OutTradeNo = req.FormValue("out_trade_no")
-	notifyReq.OutBizNo = req.FormValue("out_biz_no")
-	notifyReq.BuyerId = req.FormValue("buyer_id")
-	notifyReq.BuyerLogonId = req.FormValue("buyer_logon_id")
-	notifyReq.SellerId = req.FormValue("seller_id")
-	notifyReq.SellerEmail = req.FormValue("seller_email")
-	notifyReq.TradeStatus = req.FormValue("trade_status")
-	notifyReq.TotalAmount = req.FormValue("total_amount")
-	notifyReq.ReceiptAmount = req.FormValue("receipt_amount")
-	notifyReq.InvoiceAmount = req.FormValue("invoice_amount")
-	notifyReq.BuyerPayAmount = req.FormValue("buyer_pay_amount")
-	notifyReq.PointAmount = req.FormValue("point_amount")
-	notifyReq.RefundFee = req.FormValue("refund_fee")
-	notifyReq.Subject = req.FormValue("subject")
-	notifyReq.Body = req.FormValue("body")
-	notifyReq.GmtCreate = req.FormValue("gmt_create")
-	notifyReq.GmtPayment = req.FormValue("gmt_payment")
-	notifyReq.GmtRefund = req.FormValue("gmt_refund")
-	notifyReq.GmtClose = req.FormValue("gmt_close")
-	billList := req.FormValue("fund_bill_list")
+	if err = req.ParseForm(); err != nil {
+		return
+	}
+	notifyReq.NotifyTime = req.Form.Get("notify_time")
+	notifyReq.NotifyType = req.Form.Get("notify_type")
+	notifyReq.NotifyId = req.Form.Get("notify_id")
+	notifyReq.AppId = req.Form.Get("app_id")
+	notifyReq.Charset = req.Form.Get("charset")
+	notifyReq.Version = req.Form.Get("version")
+	notifyReq.SignType = req.Form.Get("sign_type")
+	notifyReq.Sign = req.Form.Get("sign")
+	notifyReq.AuthAppId = req.Form.Get("auth_app_id")
+	notifyReq.TradeNo = req.Form.Get("trade_no")
+	notifyReq.OutTradeNo = req.Form.Get("out_trade_no")
+	notifyReq.OutBizNo = req.Form.Get("out_biz_no")
+	notifyReq.BuyerId = req.Form.Get("buyer_id")
+	notifyReq.BuyerLogonId = req.Form.Get("buyer_logon_id")
+	notifyReq.SellerId = req.Form.Get("seller_id")
+	notifyReq.SellerEmail = req.Form.Get("seller_email")
+	notifyReq.TradeStatus = req.Form.Get("trade_status")
+	notifyReq.TotalAmount = req.Form.Get("total_amount")
+	notifyReq.ReceiptAmount = req.Form.Get("receipt_amount")
+	notifyReq.InvoiceAmount = req.Form.Get("invoice_amount")
+	notifyReq.BuyerPayAmount = req.Form.Get("buyer_pay_amount")
+	notifyReq.PointAmount = req.Form.Get("point_amount")
+	notifyReq.RefundFee = req.Form.Get("refund_fee")
+	notifyReq.Subject = req.Form.Get("subject")
+	notifyReq.Body = req.Form.Get("body")
+	notifyReq.GmtCreate = req.Form.Get("gmt_create")
+	notifyReq.GmtPayment = req.Form.Get("gmt_payment")
+	notifyReq.GmtRefund = req.Form.Get("gmt_refund")
+	notifyReq.GmtClose = req.Form.Get("gmt_close")
+	notifyReq.PassbackParams = req.Form.Get("passback_params")
+
+	billList := req.Form.Get("fund_bill_list")
 	if billList != null {
-		bills := make([]fundBillListInfo, 0)
+		bills := make([]*fundBillListInfo, 0)
 		if err = json.Unmarshal([]byte(billList), &bills); err != nil {
-			return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
+			return nil, fmt.Errorf(`"fund_bill_list" xml.Unmarshal：%s`, err.Error())
 		}
 		notifyReq.FundBillList = bills
 	} else {
 		notifyReq.FundBillList = nil
 	}
-	notifyReq.PassbackParams = req.FormValue("passback_params")
-	detailList := req.FormValue("voucher_detail_list")
+
+	detailList := req.Form.Get("voucher_detail_list")
 	if detailList != null {
-		details := make([]voucherDetailListInfo, 0)
+		details := make([]*voucherDetailListInfo, 0)
 		if err = json.Unmarshal([]byte(detailList), &details); err != nil {
-			return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
+			return nil, fmt.Errorf(`"voucher_detail_list" xml.Unmarshal：%s`, err.Error())
 		}
 		notifyReq.VoucherDetailList = details
 	} else {
@@ -109,7 +137,7 @@ A：开发者上传自己的应用公钥证书后，开放平台会为开发者�
 // VerifyAliPaySign 支付宝同步返回验签或异步通知验签
 //    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
 //    aliPayPublicKey：支付宝公钥
-//    bean： 同步返回验签时，此参数为 aliRsp.SignData ；异步通知验签时，此参数为异步通知解析的结构体 notifyReq
+//    bean： 同步返回验签时，此参数为字符串 aliRsp.SignData ；异步通知验签时，此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm
 //    syncSign：同步返回验签时，此参数必传，即：aliRsp.Sign ；异步通知验签时，不传此参数，否则会出错。
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
@@ -132,18 +160,28 @@ func VerifyAliPaySign(aliPayPublicKey string, bean interface{}, syncSign ...stri
 		signData = bean.(string)
 		goto Verify
 	}
-	if bs, err = json.Marshal(bean); err != nil {
-		return false, fmt.Errorf("json.Marshal：%s", err.Error())
-	}
 	bm = make(BodyMap)
-	if err = json.Unmarshal(bs, &bm); err != nil {
-		return false, fmt.Errorf("json.Unmarshal：%s", err.Error())
+	if reflect.ValueOf(bean).Kind() == reflect.Map {
+		if bm, ok = bean.(BodyMap); ok {
+			bodySign = bm.Get("sign")
+			bodySignType = bm.Get("sign_type")
+			bm.Remove("sign")
+			bm.Remove("sign_type")
+			signData = bm.EncodeAliPaySignParams()
+		}
+	} else {
+		if bs, err = json.Marshal(bean); err != nil {
+			return false, fmt.Errorf("json.Marshal：%s", err.Error())
+		}
+		if err = json.Unmarshal(bs, &bm); err != nil {
+			return false, fmt.Errorf("json.Unmarshal：%s", err.Error())
+		}
+		bodySign = bm.Get("sign")
+		bodySignType = bm.Get("sign_type")
+		bm.Remove("sign")
+		bm.Remove("sign_type")
+		signData = bm.EncodeAliPaySignParams()
 	}
-	bodySign = bm.Get("sign")
-	bodySignType = bm.Get("sign_type")
-	bm.Remove("sign")
-	bm.Remove("sign_type")
-	signData = bm.EncodeAliPaySignParams()
 Verify:
 	pKey = FormatAliPayPublicKey(aliPayPublicKey)
 	if err = verifyAliPaySign(signData, bodySign, bodySignType, pKey); err != nil {
