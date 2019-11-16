@@ -2,12 +2,11 @@ package gopay
 
 import (
 	"crypto/tls"
-	"crypto/x509"
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"strings"
+	"sync"
 
 	"github.com/parnurzeal/gorequest"
 )
@@ -21,9 +20,10 @@ type WeChatClient struct {
 	KeyFile    []byte
 	Pkcs12File []byte
 	IsProd     bool
+	mu         sync.RWMutex
 }
 
-// 初始化微信客户端 ok
+// 初始化微信客户端
 //    appId：应用ID
 //    mchId：商户ID
 //    ApiKey：API秘钥值
@@ -36,7 +36,7 @@ func NewWeChatClient(appId, mchId, apiKey string, isProd bool) (client *WeChatCl
 		IsProd: isProd}
 }
 
-// 提交付款码支付 ok
+// 提交付款码支付
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
 func (w *WeChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse, err error) {
 	var bs []byte
@@ -55,7 +55,7 @@ func (w *WeChatClient) Micropay(body BodyMap) (wxRsp *WeChatMicropayResponse, er
 	return
 }
 
-// 统一下单 ok
+// 统一下单
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
 func (w *WeChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderResponse, err error) {
 	var bs []byte
@@ -75,7 +75,7 @@ func (w *WeChatClient) UnifiedOrder(body BodyMap) (wxRsp *WeChatUnifiedOrderResp
 	return
 }
 
-// 查询订单 ok
+// 查询订单
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
 func (w *WeChatClient) QueryOrder(body BodyMap) (wxRsp *WeChatQueryOrderResponse, err error) {
 	var bs []byte
@@ -94,7 +94,7 @@ func (w *WeChatClient) QueryOrder(body BodyMap) (wxRsp *WeChatQueryOrderResponse
 	return
 }
 
-// 关闭订单 ok
+// 关闭订单
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_3
 func (w *WeChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderResponse, err error) {
 	var bs []byte
@@ -113,28 +113,18 @@ func (w *WeChatClient) CloseOrder(body BodyMap) (wxRsp *WeChatCloseOrderResponse
 	return
 }
 
-// 撤销订单 ok
+// 撤销订单
+//    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，如方法需单独使用证书，则传证书Path
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3
 func (w *WeChatClient) Reverse(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatReverseResponse, err error) {
 	var (
-		bs, pkcs    []byte
-		pkcsPool    *x509.CertPool
-		certificate tls.Certificate
-		tlsConfig   *tls.Config
+		bs        []byte
+		tlsConfig *tls.Config
 	)
 	if w.IsProd {
-		pkcsPool = x509.NewCertPool()
-		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
-			return nil, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
+		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+			return nil, err
 		}
-		pkcsPool.AppendCertsFromPEM(pkcs)
-		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
-			return nil, fmt.Errorf("tls.LoadX509KeyPair：%s", err.Error())
-		}
-		tlsConfig = &tls.Config{
-			Certificates:       []tls.Certificate{certificate},
-			RootCAs:            pkcsPool,
-			InsecureSkipVerify: true}
 		bs, err = w.doWeChat(body, wxReverse, tlsConfig)
 	} else {
 		bs, err = w.doWeChat(body, wxSandboxReverse)
@@ -149,28 +139,18 @@ func (w *WeChatClient) Reverse(body BodyMap, certFilePath, keyFilePath, pkcs12Fi
 	return
 }
 
-// 申请退款 ok
+// 申请退款
+//    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，如方法需单独使用证书，则传证书Path
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
 func (w *WeChatClient) Refund(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatRefundResponse, err error) {
 	var (
-		bs, pkcs    []byte
-		pkcsPool    *x509.CertPool
-		certificate tls.Certificate
-		tlsConfig   *tls.Config
+		bs        []byte
+		tlsConfig *tls.Config
 	)
 	if w.IsProd {
-		pkcsPool = x509.NewCertPool()
-		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
-			return nil, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
+		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+			return nil, err
 		}
-		pkcsPool.AppendCertsFromPEM(pkcs)
-		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
-			return nil, fmt.Errorf("tls.LoadX509KeyPair：%s", err.Error())
-		}
-		tlsConfig = &tls.Config{
-			Certificates:       []tls.Certificate{certificate},
-			RootCAs:            pkcsPool,
-			InsecureSkipVerify: true}
 		bs, err = w.doWeChat(body, wxRefund, tlsConfig)
 	} else {
 		bs, err = w.doWeChat(body, wxSandboxRefund)
@@ -185,7 +165,7 @@ func (w *WeChatClient) Refund(body BodyMap, certFilePath, keyFilePath, pkcs12Fil
 	return
 }
 
-// 查询退款 ok
+// 查询退款
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_5
 func (w *WeChatClient) QueryRefund(body BodyMap) (wxRsp *WeChatQueryRefundResponse, err error) {
 	var bs []byte
@@ -204,7 +184,7 @@ func (w *WeChatClient) QueryRefund(body BodyMap) (wxRsp *WeChatQueryRefundRespon
 	return
 }
 
-// 下载对账单 ok
+// 下载对账单
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_6
 func (w *WeChatClient) DownloadBill(body BodyMap) (wxRsp string, err error) {
 	var bs []byte
@@ -220,29 +200,19 @@ func (w *WeChatClient) DownloadBill(body BodyMap) (wxRsp string, err error) {
 	return
 }
 
-// 下载资金账单 ok
+// 下载资金账单
+//    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，如方法需单独使用证书，则传证书Path
+//    貌似不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7
-//    好像不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 func (w *WeChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
 	var (
-		bs, pkcs    []byte
-		pkcsPool    *x509.CertPool
-		certificate tls.Certificate
-		tlsConfig   *tls.Config
+		bs        []byte
+		tlsConfig *tls.Config
 	)
 	if w.IsProd {
-		pkcsPool = x509.NewCertPool()
-		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
-			return null, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
+		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+			return null, err
 		}
-		pkcsPool.AppendCertsFromPEM(pkcs)
-		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
-			return null, fmt.Errorf("tls.LoadX509KeyPair：%s", err.Error())
-		}
-		tlsConfig = &tls.Config{
-			Certificates:       []tls.Certificate{certificate},
-			RootCAs:            pkcsPool,
-			InsecureSkipVerify: true}
 		bs, err = w.doWeChat(body, wxDownloadfundflow, tlsConfig)
 	} else {
 		bs, err = w.doWeChat(body, wxSandboxDownloadfundflow)
@@ -255,29 +225,19 @@ func (w *WeChatClient) DownloadFundFlow(body BodyMap, certFilePath, keyFilePath,
 }
 
 // 拉取订单评价数据
+//    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，如方法需单独使用证书，则传证书Path
+//    貌似不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_17&index=11
-//    好像不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 func (w *WeChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
 	var (
-		bs, pkcs    []byte
-		pkcsPool    *x509.CertPool
-		certificate tls.Certificate
-		tlsConfig   *tls.Config
+		bs        []byte
+		tlsConfig *tls.Config
 	)
 	if w.IsProd {
 		body.Set("sign_type", SignType_HMAC_SHA256)
-		pkcsPool = x509.NewCertPool()
-		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
-			return null, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
+		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+			return null, err
 		}
-		pkcsPool.AppendCertsFromPEM(pkcs)
-		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
-			return null, fmt.Errorf("tls.LoadX509KeyPair：%s", err.Error())
-		}
-		tlsConfig = &tls.Config{
-			Certificates:       []tls.Certificate{certificate},
-			RootCAs:            pkcsPool,
-			InsecureSkipVerify: true}
 		bs, err = w.doWeChat(body, wxBatchquerycomment, tlsConfig)
 	} else {
 		bs, err = w.doWeChat(body, wxSandboxBatchquerycomment)
@@ -290,32 +250,22 @@ func (w *WeChatClient) BatchQueryComment(body BodyMap, certFilePath, keyFilePath
 }
 
 // 企业向微信用户个人付款
-//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_1
+//    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，如方法需单独使用证书，则传证书Path
 //    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_1
 func (w *WeChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *WeChatTransfersResponse, err error) {
 	body.Set("mch_appid", w.AppId)
 	body.Set("mchid", w.MchId)
 	var (
-		bs, pkcs    []byte
-		pkcsPool    *x509.CertPool
-		certificate tls.Certificate
-		tlsConfig   *tls.Config
-		agent       *gorequest.SuperAgent
-		errs        []error
-		res         gorequest.Response
+		bs        []byte
+		tlsConfig *tls.Config
+		agent     *gorequest.SuperAgent
+		errs      []error
+		res       gorequest.Response
 	)
-	pkcsPool = x509.NewCertPool()
-	if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
-		return nil, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
+	if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return nil, err
 	}
-	pkcsPool.AppendCertsFromPEM(pkcs)
-	if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
-		return nil, fmt.Errorf("tls.LoadX509KeyPair：%s", err.Error())
-	}
-	tlsConfig = &tls.Config{
-		Certificates:       []tls.Certificate{certificate},
-		RootCAs:            pkcsPool,
-		InsecureSkipVerify: true}
 	body.Set("sign", getWeChatReleaseSign(w.ApiKey, SignType_MD5, body))
 	agent = HttpAgent().TLSClientConfig(tlsConfig)
 	if w.BaseURL != null {
@@ -344,7 +294,7 @@ func (w *WeChatClient) EntrustPublic(body BodyMap) (bs []byte, err error) {
 	return nil, nil
 }
 
-// 向微信发送请求 ok
+// 向微信发送请求
 func (w *WeChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
 	body.Set("appid", w.AppId)
 	body.Set("mch_id", w.MchId)

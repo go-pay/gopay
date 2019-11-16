@@ -38,10 +38,10 @@ func (bm BodyMap) Get(key string) string {
 	if v, ok = value.(string); ok {
 		return v
 	}
-	return jsonToString(value)
+	return convertToString(value)
 }
 
-func jsonToString(v interface{}) (str string) {
+func convertToString(v interface{}) (str string) {
 	if v == nil {
 		return null
 	}

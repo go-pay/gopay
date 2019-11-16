@@ -39,58 +39,74 @@ type OpenApiRoyaltyDetailInfoPojo struct {
 // 设置 应用公钥证书SN
 //    appCertSN：应用公钥证书SN，通过 gopay.GetCertSN() 获取
 func (a *AliPayClient) SetAppCertSN(appCertSN string) (client *AliPayClient) {
+	a.mu.Lock()
 	a.AppCertSN = appCertSN
+	a.mu.Unlock()
 	return a
 }
 
 // 设置 支付宝根证书SN
 //    alipayRootCertSN：支付宝根证书SN，通过 gopay.GetCertSN() 获取
 func (a *AliPayClient) SetAliPayRootCertSN(alipayRootCertSN string) (client *AliPayClient) {
+	a.mu.Lock()
 	a.AlipayRootCertSN = alipayRootCertSN
+	a.mu.Unlock()
 	return a
 }
 
 // 设置支付后的ReturnUrl
 func (a *AliPayClient) SetReturnUrl(url string) (client *AliPayClient) {
+	a.mu.Lock()
 	a.ReturnUrl = url
+	a.mu.Unlock()
 	return a
 }
 
 // 设置支付宝服务器主动通知商户服务器里指定的页面http/https路径。
 func (a *AliPayClient) SetNotifyUrl(url string) (client *AliPayClient) {
+	a.mu.Lock()
 	a.NotifyUrl = url
+	a.mu.Unlock()
 	return a
 }
 
 // 设置编码格式，如utf-8,gbk,gb2312等，默认推荐使用 utf-8
 func (a *AliPayClient) SetCharset(charset string) (client *AliPayClient) {
+	a.mu.Lock()
 	if charset == null {
 		a.Charset = "utf-8"
 	} else {
 		a.Charset = charset
 	}
+	a.mu.Unlock()
 	return a
 }
 
 // 设置签名算法类型，目前支持RSA2和RSA，默认推荐使用 RSA2
 func (a *AliPayClient) SetSignType(signType string) (client *AliPayClient) {
+	a.mu.Lock()
 	if signType == null {
 		a.SignType = "RSA2"
 	} else {
 		a.SignType = signType
 	}
+	a.mu.Unlock()
 	return a
 }
 
 // 设置应用授权
 func (a *AliPayClient) SetAppAuthToken(appAuthToken string) (client *AliPayClient) {
+	a.mu.Lock()
 	a.AppAuthToken = appAuthToken
+	a.mu.Unlock()
 	return a
 }
 
 // 设置用户信息授权
 func (a *AliPayClient) SetAuthToken(authToken string) (client *AliPayClient) {
+	a.mu.Lock()
 	a.AuthToken = authToken
+	a.mu.Unlock()
 	return a
 }
 

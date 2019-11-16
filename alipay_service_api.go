@@ -34,7 +34,7 @@ var allowSignatureAlgorithm = map[string]bool{
 	"SHA512-RSAPSS": true,
 }
 
-// 解析支付宝支付异步通知的结果到BodyMap
+// 解析支付宝支付异步通知的参数到BodyMap
 //    req：*http.Request
 //    返回参数bm：Notify请求的参数
 //    返回参数err：错误信息
@@ -53,7 +53,7 @@ func ParseAliPayNotifyResultToBodyMap(req *http.Request) (bm BodyMap, err error)
 	return
 }
 
-// ParseAliPayNotifyResult 解析支付宝支付完成后的Notify信息
+// 解析支付宝支付异步通知的参数到Struct
 //    req：*http.Request
 //    返回参数notifyReq：Notify请求的参数
 //    返回参数err：错误信息

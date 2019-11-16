@@ -94,7 +94,8 @@
 * gopay.AliPaySystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
 * gopay.FormatPrivateKey() => 格式化应用私钥
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
-* gopay.ParseAliPayNotifyResult() => 解析并返回支付宝支付异步通知的参数
+* gopay.ParseAliPayNotifyResult() => 解析支付宝支付异步通知的参数到Struct
+* gopay.ParseAliPayNotifyResultToBodyMap() => 解析支付宝支付异步通知的参数到BodyMap
 * gopay.VerifyAliPaySign() => 支付宝同步返回参数验签或异步通知参数验签
 * gopay.DecryptAliPayOpenDataToStruct() => 支付宝小程序敏感加密数据解析到结构体
 
@@ -145,28 +146,42 @@ QQ群：
 
 ---
 
-## 1、初始化GoPay客户端并做配置(所有https请求，已忽略https双向认证：InsecureSkipVerify: true)
+## 1、初始化GoPay客户端并做配置（HTTP请求均设置tls.Config{InsecureSkipVerify: true}）
 
-* #### 微信客户端，如无需更改Appid、Mchid和ApiKey，推荐在 init()方法中初始化，全局适用
+* #### 微信客户端，如无需更改Appid、Mchid和ApiKey等参数，可在init()方法中初始化，全局适用
 
 微信官方文档：[官方文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 ```go
-//初始化微信客户端
+// 初始化微信客户端
 //    appId：应用ID
 //    mchId：商户ID
 //    apiKey：API秘钥值
 //    isProd：是否是正式环境
 client := gopay.NewWeChatClient("wxdaa2ab9ef87b5497", mchId, apiKey, false)
 
-//设置国家：不设置默认 中国国内
+// 设置国家：不设置默认 中国国内
 //    gopay.China：中国国内
 //    gopay.China2：中国国内备用
 //    gopay.SoutheastAsia：东南亚
 //    gopay.Other：其他国家
 client.SetCountry(gopay.China)
+
+// 添加微信证书 Byte 数组
+//    certFile：apiclient_cert.pem byte数组
+//    keyFile：apiclient_key.pem byte数组
+//    pkcs12File：apiclient_cert.p12 byte数组
+client.AddCertFileByte()
+
+// 添加微信证书 Path 路径
+//    certFilePath：apiclient_cert.pem 路径
+//    keyFilePath：apiclient_key.pem 路径
+//    pkcs12FilePath：apiclient_cert.p12 路径
+//    返回err
+client.AddCertFilePath()
+
 ```
 
-* #### 支付宝，如无需更改Appid和PrivateKey，推荐在 init()方法中初始化，全局适用
+* #### 支付宝，如无需更改Appid和PrivateKey等参数，可在init()方法中初始化，全局适用
 
 支付宝官方文档：[官方文档](https://docs.open.alipay.com/catalog)
 

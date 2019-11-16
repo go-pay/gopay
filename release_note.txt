@@ -1,3 +1,15 @@
+版本号：Release 1.4.4
+发布时间：2019/11/16 15:56
+修改记录：
+   (1) 支付宝：新增公共API方法：gopay.ParseAliPayNotifyResultToBodyMap()，解析支付宝支付异步通知的参数到BodyMap
+   (2) 支付宝：修改公共API方法：gopay.VerifyAliPaySign()，支付宝异步验签支持传入 BodyMap
+   (3) 微信：新增Client方法：client.AddCertFileByte()，添加微信证书 Byte 数组
+   (4) 微信：新增Client方法：client.AddCertFilePath()，添加微信证书 Path 路径
+   (5) 微信：微信Client需要证书的方法，如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，如方法需单独使用证书，则传证书Path
+   (6) BodyMap 的Set方法去掉switch判断，直接赋值
+   (7) WeChatClient、AliPayClient 加锁
+   (8) 修改部分小问题和部分样式
+
 版本号：Release 1.4.3
 发布时间：2019/11/12 01:15
 修改记录：

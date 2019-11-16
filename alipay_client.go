@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/parnurzeal/gorequest"
@@ -22,6 +23,7 @@ type AliPayClient struct {
 	AppAuthToken     string
 	AuthToken        string
 	IsProd           bool
+	mu               sync.RWMutex
 }
 
 // 初始化支付宝客户端

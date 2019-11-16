@@ -4,9 +4,12 @@ import (
 	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha256"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/hex"
 	"encoding/xml"
 	"errors"
+	"fmt"
 	"hash"
 	"io/ioutil"
 	"strings"
@@ -18,6 +21,7 @@ type Country int
 //    根据支付地区情况设置国家
 //    country：<China：中国国内，China2：中国国内（冗灾方案），SoutheastAsia：东南亚，Other：其他国家>
 func (w *WeChatClient) SetCountry(country Country) (client *WeChatClient) {
+	w.mu.Lock()
 	switch country {
 	case China:
 		w.BaseURL = wxBaseUrlCh
@@ -30,27 +34,78 @@ func (w *WeChatClient) SetCountry(country Country) (client *WeChatClient) {
 	default:
 		w.BaseURL = wxBaseUrlCh
 	}
+	w.mu.Unlock()
 	return w
 }
 
-// 添加微信证书Bytes
-func (w *WeChatClient) AddCertFileBytes(certFile, keyFile, pkcs12File []byte) {
+// 添加微信证书 Byte 数组
+//    certFile：apiclient_cert.pem byte数组
+//    keyFile：apiclient_key.pem byte数组
+//    pkcs12File：apiclient_cert.p12 byte数组
+func (w *WeChatClient) AddCertFileByte(certFile, keyFile, pkcs12File []byte) {
+	w.mu.Lock()
 	w.CertFile = certFile
 	w.KeyFile = keyFile
 	w.Pkcs12File = pkcs12File
+	w.mu.Unlock()
 }
 
-// 添加微信证书Path路径
-func (w *WeChatClient) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath string) {
-	if cert, err := ioutil.ReadFile(certFilePath); err == nil {
-		w.CertFile = cert
+// 添加微信证书 Path 路径
+//    certFilePath：apiclient_cert.pem 路径
+//    keyFilePath：apiclient_key.pem 路径
+//    pkcs12FilePath：apiclient_cert.p12 路径
+//    返回err
+func (w *WeChatClient) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath string) (err error) {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	var (
+		cert, key, pkcs []byte
+	)
+	if cert, err = ioutil.ReadFile(certFilePath); err != nil {
+		return
 	}
-	if key, err := ioutil.ReadFile(keyFilePath); err == nil {
-		w.KeyFile = key
+	if key, err = ioutil.ReadFile(keyFilePath); err != nil {
+		return
 	}
-	if pkcs, err := ioutil.ReadFile(pkcs12FilePath); err == nil {
-		w.Pkcs12File = pkcs
+	if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
+		return
 	}
+	w.CertFile = cert
+	w.KeyFile = key
+	w.Pkcs12File = pkcs
+	return
+}
+
+func (w *WeChatClient) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath string) (tlsConfig *tls.Config, err error) {
+	var (
+		pkcs        []byte
+		certificate tls.Certificate
+		pkcsPool    = x509.NewCertPool()
+	)
+	if certFilePath != null && keyFilePath != null && pkcs12FilePath != null {
+		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
+			return nil, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
+		}
+		pkcsPool.AppendCertsFromPEM(pkcs)
+		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
+			return nil, fmt.Errorf("tls.LoadX509KeyPair：%s", err.Error())
+		}
+		tlsConfig = &tls.Config{
+			Certificates:       []tls.Certificate{certificate},
+			RootCAs:            pkcsPool,
+			InsecureSkipVerify: true}
+		return
+	}
+
+	pkcsPool.AppendCertsFromPEM(w.Pkcs12File)
+	if certificate, err = tls.X509KeyPair(w.CertFile, w.KeyFile); err != nil {
+		return nil, fmt.Errorf("tls.X509KeyPair：%s", err.Error())
+	}
+	tlsConfig = &tls.Config{
+		Certificates:       []tls.Certificate{certificate},
+		RootCAs:            pkcsPool,
+		InsecureSkipVerify: true}
+	return
 }
 
 // 获取微信支付正式环境Sign值
@@ -83,11 +138,11 @@ func getWeChatSignBoxSign(mchId, apiKey string, bm BodyMap) (sign string, err er
 
 // 从微信提供的接口获取：SandboxSignKey
 func getSanBoxKey(mchId, nonceStr, apiKey, signType string) (key string, err error) {
-	body := make(BodyMap)
-	body.Set("mch_id", mchId)
-	body.Set("nonce_str", nonceStr)
+	bm := make(BodyMap)
+	bm.Set("mch_id", mchId)
+	bm.Set("nonce_str", nonceStr)
 	//沙箱环境：获取沙箱环境ApiKey
-	if key, err = getSanBoxSignKey(mchId, nonceStr, getWeChatReleaseSign(apiKey, signType, body)); err != nil {
+	if key, err = getSanBoxSignKey(mchId, nonceStr, getWeChatReleaseSign(apiKey, signType, bm)); err != nil {
 		return
 	}
 	return
