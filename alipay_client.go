@@ -23,7 +23,7 @@ type AliPayClient struct {
 	AppAuthToken     string
 	AuthToken        string
 	IsProd           bool
-	mu               sync.RWMutex
+	mu               sync.Mutex
 }
 
 // 初始化支付宝客户端

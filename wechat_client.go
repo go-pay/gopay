@@ -20,7 +20,7 @@ type WeChatClient struct {
 	KeyFile    []byte
 	Pkcs12File []byte
 	IsProd     bool
-	mu         sync.RWMutex
+	mu         sync.Mutex
 }
 
 // 初始化微信客户端
