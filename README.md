@@ -528,6 +528,9 @@ fmt.Println(*phone)
 支付宝：
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_zfb.png"/>
 
+#### 赞赏者
+* 详见：[赞赏记录](https://github.com/iGoogle-ink/gopay/blob/master/support_note.txt)
+
 ## License
 ```
 Copyright 2019 Jerry
