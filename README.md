@@ -523,9 +523,9 @@ fmt.Println(*phone)
 ```
 
 ## 开源不易，讲究的朋友可以给个赞赏
-微信：
+<font color='#0088ff'>微信：</font>
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_wx.png"/>
- ______  支付宝：
+<font color='#0088ff'>支付宝：</font>
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_zfb.png"/>
 
 #### 赞赏者
