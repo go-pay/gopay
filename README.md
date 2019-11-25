@@ -525,7 +525,7 @@ fmt.Println(*phone)
 ## 开源不易，讲究的朋友可以给个赞赏
 微信：
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_wx.png"/>
-支付宝：
+ ______  支付宝：
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_zfb.png"/>
 
 #### 赞赏者
