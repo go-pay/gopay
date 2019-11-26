@@ -106,18 +106,6 @@ gopath 安装
 $ go get -u github.com/iGoogle-ink/gopay
 ```
 
-go mod 安装
-```bash
-1、mod 文件的require中添加：github.com/iGoogle-ink/gopay latest ，如下
-require (
-    github.com/iGoogle-ink/gopay latest
-    ...
-    ...
-)
-2、命令行执行：go mod tidy 下载依赖包
-3、命令行执行：go list -m all 查看所有依赖包
-```
-
 * #### 查看 GoPay 版本
     * [版本更新记录](https://github.com/iGoogle-ink/gopay/blob/master/release_note.txt)
 ```go
@@ -527,9 +515,6 @@ fmt.Println(*phone)
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_wx.png"/>
 <font color='#0088ff'>支付宝：</font>
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/zanshang_zfb.png"/>
-
-#### 赞赏者
-* 详见：[赞赏记录](https://github.com/iGoogle-ink/gopay/blob/master/support_note.txt)
 
 ## License
 ```
