@@ -101,7 +101,6 @@
 
 # 一、安装
 
-gopath 安装
 ```bash
 $ go get -u github.com/iGoogle-ink/gopay
 ```
