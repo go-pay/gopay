@@ -10,6 +10,7 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"errors"
+	"fmt"
 	"hash"
 	"net/url"
 )
@@ -45,13 +46,61 @@ func (a *AliPayClient) SetAppCertSN(appCertSN string) (client *AliPayClient) {
 	return a
 }
 
-// 设置 支付宝根证书SN
-//    alipayRootCertSN：支付宝根证书SN，通过 gopay.GetCertSN() 获取
-func (a *AliPayClient) SetAliPayRootCertSN(alipayRootCertSN string) (client *AliPayClient) {
+// 设置 支付宝公钥证书SN
+//    aliPayPublicCertSN：支付宝公钥证书SN，通过 gopay.GetCertSN() 获取
+func (a *AliPayClient) SetAliPayPublicCertSN(aliPayPublicCertSN string) (client *AliPayClient) {
 	a.mu.Lock()
-	a.AlipayRootCertSN = alipayRootCertSN
+	a.AliPayPublicCertSN = aliPayPublicCertSN
 	a.mu.Unlock()
 	return a
+}
+
+// 设置 支付宝CA根证书SN
+//    aliPayRootCertSN：支付宝CA根证书SN，通过 gopay.GetCertSN() 获取
+func (a *AliPayClient) SetAliPayRootCertSN(aliPayRootCertSN string) (client *AliPayClient) {
+	a.mu.Lock()
+	a.AliPayRootCertSN = aliPayRootCertSN
+	a.mu.Unlock()
+	return a
+}
+
+// 设置 应用公钥证书路径，并赋值 app_cert_sn
+//    appCertPath：应用公钥证书路径
+func (a *AliPayClient) SetAppCertPath(appCertPath string) (client *AliPayClient, err error) {
+	sn, err := GetCertSN(appCertPath)
+	if err != nil {
+		return a, fmt.Errorf("get app_cert_sn return err, but alse return alipay client. err: %v", err)
+	}
+	a.mu.Lock()
+	a.AppCertSN = sn
+	a.mu.Unlock()
+	return a, nil
+}
+
+// 设置 支付宝公钥证书文件路径，并赋值 alipay_cert_sn
+//    aliPayPublicCertPath：支付宝公钥证书文件路径
+func (a *AliPayClient) SetAliPayPublicCertPath(aliPayPublicCertPath string) (client *AliPayClient, err error) {
+	sn, err := GetCertSN(aliPayPublicCertPath)
+	if err != nil {
+		return a, fmt.Errorf("get alipay_cert_sn return err, but alse return alipay client. err: %v", err)
+	}
+	a.mu.Lock()
+	a.AliPayPublicCertSN = sn
+	a.mu.Unlock()
+	return a, nil
+}
+
+// 设置 支付宝CA根证书文件路径，并赋值 alipay_root_cert_sn
+//    aliPayRootCertPath：支付宝CA根证书文件路径
+func (a *AliPayClient) SetAliPayRootCertPath(aliPayRootCertPath string) (client *AliPayClient, err error) {
+	sn, err := GetCertSN(aliPayRootCertPath)
+	if err != nil {
+		return a, fmt.Errorf("get alipay_root_cert_sn return err, but alse return alipay client. err: %v", err)
+	}
+	a.mu.Lock()
+	a.AliPayRootCertSN = sn
+	a.mu.Unlock()
+	return a, nil
 }
 
 // 设置支付后的ReturnUrl

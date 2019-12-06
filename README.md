@@ -96,7 +96,8 @@
 * gopay.FormatAliPayPublicKey() => 格式化支付宝公钥
 * gopay.ParseAliPayNotifyResult() => 解析支付宝支付异步通知的参数到Struct
 * gopay.ParseAliPayNotifyResultToBodyMap() => 解析支付宝支付异步通知的参数到BodyMap
-* gopay.VerifyAliPaySign() => 支付宝同步返回参数验签或异步通知参数验签
+* gopay.VerifyAliPaySign() => 支付宝异步通知参数验签
+* gopay.VerifyAliPaySyncSign() => 支付宝同步返回参数验签
 * gopay.DecryptAliPayOpenDataToStruct() => 支付宝小程序敏感加密数据解析到结构体
 
 # 一、安装
@@ -395,22 +396,20 @@ return c.String(http.StatusOK, rsp.ToXmlString())   //此写法是 echo 框架�
 
 * #### 支付宝
 
-支付宝的**同步返回**验签，参数请注意看注释
-
-APP支付： 暂不支持同步返回验签
+注意：APP支付、手机网站支付、电脑网站支付 暂不支持同步返回验签
 
 支付宝支付后的同步/异步通知验签文档：[支付结果通知](https://docs.open.alipay.com/200/106120)
 ```go
 //====同步返回参数验签Sign====
 aliRsp, err := client.AliPayTradePay(bm)
-//支付宝同步返回验签或异步通知验签
+//支付宝同步返回验签
 //    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
 //    aliPayPublicKey：支付宝公钥
-//    bean： 同步返回验签时，此参数为 aliRsp.SignData ；异步通知验签时，此参数为异步通知解析的结构体 notifyReq
-//    syncSign：同步返回验签时，此参数必传，即：aliRsp.Sign ；异步通知验签时，不要传此参数，否则会出错。
+//    signData：待验签参数，aliRsp.SignData
+//    sign：待验签sign，aliRsp.Sign
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
-ok, err := gopay.VerifyAliPaySign(alipayPublicKey, aliRsp.SignData, aliRsp.Sign)
+ok, err := gopay.VerifyAliPaySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
 
 //====异步通知参数解析和验签Sign====
 //解析异步通知的参数
@@ -419,7 +418,7 @@ ok, err := gopay.VerifyAliPaySign(alipayPublicKey, aliRsp.SignData, aliRsp.Sign)
 //    返回参数 err：错误信息
 notifyReq, err = gopay.ParseAliPayNotifyResult(c.Request())     //c.Request()是 echo 框架的获取
 //验签操作
-ok, err = gopay.VerifyAliPaySign(alipayPublicKey, notifyReq)
+ok, err = gopay.VerifyAliPaySign(aliPayPublicKey, notifyReq)
 
 //==异步通知，返回支付宝平台的信息==
 //    文档：https://docs.open.alipay.com/203/105286

@@ -1,3 +1,14 @@
+版本号：Release 1.4.5
+发布时间：2019/12/06 15:56
+修改记录：
+   (1) 支付宝：修复 公钥证书模式 下，同步返回参数接收问题，返回接收结构体增加参数 alipay_cert_sn，同步返回证书模式验签，暂时未解决
+   (2) 支付宝：修改公共API方法：gopay.VerifyAliPaySign()，不再支持同步验签，只做异步通知验签
+   (3) 支付宝：新增公共API方法：gopay.VerifyAliPaySyncSign()，支付宝同步返回验签
+   (4) 支付宝：新增Client方法：client.SetAliPayPublicCertSN()，设置 支付宝公钥证书SN，通过 gopay.GetCertSN() 获取 alipay_cert_sn
+   (5) 支付宝：新增Client方法：client.SetAppCertPath()，设置应用公钥证书路径，并赋值 app_cert_sn
+   (6) 支付宝：新增Client方法：client.SetAliPayPublicCertPath()，设置支付宝公钥证书文件路径，并赋值 alipay_cert_sn
+   (7) 支付宝：新增Client方法：client.SetAliPayRootCertPath()，设置支付宝CA根证书文件路径，并赋值 alipay_root_cert_sn
+
 版本号：Release 1.4.4
 发布时间：2019/11/16 15:56
 修改记录：

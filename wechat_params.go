@@ -56,8 +56,6 @@ func (w *WeChatClient) AddCertFileByte(certFile, keyFile, pkcs12File []byte) {
 //    pkcs12FilePath：apiclient_cert.p12 路径
 //    返回err
 func (w *WeChatClient) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath string) (err error) {
-	w.mu.Lock()
-	defer w.mu.Unlock()
 	var (
 		cert, key, pkcs []byte
 	)
@@ -70,9 +68,11 @@ func (w *WeChatClient) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath
 	if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
 		return
 	}
+	w.mu.Lock()
 	w.CertFile = cert
 	w.KeyFile = key
 	w.Pkcs12File = pkcs
+	w.mu.Unlock()
 	return
 }
 
@@ -96,9 +96,11 @@ func (w *WeChatClient) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath s
 			InsecureSkipVerify: true}
 		return
 	}
-
+	w.mu.RLock()
 	pkcsPool.AppendCertsFromPEM(w.Pkcs12File)
-	if certificate, err = tls.X509KeyPair(w.CertFile, w.KeyFile); err != nil {
+	certificate, err = tls.X509KeyPair(w.CertFile, w.KeyFile)
+	w.mu.RUnlock()
+	if err != nil {
 		return nil, fmt.Errorf("tls.X509KeyPair：%s", err.Error())
 	}
 	tlsConfig = &tls.Config{
