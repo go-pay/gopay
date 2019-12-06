@@ -12,7 +12,6 @@ public static String getRootCertSN(String rootCertContent){
 		   if(c.getSigAlgOID().startsWith("1.2.840.113549.1.1")){
 			   md.update((c.getIssuerX500Principal().getName() + c.getSerialNumber()).getBytes());
 			   String certSN = new BigInteger(1,md.digest()).toString(16);
-			   //BigInteger���0ʡ�Ե����貹ȫ��32λ
 			   certSN = fillMD5(certSN);
 			   if(StringUtils.isEmpty(rootCertSN)){
 				   rootCertSN = certSN;
@@ -23,7 +22,7 @@ public static String getRootCertSN(String rootCertContent){
 
 	   }
    }catch (Exception e){
-	   AlipayLogger.logBizError(("��ȡ��֤��ʧ��"));
+	   AlipayLogger.logBizError(("err"));
    }
    return rootCertSN;
 }
