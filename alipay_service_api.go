@@ -134,33 +134,41 @@ A：开发者上传自己的应用公钥证书后，开放平台会为开发者�
 基于该机制可实现支付宝公钥证书变更时开发者无感知，当前开放平台提供的SDK已基于该机制实现对应功能。若开发者未通过SDK接入，须自行实现该功能。
 */
 
-// VerifyAliPaySign 支付宝同步返回验签或异步通知验签
+// VerifyAliPaySyncSign 支付宝同步返回验签
 //    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
 //    aliPayPublicKey：支付宝公钥
-//    bean： 同步返回验签时，此参数为字符串 aliRsp.SignData ；异步通知验签时，此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm
-//    syncSign：同步返回验签时，此参数必传，即：aliRsp.Sign ；异步通知验签时，不传此参数，否则会出错。
+//    signData：待验签参数，aliRsp.SignData
+//    sign：待验签sign，aliRsp.Sign
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
 //    验签文档：https://docs.open.alipay.com/200/106120
-func VerifyAliPaySign(aliPayPublicKey string, bean interface{}, syncSign ...string) (ok bool, err error) {
+func VerifyAliPaySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error) {
+
+	// 支付宝公钥验签
+	pKey := FormatAliPayPublicKey(aliPayPublicKey)
+	if err = verifyAliPaySign(signData, sign, "RSA2", pKey); err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// VerifyAliPaySign 支付宝异步通知验签
+//    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
+//    aliPayPublicKey：支付宝公钥
+//    bean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm
+//    返回参数ok：是否验签通过
+//    返回参数err：错误信息
+//    验签文档：https://docs.open.alipay.com/200/106120
+func VerifyAliPaySign(aliPayPublicKey string, bean interface{}) (ok bool, err error) {
 	if bean == nil {
 		return false, errors.New("bean is nil")
 	}
 	var (
 		bodySign     string
 		bodySignType string
-		pKey         string
 		signData     string
-		bm           BodyMap
-		bs           []byte
+		bm           = make(BodyMap)
 	)
-	if len(syncSign) > 0 {
-		bodySign = syncSign[0]
-		bodySignType = "RSA2"
-		signData = bean.(string)
-		goto Verify
-	}
-	bm = make(BodyMap)
 	if reflect.ValueOf(bean).Kind() == reflect.Map {
 		if bm, ok = bean.(BodyMap); ok {
 			bodySign = bm.Get("sign")
@@ -170,7 +178,8 @@ func VerifyAliPaySign(aliPayPublicKey string, bean interface{}, syncSign ...stri
 			signData = bm.EncodeAliPaySignParams()
 		}
 	} else {
-		if bs, err = json.Marshal(bean); err != nil {
+		bs, err := json.Marshal(bean)
+		if err != nil {
 			return false, fmt.Errorf("json.Marshal：%s", err.Error())
 		}
 		if err = json.Unmarshal(bs, &bm); err != nil {
@@ -182,8 +191,7 @@ func VerifyAliPaySign(aliPayPublicKey string, bean interface{}, syncSign ...stri
 		bm.Remove("sign_type")
 		signData = bm.EncodeAliPaySignParams()
 	}
-Verify:
-	pKey = FormatAliPayPublicKey(aliPayPublicKey)
+	pKey := FormatAliPayPublicKey(aliPayPublicKey)
 	if err = verifyAliPaySign(signData, bodySign, bodySignType, pKey); err != nil {
 		return false, err
 	}

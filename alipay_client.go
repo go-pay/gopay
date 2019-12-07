@@ -12,18 +12,19 @@ import (
 )
 
 type AliPayClient struct {
-	AppId            string
-	PrivateKey       string
-	AlipayRootCertSN string
-	AppCertSN        string
-	ReturnUrl        string
-	NotifyUrl        string
-	Charset          string
-	SignType         string
-	AppAuthToken     string
-	AuthToken        string
-	IsProd           bool
-	mu               sync.Mutex
+	AppId              string
+	PrivateKey         string
+	AppCertSN          string
+	AliPayPublicCertSN string
+	AliPayRootCertSN   string
+	ReturnUrl          string
+	NotifyUrl          string
+	Charset            string
+	SignType           string
+	AppAuthToken       string
+	AuthToken          string
+	IsProd             bool
+	mu                 sync.RWMutex
 }
 
 // 初始化支付宝客户端
@@ -537,34 +538,50 @@ func (a *AliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, err 
 	pubBody.Set("method", method)
 	pubBody.Set("format", "JSON")
 	if a.AppCertSN != null {
+		a.mu.RLock()
 		pubBody.Set("app_cert_sn", a.AppCertSN)
+		a.mu.RUnlock()
 	}
-	if a.AlipayRootCertSN != null {
-		pubBody.Set("alipay_root_cert_sn", a.AlipayRootCertSN)
+	if a.AliPayRootCertSN != null {
+		a.mu.RLock()
+		pubBody.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
+		a.mu.RUnlock()
 	}
 	if a.ReturnUrl != null {
+		a.mu.RLock()
 		pubBody.Set("return_url", a.ReturnUrl)
+		a.mu.RUnlock()
 	}
 	if a.Charset == null {
 		pubBody.Set("charset", "utf-8")
 	} else {
+		a.mu.RLock()
 		pubBody.Set("charset", a.Charset)
+		a.mu.RUnlock()
 	}
 	if a.SignType == null {
 		pubBody.Set("sign_type", "RSA2")
 	} else {
+		a.mu.RLock()
 		pubBody.Set("sign_type", a.SignType)
+		a.mu.RUnlock()
 	}
 	pubBody.Set("timestamp", time.Now().Format(TimeLayout))
 	pubBody.Set("version", "1.0")
 	if a.NotifyUrl != null {
+		a.mu.RLock()
 		pubBody.Set("notify_url", a.NotifyUrl)
+		a.mu.RUnlock()
 	}
 	if a.AppAuthToken != null {
+		a.mu.RLock()
 		pubBody.Set("app_auth_token", a.AppAuthToken)
+		a.mu.RUnlock()
 	}
 	if a.AuthToken != null {
+		a.mu.RLock()
 		pubBody.Set("auth_token", a.AuthToken)
+		a.mu.RUnlock()
 	}
 	if bodyStr != null {
 		pubBody.Set("biz_content", bodyStr)

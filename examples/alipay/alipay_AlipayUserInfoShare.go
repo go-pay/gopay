@@ -26,7 +26,8 @@ func AliPayUserInfoShare() {
 		return
 	}
 	fmt.Println("aliRsp:", *aliRsp)
-	ok, err := gopay.VerifyAliPaySign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
+	// 同步返回验签
+	ok, err := gopay.VerifyAliPaySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
 	if err != nil {
 		fmt.Println("VerifyAliPaySign-err:", err)
 		return

@@ -20,7 +20,7 @@ type WeChatClient struct {
 	KeyFile    []byte
 	Pkcs12File []byte
 	IsProd     bool
-	mu         sync.Mutex
+	mu         sync.RWMutex
 }
 
 // 初始化微信客户端
@@ -321,7 +321,9 @@ GoRequest:
 		agent.TLSClientConfig(tlsConfig[0])
 	}
 	if w.BaseURL != null {
+		w.mu.RLock()
 		agent.Post(w.BaseURL + path)
+		w.mu.RUnlock()
 	} else {
 		agent.Post(wxBaseUrlCh + path)
 	}

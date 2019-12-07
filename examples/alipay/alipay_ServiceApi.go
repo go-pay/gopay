@@ -48,6 +48,19 @@ func DecryptAliPayOpenDataToStruct() {
 	fmt.Println("rsp.Mobile:", rsp.Mobile)
 }
 
+func VerifyAliPaySyncSign() {
+	aliPayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1wn1sU/8Q0rYLlZ6sq3enrPZw2ptp6FecHR2bBFLjJ+sKzepROd0bKddgj+Mr1ffr3Ej78mLdWV8IzLfpXUi945DkrQcOUWLY0MHhYVG2jSs/qzFfpzmtut2Cl2TozYpE84zom9ei06u2AXLMBkU6VpznZl+R4qIgnUfByt3Ix5b3h4Cl6gzXMAB1hJrrrCkq+WvWb3Fy0vmk/DUbJEz8i8mQPff2gsHBE1nMPvHVAMw1GMk9ImB4PxucVek4ZbUzVqxZXphaAgUXFK2FSFU+Q+q1SPvHbUsjtIyL+cLA6H/6ybFF9Ffp27Y14AHPw29+243/SpMisbGcj2KD+evBwIDAQAB"
+	signData := "aaaaaaaaaaaaaaaaaaaaaa"
+	sign := "asdkjsdhfgkjdshflksdjfl"
+
+	ok, err := gopay.VerifyAliPaySyncSign(aliPayPublicKey, signData, sign)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("ok:", ok)
+}
+
 func ParseAliPayNotifyResultAndVerifyAliPaySign(req *http.Request) {
 	aliPayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1wn1sU/8Q0rYLlZ6sq3enrPZw2ptp6FecHR2bBFLjJ+sKzepROd0bKddgj+Mr1ffr3Ej78mLdWV8IzLfpXUi945DkrQcOUWLY0MHhYVG2jSs/qzFfpzmtut2Cl2TozYpE84zom9ei06u2AXLMBkU6VpznZl+R4qIgnUfByt3Ix5b3h4Cl6gzXMAB1hJrrrCkq+WvWb3Fy0vmk/DUbJEz8i8mQPff2gsHBE1nMPvHVAMw1GMk9ImB4PxucVek4ZbUzVqxZXphaAgUXFK2FSFU+Q+q1SPvHbUsjtIyL+cLA6H/6ybFF9Ffp27Y14AHPw29+243/SpMisbGcj2KD+evBwIDAQAB"
 
@@ -55,6 +68,7 @@ func ParseAliPayNotifyResultAndVerifyAliPaySign(req *http.Request) {
 	notifyReq, err := gopay.ParseAliPayNotifyResult(req)
 	if err != nil {
 		fmt.Println("err:", err)
+		return
 	}
 	fmt.Println("notifyReq:", *notifyReq)
 
@@ -62,6 +76,7 @@ func ParseAliPayNotifyResultAndVerifyAliPaySign(req *http.Request) {
 	ok, err := gopay.VerifyAliPaySign(aliPayPublicKey, notifyReq)
 	if err != nil {
 		fmt.Println("err:", err)
+		return
 	}
 	log.Println("支付宝验签是否通过:", ok)
 }
