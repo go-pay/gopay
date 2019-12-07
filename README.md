@@ -194,6 +194,10 @@ client.SetAliPayRootCertSN().               //设置支付宝根证书SN，通�
     SetNotifyUrl("https://www.gopay.ink").  //设置异步通知URL
     SetAppAuthToken().                      //设置第三方应用授权
     SetAuthToken()                          //设置个人信息授权
+
+client, err := client.SetAppCertSnByPath("appCertPublicKey.crt")
+client, err := client.SetAliPayPublicCertSnByPath("alipayCertPublicKey_RSA2.crt")
+client, err := client.SetAliPayRootCertSnByPath("alipayRootCert.crt")
 ```
 
 ## 2、初始化并赋值BodyMap（client的方法所需的入参）

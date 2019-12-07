@@ -64,9 +64,9 @@ func (a *AliPayClient) SetAliPayRootCertSN(aliPayRootCertSN string) (client *Ali
 	return a
 }
 
-// 设置 应用公钥证书路径，并赋值 app_cert_sn
+// 设置 app_cert_sn 通过应用公钥证书路径
 //    appCertPath：应用公钥证书路径
-func (a *AliPayClient) SetAppCertPath(appCertPath string) (client *AliPayClient, err error) {
+func (a *AliPayClient) SetAppCertSnByPath(appCertPath string) (client *AliPayClient, err error) {
 	sn, err := GetCertSN(appCertPath)
 	if err != nil {
 		return a, fmt.Errorf("get app_cert_sn return err, but alse return alipay client. err: %v", err)
@@ -77,9 +77,9 @@ func (a *AliPayClient) SetAppCertPath(appCertPath string) (client *AliPayClient,
 	return a, nil
 }
 
-// 设置 支付宝公钥证书文件路径，并赋值 alipay_cert_sn
+// 设置 alipay_cert_sn 通过 支付宝公钥证书文件路径
 //    aliPayPublicCertPath：支付宝公钥证书文件路径
-func (a *AliPayClient) SetAliPayPublicCertPath(aliPayPublicCertPath string) (client *AliPayClient, err error) {
+func (a *AliPayClient) SetAliPayPublicCertSnByPath(aliPayPublicCertPath string) (client *AliPayClient, err error) {
 	sn, err := GetCertSN(aliPayPublicCertPath)
 	if err != nil {
 		return a, fmt.Errorf("get alipay_cert_sn return err, but alse return alipay client. err: %v", err)
@@ -90,9 +90,9 @@ func (a *AliPayClient) SetAliPayPublicCertPath(aliPayPublicCertPath string) (cli
 	return a, nil
 }
 
-// 设置 支付宝CA根证书文件路径，并赋值 alipay_root_cert_sn
+// 设置 alipay_root_cert_sn 通过支付宝CA根证书文件路径
 //    aliPayRootCertPath：支付宝CA根证书文件路径
-func (a *AliPayClient) SetAliPayRootCertPath(aliPayRootCertPath string) (client *AliPayClient, err error) {
+func (a *AliPayClient) SetAliPayRootCertSnByPath(aliPayRootCertPath string) (client *AliPayClient, err error) {
 	sn, err := GetCertSN(aliPayRootCertPath)
 	if err != nil {
 		return a, fmt.Errorf("get alipay_root_cert_sn return err, but alse return alipay client. err: %v", err)
