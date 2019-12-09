@@ -80,7 +80,9 @@ func (c *Client) Post(url string) (client *Client) {
 
 func (c *Client) Type(typeStr string) (client *Client) {
 	if _, ok := Types[typeStr]; ok {
+		c.mu.Lock()
 		c.ForceType = typeStr
+		c.mu.Unlock()
 	} else {
 		c.Errors = append(c.Errors, errors.New("Type func: incorrect type \""+typeStr+"\""))
 	}
@@ -101,7 +103,9 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 		c.Errors = append(c.Errors, err)
 		return c
 	}
+	c.mu.Lock()
 	c.JsonByte = bs
+	c.mu.Unlock()
 	return c
 }
 
@@ -118,6 +122,9 @@ func (c *Client) EndStruct(v interface{}) (res *http.Response, errs []error) {
 		c.Errors = append(c.Errors, errs...)
 		return nil, c.Errors
 	}
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+
 	switch c.UnmarshalType {
 	case TypeJSON:
 		err := json.Unmarshal(bs, &v)
@@ -143,36 +150,48 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 		return nil, nil, c.Errors
 	}
 	var reader *strings.Reader
-	switch c.Method {
-	case GET:
-		reader = strings.NewReader(null)
-	case POST:
-		switch c.ForceType {
-		case TypeJSON:
-			if c.JsonByte != nil {
-				reader = strings.NewReader(string(c.JsonByte))
+
+	req, err := func() (*http.Request, error) {
+		c.mu.RLock()
+		defer c.mu.RUnlock()
+
+		switch c.Method {
+		case GET:
+			reader = strings.NewReader(null)
+		case POST:
+			switch c.ForceType {
+			case TypeJSON:
+				if c.JsonByte != nil {
+					reader = strings.NewReader(string(c.JsonByte))
+				}
+				c.ContentType = Types[TypeJSON]
+			case TypeForm, TypeFormData, TypeUrlencoded:
+				reader = strings.NewReader(c.FormString)
+				c.ContentType = Types[TypeForm]
+			case TypeXML:
+				reader = strings.NewReader(c.FormString)
+				c.ContentType = Types[TypeXML]
+				c.UnmarshalType = TypeXML
+			default:
+				c.Errors = append(c.Errors, errors.New("Request type Error "))
 			}
-			c.ContentType = Types[TypeJSON]
-		case TypeForm, TypeFormData, TypeUrlencoded:
-			reader = strings.NewReader(c.FormString)
-			c.ContentType = Types[TypeForm]
-		case TypeXML:
-			reader = strings.NewReader(c.FormString)
-			c.ContentType = Types[TypeXML]
-			c.UnmarshalType = TypeXML
 		default:
-			c.Errors = append(c.Errors, errors.New("Request type Error "))
+			reader = strings.NewReader(null)
 		}
-	default:
-		reader = strings.NewReader(null)
-	}
-	req, err := http.NewRequest(c.Method, c.Url, reader)
+
+		req, err := http.NewRequest(c.Method, c.Url, reader)
+		if err != nil {
+			return nil, err
+		}
+		req.Header.Set("Content-Type", c.ContentType)
+		c.HttpClient.Transport = c.Transport
+		return req, nil
+	}()
 	if err != nil {
 		c.Errors = append(c.Errors, err)
 		return nil, nil, c.Errors
 	}
-	req.Header.Set("Content-Type", c.ContentType)
-	c.HttpClient.Transport = c.Transport
+
 	res, err = c.HttpClient.Do(req)
 	if err != nil {
 		c.Errors = append(c.Errors, err)
