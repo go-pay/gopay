@@ -48,7 +48,7 @@ type Client struct {
 // NewHttpClient , default tls.Config{InsecureSkipVerify: true}
 func NewHttpClient() (client *Client) {
 	c := new(Client)
-	c.HttpClient = new(http.Client)
+	c.HttpClient = &http.Client{}
 	c.Transport = &http.Transport{}
 	c.Transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	c.RequestType = TypeUrlencoded
