@@ -52,6 +52,7 @@ func NewHttpClient() (client *Client) {
 	c.HttpClient = &http.Client{}
 	c.Transport = &http.Transport{}
 	c.Transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	c.Transport.DisableKeepAlives = true
 	c.RequestType = TypeUrlencoded
 	c.UnmarshalType = TypeJSON
 	c.Errors = make([]error, 0)
