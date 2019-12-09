@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"strings"
 	"sync"
-
-	"github.com/parnurzeal/gorequest"
 )
 
 type WeChatClient struct {
@@ -257,33 +255,29 @@ func (w *WeChatClient) Transfer(body BodyMap, certFilePath, keyFilePath, pkcs12F
 	body.Set("mch_appid", w.AppId)
 	body.Set("mchid", w.MchId)
 	var (
-		bs        []byte
 		tlsConfig *tls.Config
-		agent     *gorequest.SuperAgent
-		errs      []error
-		res       gorequest.Response
+		url       = wxBaseUrlCh + wxTransfers
 	)
 	if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	body.Set("sign", getWeChatReleaseSign(w.ApiKey, SignType_MD5, body))
-	agent = HttpAgent().TLSClientConfig(tlsConfig)
+
+	httpClient := NewHttpClient().SetTLSConfig(tlsConfig).Type(TypeXML)
 	if w.BaseURL != null {
-		agent.Post(w.BaseURL + wxTransfers)
-	} else {
-		agent.Post(wxBaseUrlCh + wxTransfers)
+		w.mu.RLock()
+		url = w.BaseURL + wxTransfers
+		w.mu.RUnlock()
 	}
-	if res, bs, errs = agent.Type("xml").SendString(generateXml(body)).EndBytes(); len(errs) > 0 {
+	wxRsp = new(WeChatTransfersResponse)
+	res, errs := httpClient.Post(url).SendString(generateXml(body)).EndStruct(wxRsp)
+	if len(errs) > 0 {
 		return nil, errs[0]
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
 	}
-	wxRsp = new(WeChatTransfersResponse)
-	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
-	}
-	return
+	return wxRsp, nil
 }
 
 // 公众号纯签约（未完成）
@@ -295,13 +289,12 @@ func (w *WeChatClient) EntrustPublic(body BodyMap) (bs []byte, err error) {
 }
 
 // 向微信发送请求
-func (w *WeChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.Config) (bytes []byte, err error) {
+func (w *WeChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.Config) (bs []byte, err error) {
 	body.Set("appid", w.AppId)
 	body.Set("mch_id", w.MchId)
 	var (
 		sign string
-		errs []error
-		res  gorequest.Response
+		url  = wxBaseUrlCh + path
 	)
 	if body.Get("sign") != null {
 		goto GoRequest
@@ -309,32 +302,34 @@ func (w *WeChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.Con
 	if !w.IsProd {
 		body.Set("sign_type", SignType_MD5)
 		if sign, err = getWeChatSignBoxSign(w.MchId, w.ApiKey, body); err != nil {
-			return
+			return nil, err
 		}
 	} else {
 		sign = getWeChatReleaseSign(w.ApiKey, body.Get("sign_type"), body)
 	}
 	body.Set("sign", sign)
+
 GoRequest:
-	agent := HttpAgent()
+	httpClient := NewHttpClient()
 	if w.IsProd && tlsConfig != nil {
-		agent.TLSClientConfig(tlsConfig[0])
+		httpClient.SetTLSConfig(tlsConfig[0])
 	}
+
 	if w.BaseURL != null {
 		w.mu.RLock()
-		agent.Post(w.BaseURL + path)
+		url = w.BaseURL + path
 		w.mu.RUnlock()
-	} else {
-		agent.Post(wxBaseUrlCh + path)
 	}
-	if res, bytes, errs = agent.Type("xml").SendString(generateXml(body)).EndBytes(); len(errs) > 0 {
+
+	res, bs, errs := httpClient.Type(TypeXML).Post(url).SendString(generateXml(body)).EndBytes()
+	if len(errs) > 0 {
 		return nil, errs[0]
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
 	}
-	if strings.Contains(string(bytes), "HTML") {
-		return nil, errors.New(string(bytes))
+	if strings.Contains(string(bs), "HTML") {
+		return nil, errors.New(string(bs))
 	}
-	return
+	return bs, nil
 }

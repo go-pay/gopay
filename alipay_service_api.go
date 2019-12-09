@@ -438,7 +438,7 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 }
 
 // aliPaySystemOauthToken 向支付宝发送请求
-func aliPaySystemOauthToken(appId, privateKey string, body BodyMap, method string, isProd bool) (bytes []byte, err error) {
+func aliPaySystemOauthToken(appId, privateKey string, body BodyMap, method string, isProd bool) (bs []byte, err error) {
 	body.Set("app_id", appId)
 	body.Set("method", method)
 	body.Set("format", "JSON")
@@ -447,22 +447,20 @@ func aliPaySystemOauthToken(appId, privateKey string, body BodyMap, method strin
 	body.Set("timestamp", time.Now().Format(TimeLayout))
 	body.Set("version", "1.0")
 	var (
-		sign, url string
-		errs      []error
+		sign string
+		url  = zfbBaseUrlUtf8
 	)
 	pKey := FormatPrivateKey(privateKey)
 	if sign, err = getRsaSign(body, "RSA2", pKey); err != nil {
-		return
+		return nil, err
 	}
 	body.Set("sign", sign)
-	agent := HttpAgent()
 	if !isProd {
 		url = zfbSandboxBaseUrlUtf8
-	} else {
-		url = zfbBaseUrlUtf8
 	}
-	if _, bytes, errs = agent.Post(url).Type("form-data").SendString(FormatAliPayURLParam(body)).EndBytes(); len(errs) > 0 {
+	_, bs, errs := NewHttpClient().Type(TypeForm).Post(url).SendString(FormatAliPayURLParam(body)).EndBytes()
+	if len(errs) > 0 {
 		return nil, errs[0]
 	}
-	return
+	return bs, nil
 }

@@ -13,6 +13,7 @@ import (
 	"errors"
 	"fmt"
 	"hash"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"reflect"
@@ -74,8 +75,8 @@ func GetWeChatSanBoxParamSign(appId, mchId, apiKey string, bm BodyMap) (sign str
 //    返回参数bm：Notify请求的参数
 //    返回参数err：错误信息
 func ParseWeChatNotifyResultToBodyMap(req *http.Request) (bm BodyMap, err error) {
-	var bs []byte
-	if bs, err = ioutil.ReadAll(req.Body); err != nil {
+	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(2<<20))) // default 2MB change the size you want;
+	if err != nil {
 		return nil, fmt.Errorf("ioutil.ReadAll：%s", err.Error())
 	}
 	bm = make(BodyMap)
@@ -394,10 +395,12 @@ func DecryptWeChatOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm Bo
 func GetAppWeChatLoginAccessToken(appId, appSecret, code string) (accessToken *AppWeChatLoginAccessToken, err error) {
 	accessToken = new(AppWeChatLoginAccessToken)
 	url := "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type=authorization_code"
-	if _, _, errs := HttpAgent().Get(url).EndStruct(accessToken); len(errs) > 0 {
+
+	_, errs := NewHttpClient().Get(url).EndStruct(accessToken)
+	if len(errs) > 0 {
 		return nil, errs[0]
 	}
-	return
+	return accessToken, nil
 }
 
 // 刷新App应用微信第三方登录后，获取的 access_token
@@ -407,10 +410,12 @@ func GetAppWeChatLoginAccessToken(appId, appSecret, code string) (accessToken *A
 func RefreshAppWeChatLoginAccessToken(appId, refreshToken string) (accessToken *RefreshAppWeChatLoginAccessTokenRsp, err error) {
 	accessToken = new(RefreshAppWeChatLoginAccessTokenRsp)
 	url := "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=" + appId + "&grant_type=refresh_token&refresh_token=" + refreshToken
-	if _, _, errs := HttpAgent().Get(url).EndStruct(accessToken); len(errs) > 0 {
+
+	_, errs := NewHttpClient().Get(url).EndStruct(accessToken)
+	if len(errs) > 0 {
 		return nil, errs[0]
 	}
-	return
+	return accessToken, nil
 }
 
 // 获取微信小程序用户的OpenId、SessionKey、UnionId
@@ -421,10 +426,11 @@ func RefreshAppWeChatLoginAccessToken(appId, refreshToken string) (accessToken *
 func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp, err error) {
 	sessionRsp = new(Code2SessionRsp)
 	url := "https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + appSecret + "&js_code=" + wxCode + "&grant_type=authorization_code"
-	if _, _, errs := HttpAgent().Get(url).EndStruct(sessionRsp); len(errs) > 0 {
+	_, errs := NewHttpClient().Get(url).EndStruct(sessionRsp)
+	if len(errs) > 0 {
 		return nil, errs[0]
 	}
-	return
+	return sessionRsp, nil
 }
 
 // 获取微信小程序全局唯一后台接口调用凭据(AccessToken:157字符)
@@ -434,10 +440,11 @@ func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp,
 func GetWeChatAppletAccessToken(appId, appSecret string) (accessToken *AccessToken, err error) {
 	accessToken = new(AccessToken)
 	url := "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appId + "&secret=" + appSecret
-	if _, _, errs := HttpAgent().Get(url).EndStruct(accessToken); len(errs) > 0 {
+	_, errs := NewHttpClient().Get(url).EndStruct(accessToken)
+	if len(errs) > 0 {
 		return nil, errs[0]
 	}
-	return
+	return accessToken, nil
 }
 
 // 授权码查询openid(AccessToken:157字符)
@@ -449,10 +456,8 @@ func GetWeChatAppletAccessToken(appId, appSecret string) (accessToken *AccessTok
 //    文档：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_13&index=9
 func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openIdRsp *OpenIdByAuthCodeRsp, err error) {
 	var (
-		url  string
-		bm   BodyMap
-		bs   []byte
-		errs []error
+		url string
+		bm  BodyMap
 	)
 	url = "https://api.mch.weixin.qq.com/tools/authcodetoopenid"
 	bm = make(BodyMap)
@@ -461,14 +466,13 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 	bm.Set("auth_code", authCode)
 	bm.Set("nonce_str", nonceStr)
 	bm.Set("sign", getWeChatReleaseSign(apiKey, SignType_MD5, bm))
-	if _, bs, errs = HttpAgent().Post(url).Type("xml").SendString(generateXml(bm)).EndBytes(); len(errs) > 0 {
+
+	openIdRsp = new(OpenIdByAuthCodeRsp)
+	_, errs := NewHttpClient().Type(TypeXML).Post(url).SendString(generateXml(bm)).EndStruct(openIdRsp)
+	if len(errs) > 0 {
 		return nil, errs[0]
 	}
-	openIdRsp = new(OpenIdByAuthCodeRsp)
-	if err = xml.Unmarshal(bs, openIdRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
-	}
-	return
+	return openIdRsp, nil
 }
 
 // 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权。
@@ -479,10 +483,11 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 func GetWeChatAppletPaidUnionId(accessToken, openId, transactionId string) (unionId *PaidUnionId, err error) {
 	unionId = new(PaidUnionId)
 	url := "https://api.weixin.qq.com/wxa/getpaidunionid?access_token=" + accessToken + "&openid=" + openId + "&transaction_id=" + transactionId
-	if _, _, errs := HttpAgent().Get(url).EndStruct(unionId); len(errs) > 0 {
+	_, errs := NewHttpClient().Get(url).EndStruct(unionId)
+	if len(errs) > 0 {
 		return nil, errs[0]
 	}
-	return
+	return unionId, nil
 }
 
 // 获取用户基本信息(UnionID机制)
@@ -492,14 +497,13 @@ func GetWeChatAppletPaidUnionId(accessToken, openId, transactionId string) (unio
 //    获取用户基本信息(UnionID机制)文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140839
 func GetWeChatUserInfo(accessToken, openId string, lang ...string) (userInfo *WeChatUserInfo, err error) {
 	userInfo = new(WeChatUserInfo)
-	var url string
+	url := "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + accessToken + "&openid=" + openId + "&lang=zh_CN"
 	if len(lang) > 0 {
 		url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + accessToken + "&openid=" + openId + "&lang=" + lang[0]
-	} else {
-		url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + accessToken + "&openid=" + openId + "&lang=zh_CN"
 	}
-	if _, _, errs := HttpAgent().Get(url).EndStruct(userInfo); len(errs) > 0 {
+	_, errs := NewHttpClient().Get(url).EndStruct(userInfo)
+	if len(errs) > 0 {
 		return nil, errs[0]
 	}
-	return
+	return userInfo, nil
 }
