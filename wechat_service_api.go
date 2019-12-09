@@ -13,6 +13,7 @@ import (
 	"errors"
 	"fmt"
 	"hash"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"reflect"
@@ -74,8 +75,8 @@ func GetWeChatSanBoxParamSign(appId, mchId, apiKey string, bm BodyMap) (sign str
 //    返回参数bm：Notify请求的参数
 //    返回参数err：错误信息
 func ParseWeChatNotifyResultToBodyMap(req *http.Request) (bm BodyMap, err error) {
-	var bs []byte
-	if bs, err = ioutil.ReadAll(req.Body); err != nil {
+	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(2<<20))) // default 2MB change the size you want;
+	if err != nil {
 		return nil, fmt.Errorf("ioutil.ReadAll：%s", err.Error())
 	}
 	bm = make(BodyMap)

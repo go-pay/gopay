@@ -6,6 +6,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -192,7 +193,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 		return nil, nil, c.Errors
 	}
 	defer res.Body.Close()
-	bs, err = ioutil.ReadAll(res.Body)
+	bs, err = ioutil.ReadAll(io.LimitReader(res.Body, int64(2<<20))) // default 2MB change the size you want
 	if err != nil {
 		c.Errors = append(c.Errors, err)
 		return nil, nil, c.Errors
