@@ -202,6 +202,5 @@ func FormatAliPayURLParam(body BodyMap) (urlParam string) {
 	for key, value := range body {
 		v.Add(key, value.(string))
 	}
-	urlParam = v.Encode()
-	return
+	return v.Encode()
 }

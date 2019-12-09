@@ -7,8 +7,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-
-	"github.com/parnurzeal/gorequest"
 )
 
 type AliPayClient struct {
@@ -520,12 +518,10 @@ func (a *AliPayClient) AliPayUserCertifyOpenQuery(body BodyMap) (aliRsp *AliPayU
 }
 
 // 向支付宝发送请求
-func (a *AliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, err error) {
+func (a *AliPayClient) doAliPay(body BodyMap, method string) (bs []byte, err error) {
 	var (
-		bodyStr, sign, url, urlParam string
-		bodyBs                       []byte
-		res                          gorequest.Response
-		errs                         []error
+		bodyStr, sign, url string
+		bodyBs             []byte
 	)
 	if body != nil {
 		if bodyBs, err = json.Marshal(body); err != nil {
@@ -590,31 +586,32 @@ func (a *AliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, err 
 		return
 	}
 	pubBody.Set("sign", sign)
-	urlParam = FormatAliPayURLParam(pubBody)
+	param := FormatAliPayURLParam(pubBody)
 	if method == "alipay.trade.app.pay" {
-		return []byte(urlParam), nil
+		return []byte(param), nil
 	}
 	if method == "alipay.user.certify.open.certify" {
 		if !a.IsProd {
-			return []byte(zfbSandboxBaseUrl + "?" + urlParam), nil
+			return []byte(zfbSandboxBaseUrl + "?" + param), nil
 		} else {
-			return []byte(zfbBaseUrl + "?" + urlParam), nil
+			return []byte(zfbBaseUrl + "?" + param), nil
 		}
 	}
 	if method == "alipay.trade.page.pay" {
 		if !a.IsProd {
-			return []byte(zfbSandboxBaseUrl + "?" + urlParam), nil
+			return []byte(zfbSandboxBaseUrl + "?" + param), nil
 		} else {
-			return []byte(zfbBaseUrl + "?" + urlParam), nil
+			return []byte(zfbBaseUrl + "?" + param), nil
 		}
 	}
-	agent := HttpAgent()
+	httpClient := NewHttpClient()
 	if !a.IsProd {
 		url = zfbSandboxBaseUrlUtf8
 	} else {
 		url = zfbBaseUrlUtf8
 	}
-	if res, bytes, errs = agent.Post(url).Type("form-data").SendString(urlParam).EndBytes(); len(errs) > 0 {
+	res, bs, errs := httpClient.Type(TypeForm).Post(url).SendString(param).EndBytes()
+	if len(errs) > 0 {
 		return nil, errs[0]
 	}
 	if res.StatusCode != 200 {
@@ -626,7 +623,7 @@ func (a *AliPayClient) doAliPay(body BodyMap, method string) (bytes []byte, err 
 		}
 		return []byte(res.Request.URL.String()), nil
 	}
-	return
+	return bs, nil
 }
 
 func getSignData(bs []byte) (signData string) {

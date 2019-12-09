@@ -160,3 +160,12 @@ func TestBodyMap_Set_Get(t *testing.T) {
 	fmt.Println("Get2:", bm.Get("student"))
 
 }
+
+func TestGetWeChatAppletAccessToken(t *testing.T) {
+	token, err := GetWeChatAppletAccessToken("wxdaa2ab9ef87b5497", "AppSecret")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("token:", token)
+}

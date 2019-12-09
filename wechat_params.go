@@ -7,7 +7,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/hex"
-	"encoding/xml"
 	"errors"
 	"fmt"
 	"hash"
@@ -150,23 +149,17 @@ func getSanBoxKey(mchId, nonceStr, apiKey, signType string) (key string, err err
 	return
 }
 
-// 从微信提供的接口获取：SandboxSignkey
+// 从微信提供的接口获取：SandboxSignKey
 func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 	reqs := make(BodyMap)
 	reqs.Set("mch_id", mchId)
 	reqs.Set("nonce_str", nonceStr)
 	reqs.Set("sign", sign)
-	var (
-		byteList    []byte
-		errorList   []error
-		keyResponse *getSignKeyResponse
-	)
-	if _, byteList, errorList = HttpAgent().Post(wxSandboxGetsignkey).Type("xml").SendString(generateXml(reqs)).EndBytes(); len(errorList) > 0 {
-		return null, errorList[0]
-	}
-	keyResponse = new(getSignKeyResponse)
-	if err = xml.Unmarshal(byteList, keyResponse); err != nil {
-		return
+
+	keyResponse := new(getSignKeyResponse)
+	_, errs := NewHttpClient().Type(TypeXML).Post(wxSandboxGetsignkey).SendString(generateXml(reqs)).EndStruct(keyResponse)
+	if len(errs) > 0 {
+		return null, errs[0]
 	}
 	if keyResponse.ReturnCode == "FAIL" {
 		return null, errors.New(keyResponse.ReturnMsg)
