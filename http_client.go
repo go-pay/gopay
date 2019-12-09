@@ -20,9 +20,6 @@ const (
 	TypeUrlencoded = "urlencoded"
 	TypeForm       = "form"
 	TypeFormData   = "form-data"
-	TypeHTML       = "html"
-	TypeText       = "text"
-	TypeMultipart  = "multipart"
 )
 
 var Types = map[string]string{
@@ -31,9 +28,6 @@ var Types = map[string]string{
 	TypeForm:       "application/x-www-form-urlencoded",
 	TypeFormData:   "application/x-www-form-urlencoded",
 	TypeUrlencoded: "application/x-www-form-urlencoded",
-	TypeHTML:       "text/html",
-	TypeText:       "text/plain",
-	TypeMultipart:  "multipart/form-data",
 }
 
 type Client struct {
@@ -41,7 +35,7 @@ type Client struct {
 	Transport     *http.Transport
 	Url           string
 	Method        string
-	ForceType     string
+	RequestType   string
 	FormString    string
 	ContentType   string
 	UnmarshalType string
@@ -57,7 +51,7 @@ func NewHttpClient() (client *Client) {
 	c.HttpClient = new(http.Client)
 	c.Transport = &http.Transport{}
 	c.Transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	c.ForceType = TypeUrlencoded
+	c.RequestType = TypeUrlencoded
 	c.UnmarshalType = TypeJSON
 	c.Errors = make([]error, 0)
 	return c
@@ -81,7 +75,7 @@ func (c *Client) Post(url string) (client *Client) {
 func (c *Client) Type(typeStr string) (client *Client) {
 	if _, ok := Types[typeStr]; ok {
 		c.mu.Lock()
-		c.ForceType = typeStr
+		c.RequestType = typeStr
 		c.mu.Unlock()
 	} else {
 		c.Errors = append(c.Errors, errors.New("Type func: incorrect type \""+typeStr+"\""))
@@ -149,7 +143,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 	if len(c.Errors) > 0 {
 		return nil, nil, c.Errors
 	}
-	var reader *strings.Reader
+	var reader = strings.NewReader(null)
 
 	req, err := func() (*http.Request, error) {
 		c.mu.RLock()
@@ -157,9 +151,9 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 
 		switch c.Method {
 		case GET:
-			reader = strings.NewReader(null)
+			//todo: nothing
 		case POST:
-			switch c.ForceType {
+			switch c.RequestType {
 			case TypeJSON:
 				if c.JsonByte != nil {
 					reader = strings.NewReader(string(c.JsonByte))
@@ -173,10 +167,10 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 				c.ContentType = Types[TypeXML]
 				c.UnmarshalType = TypeXML
 			default:
-				c.Errors = append(c.Errors, errors.New("Request type Error "))
+				return nil, errors.New("Request type Error ")
 			}
 		default:
-			reader = strings.NewReader(null)
+			return nil, errors.New("Only support Get and Post ")
 		}
 
 		req, err := http.NewRequest(c.Method, c.Url, reader)
