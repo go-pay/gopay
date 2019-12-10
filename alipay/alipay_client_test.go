@@ -1,10 +1,12 @@
-package gopay
+package alipay
 
 import (
 	"encoding/json"
 	"fmt"
 	"strings"
 	"testing"
+
+	"github.com/iGoogle-ink/gopay"
 )
 
 type List struct {
@@ -40,7 +42,7 @@ type People struct {
 }
 
 func TestAliPayParams(t *testing.T) {
-	bodyMap := make(BodyMap)
+	bodyMap := make(gopay.BodyMap)
 
 	//people := new(People)
 	//people.Name = "Jerry"
@@ -57,7 +59,7 @@ func TestSyncVerifyAliPaySign(t *testing.T) {
 	signData := `{"code":"10000","msg":"Success","buyer_logon_id":"854***@qq.com","buyer_pay_amount":"0.01","buyer_user_id":"2088102363632794","fund_bill_list":[{"amount":"0.01","fund_channel":"PCREDIT"}],"gmt_payment":"2019-08-29 20:14:05","invoice_amount":"0.01","out_trade_no":"GZ201901301040361012","point_amount":"0.00","receipt_amount":"0.01","total_amount":"0.01","trade_no":"2019082922001432790585537960"}`
 	sign := "bk3SzX0CZRI811IJioS2XKQHcgMixUT8mYyGQj+vcOAQas7GIYi6LpykqqSc3m7+yvqoG0TdX/c2JjYnpw/J53JxtC2IC4vsLuIPIgghVo5qafsfSxEJ22w20RZDatI2dYqFVcj8Jp+4aesQ8zMMNw7cX9NLyk7kw3DecYeyQp+zrZMueZPqLh88Z+54G+e6QuSU++0ouqQVd4PkpPqy6YI+8MdMUX4Ve0jOQxMmYH8BC6n5ZsTH/uEaLEtzYVZdSw/xdSQ7K1SH73aEH8XbRYx6rL7RkKksrdvhezX+ThDjQ+fTWjvNFrGcg3fmqXRy2elvoalu+BQmqlkWWjEJYA=="
 	aliPayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp8gueNlkbiDidz6FBQEBpqoRgH8h7JtsPtYW0nzAqy1MME4mFnDSMfSKlreUomS3a55gmBopL1eF4/Km/dEnaL5tCY9+24SKn1D4iyls+lvz/ZjvUjVwxoUYBh8kkcxMZSDeDz8//o+9qZTrICVP2a4sBB8T0XmU4gxfw8FsmtoomBH1nLk3AO7wgRN2a3+SRSAmxrhIGDmF1lljSlhY32eJpJ2TZQKaWNW+7yDBU/0Wt3kQVY84vr14yYagnSCiIfqyVFqePayRtmVJDr5qvSXr51tdqs2zKZCu+26X7JAF4BSsaq4gmY5DmDTm4TohCnBduI1+bPGD+igVmtl05wIDAQAB"
-	pKey := FormatAliPayPublicKey(aliPayPublicKey)
+	pKey := FormatPublicKey(aliPayPublicKey)
 	err := verifyAliPaySign(signData, sign, "RSA2", pKey)
 	if err != nil {
 		fmt.Println("err:", err)
@@ -66,7 +68,7 @@ func TestSyncVerifyAliPaySign(t *testing.T) {
 
 func TestVerifyAliPaySign(t *testing.T) {
 	// 测试，假数据，无法验签通过
-	bm := make(BodyMap)
+	bm := make(gopay.BodyMap)
 	bm.Set("sign", "kPbQIjX+xQc8F0/A6/AocELIjhhZnGbcBN6G4MM/HmfWL4ZiHM6fWl5NQhzXJusaklZ1LFuMo+lHQUELAYeugH8LYFvxnNajOvZhuxNFbN2LhF0l/KL8ANtj8oyPM4NN7Qft2kWJTDJUpQOzCzNnV9hDxh5AaT9FPqRS6ZKxnzM=")
 	bm.Set("sign_type", "RSA2")
 	bm.Set("total_amount", "2.00")
@@ -88,7 +90,7 @@ func TestVerifyAliPaySign(t *testing.T) {
 	bm.Set("seller_id", "2088102119685838")
 	bm.Set("notify_id", "4a91b7a78a503640467525113fb7d8bg8e")
 
-	ok, err := VerifyAliPaySign("aliPayPublicKey", bm)
+	ok, err := VerifySign("aliPayPublicKey", bm)
 	if err != nil {
 		fmt.Println("err:", err)
 		return

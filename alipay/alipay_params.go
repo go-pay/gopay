@@ -1,4 +1,4 @@
-package gopay
+package alipay
 
 import (
 	"crypto"
@@ -13,6 +13,8 @@ import (
 	"fmt"
 	"hash"
 	"net/url"
+
+	"github.com/iGoogle-ink/gopay"
 )
 
 //	AppId      string `json:"app_id"`      //支付宝分配给开发者的应用ID
@@ -39,7 +41,7 @@ type OpenApiRoyaltyDetailInfoPojo struct {
 
 // 设置 应用公钥证书SN
 //    appCertSN：应用公钥证书SN，通过 gopay.GetCertSN() 获取
-func (a *AliPayClient) SetAppCertSN(appCertSN string) (client *AliPayClient) {
+func (a *Client) SetAppCertSN(appCertSN string) (client *Client) {
 	a.mu.Lock()
 	a.AppCertSN = appCertSN
 	a.mu.Unlock()
@@ -48,7 +50,7 @@ func (a *AliPayClient) SetAppCertSN(appCertSN string) (client *AliPayClient) {
 
 // 设置 支付宝公钥证书SN
 //    aliPayPublicCertSN：支付宝公钥证书SN，通过 gopay.GetCertSN() 获取
-func (a *AliPayClient) SetAliPayPublicCertSN(aliPayPublicCertSN string) (client *AliPayClient) {
+func (a *Client) SetAliPayPublicCertSN(aliPayPublicCertSN string) (client *Client) {
 	a.mu.Lock()
 	a.AliPayPublicCertSN = aliPayPublicCertSN
 	a.mu.Unlock()
@@ -57,7 +59,7 @@ func (a *AliPayClient) SetAliPayPublicCertSN(aliPayPublicCertSN string) (client 
 
 // 设置 支付宝CA根证书SN
 //    aliPayRootCertSN：支付宝CA根证书SN，通过 gopay.GetCertSN() 获取
-func (a *AliPayClient) SetAliPayRootCertSN(aliPayRootCertSN string) (client *AliPayClient) {
+func (a *Client) SetAliPayRootCertSN(aliPayRootCertSN string) (client *Client) {
 	a.mu.Lock()
 	a.AliPayRootCertSN = aliPayRootCertSN
 	a.mu.Unlock()
@@ -66,7 +68,7 @@ func (a *AliPayClient) SetAliPayRootCertSN(aliPayRootCertSN string) (client *Ali
 
 // 设置 app_cert_sn 通过应用公钥证书路径
 //    appCertPath：应用公钥证书路径
-func (a *AliPayClient) SetAppCertSnByPath(appCertPath string) (client *AliPayClient, err error) {
+func (a *Client) SetAppCertSnByPath(appCertPath string) (client *Client, err error) {
 	sn, err := GetCertSN(appCertPath)
 	if err != nil {
 		return a, fmt.Errorf("get app_cert_sn return err, but alse return alipay client. err: %v", err)
@@ -79,7 +81,7 @@ func (a *AliPayClient) SetAppCertSnByPath(appCertPath string) (client *AliPayCli
 
 // 设置 alipay_cert_sn 通过 支付宝公钥证书文件路径
 //    aliPayPublicCertPath：支付宝公钥证书文件路径
-func (a *AliPayClient) SetAliPayPublicCertSnByPath(aliPayPublicCertPath string) (client *AliPayClient, err error) {
+func (a *Client) SetAliPayPublicCertSnByPath(aliPayPublicCertPath string) (client *Client, err error) {
 	sn, err := GetCertSN(aliPayPublicCertPath)
 	if err != nil {
 		return a, fmt.Errorf("get alipay_cert_sn return err, but alse return alipay client. err: %v", err)
@@ -92,7 +94,7 @@ func (a *AliPayClient) SetAliPayPublicCertSnByPath(aliPayPublicCertPath string) 
 
 // 设置 alipay_root_cert_sn 通过支付宝CA根证书文件路径
 //    aliPayRootCertPath：支付宝CA根证书文件路径
-func (a *AliPayClient) SetAliPayRootCertSnByPath(aliPayRootCertPath string) (client *AliPayClient, err error) {
+func (a *Client) SetAliPayRootCertSnByPath(aliPayRootCertPath string) (client *Client, err error) {
 	sn, err := GetCertSN(aliPayRootCertPath)
 	if err != nil {
 		return a, fmt.Errorf("get alipay_root_cert_sn return err, but alse return alipay client. err: %v", err)
@@ -104,7 +106,7 @@ func (a *AliPayClient) SetAliPayRootCertSnByPath(aliPayRootCertPath string) (cli
 }
 
 // 设置支付后的ReturnUrl
-func (a *AliPayClient) SetReturnUrl(url string) (client *AliPayClient) {
+func (a *Client) SetReturnUrl(url string) (client *Client) {
 	a.mu.Lock()
 	a.ReturnUrl = url
 	a.mu.Unlock()
@@ -112,7 +114,7 @@ func (a *AliPayClient) SetReturnUrl(url string) (client *AliPayClient) {
 }
 
 // 设置支付宝服务器主动通知商户服务器里指定的页面http/https路径。
-func (a *AliPayClient) SetNotifyUrl(url string) (client *AliPayClient) {
+func (a *Client) SetNotifyUrl(url string) (client *Client) {
 	a.mu.Lock()
 	a.NotifyUrl = url
 	a.mu.Unlock()
@@ -120,9 +122,9 @@ func (a *AliPayClient) SetNotifyUrl(url string) (client *AliPayClient) {
 }
 
 // 设置编码格式，如utf-8,gbk,gb2312等，默认推荐使用 utf-8
-func (a *AliPayClient) SetCharset(charset string) (client *AliPayClient) {
+func (a *Client) SetCharset(charset string) (client *Client) {
 	a.mu.Lock()
-	if charset == null {
+	if charset == gopay.NULL {
 		a.Charset = "utf-8"
 	} else {
 		a.Charset = charset
@@ -132,9 +134,9 @@ func (a *AliPayClient) SetCharset(charset string) (client *AliPayClient) {
 }
 
 // 设置签名算法类型，目前支持RSA2和RSA，默认推荐使用 RSA2
-func (a *AliPayClient) SetSignType(signType string) (client *AliPayClient) {
+func (a *Client) SetSignType(signType string) (client *Client) {
 	a.mu.Lock()
-	if signType == null {
+	if signType == gopay.NULL {
 		a.SignType = "RSA2"
 	} else {
 		a.SignType = signType
@@ -144,7 +146,7 @@ func (a *AliPayClient) SetSignType(signType string) (client *AliPayClient) {
 }
 
 // 设置应用授权
-func (a *AliPayClient) SetAppAuthToken(appAuthToken string) (client *AliPayClient) {
+func (a *Client) SetAppAuthToken(appAuthToken string) (client *Client) {
 	a.mu.Lock()
 	a.AppAuthToken = appAuthToken
 	a.mu.Unlock()
@@ -152,7 +154,7 @@ func (a *AliPayClient) SetAppAuthToken(appAuthToken string) (client *AliPayClien
 }
 
 // 设置用户信息授权
-func (a *AliPayClient) SetAuthToken(authToken string) (client *AliPayClient) {
+func (a *Client) SetAuthToken(authToken string) (client *Client) {
 	a.mu.Lock()
 	a.AuthToken = authToken
 	a.mu.Unlock()
@@ -160,7 +162,7 @@ func (a *AliPayClient) SetAuthToken(authToken string) (client *AliPayClient) {
 }
 
 // 获取参数签名
-func getRsaSign(bm BodyMap, signType, privateKey string) (sign string, err error) {
+func getRsaSign(bm gopay.BodyMap, signType, privateKey string) (sign string, err error) {
 	var (
 		block          *pem.Block
 		h              hash.Hash
@@ -170,7 +172,7 @@ func getRsaSign(bm BodyMap, signType, privateKey string) (sign string, err error
 	)
 
 	if block, _ = pem.Decode([]byte(privateKey)); block == nil {
-		return null, errors.New("pem.Decode：privateKey decode error")
+		return gopay.NULL, errors.New("pem.Decode：privateKey decode error")
 	}
 	if key, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil {
 		return
@@ -197,7 +199,7 @@ func getRsaSign(bm BodyMap, signType, privateKey string) (sign string, err error
 }
 
 // 格式化请求URL参数
-func FormatAliPayURLParam(body BodyMap) (urlParam string) {
+func FormatURLParam(body gopay.BodyMap) (urlParam string) {
 	v := url.Values{}
 	for key, value := range body {
 		v.Add(key, value.(string))

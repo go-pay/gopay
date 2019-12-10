@@ -1,4 +1,12 @@
-package gopay
+package alipay
+
+const (
+	// URL
+	zfbBaseUrl            = "https://openapi.alipay.com/gateway.do"
+	zfbSandboxBaseUrl     = "https://openapi.alipaydev.com/gateway.do"
+	zfbBaseUrlUtf8        = "https://openapi.alipay.com/gateway.do?charset=utf-8"
+	zfbSandboxBaseUrlUtf8 = "https://openapi.alipaydev.com/gateway.do?charset=utf-8"
+)
 
 type AliPayNotifyRequest struct {
 	NotifyTime        string                   `json:"notify_time,omitempty"`

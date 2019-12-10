@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 func Code2Session() {
@@ -12,7 +13,7 @@ func Code2Session() {
 	//    appId:APPID
 	//    appSecret:AppSecret
 	//    wxCode:小程序调用wx.login 获取的code
-	userIdRsp, err := gopay.Code2Session("AppID", "APPSecret", "011EZg6p0VO47n1p2W4p0mle6p0EZg6u")
+	userIdRsp, err := wechat.Code2Session("AppID", "APPSecret", "011EZg6p0VO47n1p2W4p0mle6p0EZg6u")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -26,7 +27,7 @@ func Code2Session() {
 }
 
 func GetAppWeChatLoginAccessToken() {
-	accessToken, err := gopay.GetAppWeChatLoginAccessToken("AppID", "AppSecret", "code")
+	accessToken, err := wechat.GetAppLoginAccessToken("AppID", "AppSecret", "code")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -41,7 +42,7 @@ func GetAppWeChatLoginAccessToken() {
 }
 
 func RefreshAppWeChatLoginAccessToken() {
-	accessToken, err := gopay.RefreshAppWeChatLoginAccessToken("AppID", "refreshToken")
+	accessToken, err := wechat.RefreshAppLoginAccessToken("AppID", "refreshToken")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -58,7 +59,7 @@ func GetWeChatAppletAccessToken() {
 	//获取小程序全局唯一后台接口调用凭据(AccessToken:157字符)
 	//    appId:APPID
 	//    appSecret:AppSecret
-	accessToken, err := gopay.GetWeChatAppletAccessToken("AppID", "AppSecret")
+	accessToken, err := wechat.GetAppletAccessToken("AppID", "AppSecret")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -75,7 +76,7 @@ func GetWeChatAppletPaidUnionId() {
 	//    accessToken：接口调用凭据
 	//    openId：用户的OpenID
 	//    transactionId：微信支付订单号
-	rsp, err := gopay.GetWeChatAppletPaidUnionId(accessToken, "o0Df70MSI4Ygv2KQ2cLnoMN5CXI8", "4200000326201905256499385970")
+	rsp, err := wechat.GetAppletPaidUnionId(accessToken, "o0Df70MSI4Ygv2KQ2cLnoMN5CXI8", "4200000326201905256499385970")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -91,7 +92,7 @@ func GetWeChatUserInfo() {
 	//    accessToken：接口调用凭据
 	//    openId：用户的OpenID
 	//    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
-	userInfo, err := gopay.GetWeChatUserInfo(accessToken, "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
+	userInfo, err := wechat.GetUserInfo(accessToken, "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -105,13 +106,13 @@ func DecryptWeChatOpenDataToStruct() {
 	session := "lyY4HPQbaOYzZdG+JcYK9w=="
 
 	//微信小程序，手机号
-	phone := new(gopay.WeChatUserPhone)
+	phone := new(wechat.UserPhone)
 	//解密开放数据
 	//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 	//    iv:加密算法的初始向量
 	//    sessionKey:会话密钥
 	//    beanPtr:需要解析到的结构体指针
-	err := gopay.DecryptWeChatOpenDataToStruct(data, iv, session, phone)
+	err := wechat.DecryptOpenDataToStruct(data, iv, session, phone)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -126,9 +127,9 @@ func DecryptWeChatOpenDataToStruct() {
 	iv2 := "r7BXXKkLb8qrSNn05n0qiA=="
 
 	//微信小程序 用户信息
-	userInfo := new(gopay.WeChatAppletUserInfo)
+	userInfo := new(wechat.AppletUserInfo)
 
-	err = gopay.DecryptWeChatOpenDataToStruct(encryptedData, iv2, sessionKey, userInfo)
+	err = wechat.DecryptOpenDataToStruct(encryptedData, iv2, sessionKey, userInfo)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -153,7 +154,7 @@ func DecryptWeChatOpenDataToBodyMap() {
 	//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 	//    iv:加密算法的初始向量
 	//    sessionKey:会话密钥
-	bm, err := gopay.DecryptWeChatOpenDataToBodyMap(data, iv, session)
+	bm, err := wechat.DecryptOpenDataToBodyMap(data, iv, session)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -168,7 +169,7 @@ func GetOpenIdByAuthCode() {
 	//    apiKey:ApiKey
 	//    authCode:用户授权码
 	//    nonceStr:随即字符串
-	openIdRsp, err := gopay.GetOpenIdByAuthCode("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", "135127679952609396", gopay.GetRandomString(32))
+	openIdRsp, err := wechat.GetOpenIdByAuthCode("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", "135127679952609396", gopay.GetRandomString(32))
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -185,17 +186,17 @@ func GetOpenIdByAuthCode() {
 
 //解析notify参数、验签、返回数据到微信
 func ParseWeChatNotifyResultAndVerifyWeChatSign(req *http.Request) string {
-	rsp := new(gopay.WeChatNotifyResponse)
+	rsp := new(wechat.NotifyResponse)
 
 	//解析参数
-	notifyReq, err := gopay.ParseWeChatNotifyResult(req)
+	notifyReq, err := wechat.ParseNotifyResult(req)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
 	fmt.Println("notifyReq:", *notifyReq)
 
 	//验签
-	ok, err := gopay.VerifyWeChatSign("GFDS8j98rewnmgl45wHTt980jg543abc", gopay.SignType_MD5, notifyReq)
+	ok, err := wechat.VerifySign("GFDS8j98rewnmgl45wHTt980jg543abc", wechat.SignType_MD5, notifyReq)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -203,13 +204,13 @@ func ParseWeChatNotifyResultAndVerifyWeChatSign(req *http.Request) string {
 
 	//或者
 
-	bodyMap, err := gopay.ParseWeChatNotifyResultToBodyMap(req)
+	bodyMap, err := wechat.ParseNotifyResultToBodyMap(req)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
 	fmt.Println("bodyMap:", bodyMap)
 
-	ok, err = gopay.VerifyWeChatSign("GFDS8j98rewnmgl45wHTt980jg543abc", gopay.SignType_MD5, bodyMap)
+	ok, err = wechat.VerifySign("GFDS8j98rewnmgl45wHTt980jg543abc", wechat.SignType_MD5, bodyMap)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -222,9 +223,9 @@ func ParseWeChatNotifyResultAndVerifyWeChatSign(req *http.Request) string {
 
 // 解析微信退款异步通知的参数，解析出来的 req_info 是加密数据，需解密
 func ParseWeChatRefundNotifyResult(req *http.Request) string {
-	rsp := new(gopay.WeChatNotifyResponse)
+	rsp := new(wechat.NotifyResponse)
 	// 解析参数
-	notifyReq, err := gopay.ParseWeChatRefundNotifyResult(req)
+	notifyReq, err := wechat.ParseRefundNotifyResult(req)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -232,7 +233,7 @@ func ParseWeChatRefundNotifyResult(req *http.Request) string {
 	// 退款通知无sign，不用验签
 
 	// 解密退款异步通知的加密数据
-	refundNotify, err := gopay.DecryptRefundNotifyReqInfo(notifyReq.ReqInfo, "GFDS8j98rewnmgl45wHTt980jg543abc")
+	refundNotify, err := wechat.DecryptRefundNotifyReqInfo(notifyReq.ReqInfo, "GFDS8j98rewnmgl45wHTt980jg543abc")
 	if err != nil {
 		fmt.Println("err:", err)
 	}

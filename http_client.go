@@ -145,7 +145,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 	if len(c.Errors) > 0 {
 		return nil, nil, c.Errors
 	}
-	var reader = strings.NewReader(null)
+	var reader = strings.NewReader(NULL)
 
 	req, err := func() (*http.Request, error) {
 		c.mu.RLock()

@@ -18,7 +18,7 @@ func (bm BodyMap) Set(key string, value interface{}) {
 // 获取参数
 func (bm BodyMap) Get(key string) string {
 	if bm == nil {
-		return null
+		return NULL
 	}
 	var (
 		value interface{}
@@ -26,7 +26,7 @@ func (bm BodyMap) Get(key string) string {
 		v     string
 	)
 	if value, ok = bm[key]; !ok {
-		return null
+		return NULL
 	}
 	if v, ok = value.(string); ok {
 		return v
@@ -36,14 +36,14 @@ func (bm BodyMap) Get(key string) string {
 
 func convertToString(v interface{}) (str string) {
 	if v == nil {
-		return null
+		return NULL
 	}
 	var (
 		bs  []byte
 		err error
 	)
 	if bs, err = json.Marshal(v); err != nil {
-		return null
+		return NULL
 	}
 	str = string(bs)
 	return
@@ -54,22 +54,27 @@ func (bm BodyMap) Remove(key string) {
 	delete(bm, key)
 }
 
-type xmlMapEntry struct {
+type xmlMapMarshal struct {
 	XMLName xml.Name
 	Value   interface{} `xml:",cdata"`
+}
+
+type xmlMapUnmarshal struct {
+	XMLName xml.Name
+	Value   string `xml:",cdata"`
 }
 
 func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error) {
 	if len(bm) == 0 {
 		return nil
 	}
-	start.Name = xml.Name{null, "xml"}
+	start.Name = xml.Name{NULL, "xml"}
 	if err = e.EncodeToken(start); err != nil {
 		return
 	}
 	for k := range bm {
-		if v := bm.Get(k); v != null {
-			e.Encode(xmlMapEntry{XMLName: xml.Name{Local: k}, Value: v})
+		if v := bm.Get(k); v != NULL {
+			e.Encode(xmlMapMarshal{XMLName: xml.Name{Local: k}, Value: v})
 		}
 	}
 	return e.EncodeToken(start.End())
@@ -77,16 +82,16 @@ func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error)
 
 func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) (err error) {
 	for {
-		var e xmlMapEntry
+		var e xmlMapUnmarshal
 		err = d.Decode(&e)
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			return
+		if err != nil {
+			if err == io.EOF {
+				return nil
+			}
+			return err
 		}
 		bm.Set(e.XMLName.Local, e.Value)
 	}
-	return
 }
 
 // ("bar=baz&foo=quux") sorted by key.
@@ -100,7 +105,7 @@ func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
 	}
 	sort.Strings(keyList)
 	for _, k := range keyList {
-		if v := bm.Get(k); v != null {
+		if v := bm.Get(k); v != NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
 			buf.WriteString(v)
@@ -125,7 +130,7 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 	}
 	sort.Strings(keyList)
 	for _, k := range keyList {
-		if v := bm.Get(k); v != null {
+		if v := bm.Get(k); v != NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
 			buf.WriteString(v)

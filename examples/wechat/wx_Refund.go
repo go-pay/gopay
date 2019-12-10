@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 func Refund() {
@@ -12,13 +13,13 @@ func Refund() {
 	//    MchID：商户ID
 	//    ApiKey：Key值
 	//    isProd：是否是正式环境
-	client := gopay.NewWeChatClient("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", false)
+	client := wechat.NewClient("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", false)
 
 	//初始化参数结构体
 	body := make(gopay.BodyMap)
 	body.Set("out_trade_no", "SdZBAqJHBQGKVwb7aMR2mUwC588NG2Sd")
 	body.Set("nonce_str", gopay.GetRandomString(32))
-	body.Set("sign_type", gopay.SignType_MD5)
+	body.Set("sign_type", wechat.SignType_MD5)
 	s := gopay.GetRandomString(64)
 	fmt.Println("out_refund_no:", s)
 	body.Set("out_refund_no", s)

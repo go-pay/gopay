@@ -1,4 +1,4 @@
-package gopay
+package wechat
 
 import (
 	"crypto/aes"
@@ -18,6 +18,8 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
+
+	"github.com/iGoogle-ink/gopay"
 )
 
 // 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
@@ -26,7 +28,7 @@ import (
 //    mchId：商户ID
 //    ApiKey：API秘钥值
 //    返回参数 sign：通过Appid、MchId、ApiKey和BodyMap中的参数计算出的Sign值
-func GetWeChatParamSign(appId, mchId, apiKey string, bm BodyMap) (sign string) {
+func GetParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string) {
 	bm.Set("appid", appId)
 	bm.Set("mch_id", mchId)
 	var (
@@ -34,7 +36,7 @@ func GetWeChatParamSign(appId, mchId, apiKey string, bm BodyMap) (sign string) {
 		h        hash.Hash
 	)
 	signType = bm.Get("sign_type")
-	if signType == null {
+	if signType == gopay.NULL {
 		bm.Set("sign_type", SignType_MD5)
 	}
 	if signType == SignType_HMAC_SHA256 {
@@ -53,7 +55,7 @@ func GetWeChatParamSign(appId, mchId, apiKey string, bm BodyMap) (sign string) {
 //    mchId：商户ID
 //    ApiKey：API秘钥值
 //    返回参数 sign：通过Appid、MchId、ApiKey和BodyMap中的参数计算出的Sign值
-func GetWeChatSanBoxParamSign(appId, mchId, apiKey string, bm BodyMap) (sign string, err error) {
+func GetSanBoxParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
 	bm.Set("appid", appId)
 	bm.Set("mch_id", mchId)
 	bm.Set("sign_type", SignType_MD5)
@@ -61,7 +63,7 @@ func GetWeChatSanBoxParamSign(appId, mchId, apiKey string, bm BodyMap) (sign str
 		sandBoxApiKey string
 		hashMd5       hash.Hash
 	)
-	if sandBoxApiKey, err = getSanBoxKey(mchId, GetRandomString(32), apiKey, SignType_MD5); err != nil {
+	if sandBoxApiKey, err = getSanBoxKey(mchId, gopay.GetRandomString(32), apiKey, SignType_MD5); err != nil {
 		return
 	}
 	hashMd5 = md5.New()
@@ -74,12 +76,12 @@ func GetWeChatSanBoxParamSign(appId, mchId, apiKey string, bm BodyMap) (sign str
 //    req：*http.Request
 //    返回参数bm：Notify请求的参数
 //    返回参数err：错误信息
-func ParseWeChatNotifyResultToBodyMap(req *http.Request) (bm BodyMap, err error) {
+func ParseNotifyResultToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(2<<20))) // default 2MB change the size you want;
 	if err != nil {
 		return nil, fmt.Errorf("ioutil.ReadAll：%s", err.Error())
 	}
-	bm = make(BodyMap)
+	bm = make(gopay.BodyMap)
 	if err = xml.Unmarshal(bs, &bm); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
 	}
@@ -90,8 +92,8 @@ func ParseWeChatNotifyResultToBodyMap(req *http.Request) (bm BodyMap, err error)
 //    req：*http.Request
 //    返回参数notifyReq：Notify请求的参数
 //    返回参数err：错误信息
-func ParseWeChatNotifyResult(req *http.Request) (notifyReq *WeChatNotifyRequest, err error) {
-	notifyReq = new(WeChatNotifyRequest)
+func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) {
+	notifyReq = new(NotifyRequest)
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
 		return nil, fmt.Errorf("xml.NewDecoder：%s", err.Error())
 	}
@@ -102,8 +104,8 @@ func ParseWeChatNotifyResult(req *http.Request) (notifyReq *WeChatNotifyRequest,
 //    req：*http.Request
 //    返回参数notifyReq：Notify请求的参数
 //    返回参数err：错误信息
-func ParseWeChatRefundNotifyResult(req *http.Request) (notifyReq *WeChatRefundNotifyRequest, err error) {
-	notifyReq = new(WeChatRefundNotifyRequest)
+func ParseRefundNotifyResult(req *http.Request) (notifyReq *RefundNotifyRequest, err error) {
+	notifyReq = new(RefundNotifyRequest)
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
 		return nil, fmt.Errorf("xml.NewDecoder：%s", err.Error())
 	}
@@ -111,7 +113,7 @@ func ParseWeChatRefundNotifyResult(req *http.Request) (notifyReq *WeChatRefundNo
 }
 
 // 解密微信退款异步通知的加密数据
-//    reqInfo：gopay.ParseWeChatRefundNotifyResult() 方法获取的加密数据 req_info
+//    reqInfo：gopay.ParseRefundNotifyResult() 方法获取的加密数据 req_info
 //    apiKey：API秘钥值
 //    返回参数refundNotify：RefundNotify请求的加密数据
 //    返回参数err：错误信息
@@ -148,7 +150,7 @@ func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNot
 			dst = dst[blockSize:]
 		}
 	}(encryptionB, encryptionB)
-	bs = PKCS7UnPadding(encryptionB)
+	bs = gopay.PKCS7UnPadding(encryptionB)
 	refundNotify = new(RefundNotify)
 	if err = xml.Unmarshal(bs, refundNotify); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
@@ -162,41 +164,41 @@ func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNot
 //    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
-func VerifyWeChatSign(apiKey, signType string, bean interface{}) (ok bool, err error) {
+func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) {
 	if bean == nil {
 		return false, errors.New("bean is nil")
 	}
 	var (
-		bm       BodyMap
+		bm       gopay.BodyMap
 		bs       []byte
 		kind     reflect.Kind
 		bodySign string
 	)
 	kind = reflect.ValueOf(bean).Kind()
 	if kind == reflect.Map {
-		bm = bean.(BodyMap)
+		bm = bean.(gopay.BodyMap)
 		goto Verify
 	}
 	if bs, err = json.Marshal(bean); err != nil {
 		return false, fmt.Errorf("json.Marshal：%s", err.Error())
 	}
-	bm = make(BodyMap)
+	bm = make(gopay.BodyMap)
 	if err = json.Unmarshal(bs, &bm); err != nil {
 		return false, fmt.Errorf("json.Unmarshal：%s", err.Error())
 	}
 Verify:
 	bodySign = bm.Get("sign")
 	bm.Remove("sign")
-	return getWeChatReleaseSign(apiKey, signType, bm) == bodySign, nil
+	return getReleaseSign(apiKey, signType, bm) == bodySign, nil
 }
 
-type WeChatNotifyResponse struct {
+type NotifyResponse struct {
 	ReturnCode string `xml:"return_code"`
 	ReturnMsg  string `xml:"return_msg"`
 }
 
 // 返回数据给微信
-func (w *WeChatNotifyResponse) ToXmlString() (xmlStr string) {
+func (w *NotifyResponse) ToXmlString() (xmlStr string) {
 	var buffer strings.Builder
 	buffer.WriteString("<xml><return_code><![CDATA[")
 	buffer.WriteString(w.ReturnCode)
@@ -321,7 +323,7 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 //    sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
 //    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
-func DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr interface{}) (err error) {
+func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr interface{}) (err error) {
 	var (
 		cipherText, aesKey, ivKey, plainText []byte
 		block                                cipher.Block
@@ -347,7 +349,7 @@ func DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr
 	plainText = make([]byte, len(cipherText))
 	blockMode.CryptBlocks(plainText, cipherText)
 	if len(plainText) > 0 {
-		plainText = PKCS7UnPadding(plainText)
+		plainText = gopay.PKCS7UnPadding(plainText)
 	}
 	if err = json.Unmarshal(plainText, beanPtr); err != nil {
 		return fmt.Errorf("json.Unmarshal：%s", err.Error())
@@ -360,7 +362,7 @@ func DecryptWeChatOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr
 //    iv：加密算法的初始向量，小程序获取到
 //    sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
-func DecryptWeChatOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm BodyMap, err error) {
+func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.BodyMap, err error) {
 	var (
 		cipherText, aesKey, ivKey, plainText []byte
 		block                                cipher.Block
@@ -379,9 +381,9 @@ func DecryptWeChatOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm Bo
 		plainText = make([]byte, len(cipherText))
 		blockMode.CryptBlocks(plainText, cipherText)
 		if len(plainText) > 0 {
-			plainText = PKCS7UnPadding(plainText)
+			plainText = gopay.PKCS7UnPadding(plainText)
 		}
-		bm = make(BodyMap)
+		bm = make(gopay.BodyMap)
 		if err = json.Unmarshal(plainText, &bm); err != nil {
 			return nil, fmt.Errorf("json.Unmarshal：%s", err.Error())
 		}
@@ -393,11 +395,11 @@ func DecryptWeChatOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm Bo
 //    appId：应用唯一标识，在微信开放平台提交应用审核通过后获得
 //    appSecret：应用密钥AppSecret，在微信开放平台提交应用审核通过后获得
 //    code：App用户换取access_token的code
-func GetAppWeChatLoginAccessToken(appId, appSecret, code string) (accessToken *AppWeChatLoginAccessToken, err error) {
-	accessToken = new(AppWeChatLoginAccessToken)
+func GetAppLoginAccessToken(appId, appSecret, code string) (accessToken *AppLoginAccessToken, err error) {
+	accessToken = new(AppLoginAccessToken)
 	url := "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type=authorization_code"
 
-	_, errs := NewHttpClient().Get(url).EndStruct(accessToken)
+	_, errs := gopay.NewHttpClient().Get(url).EndStruct(accessToken)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -408,11 +410,11 @@ func GetAppWeChatLoginAccessToken(appId, appSecret, code string) (accessToken *A
 //    appId：应用唯一标识，在微信开放平台提交应用审核通过后获得
 //    appSecret：应用密钥AppSecret，在微信开放平台提交应用审核通过后获得
 //    code：App用户换取access_token的code
-func RefreshAppWeChatLoginAccessToken(appId, refreshToken string) (accessToken *RefreshAppWeChatLoginAccessTokenRsp, err error) {
-	accessToken = new(RefreshAppWeChatLoginAccessTokenRsp)
+func RefreshAppLoginAccessToken(appId, refreshToken string) (accessToken *RefreshAppLoginAccessTokenRsp, err error) {
+	accessToken = new(RefreshAppLoginAccessTokenRsp)
 	url := "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=" + appId + "&grant_type=refresh_token&refresh_token=" + refreshToken
 
-	_, errs := NewHttpClient().Get(url).EndStruct(accessToken)
+	_, errs := gopay.NewHttpClient().Get(url).EndStruct(accessToken)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -427,7 +429,7 @@ func RefreshAppWeChatLoginAccessToken(appId, refreshToken string) (accessToken *
 func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp, err error) {
 	sessionRsp = new(Code2SessionRsp)
 	url := "https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + appSecret + "&js_code=" + wxCode + "&grant_type=authorization_code"
-	_, errs := NewHttpClient().Get(url).EndStruct(sessionRsp)
+	_, errs := gopay.NewHttpClient().Get(url).EndStruct(sessionRsp)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -438,10 +440,10 @@ func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp,
 //    appId:APPID
 //    appSecret:AppSecret
 //    获取access_token文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
-func GetWeChatAppletAccessToken(appId, appSecret string) (accessToken *AccessToken, err error) {
+func GetAppletAccessToken(appId, appSecret string) (accessToken *AccessToken, err error) {
 	accessToken = new(AccessToken)
 	url := "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appId + "&secret=" + appSecret
-	_, errs := NewHttpClient().Get(url).EndStruct(accessToken)
+	_, errs := gopay.NewHttpClient().Get(url).EndStruct(accessToken)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -458,18 +460,18 @@ func GetWeChatAppletAccessToken(appId, appSecret string) (accessToken *AccessTok
 func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openIdRsp *OpenIdByAuthCodeRsp, err error) {
 	var (
 		url string
-		bm  BodyMap
+		bm  gopay.BodyMap
 	)
 	url = "https://api.mch.weixin.qq.com/tools/authcodetoopenid"
-	bm = make(BodyMap)
+	bm = make(gopay.BodyMap)
 	bm.Set("appid", appId)
 	bm.Set("mch_id", mchId)
 	bm.Set("auth_code", authCode)
 	bm.Set("nonce_str", nonceStr)
-	bm.Set("sign", getWeChatReleaseSign(apiKey, SignType_MD5, bm))
+	bm.Set("sign", getReleaseSign(apiKey, SignType_MD5, bm))
 
 	openIdRsp = new(OpenIdByAuthCodeRsp)
-	_, errs := NewHttpClient().Type(TypeXML).Post(url).SendString(generateXml(bm)).EndStruct(openIdRsp)
+	_, errs := gopay.NewHttpClient().Type(gopay.TypeXML).Post(url).SendString(generateXml(bm)).EndStruct(openIdRsp)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -481,10 +483,10 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 //    openId：用户的OpenID
 //    transactionId：微信支付订单号
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/user-info/auth.getPaidUnionId.html
-func GetWeChatAppletPaidUnionId(accessToken, openId, transactionId string) (unionId *PaidUnionId, err error) {
+func GetAppletPaidUnionId(accessToken, openId, transactionId string) (unionId *PaidUnionId, err error) {
 	unionId = new(PaidUnionId)
 	url := "https://api.weixin.qq.com/wxa/getpaidunionid?access_token=" + accessToken + "&openid=" + openId + "&transaction_id=" + transactionId
-	_, errs := NewHttpClient().Get(url).EndStruct(unionId)
+	_, errs := gopay.NewHttpClient().Get(url).EndStruct(unionId)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -496,13 +498,13 @@ func GetWeChatAppletPaidUnionId(accessToken, openId, transactionId string) (unio
 //    openId：用户的OpenID
 //    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
 //    获取用户基本信息(UnionID机制)文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140839
-func GetWeChatUserInfo(accessToken, openId string, lang ...string) (userInfo *WeChatUserInfo, err error) {
-	userInfo = new(WeChatUserInfo)
+func GetUserInfo(accessToken, openId string, lang ...string) (userInfo *UserInfo, err error) {
+	userInfo = new(UserInfo)
 	url := "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + accessToken + "&openid=" + openId + "&lang=zh_CN"
 	if len(lang) > 0 {
 		url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + accessToken + "&openid=" + openId + "&lang=" + lang[0]
 	}
-	_, errs := NewHttpClient().Get(url).EndStruct(userInfo)
+	_, errs := gopay.NewHttpClient().Get(url).EndStruct(userInfo)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}

@@ -4,7 +4,7 @@ package gopay
 
 // Java SDK 获取Root证书SN
 public static String getRootCertSN(String rootCertContent){
-   String rootCertSN = null;
+   String rootCertSN = NULL;
    try {
 	   X509Certificate[] x509Certificates = readPemCertChain(rootCertContent);
 	   MessageDigest md = MessageDigest.getInstance("MD5");
@@ -29,7 +29,7 @@ public static String getRootCertSN(String rootCertContent){
 
 // Java SDK 获取证书
 private X509Certificate getCert(String  certPath) throws AlipayApiException{
-	InputStream inputStream = null;
+	InputStream inputStream = NULL;
 	try {
 		inputStream = new FileInputStream(certPath);
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -42,7 +42,7 @@ private X509Certificate getCert(String  certPath) throws AlipayApiException{
 		throw new AlipayApiException(e);
 	}finally {
 		try {
-			if (inputStream != null) {
+			if (inputStream != NULL) {
 				inputStream.close();
 			}
 		}catch (IOException e) {

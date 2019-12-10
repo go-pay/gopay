@@ -1,39 +1,46 @@
-package gopay
+package wechat
 
 import (
-	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"testing"
+
+	"github.com/iGoogle-ink/gopay"
 )
 
 type Student struct {
-	Name  string `json:"name,omitempty"`
-	Age   int    `json:"age,omitempty"`
-	Sign  string `json:"sign,omitempty"`
-	Phone string `json:"phone,omitempty"`
+	XMLName xml.Name `xml:"xml"`
+	Name    string   `xml:"name,omitempty"`
+	Age     int      `xml:"age,omitempty"`
+	Sign    string   `xml:"sign,omitempty"`
+	Phone   string   `xml:"phone,omitempty"`
 }
 
 func TestBodyMap_MarshalXML(t *testing.T) {
 
-	student := new(Student)
-	student.Name = "Jerry"
-	student.Age = 28
-	student.Phone = "18017448610"
+	//student := new(Student)
+	//student.Name = "Jerry"
+	//student.Age = 28
+	//student.Phone = "18017448610"
+	student := make(gopay.BodyMap)
+	student.Set("name", "Jerry")
+	student.Set("age", 28)
+	student.Set("phone", "18017448610")
 
-	marshal, err := json.Marshal(student)
+	marshal, err := xml.Marshal(student)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
 
 	fmt.Println("marshal:", string(marshal))
 
-	maps := make(map[string]interface{})
+	bm := make(gopay.BodyMap)
 
-	err = json.Unmarshal(marshal, &maps)
+	err = xml.Unmarshal(marshal, &bm)
 	if err != nil {
 		fmt.Println("err2:", err)
 	}
-	fmt.Println("maps:", maps)
+	fmt.Println("bm:", bm)
 
 	//maps := make(BodyMap)
 	//maps.Set("name", "jerry")
@@ -47,20 +54,20 @@ func TestBodyMap_MarshalXML(t *testing.T) {
 	//fmt.Println("ssss:", string(bytes))
 }
 
-func TestVerifyWeChatResponseSign(t *testing.T) {
+func TestVerifySign(t *testing.T) {
 	student := new(Student)
 	student.Name = "Jerry"
 	student.Age = 1
 	student.Sign = "544E55ED43B787B945FF0BF8344A4D69"
 	student.Phone = "18017448610"
 
-	maps := make(BodyMap)
+	maps := make(gopay.BodyMap)
 	maps["name"] = "Jerry"
 	maps["age"] = 1
 	maps["sign"] = "544E55ED43B787B945FF0BF8344A4D69"
 	maps["phone"] = "18017448610"
 
-	ok, err := VerifyWeChatSign("ABCDEFG", "MD5", student)
+	ok, err := VerifySign("ABCDEFG", "MD5", student)
 	if err != nil {
 		fmt.Println("errrrr:", err)
 		return
@@ -68,17 +75,17 @@ func TestVerifyWeChatResponseSign(t *testing.T) {
 	fmt.Println("ok:", ok)
 }
 
-func TestDecryptWeChatOpenDataToStruct(t *testing.T) {
+func TestDecryptOpenDataToStruct(t *testing.T) {
 	data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
 	iv := "Cds8j3VYoGvnTp1BrjXdJg=="
 	session := "lyY4HPQbaOYzZdG+JcYK9w=="
-	phone := new(WeChatUserPhone)
+	phone := new(UserPhone)
 	//解密开放数据
 	//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 	//    iv:加密算法的初始向量
 	//    sessionKey:会话密钥
 	//    beanPtr:需要解析到的结构体指针
-	err := DecryptWeChatOpenDataToStruct(data, iv, session, phone)
+	err := DecryptOpenDataToStruct(data, iv, session, phone)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -93,9 +100,9 @@ func TestDecryptWeChatOpenDataToStruct(t *testing.T) {
 	iv2 := "r7BXXKkLb8qrSNn05n0qiA=="
 
 	//微信小程序 用户信息
-	userInfo := new(WeChatAppletUserInfo)
+	userInfo := new(AppletUserInfo)
 
-	err = DecryptWeChatOpenDataToStruct(encryptedData, iv2, sessionKey, userInfo)
+	err = DecryptOpenDataToStruct(encryptedData, iv2, sessionKey, userInfo)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -111,7 +118,7 @@ func TestDecryptWeChatOpenDataToStruct(t *testing.T) {
 	fmt.Println("Watermark:", userInfo.Watermark)
 }
 
-func TestDecryptWeChatOpenDataToBodyMap(t *testing.T) {
+func TestDecryptOpenDataToBodyMap(t *testing.T) {
 	data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
 	iv := "Cds8j3VYoGvnTp1BrjXdJg=="
 	session := "lyY4HPQbaOYzZdG+JcYK9w=="
@@ -120,7 +127,7 @@ func TestDecryptWeChatOpenDataToBodyMap(t *testing.T) {
 	//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 	//    iv:加密算法的初始向量
 	//    sessionKey:会话密钥
-	bm, err := DecryptWeChatOpenDataToBodyMap(data, iv, session)
+	bm, err := DecryptOpenDataToBodyMap(data, iv, session)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -140,7 +147,7 @@ func TestDecryptRefundNotifyReqInfo(t *testing.T) {
 }
 
 func TestBodyMap_Set_Get(t *testing.T) {
-	bm := make(BodyMap)
+	bm := make(gopay.BodyMap)
 	sceneInfo := make(map[string]map[string]string)
 	h5Info := make(map[string]string)
 	h5Info["type"] = "Wap"
@@ -161,8 +168,8 @@ func TestBodyMap_Set_Get(t *testing.T) {
 
 }
 
-func TestGetWeChatAppletAccessToken(t *testing.T) {
-	token, err := GetWeChatAppletAccessToken("wxdaa2ab9ef87b5497", "AppSecret")
+func TestGetAppletAccessToken(t *testing.T) {
+	token, err := GetAppletAccessToken("wxdaa2ab9ef87b5497", "AppSecret")
 	if err != nil {
 		fmt.Println(err)
 		return
