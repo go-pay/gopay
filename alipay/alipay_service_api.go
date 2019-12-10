@@ -289,8 +289,8 @@ func FormatPublicKey(publicKey string) (pKey string) {
 }
 
 // GetCertSN 获取证书序列号SN
-//    certPath：X.509证书文件路径(appCertPublicKey.crt、alipayRootCert.crt、alipayCertPublicKey_RSA2)
-//    返回 sn：证书序列号(app_cert_sn、alipay_root_cert_sn、alipay_cert_sn)
+//    certPath：X.509证书文件路径(appCertPublicKey.crt、alipayCertPublicKey_RSA2.crt)
+//    返回 sn：证书序列号(app_cert_sn、alipay_cert_sn)
 //    返回 err：error 信息
 func GetCertSN(certPath string) (sn string, err error) {
 	var (
@@ -301,14 +301,51 @@ func GetCertSN(certPath string) (sn string, err error) {
 	)
 	certData, err = ioutil.ReadFile(certPath)
 	if err != nil {
+		return gopay.NULL, err
+	}
+	if block, _ := pem.Decode(certData); block != nil {
+		if certs, err = x509.ParseCertificates(block.Bytes); err != nil {
+			return gopay.NULL, err
+		}
+		name = certs[0].Issuer.String()
+		serialNumber = certs[0].SerialNumber.String()
+		h = md5.New()
+		h.Write([]byte(name))
+		h.Write([]byte(serialNumber))
+		if sn == "" {
+			sn += hex.EncodeToString(h.Sum(nil))
+		} else {
+			sn += "_"
+			sn += hex.EncodeToString(h.Sum(nil))
+		}
+	}
+	if sn == "" {
+		return "", errors.New("failed to get sn,please check your cert")
+	}
+	return sn, nil
+}
+
+// GetRootCertSN 获取root证书序列号SN
+//    rootCertPath：X.509证书文件路径(alipayRootCert.crt)
+//    返回 sn：证书序列号(alipay_root_cert_sn)
+//    返回 err：error 信息
+func GetRootCertSN(rootCertPath string) (sn string, err error) {
+	var (
+		certData           []byte
+		certs              []*x509.Certificate
+		name, serialNumber string
+		h                  hash.Hash
+	)
+	certData, err = ioutil.ReadFile(rootCertPath)
+	if err != nil {
 		return "", err
 	}
-	strs := strings.Split(string(certData), "-----END CERTIFICATE-----")
+	strs := strings.Split(string(certData), "\n\n")
 	for i := 0; i < len(strs); i++ {
-		if strs[i] == "" {
+		if strs[i] == gopay.NULL {
 			continue
 		}
-		if block, _ := pem.Decode([]byte(strs[i] + "-----END CERTIFICATE-----")); block != nil {
+		if block, _ := pem.Decode([]byte(strs[i])); block != nil {
 			if certs, err = x509.ParseCertificates(block.Bytes); err != nil {
 				continue
 			}
@@ -320,7 +357,7 @@ func GetCertSN(certPath string) (sn string, err error) {
 			h = md5.New()
 			h.Write([]byte(name))
 			h.Write([]byte(serialNumber))
-			if sn == "" {
+			if sn == gopay.NULL {
 				sn += hex.EncodeToString(h.Sum(nil))
 			} else {
 				sn += "_"

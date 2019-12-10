@@ -40,7 +40,7 @@ type OpenApiRoyaltyDetailInfoPojo struct {
 }
 
 // 设置 应用公钥证书SN
-//    appCertSN：应用公钥证书SN，通过 gopay.GetCertSN() 获取
+//    appCertSN：应用公钥证书SN，通过 alipay.GetCertSN() 获取
 func (a *Client) SetAppCertSN(appCertSN string) (client *Client) {
 	a.mu.Lock()
 	a.AppCertSN = appCertSN
@@ -49,7 +49,7 @@ func (a *Client) SetAppCertSN(appCertSN string) (client *Client) {
 }
 
 // 设置 支付宝公钥证书SN
-//    aliPayPublicCertSN：支付宝公钥证书SN，通过 gopay.GetCertSN() 获取
+//    aliPayPublicCertSN：支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
 func (a *Client) SetAliPayPublicCertSN(aliPayPublicCertSN string) (client *Client) {
 	a.mu.Lock()
 	a.AliPayPublicCertSN = aliPayPublicCertSN
@@ -58,7 +58,7 @@ func (a *Client) SetAliPayPublicCertSN(aliPayPublicCertSN string) (client *Clien
 }
 
 // 设置 支付宝CA根证书SN
-//    aliPayRootCertSN：支付宝CA根证书SN，通过 gopay.GetCertSN() 获取
+//    aliPayRootCertSN：支付宝CA根证书SN，通过 alipay.GetRootCertSN() 获取
 func (a *Client) SetAliPayRootCertSN(aliPayRootCertSN string) (client *Client) {
 	a.mu.Lock()
 	a.AliPayRootCertSN = aliPayRootCertSN
@@ -95,7 +95,7 @@ func (a *Client) SetAliPayPublicCertSnByPath(aliPayPublicCertPath string) (clien
 // 设置 alipay_root_cert_sn 通过支付宝CA根证书文件路径
 //    aliPayRootCertPath：支付宝CA根证书文件路径
 func (a *Client) SetAliPayRootCertSnByPath(aliPayRootCertPath string) (client *Client, err error) {
-	sn, err := GetCertSN(aliPayRootCertPath)
+	sn, err := GetRootCertSN(aliPayRootCertPath)
 	if err != nil {
 		return a, fmt.Errorf("get alipay_root_cert_sn return err, but alse return alipay client. err: %v", err)
 	}
