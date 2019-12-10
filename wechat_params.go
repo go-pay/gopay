@@ -81,6 +81,22 @@ func (w *WeChatClient) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath s
 		certificate tls.Certificate
 		pkcsPool    = x509.NewCertPool()
 	)
+
+	if certFilePath == null && keyFilePath == null && pkcs12FilePath == null {
+		w.mu.RLock()
+		pkcsPool.AppendCertsFromPEM(w.Pkcs12File)
+		certificate, err = tls.X509KeyPair(w.CertFile, w.KeyFile)
+		w.mu.RUnlock()
+		if err != nil {
+			return nil, fmt.Errorf("tls.X509KeyPair：%s", err.Error())
+		}
+		tlsConfig = &tls.Config{
+			Certificates:       []tls.Certificate{certificate},
+			RootCAs:            pkcsPool,
+			InsecureSkipVerify: true}
+		return tlsConfig, nil
+	}
+
 	if certFilePath != null && keyFilePath != null && pkcs12FilePath != null {
 		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
 			return nil, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
@@ -93,20 +109,10 @@ func (w *WeChatClient) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath s
 			Certificates:       []tls.Certificate{certificate},
 			RootCAs:            pkcsPool,
 			InsecureSkipVerify: true}
-		return
+		return tlsConfig, nil
 	}
-	w.mu.RLock()
-	pkcsPool.AppendCertsFromPEM(w.Pkcs12File)
-	certificate, err = tls.X509KeyPair(w.CertFile, w.KeyFile)
-	w.mu.RUnlock()
-	if err != nil {
-		return nil, fmt.Errorf("tls.X509KeyPair：%s", err.Error())
-	}
-	tlsConfig = &tls.Config{
-		Certificates:       []tls.Certificate{certificate},
-		RootCAs:            pkcsPool,
-		InsecureSkipVerify: true}
-	return
+
+	return nil, errors.New("certificate file path must be all input or all input null")
 }
 
 // 获取微信支付正式环境Sign值
