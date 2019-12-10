@@ -7,6 +7,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/hex"
+	"encoding/xml"
 	"errors"
 	"fmt"
 	"hash"
@@ -175,18 +176,25 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 
 // 生成请求XML的Body体
 func generateXml(bm BodyMap) (reqXml string) {
-	var buffer strings.Builder
-	buffer.WriteString("<xml>")
-	for key := range bm {
-		buffer.WriteByte('<')
-		buffer.WriteString(key)
-		buffer.WriteString("><![CDATA[")
-		buffer.WriteString(bm.Get(key))
-		buffer.WriteString("]]></")
-		buffer.WriteString(key)
-		buffer.WriteByte('>')
+	bs, err := xml.Marshal(bm)
+	if err != nil {
+		return null
 	}
-	buffer.WriteString("</xml>")
-	reqXml = buffer.String()
-	return
+	return string(bs)
+
+	//var buffer strings.Builder
+	//buffer.WriteString("<xml>")
+	//for key := range bm {
+	//	buffer.WriteByte('<')
+	//	buffer.WriteString(key)
+	//	buffer.WriteString("><![CDATA[")
+	//	buffer.WriteString(bm.Get(key))
+	//	buffer.WriteString("]]></")
+	//	buffer.WriteString(key)
+	//	buffer.WriteByte('>')
+	//}
+	//buffer.WriteString("</xml>")
+	//reqXml = buffer.String()
+	//fmt.Println(reqXml)
+	//return
 }

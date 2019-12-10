@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"io"
-	"reflect"
 	"sort"
 	"strings"
 )
@@ -57,37 +56,19 @@ func (bm BodyMap) Remove(key string) {
 
 type xmlMapEntry struct {
 	XMLName xml.Name
-	Value   string `xml:",chardata"`
+	Value   interface{} `xml:",cdata"`
 }
 
 func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error) {
 	if len(bm) == 0 {
 		return nil
 	}
-	var (
-		value string
-		vKind reflect.Kind
-	)
+	start.Name = xml.Name{null, "xml"}
 	if err = e.EncodeToken(start); err != nil {
 		return
 	}
-	for k, v := range bm {
-		vKind = reflect.ValueOf(v).Kind()
-		switch vKind {
-		case reflect.String:
-			value = v.(string)
-		case reflect.Int:
-			value = Int2String(v.(int))
-		case reflect.Int64:
-			value = Int642String(v.(int64))
-		case reflect.Float32:
-			value = Float32ToString(v.(float32))
-		case reflect.Float64:
-			value = Float64ToString(v.(float64))
-		default:
-			value = ""
-		}
-		e.Encode(xmlMapEntry{XMLName: xml.Name{Local: k}, Value: value})
+	for k, _ := range bm {
+		e.Encode(xmlMapEntry{XMLName: xml.Name{Local: k}, Value: bm.Get(k)})
 	}
 	return e.EncodeToken(start.End())
 }
