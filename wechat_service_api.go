@@ -216,6 +216,7 @@ func (w *WeChatNotifyResponse) ToXmlString() (xmlStr string) {
 //    timeStamp：时间
 //    ApiKey：API秘钥值
 //    微信小程序支付API：https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html
+//    微信小程序支付PaySign计算文档：https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=3
 func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
 	var (
 		buffer strings.Builder
