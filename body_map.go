@@ -67,8 +67,10 @@ func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error)
 	if err = e.EncodeToken(start); err != nil {
 		return
 	}
-	for k, _ := range bm {
-		e.Encode(xmlMapEntry{XMLName: xml.Name{Local: k}, Value: bm.Get(k)})
+	for k := range bm {
+		if v := bm.Get(k); v != null {
+			e.Encode(xmlMapEntry{XMLName: xml.Name{Local: k}, Value: v})
+		}
 	}
 	return e.EncodeToken(start.End())
 }
