@@ -60,8 +60,8 @@ func ParseNotifyResultToBodyMap(req *http.Request) (bm gopay.BodyMap, err error)
 //    返回参数notifyReq：Notify请求的参数
 //    返回参数err：错误信息
 //    文档：https://docs.open.alipay.com/203/105286/
-func ParseNotifyResult(req *http.Request) (notifyReq *AliPayNotifyRequest, err error) {
-	notifyReq = new(AliPayNotifyRequest)
+func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) {
+	notifyReq = new(NotifyRequest)
 	if err = req.ParseForm(); err != nil {
 		return
 	}
@@ -148,7 +148,7 @@ func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error)
 
 	// 支付宝公钥验签
 	pKey := FormatPublicKey(aliPayPublicKey)
-	if err = verifyAliPaySign(signData, sign, "RSA2", pKey); err != nil {
+	if err = verifySign(signData, sign, "RSA2", pKey); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -194,13 +194,13 @@ func VerifySign(aliPayPublicKey string, bean interface{}) (ok bool, err error) {
 		signData = bm.EncodeAliPaySignParams()
 	}
 	pKey := FormatPublicKey(aliPayPublicKey)
-	if err = verifyAliPaySign(signData, bodySign, bodySignType, pKey); err != nil {
+	if err = verifySign(signData, bodySign, bodySignType, pKey); err != nil {
 		return false, err
 	}
 	return true, nil
 }
 
-func verifyAliPaySign(signData, sign, signType, aliPayPublicKey string) (err error) {
+func verifySign(signData, sign, signType, aliPayPublicKey string) (err error) {
 	var (
 		h         hash.Hash
 		hashs     crypto.Hash
@@ -334,13 +334,13 @@ func GetCertSN(certPath string) (sn string, err error) {
 	return sn, nil
 }
 
-// DecryptAliPayOpenDataToStruct 解密支付宝开放数据到 结构体
+// DecryptOpenDataToStruct 解密支付宝开放数据到 结构体
 //    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 //    secretKey:AES密钥，支付宝管理平台配置
 //    beanPtr:需要解析到的结构体指针
 //    文档：https://docs.alipay.com/mini/introduce/aes
 //    文档：https://docs.open.alipay.com/common/104567
-func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{}) (err error) {
+func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{}) (err error) {
 	beanValue := reflect.ValueOf(beanPtr)
 	if beanValue.Kind() != reflect.Ptr {
 		return errors.New("传入参数类型必须是以指针形式")
@@ -374,12 +374,12 @@ func DecryptAliPayOpenDataToStruct(encryptedData, secretKey string, beanPtr inte
 	return nil
 }
 
-// DecryptAliPayOpenDataToBodyMap 解密支付宝开放数据到 BodyMap
+// DecryptOpenDataToBodyMap 解密支付宝开放数据到 BodyMap
 //    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 //    secretKey:AES密钥，支付宝管理平台配置
 //    文档：https://docs.alipay.com/mini/introduce/aes
 //    文档：https://docs.open.alipay.com/common/104567
-func DecryptAliPayOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap, err error) {
+func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap, err error) {
 	var (
 		aesKey, originData []byte
 		ivKey              = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
@@ -413,7 +413,7 @@ func DecryptAliPayOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.B
 //    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
 //    codeOrToken：支付宝授权码或refresh_token
 //    文档：https://docs.open.alipay.com/api_9/alipay.system.oauth.token
-func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (rsp *AliPaySystemOauthTokenResponse, err error) {
+func SystemOauthToken(appId, privateKey, grantType, codeOrToken string) (rsp *SystemOauthTokenResponse, err error) {
 	var bs []byte
 	bm := make(gopay.BodyMap)
 	if "authorization_code" == grantType {
@@ -429,7 +429,7 @@ func AliPaySystemOauthToken(appId, privateKey, grantType, codeOrToken string) (r
 	if bs, err = systemOauthToken(appId, privateKey, bm, "alipay.system.oauth.token", true); err != nil {
 		return
 	}
-	rsp = new(AliPaySystemOauthTokenResponse)
+	rsp = new(SystemOauthTokenResponse)
 	if err = json.Unmarshal(bs, rsp); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal：%s", err.Error())
 	}
