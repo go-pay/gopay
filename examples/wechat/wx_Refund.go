@@ -24,6 +24,7 @@ func Refund() {
 	body.Set("out_refund_no", s)
 	body.Set("total_fee", 1)
 	body.Set("refund_fee", 1)
+	body.Set("notify_url", "https://www.gopay.ink")
 
 	//请求申请退款（沙箱环境下，证书路径参数可传空）
 	//    body：参数Body
