@@ -27,15 +27,21 @@ public static String getRootCertSN(String rootCertContent){
    return rootCertSN;
 }
 
-// Java SDK 获取证书
-private X509Certificate getCert(String  certPath) throws AlipayApiException{
+// Java SDK 获取证书SN
+public static String getCertSN(String certPath)throws AlipayApiException{
 	InputStream inputStream = null;
 	try {
 		inputStream = new FileInputStream(certPath);
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
 		X509Certificate cert = (X509Certificate)cf.generateCertificate(inputStream);
-		return cert;
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		md.update((cert.getIssuerX500Principal().getName()+cert.getSerialNumber()).getBytes());
+		String certSN = new BigInteger(1,md.digest()).toString(16);
+		certSN = fillMD5(certSN);
+		return certSN;
 
+	}catch (NoSuchAlgorithmException e){
+		throw new AlipayApiException(e);
 	}catch (IOException e) {
 		throw new AlipayApiException(e);
 	}catch (CertificateException e){
@@ -48,19 +54,6 @@ private X509Certificate getCert(String  certPath) throws AlipayApiException{
 		}catch (IOException e) {
 			throw new AlipayApiException(e);
 		}
-	}
-}
-
-// Java SDK 获取证书SN
-private String getCertSN(X509Certificate cf) throws AlipayApiException{
-	try {
-		MessageDigest md = MessageDigest.getInstance("MD5");
-		md.update((cf.getIssuerX500Principal().getName() + cf.getSerialNumber()).getBytes());
-		String certSN = new BigInteger(1,md.digest()).toString(16);
-		certSN = fillMD5(certSN);
-		return certSN;
-	}catch (NoSuchAlgorithmException e){
-		throw new AlipayApiException(e);
 	}
 }
 
