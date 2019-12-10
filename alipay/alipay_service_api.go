@@ -334,18 +334,16 @@ func GetRootCertSN(rootCertPath string) (sn string, err error) {
 		certData           []byte
 		cert               *x509.Certificate
 		name, serialNumber string
+		certEnd            = `-----END CERTIFICATE-----`
 		h                  hash.Hash
 	)
 	certData, err = ioutil.ReadFile(rootCertPath)
 	if err != nil {
-		return "", err
+		return gopay.NULL, err
 	}
-	pems := strings.Split(string(certData), "\n\n")
-	for i := 0; i < len(pems); i++ {
-		if pems[i] == gopay.NULL {
-			continue
-		}
-		if block, _ := pem.Decode([]byte(pems[i])); block != nil {
+	pems := strings.Split(string(certData), certEnd)
+	for _, c := range pems {
+		if block, _ := pem.Decode([]byte(c + certEnd)); block != nil {
 			if cert, err = x509.ParseCertificate(block.Bytes); err != nil {
 				continue
 			}
@@ -360,13 +358,12 @@ func GetRootCertSN(rootCertPath string) (sn string, err error) {
 			if sn == gopay.NULL {
 				sn += hex.EncodeToString(h.Sum(nil))
 			} else {
-				sn += "_"
-				sn += hex.EncodeToString(h.Sum(nil))
+				sn += "_" + hex.EncodeToString(h.Sum(nil))
 			}
 		}
 	}
-	if sn == "" {
-		return "", errors.New("failed to get sn,please check your cert")
+	if sn == gopay.NULL {
+		return gopay.NULL, errors.New("failed to get sn,please check your cert")
 	}
 	return sn, nil
 }

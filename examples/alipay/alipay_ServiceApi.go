@@ -82,14 +82,14 @@ func ParseNotifyResultAndVerifySign(req *http.Request) {
 }
 
 func GetCertSN() {
-	sn, err := alipay.GetCertSN("alipay_cert/appCertPublicKey.crt")
+	sn, err := alipay.GetCertSN("cert/appCertPublicKey.crt")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
 	fmt.Println("sn:", sn)
 
-	sn, err = alipay.GetCertSN("alipay_cert/alipayCertPublicKey_RSA2.crt")
+	sn, err = alipay.GetCertSN("cert/alipayCertPublicKey_RSA2.crt")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -98,7 +98,7 @@ func GetCertSN() {
 }
 
 func GetRootCertSN() {
-	sn, err := alipay.GetRootCertSN("alipay_cert/alipayRootCert.crt")
+	sn, err := alipay.GetRootCertSN("cert/alipayRootCert.crt")
 	if err != nil {
 		fmt.Println("err:", err)
 		return

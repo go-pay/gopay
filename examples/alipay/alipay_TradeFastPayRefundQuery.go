@@ -18,6 +18,7 @@ func TradeFastPayRefundQuery() {
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType("RSA2")
+
 	//请求参数
 	body := make(gopay.BodyMap)
 	body.Set("out_trade_no", "GZ201907301420334577")

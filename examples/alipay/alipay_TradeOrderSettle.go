@@ -17,6 +17,7 @@ func TradeOrderSettle() {
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType("RSA2")
+
 	//请求参数
 	body := make(gopay.BodyMap)
 	body.Set("out_request_no", "201907301518083384")

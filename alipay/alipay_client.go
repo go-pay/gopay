@@ -184,7 +184,7 @@ func (a *Client) TradeRefund(body gopay.BodyMap) (aliRsp *TradeRefundResponse, e
 	return
 }
 
-// alipay.trade.refund(统一收单退款页面接口)
+// alipay.trade.page.refund(统一收单退款页面接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.page.refund
 func (a *Client) TradePageRefund(body gopay.BodyMap) (aliRsp *TradePageRefundResponse, err error) {
 	var (
@@ -193,7 +193,7 @@ func (a *Client) TradePageRefund(body gopay.BodyMap) (aliRsp *TradePageRefundRes
 	if body.Get("out_trade_no") == gopay.NULL && body.Get("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be NULL at the same time")
 	}
-	if bs, err = a.doAliPay(body, "	alipay.trade.page.refund"); err != nil {
+	if bs, err = a.doAliPay(body, "alipay.trade.page.refund"); err != nil {
 		return
 	}
 	aliRsp = new(TradePageRefundResponse)
@@ -365,7 +365,7 @@ func (a *Client) SystemOauthToken(body gopay.BodyMap) (aliRsp *SystemOauthTokenR
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.AccessToken == gopay.NULL {
+	if aliRsp.Response == nil && aliRsp.ErrorResponse != nil {
 		info := aliRsp.ErrorResponse
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -589,43 +589,41 @@ func (a *Client) doAliPay(body gopay.BodyMap, method string) (bs []byte, err err
 	}
 	pubBody.Set("sign", sign)
 	param := FormatURLParam(pubBody)
-	if method == "alipay.trade.app.pay" {
+
+	switch method {
+	case "alipay.trade.app.pay":
 		return []byte(param), nil
-	}
-	if method == "alipay.user.certify.open.certify" {
+	case "alipay.trade.page.pay":
 		if !a.IsProd {
 			return []byte(zfbSandboxBaseUrl + "?" + param), nil
-		} else {
-			return []byte(zfbBaseUrl + "?" + param), nil
 		}
-	}
-	if method == "alipay.trade.page.pay" {
+		return []byte(zfbBaseUrl + "?" + param), nil
+	case "alipay.trade.wap.pay":
 		if !a.IsProd {
 			return []byte(zfbSandboxBaseUrl + "?" + param), nil
+		}
+		return []byte(zfbBaseUrl + "?" + param), nil
+	case "alipay.user.certify.open.certify":
+		if !a.IsProd {
+			return []byte(zfbSandboxBaseUrl + "?" + param), nil
+		}
+		return []byte(zfbBaseUrl + "?" + param), nil
+	default:
+		httpClient := gopay.NewHttpClient()
+		if !a.IsProd {
+			url = zfbSandboxBaseUrlUtf8
 		} else {
-			return []byte(zfbBaseUrl + "?" + param), nil
+			url = zfbBaseUrlUtf8
 		}
-	}
-	httpClient := gopay.NewHttpClient()
-	if !a.IsProd {
-		url = zfbSandboxBaseUrlUtf8
-	} else {
-		url = zfbBaseUrlUtf8
-	}
-	res, bs, errs := httpClient.Type(gopay.TypeForm).Post(url).SendString(param).EndBytes()
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
-	}
-	if method == "alipay.trade.wap.pay" {
-		if res.Request.URL.String() == zfbSandboxBaseUrl || res.Request.URL.String() == zfbBaseUrl {
-			return nil, errors.New("alipay.trade.wap.pay error,please check the parameters")
+		res, bs, errs := httpClient.Type(gopay.TypeForm).Post(url).SendString(param).EndBytes()
+		if len(errs) > 0 {
+			return nil, errs[0]
 		}
-		return []byte(res.Request.URL.String()), nil
+		if res.StatusCode != 200 {
+			return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+		}
+		return bs, nil
 	}
-	return bs, nil
 }
 
 func getSignData(bs []byte) (signData string) {

@@ -17,6 +17,7 @@ func FundTransToaccountTransfer() {
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType("RSA2")
+
 	//请求参数
 	body := make(gopay.BodyMap)
 	out_biz_no := gopay.GetRandomString(32)
@@ -27,7 +28,7 @@ func FundTransToaccountTransfer() {
 	body.Set("payer_show_name", "发钱人名字")
 	body.Set("payee_real_name", "沙箱环境")
 	body.Set("remark", "转账测试")
-	//创建订单
+	//转账
 	aliRsp, err := client.FundTransToaccountTransfer(body)
 	if err != nil {
 		fmt.Println("err:", err)

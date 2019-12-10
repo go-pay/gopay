@@ -18,6 +18,7 @@ func ZhimaCreditScoreGet() {
 	client.SetCharset("utf-8").
 		SetSignType("RSA2").
 		SetAuthToken("") //必须设置此参数
+
 	//请求参数
 	body := make(gopay.BodyMap)
 	transaction_id := gopay.GetRandomString(48)

@@ -18,6 +18,7 @@ func OpenAuthTokenApp() {
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType("RSA2")
+
 	//请求参数
 	body := make(gopay.BodyMap)
 	body.Set("grant_type", "authorization_code")

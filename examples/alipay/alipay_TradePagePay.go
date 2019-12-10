@@ -19,6 +19,7 @@ func TradePagePay() {
 	client.SetCharset("utf-8").
 		SetSignType("RSA2").
 		SetNotifyUrl("https://www.gopay.ink")
+
 	//请求参数
 	body := make(gopay.BodyMap)
 	body.Set("subject", "网站测试支付")

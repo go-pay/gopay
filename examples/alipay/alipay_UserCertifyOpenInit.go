@@ -19,7 +19,7 @@ func UserCertifyOpenInit() {
 	client.SetCharset("utf-8").
 		SetSignType("RSA2")
 
-	//请求参数
+	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("outer_order_no", "ZGYD201809132323000001234")
 	// 认证场景码：FACE：多因子人脸认证，CERT_PHOTO：多因子证照认证，CERT_PHOTO_FACE ：多因子证照和人脸认证，SMART_FACE：多因子快捷认证

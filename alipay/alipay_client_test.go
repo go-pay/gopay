@@ -1,59 +1,410 @@
 package alipay
 
 import (
-	"encoding/json"
 	"fmt"
-	"strings"
+	"os"
 	"testing"
 
 	"github.com/iGoogle-ink/gopay"
 )
 
-type List struct {
-	BillList []fundBillListInfo `json:"bill_list"`
+var (
+	client          *Client
+	appid           = "2016091200494382"
+	aliPayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1wn1sU/8Q0rYLlZ6sq3enrPZw2ptp6FecHR2bBFLjJ+sKzepROd0bKddgj+Mr1ffr3Ej78mLdWV8IzLfpXUi945DkrQcOUWLY0MHhYVG2jSs/qzFfpzmtut2Cl2TozYpE84zom9ei06u2AXLMBkU6VpznZl+R4qIgnUfByt3Ix5b3h4Cl6gzXMAB1hJrrrCkq+WvWb3Fy0vmk/DUbJEz8i8mQPff2gsHBE1nMPvHVAMw1GMk9ImB4PxucVek4ZbUzVqxZXphaAgUXFK2FSFU+Q+q1SPvHbUsjtIyL+cLA6H/6ybFF9Ffp27Y14AHPw29+243/SpMisbGcj2KD+evBwIDAQAB"
+	privateKey      = "MIIEogIBAAKCAQEAy+CRzKw4krA2RzCDTqg5KJg92XkOY0RN3pW4sYInPqnGtHV7YDHu5nMuxY6un+dLfo91OFOEg+RI+WTOPoM4xJtsOaJwQ1lpjycoeLq1OyetGW5Q8wO+iLWJASaMQM/t/aXR/JHaguycJyqlHSlxANvKKs/tOHx9AhW3LqumaCwz71CDF/+70scYuZG/7wxSjmrbRBswxd1Sz9KHdcdjqT8pmieyPqnM24EKBexHDmQ0ySXvLJJy6eu1dJsPIz+ivX6HEfDXmSmJ71AZVqZyCI1MhK813R5E7XCv5NOtskTe3y8uiIhgGpZSdB77DOyPLcmVayzFVLAQ3AOBDmsY6wIDAQABAoIBAHjsNq31zAw9FcR9orQJlPVd7vlJEt6Pybvmg8hNESfanO+16rpwg2kOEkS8zxgqoJ1tSzJgXu23fgzl3Go5fHcoVDWPAhUAOFre9+M7onh2nPXDd6Hbq6v8OEmFapSaf2b9biHnBHq5Chk08v/r74l501w3PVVOiPqulJrK1oVb+0/YmCvVFpGatBcNaefKUEcA+vekWPL7Yl46k6XeUvRfTwomCD6jpYLUhsAKqZiQJhMGoaLglZvkokQMF/4G78K7FbbVLMM1+JDh8zJ/DDVdY2vHREUcCGhl4mCVQtkzIbpxG++vFg7/g/fDI+PquG22hFILTDdtt2g2fV/4wmkCgYEA6goRQYSiM03y8Tt/M4u1Mm7OWYCksqAsU7rzQllHekIN3WjD41Xrjv6uklsX3sTG1syo7Jr9PGE1xQgjDEIyO8h/3lDQyLyycYnyUPGNNMX8ZjmGwcM51DQ/QfIrY/CXjnnW+MVpmNclAva3L33KXCWjw20VsROV1EA8LCL94BUCgYEA3wH4ANpzo7NqXf+2WlPPMuyRrF0QPIRGlFBNtaKFy0mvoclkREPmK7+N4NIGtMf5JNODS5HkFRgmU4YNdupA2I8lIYpD+TsIobZxGUKUkYzRZYZ1m1ttL69YYvCVz9Xosw/VoQ+RrW0scS5yUKqFMIUOV2R/Imi//c5TdKx6VP8CgYAnJ1ADugC4vI2sNdvt7618pnT3HEJxb8J6r4gKzYzbszlGlURQQAuMfKcP7RVtO1ZYkRyhmLxM4aZxNA9I+boVrlFWDAchzg+8VuunBwIslgLHx0/4EoUWLzd1/OGtco6oU1HXhI9J9pRGjqfO1iiIifN/ujwqx7AFNknayG/YkQKBgD6yNgA/ak12rovYzXKdp14Axn+39k2dPp6J6R8MnyLlB3yruwW6NSbNhtzTD1GZ+wCQepQvYvlPPc8zm+t3tl1r+Rtx3ORf5XBZc3iPkGdPOLubTssrrAnA+U9vph61W+OjqwLJ9sHUNK9pSHhHSIS4k6ycM2YAHyIC9NGTgB0PAoGAJjwd1DgMaQldtWnuXjvohPOo8cQudxXYcs6zVRbx6vtjKe2v7e+eK1SSVrR5qFV9AqxDfGwq8THenRa0LC3vNNplqostuehLhkWCKE7Y75vXMR7N6KU1kdoVWgN4BhXSwuRxmHMQfSY7q3HG3rDGz7mzXo1FVMr/uE4iDGm0IXY="
+)
+
+func TestMain(m *testing.M) {
+
+	// 初始化支付宝客户端
+	//    appId：应用ID
+	//    privateKey：应用秘钥
+	//    isProd：是否是正式环境
+	client = NewClient(appid, privateKey, false)
+	// 配置公共参数
+	client.SetCharset("utf-8").
+		SetSignType("RSA2").
+		//SetReturnUrl("https://www.gopay.ink").
+		SetNotifyUrl("https://www.gopay.ink")
+
+	//err := client.SetCertSnByPath("cert/appCertPublicKey.crt", "cert/alipayRootCert.crt", "cert/alipayCertPublicKey_RSA2.crt")
+	//if err != nil {
+	//	fmt.Println("SetCertSnByPath:", err)
+	//	return
+	//}
+
+	os.Exit(m.Run())
 }
 
-func TestJsonToString(t *testing.T) {
+func TestClient_TradePrecreate(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "预创建创建订单")
+	bm.Set("out_trade_no", gopay.GetRandomString(32))
+	bm.Set("total_amount", "100")
 
-	list := new(List)
-	infos := make([]fundBillListInfo, 0)
-
-	infos = append(infos, fundBillListInfo{Amount: "1.0.0", FundChannel: "iguiyu"})
-	infos = append(infos, fundBillListInfo{Amount: "2.0.2", FundChannel: "Jerry"})
-
-	list.BillList = infos
-
-	bs, err := json.Marshal(list)
+	// 创建订单
+	aliRsp, err := client.TradePrecreate(bm)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
-	fmt.Println("string:", string(bs))
+	fmt.Println("aliRsp:", *aliRsp)
+	fmt.Println("aliRsp.QrCode:", aliRsp.Response.QrCode)
+	fmt.Println("aliRsp.OutTradeNo:", aliRsp.Response.OutTradeNo)
 }
 
-type People struct {
-	Name string `json:"name,omitempty"`
-	Age  int    `json:"age,omitempty"`
-	List []*struct {
-		Address string `json:"address,omitempty"`
-		Age     int    `json:"age,omitempty"`
-		Phone   string `json:"phone,omitempty"`
-	} `json:"list,omitempty"`
+func TestClient_TradeCreate(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "创建订单")
+	bm.Set("buyer_id", "2088802095984694")
+	bm.Set("out_trade_no", "GZ201901301040355709")
+	bm.Set("total_amount", "0.01")
+
+	// 创建订单
+	aliRsp, err := client.TradeCreate(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+	fmt.Println("aliRsp.TradeNo:", aliRsp.Response.TradeNo)
 }
 
-func TestAliPayParams(t *testing.T) {
-	bodyMap := make(gopay.BodyMap)
+func TestClient_TradeAppPay(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "测试APP支付")
+	bm.Set("out_trade_no", "GZ201901301040355706100469")
+	bm.Set("total_amount", "1.00")
 
-	//people := new(People)
-	//people.Name = "Jerry"
-	//people.Age = 18
-	people := make(map[string]interface{})
-	people["name"] = "jerry"
-	people["age"] = 18
-	bodyMap.Set("people", people)
-
-	fmt.Println("result:", bodyMap.Get("people"))
+	// 手机APP支付参数请求
+	payParam, err := client.TradeAppPay(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("payParam:", payParam)
 }
+
+func TestClient_TradeCancel(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("out_trade_no", "GZ201909081743431443")
+
+	// 撤销支付订单
+	aliRsp, err := client.TradeCancel(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+}
+
+func TestClient_TradeClose(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("out_trade_no", "GZ201909081743431443")
+
+	// 条码支付
+	aliRsp, err := client.TradeClose(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+}
+
+func TestClient_TradePay(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "条码支付")
+	bm.Set("scene", "bar_code")
+	bm.Set("auth_code", "286248566432274952")
+	bm.Set("out_trade_no", "GZ201909081743431443")
+	bm.Set("total_amount", "0.01")
+	bm.Set("timeout_express", "2m")
+
+	// 条码支付
+	aliRsp, err := client.TradePay(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+
+	// 同步返回验签
+	ok, err := VerifySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
+	if err != nil {
+		fmt.Println("err:::", err)
+	}
+	fmt.Println("同步返回验签：", ok)
+}
+
+func TestClient_TradeQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("out_trade_no", "GZ201909081743431443")
+
+	// 查询订单
+	aliRsp, err := client.TradeQuery(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+}
+
+func TestClient_TradeWapPay(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "手机网站测试支付")
+	bm.Set("out_trade_no", "GZ201909081743431443")
+	bm.Set("quit_url", "https://www.gopay.ink")
+	bm.Set("total_amount", "100.00")
+	bm.Set("product_code", "QUICK_WAP_WAY")
+
+	// 手机网站支付请求
+	payUrl, err := client.TradeWapPay(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("payUrl:", payUrl)
+}
+
+func TestClient_TradePagePay(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "网站测试支付")
+	bm.Set("out_trade_no", "GZ201909081743431443")
+	bm.Set("total_amount", "88.88")
+	bm.Set("product_code", "FAST_INSTANT_TRADE_PAY")
+
+	// 电脑网站支付请求
+	payUrl, err := client.TradePagePay(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("payUrl:", payUrl)
+}
+
+func TestClient_TradeRefund(t *testing.T) {
+	// 请求参数
+	body := make(gopay.BodyMap)
+	body.Set("out_trade_no", "GZ201909081743431443")
+	body.Set("refund_amount", "5")
+	body.Set("refund_reason", "测试退款")
+
+	// 发起退款请求
+	aliRsp, err := client.TradeRefund(body)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+}
+
+func TestClient_TradePageRefund(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("out_trade_no", "GZ201909081743431443")
+	bm.Set("refund_amount", "5")
+	bm.Set("out_request_no", gopay.GetRandomString(32))
+
+	// 发起退款请求
+	aliRsp, err := client.TradePageRefund(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+}
+
+func TestClient_SystemOauthToken(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("grant_type", "authorization_code")
+	bm.Set("code", "3a06216ac8f84b8c93507bb9774bWX11")
+
+	// 发起请求
+	aliRsp, err := client.SystemOauthToken(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+	fmt.Println("aliRsp:", aliRsp.Response.AccessToken)
+	fmt.Println("aliRsp:", aliRsp.SignData)
+}
+
+func TestClient_TradeOrderSettle(t *testing.T) {
+	//请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("out_request_no", "201907301518083384")
+	bm.Set("trade_no", "2019072522001484690549776067")
+
+	var listParams []OpenApiRoyaltyDetailInfoPojo
+	listParams = append(listParams, OpenApiRoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
+
+	bm.Set("royalty_parameters", listParams)
+	//fmt.Println("listParams:", bm.Get("royalty_parameters"))
+
+	// 发起交易结算接口
+	aliRsp, err := client.TradeOrderSettle(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+}
+
+func TestClient_OpenAuthTokenApp(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("grant_type", "authorization_code")
+	bm.Set("code", "866185490c4e40efa9f71efea6766X02")
+
+	// 发起请求
+	aliRsp, err := client.OpenAuthTokenApp(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+}
+
+func TestClient_TradeFastPayRefundQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("out_trade_no", "GZ201909081743431443")
+	bm.Set("out_request_no", "GZ201909081743431443")
+
+	// 发起退款查询请求
+	aliRsp, err := client.TradeFastPayRefundQuery(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+}
+
+func TestClient_FundTransToaccountTransfer(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("out_biz_no", gopay.GetRandomString(32))
+	bm.Set("payee_type", "ALIPAY_LOGONID")
+	bm.Set("payee_account", "otmdfd2378@sandbox.com")
+	bm.Set("amount", "1000")
+	bm.Set("payer_show_name", "发钱人名字")
+	bm.Set("payee_real_name", "沙箱环境")
+	bm.Set("remark", "转账测试")
+
+	// 转账
+	aliRsp, err := client.FundTransToaccountTransfer(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+}
+
+func TestClient_UserCertifyOpenInit(t *testing.T) {
+	//请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("outer_order_no", "ZGYD201809132323000001234")
+	// 认证场景码：FACE：多因子人脸认证，CERT_PHOTO：多因子证照认证，CERT_PHOTO_FACE ：多因子证照和人脸认证，SMART_FACE：多因子快捷认证
+	bm.Set("biz_code", "FACE")
+	// 需要验证的身份信息参数，格式为json
+	identity := make(map[string]string)
+	identity["identity_type"] = "CERT_INFO"
+	identity["cert_type"] = "IDENTITY_CARD"
+	identity["cert_name"] = "张三"
+	identity["cert_no"] = "310123199012301234"
+	bm.Set("identity_param", identity)
+	// 商户个性化配置，格式为json
+	merchant := make(map[string]string)
+	merchant["return_url"] = "https://www.gopay.ink"
+	bm.Set("merchant_config", merchant)
+
+	// 发起请求
+	aliRsp, err := client.UserCertifyOpenInit(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+}
+
+func TestClient_UserCertifyOpenCertify(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	// 本次申请操作的唯一标识，由开放认证初始化接口调用后生成，后续的操作都需要用到
+	bm.Set("certify_id", "OC201809253000000393900404029253")
+
+	// 发起请求
+	certifyUrl, err := client.UserCertifyOpenCertify(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("certifyUrl:", certifyUrl)
+}
+
+func TestClient_UserCertifyOpenQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	// 本次申请操作的唯一标识，由开放认证初始化接口调用后生成，后续的操作都需要用到
+	bm.Set("certify_id", "OC201809253000000393900404029253")
+
+	// 发起请求
+	aliRsp, err := client.UserCertifyOpenQuery(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+	fmt.Println("aliRsp.Response.Passed:", aliRsp.Response.Passed)
+
+}
+
+func TestClient_UserInfoShare(t *testing.T) {
+	// 发起请求
+	aliRsp, err := client.UserInfoShare()
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+
+	// 同步返回验签
+	ok, err := VerifySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
+	if err != nil {
+		fmt.Println("VerifySign-err:", err)
+		return
+	}
+	fmt.Println("ok:", ok)
+}
+
+func TestClient_ZhimaCreditScoreGet(t *testing.T) {
+	// 请求参数
+	body := make(gopay.BodyMap)
+	body.Set("transaction_id", gopay.GetRandomString(48))
+	body.Set("product_code", "w1010100100000000001")
+
+	// 芝麻分
+	aliRsp, err := client.ZhimaCreditScoreGet(body)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
+}
+
+// =================================================
 
 func TestSyncVerifySign(t *testing.T) {
 	signData := `{"code":"10000","msg":"Success","buyer_logon_id":"854***@qq.com","buyer_pay_amount":"0.01","buyer_user_id":"2088102363632794","fund_bill_list":[{"amount":"0.01","fund_channel":"PCREDIT"}],"gmt_payment":"2019-08-29 20:14:05","invoice_amount":"0.01","out_trade_no":"GZ201901301040361012","point_amount":"0.00","receipt_amount":"0.01","total_amount":"0.01","trade_no":"2019082922001432790585537960"}`
@@ -97,43 +448,30 @@ func TestVerifySign(t *testing.T) {
 	}
 	fmt.Println("OK:", ok)
 }
-func TestSubString(t *testing.T) {
-	str := `{"alipay_trade_pay_response":{"code":"10000","msg":"Success","buyer_logon_id":"854***@qq.com","buyer_pay_amount":"0.01","buyer_user_id":"2088102363632794","fund_bill_list":[{"amount":"0.01","fund_channel":"PCREDIT"}],"gmt_payment":"2019-08-29 20:22:02","invoice_amount":"0.01","out_trade_no":"GZ201901301040361013","point_amount":"0.00","receipt_amount":"0.01","total_amount":"0.01","trade_no":"2019082922001432790585666965"},"sign":"DSX/wmE0nnuxQrWfJZtq0fNntcx5UYtVV35P2VZpoTC2KlIWr4eGNiXcetbb7AkI/1Tyd0+cNtcGMgB7SYzTB15/wDE0vJ+eT5ucqhNkER1kcuCC0k9OkZzU5w8wCJzOgAy52Wso9KnrwkY86mJWt3dC8DNCCi1rlf1a8bTGIBG/diJaKAgP1lGT3aW8jeGGM98zLabqDUNvck2qkgctGR49kBb0ZYmIzmY0x5goVyKnaCkcC/d1VTIIMz81mJbeqU8UZk6TqEplCC8J+dYEUj04pAO4/lwIg/YZdKj3Pz1136/+uy669Pew88+74J/u/zPsehC44PxcUk9YKmkNyw=="}`
-
-	index := strings.Index(str, `":`)
-	fmt.Println("index:", index)
-	indexEnd := strings.Index(str, `,"sign"`)
-	fmt.Println("indexEnd:", indexEnd)
-
-	fmt.Println("sub:", str[index+2:indexEnd])
-}
 
 func TestGetCertSN(t *testing.T) {
-	sn, err := GetCertSN("../examples/alipay_cert/alipayCertPublicKey_RSA2.crt")
+	sn, err := GetCertSN("cert/alipayCertPublicKey_RSA2.crt")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
+	// 04afd423ea5bd6f5c5482854ed73278c
 	fmt.Println("alipayCertPublicKey_RSA2:", sn)
 
-	sn, err = GetCertSN("../examples/alipay_cert/appCertPublicKey.crt")
+	sn, err = GetCertSN("cert/appCertPublicKey.crt")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
-	if sn != "4498aaa8ab0c8986c15c41b36186db7d" {
-		t.Fatal("get sigle cert sn error")
-	}
+	// 4498aaa8ab0c8986c15c41b36186db7d
 	fmt.Println("appCertPublicKey:", sn)
 
-	sn, err = GetRootCertSN("../examples/alipay_cert/alipayRootCert.crt")
+	sn, err = GetRootCertSN("cert/alipayRootCert.crt")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
 	}
-	if sn != "687b59193f3f462dd5336e5abf83c5d8_02941eef3187dddf3d3b83462e1dfcf6" {
-		t.Fatal("get cert chain sn error")
-	}
+	// 687b59193f3f462dd5336e5abf83c5d8_02941eef3187dddf3d3b83462e1dfcf6
 	fmt.Println("alipay_root_cert_sn:", sn)
 }
 

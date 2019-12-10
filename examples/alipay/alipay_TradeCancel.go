@@ -19,6 +19,7 @@ func TradeCancel() {
 	client.SetCharset("utf-8").
 		SetSignType("RSA2").
 		SetNotifyUrl("https://www.gopay.ink")
+
 	//请求参数
 	body := make(gopay.BodyMap)
 	body.Set("out_trade_no", "GYWX201901301040355706100457")

@@ -20,6 +20,7 @@ func TradeCreate() {
 	client.SetCharset("utf-8").
 		SetSignType("RSA2").
 		SetNotifyUrl("https://www.gopay.ink")
+
 	//请求参数
 	body := make(gopay.BodyMap)
 	body.Set("subject", "创建订单")

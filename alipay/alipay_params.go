@@ -66,43 +66,29 @@ func (a *Client) SetAliPayRootCertSN(aliPayRootCertSN string) (client *Client) {
 	return a
 }
 
-// 设置 app_cert_sn 通过应用公钥证书路径
+// 设置 app_cert_sn、alipay_root_cert_sn、alipay_cert_sn 通过应用公钥证书路径
 //    appCertPath：应用公钥证书路径
-func (a *Client) SetAppCertSnByPath(appCertPath string) (client *Client, err error) {
-	sn, err := GetCertSN(appCertPath)
-	if err != nil {
-		return a, fmt.Errorf("get app_cert_sn return err, but alse return alipay client. err: %v", err)
-	}
-	a.mu.Lock()
-	a.AppCertSN = sn
-	a.mu.Unlock()
-	return a, nil
-}
-
-// 设置 alipay_cert_sn 通过 支付宝公钥证书文件路径
+//    aliPayRootCertPath：支付宝根证书文件路径
 //    aliPayPublicCertPath：支付宝公钥证书文件路径
-func (a *Client) SetAliPayPublicCertSnByPath(aliPayPublicCertPath string) (client *Client, err error) {
-	sn, err := GetCertSN(aliPayPublicCertPath)
+func (a *Client) SetCertSnByPath(appCertPath, aliPayRootCertPath, aliPayPublicCertPath string) (err error) {
+	appCertSn, err := GetCertSN(appCertPath)
 	if err != nil {
-		return a, fmt.Errorf("get alipay_cert_sn return err, but alse return alipay client. err: %v", err)
+		return fmt.Errorf("get app_cert_sn return err, but alse return alipay client. err: %v", err)
+	}
+	rootCertSn, err := GetRootCertSN(aliPayRootCertPath)
+	if err != nil {
+		return fmt.Errorf("get alipay_root_cert_sn return err, but alse return alipay client. err: %v", err)
+	}
+	publicCertSn, err := GetCertSN(aliPayPublicCertPath)
+	if err != nil {
+		return fmt.Errorf("get alipay_cert_sn return err, but alse return alipay client. err: %v", err)
 	}
 	a.mu.Lock()
-	a.AliPayPublicCertSN = sn
+	a.AppCertSN = appCertSn
+	a.AliPayRootCertSN = rootCertSn
+	a.AliPayPublicCertSN = publicCertSn
 	a.mu.Unlock()
-	return a, nil
-}
-
-// 设置 alipay_root_cert_sn 通过支付宝CA根证书文件路径
-//    aliPayRootCertPath：支付宝CA根证书文件路径
-func (a *Client) SetAliPayRootCertSnByPath(aliPayRootCertPath string) (client *Client, err error) {
-	sn, err := GetRootCertSN(aliPayRootCertPath)
-	if err != nil {
-		return a, fmt.Errorf("get alipay_root_cert_sn return err, but alse return alipay client. err: %v", err)
-	}
-	a.mu.Lock()
-	a.AliPayRootCertSN = sn
-	a.mu.Unlock()
-	return a, nil
+	return nil
 }
 
 // 设置支付后的ReturnUrl
