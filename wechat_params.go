@@ -181,20 +181,4 @@ func generateXml(bm BodyMap) (reqXml string) {
 		return null
 	}
 	return string(bs)
-
-	//var buffer strings.Builder
-	//buffer.WriteString("<xml>")
-	//for key := range bm {
-	//	buffer.WriteByte('<')
-	//	buffer.WriteString(key)
-	//	buffer.WriteString("><![CDATA[")
-	//	buffer.WriteString(bm.Get(key))
-	//	buffer.WriteString("]]></")
-	//	buffer.WriteString(key)
-	//	buffer.WriteByte('>')
-	//}
-	//buffer.WriteString("</xml>")
-	//reqXml = buffer.String()
-	//fmt.Println(reqXml)
-	//return
 }
