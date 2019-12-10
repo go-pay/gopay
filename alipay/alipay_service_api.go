@@ -332,7 +332,7 @@ func GetCertSN(certPath string) (sn string, err error) {
 func GetRootCertSN(rootCertPath string) (sn string, err error) {
 	var (
 		certData           []byte
-		certs              []*x509.Certificate
+		cert               *x509.Certificate
 		name, serialNumber string
 		h                  hash.Hash
 	)
@@ -340,20 +340,20 @@ func GetRootCertSN(rootCertPath string) (sn string, err error) {
 	if err != nil {
 		return "", err
 	}
-	strs := strings.Split(string(certData), "\n\n")
-	for i := 0; i < len(strs); i++ {
-		if strs[i] == gopay.NULL {
+	pems := strings.Split(string(certData), "\n\n")
+	for i := 0; i < len(pems); i++ {
+		if pems[i] == gopay.NULL {
 			continue
 		}
-		if block, _ := pem.Decode([]byte(strs[i])); block != nil {
-			if certs, err = x509.ParseCertificates(block.Bytes); err != nil {
+		if block, _ := pem.Decode([]byte(pems[i])); block != nil {
+			if cert, err = x509.ParseCertificate(block.Bytes); err != nil {
 				continue
 			}
-			if !allowSignatureAlgorithm[certs[0].SignatureAlgorithm.String()] {
+			if !allowSignatureAlgorithm[cert.SignatureAlgorithm.String()] {
 				continue
 			}
-			name = certs[0].Issuer.String()
-			serialNumber = certs[0].SerialNumber.String()
+			name = cert.Issuer.String()
+			serialNumber = cert.SerialNumber.String()
 			h = md5.New()
 			h.Write([]byte(name))
 			h.Write([]byte(serialNumber))
