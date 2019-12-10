@@ -109,7 +109,14 @@ func TestSubString(t *testing.T) {
 }
 
 func TestGetCertSN(t *testing.T) {
-	sn, err := GetCertSN("alipay_cert/appCertPublicKey.crt")
+	sn, err := GetCertSN("../examples/alipay_cert/alipayCertPublicKey_RSA2.crt")
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("sn:", sn)
+
+	sn, err = GetCertSN("../examples/alipay_cert/appCertPublicKey.crt")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -118,7 +125,8 @@ func TestGetCertSN(t *testing.T) {
 		t.Fatal("get sigle cert sn error")
 	}
 	fmt.Println("sn:", sn)
-	sn, err = GetCertSN("alipay_cert/alipayRootCert.crt")
+
+	sn, err = GetCertSN("../examples/alipay_cert/alipayRootCert.crt")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
