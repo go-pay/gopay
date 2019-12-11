@@ -4,7 +4,7 @@
    (1) 按支付渠道模块分包大调整
    (2) 支付宝：修改公共API方法：alipay.GetCertSN()，不再支持支付宝根证书的SN获取
    (3) 支付宝：新增公共API方法：alipay.GetRootCertSN()，获取root证书序列号SN
-   (4) 支付宝：新增Client方法：alipay.SetLocation()，设置时区，不设置或出错均为默认 Asia/Shanghai
+   (4) 支付宝：新增Client方法：alipay.SetLocation()，设置时区，不设置或出错均为默认服务器时间
 
 版本号：Release 1.4.6
 发布时间：2019/12/09 18:37

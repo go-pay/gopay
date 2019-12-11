@@ -12,6 +12,7 @@ import (
 	"errors"
 	"fmt"
 	"hash"
+	"log"
 	"net/url"
 	"time"
 
@@ -40,12 +41,12 @@ type OpenApiRoyaltyDetailInfoPojo struct {
 	Desc         string `json:"desc,omitempty"`
 }
 
-// 设置 时区，不设置或者解析出错均默认：Asia/Shanghai
+// 设置 时区，不设置或出错均为默认服务器时间
 func (a *Client) SetLocation(name string) (client *Client) {
 	location, err := time.LoadLocation(name)
 	if err != nil {
-		name = locationShanghai
-		location, _ = time.LoadLocation(name)
+		log.Println("set Location err, default UTC")
+		return a
 	}
 	a.mu.Lock()
 	a.LocationName = name

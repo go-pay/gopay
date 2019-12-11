@@ -571,8 +571,7 @@ func (a *Client) doAliPay(body gopay.BodyMap, method string) (bs []byte, err err
 		pubBody.Set("timestamp", time.Now().In(a.location).Format(gopay.TimeLayout))
 		a.mu.RUnlock()
 	} else {
-		location, _ := time.LoadLocation(locationShanghai)
-		pubBody.Set("timestamp", time.Now().In(location).Format(gopay.TimeLayout))
+		pubBody.Set("timestamp", time.Now().Format(gopay.TimeLayout))
 	}
 	pubBody.Set("version", "1.0")
 	if a.NotifyUrl != gopay.NULL {
