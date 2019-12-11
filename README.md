@@ -3,8 +3,6 @@
 
 # GoPay
 
-[English Document](https://github.com/iGoogle-ink/gopay/blob/master/README_EN.md)
-
 微信和支付宝的Golang版本SDK
 
 ![Author](https://img.shields.io/badge/author-Jerry-blue.svg)
@@ -186,8 +184,9 @@ client := gopay.NewAliPayClient("2016091200494382", privateKey, false)
 
 //设置支付宝请求 公共参数
 //    注意：具体设置哪些参数，根据不同的方法而不同，此处列举出所以设置参数
-client.SetAliPayRootCertSN().               //设置支付宝根证书SN，通过 gopay.GetCertSN() 获取
+client.SetAliPayRootCertSN().               //设置支付宝根证书SN，通过 gopay.GetRootCertSN() 获取
     SetAppCertSN().                         //设置应用公钥证书SN，通过 gopay.GetCertSN() 获取
+    SetAliPayPublicCertSN().                // 设置支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
     SetCharset("utf-8").                    //设置字符编码，不设置默认 utf-8
     SetSignType("RSA2").                    //设置签名类型，不设置默认 RSA2
     SetReturnUrl("https://www.gopay.ink").  //设置返回URL
@@ -195,9 +194,7 @@ client.SetAliPayRootCertSN().               //设置支付宝根证书SN，通�
     SetAppAuthToken().                      //设置第三方应用授权
     SetAuthToken()                          //设置个人信息授权
 
-client, err := client.SetAppCertSnByPath("appCertPublicKey.crt")
-client, err := client.SetAliPayPublicCertSnByPath("alipayCertPublicKey_RSA2.crt")
-client, err := client.SetAliPayRootCertSnByPath("alipayRootCert.crt")
+err := client.SetCertSnByPath("appCertPublicKey.crt", "alipayRootCert.crt", "alipayCertPublicKey_RSA2.crt")
 ```
 
 ## 2、初始化并赋值BodyMap（client的方法所需的入参）

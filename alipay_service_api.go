@@ -287,47 +287,69 @@ func FormatAliPayPublicKey(publicKey string) (pKey string) {
 }
 
 // GetCertSN 获取证书序列号SN
-//    certPath：X.509证书文件路径(appCertPublicKey.crt、alipayRootCert.crt、alipayCertPublicKey_RSA2)
-//    返回 sn：证书序列号(app_cert_sn、alipay_root_cert_sn、alipay_cert_sn)
+//    certPath：X.509证书文件路径(appCertPublicKey.crt、alipayCertPublicKey_RSA2.crt)
+//    返回 sn：证书序列号(app_cert_sn、alipay_cert_sn)
 //    返回 err：error 信息
 func GetCertSN(certPath string) (sn string, err error) {
-	var (
-		certData           []byte
-		certs              []*x509.Certificate
-		name, serialNumber string
-		h                  hash.Hash
-	)
-	certData, err = ioutil.ReadFile(certPath)
+	certData, err := ioutil.ReadFile(certPath)
 	if err != nil {
-		return "", err
+		return null, err
 	}
-	strs := strings.Split(string(certData), "-----END CERTIFICATE-----")
-	for i := 0; i < len(strs); i++ {
-		if strs[i] == "" {
-			continue
+
+	if block, _ := pem.Decode(certData); block != nil {
+		cert, err := x509.ParseCertificate(block.Bytes)
+		if err != nil {
+			return null, err
 		}
-		if block, _ := pem.Decode([]byte(strs[i] + "-----END CERTIFICATE-----")); block != nil {
-			if certs, err = x509.ParseCertificates(block.Bytes); err != nil {
+		name := cert.Issuer.String()
+		serialNumber := cert.SerialNumber.String()
+		h := md5.New()
+		h.Write([]byte(name))
+		h.Write([]byte(serialNumber))
+		sn = hex.EncodeToString(h.Sum(nil))
+	}
+	if sn == null {
+		return null, errors.New("failed to get sn,please check your cert")
+	}
+	return sn, nil
+}
+
+// GetRootCertSN 获取root证书序列号SN
+//    rootCertPath：X.509证书文件路径(alipayRootCert.crt)
+//    返回 sn：证书序列号(alipay_root_cert_sn)
+//    返回 err：error 信息
+func GetRootCertSN(rootCertPath string) (sn string, err error) {
+	var certEnd = `-----END CERTIFICATE-----`
+
+	certData, err := ioutil.ReadFile(rootCertPath)
+	if err != nil {
+		return null, err
+	}
+
+	pems := strings.Split(string(certData), certEnd)
+	for _, c := range pems {
+		if block, _ := pem.Decode([]byte(c + certEnd)); block != nil {
+			cert, err := x509.ParseCertificate(block.Bytes)
+			if err != nil {
 				continue
 			}
-			if !allowSignatureAlgorithm[certs[0].SignatureAlgorithm.String()] {
+			if !allowSignatureAlgorithm[cert.SignatureAlgorithm.String()] {
 				continue
 			}
-			name = certs[0].Issuer.String()
-			serialNumber = certs[0].SerialNumber.String()
-			h = md5.New()
+			name := cert.Issuer.String()
+			serialNumber := cert.SerialNumber.String()
+			h := md5.New()
 			h.Write([]byte(name))
 			h.Write([]byte(serialNumber))
-			if sn == "" {
+			if sn == null {
 				sn += hex.EncodeToString(h.Sum(nil))
 			} else {
-				sn += "_"
-				sn += hex.EncodeToString(h.Sum(nil))
+				sn += "_" + hex.EncodeToString(h.Sum(nil))
 			}
 		}
 	}
-	if sn == "" {
-		return "", errors.New("failed to get sn,please check your cert")
+	if sn == null {
+		return null, errors.New("failed to get sn,please check your cert")
 	}
 	return sn, nil
 }

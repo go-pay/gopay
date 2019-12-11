@@ -54,9 +54,14 @@ func (bm BodyMap) Remove(key string) {
 	delete(bm, key)
 }
 
-type xmlMapEntry struct {
+type xmlMapMarshal struct {
 	XMLName xml.Name
 	Value   interface{} `xml:",cdata"`
+}
+
+type xmlMapUnmarshal struct {
+	XMLName xml.Name
+	Value   string `xml:",cdata"`
 }
 
 func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error) {
@@ -69,7 +74,7 @@ func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error)
 	}
 	for k := range bm {
 		if v := bm.Get(k); v != null {
-			e.Encode(xmlMapEntry{XMLName: xml.Name{Local: k}, Value: v})
+			e.Encode(xmlMapMarshal{XMLName: xml.Name{Local: k}, Value: v})
 		}
 	}
 	return e.EncodeToken(start.End())
@@ -77,16 +82,16 @@ func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error)
 
 func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) (err error) {
 	for {
-		var e xmlMapEntry
+		var e xmlMapUnmarshal
 		err = d.Decode(&e)
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			return
+		if err != nil {
+			if err == io.EOF {
+				return nil
+			}
+			return err
 		}
 		bm.Set(e.XMLName.Local, e.Value)
 	}
-	return
 }
 
 // ("bar=baz&foo=quux") sorted by key.

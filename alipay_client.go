@@ -587,43 +587,31 @@ func (a *AliPayClient) doAliPay(body BodyMap, method string) (bs []byte, err err
 	}
 	pubBody.Set("sign", sign)
 	param := FormatAliPayURLParam(pubBody)
-	if method == "alipay.trade.app.pay" {
+
+	switch method {
+	case "alipay.trade.app.pay":
 		return []byte(param), nil
-	}
-	if method == "alipay.user.certify.open.certify" {
+	case "alipay.trade.wap.pay", "alipay.trade.page.pay", "alipay.user.certify.open.certify":
 		if !a.IsProd {
 			return []byte(zfbSandboxBaseUrl + "?" + param), nil
-		} else {
-			return []byte(zfbBaseUrl + "?" + param), nil
 		}
-	}
-	if method == "alipay.trade.page.pay" {
+		return []byte(zfbBaseUrl + "?" + param), nil
+	default:
+		httpClient := NewHttpClient()
 		if !a.IsProd {
-			return []byte(zfbSandboxBaseUrl + "?" + param), nil
+			url = zfbSandboxBaseUrlUtf8
 		} else {
-			return []byte(zfbBaseUrl + "?" + param), nil
+			url = zfbBaseUrlUtf8
 		}
-	}
-	httpClient := NewHttpClient()
-	if !a.IsProd {
-		url = zfbSandboxBaseUrlUtf8
-	} else {
-		url = zfbBaseUrlUtf8
-	}
-	res, bs, errs := httpClient.Type(TypeForm).Post(url).SendString(param).EndBytes()
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
-	}
-	if method == "alipay.trade.wap.pay" {
-		if res.Request.URL.String() == zfbSandboxBaseUrl || res.Request.URL.String() == zfbBaseUrl {
-			return nil, errors.New("alipay.trade.wap.pay error,please check the parameters")
+		res, bs, errs := httpClient.Type(TypeForm).Post(url).SendString(param).EndBytes()
+		if len(errs) > 0 {
+			return nil, errs[0]
 		}
-		return []byte(res.Request.URL.String()), nil
+		if res.StatusCode != 200 {
+			return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+		}
+		return bs, nil
 	}
-	return bs, nil
 }
 
 func getSignData(bs []byte) (signData string) {
