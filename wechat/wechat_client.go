@@ -254,6 +254,9 @@ func (w *Client) BatchQueryComment(body gopay.BodyMap, certFilePath, keyFilePath
 //    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_1
 func (w *Client) Transfer(body gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *TransfersResponse, err error) {
+	if certFilePath == gopay.NULL || keyFilePath == gopay.NULL || pkcs12FilePath == gopay.NULL {
+		return nil, errors.New("cert file path not allow to input null")
+	}
 	body.Set("mch_appid", w.AppId)
 	body.Set("mchid", w.MchId)
 	var (

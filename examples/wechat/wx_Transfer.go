@@ -32,7 +32,7 @@ func Transfer() {
 	body.Set("desc", "测试转账")              // 企业付款备注，必填。注意：备注中的敏感词会被转成字符*
 	body.Set("spbill_create_ip", "127.0.0.1")
 
-	// 请求申请退款（沙箱环境下，证书路径参数可传空）
+	// 企业向微信用户个人付款（不支持沙箱环境）
 	//    body：参数Body
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径

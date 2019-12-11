@@ -343,7 +343,7 @@ func TestClient_UserCertifyOpenCertify(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	// 本次申请操作的唯一标识，由开放认证初始化接口调用后生成，后续的操作都需要用到
-	bm.Set("certify_id", "OC201809253000000393900404029253")
+	bm.Set("certify_id", "53827f9d085b3ce43938c6e5915b4729")
 
 	// 发起请求
 	certifyUrl, err := client.UserCertifyOpenCertify(bm)

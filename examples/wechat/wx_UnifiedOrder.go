@@ -22,6 +22,7 @@ func UnifiedOrder() {
 
 	number := gopay.GetRandomString(32)
 	fmt.Println("out_trade_no:", number)
+
 	//初始化参数Map
 	body := make(gopay.BodyMap)
 	body.Set("nonce_str", gopay.GetRandomString(32))
