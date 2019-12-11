@@ -139,7 +139,7 @@ func main() {
 # 二、文档说明
 
 * [GoDoc](https://godoc.org/github.com/iGoogle-ink/gopay)
-* 所有方法，如有问题，请仔细查看 examples
+* 所有方法，如有问题，请仔细查看 wechat_client_test.go、alipay_client_test.go 或 examples
 * 有问题请加QQ群（加群验证答案：gopay）。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 
 QQ群：
@@ -149,7 +149,7 @@ QQ群：
 
 ---
 
-## 1、初始化GoPay客户端并做配置（HTTP请求均设置tls.Config{InsecureSkipVerify: true}）
+## 1、初始化GoPay客户端并做配置（HTTP请求均默认设置tls.Config{InsecureSkipVerify: true}）
 
 * #### 微信客户端，如无需更改Appid、Mchid和ApiKey等参数，可在init()方法中初始化，全局适用
 
