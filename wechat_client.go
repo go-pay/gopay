@@ -293,23 +293,22 @@ func (w *WeChatClient) doWeChat(body BodyMap, path string, tlsConfig ...*tls.Con
 	body.Set("appid", w.AppId)
 	body.Set("mch_id", w.MchId)
 	var (
-		sign string
-		url  = wxBaseUrlCh + path
+		url = wxBaseUrlCh + path
 	)
-	if body.Get("sign") != null {
-		goto GoRequest
-	}
-	if !w.IsProd {
-		body.Set("sign_type", SignType_MD5)
-		if sign, err = getWeChatSignBoxSign(w.MchId, w.ApiKey, body); err != nil {
-			return nil, err
+	if body.Get("sign") == null {
+		var sign string
+		if !w.IsProd {
+			body.Set("sign_type", SignType_MD5)
+			sign, err = getWeChatSignBoxSign(w.MchId, w.ApiKey, body)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			sign = getWeChatReleaseSign(w.ApiKey, body.Get("sign_type"), body)
 		}
-	} else {
-		sign = getWeChatReleaseSign(w.ApiKey, body.Get("sign_type"), body)
+		body.Set("sign", sign)
 	}
-	body.Set("sign", sign)
 
-GoRequest:
 	httpClient := NewHttpClient()
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig[0])
