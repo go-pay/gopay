@@ -191,7 +191,7 @@ func (a *AliPayClient) AliPayTradePageRefund(body BodyMap) (aliRsp *AliPayTradeP
 	if body.Get("out_trade_no") == null && body.Get("trade_no") == null {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
-	if bs, err = a.doAliPay(body, "	alipay.trade.page.refund"); err != nil {
+	if bs, err = a.doAliPay(body, "alipay.trade.page.refund"); err != nil {
 		return
 	}
 	aliRsp = new(AliPayTradePageRefundResponse)
