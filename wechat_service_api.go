@@ -57,6 +57,7 @@ func GetWeChatSanBoxParamSign(appId, mchId, apiKey string, bm BodyMap) (sign str
 	bm.Set("appid", appId)
 	bm.Set("mch_id", mchId)
 	bm.Set("sign_type", SignType_MD5)
+	bm.Set("total_fee", 101)
 	var (
 		sandBoxApiKey string
 		hashMd5       hash.Hash

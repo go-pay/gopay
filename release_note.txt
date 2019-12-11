@@ -5,6 +5,7 @@
    (2) 修复一些问题
    (3) 支付宝：修改公共API方法：gopay.GetCertSN()，不再支持支付宝根证书的SN获取
    (4) 支付宝：新增公共API方法：gopay.GetRootCertSN()，获取root证书序列号SN
+   (5) 微信：修改公共API方法：gopay.GetWeChatSanBoxParamSign()，修复 沙箱验签出错问题
 
 版本号：Release 1.4.6
 发布时间：2019/12/09 18:37
