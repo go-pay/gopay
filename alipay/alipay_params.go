@@ -40,7 +40,7 @@ type OpenApiRoyaltyDetailInfoPojo struct {
 	Desc         string `json:"desc,omitempty"`
 }
 
-// 设置 时区，默认或者解析出错，均默认：Asia/Shanghai
+// 设置 时区，不设置或者解析出错均默认：Asia/Shanghai
 func (a *Client) SetLocation(name string) (client *Client) {
 	location, err := time.LoadLocation(name)
 	if err != nil {
