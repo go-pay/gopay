@@ -292,26 +292,24 @@ func (w *Client) EntrustPublic(body gopay.BodyMap) (bs []byte, err error) {
 
 // 向微信发送请求
 func (w *Client) doWeChat(body gopay.BodyMap, path string, tlsConfig ...*tls.Config) (bs []byte, err error) {
+	var url = wxBaseUrlCh + path
 	body.Set("appid", w.AppId)
 	body.Set("mch_id", w.MchId)
-	var (
-		sign string
-		url  = wxBaseUrlCh + path
-	)
-	if body.Get("sign") != gopay.NULL {
-		goto GoRequest
-	}
-	if !w.IsProd {
-		body.Set("sign_type", SignType_MD5)
-		if sign, err = getSignBoxSign(w.MchId, w.ApiKey, body); err != nil {
-			return nil, err
-		}
-	} else {
-		sign = getReleaseSign(w.ApiKey, body.Get("sign_type"), body)
-	}
-	body.Set("sign", sign)
 
-GoRequest:
+	if body.Get("sign") == gopay.NULL {
+		var sign string
+		if !w.IsProd {
+			body.Set("sign_type", SignType_MD5)
+			sign, err = getSignBoxSign(w.MchId, w.ApiKey, body)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			sign = getReleaseSign(w.ApiKey, body.Get("sign_type"), body)
+		}
+		body.Set("sign", sign)
+	}
+
 	httpClient := gopay.NewHttpClient()
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig[0])

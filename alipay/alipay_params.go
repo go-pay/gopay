@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"hash"
 	"net/url"
+	"time"
 
 	"github.com/iGoogle-ink/gopay"
 )
@@ -37,6 +38,20 @@ type OpenApiRoyaltyDetailInfoPojo struct {
 	TransIn      string `json:"trans_in"`
 	Amount       string `json:"amount,omitempty"`
 	Desc         string `json:"desc,omitempty"`
+}
+
+// 设置 时区，默认或者解析出错，均默认：Asia/Shanghai
+func (a *Client) SetLocation(name string) (client *Client) {
+	location, err := time.LoadLocation(name)
+	if err != nil {
+		name = locationShanghai
+		location, _ = time.LoadLocation(name)
+	}
+	a.mu.Lock()
+	a.LocationName = name
+	a.location = location
+	a.mu.Unlock()
+	return a
 }
 
 // 设置 应用公钥证书SN

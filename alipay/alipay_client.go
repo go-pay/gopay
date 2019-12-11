@@ -14,6 +14,7 @@ import (
 type Client struct {
 	AppId              string
 	PrivateKey         string
+	LocationName       string
 	AppCertSN          string
 	AliPayPublicCertSN string
 	AliPayRootCertSN   string
@@ -24,6 +25,7 @@ type Client struct {
 	AppAuthToken       string
 	AuthToken          string
 	IsProd             bool
+	location           *time.Location
 	mu                 sync.RWMutex
 }
 
@@ -522,8 +524,8 @@ func (a *Client) UserCertifyOpenQuery(body gopay.BodyMap) (aliRsp *UserCertifyOp
 // 向支付宝发送请求
 func (a *Client) doAliPay(body gopay.BodyMap, method string) (bs []byte, err error) {
 	var (
-		bodyStr, sign, url string
-		bodyBs             []byte
+		bodyStr, url string
+		bodyBs       []byte
 	)
 	if body != nil {
 		if bodyBs, err = json.Marshal(body); err != nil {
@@ -564,7 +566,14 @@ func (a *Client) doAliPay(body gopay.BodyMap, method string) (bs []byte, err err
 		pubBody.Set("sign_type", a.SignType)
 		a.mu.RUnlock()
 	}
-	pubBody.Set("timestamp", time.Now().Format(gopay.TimeLayout))
+	if a.LocationName != gopay.NULL && a.location != nil {
+		a.mu.RLock()
+		pubBody.Set("timestamp", time.Now().In(a.location).Format(gopay.TimeLayout))
+		a.mu.RUnlock()
+	} else {
+		location, _ := time.LoadLocation(locationShanghai)
+		pubBody.Set("timestamp", time.Now().In(location).Format(gopay.TimeLayout))
+	}
 	pubBody.Set("version", "1.0")
 	if a.NotifyUrl != gopay.NULL {
 		a.mu.RLock()
@@ -584,7 +593,8 @@ func (a *Client) doAliPay(body gopay.BodyMap, method string) (bs []byte, err err
 	if bodyStr != gopay.NULL {
 		pubBody.Set("biz_content", bodyStr)
 	}
-	if sign, err = getRsaSign(pubBody, pubBody.Get("sign_type"), FormatPrivateKey(a.PrivateKey)); err != nil {
+	sign, err := getRsaSign(pubBody, pubBody.Get("sign_type"), FormatPrivateKey(a.PrivateKey))
+	if err != nil {
 		return
 	}
 	pubBody.Set("sign", sign)

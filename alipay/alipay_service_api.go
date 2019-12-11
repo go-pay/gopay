@@ -293,23 +293,19 @@ func FormatPublicKey(publicKey string) (pKey string) {
 //    返回 sn：证书序列号(app_cert_sn、alipay_cert_sn)
 //    返回 err：error 信息
 func GetCertSN(certPath string) (sn string, err error) {
-	var (
-		certData           []byte
-		certs              []*x509.Certificate
-		name, serialNumber string
-		h                  hash.Hash
-	)
-	certData, err = ioutil.ReadFile(certPath)
+	certData, err := ioutil.ReadFile(certPath)
 	if err != nil {
 		return gopay.NULL, err
 	}
+
 	if block, _ := pem.Decode(certData); block != nil {
-		if certs, err = x509.ParseCertificates(block.Bytes); err != nil {
+		cert, err := x509.ParseCertificate(block.Bytes)
+		if err != nil {
 			return gopay.NULL, err
 		}
-		name = certs[0].Issuer.String()
-		serialNumber = certs[0].SerialNumber.String()
-		h = md5.New()
+		name := cert.Issuer.String()
+		serialNumber := cert.SerialNumber.String()
+		h := md5.New()
 		h.Write([]byte(name))
 		h.Write([]byte(serialNumber))
 		if sn == "" {
@@ -330,29 +326,26 @@ func GetCertSN(certPath string) (sn string, err error) {
 //    返回 sn：证书序列号(alipay_root_cert_sn)
 //    返回 err：error 信息
 func GetRootCertSN(rootCertPath string) (sn string, err error) {
-	var (
-		certData           []byte
-		cert               *x509.Certificate
-		name, serialNumber string
-		certEnd            = `-----END CERTIFICATE-----`
-		h                  hash.Hash
-	)
-	certData, err = ioutil.ReadFile(rootCertPath)
+	var certEnd = `-----END CERTIFICATE-----`
+
+	certData, err := ioutil.ReadFile(rootCertPath)
 	if err != nil {
 		return gopay.NULL, err
 	}
+
 	pems := strings.Split(string(certData), certEnd)
 	for _, c := range pems {
 		if block, _ := pem.Decode([]byte(c + certEnd)); block != nil {
-			if cert, err = x509.ParseCertificate(block.Bytes); err != nil {
+			cert, err := x509.ParseCertificate(block.Bytes)
+			if err != nil {
 				continue
 			}
 			if !allowSignatureAlgorithm[cert.SignatureAlgorithm.String()] {
 				continue
 			}
-			name = cert.Issuer.String()
-			serialNumber = cert.SerialNumber.String()
-			h = md5.New()
+			name := cert.Issuer.String()
+			serialNumber := cert.SerialNumber.String()
+			h := md5.New()
 			h.Write([]byte(name))
 			h.Write([]byte(serialNumber))
 			if sn == gopay.NULL {

@@ -6,6 +6,8 @@ const (
 	zfbSandboxBaseUrl     = "https://openapi.alipaydev.com/gateway.do"
 	zfbBaseUrlUtf8        = "https://openapi.alipay.com/gateway.do?charset=utf-8"
 	zfbSandboxBaseUrlUtf8 = "https://openapi.alipaydev.com/gateway.do?charset=utf-8"
+
+	locationShanghai = "Asia/Shanghai"
 )
 
 type NotifyRequest struct {
