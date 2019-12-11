@@ -132,7 +132,7 @@ func (c *Client) EndStruct(v interface{}) (res *http.Response, errs []error) {
 	case TypeXML:
 		err := xml.Unmarshal(bs, &v)
 		if err != nil {
-			c.Errors = append(c.Errors, fmt.Errorf("xml.Unmarshal：%s", err.Error()))
+			c.Errors = append(c.Errors, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error()))
 			return nil, c.Errors
 		}
 		return res, nil

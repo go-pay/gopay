@@ -84,7 +84,7 @@ func ParseNotifyResultToBodyMap(req *http.Request) (bm gopay.BodyMap, err error)
 	}
 	bm = make(gopay.BodyMap)
 	if err = xml.Unmarshal(bs, &bm); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
 	}
 	return
 }
@@ -154,7 +154,7 @@ func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNot
 	bs = gopay.PKCS7UnPadding(encryptionB)
 	refundNotify = new(RefundNotify)
 	if err = xml.Unmarshal(bs, refundNotify); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal：%s", err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
 	}
 	return
 }

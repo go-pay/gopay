@@ -47,11 +47,11 @@ const (
 	wxSandboxBatchquerycomment = "sandboxnew/billcommentsp/batchquerycomment"
 
 	// 支付类型
-	TradeType_Mini   = "JSAPI"
-	TradeType_JsApi  = "JSAPI"
-	TradeType_App    = "APP"
-	TradeType_H5     = "MWEB"
-	TradeType_Native = "NATIVE"
+	TradeType_Mini   = "JSAPI"  // 小程序支付
+	TradeType_JsApi  = "JSAPI"  // JSAPI支付
+	TradeType_App    = "APP"    // app支付
+	TradeType_H5     = "MWEB"   // H5支付
+	TradeType_Native = "NATIVE" // Native支付
 
 	// 签名方式
 	SignType_MD5         = "MD5"

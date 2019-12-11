@@ -44,14 +44,14 @@ func NewClient(appId, privateKey string, isProd bool) (client *Client) {
 
 // alipay.trade.fastpay.refund.query(统一收单交易退款查询)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.fastpay.refund.query
-func (a *Client) TradeFastPayRefundQuery(body gopay.BodyMap) (aliRsp *TradeFastpayRefundQueryResponse, err error) {
+func (a *Client) TradeFastPayRefundQuery(bm gopay.BodyMap) (aliRsp *TradeFastpayRefundQueryResponse, err error) {
 	var (
 		bs []byte
 	)
-	if body.Get("out_trade_no") == gopay.NULL && body.Get("trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be NULL at the same time")
 	}
-	if bs, err = a.doAliPay(body, "alipay.trade.fastpay.refund.query"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.trade.fastpay.refund.query"); err != nil {
 		return
 	}
 	aliRsp = new(TradeFastpayRefundQueryResponse)
@@ -68,14 +68,14 @@ func (a *Client) TradeFastPayRefundQuery(body gopay.BodyMap) (aliRsp *TradeFastp
 
 // alipay.trade.order.settle(统一收单交易结算接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.order.settle
-func (a *Client) TradeOrderSettle(body gopay.BodyMap) (aliRsp *TradeOrderSettleResponse, err error) {
+func (a *Client) TradeOrderSettle(bm gopay.BodyMap) (aliRsp *TradeOrderSettleResponse, err error) {
 	var (
 		bs []byte
 	)
-	if body.Get("out_request_no") == gopay.NULL || body.Get("trade_no") == gopay.NULL {
+	if bm.Get("out_request_no") == gopay.NULL || bm.Get("trade_no") == gopay.NULL {
 		return nil, errors.New("out_request_no or trade_no are not allowed to be NULL")
 	}
-	if bs, err = a.doAliPay(body, "alipay.trade.order.settle"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.trade.order.settle"); err != nil {
 		return
 	}
 	aliRsp = new(TradeOrderSettleResponse)
@@ -92,14 +92,14 @@ func (a *Client) TradeOrderSettle(body gopay.BodyMap) (aliRsp *TradeOrderSettleR
 
 // alipay.trade.create(统一收单交易创建接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.create
-func (a *Client) TradeCreate(body gopay.BodyMap) (aliRsp *TradeCreateResponse, err error) {
+func (a *Client) TradeCreate(bm gopay.BodyMap) (aliRsp *TradeCreateResponse, err error) {
 	var (
 		bs []byte
 	)
-	if body.Get("out_trade_no") == gopay.NULL && body.Get("buyer_id") == gopay.NULL {
+	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("buyer_id") == gopay.NULL {
 		return nil, errors.New("out_trade_no and buyer_id are not allowed to be NULL at the same time")
 	}
-	if bs, err = a.doAliPay(body, "alipay.trade.create"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.trade.create"); err != nil {
 		return
 	}
 	aliRsp = new(TradeCreateResponse)
@@ -116,14 +116,14 @@ func (a *Client) TradeCreate(body gopay.BodyMap) (aliRsp *TradeCreateResponse, e
 
 // alipay.trade.close(统一收单交易关闭接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.close
-func (a *Client) TradeClose(body gopay.BodyMap) (aliRsp *TradeCloseResponse, err error) {
+func (a *Client) TradeClose(bm gopay.BodyMap) (aliRsp *TradeCloseResponse, err error) {
 	var (
 		bs []byte
 	)
-	if body.Get("out_trade_no") == gopay.NULL && body.Get("trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be NULL at the same time")
 	}
-	if bs, err = a.doAliPay(body, "alipay.trade.close"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.trade.close"); err != nil {
 		return
 	}
 	aliRsp = new(TradeCloseResponse)
@@ -140,14 +140,14 @@ func (a *Client) TradeClose(body gopay.BodyMap) (aliRsp *TradeCloseResponse, err
 
 // alipay.trade.cancel(统一收单交易撤销接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.cancel
-func (a *Client) TradeCancel(body gopay.BodyMap) (aliRsp *TradeCancelResponse, err error) {
+func (a *Client) TradeCancel(bm gopay.BodyMap) (aliRsp *TradeCancelResponse, err error) {
 	var (
 		bs []byte
 	)
-	if body.Get("out_trade_no") == gopay.NULL && body.Get("trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be NULL at the same time")
 	}
-	if bs, err = a.doAliPay(body, "alipay.trade.cancel"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.trade.cancel"); err != nil {
 		return
 	}
 	aliRsp = new(TradeCancelResponse)
@@ -164,14 +164,14 @@ func (a *Client) TradeCancel(body gopay.BodyMap) (aliRsp *TradeCancelResponse, e
 
 // alipay.trade.refund(统一收单交易退款接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.refund
-func (a *Client) TradeRefund(body gopay.BodyMap) (aliRsp *TradeRefundResponse, err error) {
+func (a *Client) TradeRefund(bm gopay.BodyMap) (aliRsp *TradeRefundResponse, err error) {
 	var (
 		bs []byte
 	)
-	if body.Get("out_trade_no") == gopay.NULL && body.Get("trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be NULL at the same time")
 	}
-	if bs, err = a.doAliPay(body, "alipay.trade.refund"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.trade.refund"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(TradeRefundResponse)
@@ -188,14 +188,14 @@ func (a *Client) TradeRefund(body gopay.BodyMap) (aliRsp *TradeRefundResponse, e
 
 // alipay.trade.page.refund(统一收单退款页面接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.page.refund
-func (a *Client) TradePageRefund(body gopay.BodyMap) (aliRsp *TradePageRefundResponse, err error) {
+func (a *Client) TradePageRefund(bm gopay.BodyMap) (aliRsp *TradePageRefundResponse, err error) {
 	var (
 		bs []byte
 	)
-	if body.Get("out_trade_no") == gopay.NULL && body.Get("trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be NULL at the same time")
 	}
-	if bs, err = a.doAliPay(body, "alipay.trade.page.refund"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.trade.page.refund"); err != nil {
 		return
 	}
 	aliRsp = new(TradePageRefundResponse)
@@ -212,12 +212,12 @@ func (a *Client) TradePageRefund(body gopay.BodyMap) (aliRsp *TradePageRefundRes
 
 // alipay.trade.precreate(统一收单线下交易预创建)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.precreate
-func (a *Client) TradePrecreate(body gopay.BodyMap) (aliRsp *TradePrecreateResponse, err error) {
+func (a *Client) TradePrecreate(bm gopay.BodyMap) (aliRsp *TradePrecreateResponse, err error) {
 	var bs []byte
-	if body.Get("out_trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no is not allowed to be NULL")
 	}
-	if bs, err = a.doAliPay(body, "alipay.trade.precreate"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.trade.precreate"); err != nil {
 		return
 	}
 	aliRsp = new(TradePrecreateResponse)
@@ -234,12 +234,12 @@ func (a *Client) TradePrecreate(body gopay.BodyMap) (aliRsp *TradePrecreateRespo
 
 // alipay.trade.pay(统一收单交易支付接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.pay
-func (a *Client) TradePay(body gopay.BodyMap) (aliRsp *TradePayResponse, err error) {
+func (a *Client) TradePay(bm gopay.BodyMap) (aliRsp *TradePayResponse, err error) {
 	var bs []byte
-	if body.Get("out_trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no is not allowed to be NULL")
 	}
-	if bs, err = a.doAliPay(body, "alipay.trade.pay"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.trade.pay"); err != nil {
 		return
 	}
 	aliRsp = new(TradePayResponse)
@@ -256,14 +256,14 @@ func (a *Client) TradePay(body gopay.BodyMap) (aliRsp *TradePayResponse, err err
 
 // alipay.trade.query(统一收单线下交易查询)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.query
-func (a *Client) TradeQuery(body gopay.BodyMap) (aliRsp *TradeQueryResponse, err error) {
+func (a *Client) TradeQuery(bm gopay.BodyMap) (aliRsp *TradeQueryResponse, err error) {
 	var (
 		bs []byte
 	)
-	if body.Get("out_trade_no") == gopay.NULL && body.Get("trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be NULL at the same time")
 	}
-	if bs, err = a.doAliPay(body, "alipay.trade.query"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.trade.query"); err != nil {
 		return
 	}
 	aliRsp = new(TradeQueryResponse)
@@ -280,12 +280,12 @@ func (a *Client) TradeQuery(body gopay.BodyMap) (aliRsp *TradeQueryResponse, err
 
 // alipay.trade.app.pay(app支付接口2.0)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.app.pay
-func (a *Client) TradeAppPay(body gopay.BodyMap) (payParam string, err error) {
+func (a *Client) TradeAppPay(bm gopay.BodyMap) (payParam string, err error) {
 	var bs []byte
-	if body.Get("out_trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == gopay.NULL {
 		return gopay.NULL, errors.New("out_trade_no is not allowed to be NULL")
 	}
-	if bs, err = a.doAliPay(body, "alipay.trade.app.pay"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.trade.app.pay"); err != nil {
 		return gopay.NULL, err
 	}
 	payParam = string(bs)
@@ -294,13 +294,13 @@ func (a *Client) TradeAppPay(body gopay.BodyMap) (payParam string, err error) {
 
 // alipay.trade.wap.pay(手机网站支付接口2.0)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.wap.pay
-func (a *Client) TradeWapPay(body gopay.BodyMap) (payUrl string, err error) {
+func (a *Client) TradeWapPay(bm gopay.BodyMap) (payUrl string, err error) {
 	var bs []byte
-	if body.Get("out_trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == gopay.NULL {
 		return gopay.NULL, errors.New("out_trade_no is not allowed to be NULL")
 	}
-	body.Set("product_code", "QUICK_WAP_WAY")
-	if bs, err = a.doAliPay(body, "alipay.trade.wap.pay"); err != nil {
+	bm.Set("product_code", "QUICK_WAP_WAY")
+	if bs, err = a.doAliPay(bm, "alipay.trade.wap.pay"); err != nil {
 		return gopay.NULL, err
 	}
 	payUrl = string(bs)
@@ -309,13 +309,13 @@ func (a *Client) TradeWapPay(body gopay.BodyMap) (payUrl string, err error) {
 
 // alipay.trade.page.pay(统一收单下单并支付页面接口)
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.page.pay
-func (a *Client) TradePagePay(body gopay.BodyMap) (payUrl string, err error) {
+func (a *Client) TradePagePay(bm gopay.BodyMap) (payUrl string, err error) {
 	var bs []byte
-	if body.Get("out_trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == gopay.NULL {
 		return gopay.NULL, errors.New("out_trade_no is not allowed to be NULL")
 	}
-	body.Set("product_code", "FAST_INSTANT_TRADE_PAY")
-	if bs, err = a.doAliPay(body, "alipay.trade.page.pay"); err != nil {
+	bm.Set("product_code", "FAST_INSTANT_TRADE_PAY")
+	if bs, err = a.doAliPay(bm, "alipay.trade.page.pay"); err != nil {
 		return gopay.NULL, err
 	}
 	payUrl = string(bs)
@@ -324,12 +324,12 @@ func (a *Client) TradePagePay(body gopay.BodyMap) (payUrl string, err error) {
 
 // alipay.fund.trans.toaccount.transfer(单笔转账到支付宝账户接口)
 //    文档地址：https://docs.open.alipay.com/api_28/alipay.fund.trans.toaccount.transfer
-func (a *Client) FundTransToaccountTransfer(body gopay.BodyMap) (aliRsp *FundTransToaccountTransferResponse, err error) {
+func (a *Client) FundTransToaccountTransfer(bm gopay.BodyMap) (aliRsp *FundTransToaccountTransferResponse, err error) {
 	var bs []byte
-	if body.Get("out_biz_no") == gopay.NULL {
+	if bm.Get("out_biz_no") == gopay.NULL {
 		return nil, errors.New("out_biz_no is not allowed to be NULL")
 	}
-	if bs, err = a.doAliPay(body, "alipay.fund.trans.toaccount.transfer"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.fund.trans.toaccount.transfer"); err != nil {
 		return
 	}
 	aliRsp = new(FundTransToaccountTransferResponse)
@@ -352,15 +352,15 @@ func (a *Client) TradeOrderinfoSync(body gopay.BodyMap) {
 
 // alipay.system.oauth.token(换取授权访问令牌)
 //    文档地址：https://docs.open.alipay.com/api_9/alipay.system.oauth.token
-func (a *Client) SystemOauthToken(body gopay.BodyMap) (aliRsp *SystemOauthTokenResponse, err error) {
+func (a *Client) SystemOauthToken(bm gopay.BodyMap) (aliRsp *SystemOauthTokenResponse, err error) {
 	var bs []byte
-	if body.Get("grant_type") == gopay.NULL {
+	if bm.Get("grant_type") == gopay.NULL {
 		return nil, errors.New("grant_type is not allowed to be NULL")
 	}
-	if body.Get("code") == gopay.NULL && body.Get("refresh_token") == gopay.NULL {
+	if bm.Get("code") == gopay.NULL && bm.Get("refresh_token") == gopay.NULL {
 		return nil, errors.New("code and refresh_token are not allowed to be NULL at the same time")
 	}
-	if bs, err = systemOauthToken(a.AppId, a.PrivateKey, body, "alipay.system.oauth.token", a.IsProd); err != nil {
+	if bs, err = systemOauthToken(a.AppId, a.PrivateKey, bm, "alipay.system.oauth.token", a.IsProd); err != nil {
 		return
 	}
 	aliRsp = new(SystemOauthTokenResponse)
@@ -397,15 +397,15 @@ func (a *Client) UserInfoShare() (aliRsp *UserInfoShareResponse, err error) {
 
 // alipay.open.auth.token.app(换取应用授权令牌)
 //    文档地址：https://docs.open.alipay.com/api_9/alipay.open.auth.token.app
-func (a *Client) OpenAuthTokenApp(body gopay.BodyMap) (aliRsp *OpenAuthTokenAppResponse, err error) {
+func (a *Client) OpenAuthTokenApp(bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppResponse, err error) {
 	var bs []byte
-	if body.Get("grant_type") == gopay.NULL {
+	if bm.Get("grant_type") == gopay.NULL {
 		return nil, errors.New("grant_type is not allowed to be NULL")
 	}
-	if body.Get("code") == gopay.NULL && body.Get("refresh_token") == gopay.NULL {
+	if bm.Get("code") == gopay.NULL && bm.Get("refresh_token") == gopay.NULL {
 		return nil, errors.New("code and refresh_token are not allowed to be NULL at the same time")
 	}
-	if bs, err = a.doAliPay(body, "alipay.open.auth.token.app"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.open.auth.token.app"); err != nil {
 		return
 	}
 	aliRsp = new(OpenAuthTokenAppResponse)
@@ -422,17 +422,17 @@ func (a *Client) OpenAuthTokenApp(body gopay.BodyMap) (aliRsp *OpenAuthTokenAppR
 
 // zhima.credit.score.get(芝麻分)
 //    文档地址：https://docs.open.alipay.com/api_8/zhima.credit.score.get
-func (a *Client) ZhimaCreditScoreGet(body gopay.BodyMap) (aliRsp *ZhimaCreditScoreGetResponse, err error) {
+func (a *Client) ZhimaCreditScoreGet(bm gopay.BodyMap) (aliRsp *ZhimaCreditScoreGetResponse, err error) {
 	var (
 		bs []byte
 	)
-	if body.Get("product_code") == gopay.NULL {
-		body.Set("product_code", "w1010100100000000001")
+	if bm.Get("product_code") == gopay.NULL {
+		bm.Set("product_code", "w1010100100000000001")
 	}
-	if body.Get("transaction_id") == gopay.NULL {
+	if bm.Get("transaction_id") == gopay.NULL {
 		return nil, errors.New("transaction_id is not allowed to be NULL")
 	}
-	if bs, err = a.doAliPay(body, "zhima.credit.score.get"); err != nil {
+	if bs, err = a.doAliPay(bm, "zhima.credit.score.get"); err != nil {
 		return
 	}
 	aliRsp = new(ZhimaCreditScoreGetResponse)
@@ -449,23 +449,23 @@ func (a *Client) ZhimaCreditScoreGet(body gopay.BodyMap) (aliRsp *ZhimaCreditSco
 
 // alipay.user.certify.open.initialize(身份认证初始化服务)
 //    文档地址：https://docs.open.alipay.com/api_2/alipay.user.certify.open.initialize
-func (a *Client) UserCertifyOpenInit(body gopay.BodyMap) (aliRsp *UserCertifyOpenInitResponse, err error) {
+func (a *Client) UserCertifyOpenInit(bm gopay.BodyMap) (aliRsp *UserCertifyOpenInitResponse, err error) {
 	var (
 		bs []byte
 	)
-	if body.Get("biz_code") == gopay.NULL {
+	if bm.Get("biz_code") == gopay.NULL {
 		return nil, errors.New("biz_code is not allowed to be NULL")
 	}
-	if body.Get("outer_order_no") == gopay.NULL {
+	if bm.Get("outer_order_no") == gopay.NULL {
 		return nil, errors.New("outer_order_no is not allowed to be NULL")
 	}
-	if body.Get("identity_param") == gopay.NULL {
+	if bm.Get("identity_param") == gopay.NULL {
 		return nil, errors.New("identity_param is not allowed to be NULL")
 	}
-	if body.Get("merchant_config") == gopay.NULL {
+	if bm.Get("merchant_config") == gopay.NULL {
 		return nil, errors.New("merchant_config is not allowed to be NULL")
 	}
-	if bs, err = a.doAliPay(body, "alipay.user.certify.open.initialize"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.user.certify.open.initialize"); err != nil {
 		return
 	}
 	aliRsp = new(UserCertifyOpenInitResponse)
@@ -483,14 +483,14 @@ func (a *Client) UserCertifyOpenInit(body gopay.BodyMap) (aliRsp *UserCertifyOpe
 // alipay.user.certify.open.certify(身份认证开始认证)
 //    API文档地址：https://docs.open.alipay.com/api_2/alipay.user.certify.open.certify
 //    产品文档地址：https://docs.open.alipay.com/20181012100420932508/quickstart
-func (a *Client) UserCertifyOpenCertify(body gopay.BodyMap) (certifyUrl string, err error) {
+func (a *Client) UserCertifyOpenCertify(bm gopay.BodyMap) (certifyUrl string, err error) {
 	var (
 		bs []byte
 	)
-	if body.Get("certify_id") == gopay.NULL {
+	if bm.Get("certify_id") == gopay.NULL {
 		return gopay.NULL, errors.New("certify_id is not allowed to be NULL")
 	}
-	if bs, err = a.doAliPay(body, "alipay.user.certify.open.certify"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.user.certify.open.certify"); err != nil {
 		return gopay.NULL, err
 	}
 	certifyUrl = string(bs)
@@ -499,14 +499,14 @@ func (a *Client) UserCertifyOpenCertify(body gopay.BodyMap) (certifyUrl string, 
 
 // alipay.user.certify.open.query(身份认证记录查询)
 //    文档地址：https://docs.open.alipay.com/api_2/alipay.user.certify.open.query
-func (a *Client) UserCertifyOpenQuery(body gopay.BodyMap) (aliRsp *UserCertifyOpenQueryResponse, err error) {
+func (a *Client) UserCertifyOpenQuery(bm gopay.BodyMap) (aliRsp *UserCertifyOpenQueryResponse, err error) {
 	var (
 		bs []byte
 	)
-	if body.Get("certify_id") == gopay.NULL {
+	if bm.Get("certify_id") == gopay.NULL {
 		return nil, errors.New("certify_id is not allowed to be NULL")
 	}
-	if bs, err = a.doAliPay(body, "alipay.user.certify.open.query"); err != nil {
+	if bs, err = a.doAliPay(bm, "alipay.user.certify.open.query"); err != nil {
 		return
 	}
 	aliRsp = new(UserCertifyOpenQueryResponse)
@@ -522,13 +522,13 @@ func (a *Client) UserCertifyOpenQuery(body gopay.BodyMap) (aliRsp *UserCertifyOp
 }
 
 // 向支付宝发送请求
-func (a *Client) doAliPay(body gopay.BodyMap, method string) (bs []byte, err error) {
+func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error) {
 	var (
 		bodyStr, url string
 		bodyBs       []byte
 	)
-	if body != nil {
-		if bodyBs, err = json.Marshal(body); err != nil {
+	if bm != nil {
+		if bodyBs, err = json.Marshal(bm); err != nil {
 			return nil, fmt.Errorf("json.Marshal：%s", err.Error())
 		}
 		bodyStr = string(bodyBs)

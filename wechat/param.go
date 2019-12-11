@@ -58,24 +58,24 @@ func (w *Client) AddCertFileByte(certFile, keyFile, pkcs12File []byte) {
 //    pkcs12FilePath：apiclient_cert.p12 路径
 //    返回err
 func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath string) (err error) {
-	var (
-		cert, key, pkcs []byte
-	)
-	if cert, err = ioutil.ReadFile(certFilePath); err != nil {
-		return
+	cert, err := ioutil.ReadFile(certFilePath)
+	if err != nil {
+		return err
 	}
-	if key, err = ioutil.ReadFile(keyFilePath); err != nil {
-		return
+	key, err := ioutil.ReadFile(keyFilePath)
+	if err != nil {
+		return err
 	}
-	if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
-		return
+	pkcs, err := ioutil.ReadFile(pkcs12FilePath)
+	if err != nil {
+		return err
 	}
 	w.mu.Lock()
 	w.CertFile = cert
 	w.KeyFile = key
 	w.Pkcs12File = pkcs
 	w.mu.Unlock()
-	return
+	return nil
 }
 
 func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath string) (tlsConfig *tls.Config, err error) {
@@ -127,8 +127,7 @@ func getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign stri
 		h = md5.New()
 	}
 	h.Write([]byte(bm.EncodeWeChatSignParams(apiKey)))
-	sign = strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
-	return
+	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 }
 
 // 获取微信支付沙箱环境Sign值
