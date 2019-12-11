@@ -308,15 +308,10 @@ func GetCertSN(certPath string) (sn string, err error) {
 		h := md5.New()
 		h.Write([]byte(name))
 		h.Write([]byte(serialNumber))
-		if sn == "" {
-			sn += hex.EncodeToString(h.Sum(nil))
-		} else {
-			sn += "_"
-			sn += hex.EncodeToString(h.Sum(nil))
-		}
+		sn = hex.EncodeToString(h.Sum(nil))
 	}
-	if sn == "" {
-		return "", errors.New("failed to get sn,please check your cert")
+	if sn == gopay.NULL {
+		return gopay.NULL, errors.New("failed to get sn,please check your cert")
 	}
 	return sn, nil
 }

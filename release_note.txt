@@ -6,6 +6,15 @@
    (3) 支付宝：新增公共API方法：alipay.GetRootCertSN()，获取root证书序列号SN
    (4) 支付宝：新增Client方法：alipay.SetLocation()，设置时区，不设置或出错均为默认服务器时间
 
+版本号：Release 1.4.8
+发布时间：2019/12/11 16:40
+修改记录：
+   (1) 1.几 最后一个版本
+   (2) 修复一些问题
+   (3) 支付宝：修改公共API方法：gopay.GetCertSN()，不再支持支付宝根证书的SN获取
+   (4) 支付宝：新增公共API方法：gopay.GetRootCertSN()，获取root证书序列号SN
+   (5) 微信：修改公共API方法：gopay.GetWeChatSanBoxParamSign()，修复 沙箱验签出错问题
+
 版本号：Release 1.4.6
 发布时间：2019/12/09 18:37
 修改记录：

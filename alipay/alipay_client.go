@@ -602,17 +602,7 @@ func (a *Client) doAliPay(body gopay.BodyMap, method string) (bs []byte, err err
 	switch method {
 	case "alipay.trade.app.pay":
 		return []byte(param), nil
-	case "alipay.trade.page.pay":
-		if !a.IsProd {
-			return []byte(zfbSandboxBaseUrl + "?" + param), nil
-		}
-		return []byte(zfbBaseUrl + "?" + param), nil
-	case "alipay.trade.wap.pay":
-		if !a.IsProd {
-			return []byte(zfbSandboxBaseUrl + "?" + param), nil
-		}
-		return []byte(zfbBaseUrl + "?" + param), nil
-	case "alipay.user.certify.open.certify":
+	case "alipay.trade.wap.pay", "alipay.trade.page.pay", "alipay.user.certify.open.certify":
 		if !a.IsProd {
 			return []byte(zfbSandboxBaseUrl + "?" + param), nil
 		}
