@@ -76,6 +76,13 @@ type UserPhone struct {
 	Mobile  string `json:"mobile,omitempty"`
 }
 
+type ErrorResponse struct {
+	Code    string `json:"code,omitempty"`
+	Msg     string `json:"msg,omitempty"`
+	SubCode string `json:"sub_code,omitempty"`
+	SubMsg  string `json:"sub_msg,omitempty"`
+}
+
 //===================================================
 type TradePayResponse struct {
 	Response *payResponse `json:"alipay_trade_pay_response,omitempty"`
@@ -258,15 +265,10 @@ type cancelResponse struct {
 //===================================================
 type SystemOauthTokenResponse struct {
 	Response      *oauthTokenInfo `json:"alipay_system_oauth_token_response,omitempty"`
-	ErrorResponse *struct {
-		Code    string `json:"code,omitempty"`
-		Msg     string `json:"msg,omitempty"`
-		SubCode string `json:"sub_code,omitempty"`
-		SubMsg  string `json:"sub_msg,omitempty"`
-	} `json:"error_response,omitempty"`
-	AlipayCertSn string `json:"alipay_cert_sn,omitempty"`
-	SignData     string `json:"-"`
-	Sign         string `json:"sign"`
+	ErrorResponse *ErrorResponse  `json:"error_response,omitempty"`
+	AlipayCertSn  string          `json:"alipay_cert_sn,omitempty"`
+	SignData      string          `json:"-"`
+	Sign          string          `json:"sign"`
 }
 type oauthTokenInfo struct {
 	AccessToken  string `json:"access_token,omitempty"`
@@ -398,6 +400,7 @@ type orderSettleResponse struct {
 //===================================================
 type TradePrecreateResponse struct {
 	Response     *precreateResponse `json:"alipay_trade_precreate_response,omitempty"`
+	NullResponse *ErrorResponse     `json:"null_response,omitempty"`
 	AlipayCertSn string             `json:"alipay_cert_sn,omitempty"`
 	SignData     string             `json:"-"`
 	Sign         string             `json:"sign"`

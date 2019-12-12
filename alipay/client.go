@@ -58,7 +58,7 @@ func (a *Client) TradeFastPayRefundQuery(bm gopay.BodyMap) (aliRsp *TradeFastpay
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -82,7 +82,7 @@ func (a *Client) TradeOrderSettle(bm gopay.BodyMap) (aliRsp *TradeOrderSettleRes
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -106,7 +106,7 @@ func (a *Client) TradeCreate(bm gopay.BodyMap) (aliRsp *TradeCreateResponse, err
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -130,7 +130,7 @@ func (a *Client) TradeClose(bm gopay.BodyMap) (aliRsp *TradeCloseResponse, err e
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -154,7 +154,7 @@ func (a *Client) TradeCancel(bm gopay.BodyMap) (aliRsp *TradeCancelResponse, err
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -178,7 +178,7 @@ func (a *Client) TradeRefund(bm gopay.BodyMap) (aliRsp *TradeRefundResponse, err
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -202,7 +202,7 @@ func (a *Client) TradePageRefund(bm gopay.BodyMap) (aliRsp *TradePageRefundRespo
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -224,8 +224,12 @@ func (a *Client) TradePrecreate(bm gopay.BodyMap) (aliRsp *TradePrecreateRespons
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	if aliRsp.NullResponse != nil {
+		info := aliRsp.NullResponse
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
@@ -246,7 +250,7 @@ func (a *Client) TradePay(bm gopay.BodyMap) (aliRsp *TradePayResponse, err error
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -270,7 +274,7 @@ func (a *Client) TradeQuery(bm gopay.BodyMap) (aliRsp *TradeQueryResponse, err e
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -336,7 +340,7 @@ func (a *Client) FundTransToaccountTransfer(bm gopay.BodyMap) (aliRsp *FundTrans
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -367,7 +371,7 @@ func (a *Client) SystemOauthToken(bm gopay.BodyMap) (aliRsp *SystemOauthTokenRes
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response == nil && aliRsp.ErrorResponse != nil {
+	if aliRsp.ErrorResponse != nil {
 		info := aliRsp.ErrorResponse
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -387,7 +391,7 @@ func (a *Client) UserInfoShare() (aliRsp *UserInfoShareResponse, err error) {
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -412,7 +416,7 @@ func (a *Client) OpenAuthTokenApp(bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppRes
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -439,7 +443,7 @@ func (a *Client) ZhimaCreditScoreGet(bm gopay.BodyMap) (aliRsp *ZhimaCreditScore
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -472,7 +476,7 @@ func (a *Client) UserCertifyOpenInit(bm gopay.BodyMap) (aliRsp *UserCertifyOpenI
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
@@ -513,7 +517,7 @@ func (a *Client) UserCertifyOpenQuery(bm gopay.BodyMap) (aliRsp *UserCertifyOpen
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response.Code != "10000" {
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
