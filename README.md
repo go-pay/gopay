@@ -3,7 +3,7 @@
 
 # GoPay
 
-微信和支付宝的Golang版本SDK
+QQ、微信、支付宝的Golang版本SDK
 
 ![Author](https://img.shields.io/badge/author-Jerry-blue.svg)
 [![Golang](https://img.shields.io/badge/golang-1.11+-brightgreen.svg)](https://golang.org)
@@ -124,6 +124,7 @@ $ go get -u github.com/iGoogle-ink/gopay
 
 * #### 查看 GoPay 版本
     * [版本更新记录](https://github.com/iGoogle-ink/gopay/blob/master/release_note.txt)
+    * 2.0+ 版本未经严格测试，如若有问题，请提交PR修复或切回 v1.4.8
 ```go
 import (
     "fmt"
@@ -139,6 +140,7 @@ func main() {
 # 二、文档说明
 
 * [GoDoc](https://godoc.org/github.com/iGoogle-ink/gopay)
+* QQ支付 使用方法请参考微信的
 * 所有方法，如有问题，请仔细查看 wechat_client_test.go、alipay_client_test.go 或 examples
 * 有问题请加QQ群（加群验证答案：gopay）。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 
