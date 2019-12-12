@@ -1,3 +1,12 @@
+版本号：Release 2.0.0
+发布时间：2019/12/12 18:22
+修改记录：
+   (1) 按支付渠道模块分包大调整
+   (2) 一大推细小改动，不一一描述了
+   (3) 支付宝：修改公共API方法：alipay.GetCertSN()，不再支持支付宝根证书的SN获取
+   (4) 支付宝：新增公共API方法：alipay.GetRootCertSN()，获取root证书序列号SN
+   (5) 支付宝：新增Client方法：alipay.SetLocation()，设置时区，不设置或出错均为默认服务器时间
+
 版本号：Release 1.4.8
 发布时间：2019/12/11 16:40
 修改记录：
@@ -31,7 +40,7 @@
    (2) 支付宝：修改公共API方法：gopay.VerifyAliPaySign()，支付宝异步验签支持传入 BodyMap
    (3) 微信：新增Client方法：client.AddCertFileByte()，添加微信证书 Byte 数组
    (4) 微信：新增Client方法：client.AddCertFilePath()，添加微信证书 Path 路径
-   (5) 微信：微信Client需要证书的方法，如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，如方法需单独使用证书，则传证书Path
+   (5) 微信：微信Client需要证书的方法，如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
    (6) BodyMap 的Set方法去掉switch判断，直接赋值
    (7) WeChatClient、AliPayClient 加锁
    (8) 修改部分小问题和部分样式

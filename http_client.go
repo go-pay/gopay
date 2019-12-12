@@ -132,7 +132,7 @@ func (c *Client) EndStruct(v interface{}) (res *http.Response, errs []error) {
 	case TypeXML:
 		err := xml.Unmarshal(bs, &v)
 		if err != nil {
-			c.Errors = append(c.Errors, fmt.Errorf("xml.Unmarshal：%s", err.Error()))
+			c.Errors = append(c.Errors, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error()))
 			return nil, c.Errors
 		}
 		return res, nil
@@ -145,7 +145,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 	if len(c.Errors) > 0 {
 		return nil, nil, c.Errors
 	}
-	var reader = strings.NewReader(null)
+	var reader = strings.NewReader(NULL)
 
 	req, err := func() (*http.Request, error) {
 		c.mu.RLock()

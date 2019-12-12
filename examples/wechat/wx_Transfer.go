@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 func Transfer() {
@@ -12,7 +13,7 @@ func Transfer() {
 	//    MchID：商户ID
 	//    ApiKey：Key值
 	//    isProd：是否是正式环境（企业转账到个人账户，默认正式环境）
-	client := gopay.NewWeChatClient("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", false)
+	client := wechat.NewClient("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", false)
 
 	err := client.AddCertFilePath("iguiyu_cert/apiclient_cert.pem", "iguiyu_cert/apiclient_key.pem", "iguiyu_cert/apiclient_cert.p12")
 	if err != nil {
@@ -31,7 +32,7 @@ func Transfer() {
 	body.Set("desc", "测试转账")              // 企业付款备注，必填。注意：备注中的敏感词会被转成字符*
 	body.Set("spbill_create_ip", "127.0.0.1")
 
-	// 请求申请退款（沙箱环境下，证书路径参数可传空）
+	// 企业向微信用户个人付款（不支持沙箱环境）
 	//    body：参数Body
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径

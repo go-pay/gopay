@@ -1,0 +1,75 @@
+
+// Java SDK 获取Root证书SN  AntCertificationUtil.getRootCertSN();
+/**
+ * 从公钥证书中提取公钥序列号
+ *
+ * @param certPath 公钥证书存放路径，例如:/home/admin/cert.crt
+ * @return 公钥证书序列号
+ * @throws AlipayApiException
+ */
+public static String getCertSN(String certPath) throws AlipayApiException {
+    InputStream inputStream = null;
+    try {
+        inputStream = new FileInputStream(certPath);
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        X509Certificate cert = (X509Certificate) cf.generateCertificate(inputStream);
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update((cert.getIssuerX500Principal().getName() + cert.getSerialNumber()).getBytes());
+        String certSN = new BigInteger(1, md.digest()).toString(16);
+        //BigInteger会把0省略掉，需补全至32位
+        certSN = fillMD5(certSN);
+        return certSN;
+
+    } catch (NoSuchAlgorithmException e) {
+        throw new AlipayApiException(e);
+    } catch (IOException e) {
+        throw new AlipayApiException(e);
+    } catch (CertificateException e) {
+        throw new AlipayApiException(e);
+    } finally {
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            throw new AlipayApiException(e);
+        }
+    }
+}
+
+// Java SDK 获取证书SN  AlipaySignature.getCertSN();
+/**
+ * 获取根证书序列号
+ *
+ * @param rootCertContent
+ * @return
+ */
+public static String getRootCertSN(String rootCertContent) {
+    String rootCertSN = null;
+    try {
+        X509Certificate[] x509Certificates = readPemCertChain(rootCertContent);
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        for (X509Certificate c : x509Certificates) {
+            if (c.getSigAlgOID().startsWith("1.2.840.113549.1.1")) {
+                md.update((c.getIssuerX500Principal().getName() + c.getSerialNumber()).getBytes());
+                String certSN = new BigInteger(1, md.digest()).toString(16);
+                //BigInteger会把0省略掉，需补全至32位
+                certSN = fillMD5(certSN);
+                if (StringUtils.isEmpty(rootCertSN)) {
+                    rootCertSN = certSN;
+                } else {
+                    rootCertSN = rootCertSN + "_" + certSN;
+                }
+            }
+
+        }
+    } catch (Exception e) {
+        AlipayLogger.logBizError(("提取根证书失败"));
+    }
+    return rootCertSN;
+
+}
+
+private static String fillMD5(String md5) {
+    return md5.length() == 32 ? md5 : fillMD5("0" + md5);
+}
