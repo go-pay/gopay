@@ -39,6 +39,10 @@ func NewClient(appId, mchId, apiKey string, isProd bool) (client *Client) {
 // 提交付款码支付
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
 func (w *Client) Micropay(bm gopay.BodyMap) (wxRsp *MicropayResponse, err error) {
+	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "auth_code")
+	if err != nil {
+		return nil, err
+	}
 	var bs []byte
 	if w.IsProd {
 		bs, err = w.doWeChat(bm, wxMicropay, nil)
@@ -58,6 +62,10 @@ func (w *Client) Micropay(bm gopay.BodyMap) (wxRsp *MicropayResponse, err error)
 // 统一下单
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
 func (w *Client) UnifiedOrder(bm gopay.BodyMap) (wxRsp *UnifiedOrderResponse, err error) {
+	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "notify_url", "trade_type")
+	if err != nil {
+		return nil, err
+	}
 	var bs []byte
 	if w.IsProd {
 		bs, err = w.doWeChat(bm, wxUnifiedorder, nil)
@@ -78,9 +86,15 @@ func (w *Client) UnifiedOrder(bm gopay.BodyMap) (wxRsp *UnifiedOrderResponse, er
 // 查询订单
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
 func (w *Client) QueryOrder(bm gopay.BodyMap) (wxRsp *QueryOrderResponse, err error) {
+	err = bm.CheckEmptyError("nonce_str")
+	if err != nil {
+		return nil, err
+	}
+	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("transaction_id") == gopay.NULL {
+		return nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
+	}
 	var bs []byte
 	if w.IsProd {
-		re
 		bs, err = w.doWeChat(bm, wxOrderquery, nil)
 	} else {
 		bs, err = w.doWeChat(bm, wxSandboxOrderquery, nil)
@@ -98,6 +112,10 @@ func (w *Client) QueryOrder(bm gopay.BodyMap) (wxRsp *QueryOrderResponse, err er
 // 关闭订单
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_3
 func (w *Client) CloseOrder(bm gopay.BodyMap) (wxRsp *CloseOrderResponse, err error) {
+	err = bm.CheckEmptyError("nonce_str", "out_trade_no")
+	if err != nil {
+		return nil, err
+	}
 	var bs []byte
 	if w.IsProd {
 		bs, err = w.doWeChat(bm, wxCloseorder, nil)
@@ -118,6 +136,10 @@ func (w *Client) CloseOrder(bm gopay.BodyMap) (wxRsp *CloseOrderResponse, err er
 //    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3
 func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *ReverseResponse, err error) {
+	err = bm.CheckEmptyError("nonce_str", "out_trade_no")
+	if err != nil {
+		return nil, err
+	}
 	var (
 		bs        []byte
 		tlsConfig *tls.Config
@@ -144,6 +166,13 @@ func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 //    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
 func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *RefundResponse, err error) {
+	err = bm.CheckEmptyError("nonce_str", "out_refund_no", "total_fee", "refund_fee")
+	if err != nil {
+		return nil, err
+	}
+	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("transaction_id") == gopay.NULL {
+		return nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
+	}
 	var (
 		bs        []byte
 		tlsConfig *tls.Config
@@ -169,6 +198,13 @@ func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 // 查询退款
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_5
 func (w *Client) QueryRefund(bm gopay.BodyMap) (wxRsp *QueryRefundResponse, err error) {
+	err = bm.CheckEmptyError("nonce_str")
+	if err != nil {
+		return nil, err
+	}
+	if bm.Get("refund_id") == gopay.NULL && bm.Get("out_refund_no") == gopay.NULL && bm.Get("transaction_id") == gopay.NULL && bm.Get("out_trade_no") == gopay.NULL {
+		return nil, errors.New("refund_id, out_refund_no, out_trade_no, transaction_id are not allowed to be null at the same time")
+	}
 	var bs []byte
 	if w.IsProd {
 		bs, err = w.doWeChat(bm, wxRefundquery, nil)
@@ -188,6 +224,14 @@ func (w *Client) QueryRefund(bm gopay.BodyMap) (wxRsp *QueryRefundResponse, err 
 // 下载对账单
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_6
 func (w *Client) DownloadBill(bm gopay.BodyMap) (wxRsp string, err error) {
+	err = bm.CheckEmptyError("nonce_str", "bill_date", "bill_type")
+	if err != nil {
+		return gopay.NULL, err
+	}
+	billType := bm.Get("bill_type")
+	if billType != "ALL" && billType != "SUCCESS" && billType != "REFUND" && billType != "RECHARGE_REFUND" {
+		return gopay.NULL, errors.New("bill_type error, please reference: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_6")
+	}
 	var bs []byte
 	if w.IsProd {
 		bs, err = w.doWeChat(bm, wxDownloadbill, nil)
@@ -206,10 +250,19 @@ func (w *Client) DownloadBill(bm gopay.BodyMap) (wxRsp string, err error) {
 //    貌似不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7
 func (w *Client) DownloadFundFlow(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
+	err = bm.CheckEmptyError("nonce_str", "bill_date", "account_type")
+	if err != nil {
+		return gopay.NULL, err
+	}
+	accountType := bm.Get("account_type")
+	if accountType != "Basic" && accountType != "Operation" && accountType != "Fees" {
+		return gopay.NULL, errors.New("account_type error, please reference: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7")
+	}
 	var (
 		bs        []byte
 		tlsConfig *tls.Config
 	)
+	bm.Set("sign_type", SignType_HMAC_SHA256)
 	if w.IsProd {
 		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 			return gopay.NULL, err
@@ -230,12 +283,16 @@ func (w *Client) DownloadFundFlow(bm gopay.BodyMap, certFilePath, keyFilePath, p
 //    貌似不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_17&index=11
 func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
+	err = bm.CheckEmptyError("nonce_str", "begin_time", "end_time", "offset")
+	if err != nil {
+		return gopay.NULL, err
+	}
 	var (
 		bs        []byte
 		tlsConfig *tls.Config
 	)
+	bm.Set("sign_type", SignType_HMAC_SHA256)
 	if w.IsProd {
-		bm.Set("sign_type", SignType_HMAC_SHA256)
 		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 			return gopay.NULL, err
 		}
@@ -253,10 +310,11 @@ func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, 
 // 企业向微信用户个人付款
 //    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
-//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_1
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
 func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *TransfersResponse, err error) {
-	if certFilePath == gopay.NULL || keyFilePath == gopay.NULL || pkcs12FilePath == gopay.NULL {
-		return nil, errors.New("cert file path not allow to input null")
+	err = bm.CheckEmptyError("nonce_str", "partner_trade_no", "openid", "check_name", "amount", "desc", "spbill_create_ip")
+	if err != nil {
+		return nil, err
 	}
 	bm.Set("mch_appid", w.AppId)
 	bm.Set("mchid", w.MchId)
