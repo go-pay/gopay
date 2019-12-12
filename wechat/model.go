@@ -58,6 +58,42 @@ const (
 	SignType_HMAC_SHA256 = "HMAC-SHA256"
 )
 
+// Notify
+type NotifyRequest struct {
+	ReturnCode         string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg          string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode         string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode            string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes         string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	Appid              string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId              string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	DeviceInfo         string `xml:"device_info,omitempty" json:"device_info,omitempty"`
+	NonceStr           string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign               string `xml:"sign,omitempty" json:"sign,omitempty"`
+	SignType           string `xml:"sign_type,omitempty" json:"sign_type,omitempty"`
+	Openid             string `xml:"openid,omitempty" json:"openid,omitempty"`
+	IsSubscribe        string `xml:"is_subscribe,omitempty" json:"is_subscribe,omitempty"`
+	TradeType          string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
+	BankType           string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
+	TotalFee           int    `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
+	SettlementTotalFee int    `xml:"settlement_total_fee,omitempty" json:"settlement_total_fee,omitempty"`
+	FeeType            string `xml:"fee_type,omitempty" json:"fee_type,omitempty"`
+	CashFee            int    `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
+	CashFeeType        string `xml:"cash_fee_type,omitempty" json:"cash_fee_type,omitempty"`
+	CouponFee          int    `xml:"coupon_fee,omitempty" json:"coupon_fee,omitempty"`
+	CouponCount        int    `xml:"coupon_count,omitempty" json:"coupon_count,omitempty"`
+	CouponType0        string `xml:"coupon_type_0,omitempty" json:"coupon_type_0,omitempty"`
+	CouponType1        string `xml:"coupon_type_1,omitempty" json:"coupon_type_1,omitempty"`
+	CouponId0          string `xml:"coupon_id_0,omitempty" json:"coupon_id_0,omitempty"`
+	CouponId1          string `xml:"coupon_id_1,omitempty" json:"coupon_id_1,omitempty"`
+	CouponFee0         int    `xml:"coupon_fee_0,omitempty" json:"coupon_fee_0,omitempty"`
+	CouponFee1         int    `xml:"coupon_fee_1,omitempty" json:"coupon_fee_1,omitempty"`
+	TransactionId      string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
+	OutTradeNo         string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
+	Attach             string `xml:"attach,omitempty" json:"attach,omitempty"`
+	TimeEnd            string `xml:"time_end,omitempty" json:"time_end,omitempty"`
+}
+
 type UnifiedOrderResponse struct {
 	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
 	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
@@ -272,41 +308,6 @@ type getSignKeyResponse struct {
 	ReturnMsg      string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
 	MchId          string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
 	SandboxSignkey string `xml:"sandbox_signkey,omitempty" json:"sandbox_signkey,omitempty"`
-}
-
-type NotifyRequest struct {
-	ReturnCode         string `xml:"return_code,omitempty" json:"return_code,omitempty"`
-	ReturnMsg          string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
-	ResultCode         string `xml:"result_code,omitempty" json:"result_code,omitempty"`
-	ErrCode            string `xml:"err_code,omitempty" json:"err_code,omitempty"`
-	ErrCodeDes         string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
-	Appid              string `xml:"appid,omitempty" json:"appid,omitempty"`
-	MchId              string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
-	DeviceInfo         string `xml:"device_info,omitempty" json:"device_info,omitempty"`
-	NonceStr           string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
-	Sign               string `xml:"sign,omitempty" json:"sign,omitempty"`
-	SignType           string `xml:"sign_type,omitempty" json:"sign_type,omitempty"`
-	Openid             string `xml:"openid,omitempty" json:"openid,omitempty"`
-	IsSubscribe        string `xml:"is_subscribe,omitempty" json:"is_subscribe,omitempty"`
-	TradeType          string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
-	BankType           string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
-	TotalFee           int    `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
-	SettlementTotalFee int    `xml:"settlement_total_fee,omitempty" json:"settlement_total_fee,omitempty"`
-	FeeType            string `xml:"fee_type,omitempty" json:"fee_type,omitempty"`
-	CashFee            int    `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
-	CashFeeType        string `xml:"cash_fee_type,omitempty" json:"cash_fee_type,omitempty"`
-	CouponFee          int    `xml:"coupon_fee,omitempty" json:"coupon_fee,omitempty"`
-	CouponCount        int    `xml:"coupon_count,omitempty" json:"coupon_count,omitempty"`
-	CouponType0        string `xml:"coupon_type_0,omitempty" json:"coupon_type_0,omitempty"`
-	CouponType1        string `xml:"coupon_type_1,omitempty" json:"coupon_type_1,omitempty"`
-	CouponId0          string `xml:"coupon_id_0,omitempty" json:"coupon_id_0,omitempty"`
-	CouponId1          string `xml:"coupon_id_1,omitempty" json:"coupon_id_1,omitempty"`
-	CouponFee0         int    `xml:"coupon_fee_0,omitempty" json:"coupon_fee_0,omitempty"`
-	CouponFee1         int    `xml:"coupon_fee_1,omitempty" json:"coupon_fee_1,omitempty"`
-	TransactionId      string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
-	OutTradeNo         string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
-	Attach             string `xml:"attach,omitempty" json:"attach,omitempty"`
-	TimeEnd            string `xml:"time_end,omitempty" json:"time_end,omitempty"`
 }
 
 type RefundNotifyRequest struct {

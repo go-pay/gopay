@@ -4,8 +4,12 @@ import (
 	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha256"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/hex"
 	"encoding/xml"
+	"errors"
+	"fmt"
 	"hash"
 	"io/ioutil"
 	"strings"
@@ -70,4 +74,44 @@ func getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign stri
 	}
 	h.Write([]byte(bm.EncodeWeChatSignParams(apiKey)))
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
+}
+
+func (q *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath string) (tlsConfig *tls.Config, err error) {
+	var (
+		pkcs        []byte
+		certificate tls.Certificate
+		pkcsPool    = x509.NewCertPool()
+	)
+
+	if certFilePath == gopay.NULL && keyFilePath == gopay.NULL && pkcs12FilePath == gopay.NULL {
+		q.mu.RLock()
+		pkcsPool.AppendCertsFromPEM(q.Pkcs12File)
+		certificate, err = tls.X509KeyPair(q.CertFile, q.KeyFile)
+		q.mu.RUnlock()
+		if err != nil {
+			return nil, fmt.Errorf("tls.X509KeyPair：%s", err.Error())
+		}
+		tlsConfig = &tls.Config{
+			Certificates:       []tls.Certificate{certificate},
+			RootCAs:            pkcsPool,
+			InsecureSkipVerify: true}
+		return tlsConfig, nil
+	}
+
+	if certFilePath != gopay.NULL && keyFilePath != gopay.NULL && pkcs12FilePath != gopay.NULL {
+		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
+			return nil, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
+		}
+		pkcsPool.AppendCertsFromPEM(pkcs)
+		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
+			return nil, fmt.Errorf("tls.LoadX509KeyPair：%s", err.Error())
+		}
+		tlsConfig = &tls.Config{
+			Certificates:       []tls.Certificate{certificate},
+			RootCAs:            pkcsPool,
+			InsecureSkipVerify: true}
+		return tlsConfig, nil
+	}
+
+	return nil, errors.New("certificate file path must be all input or all input null")
 }

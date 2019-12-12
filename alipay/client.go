@@ -49,7 +49,7 @@ func (a *Client) TradeFastPayRefundQuery(bm gopay.BodyMap) (aliRsp *TradeFastpay
 		bs []byte
 	)
 	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
-		return nil, errors.New("out_trade_no and trade_no are not allowed to be NULL at the same time")
+		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.trade.fastpay.refund.query"); err != nil {
 		return
@@ -73,7 +73,7 @@ func (a *Client) TradeOrderSettle(bm gopay.BodyMap) (aliRsp *TradeOrderSettleRes
 		bs []byte
 	)
 	if bm.Get("out_request_no") == gopay.NULL || bm.Get("trade_no") == gopay.NULL {
-		return nil, errors.New("out_request_no or trade_no are not allowed to be NULL")
+		return nil, errors.New("out_request_no or trade_no are not allowed to be null")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.trade.order.settle"); err != nil {
 		return
@@ -97,7 +97,7 @@ func (a *Client) TradeCreate(bm gopay.BodyMap) (aliRsp *TradeCreateResponse, err
 		bs []byte
 	)
 	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("buyer_id") == gopay.NULL {
-		return nil, errors.New("out_trade_no and buyer_id are not allowed to be NULL at the same time")
+		return nil, errors.New("out_trade_no and buyer_id are not allowed to be null at the same time")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.trade.create"); err != nil {
 		return
@@ -121,7 +121,7 @@ func (a *Client) TradeClose(bm gopay.BodyMap) (aliRsp *TradeCloseResponse, err e
 		bs []byte
 	)
 	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
-		return nil, errors.New("out_trade_no and trade_no are not allowed to be NULL at the same time")
+		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.trade.close"); err != nil {
 		return
@@ -145,7 +145,7 @@ func (a *Client) TradeCancel(bm gopay.BodyMap) (aliRsp *TradeCancelResponse, err
 		bs []byte
 	)
 	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
-		return nil, errors.New("out_trade_no and trade_no are not allowed to be NULL at the same time")
+		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.trade.cancel"); err != nil {
 		return
@@ -169,7 +169,7 @@ func (a *Client) TradeRefund(bm gopay.BodyMap) (aliRsp *TradeRefundResponse, err
 		bs []byte
 	)
 	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
-		return nil, errors.New("out_trade_no and trade_no are not allowed to be NULL at the same time")
+		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.trade.refund"); err != nil {
 		return nil, err
@@ -193,7 +193,7 @@ func (a *Client) TradePageRefund(bm gopay.BodyMap) (aliRsp *TradePageRefundRespo
 		bs []byte
 	)
 	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
-		return nil, errors.New("out_trade_no and trade_no are not allowed to be NULL at the same time")
+		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.trade.page.refund"); err != nil {
 		return
@@ -215,7 +215,7 @@ func (a *Client) TradePageRefund(bm gopay.BodyMap) (aliRsp *TradePageRefundRespo
 func (a *Client) TradePrecreate(bm gopay.BodyMap) (aliRsp *TradePrecreateResponse, err error) {
 	var bs []byte
 	if bm.Get("out_trade_no") == gopay.NULL {
-		return nil, errors.New("out_trade_no is not allowed to be NULL")
+		return nil, errors.New("out_trade_no is not allowed to be null")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.trade.precreate"); err != nil {
 		return
@@ -241,7 +241,7 @@ func (a *Client) TradePrecreate(bm gopay.BodyMap) (aliRsp *TradePrecreateRespons
 func (a *Client) TradePay(bm gopay.BodyMap) (aliRsp *TradePayResponse, err error) {
 	var bs []byte
 	if bm.Get("out_trade_no") == gopay.NULL {
-		return nil, errors.New("out_trade_no is not allowed to be NULL")
+		return nil, errors.New("out_trade_no is not allowed to be null")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.trade.pay"); err != nil {
 		return
@@ -265,7 +265,7 @@ func (a *Client) TradeQuery(bm gopay.BodyMap) (aliRsp *TradeQueryResponse, err e
 		bs []byte
 	)
 	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
-		return nil, errors.New("out_trade_no and trade_no are not allowed to be NULL at the same time")
+		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.trade.query"); err != nil {
 		return
@@ -287,7 +287,7 @@ func (a *Client) TradeQuery(bm gopay.BodyMap) (aliRsp *TradeQueryResponse, err e
 func (a *Client) TradeAppPay(bm gopay.BodyMap) (payParam string, err error) {
 	var bs []byte
 	if bm.Get("out_trade_no") == gopay.NULL {
-		return gopay.NULL, errors.New("out_trade_no is not allowed to be NULL")
+		return gopay.NULL, errors.New("out_trade_no is not allowed to be null")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.trade.app.pay"); err != nil {
 		return gopay.NULL, err
@@ -301,7 +301,7 @@ func (a *Client) TradeAppPay(bm gopay.BodyMap) (payParam string, err error) {
 func (a *Client) TradeWapPay(bm gopay.BodyMap) (payUrl string, err error) {
 	var bs []byte
 	if bm.Get("out_trade_no") == gopay.NULL {
-		return gopay.NULL, errors.New("out_trade_no is not allowed to be NULL")
+		return gopay.NULL, errors.New("out_trade_no is not allowed to be null")
 	}
 	bm.Set("product_code", "QUICK_WAP_WAY")
 	if bs, err = a.doAliPay(bm, "alipay.trade.wap.pay"); err != nil {
@@ -316,7 +316,7 @@ func (a *Client) TradeWapPay(bm gopay.BodyMap) (payUrl string, err error) {
 func (a *Client) TradePagePay(bm gopay.BodyMap) (payUrl string, err error) {
 	var bs []byte
 	if bm.Get("out_trade_no") == gopay.NULL {
-		return gopay.NULL, errors.New("out_trade_no is not allowed to be NULL")
+		return gopay.NULL, errors.New("out_trade_no is not allowed to be null")
 	}
 	bm.Set("product_code", "FAST_INSTANT_TRADE_PAY")
 	if bs, err = a.doAliPay(bm, "alipay.trade.page.pay"); err != nil {
@@ -331,7 +331,7 @@ func (a *Client) TradePagePay(bm gopay.BodyMap) (payUrl string, err error) {
 func (a *Client) FundTransToaccountTransfer(bm gopay.BodyMap) (aliRsp *FundTransToaccountTransferResponse, err error) {
 	var bs []byte
 	if bm.Get("out_biz_no") == gopay.NULL {
-		return nil, errors.New("out_biz_no is not allowed to be NULL")
+		return nil, errors.New("out_biz_no is not allowed to be null")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.fund.trans.toaccount.transfer"); err != nil {
 		return
@@ -359,10 +359,10 @@ func (a *Client) TradeOrderinfoSync(body gopay.BodyMap) {
 func (a *Client) SystemOauthToken(bm gopay.BodyMap) (aliRsp *SystemOauthTokenResponse, err error) {
 	var bs []byte
 	if bm.Get("grant_type") == gopay.NULL {
-		return nil, errors.New("grant_type is not allowed to be NULL")
+		return nil, errors.New("grant_type is not allowed to be null")
 	}
 	if bm.Get("code") == gopay.NULL && bm.Get("refresh_token") == gopay.NULL {
-		return nil, errors.New("code and refresh_token are not allowed to be NULL at the same time")
+		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
 	}
 	if bs, err = systemOauthToken(a.AppId, a.PrivateKey, bm, "alipay.system.oauth.token", a.IsProd); err != nil {
 		return
@@ -404,10 +404,10 @@ func (a *Client) UserInfoShare() (aliRsp *UserInfoShareResponse, err error) {
 func (a *Client) OpenAuthTokenApp(bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppResponse, err error) {
 	var bs []byte
 	if bm.Get("grant_type") == gopay.NULL {
-		return nil, errors.New("grant_type is not allowed to be NULL")
+		return nil, errors.New("grant_type is not allowed to be null")
 	}
 	if bm.Get("code") == gopay.NULL && bm.Get("refresh_token") == gopay.NULL {
-		return nil, errors.New("code and refresh_token are not allowed to be NULL at the same time")
+		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.open.auth.token.app"); err != nil {
 		return
@@ -434,7 +434,7 @@ func (a *Client) ZhimaCreditScoreGet(bm gopay.BodyMap) (aliRsp *ZhimaCreditScore
 		bm.Set("product_code", "w1010100100000000001")
 	}
 	if bm.Get("transaction_id") == gopay.NULL {
-		return nil, errors.New("transaction_id is not allowed to be NULL")
+		return nil, errors.New("transaction_id is not allowed to be null")
 	}
 	if bs, err = a.doAliPay(bm, "zhima.credit.score.get"); err != nil {
 		return
@@ -458,16 +458,16 @@ func (a *Client) UserCertifyOpenInit(bm gopay.BodyMap) (aliRsp *UserCertifyOpenI
 		bs []byte
 	)
 	if bm.Get("biz_code") == gopay.NULL {
-		return nil, errors.New("biz_code is not allowed to be NULL")
+		return nil, errors.New("biz_code is not allowed to be null")
 	}
 	if bm.Get("outer_order_no") == gopay.NULL {
-		return nil, errors.New("outer_order_no is not allowed to be NULL")
+		return nil, errors.New("outer_order_no is not allowed to be null")
 	}
 	if bm.Get("identity_param") == gopay.NULL {
-		return nil, errors.New("identity_param is not allowed to be NULL")
+		return nil, errors.New("identity_param is not allowed to be null")
 	}
 	if bm.Get("merchant_config") == gopay.NULL {
-		return nil, errors.New("merchant_config is not allowed to be NULL")
+		return nil, errors.New("merchant_config is not allowed to be null")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.user.certify.open.initialize"); err != nil {
 		return
@@ -492,7 +492,7 @@ func (a *Client) UserCertifyOpenCertify(bm gopay.BodyMap) (certifyUrl string, er
 		bs []byte
 	)
 	if bm.Get("certify_id") == gopay.NULL {
-		return gopay.NULL, errors.New("certify_id is not allowed to be NULL")
+		return gopay.NULL, errors.New("certify_id is not allowed to be null")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.user.certify.open.certify"); err != nil {
 		return gopay.NULL, err
@@ -508,7 +508,7 @@ func (a *Client) UserCertifyOpenQuery(bm gopay.BodyMap) (aliRsp *UserCertifyOpen
 		bs []byte
 	)
 	if bm.Get("certify_id") == gopay.NULL {
-		return nil, errors.New("certify_id is not allowed to be NULL")
+		return nil, errors.New("certify_id is not allowed to be null")
 	}
 	if bs, err = a.doAliPay(bm, "alipay.user.certify.open.query"); err != nil {
 		return
