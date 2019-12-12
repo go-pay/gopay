@@ -21,12 +21,12 @@ import (
 //    certFile：apiclient_cert.pem byte数组
 //    keyFile：apiclient_key.pem byte数组
 //    pkcs12File：apiclient_cert.p12 byte数组
-func (w *Client) AddCertFileByte(certFile, keyFile, pkcs12File []byte) {
-	w.mu.Lock()
-	w.CertFile = certFile
-	w.KeyFile = keyFile
-	w.Pkcs12File = pkcs12File
-	w.mu.Unlock()
+func (q *Client) AddCertFileByte(certFile, keyFile, pkcs12File []byte) {
+	q.mu.Lock()
+	q.CertFile = certFile
+	q.KeyFile = keyFile
+	q.Pkcs12File = pkcs12File
+	q.mu.Unlock()
 }
 
 // 添加QQ证书 Path 路径
@@ -34,7 +34,7 @@ func (w *Client) AddCertFileByte(certFile, keyFile, pkcs12File []byte) {
 //    keyFilePath：apiclient_key.pem 路径
 //    pkcs12FilePath：apiclient_cert.p12 路径
 //    返回err
-func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath string) (err error) {
+func (q *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath string) (err error) {
 	cert, err := ioutil.ReadFile(certFilePath)
 	if err != nil {
 		return err
@@ -47,11 +47,11 @@ func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath strin
 	if err != nil {
 		return err
 	}
-	w.mu.Lock()
-	w.CertFile = cert
-	w.KeyFile = key
-	w.Pkcs12File = pkcs
-	w.mu.Unlock()
+	q.mu.Lock()
+	q.CertFile = cert
+	q.KeyFile = key
+	q.Pkcs12File = pkcs
+	q.mu.Unlock()
 	return nil
 }
 
