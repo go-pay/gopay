@@ -124,7 +124,7 @@ $ go get github.com/iGoogle-ink/gopay/v2
 
 * #### 查看 GoPay 版本
     * [版本更新记录](https://github.com/iGoogle-ink/gopay/blob/master/release_note.txt)
-    * 2.0+ 版本未经严格测试，如若有问题，请使用v1.4.8，兼容老版本
+    * 2.+ 版本未经严格测试，如若有问题，请使用 1.+ 版本，兼容老版本
 ```go
 import (
     "fmt"
