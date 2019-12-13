@@ -2,6 +2,7 @@ package wechat
 
 import (
 	"crypto/tls"
+	"crypto/x509"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -12,15 +13,14 @@ import (
 )
 
 type Client struct {
-	AppId      string
-	MchId      string
-	ApiKey     string
-	BaseURL    string
-	CertFile   []byte
-	KeyFile    []byte
-	Pkcs12File []byte
-	IsProd     bool
-	mu         sync.RWMutex
+	AppId       string
+	MchId       string
+	ApiKey      string
+	BaseURL     string
+	IsProd      bool
+	certificate tls.Certificate
+	certPool    *x509.CertPool
+	mu          sync.RWMutex
 }
 
 // 初始化微信客户端
@@ -54,7 +54,7 @@ func (w *Client) Micropay(bm gopay.BodyMap) (wxRsp *MicropayResponse, err error)
 	}
 	wxRsp = new(MicropayResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return
 }
@@ -78,7 +78,7 @@ func (w *Client) UnifiedOrder(bm gopay.BodyMap) (wxRsp *UnifiedOrderResponse, er
 	}
 	wxRsp = new(UnifiedOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return
 }
@@ -104,7 +104,7 @@ func (w *Client) QueryOrder(bm gopay.BodyMap) (wxRsp *QueryOrderResponse, err er
 	}
 	wxRsp = new(QueryOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return
 }
@@ -127,13 +127,13 @@ func (w *Client) CloseOrder(bm gopay.BodyMap) (wxRsp *CloseOrderResponse, err er
 	}
 	wxRsp = new(CloseOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return
 }
 
 // 撤销订单
-//    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
+//    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3
 func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *ReverseResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_trade_no")
@@ -157,13 +157,13 @@ func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 	}
 	wxRsp = new(ReverseResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return
 }
 
 // 申请退款
-//    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
+//    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
 func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *RefundResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_refund_no", "total_fee", "refund_fee")
@@ -190,7 +190,7 @@ func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 	}
 	wxRsp = new(RefundResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return
 }
@@ -216,7 +216,7 @@ func (w *Client) QueryRefund(bm gopay.BodyMap) (wxRsp *QueryRefundResponse, err 
 	}
 	wxRsp = new(QueryRefundResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return
 }
@@ -246,7 +246,7 @@ func (w *Client) DownloadBill(bm gopay.BodyMap) (wxRsp string, err error) {
 }
 
 // 下载资金账单
-//    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
+//    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    貌似不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7
 func (w *Client) DownloadFundFlow(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
@@ -279,7 +279,7 @@ func (w *Client) DownloadFundFlow(bm gopay.BodyMap, certFilePath, keyFilePath, p
 }
 
 // 拉取订单评价数据
-//    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
+//    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    貌似不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_17&index=11
 func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
@@ -308,7 +308,7 @@ func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, 
 }
 
 // 企业向微信用户个人付款
-//    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
+//    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
 func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *TransfersResponse, err error) {

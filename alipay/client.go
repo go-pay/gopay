@@ -533,7 +533,7 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 	)
 	if bm != nil {
 		if bodyBs, err = json.Marshal(bm); err != nil {
-			return nil, fmt.Errorf("json.Marshal：%s", err.Error())
+			return nil, fmt.Errorf("json.Marshal：%w", err)
 		}
 		bodyStr = string(bodyBs)
 	}

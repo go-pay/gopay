@@ -6,7 +6,7 @@
 QQ、微信、支付宝的Golang版本SDK
 
 ![Author](https://img.shields.io/badge/author-Jerry-blue.svg)
-[![Golang](https://img.shields.io/badge/golang-1.11+-brightgreen.svg)](https://golang.org)
+[![Golang](https://img.shields.io/badge/golang-1.13+-brightgreen.svg)](https://golang.org)
 [![Godoc](https://img.shields.io/badge/godoc-reference-informational.svg)](https://godoc.org/github.com/iGoogle-ink/gopay)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/iGoogle-ink/gopay)
 ![Travis (.org)](https://img.shields.io/travis/iGoogle-ink/gopay)
@@ -174,12 +174,6 @@ client := wechat.NewClient("wxdaa2ab9ef87b5497", mchId, apiKey, false)
 //    gopay.SoutheastAsia：东南亚
 //    gopay.Other：其他国家
 client.SetCountry(gopay.China)
-
-// 添加微信证书 Byte 数组
-//    certFile：apiclient_cert.pem byte数组
-//    keyFile：apiclient_key.pem byte数组
-//    pkcs12File：apiclient_cert.p12 byte数组
-client.AddCertFileByte()
 
 // 添加微信证书 Path 路径
 //    certFilePath：apiclient_cert.pem 路径

@@ -80,11 +80,11 @@ func GetSanBoxParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign str
 func ParseNotifyResultToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(2<<20))) // default 2MB change the size you want;
 	if err != nil {
-		return nil, fmt.Errorf("ioutil.ReadAll：%s", err.Error())
+		return nil, fmt.Errorf("ioutil.ReadAll：%w", err)
 	}
 	bm = make(gopay.BodyMap)
 	if err = xml.Unmarshal(bs, &bm); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return
 }
@@ -96,7 +96,7 @@ func ParseNotifyResultToBodyMap(req *http.Request) (bm gopay.BodyMap, err error)
 func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) {
 	notifyReq = new(NotifyRequest)
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
-		return nil, fmt.Errorf("xml.NewDecoder：%s", err.Error())
+		return nil, fmt.Errorf("xml.NewDecoder.Decode：%w", err)
 	}
 	return
 }
@@ -108,7 +108,7 @@ func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) 
 func ParseRefundNotifyResult(req *http.Request) (notifyReq *RefundNotifyRequest, err error) {
 	notifyReq = new(RefundNotifyRequest)
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
-		return nil, fmt.Errorf("xml.NewDecoder：%s", err.Error())
+		return nil, fmt.Errorf("xml.NewDecoder.Decode：%w", err)
 	}
 	return
 }
@@ -154,7 +154,7 @@ func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNot
 	bs = gopay.PKCS7UnPadding(encryptionB)
 	refundNotify = new(RefundNotify)
 	if err = xml.Unmarshal(bs, refundNotify); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return
 }
@@ -181,11 +181,11 @@ func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) 
 		goto Verify
 	}
 	if bs, err = json.Marshal(bean); err != nil {
-		return false, fmt.Errorf("json.Marshal：%s", err.Error())
+		return false, fmt.Errorf("json.Marshal(%s)：%w", string(bs), err)
 	}
 	bm = make(gopay.BodyMap)
 	if err = json.Unmarshal(bs, &bm); err != nil {
-		return false, fmt.Errorf("json.Unmarshal：%s", err.Error())
+		return false, fmt.Errorf("json.Marshal(%s)：%w", string(bs), err)
 	}
 Verify:
 	bodySign = bm.Get("sign")
@@ -344,7 +344,7 @@ func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr inter
 		return errors.New("encryptedData is error")
 	}
 	if block, err = aes.NewCipher(aesKey); err != nil {
-		return fmt.Errorf("aes.NewCipher：%s", err.Error())
+		return fmt.Errorf("aes.NewCipher：%w", err)
 	}
 	blockMode = cipher.NewCBCDecrypter(block, ivKey)
 	plainText = make([]byte, len(cipherText))
@@ -353,7 +353,7 @@ func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr inter
 		plainText = gopay.PKCS7UnPadding(plainText)
 	}
 	if err = json.Unmarshal(plainText, beanPtr); err != nil {
-		return fmt.Errorf("json.Unmarshal：%s", err.Error())
+		return fmt.Errorf("json.Marshal(%s)：%w", string(plainText), err)
 	}
 	return
 }
@@ -376,7 +376,7 @@ func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.Bo
 		return nil, errors.New("encryptedData is error")
 	}
 	if block, err = aes.NewCipher(aesKey); err != nil {
-		return nil, fmt.Errorf("aes.NewCipher：%s", err.Error())
+		return nil, fmt.Errorf("aes.NewCipher：%w", err)
 	} else {
 		blockMode = cipher.NewCBCDecrypter(block, ivKey)
 		plainText = make([]byte, len(cipherText))
@@ -386,7 +386,7 @@ func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.Bo
 		}
 		bm = make(gopay.BodyMap)
 		if err = json.Unmarshal(plainText, &bm); err != nil {
-			return nil, fmt.Errorf("json.Unmarshal：%s", err.Error())
+			return nil, fmt.Errorf("json.Marshal(%s)：%w", string(plainText), err)
 		}
 		return
 	}

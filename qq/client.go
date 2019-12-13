@@ -2,6 +2,7 @@ package qq
 
 import (
 	"crypto/tls"
+	"crypto/x509"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -12,13 +13,12 @@ import (
 )
 
 type Client struct {
-	MchId      string
-	ApiKey     string
-	CertFile   []byte
-	KeyFile    []byte
-	Pkcs12File []byte
-	IsProd     bool
-	mu         sync.RWMutex
+	MchId       string
+	ApiKey      string
+	IsProd      bool
+	certificate tls.Certificate
+	certPool    *x509.CertPool
+	mu          sync.RWMutex
 }
 
 // 初始化QQ客户端（正式环境）
@@ -48,7 +48,7 @@ func (q *Client) MicroPay(bm gopay.BodyMap) (qqRsp *MicroPayResponse, err error)
 	}
 	qqRsp = new(MicroPayResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return qqRsp, nil
 }
@@ -66,7 +66,7 @@ func (q *Client) Reverse(bm gopay.BodyMap) (qqRsp *ReverseResponse, err error) {
 	}
 	qqRsp = new(ReverseResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return qqRsp, nil
 }
@@ -84,7 +84,7 @@ func (q *Client) UnifiedOrder(bm gopay.BodyMap) (qqRsp *UnifiedOrderResponse, er
 	}
 	qqRsp = new(UnifiedOrderResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return qqRsp, nil
 }
@@ -105,7 +105,7 @@ func (q *Client) OrderQuery(bm gopay.BodyMap) (qqRsp *OrderQueryResponse, err er
 	}
 	qqRsp = new(OrderQueryResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return qqRsp, nil
 }
@@ -123,13 +123,13 @@ func (q *Client) CloseOrder(bm gopay.BodyMap) (qqRsp *CloseOrderResponse, err er
 	}
 	qqRsp = new(CloseOrderResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return qqRsp, nil
 }
 
 // 申请退款
-//    注意：如已使用client.AddCertFilePath()或client.AddCertFileByte()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
+//    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    文档地址：https://qpay.qq.com/buss/wiki/38/1207
 func (q *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (qqRsp *RefundResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_refund_no", "refund_fee", "op_user_id", "op_user_passwd")
@@ -149,7 +149,7 @@ func (q *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 	}
 	qqRsp = new(RefundResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return qqRsp, nil
 }
@@ -170,7 +170,7 @@ func (q *Client) RefundQuery(bm gopay.BodyMap) (qqRsp *RefundQueryResponse, err 
 	}
 	qqRsp = new(RefundQueryResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error())
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return qqRsp, nil
 }

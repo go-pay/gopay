@@ -125,14 +125,14 @@ func (c *Client) EndStruct(v interface{}) (res *http.Response, errs []error) {
 	case TypeJSON:
 		err := json.Unmarshal(bs, &v)
 		if err != nil {
-			c.Errors = append(c.Errors, fmt.Errorf("json.Unmarshal：%s", err.Error()))
+			c.Errors = append(c.Errors, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err))
 			return nil, c.Errors
 		}
 		return res, nil
 	case TypeXML:
 		err := xml.Unmarshal(bs, &v)
 		if err != nil {
-			c.Errors = append(c.Errors, fmt.Errorf("xml.Unmarshal(%s)：%s", string(bs), err.Error()))
+			c.Errors = append(c.Errors, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err))
 			return nil, c.Errors
 		}
 		return res, nil

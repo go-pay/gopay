@@ -89,15 +89,15 @@ func (a *Client) SetAliPayRootCertSN(aliPayRootCertSN string) (client *Client) {
 func (a *Client) SetCertSnByPath(appCertPath, aliPayRootCertPath, aliPayPublicCertPath string) (err error) {
 	appCertSn, err := GetCertSN(appCertPath)
 	if err != nil {
-		return fmt.Errorf("get app_cert_sn return err, but alse return alipay client. err: %v", err)
+		return fmt.Errorf("get app_cert_sn return err, but alse return alipay client. err: %w", err)
 	}
 	rootCertSn, err := GetRootCertSN(aliPayRootCertPath)
 	if err != nil {
-		return fmt.Errorf("get alipay_root_cert_sn return err, but alse return alipay client. err: %v", err)
+		return fmt.Errorf("get alipay_root_cert_sn return err, but alse return alipay client. err: %w", err)
 	}
 	publicCertSn, err := GetCertSN(aliPayPublicCertPath)
 	if err != nil {
-		return fmt.Errorf("get alipay_cert_sn return err, but alse return alipay client. err: %v", err)
+		return fmt.Errorf("get alipay_cert_sn return err, but alse return alipay client. err: %w", err)
 	}
 	a.mu.Lock()
 	a.AppCertSN = appCertSn

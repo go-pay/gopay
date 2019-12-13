@@ -40,18 +40,6 @@ func (w *Client) SetCountry(country Country) (client *Client) {
 	return w
 }
 
-// 添加微信证书 Byte 数组
-//    certFile：apiclient_cert.pem byte数组
-//    keyFile：apiclient_key.pem byte数组
-//    pkcs12File：apiclient_cert.p12 byte数组
-func (w *Client) AddCertFileByte(certFile, keyFile, pkcs12File []byte) {
-	w.mu.Lock()
-	w.CertFile = certFile
-	w.KeyFile = keyFile
-	w.Pkcs12File = pkcs12File
-	w.mu.Unlock()
-}
-
 // 添加微信证书 Path 路径
 //    certFilePath：apiclient_cert.pem 路径
 //    keyFilePath：apiclient_key.pem 路径
@@ -60,53 +48,62 @@ func (w *Client) AddCertFileByte(certFile, keyFile, pkcs12File []byte) {
 func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath string) (err error) {
 	cert, err := ioutil.ReadFile(certFilePath)
 	if err != nil {
-		return err
+		return fmt.Errorf("ioutil.ReadFile：%w", err)
 	}
 	key, err := ioutil.ReadFile(keyFilePath)
 	if err != nil {
-		return err
+		return fmt.Errorf("ioutil.ReadFile：%w", err)
 	}
 	pkcs, err := ioutil.ReadFile(pkcs12FilePath)
 	if err != nil {
-		return err
+		return fmt.Errorf("ioutil.ReadFile：%w", err)
 	}
+	certificate, err := tls.X509KeyPair(cert, key)
+	if err != nil {
+		return fmt.Errorf("tls.LoadX509KeyPair：%w", err)
+	}
+	pkcsPool := x509.NewCertPool()
+	pkcsPool.AppendCertsFromPEM(pkcs)
 	w.mu.Lock()
-	w.CertFile = cert
-	w.KeyFile = key
-	w.Pkcs12File = pkcs
+	w.certificate = certificate
+	w.certPool = pkcsPool
 	w.mu.Unlock()
 	return nil
 }
 
 func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath string) (tlsConfig *tls.Config, err error) {
-	var (
-		pkcs        []byte
-		certificate tls.Certificate
-		pkcsPool    = x509.NewCertPool()
-	)
 
 	if certFilePath == gopay.NULL && keyFilePath == gopay.NULL && pkcs12FilePath == gopay.NULL {
 		w.mu.RLock()
-		pkcsPool.AppendCertsFromPEM(w.Pkcs12File)
-		certificate, err = tls.X509KeyPair(w.CertFile, w.KeyFile)
-		w.mu.RUnlock()
-		if err != nil {
-			return nil, fmt.Errorf("tls.X509KeyPair：%s", err.Error())
+		defer w.mu.RUnlock()
+		if &w.certificate != nil && w.certPool != nil {
+			tlsConfig = &tls.Config{
+				Certificates:       []tls.Certificate{w.certificate},
+				RootCAs:            w.certPool,
+				InsecureSkipVerify: true,
+			}
+			return tlsConfig, nil
 		}
-		tlsConfig = &tls.Config{
-			Certificates:       []tls.Certificate{certificate},
-			RootCAs:            pkcsPool,
-			InsecureSkipVerify: true}
-		return tlsConfig, nil
 	}
 
 	if certFilePath != gopay.NULL && keyFilePath != gopay.NULL && pkcs12FilePath != gopay.NULL {
-		if pkcs, err = ioutil.ReadFile(pkcs12FilePath); err != nil {
-			return nil, fmt.Errorf("ioutil.ReadFile：%s", err.Error())
+		cert, err := ioutil.ReadFile(certFilePath)
+		if err != nil {
+			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
 		}
+		key, err := ioutil.ReadFile(keyFilePath)
+		if err != nil {
+			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
+		}
+		pkcs, err := ioutil.ReadFile(pkcs12FilePath)
+		if err != nil {
+			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
+		}
+		pkcsPool := x509.NewCertPool()
 		pkcsPool.AppendCertsFromPEM(pkcs)
-		if certificate, err = tls.LoadX509KeyPair(certFilePath, keyFilePath); err != nil {
-			return nil, fmt.Errorf("tls.LoadX509KeyPair：%s", err.Error())
+		certificate, err := tls.X509KeyPair(cert, key)
+		if err != nil {
+			return nil, fmt.Errorf("tls.LoadX509KeyPair：%w", err)
 		}
 		tlsConfig = &tls.Config{
 			Certificates:       []tls.Certificate{certificate},
