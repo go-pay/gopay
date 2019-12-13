@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/v2"
 )
 
 type Client struct {

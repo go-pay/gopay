@@ -3,7 +3,7 @@ package alipay
 import (
 	"fmt"
 
-	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gopay/v2/alipay"
 )
 
 func UserInfoShare() {

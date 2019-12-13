@@ -19,7 +19,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/v2"
 )
 
 // 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）

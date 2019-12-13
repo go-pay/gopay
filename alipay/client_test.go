@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/v2"
 )
 
 var (

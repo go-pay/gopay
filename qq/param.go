@@ -14,7 +14,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/v2"
 )
 
 // 添加QQ证书 Byte 数组

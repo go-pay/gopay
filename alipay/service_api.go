@@ -20,7 +20,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/v2"
 )
 
 // 允许进行 sn 提取的证书签名算法
