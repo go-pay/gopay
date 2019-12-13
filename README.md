@@ -153,7 +153,7 @@ QQ群：
 
 ## 1、初始化GoPay客户端并做配置（HTTP请求均默认设置tls.Config{InsecureSkipVerify: true}）
 
-* #### 微信客户端，如无需更改Appid、Mchid和ApiKey等参数，可在init()方法中初始化，全局适用
+* #### 微信
 
 微信官方文档：[官方文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 ```go
@@ -190,7 +190,7 @@ client.AddCertFilePath()
 
 ```
 
-* #### 支付宝，如无需更改Appid和PrivateKey等参数，可在init()方法中初始化，全局适用
+* #### 支付宝
 
 支付宝官方文档：[官方文档](https://docs.open.alipay.com/catalog)
 
