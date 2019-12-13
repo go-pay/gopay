@@ -12,17 +12,7 @@ QQ、微信、支付宝的Golang版本SDK
 ![Travis (.org)](https://img.shields.io/travis/iGoogle-ink/gopay)
 ![License](https://img.shields.io/github/license/iGoogle-ink/gopay)
 
-### 微信 Client
-
-* wechat.NewClient() => 初始化微信支付客户端
-
-```go
-import (
-	"github.com/iGoogle-ink/gopay/v2/wechat"
-)
-
-client := wechat.NewClient()
-```
+---
 
 ### 微信支付API
 
@@ -66,17 +56,25 @@ client := wechat.NewClient()
 
 ---
 
-### 支付宝 Client
+### QQ支付API
 
-* client := alipay.NewClient() => 初始化支付宝支付客户端
+* 提交付款码支付：client.MicroPay()
+* 撤销订单：client.Reverse()
+* 统一下单：client.UnifiedOrder()
+* 订单查询：client.OrderQuery()
+* 关闭订单：client.CloseOrder()
+* 申请退款：client.Refund()
+* 退款查询：client.RefundQuery()
+* 交易账单：client.StatementDown()
+* 资金账单：client.AccRoll()
 
-```go
-import (
-	"github.com/iGoogle-ink/gopay/v2/alipay"
-)
+### QQ公共API
 
-client := alipay.NewClient()
-```
+* qq.ParseNotifyResultToBodyMap() => 解析QQ支付异步通知的结果到BodyMap
+* qq.ParseNotifyResult() => 解析QQ支付异步通知的参数
+* qq.VerifySign() => QQ同步返回参数验签或异步通知参数验签
+
+---
 
 ### 支付宝支付API
 
@@ -115,6 +113,8 @@ client := alipay.NewClient()
 * alipay.VerifySyncSign() => 支付宝同步返回参数验签
 * alipay.DecryptOpenDataToStruct() => 解密支付宝开放数据到 结构体
 * alipay.DecryptOpenDataToBodyMap() => 解密支付宝开放数据到 BodyMap
+
+---
 
 # 一、安装
 

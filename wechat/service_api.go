@@ -169,26 +169,23 @@ func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) 
 	if bean == nil {
 		return false, errors.New("bean is nil")
 	}
-	var (
-		bm       gopay.BodyMap
-		bs       []byte
-		kind     reflect.Kind
-		bodySign string
-	)
-	kind = reflect.ValueOf(bean).Kind()
+	kind := reflect.ValueOf(bean).Kind()
 	if kind == reflect.Map {
-		bm = bean.(gopay.BodyMap)
-		goto Verify
+		bm := bean.(gopay.BodyMap)
+		bodySign := bm.Get("sign")
+		bm.Remove("sign")
+		return getReleaseSign(apiKey, signType, bm) == bodySign, nil
 	}
-	if bs, err = json.Marshal(bean); err != nil {
+
+	bs, err := json.Marshal(bean)
+	if err != nil {
 		return false, fmt.Errorf("json.Marshal(%s)：%w", string(bs), err)
 	}
-	bm = make(gopay.BodyMap)
+	bm := make(gopay.BodyMap)
 	if err = json.Unmarshal(bs, &bm); err != nil {
 		return false, fmt.Errorf("json.Marshal(%s)：%w", string(bs), err)
 	}
-Verify:
-	bodySign = bm.Get("sign")
+	bodySign := bm.Get("sign")
 	bm.Remove("sign")
 	return getReleaseSign(apiKey, signType, bm) == bodySign, nil
 }

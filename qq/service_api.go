@@ -1,11 +1,15 @@
 package qq
 
 import (
+	"encoding/json"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
+	"reflect"
+	"strings"
 
 	"github.com/iGoogle-ink/gopay/v2"
 )
@@ -35,5 +39,58 @@ func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) 
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
 		return nil, fmt.Errorf("xml.NewDecoder.Decode：%w", err)
 	}
+	return
+}
+
+// QQ同步返回参数验签或异步通知参数验签
+//    ApiKey：API秘钥值
+//    signType：签名类型（调用API方法时填写的类型）
+//    bean：微信同步返回的结构体 qqRsp 或 异步通知解析的结构体 notifyReq
+//    返回参数ok：是否验签通过
+//    返回参数err：错误信息
+func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) {
+	if bean == nil {
+		return false, errors.New("bean is nil")
+	}
+	kind := reflect.ValueOf(bean).Kind()
+	if kind == reflect.Map {
+		bm := bean.(gopay.BodyMap)
+		bodySign := bm.Get("sign")
+		bm.Remove("sign")
+		return getReleaseSign(apiKey, signType, bm) == bodySign, nil
+	}
+
+	bs, err := json.Marshal(bean)
+	if err != nil {
+		return false, fmt.Errorf("json.Marshal(%s)：%w", string(bs), err)
+	}
+	bm := make(gopay.BodyMap)
+	if err = json.Unmarshal(bs, &bm); err != nil {
+		return false, fmt.Errorf("json.Marshal(%s)：%w", string(bs), err)
+	}
+	bodySign := bm.Get("sign")
+	bm.Remove("sign")
+	return getReleaseSign(apiKey, signType, bm) == bodySign, nil
+}
+
+type NotifyResponse struct {
+	ReturnCode string `xml:"return_code"`
+	ReturnMsg  string `xml:"return_msg"`
+}
+
+// 返回数据给QQ
+func (w *NotifyResponse) ToXmlString() (xmlStr string) {
+	var buffer strings.Builder
+	buffer.WriteString("<xml><return_code>")
+	buffer.WriteString(w.ReturnCode)
+	buffer.WriteString("</return_code>")
+	if w.ReturnMsg != gopay.NULL {
+		buffer.WriteString("<return_msg>")
+		buffer.WriteString(w.ReturnMsg)
+		buffer.WriteString("</return_msg>")
+	}
+	buffer.WriteString("</xml>")
+
+	xmlStr = buffer.String()
 	return
 }

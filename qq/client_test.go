@@ -40,3 +40,14 @@ func TestClient_MicroPay(t *testing.T) {
 	}
 	fmt.Println("qqRsp:", *qqRsp)
 }
+
+func TestNotifyResponse_ToXmlString(t *testing.T) {
+	n := new(NotifyResponse)
+	n.ReturnCode = "SUCCESS"
+	fmt.Println(n.ToXmlString())
+
+	n.ReturnCode = "FAIL"
+	n.ReturnMsg = "abc"
+	fmt.Println(n.ToXmlString())
+
+}
