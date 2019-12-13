@@ -7,7 +7,7 @@ const (
 	SUCCESS    = "SUCCESS"
 	FAIL       = "FAIL"
 	OK         = "OK"
-	Version    = "2.0.0"
+	Version    = "2.0.1"
 )
 
 type ReturnMessage struct {
