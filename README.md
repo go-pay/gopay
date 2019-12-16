@@ -5,7 +5,6 @@
 
 QQ、微信、支付宝的Golang版本SDK
 
-![Author](https://img.shields.io/badge/author-Jerry-blue.svg)
 [![Golang](https://img.shields.io/badge/golang-1.13+-brightgreen.svg)](https://golang.org)
 [![Godoc](https://img.shields.io/badge/godoc-reference-informational.svg)](https://godoc.org/github.com/iGoogle-ink/gopay)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/iGoogle-ink/gopay)
