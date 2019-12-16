@@ -11,6 +11,27 @@ QQ、微信、支付宝的Golang版本SDK
 ![Travis (.org)](https://img.shields.io/travis/iGoogle-ink/gopay)
 ![License](https://img.shields.io/github/license/iGoogle-ink/gopay)
 
+# 一、安装
+
+```bash
+$ go get github.com/iGoogle-ink/gopay/v2
+```
+
+* #### 查看 GoPay 版本
+    * [版本更新记录](https://github.com/iGoogle-ink/gopay/blob/master/release_note.txt)
+    * 2.+ 版本未经严格测试，如若有问题，请使用 1.+ 版本，兼容老版本
+```go
+import (
+    "fmt"
+
+    "github.com/iGoogle-ink/gopay/v2"
+)
+
+func main() {
+    fmt.Println("GoPay Version: ", gopay.Version)
+}
+```
+
 ---
 
 ### 微信支付API
@@ -114,27 +135,6 @@ QQ、微信、支付宝的Golang版本SDK
 * alipay.DecryptOpenDataToBodyMap() => 解密支付宝开放数据到 BodyMap
 
 ---
-
-# 一、安装
-
-```bash
-$ go get github.com/iGoogle-ink/gopay/v2
-```
-
-* #### 查看 GoPay 版本
-    * [版本更新记录](https://github.com/iGoogle-ink/gopay/blob/master/release_note.txt)
-    * 2.+ 版本未经严格测试，如若有问题，请使用 1.+ 版本，兼容老版本
-```go
-import (
-    "fmt"
-
-    "github.com/iGoogle-ink/gopay/v2"
-)
-
-func main() {
-    fmt.Println("GoPay Version: ", gopay.Version)
-}
-```
 
 # 二、文档说明
 
