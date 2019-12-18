@@ -1,11 +1,12 @@
 版本号：Release 2.0.3
 发布时间：2019/12/18 16:25
 修改记录：
-   (1) 微信：新增Client方法：client.AuthCodeToOpenId()，授权码查询OpenId
+   (1) 微信：新增Client方法：client.AuthCodeToOpenId()，授权码查询OpenId（正式）
    (2) 微信：新增Client方法：client.Report()，交易保障
    (3) 微信：新增Client方法：client.EntrustPublic()，公众号纯签约（正式）
    (4) 微信：新增Client方法：client.EntrustAppPre()，APP纯签约-预签约接口-获取预签约ID（正式）
    (5) 微信：新增Client方法：client.EntrustH5()，H5纯签约（正式）
+   (5) 微信：新增Client方法：client.EntrustPaying()，支付中签约（正式）
 
 版本号：Release 2.0.2
 发布时间：2019/12/13 23:25

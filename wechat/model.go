@@ -37,20 +37,16 @@ const (
 	entrustQueryOrder = "pay/paporderquery"                     // 查询扣款订单
 
 	// SanBox
-	sandboxGetSignKey        = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
-	sandboxMicroPay          = "sandboxnew/pay/micropay"
-	sandboxUnifiedOrder      = "sandboxnew/pay/unifiedorder"
-	sandboxOrderQuery        = "sandboxnew/pay/orderquery"
-	sandboxCloseOrder        = "sandboxnew/pay/closeorder"
-	sandboxRefund            = "sandboxnew/pay/refund"
-	sandboxReverse           = "sandboxnew/pay/reverse"
-	sandboxRefundQuery       = "sandboxnew/pay/refundquery"
-	sandboxDownloadBill      = "sandboxnew/pay/downloadbill"
-	sandboxDownloadFundFlow  = "sandboxnew/pay/downloadfundflow"
-	sandboxReport            = "sandboxnew/payitil/report"
-	sandboxBatchQueryComment = "sandboxnew/billcommentsp/batchquerycomment"
-	sandboxAuthCodeToOpenid  = "sandboxnew/tools/authcodetoopenid"
-	sandboxEntrustH5         = "sandboxnew/papay/h5entrustweb"
+	sandboxGetSignKey   = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
+	sandboxMicroPay     = "sandboxnew/pay/micropay"
+	sandboxUnifiedOrder = "sandboxnew/pay/unifiedorder"
+	sandboxOrderQuery   = "sandboxnew/pay/orderquery"
+	sandboxCloseOrder   = "sandboxnew/pay/closeorder"
+	sandboxRefund       = "sandboxnew/pay/refund"
+	sandboxReverse      = "sandboxnew/pay/reverse"
+	sandboxRefundQuery  = "sandboxnew/pay/refundquery"
+	sandboxDownloadBill = "sandboxnew/pay/downloadbill"
+	sandboxReport       = "sandboxnew/payitil/report"
 
 	// 支付类型
 	TradeType_Mini   = "JSAPI"  // 小程序支付
@@ -352,6 +348,31 @@ type EntrustH5Response struct {
 	ResultCode  string `xml:"result_code,omitempty" json:"result_code,omitempty"`
 	ResultMsg   string `xml:"result_msg,omitempty" json:"result_msg,omitempty"`
 	RedirectUrl string `xml:"redirect_url,omitempty" json:"redirect_url,omitempty"`
+}
+
+type EntrustPayingResponse struct {
+	ReturnCode             string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg              string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode             string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	Appid                  string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId                  string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	DeviceInfo             string `xml:"device_info,omitempty" json:"device_info,omitempty"`
+	NonceStr               string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign                   string `xml:"sign,omitempty" json:"sign,omitempty"`
+	ErrCode                string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes             string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	ContractResultCode     string `xml:"contract_result_code,omitempty" json:"contract_result_code,omitempty"`
+	ContractErrCode        string `xml:"contract_err_code,omitempty" json:"contract_err_code,omitempty"`
+	ContractErrCodeDes     string `xml:"contract_err_code_des,omitempty" json:"contract_err_code_des,omitempty"`
+	PrepayId               string `xml:"prepay_id,omitempty" json:"prepay_id,omitempty"`
+	TradeType              string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
+	CodeUrl                string `xml:"code_url,omitempty" json:"code_url,omitempty"`
+	PlanId                 int    `xml:"plan_id,omitempty" json:"plan_id,omitempty"`
+	RequestSerial          int    `xml:"request_serial,omitempty" json:"request_serial,omitempty"`
+	ContractCode           string `xml:"contract_code,omitempty" json:"contract_code,omitempty"`
+	ContractDisplayAccount string `xml:"contract_display_account,omitempty" json:"contract_display_account,omitempty"`
+	MwebUrl                string `xml:"mweb_url,omitempty" json:"mweb_url,omitempty"`
+	OutTradeNo             string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
 }
 
 type getSignKeyResponse struct {
