@@ -45,18 +45,41 @@ func (w *Client) Micropay(bm gopay.BodyMap) (wxRsp *MicropayResponse, err error)
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChat(bm, microPay, nil)
+		bs, err = w.doWeChatPost(bm, microPay, nil)
 	} else {
-		bs, err = w.doWeChat(bm, sandboxMicroPay, nil)
+		bs, err = w.doWeChatPost(bm, sandboxMicroPay, nil)
 	}
 	if err != nil {
-		return
+		return nil, err
 	}
 	wxRsp = new(MicropayResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return
+	return wxRsp, nil
+}
+
+// 授权码查询openid
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_13&index=9
+func (w *Client) AuthCodeToOpenId(bm gopay.BodyMap) (wxRsp *AuthCodeToOpenIdResponse, err error) {
+	err = bm.CheckEmptyError("nonce_str", "auth_code")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if w.IsProd {
+		bs, err = w.doWeChatPost(bm, authCodeToOpenid, nil)
+	} else {
+		bs, err = w.doWeChatPost(bm, sandboxAuthCodeToOpenid, nil)
+	}
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = new(AuthCodeToOpenIdResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+	}
+	return wxRsp, nil
 }
 
 // 统一下单
@@ -68,19 +91,19 @@ func (w *Client) UnifiedOrder(bm gopay.BodyMap) (wxRsp *UnifiedOrderResponse, er
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChat(bm, unifiedOrder, nil)
+		bs, err = w.doWeChatPost(bm, unifiedOrder, nil)
 	} else {
 		bm.Set("total_fee", 101)
-		bs, err = w.doWeChat(bm, sandboxUnifiedOrder, nil)
+		bs, err = w.doWeChatPost(bm, sandboxUnifiedOrder, nil)
 	}
 	if err != nil {
-		return
+		return nil, err
 	}
 	wxRsp = new(UnifiedOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return
+	return wxRsp, nil
 }
 
 // 查询订单
@@ -95,18 +118,18 @@ func (w *Client) QueryOrder(bm gopay.BodyMap) (wxRsp *QueryOrderResponse, err er
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChat(bm, orderQuery, nil)
+		bs, err = w.doWeChatPost(bm, orderQuery, nil)
 	} else {
-		bs, err = w.doWeChat(bm, sandboxOrderQuery, nil)
+		bs, err = w.doWeChatPost(bm, sandboxOrderQuery, nil)
 	}
 	if err != nil {
-		return
+		return nil, err
 	}
 	wxRsp = new(QueryOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return
+	return wxRsp, nil
 }
 
 // 关闭订单
@@ -118,18 +141,18 @@ func (w *Client) CloseOrder(bm gopay.BodyMap) (wxRsp *CloseOrderResponse, err er
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChat(bm, closeOrder, nil)
+		bs, err = w.doWeChatPost(bm, closeOrder, nil)
 	} else {
-		bs, err = w.doWeChat(bm, sandboxCloseOrder, nil)
+		bs, err = w.doWeChatPost(bm, sandboxCloseOrder, nil)
 	}
 	if err != nil {
-		return
+		return nil, err
 	}
 	wxRsp = new(CloseOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return
+	return wxRsp, nil
 }
 
 // 撤销订单
@@ -148,18 +171,18 @@ func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 			return nil, err
 		}
-		bs, err = w.doWeChat(bm, reverse, tlsConfig)
+		bs, err = w.doWeChatPost(bm, reverse, tlsConfig)
 	} else {
-		bs, err = w.doWeChat(bm, sandboxReverse, nil)
+		bs, err = w.doWeChatPost(bm, sandboxReverse, nil)
 	}
 	if err != nil {
-		return
+		return nil, err
 	}
 	wxRsp = new(ReverseResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return
+	return wxRsp, nil
 }
 
 // 申请退款
@@ -181,18 +204,18 @@ func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 			return nil, err
 		}
-		bs, err = w.doWeChat(bm, refund, tlsConfig)
+		bs, err = w.doWeChatPost(bm, refund, tlsConfig)
 	} else {
-		bs, err = w.doWeChat(bm, sandboxRefund, nil)
+		bs, err = w.doWeChatPost(bm, sandboxRefund, nil)
 	}
 	if err != nil {
-		return
+		return nil, err
 	}
 	wxRsp = new(RefundResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return
+	return wxRsp, nil
 }
 
 // 查询退款
@@ -207,18 +230,18 @@ func (w *Client) QueryRefund(bm gopay.BodyMap) (wxRsp *QueryRefundResponse, err 
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChat(bm, refundQuery, nil)
+		bs, err = w.doWeChatPost(bm, refundQuery, nil)
 	} else {
-		bs, err = w.doWeChat(bm, sandboxRefundQuery, nil)
+		bs, err = w.doWeChatPost(bm, sandboxRefundQuery, nil)
 	}
 	if err != nil {
-		return
+		return nil, err
 	}
 	wxRsp = new(QueryRefundResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return
+	return wxRsp, nil
 }
 
 // 下载对账单
@@ -234,15 +257,14 @@ func (w *Client) DownloadBill(bm gopay.BodyMap) (wxRsp string, err error) {
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChat(bm, downloadBill, nil)
+		bs, err = w.doWeChatPost(bm, downloadBill, nil)
 	} else {
-		bs, err = w.doWeChat(bm, sandboxDownloadBill, nil)
+		bs, err = w.doWeChatPost(bm, sandboxDownloadBill, nil)
 	}
 	if err != nil {
-		return
+		return gopay.NULL, err
 	}
-	wxRsp = string(bs)
-	return
+	return string(bs), nil
 }
 
 // 下载资金账单
@@ -267,15 +289,43 @@ func (w *Client) DownloadFundFlow(bm gopay.BodyMap, certFilePath, keyFilePath, p
 		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 			return gopay.NULL, err
 		}
-		bs, err = w.doWeChat(bm, downloadFundFlow, tlsConfig)
+		bs, err = w.doWeChatPost(bm, downloadFundFlow, tlsConfig)
 	} else {
-		bs, err = w.doWeChat(bm, sandboxDownloadFundFlow, nil)
+		bs, err = w.doWeChatPost(bm, sandboxDownloadFundFlow, nil)
 	}
 	if err != nil {
-		return
+		return gopay.NULL, err
 	}
 	wxRsp = string(bs)
 	return
+}
+
+// 交易保障
+//    文档地址：（JSAPI）https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_8&index=9
+//    文档地址：（付款码）https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_14&index=8
+//    文档地址：（Native）https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=9_8&index=9
+//    文档地址：（APP）https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_8&index=10
+//    文档地址：（H5）https://pay.weixin.qq.com/wiki/doc/api/H5.php?chapter=9_8&index=9
+//    文档地址：（微信小程序）https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_8&index=9
+func (w *Client) Report(bm gopay.BodyMap) (wxRsp *ReportResponse, err error) {
+	err = bm.CheckEmptyError("nonce_str", "interface_url", "execute_time", "return_code", "return_msg", "result_code", "user_ip")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if w.IsProd {
+		bs, err = w.doWeChatPost(bm, report, nil)
+	} else {
+		bs, err = w.doWeChatPost(bm, sandboxReport, nil)
+	}
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = new(ReportResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+	}
+	return wxRsp, nil
 }
 
 // 拉取订单评价数据
@@ -296,18 +346,17 @@ func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, 
 		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 			return gopay.NULL, err
 		}
-		bs, err = w.doWeChat(bm, batchQueryComment, tlsConfig)
+		bs, err = w.doWeChatPost(bm, batchQueryComment, tlsConfig)
 	} else {
-		bs, err = w.doWeChat(bm, sandboxBatchQueryComment, nil)
+		bs, err = w.doWeChatPost(bm, sandboxBatchQueryComment, nil)
 	}
 	if err != nil {
-		return
+		return gopay.NULL, err
 	}
-	wxRsp = string(bs)
-	return
+	return string(bs), nil
 }
 
-// 企业向微信用户个人付款
+// 企业向微信用户个人付款（正式）
 //    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
@@ -344,20 +393,77 @@ func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fil
 	return wxRsp, nil
 }
 
-// 公众号纯签约（未完成）
+// 公众号纯签约（正式）
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/pap.php?chapter=18_1&index=1
-func (w *Client) EntrustPublic(bm gopay.BodyMap) (bs []byte, err error) {
-	bs, err = w.doWeChat(bm, entrustPublic, nil)
-
-	return nil, nil
+func (w *Client) EntrustPublic(bm gopay.BodyMap) (wxRsp *EntrustPublicResponse, err error) {
+	err = bm.CheckEmptyError("plan_id", "contract_code", "request_serial", "contract_display_account", "notify_url", "version", "timestamp")
+	if err != nil {
+		return nil, err
+	}
+	bs, err := w.doWeChatGet(bm, entrustPublic, SignType_MD5)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = new(EntrustPublicResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+	}
+	return wxRsp, nil
 }
 
-// 向微信发送请求
-func (w *Client) doWeChat(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
-	var url = baseUrlCh + path
+// APP纯签约-预签约接口-获取预签约ID（正式）
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/pap.php?chapter=18_5&index=2
+func (w *Client) EntrustAppPre(bm gopay.BodyMap) (wxRsp *EntrustAppPreResponse, err error) {
+	err = bm.CheckEmptyError("plan_id", "contract_code", "request_serial", "contract_display_account", "notify_url", "version", "timestamp")
+	if err != nil {
+		return nil, err
+	}
+	var url = baseUrlCh + entrustApp
 	bm.Set("appid", w.AppId)
 	bm.Set("mch_id", w.MchId)
+	bm.Set("sign", getReleaseSign(w.ApiKey, bm.Get("sign_type"), bm))
+	httpClient := gopay.NewHttpClient().Type(gopay.TypeXML)
+	if w.BaseURL != gopay.NULL {
+		w.mu.RLock()
+		url = w.BaseURL + entrustApp
+		w.mu.RUnlock()
+	}
+	wxRsp = new(EntrustAppPreResponse)
+	res, errs := httpClient.Post(url).SendString(generateXml(bm)).EndStruct(wxRsp)
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	return wxRsp, nil
+}
 
+// H5纯签约（正式）
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/pap.php?chapter=18_16&index=4
+func (w *Client) EntrustH5(bm gopay.BodyMap) (wxRsp *EntrustH5Response, err error) {
+	err = bm.CheckEmptyError("plan_id", "contract_code", "request_serial", "contract_display_account", "notify_url", "version", "timestamp", "clientip")
+	if err != nil {
+		return nil, err
+	}
+	bs, err := w.doWeChatGet(bm, entrustH5, SignType_HMAC_SHA256)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = new(EntrustH5Response)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+	}
+	return wxRsp, nil
+}
+
+// Post请求
+func (w *Client) doWeChatPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
+	var url = baseUrlCh + path
+	w.mu.RLock()
+	defer w.mu.RUnlock()
+	bm.Set("appid", w.AppId)
+	bm.Set("mch_id", w.MchId)
 	if bm.Get("sign") == gopay.NULL {
 		var sign string
 		if !w.IsProd {
@@ -376,13 +482,9 @@ func (w *Client) doWeChat(bm gopay.BodyMap, path string, tlsConfig *tls.Config) 
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
-
 	if w.BaseURL != gopay.NULL {
-		w.mu.RLock()
 		url = w.BaseURL + path
-		w.mu.RUnlock()
 	}
-
 	res, bs, errs := httpClient.Type(gopay.TypeXML).Post(url).SendString(generateXml(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
@@ -390,7 +492,38 @@ func (w *Client) doWeChat(bm gopay.BodyMap, path string, tlsConfig *tls.Config) 
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
 	}
-	if strings.Contains(string(bs), "HTML") {
+	if strings.Contains(string(bs), "HTML") || strings.Contains(string(bs), "html") {
+		return nil, errors.New(string(bs))
+	}
+	return bs, nil
+}
+
+// Get请求
+func (w *Client) doWeChatGet(bm gopay.BodyMap, path, signType string) (bs []byte, err error) {
+	var url = baseUrlCh + path
+	w.mu.RLock()
+	defer w.mu.RUnlock()
+	bm.Set("appid", w.AppId)
+	bm.Set("mch_id", w.MchId)
+	bm.Remove("sign")
+	sign := getReleaseSign(w.ApiKey, signType, bm)
+	bm.Set("sign", sign)
+
+	if w.BaseURL != gopay.NULL {
+		w.mu.RLock()
+		url = w.BaseURL + path
+		w.mu.RUnlock()
+	}
+	param := bm.EncodeGetParams()
+	url = url + "?" + param
+	res, bs, errs := gopay.NewHttpClient().Get(url).EndBytes()
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	if strings.Contains(string(bs), "HTML") || strings.Contains(string(bs), "html") {
 		return nil, errors.New(string(bs))
 	}
 	return bs, nil

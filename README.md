@@ -42,6 +42,7 @@ func main() {
     * APP - app支付
     * MWEB - H5支付
 * 提交付款码支付：client.Micropay()
+* 授权码查询OpenId：client.AuthCodeToOpenId()
 * 查询订单：client.QueryOrder()
 * 关闭订单：client.CloseOrder()
 * 撤销订单：client.Reverse()
@@ -49,8 +50,12 @@ func main() {
 * 查询退款：client.QueryRefund()
 * 下载对账单：client.DownloadBill()
 * 下载资金账单：client.DownloadFundFlow()
+* 交易保障：client.Report()
 * 拉取订单评价数据：client.BatchQueryComment()
-* 企业向微信用户个人付款：client.Transfer()
+* 企业向微信用户个人付款（正式）：client.Transfer()
+* 公众号纯签约（正式）：client.EntrustPublic()
+* APP纯签约-预签约接口-获取预签约ID（正式）：client.EntrustAppPre()
+* H5纯签约（正式）：client.EntrustH5()
 
 ### 微信公共API
 

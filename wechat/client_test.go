@@ -292,6 +292,67 @@ func TestClient_BatchQueryComment(t *testing.T) {
 	fmt.Println("wxRsp：", wxRsp)
 }
 
+func TestClient_EntrustPublic(t *testing.T) {
+	// 初始化参数结构体
+	bm := make(gopay.BodyMap)
+	bm.Set("plan_id", "12535")
+	bm.Set("contract_code", "100000")
+	bm.Set("request_serial", "1000")
+	bm.Set("contract_display_account", "微信代扣")
+	bm.Set("notify_url", "https://www.igoogle.ink")
+	bm.Set("version", "1.0")
+	bm.Set("timestamp", time.Now().Unix())
+
+	// 公众号纯签约
+	wxRsp, err := client.EntrustPublic(bm)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Println("wxRsp：", wxRsp)
+}
+
+func TestClient_EntrustAppPre(t *testing.T) {
+	// 初始化参数结构体
+	bm := make(gopay.BodyMap)
+	bm.Set("plan_id", "12535")
+	bm.Set("contract_code", "100000")
+	bm.Set("request_serial", "1000")
+	bm.Set("contract_display_account", "微信代扣")
+	bm.Set("notify_url", "https://www.igoogle.ink")
+	bm.Set("version", "1.0")
+	bm.Set("timestamp", time.Now().Unix())
+
+	// APP纯签约
+	wxRsp, err := client.EntrustAppPre(bm)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Println("wxRsp：", wxRsp)
+}
+
+func TestClient_EntrustH5(t *testing.T) {
+	// 初始化参数结构体
+	bm := make(gopay.BodyMap)
+	bm.Set("plan_id", "12535")
+	bm.Set("contract_code", "100000")
+	bm.Set("request_serial", "1000")
+	bm.Set("contract_display_account", "微信代扣")
+	bm.Set("notify_url", "https://www.igoogle.ink")
+	bm.Set("version", "1.0")
+	bm.Set("timestamp", time.Now().Unix())
+	bm.Set("clientip", "127.0.0.1")
+
+	// H5纯签约
+	wxRsp, err := client.EntrustH5(bm)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Println("wxRsp：", wxRsp)
+}
+
 // =======================
 
 func TestDecryptOpenDataToStruct(t *testing.T) {
