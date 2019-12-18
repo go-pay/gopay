@@ -8,43 +8,43 @@ const (
 	Other         Country = 4 // 其他国家
 
 	// URL
-	wxBaseUrlCh  = "https://api.mch.weixin.qq.com/"   //中国国内
-	wxBaseUrlCh2 = "https://api2.mch.weixin.qq.com/"  //中国国内
-	wxBaseUrlHk  = "https://apihk.mch.weixin.qq.com/" //东南亚
-	wxBaseUrlUs  = "https://apius.mch.weixin.qq.com/" //其他
+	baseUrlCh  = "https://api.mch.weixin.qq.com/"   //中国国内
+	baseUrlCh2 = "https://api2.mch.weixin.qq.com/"  //中国国内
+	baseUrlHk  = "https://apihk.mch.weixin.qq.com/" //东南亚
+	baseUrlUs  = "https://apius.mch.weixin.qq.com/" //其他
 
 	// 正式
-	wxMicropay          = "pay/micropay"                          //提交付款码支付
-	wxUnifiedorder      = "pay/unifiedorder"                      //统一下单
-	wxOrderquery        = "pay/orderquery"                        //查询订单
-	wxCloseorder        = "pay/closeorder"                        //关闭订单
-	wxRefund            = "secapi/pay/refund"                     //申请退款
-	wxReverse           = "secapi/pay/reverse"                    //撤销订单
-	wxRefundquery       = "pay/refundquery"                       //查询退款
-	wxDownloadbill      = "pay/downloadbill"                      //下载对账单
-	wxDownloadfundflow  = "pay/downloadfundflow"                  //下载资金账单
-	wxBatchquerycomment = "billcommentsp/batchquerycomment"       //拉取订单评价数据
-	wxTransfers         = "mmpaymkttransfers/promotion/transfers" //企业向微信用户个人付款
-	wxEntrustPublic     = "papay/entrustweb"                      //公众号纯签约
-	wxEntrustApp        = "papay/preentrustweb"                   //APP纯签约
-	wxEntrustH5         = "papay/h5entrustweb"                    //H5纯签约
-	wxEntrustQuery      = "papay/querycontract"                   //查询签约关系
-	wxEntrustDelete     = "papay/deletecontract"                  //申请解约
-	wxEntrustApplyPay   = "pay/pappayapply"                       //申请扣款
-	wxEntrustQueryOrder = "pay/paporderquery"                     //查询扣款订单
+	microPay          = "pay/micropay"                          //提交付款码支付
+	unifiedOrder      = "pay/unifiedorder"                      //统一下单
+	orderQuery        = "pay/orderquery"                        //查询订单
+	closeOrder        = "pay/closeorder"                        //关闭订单
+	refund            = "secapi/pay/refund"                     //申请退款
+	reverse           = "secapi/pay/reverse"                    //撤销订单
+	refundQuery       = "pay/refundquery"                       //查询退款
+	downloadBill      = "pay/downloadbill"                      //下载对账单
+	downloadFundFlow  = "pay/downloadfundflow"                  //下载资金账单
+	batchQueryComment = "billcommentsp/batchquerycomment"       //拉取订单评价数据
+	transfers         = "mmpaymkttransfers/promotion/transfers" //企业向微信用户个人付款
+	entrustPublic     = "papay/entrustweb"                      //公众号纯签约
+	entrustApp        = "papay/preentrustweb"                   //APP纯签约
+	entrustH5         = "papay/h5entrustweb"                    //H5纯签约
+	entrustQuery      = "papay/querycontract"                   //查询签约关系
+	entrustDelete     = "papay/deletecontract"                  //申请解约
+	entrustApplyPay   = "pay/pappayapply"                       //申请扣款
+	entrustQueryOrder = "pay/paporderquery"                     //查询扣款订单
 
 	// SanBox
-	wxSandboxGetsignkey        = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
-	wxSandboxMicropay          = "sandboxnew/pay/micropay"
-	wxSandboxUnifiedorder      = "sandboxnew/pay/unifiedorder"
-	wxSandboxOrderquery        = "sandboxnew/pay/orderquery"
-	wxSandboxCloseorder        = "sandboxnew/pay/closeorder"
-	wxSandboxRefund            = "sandboxnew/pay/refund"
-	wxSandboxReverse           = "sandboxnew/pay/reverse"
-	wxSandboxRefundquery       = "sandboxnew/pay/refundquery"
-	wxSandboxDownloadbill      = "sandboxnew/pay/downloadbill"
-	wxSandboxDownloadfundflow  = "sandboxnew/pay/downloadfundflow"
-	wxSandboxBatchquerycomment = "sandboxnew/billcommentsp/batchquerycomment"
+	sandboxGetSignKey        = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
+	sandboxMicroPay          = "sandboxnew/pay/micropay"
+	sandboxUnifiedOrder      = "sandboxnew/pay/unifiedorder"
+	sandboxOrderQuery        = "sandboxnew/pay/orderquery"
+	sandboxCloseOrder        = "sandboxnew/pay/closeorder"
+	sandboxRefund            = "sandboxnew/pay/refund"
+	sandboxReverse           = "sandboxnew/pay/reverse"
+	sandboxRefundQuery       = "sandboxnew/pay/refundquery"
+	sandboxDownloadBill      = "sandboxnew/pay/downloadbill"
+	sandboxDownloadFundFlow  = "sandboxnew/pay/downloadfundflow"
+	sandboxBatchQueryComment = "sandboxnew/billcommentsp/batchquerycomment"
 
 	// 支付类型
 	TradeType_Mini   = "JSAPI"  // 小程序支付

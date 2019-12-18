@@ -2,15 +2,15 @@ package qq
 
 const (
 	// URL
-	qqUnifiedOrder  = "https://qpay.qq.com/cgi-bin/pay/qpay_unified_order.cgi"              // 统一下单
-	qqMicroPay      = "https://qpay.qq.com/cgi-bin/pay/qpay_micro_pay.cgi"                  // 提交付款码支付
-	qqOrderQuery    = "https://qpay.qq.com/cgi-bin/pay/qpay_order_query.cgi"                // 订单查询
-	qqOrderClose    = "https://qpay.qq.com/cgi-bin/pay/qpay_close_order.cgi"                // 关闭订单
-	qqRefundQuery   = "https://qpay.qq.com/cgi-bin/pay/qpay_refund_query.cgi"               // 退款查询
-	qqStatementDown = "https://qpay.qq.com/cgi-bin/sp_download/qpay_mch_statement_down.cgi" // 交易账单
-	qqAccRoll       = "https://qpay.qq.com/cgi-bin/sp_download/qpay_mch_acc_roll.cgi"       // 资金账单
-	qqReverse       = "https://api.qpay.qq.com/cgi-bin/pay/qpay_reverse.cgi"                // 撤销订单
-	qqRefund        = "https://api.qpay.qq.com/cgi-bin/pay/qpay_refund.cgi"                 // 申请退款
+	unifiedOrder  = "https://qpay.qq.com/cgi-bin/pay/qpay_unified_order.cgi"              // 统一下单
+	microPay      = "https://qpay.qq.com/cgi-bin/pay/qpay_micro_pay.cgi"                  // 提交付款码支付
+	orderQuery    = "https://qpay.qq.com/cgi-bin/pay/qpay_order_query.cgi"                // 订单查询
+	orderClose    = "https://qpay.qq.com/cgi-bin/pay/qpay_close_order.cgi"                // 关闭订单
+	refundQuery   = "https://qpay.qq.com/cgi-bin/pay/qpay_refund_query.cgi"               // 退款查询
+	statementDown = "https://qpay.qq.com/cgi-bin/sp_download/qpay_mch_statement_down.cgi" // 交易账单
+	accRoll       = "https://qpay.qq.com/cgi-bin/sp_download/qpay_mch_acc_roll.cgi"       // 资金账单
+	reverse       = "https://api.qpay.qq.com/cgi-bin/pay/qpay_reverse.cgi"                // 撤销订单
+	refund        = "https://api.qpay.qq.com/cgi-bin/pay/qpay_refund.cgi"                 // 申请退款
 
 	// 支付类型
 	TradeType_MicroPay = "MICROPAY" // 提交付款码支付

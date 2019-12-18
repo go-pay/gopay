@@ -42,7 +42,7 @@ func (q *Client) MicroPay(bm gopay.BodyMap) (qqRsp *MicroPayResponse, err error)
 		return nil, err
 	}
 	bm.Set("trade_type", TradeType_MicroPay)
-	bs, err := q.doQQ(bm, qqMicroPay, nil)
+	bs, err := q.doQQ(bm, microPay, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func (q *Client) Reverse(bm gopay.BodyMap) (qqRsp *ReverseResponse, err error) {
 	if err != nil {
 		return nil, err
 	}
-	bs, err := q.doQQ(bm, qqReverse, nil)
+	bs, err := q.doQQ(bm, reverse, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (q *Client) UnifiedOrder(bm gopay.BodyMap) (qqRsp *UnifiedOrderResponse, er
 	if err != nil {
 		return nil, err
 	}
-	bs, err := q.doQQ(bm, qqUnifiedOrder, nil)
+	bs, err := q.doQQ(bm, unifiedOrder, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +99,7 @@ func (q *Client) OrderQuery(bm gopay.BodyMap) (qqRsp *OrderQueryResponse, err er
 	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("transaction_id") == gopay.NULL {
 		return nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
 	}
-	bs, err := q.doQQ(bm, qqOrderQuery, nil)
+	bs, err := q.doQQ(bm, orderQuery, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +117,7 @@ func (q *Client) CloseOrder(bm gopay.BodyMap) (qqRsp *CloseOrderResponse, err er
 	if err != nil {
 		return nil, err
 	}
-	bs, err := q.doQQ(bm, qqOrderClose, nil)
+	bs, err := q.doQQ(bm, orderClose, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +143,7 @@ func (q *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 	if err != nil {
 		return nil, err
 	}
-	bs, err := q.doQQ(bm, qqRefund, tlsConfig)
+	bs, err := q.doQQ(bm, refund, tlsConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -164,7 +164,7 @@ func (q *Client) RefundQuery(bm gopay.BodyMap) (qqRsp *RefundQueryResponse, err 
 	if bm.Get("refund_id") == gopay.NULL && bm.Get("out_refund_no") == gopay.NULL && bm.Get("transaction_id") == gopay.NULL && bm.Get("out_trade_no") == gopay.NULL {
 		return nil, errors.New("refund_id, out_refund_no, out_trade_no, transaction_id are not allowed to be null at the same time")
 	}
-	bs, err := q.doQQ(bm, qqRefundQuery, nil)
+	bs, err := q.doQQ(bm, refundQuery, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -186,7 +186,7 @@ func (q *Client) StatementDown(bm gopay.BodyMap) (qqRsp string, err error) {
 	if billType != "ALL" && billType != "SUCCESS" && billType != "REFUND" && billType != "RECHAR" {
 		return gopay.NULL, errors.New("bill_type error, please reference: https://qpay.qq.com/buss/wiki/38/1209")
 	}
-	bs, err := q.doQQ(bm, qqStatementDown, nil)
+	bs, err := q.doQQ(bm, statementDown, nil)
 	if err != nil {
 		return gopay.NULL, err
 	}
@@ -204,7 +204,7 @@ func (q *Client) AccRoll(bm gopay.BodyMap) (qqRsp string, err error) {
 	if accType != "CASH" && accType != "MARKETING" {
 		return gopay.NULL, errors.New("acc_type error, please reference: https://qpay.qq.com/buss/wiki/38/3089")
 	}
-	bs, err := q.doQQ(bm, qqAccRoll, nil)
+	bs, err := q.doQQ(bm, accRoll, nil)
 	if err != nil {
 		return gopay.NULL, err
 	}

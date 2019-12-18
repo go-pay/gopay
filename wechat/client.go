@@ -45,9 +45,9 @@ func (w *Client) Micropay(bm gopay.BodyMap) (wxRsp *MicropayResponse, err error)
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChat(bm, wxMicropay, nil)
+		bs, err = w.doWeChat(bm, microPay, nil)
 	} else {
-		bs, err = w.doWeChat(bm, wxSandboxMicropay, nil)
+		bs, err = w.doWeChat(bm, sandboxMicroPay, nil)
 	}
 	if err != nil {
 		return
@@ -68,10 +68,10 @@ func (w *Client) UnifiedOrder(bm gopay.BodyMap) (wxRsp *UnifiedOrderResponse, er
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChat(bm, wxUnifiedorder, nil)
+		bs, err = w.doWeChat(bm, unifiedOrder, nil)
 	} else {
 		bm.Set("total_fee", 101)
-		bs, err = w.doWeChat(bm, wxSandboxUnifiedorder, nil)
+		bs, err = w.doWeChat(bm, sandboxUnifiedOrder, nil)
 	}
 	if err != nil {
 		return
@@ -95,9 +95,9 @@ func (w *Client) QueryOrder(bm gopay.BodyMap) (wxRsp *QueryOrderResponse, err er
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChat(bm, wxOrderquery, nil)
+		bs, err = w.doWeChat(bm, orderQuery, nil)
 	} else {
-		bs, err = w.doWeChat(bm, wxSandboxOrderquery, nil)
+		bs, err = w.doWeChat(bm, sandboxOrderQuery, nil)
 	}
 	if err != nil {
 		return
@@ -118,9 +118,9 @@ func (w *Client) CloseOrder(bm gopay.BodyMap) (wxRsp *CloseOrderResponse, err er
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChat(bm, wxCloseorder, nil)
+		bs, err = w.doWeChat(bm, closeOrder, nil)
 	} else {
-		bs, err = w.doWeChat(bm, wxSandboxCloseorder, nil)
+		bs, err = w.doWeChat(bm, sandboxCloseOrder, nil)
 	}
 	if err != nil {
 		return
@@ -148,9 +148,9 @@ func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 			return nil, err
 		}
-		bs, err = w.doWeChat(bm, wxReverse, tlsConfig)
+		bs, err = w.doWeChat(bm, reverse, tlsConfig)
 	} else {
-		bs, err = w.doWeChat(bm, wxSandboxReverse, nil)
+		bs, err = w.doWeChat(bm, sandboxReverse, nil)
 	}
 	if err != nil {
 		return
@@ -181,9 +181,9 @@ func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 			return nil, err
 		}
-		bs, err = w.doWeChat(bm, wxRefund, tlsConfig)
+		bs, err = w.doWeChat(bm, refund, tlsConfig)
 	} else {
-		bs, err = w.doWeChat(bm, wxSandboxRefund, nil)
+		bs, err = w.doWeChat(bm, sandboxRefund, nil)
 	}
 	if err != nil {
 		return
@@ -207,9 +207,9 @@ func (w *Client) QueryRefund(bm gopay.BodyMap) (wxRsp *QueryRefundResponse, err 
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChat(bm, wxRefundquery, nil)
+		bs, err = w.doWeChat(bm, refundQuery, nil)
 	} else {
-		bs, err = w.doWeChat(bm, wxSandboxRefundquery, nil)
+		bs, err = w.doWeChat(bm, sandboxRefundQuery, nil)
 	}
 	if err != nil {
 		return
@@ -234,9 +234,9 @@ func (w *Client) DownloadBill(bm gopay.BodyMap) (wxRsp string, err error) {
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChat(bm, wxDownloadbill, nil)
+		bs, err = w.doWeChat(bm, downloadBill, nil)
 	} else {
-		bs, err = w.doWeChat(bm, wxSandboxDownloadbill, nil)
+		bs, err = w.doWeChat(bm, sandboxDownloadBill, nil)
 	}
 	if err != nil {
 		return
@@ -267,9 +267,9 @@ func (w *Client) DownloadFundFlow(bm gopay.BodyMap, certFilePath, keyFilePath, p
 		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 			return gopay.NULL, err
 		}
-		bs, err = w.doWeChat(bm, wxDownloadfundflow, tlsConfig)
+		bs, err = w.doWeChat(bm, downloadFundFlow, tlsConfig)
 	} else {
-		bs, err = w.doWeChat(bm, wxSandboxDownloadfundflow, nil)
+		bs, err = w.doWeChat(bm, sandboxDownloadFundFlow, nil)
 	}
 	if err != nil {
 		return
@@ -296,9 +296,9 @@ func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, 
 		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 			return gopay.NULL, err
 		}
-		bs, err = w.doWeChat(bm, wxBatchquerycomment, tlsConfig)
+		bs, err = w.doWeChat(bm, batchQueryComment, tlsConfig)
 	} else {
-		bs, err = w.doWeChat(bm, wxSandboxBatchquerycomment, nil)
+		bs, err = w.doWeChat(bm, sandboxBatchQueryComment, nil)
 	}
 	if err != nil {
 		return
@@ -320,7 +320,7 @@ func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fil
 	bm.Set("mchid", w.MchId)
 	var (
 		tlsConfig *tls.Config
-		url       = wxBaseUrlCh + wxTransfers
+		url       = baseUrlCh + transfers
 	)
 	if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
@@ -330,7 +330,7 @@ func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fil
 	httpClient := gopay.NewHttpClient().SetTLSConfig(tlsConfig).Type(gopay.TypeXML)
 	if w.BaseURL != gopay.NULL {
 		w.mu.RLock()
-		url = w.BaseURL + wxTransfers
+		url = w.BaseURL + transfers
 		w.mu.RUnlock()
 	}
 	wxRsp = new(TransfersResponse)
@@ -347,14 +347,14 @@ func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fil
 // 公众号纯签约（未完成）
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/pap.php?chapter=18_1&index=1
 func (w *Client) EntrustPublic(bm gopay.BodyMap) (bs []byte, err error) {
-	bs, err = w.doWeChat(bm, wxEntrustPublic, nil)
+	bs, err = w.doWeChat(bm, entrustPublic, nil)
 
 	return nil, nil
 }
 
 // 向微信发送请求
 func (w *Client) doWeChat(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
-	var url = wxBaseUrlCh + path
+	var url = baseUrlCh + path
 	bm.Set("appid", w.AppId)
 	bm.Set("mch_id", w.MchId)
 

@@ -26,15 +26,15 @@ func (w *Client) SetCountry(country Country) (client *Client) {
 	w.mu.Lock()
 	switch country {
 	case China:
-		w.BaseURL = wxBaseUrlCh
+		w.BaseURL = baseUrlCh
 	case China2:
-		w.BaseURL = wxBaseUrlCh2
+		w.BaseURL = baseUrlCh2
 	case SoutheastAsia:
-		w.BaseURL = wxBaseUrlHk
+		w.BaseURL = baseUrlHk
 	case Other:
-		w.BaseURL = wxBaseUrlUs
+		w.BaseURL = baseUrlUs
 	default:
-		w.BaseURL = wxBaseUrlCh
+		w.BaseURL = baseUrlCh
 	}
 	w.mu.Unlock()
 	return w
@@ -162,7 +162,7 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 	reqs.Set("sign", sign)
 
 	keyResponse := new(getSignKeyResponse)
-	_, errs := gopay.NewHttpClient().Type(gopay.TypeXML).Post(wxSandboxGetsignkey).SendString(generateXml(reqs)).EndStruct(keyResponse)
+	_, errs := gopay.NewHttpClient().Type(gopay.TypeXML).Post(sandboxGetSignKey).SendString(generateXml(reqs)).EndStruct(keyResponse)
 	if len(errs) > 0 {
 		return gopay.NULL, errs[0]
 	}

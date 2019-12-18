@@ -472,7 +472,7 @@ func systemOauthToken(appId, privateKey string, body gopay.BodyMap, method strin
 	body.Set("version", "1.0")
 	var (
 		sign string
-		url  = zfbBaseUrlUtf8
+		url  = baseUrlUtf8
 	)
 	pKey := FormatPrivateKey(privateKey)
 	if sign, err = getRsaSign(body, "RSA2", pKey); err != nil {
@@ -480,7 +480,7 @@ func systemOauthToken(appId, privateKey string, body gopay.BodyMap, method strin
 	}
 	body.Set("sign", sign)
 	if !isProd {
-		url = zfbSandboxBaseUrlUtf8
+		url = sandboxBaseUrlUtf8
 	}
 	_, bs, errs := gopay.NewHttpClient().Type(gopay.TypeForm).Post(url).SendString(FormatURLParam(body)).EndBytes()
 	if len(errs) > 0 {

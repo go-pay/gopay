@@ -2,10 +2,10 @@ package alipay
 
 const (
 	// URL
-	zfbBaseUrl            = "https://openapi.alipay.com/gateway.do"
-	zfbSandboxBaseUrl     = "https://openapi.alipaydev.com/gateway.do"
-	zfbBaseUrlUtf8        = "https://openapi.alipay.com/gateway.do?charset=utf-8"
-	zfbSandboxBaseUrlUtf8 = "https://openapi.alipaydev.com/gateway.do?charset=utf-8"
+	baseUrl            = "https://openapi.alipay.com/gateway.do"
+	sandboxBaseUrl     = "https://openapi.alipaydev.com/gateway.do"
+	baseUrlUtf8        = "https://openapi.alipay.com/gateway.do?charset=utf-8"
+	sandboxBaseUrlUtf8 = "https://openapi.alipaydev.com/gateway.do?charset=utf-8"
 
 	locationShanghai = "Asia/Shanghai"
 )

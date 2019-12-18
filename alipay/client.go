@@ -608,15 +608,15 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 		return []byte(param), nil
 	case "alipay.trade.wap.pay", "alipay.trade.page.pay", "alipay.user.certify.open.certify":
 		if !a.IsProd {
-			return []byte(zfbSandboxBaseUrl + "?" + param), nil
+			return []byte(sandboxBaseUrl + "?" + param), nil
 		}
-		return []byte(zfbBaseUrl + "?" + param), nil
+		return []byte(baseUrl + "?" + param), nil
 	default:
 		httpClient := gopay.NewHttpClient()
 		if !a.IsProd {
-			url = zfbSandboxBaseUrlUtf8
+			url = sandboxBaseUrlUtf8
 		} else {
-			url = zfbBaseUrlUtf8
+			url = baseUrlUtf8
 		}
 		res, bs, errs := httpClient.Type(gopay.TypeForm).Post(url).SendString(param).EndBytes()
 		if len(errs) > 0 {
