@@ -1,5 +1,5 @@
 版本号：Release 2.0.3
-发布时间：2019/12/18 16:25
+发布时间：2019/12/18 19:25
 修改记录：
    (1) 微信：新增Client方法：client.AuthCodeToOpenId()，授权码查询OpenId（正式）
    (2) 微信：新增Client方法：client.Report()，交易保障
