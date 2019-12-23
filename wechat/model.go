@@ -8,43 +8,45 @@ const (
 	Other         Country = 4 // 其他国家
 
 	// URL
-	baseUrlCh  = "https://api.mch.weixin.qq.com/"   //中国国内
-	baseUrlCh2 = "https://api2.mch.weixin.qq.com/"  //中国国内
-	baseUrlHk  = "https://apihk.mch.weixin.qq.com/" //东南亚
-	baseUrlUs  = "https://apius.mch.weixin.qq.com/" //其他
+	baseUrlCh  = "https://api.mch.weixin.qq.com/"   // 中国国内
+	baseUrlCh2 = "https://api2.mch.weixin.qq.com/"  // 中国国内
+	baseUrlHk  = "https://apihk.mch.weixin.qq.com/" // 东南亚
+	baseUrlUs  = "https://apius.mch.weixin.qq.com/" // 其他
 
 	// 正式
-	microPay          = "pay/micropay"                          //提交付款码支付
-	unifiedOrder      = "pay/unifiedorder"                      //统一下单
-	orderQuery        = "pay/orderquery"                        //查询订单
-	closeOrder        = "pay/closeorder"                        //关闭订单
-	refund            = "secapi/pay/refund"                     //申请退款
-	reverse           = "secapi/pay/reverse"                    //撤销订单
-	refundQuery       = "pay/refundquery"                       //查询退款
-	downloadBill      = "pay/downloadbill"                      //下载对账单
-	downloadFundFlow  = "pay/downloadfundflow"                  //下载资金账单
-	batchQueryComment = "billcommentsp/batchquerycomment"       //拉取订单评价数据
-	transfers         = "mmpaymkttransfers/promotion/transfers" //企业向微信用户个人付款
-	entrustPublic     = "papay/entrustweb"                      //公众号纯签约
-	entrustApp        = "papay/preentrustweb"                   //APP纯签约
-	entrustH5         = "papay/h5entrustweb"                    //H5纯签约
-	entrustQuery      = "papay/querycontract"                   //查询签约关系
-	entrustDelete     = "papay/deletecontract"                  //申请解约
-	entrustApplyPay   = "pay/pappayapply"                       //申请扣款
-	entrustQueryOrder = "pay/paporderquery"                     //查询扣款订单
+	microPay          = "pay/micropay"                          // 提交付款码支付
+	unifiedOrder      = "pay/unifiedorder"                      // 统一下单
+	orderQuery        = "pay/orderquery"                        // 查询订单
+	closeOrder        = "pay/closeorder"                        // 关闭订单
+	refund            = "secapi/pay/refund"                     // 申请退款
+	reverse           = "secapi/pay/reverse"                    // 撤销订单
+	refundQuery       = "pay/refundquery"                       // 查询退款
+	downloadBill      = "pay/downloadbill"                      // 下载对账单
+	downloadFundFlow  = "pay/downloadfundflow"                  // 下载资金账单
+	report            = "payitil/report"                        // 交易保障
+	batchQueryComment = "billcommentsp/batchquerycomment"       // 拉取订单评价数据
+	transfers         = "mmpaymkttransfers/promotion/transfers" // 企业向微信用户个人付款
+	authCodeToOpenid  = "tools/authcodetoopenid"                // 授权码查询openid
+	entrustPublic     = "papay/entrustweb"                      // 公众号纯签约
+	entrustApp        = "papay/preentrustweb"                   // APP纯签约
+	entrustH5         = "papay/h5entrustweb"                    // H5纯签约
+	entrustPaying     = "pay/contractorder"                     // 支付中签约
+	entrustQuery      = "papay/querycontract"                   // 查询签约关系
+	entrustApplyPay   = "pay/pappayapply"                       // 申请扣款
+	entrustDelete     = "papay/deletecontract"                  // 申请解约
+	entrustQueryOrder = "pay/paporderquery"                     // 查询扣款订单
 
 	// SanBox
-	sandboxGetSignKey        = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
-	sandboxMicroPay          = "sandboxnew/pay/micropay"
-	sandboxUnifiedOrder      = "sandboxnew/pay/unifiedorder"
-	sandboxOrderQuery        = "sandboxnew/pay/orderquery"
-	sandboxCloseOrder        = "sandboxnew/pay/closeorder"
-	sandboxRefund            = "sandboxnew/pay/refund"
-	sandboxReverse           = "sandboxnew/pay/reverse"
-	sandboxRefundQuery       = "sandboxnew/pay/refundquery"
-	sandboxDownloadBill      = "sandboxnew/pay/downloadbill"
-	sandboxDownloadFundFlow  = "sandboxnew/pay/downloadfundflow"
-	sandboxBatchQueryComment = "sandboxnew/billcommentsp/batchquerycomment"
+	sandboxGetSignKey   = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
+	sandboxMicroPay     = "sandboxnew/pay/micropay"
+	sandboxUnifiedOrder = "sandboxnew/pay/unifiedorder"
+	sandboxOrderQuery   = "sandboxnew/pay/orderquery"
+	sandboxCloseOrder   = "sandboxnew/pay/closeorder"
+	sandboxRefund       = "sandboxnew/pay/refund"
+	sandboxReverse      = "sandboxnew/pay/reverse"
+	sandboxRefundQuery  = "sandboxnew/pay/refundquery"
+	sandboxDownloadBill = "sandboxnew/pay/downloadbill"
+	sandboxReport       = "sandboxnew/payitil/report"
 
 	// 支付类型
 	TradeType_Mini   = "JSAPI"  // 小程序支付
@@ -288,6 +290,18 @@ type MicropayResponse struct {
 	PromotionDetail    string `xml:"promotion_detail,omitempty" json:"promotion_detail,omitempty"`
 }
 
+type AuthCodeToOpenIdResponse struct {
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	Appid      string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId      string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	NonceStr   string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign       string `xml:"sign,omitempty" json:"sign,omitempty"`
+	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode    string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	Openid     string `xml:"openid,omitempty" json:"openid,omitempty"`
+}
+
 type TransfersResponse struct {
 	ReturnCode     string `xml:"return_code,omitempty" json:"return_code,omitempty"`
 	ReturnMsg      string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
@@ -301,6 +315,64 @@ type TransfersResponse struct {
 	PartnerTradeNo string `xml:"partner_trade_no,omitempty" json:"partner_trade_no,omitempty"`
 	PaymentNo      string `xml:"payment_no,omitempty" json:"payment_no,omitempty"`
 	PaymentTime    string `xml:"payment_time,omitempty" json:"payment_time,omitempty"`
+}
+
+type ReportResponse struct {
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+}
+
+type EntrustPublicResponse struct {
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ResultMsg  string `xml:"result_msg,omitempty" json:"result_msg,omitempty"`
+}
+
+type EntrustAppPreResponse struct {
+	ReturnCode      string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg       string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode      string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode         string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	Appid           string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId           string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	Sign            string `xml:"sign,omitempty" json:"sign,omitempty"`
+	NonceStr        string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	PreEntrustwebId string `xml:"pre_entrustweb_id,omitempty" json:"pre_entrustweb_id,omitempty"`
+}
+
+type EntrustH5Response struct {
+	ReturnCode  string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg   string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode  string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ResultMsg   string `xml:"result_msg,omitempty" json:"result_msg,omitempty"`
+	RedirectUrl string `xml:"redirect_url,omitempty" json:"redirect_url,omitempty"`
+}
+
+type EntrustPayingResponse struct {
+	ReturnCode             string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg              string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode             string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	Appid                  string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId                  string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	DeviceInfo             string `xml:"device_info,omitempty" json:"device_info,omitempty"`
+	NonceStr               string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign                   string `xml:"sign,omitempty" json:"sign,omitempty"`
+	ErrCode                string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes             string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	ContractResultCode     string `xml:"contract_result_code,omitempty" json:"contract_result_code,omitempty"`
+	ContractErrCode        string `xml:"contract_err_code,omitempty" json:"contract_err_code,omitempty"`
+	ContractErrCodeDes     string `xml:"contract_err_code_des,omitempty" json:"contract_err_code_des,omitempty"`
+	PrepayId               string `xml:"prepay_id,omitempty" json:"prepay_id,omitempty"`
+	TradeType              string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
+	CodeUrl                string `xml:"code_url,omitempty" json:"code_url,omitempty"`
+	PlanId                 int    `xml:"plan_id,omitempty" json:"plan_id,omitempty"`
+	RequestSerial          int    `xml:"request_serial,omitempty" json:"request_serial,omitempty"`
+	ContractCode           string `xml:"contract_code,omitempty" json:"contract_code,omitempty"`
+	ContractDisplayAccount string `xml:"contract_display_account,omitempty" json:"contract_display_account,omitempty"`
+	MwebUrl                string `xml:"mweb_url,omitempty" json:"mweb_url,omitempty"`
+	OutTradeNo             string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
 }
 
 type getSignKeyResponse struct {

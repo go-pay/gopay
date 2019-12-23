@@ -150,6 +150,21 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 	return buf.String()[:buf.Len()-1]
 }
 
+func (bm BodyMap) EncodeGetParams() string {
+	var (
+		buf strings.Builder
+	)
+	for k, _ := range bm {
+		if v := bm.Get(k); v != NULL {
+			buf.WriteString(k)
+			buf.WriteByte('=')
+			buf.WriteString(v)
+			buf.WriteByte('&')
+		}
+	}
+	return buf.String()[:buf.Len()-1]
+}
+
 func (bm BodyMap) CheckEmptyError(keys ...string) error {
 	var emptyKeys []string
 	for _, k := range keys {

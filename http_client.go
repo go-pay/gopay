@@ -141,6 +141,7 @@ func (c *Client) EndStruct(v interface{}) (res *http.Response, errs []error) {
 		return nil, c.Errors
 	}
 }
+
 func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 	if len(c.Errors) > 0 {
 		return nil, nil, c.Errors

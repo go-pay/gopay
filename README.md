@@ -48,9 +48,15 @@ func main() {
 * 申请退款：client.Refund()
 * 查询退款：client.QueryRefund()
 * 下载对账单：client.DownloadBill()
-* 下载资金账单：client.DownloadFundFlow()
-* 拉取订单评价数据：client.BatchQueryComment()
-* 企业向微信用户个人付款：client.Transfer()
+* 下载资金账单（正式）：client.DownloadFundFlow()
+* 交易保障：client.Report()
+* 拉取订单评价数据（正式）：client.BatchQueryComment()
+* 企业向微信用户个人付款（正式）：client.Transfer()
+* 授权码查询OpenId（正式）：client.AuthCodeToOpenId()
+* 公众号纯签约（正式）：client.EntrustPublic()
+* APP纯签约-预签约接口-获取预签约ID（正式）：client.EntrustAppPre()
+* H5纯签约（正式）：client.EntrustH5()
+* 支付中签约（正式）：client.EntrustPaying()
 
 ### 微信公共API
 
