@@ -232,6 +232,87 @@ func verifySign(signData, sign, signType, aliPayPublicKey string) (err error) {
 	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
 }
 
+// VerifySignWithCert 支付宝异步通知验签
+//    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
+//    aliPayPublicKeyPath：支付宝公钥存放路径 alipayCertPublicKey_RSA2.crt
+//    bean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm
+//    返回参数ok：是否验签通过
+//    返回参数err：错误信息
+//    验签文档：https://docs.open.alipay.com/200/106120
+func VerifySignWithCert(aliPayPublicKeyPath string, bean interface{}) (ok bool, err error) {
+	if bean == nil {
+		return false, errors.New("bean is nil")
+	}
+	var (
+		bodySign     string
+		bodySignType string
+		signData     string
+		bm           = make(gopay.BodyMap)
+	)
+	if reflect.ValueOf(bean).Kind() == reflect.Map {
+		if bm, ok = bean.(gopay.BodyMap); ok {
+			bodySign = bm.Get("sign")
+			bodySignType = bm.Get("sign_type")
+			bm.Remove("sign")
+			bm.Remove("sign_type")
+			signData = bm.EncodeAliPaySignParams()
+		}
+	} else {
+		bs, err := json.Marshal(bean)
+		if err != nil {
+			return false, fmt.Errorf("json.Marshal：%w", err)
+		}
+		if err = json.Unmarshal(bs, &bm); err != nil {
+			return false, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		}
+		bodySign = bm.Get("sign")
+		bodySignType = bm.Get("sign_type")
+		bm.Remove("sign")
+		bm.Remove("sign_type")
+		signData = bm.EncodeAliPaySignParams()
+	}
+	if err = verifySignCert(signData, bodySign, bodySignType, aliPayPublicKeyPath); err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func verifySignCert(signData, sign, signType, aliPayPublicKeyPath string) (err error) {
+	var (
+		h         hash.Hash
+		hashs     crypto.Hash
+		block     *pem.Block
+		pubKey    *x509.Certificate
+		publicKey *rsa.PublicKey
+		ok        bool
+		bytes     []byte
+	)
+	if bytes, err = ioutil.ReadFile(aliPayPublicKeyPath); err != nil {
+		return fmt.Errorf("支付宝公钥文件读取失败: %w", err)
+	}
+	signBytes, _ := base64.StdEncoding.DecodeString(sign)
+	if block, _ = pem.Decode(bytes); block == nil {
+		return errors.New("支付宝公钥Decode错误")
+	}
+	if pubKey, err = x509.ParseCertificate(block.Bytes); err != nil {
+		return fmt.Errorf("x509.ParseCertificate：%w", err)
+	}
+	if publicKey, ok = pubKey.PublicKey.(*rsa.PublicKey); !ok {
+		return errors.New("支付宝公钥转换错误")
+	}
+	switch signType {
+	case "RSA":
+		hashs = crypto.SHA1
+	case "RSA2":
+		hashs = crypto.SHA256
+	default:
+		hashs = crypto.SHA256
+	}
+	h = hashs.New()
+	h.Write([]byte(signData))
+	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
+}
+
 // FormatPrivateKey 格式化 普通应用秘钥
 func FormatPrivateKey(privateKey string) (pKey string) {
 	var buffer strings.Builder

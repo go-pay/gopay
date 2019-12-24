@@ -25,14 +25,14 @@ func TestMain(m *testing.M) {
 	// 配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType("RSA2").
-		//SetReturnUrl("https://www.gopay.ink").
+		// SetReturnUrl("https://www.gopay.ink").
 		SetNotifyUrl("https://www.gopay.ink")
 
-	//err := client.SetCertSnByPath("cert/appCertPublicKey.crt", "cert/alipayRootCert.crt", "cert/alipayCertPublicKey_RSA2.crt")
-	//if err != nil {
+	// err := client.SetCertSnByPath("cert/appCertPublicKey.crt", "cert/alipayRootCert.crt", "cert/alipayCertPublicKey_RSA2.crt")
+	// if err != nil {
 	//	fmt.Println("SetCertSnByPath:", err)
 	//	return
-	//}
+	// }
 
 	os.Exit(m.Run())
 }
@@ -242,7 +242,7 @@ func TestClient_SystemOauthToken(t *testing.T) {
 }
 
 func TestClient_TradeOrderSettle(t *testing.T) {
-	//请求参数
+	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("out_request_no", "201907301518083384")
 	bm.Set("trade_no", "2019072522001484690549776067")
@@ -251,7 +251,7 @@ func TestClient_TradeOrderSettle(t *testing.T) {
 	listParams = append(listParams, OpenApiRoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
 
 	bm.Set("royalty_parameters", listParams)
-	//fmt.Println("listParams:", bm.Get("royalty_parameters"))
+	// fmt.Println("listParams:", bm.Get("royalty_parameters"))
 
 	// 发起交易结算接口
 	aliRsp, err := client.TradeOrderSettle(bm)
@@ -313,7 +313,7 @@ func TestClient_FundTransToaccountTransfer(t *testing.T) {
 }
 
 func TestClient_UserCertifyOpenInit(t *testing.T) {
-	//请求参数
+	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("outer_order_no", "ZGYD201809132323000001234")
 	// 认证场景码：FACE：多因子人脸认证，CERT_PHOTO：多因子证照认证，CERT_PHOTO_FACE ：多因子证照和人脸认证，SMART_FACE：多因子快捷认证
@@ -442,6 +442,38 @@ func TestVerifySign(t *testing.T) {
 	bm.Set("notify_id", "4a91b7a78a503640467525113fb7d8bg8e")
 
 	ok, err := VerifySign("aliPayPublicKey", bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("OK:", ok)
+}
+
+func TestVerifySignWithCert(t *testing.T) {
+	// 测试，假数据，无法验签通过
+	bm := make(gopay.BodyMap)
+	bm.Set("sign", "kPbQIjX+xQc8F0/A6/AocELIjhhZnGbcBN6G4MM/HmfWL4ZiHM6fWl5NQhzXJusaklZ1LFuMo+lHQUELAYeugH8LYFvxnNajOvZhuxNFbN2LhF0l/KL8ANtj8oyPM4NN7Qft2kWJTDJUpQOzCzNnV9hDxh5AaT9FPqRS6ZKxnzM=")
+	bm.Set("sign_type", "RSA2")
+	bm.Set("total_amount", "2.00")
+	bm.Set("buyer_id", "2088102116773037")
+	bm.Set("body", "大乐透2.1")
+	bm.Set("trade_no", "2016071921001003030200089909")
+	bm.Set("refund_fee", "0.00")
+	bm.Set("notify_time", "2016-07-19 14:10:49")
+	bm.Set("subject", "大乐透2.1")
+	bm.Set("charset", "utf-8")
+	bm.Set("notify_type", "trade_status_sync")
+	bm.Set("out_trade_no", "0719141034-6418")
+	bm.Set("gmt_close", "2016-07-19 14:10:46")
+	bm.Set("gmt_payment", "2016-07-19 14:10:47")
+	bm.Set("trade_status", "TRADE_SUCCESS")
+	bm.Set("version", "1.0")
+	bm.Set("gmt_create", "2016-07-19 14:10:44")
+	bm.Set("app_id", "2015102700040153")
+	bm.Set("seller_id", "2088102119685838")
+	bm.Set("notify_id", "4a91b7a78a503640467525113fb7d8bg8e")
+
+	ok, err := VerifySignWithCert("/cert/alipayCertPublicKey_RSA2.crt", bm)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
