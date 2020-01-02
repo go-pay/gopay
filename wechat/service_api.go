@@ -120,6 +120,9 @@ func ParseRefundNotifyResult(req *http.Request) (notifyReq *RefundNotifyRequest,
 //    返回参数err：错误信息
 //    文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_16&index=10
 func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNotify, err error) {
+	if reqInfo == gopay.NULL || apiKey == gopay.NULL {
+		return nil, errors.New("reqInfo or apiKey is null")
+	}
 	var (
 		encryptionB, bs []byte
 		block           cipher.Block
