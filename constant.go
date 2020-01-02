@@ -7,10 +7,5 @@ const (
 	SUCCESS    = "SUCCESS"
 	FAIL       = "FAIL"
 	OK         = "OK"
-	Version    = "2.0.4"
+	Version    = "2.0.5"
 )
-
-type ReturnMessage struct {
-	ReturnCode string `json:"return_code"`
-	ReturnMsg  string `json:"return_msg"`
-}

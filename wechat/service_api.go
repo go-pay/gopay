@@ -120,6 +120,9 @@ func ParseRefundNotifyResult(req *http.Request) (notifyReq *RefundNotifyRequest,
 //    返回参数err：错误信息
 //    文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_16&index=10
 func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNotify, err error) {
+	if reqInfo == gopay.NULL || apiKey == gopay.NULL {
+		return nil, errors.New("reqInfo or apiKey is null")
+	}
 	var (
 		encryptionB, bs []byte
 		block           cipher.Block
@@ -324,6 +327,9 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 //    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr interface{}) (err error) {
+	if encryptedData == gopay.NULL || iv == gopay.NULL || sessionKey == gopay.NULL {
+		return errors.New("input params can not null")
+	}
 	var (
 		cipherText, aesKey, ivKey, plainText []byte
 		block                                cipher.Block
@@ -363,6 +369,9 @@ func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr inter
 //    sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.BodyMap, err error) {
+	if encryptedData == gopay.NULL || iv == gopay.NULL || sessionKey == gopay.NULL {
+		return nil, errors.New("input params can not null")
+	}
 	var (
 		cipherText, aesKey, ivKey, plainText []byte
 		block                                cipher.Block

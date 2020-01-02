@@ -49,6 +49,9 @@ func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) 
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
 func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) {
+	if apiKey == gopay.NULL || signType == gopay.NULL {
+		return false, errors.New("apiKey or signType can not null")
+	}
 	if bean == nil {
 		return false, errors.New("bean is nil")
 	}

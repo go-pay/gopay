@@ -145,7 +145,6 @@ A：开发者上传自己的应用公钥证书后，开放平台会为开发者�
 //    返回参数err：错误信息
 //    验签文档：https://docs.open.alipay.com/200/106120
 func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error) {
-
 	// 支付宝公钥验签
 	pKey := FormatPublicKey(aliPayPublicKey)
 	if err = verifySign(signData, sign, "RSA2", pKey); err != nil {
@@ -162,6 +161,9 @@ func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error)
 //    返回参数err：错误信息
 //    验签文档：https://docs.open.alipay.com/200/106120
 func VerifySign(aliPayPublicKey string, bean interface{}) (ok bool, err error) {
+	if aliPayPublicKey == gopay.NULL {
+		return false, errors.New("aliPayPublicKey is null")
+	}
 	if bean == nil {
 		return false, errors.New("bean is nil")
 	}
@@ -240,6 +242,9 @@ func verifySign(signData, sign, signType, aliPayPublicKey string) (err error) {
 //    返回参数err：错误信息
 //    验签文档：https://docs.open.alipay.com/200/106120
 func VerifySignWithCert(aliPayPublicKeyPath string, bean interface{}) (ok bool, err error) {
+	if aliPayPublicKeyPath == gopay.NULL {
+		return false, errors.New("aliPayPublicKeyPath is null")
+	}
 	if bean == nil {
 		return false, errors.New("bean is nil")
 	}
@@ -444,6 +449,9 @@ func GetRootCertSN(rootCertPath string) (sn string, err error) {
 //    文档：https://docs.alipay.com/mini/introduce/aes
 //    文档：https://docs.open.alipay.com/common/104567
 func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{}) (err error) {
+	if encryptedData == gopay.NULL || secretKey == gopay.NULL {
+		return errors.New("encryptedData or secretKey is null")
+	}
 	beanValue := reflect.ValueOf(beanPtr)
 	if beanValue.Kind() != reflect.Ptr {
 		return errors.New("传入参数类型必须是以指针形式")
@@ -483,6 +491,9 @@ func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{
 //    文档：https://docs.alipay.com/mini/introduce/aes
 //    文档：https://docs.open.alipay.com/common/104567
 func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap, err error) {
+	if encryptedData == gopay.NULL || secretKey == gopay.NULL {
+		return nil, errors.New("encryptedData or secretKey is null")
+	}
 	var (
 		aesKey, originData []byte
 		ivKey              = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
