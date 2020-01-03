@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/iGoogle-ink/gopay/v2/alipay"
+	"github.com/iGoogle-ink/gopay/alipay"
 )
 
 func FormatPrivateKey() {

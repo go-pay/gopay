@@ -14,7 +14,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/iGoogle-ink/gopay/v2"
+	"github.com/iGoogle-ink/gopay"
 )
 
 // 添加QQ证书 Path 路径

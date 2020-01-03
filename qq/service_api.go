@@ -11,7 +11,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/iGoogle-ink/gopay/v2"
+	"github.com/iGoogle-ink/gopay"
 )
 
 // 解析QQ支付异步通知的结果到BodyMap

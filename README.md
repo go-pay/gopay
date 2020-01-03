@@ -14,7 +14,7 @@ QQ、微信、支付宝的Golang版本SDK
 # 一、安装
 
 ```bash
-$ go get github.com/iGoogle-ink/gopay/v2
+$ go get github.com/iGoogle-ink/gopay
 ```
 
 * #### 查看 GoPay 版本
@@ -23,7 +23,7 @@ $ go get github.com/iGoogle-ink/gopay/v2
 import (
     "fmt"
 
-    "github.com/iGoogle-ink/gopay/v2"
+    "github.com/iGoogle-ink/gopay"
 )
 
 func main() {
@@ -162,7 +162,7 @@ QQ群：
 微信官方文档：[官方文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/v2/wechat"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 // 初始化微信客户端
@@ -198,7 +198,7 @@ client.AddCertFilePath()
 
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/v2/alipay"
+	"github.com/iGoogle-ink/gopay/alipay"
 )
 
 // 初始化支付宝客户端
@@ -230,7 +230,7 @@ err := client.SetCertSnByPath("appCertPublicKey.crt", "alipayRootCert.crt", "ali
 具体参数请根据不同接口查看：[微信支付接口文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/v2/wechat"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 // 初始化 BodyMap
@@ -340,7 +340,7 @@ APP支付官方文档：[APP端调起支付的参数列表文档](https://pay.we
 微信内H5支付官方文档：[微信内H5支付文档](https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6)
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/v2/wechat"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 // ====微信小程序 paySign====
@@ -392,8 +392,8 @@ paySign := wechat.GetH5PaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_
 * #### 微信
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/v2"
-	"github.com/iGoogle-ink/gopay/v2/wechat"
+	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 // ====同步返回参数验签Sign====
@@ -440,7 +440,7 @@ return c.String(http.StatusOK, rsp.ToXmlString())   // 此写法是 echo 框架�
 支付宝支付后的同步/异步通知验签文档：[支付结果通知](https://docs.open.alipay.com/200/106120)
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/v2/alipay"
+	"github.com/iGoogle-ink/gopay/alipay"
 )
 
 // ====同步返回参数验签Sign====
@@ -480,7 +480,7 @@ button按钮获取手机号码：[button组件文档](https://developers.weixin.
 微信解密算法文档：[解密算法文档](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html)
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/v2/wechat"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 // 获取微信小程序用户的OpenId、SessionKey、UnionId
@@ -538,7 +538,7 @@ fmt.Println("WeChatUserPhone:", bm)
 支付宝加解密文档：[AES配置文档](https://docs.alipay.com/mini/introduce/aes)，[AES加解密文档](https://docs.open.alipay.com/common/104567)
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/v2/alipay"
+	"github.com/iGoogle-ink/gopay/alipay"
 )
 
 // 换取授权访问令牌（默认使用utf-8，RSA2）

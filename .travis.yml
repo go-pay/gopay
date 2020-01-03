@@ -4,7 +4,7 @@ go:
   - tip
 
 install:
-  - go get github.com/iGoogle-ink/gopay/v2
+  - go get github.com/iGoogle-ink/gopay
 
 script:
   - go test ./...

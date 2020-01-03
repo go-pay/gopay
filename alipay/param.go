@@ -16,7 +16,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/iGoogle-ink/gopay/v2"
+	"github.com/iGoogle-ink/gopay"
 )
 
 //	AppId      string `json:"app_id"`      //支付宝分配给开发者的应用ID
