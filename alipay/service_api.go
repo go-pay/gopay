@@ -98,7 +98,7 @@ func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) 
 
 	billList := req.Form.Get("fund_bill_list")
 	if billList != gopay.NULL {
-		bills := make([]*fundBillListInfo, 0)
+		bills := make([]*FundBillListInfo, 0)
 		if err = json.Unmarshal([]byte(billList), &bills); err != nil {
 			return nil, fmt.Errorf(`"fund_bill_list" xml.Unmarshal(%s)：%w`, billList, err)
 		}
@@ -109,7 +109,7 @@ func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) 
 
 	detailList := req.Form.Get("voucher_detail_list")
 	if detailList != gopay.NULL {
-		details := make([]*voucherDetailListInfo, 0)
+		details := make([]*VoucherDetailListInfo, 0)
 		if err = json.Unmarshal([]byte(detailList), &details); err != nil {
 			return nil, fmt.Errorf(`"voucher_detail_list" xml.Unmarshal(%s)：%w`, detailList, err)
 		}

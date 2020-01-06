@@ -40,21 +40,19 @@ type NotifyRequest struct {
 	GmtPayment        string                   `json:"gmt_payment,omitempty"`
 	GmtRefund         string                   `json:"gmt_refund,omitempty"`
 	GmtClose          string                   `json:"gmt_close,omitempty"`
-	FundBillList      []*fundBillListInfo      `json:"fund_bill_list,omitempty"`
+	FundBillList      []*FundBillListInfo      `json:"fund_bill_list,omitempty"`
 	PassbackParams    string                   `json:"passback_params,omitempty"`
-	VoucherDetailList []*voucherDetailListInfo `json:"voucher_detail_list,omitempty"`
+	VoucherDetailList []*VoucherDetailListInfo `json:"voucher_detail_list,omitempty"`
 	Method            string                   `json:"method,omitempty"`    //电脑网站支付 支付宝请求 return_url 同步返回参数
 	Timestamp         string                   `json:"timestamp,omitempty"` //电脑网站支付 支付宝请求 return_url 同步返回参数
 }
 
-type fundBillListInfo struct {
+type FundBillListInfo struct {
 	Amount      string `json:"amount,omitempty"`
 	FundChannel string `json:"fundChannel,omitempty"` //异步通知里是 fundChannel
-	BankCode    string `json:"bank_code,omitempty"`
-	RealAmount  string `json:"real_amount,omitempty"`
 }
 
-type voucherDetailListInfo struct {
+type VoucherDetailListInfo struct {
 	Id                         string `json:"id,omitempty"`
 	Name                       string `json:"name,omitempty"`
 	Type                       string `json:"type,omitempty"`
@@ -324,7 +322,7 @@ type refundResponse struct {
 	RefundFee               string           `json:"refund_fee,omitempty"`
 	RefundCurrency          string           `json:"refund_currency,omitempty"`
 	GmtRefundPay            string           `json:"gmt_refund_pay,omitempty"`
-	RefundDetailItemList    []*tradeFundBill `json:"refund_detail_item_list,omitempty"`
+	RefundDetailItemList    []*TradeFundBill `json:"refund_detail_item_list,omitempty"`
 	StoreName               string           `json:"store_name,omitempty"`
 	BuyerUserId             string           `json:"buyer_user_id,omitempty"`
 	RefundPresetPaytoolList []*struct {
@@ -337,7 +335,7 @@ type refundResponse struct {
 	PresentRefundMdiscountAmount string `json:"present_refund_mdiscount_amount,omitempty"`
 }
 
-type tradeFundBill struct {
+type TradeFundBill struct {
 	FundChannel string `json:"fund_channel,omitempty"` //同步通知里是 fund_channel
 	BankCode    string `json:"bank_code,omitempty"`
 	Amount      string `json:"amount,omitempty"`
@@ -374,7 +372,7 @@ type refundQueryResponse struct {
 		TransInEmail  string `json:"trans_in_email,omitempty"`
 	} `json:"refund_royaltys,omitempty"`
 	GmtRefundPay                 string           `json:"gmt_refund_pay,omitempty"`
-	RefundDetailItemList         []*tradeFundBill `json:"refund_detail_item_list,omitempty"`
+	RefundDetailItemList         []*TradeFundBill `json:"refund_detail_item_list,omitempty"`
 	SendBackFee                  string           `json:"send_back_fee,omitempty"`
 	RefundSettlementId           string           `json:"refund_settlement_id,omitempty"`
 	PresentRefundBuyerAmount     string           `json:"present_refund_buyer_amount,omitempty"`
