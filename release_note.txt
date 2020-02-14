@@ -1,3 +1,11 @@
+版本号：Release 1.5.2
+发布时间：2020/02/14 13:32
+修改记录：
+   (1) 支付宝：官方单笔转账接口更新，新增Client方法：client.FundTransUniTransfer()，单笔转账接口
+   (2) 支付宝：新增Client方法：client.FundTransCommonQuery()，转账业务单据查询接口
+   (3) 支付宝：新增Client放大：client.FundAccountQuery()，支付宝资金账户资产查询接口
+   (3) 支付宝：Client的方法，必选参数校验
+
 版本号：Release 1.5.1
 发布时间：2020/01/03 17:32
 修改记录：
