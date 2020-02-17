@@ -301,7 +301,7 @@ func (a *Client) TradeAppPay(bm gopay.BodyMap) (payParam string, err error) {
 //    文档地址：https://docs.open.alipay.com/api_1/alipay.trade.wap.pay
 func (a *Client) TradeWapPay(bm gopay.BodyMap) (payUrl string, err error) {
 	bm.Set("product_code", "QUICK_WAP_WAY")
-	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject", "quit_url")
+	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
 		return gopay.NULL, err
 	}
