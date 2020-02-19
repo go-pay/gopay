@@ -526,8 +526,9 @@ func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap
 //    PrivateKey：应用私钥
 //    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
 //    codeOrToken：支付宝授权码或refresh_token
+//    signType：签名方式 RSA 或 RSA2，默认 RSA2
 //    文档：https://docs.open.alipay.com/api_9/alipay.system.oauth.token
-func SystemOauthToken(appId, privateKey, grantType, codeOrToken string) (rsp *SystemOauthTokenResponse, err error) {
+func SystemOauthToken(appId, privateKey, grantType, codeOrToken, signType string) (rsp *SystemOauthTokenResponse, err error) {
 	var bs []byte
 	bm := make(gopay.BodyMap)
 	if "authorization_code" == grantType {
@@ -540,7 +541,7 @@ func SystemOauthToken(appId, privateKey, grantType, codeOrToken string) (rsp *Sy
 		bm.Set("grant_type", "authorization_code")
 		bm.Set("code", codeOrToken)
 	}
-	if bs, err = systemOauthToken(appId, privateKey, bm, "alipay.system.oauth.token", true, "RSA2"); err != nil {
+	if bs, err = systemOauthToken(appId, privateKey, bm, "alipay.system.oauth.token", true, signType); err != nil {
 		return
 	}
 	rsp = new(SystemOauthTokenResponse)
@@ -559,6 +560,11 @@ func systemOauthToken(appId, privateKey string, body gopay.BodyMap, method strin
 	body.Set("method", method)
 	body.Set("format", "JSON")
 	body.Set("charset", "utf-8")
+	if signType == gopay.NULL {
+		body.Set("sign_type", "RSA2")
+	} else {
+		body.Set("sign_type", signType)
+	}
 	body.Set("sign_type", signType)
 	body.Set("timestamp", time.Now().Format(gopay.TimeLayout))
 	body.Set("version", "1.0")
