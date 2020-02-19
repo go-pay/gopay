@@ -152,7 +152,7 @@ func main() {
 
 QQ群：
 <img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/qq_gopay.png"/>
-微信群：
+加微信拉群：
 <img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_jerry.png"/>
 
 ---
