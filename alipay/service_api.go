@@ -540,7 +540,7 @@ func SystemOauthToken(appId, privateKey, grantType, codeOrToken string) (rsp *Sy
 		bm.Set("grant_type", "authorization_code")
 		bm.Set("code", codeOrToken)
 	}
-	if bs, err = systemOauthToken(appId, privateKey, bm, "alipay.system.oauth.token", true); err != nil {
+	if bs, err = systemOauthToken(appId, privateKey, bm, "alipay.system.oauth.token", true, "RSA2"); err != nil {
 		return
 	}
 	rsp = new(SystemOauthTokenResponse)
@@ -554,12 +554,12 @@ func SystemOauthToken(appId, privateKey, grantType, codeOrToken string) (rsp *Sy
 }
 
 // systemOauthToken 向支付宝发送请求
-func systemOauthToken(appId, privateKey string, body gopay.BodyMap, method string, isProd bool) (bs []byte, err error) {
+func systemOauthToken(appId, privateKey string, body gopay.BodyMap, method string, isProd bool, signType string) (bs []byte, err error) {
 	body.Set("app_id", appId)
 	body.Set("method", method)
 	body.Set("format", "JSON")
 	body.Set("charset", "utf-8")
-	body.Set("sign_type", "RSA2")
+	body.Set("sign_type", signType)
 	body.Set("timestamp", time.Now().Format(gopay.TimeLayout))
 	body.Set("version", "1.0")
 	var (
@@ -567,7 +567,7 @@ func systemOauthToken(appId, privateKey string, body gopay.BodyMap, method strin
 		url  = baseUrlUtf8
 	)
 	pKey := FormatPrivateKey(privateKey)
-	if sign, err = getRsaSign(body, "RSA2", pKey); err != nil {
+	if sign, err = getRsaSign(body, signType, pKey); err != nil {
 		return nil, err
 	}
 	body.Set("sign", sign)

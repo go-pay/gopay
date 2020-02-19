@@ -434,7 +434,7 @@ func (a *Client) SystemOauthToken(bm gopay.BodyMap) (aliRsp *SystemOauthTokenRes
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = systemOauthToken(a.AppId, a.PrivateKey, bm, "alipay.system.oauth.token", a.IsProd); err != nil {
+	if bs, err = systemOauthToken(a.AppId, a.PrivateKey, bm, "alipay.system.oauth.token", a.IsProd, a.SignType); err != nil {
 		return nil, err
 	}
 	aliRsp = new(SystemOauthTokenResponse)
