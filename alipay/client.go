@@ -1,6 +1,9 @@
 package alipay
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -27,6 +30,7 @@ type Client struct {
 	IsProd             bool
 	location           *time.Location
 	mu                 sync.RWMutex
+	aesKey             string
 }
 
 // 初始化支付宝客户端
@@ -693,4 +697,66 @@ func getSignData(bs []byte) (signData string) {
 	indexEnd := strings.Index(str, `,"sign"`)
 	signData = str[indexStart+2 : indexEnd]
 	return
+}
+
+const empty = ""
+
+// 对阿里jsAPI提供的加密内容进行解密
+// 		https://opendocs.alipay.com/mini/introduce/aes
+func (c *Client) SetAESKey(aesKey string) {
+	c.aesKey = strings.TrimSpace(aesKey)
+}
+
+// 对阿里jsAPI提供的加密内容进行解密，来自 alipay Java SDK内的 `com.alipay.api.internal.util.AlipayEncrypt`
+//		https://opendocs.alipay.com/mini/introduce/aes
+func (c *Client) DecryptContent(encrypt string) (string, error) {
+	if c.aesKey == "" {
+		return empty, errors.New("AES key cannot be empty.")
+	}
+	decodeString, err := base64.StdEncoding.DecodeString(encrypt)
+	if err != nil {
+		return empty, err
+	}
+	keyBytes, err := base64.StdEncoding.DecodeString(c.aesKey)
+	if err != nil {
+		return empty, err
+	}
+	decrypt, err := aesDecrypt(decodeString, keyBytes)
+	if err != nil {
+		return empty, err
+	}
+	return string(decrypt), nil
+}
+
+// 解密
+func aesDecrypt(crypted, key []byte) ([]byte, error) {
+	key = addSuffix(key)
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+	var iv []byte
+	for i := 0; i < 16; i++ {
+		iv = append(iv, 0)
+	}
+	blockMode := cipher.NewCBCDecrypter(block, iv)
+	origData := make([]byte, len(crypted))
+	blockMode.CryptBlocks(origData, crypted)
+	origData = pKCS5UnPadding(origData)
+	return origData, nil
+}
+
+func addSuffix(secret []byte) []byte {
+	s := string(secret)
+	len := len(s)
+	for i := 0; i < 16-len; i++ {
+		s += "="
+	}
+	return []byte(s)
+}
+
+func pKCS5UnPadding(origData []byte) []byte {
+	length := len(origData)
+	unpadding := int(origData[length-1])
+	return origData[:(length - unpadding)]
 }
