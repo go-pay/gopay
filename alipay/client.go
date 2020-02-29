@@ -595,7 +595,7 @@ func (a *Client) UserInfoAuth(bm gopay.BodyMap) (aliRsp *UserInfoAuthResponse, e
 	if bs, err = a.doAliPay(bm, "alipay.user.info.auth"); err != nil {
 		return nil, err
 	}
-	if strings.Contains(string(bs), "<html>") || strings.Contains(string(bs), "<HTML>") {
+	if strings.Contains(string(bs), "<head>") {
 		return nil, errors.New(string(bs))
 	}
 	aliRsp = new(UserInfoAuthResponse)

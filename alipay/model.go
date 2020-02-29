@@ -616,7 +616,7 @@ type userCertifyOpenQueryResponse struct {
 	MaterialInfo string   `json:"material_info,omitempty"`
 }
 
-// ====================================================
+// ===================================================
 type UserInfoAuthResponse struct {
 	Response *struct {
 		Code    string `json:"code,omitempty"`
@@ -624,6 +624,20 @@ type UserInfoAuthResponse struct {
 		SubCode string `json:"sub_code,omitempty"`
 		SubMsg  string `json:"sub_msg,omitempty"`
 	} `json:"alipay_user_info_auth_response,omitempty"`
+	AlipayCertSn string `json:"alipay_cert_sn,omitempty"`
+	SignData     string `json:"-"`
+	Sign         string `json:"sign"`
+}
+
+// ===================================================
+type MonitorHeartbeatSynResponse struct {
+	Response *struct {
+		Code    string `json:"code,omitempty"`
+		Msg     string `json:"msg,omitempty"`
+		SubCode string `json:"sub_code,omitempty"`
+		SubMsg  string `json:"sub_msg,omitempty"`
+		Pid     string `json:"pid,omitempty"`
+	} `json:"monitor_heartbeat_syn_response,omitempty"`
 	AlipayCertSn string `json:"alipay_cert_sn,omitempty"`
 	SignData     string `json:"-"`
 	Sign         string `json:"sign"`
