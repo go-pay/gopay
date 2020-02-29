@@ -583,6 +583,33 @@ func (a *Client) UserCertifyOpenQuery(bm gopay.BodyMap) (aliRsp *UserCertifyOpen
 	return aliRsp, nil
 }
 
+// alipay.user.info.auth(用户登陆授权)
+//    文档地址：https://docs.open.alipay.com/api_9/alipay.user.info.auth
+func (a *Client) UserInfoAuth(bm gopay.BodyMap) (aliRsp *UserInfoAuthResponse, err error) {
+	err = bm.CheckEmptyError("scopes", "state")
+	if err != nil {
+		return nil, err
+	}
+
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.user.info.auth"); err != nil {
+		return nil, err
+	}
+	if strings.Contains(string(bs), "<head>") {
+		return nil, errors.New(string(bs))
+	}
+	aliRsp = new(UserInfoAuthResponse)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	aliRsp.SignData = getSignData(bs)
+	return aliRsp, nil
+}
+
 // 向支付宝发送请求
 func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error) {
 	var (
