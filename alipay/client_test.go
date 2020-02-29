@@ -26,7 +26,7 @@ func TestMain(m *testing.M) {
 	client.SetCharset("utf-8").
 		SetSignType("RSA2")
 	// SetReturnUrl("https://www.gopay.ink").
-	//SetNotifyUrl("https://www.gopay.ink")
+	// SetNotifyUrl("https://www.gopay.ink")
 
 	// err := client.SetCertSnByPath("cert/appCertPublicKey.crt", "cert/alipayRootCert.crt", "cert/alipayCertPublicKey_RSA2.crt")
 	// if err != nil {
