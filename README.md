@@ -126,6 +126,7 @@ func main() {
 * 身份认证初始化服务：client.UserCertifyOpenInit()
 * 身份认证开始认证（获取认证链接）：client.UserCertifyOpenCertify()
 * 身份认证记录查询：client.UserCertifyOpenQuery()
+* 用户登陆授权：client.UserInfoAuth()
 
 ### 支付宝公共API
 
@@ -140,6 +141,7 @@ func main() {
 * alipay.VerifySyncSign() => 支付宝同步返回参数验签
 * alipay.DecryptOpenDataToStruct() => 解密支付宝开放数据到 结构体
 * alipay.DecryptOpenDataToBodyMap() => 解密支付宝开放数据到 BodyMap
+* alipay.MonitorHeartbeatSyn() => 验签接口
 
 ---
 
