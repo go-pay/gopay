@@ -615,3 +615,16 @@ type userCertifyOpenQueryResponse struct {
 	IdentityInfo string   `json:"identity_info,omitempty"`
 	MaterialInfo string   `json:"material_info,omitempty"`
 }
+
+// ====================================================
+type UserInfoAuthResponse struct {
+	Response *struct {
+		Code    string `json:"code,omitempty"`
+		Msg     string `json:"msg,omitempty"`
+		SubCode string `json:"sub_code,omitempty"`
+		SubMsg  string `json:"sub_msg,omitempty"`
+	} `json:"alipay_user_info_auth_response,omitempty"`
+	AlipayCertSn string `json:"alipay_cert_sn,omitempty"`
+	SignData     string `json:"-"`
+	Sign         string `json:"sign"`
+}

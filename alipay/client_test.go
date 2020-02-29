@@ -24,9 +24,9 @@ func TestMain(m *testing.M) {
 	client = NewClient(appid, privateKey, false)
 	// 配置公共参数
 	client.SetCharset("utf-8").
-		SetSignType("RSA2").
-		// SetReturnUrl("https://www.gopay.ink").
-		SetNotifyUrl("https://www.gopay.ink")
+		SetSignType("RSA2")
+	// SetReturnUrl("https://www.gopay.ink").
+	//SetNotifyUrl("https://www.gopay.ink")
 
 	// err := client.SetCertSnByPath("cert/appCertPublicKey.crt", "cert/alipayRootCert.crt", "cert/alipayCertPublicKey_RSA2.crt")
 	// if err != nil {
@@ -368,7 +368,22 @@ func TestClient_UserCertifyOpenQuery(t *testing.T) {
 	}
 	fmt.Println("aliRsp:", *aliRsp)
 	fmt.Println("aliRsp.Response.Passed:", aliRsp.Response.Passed)
+}
 
+func TestClient_UserInfoAuth(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	// 接口权限值，目前只支持auth_user和auth_base两个值。具体说明看文档介绍
+	bm.Set("scopes", []string{"auth_user"})
+	bm.Set("state", "init")
+
+	// 发起请求
+	aliRsp, err := client.UserInfoAuth(bm)
+	if err != nil {
+		fmt.Println("err:", err)
+		return
+	}
+	fmt.Println("aliRsp:", *aliRsp)
 }
 
 func TestClient_UserInfoShare(t *testing.T) {
