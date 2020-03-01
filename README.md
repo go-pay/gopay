@@ -150,12 +150,12 @@ func main() {
 * [GoDoc](https://godoc.org/github.com/iGoogle-ink/gopay)
 * QQ支付 使用方法请参考微信的
 * 所有方法，如有问题，请仔细查看 wechat_client_test.go、alipay_client_test.go 或 examples
-* 有问题请加QQ群（加群验证答案：gopay）。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
+* 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 
 QQ群：
 <img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/qq_gopay.png"/>
-微信群：
-<img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_gopay.png"/>
+加微信拉群：
+<img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/master/wechat_jerry.png"/>
 
 ---
 
