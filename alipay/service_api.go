@@ -16,6 +16,7 @@ import (
 	"hash"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"reflect"
 	"strings"
 	"time"
@@ -51,6 +52,68 @@ func ParseNotifyResultToBodyMap(req *http.Request) (bm gopay.BodyMap, err error)
 		if len(v) == 1 {
 			bm.Set(k, v[0])
 		}
+	}
+	return
+}
+
+// 通过 url.Values 解析支付宝支付异步通知的参数到Struct
+//    value：url.Values
+//    返回参数notifyReq：Notify请求的参数
+//    返回参数err：错误信息
+//    文档：https://docs.open.alipay.com/203/105286/
+func ParseNotifyResultByURLValues(value url.Values) (notifyReq *NotifyRequest, err error) {
+	notifyReq = new(NotifyRequest)
+	notifyReq.NotifyTime = value.Get("notify_time")
+	notifyReq.NotifyType = value.Get("notify_type")
+	notifyReq.NotifyId = value.Get("notify_id")
+	notifyReq.AppId = value.Get("app_id")
+	notifyReq.Charset = value.Get("charset")
+	notifyReq.Version = value.Get("version")
+	notifyReq.SignType = value.Get("sign_type")
+	notifyReq.Sign = value.Get("sign")
+	notifyReq.AuthAppId = value.Get("auth_app_id")
+	notifyReq.TradeNo = value.Get("trade_no")
+	notifyReq.OutTradeNo = value.Get("out_trade_no")
+	notifyReq.OutBizNo = value.Get("out_biz_no")
+	notifyReq.BuyerId = value.Get("buyer_id")
+	notifyReq.BuyerLogonId = value.Get("buyer_logon_id")
+	notifyReq.SellerId = value.Get("seller_id")
+	notifyReq.SellerEmail = value.Get("seller_email")
+	notifyReq.TradeStatus = value.Get("trade_status")
+	notifyReq.TotalAmount = value.Get("total_amount")
+	notifyReq.ReceiptAmount = value.Get("receipt_amount")
+	notifyReq.InvoiceAmount = value.Get("invoice_amount")
+	notifyReq.BuyerPayAmount = value.Get("buyer_pay_amount")
+	notifyReq.PointAmount = value.Get("point_amount")
+	notifyReq.RefundFee = value.Get("refund_fee")
+	notifyReq.Subject = value.Get("subject")
+	notifyReq.Body = value.Get("body")
+	notifyReq.GmtCreate = value.Get("gmt_create")
+	notifyReq.GmtPayment = value.Get("gmt_payment")
+	notifyReq.GmtRefund = value.Get("gmt_refund")
+	notifyReq.GmtClose = value.Get("gmt_close")
+	notifyReq.PassbackParams = value.Get("passback_params")
+
+	billList := value.Get("fund_bill_list")
+	if billList != gopay.NULL {
+		bills := make([]*FundBillListInfo, 0)
+		if err = json.Unmarshal([]byte(billList), &bills); err != nil {
+			return nil, fmt.Errorf(`"fund_bill_list" xml.Unmarshal(%s)：%w`, billList, err)
+		}
+		notifyReq.FundBillList = bills
+	} else {
+		notifyReq.FundBillList = nil
+	}
+
+	detailList := value.Get("voucher_detail_list")
+	if detailList != gopay.NULL {
+		details := make([]*VoucherDetailListInfo, 0)
+		if err = json.Unmarshal([]byte(detailList), &details); err != nil {
+			return nil, fmt.Errorf(`"voucher_detail_list" xml.Unmarshal(%s)：%w`, detailList, err)
+		}
+		notifyReq.VoucherDetailList = details
+	} else {
+		notifyReq.VoucherDetailList = nil
 	}
 	return
 }

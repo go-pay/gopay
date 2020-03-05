@@ -5,6 +5,7 @@
    (2) 支付宝：新增Client方法：client.DataBillDownloadUrlQuery()，查询对账单下载地址。
    (3) 支付宝：开放公共方法：alipay.GetRsaSign()，获取支付宝参数签名（参数sign值）。
    (4) 支付宝：开放公共方法：alipay.FormatURLParam()，格式化支付宝请求URL参数。
+   (4) 支付宝：新增公共方法：alipay.ParseNotifyResultByURLValues()，通过 url.Values 解析支付宝支付异步通知的参数到Struct。
 
 版本号：Release 1.5.4
 发布时间：2020/02/29 14:32

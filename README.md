@@ -140,6 +140,7 @@ func main() {
 * alipay.FormatPublicKey() => 格式化支付宝公钥
 * alipay.FormatURLParam() => 格式化支付宝请求URL参数
 * alipay.ParseNotifyResult() => 解析支付宝支付异步通知的参数到Struct
+* alipay.ParseNotifyResultByURLValues() => 通过 url.Values 解析支付宝支付异步通知的参数到Struct
 * alipay.ParseNotifyResultToBodyMap() => 解析支付宝支付异步通知的参数到BodyMap
 * alipay.VerifySign() => 支付宝异步通知参数验签
 * alipay.VerifySyncSign() => 支付宝同步返回参数验签
