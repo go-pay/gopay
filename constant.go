@@ -7,5 +7,5 @@ const (
 	SUCCESS    = "SUCCESS"
 	FAIL       = "FAIL"
 	OK         = "OK"
-	Version    = "1.5.4"
+	Version    = "1.5.5"
 )
