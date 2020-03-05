@@ -127,14 +127,18 @@ func main() {
 * 身份认证开始认证（获取认证链接）：client.UserCertifyOpenCertify()
 * 身份认证记录查询：client.UserCertifyOpenQuery()
 * 用户登陆授权：client.UserInfoAuth()
+* 支付宝商家账户当前余额查询：client.DataBillBalanceQuery()
+* 查询对账单下载地址：client.DataBillDownloadUrlQuery()
 
 ### 支付宝公共API
 
 * alipay.GetCertSN() => 获取证书SN号（app_cert_sn、alipay_cert_sn）
 * alipay.GetRootCertSN() => 获取证书SN号（alipay_root_cert_sn）
+* alipay.GetRsaSign() => 获取支付宝参数签名（参数sign值）
 * alipay.SystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
 * alipay.FormatPrivateKey() => 格式化应用私钥
 * alipay.FormatPublicKey() => 格式化支付宝公钥
+* alipay.FormatURLParam() => 格式化支付宝请求URL参数
 * alipay.ParseNotifyResult() => 解析支付宝支付异步通知的参数到Struct
 * alipay.ParseNotifyResultToBodyMap() => 解析支付宝支付异步通知的参数到BodyMap
 * alipay.VerifySign() => 支付宝异步通知参数验签

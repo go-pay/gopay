@@ -611,7 +611,7 @@ func (a *Client) UserInfoAuth(bm gopay.BodyMap) (aliRsp *UserInfoAuthResponse, e
 }
 
 // alipay.data.bill.balance.query(支付宝商家账户当前余额查询)
-// https://docs.open.alipay.com/api_15/alipay.data.bill.balance.query
+//    文档地址：https://docs.open.alipay.com/api_15/alipay.data.bill.balance.query
 func (a *Client) DataBillBalanceQuery(bm gopay.BodyMap) (aliRsp *DataBillBalanceQueryResponse, err error) {
 	var bs []byte
 	if bs, err = a.doAliPay(bm, "alipay.data.bill.balance.query"); err != nil {
@@ -630,7 +630,7 @@ func (a *Client) DataBillBalanceQuery(bm gopay.BodyMap) (aliRsp *DataBillBalance
 }
 
 // alipay.data.dataservice.bill.downloadurl.query(查询对账单下载地址)
-// https://docs.open.alipay.com/api_15/alipay.data.bill.balance.query
+//    文档地址：https://docs.open.alipay.com/api_15/alipay.data.dataservice.bill.downloadurl.query
 func (a *Client) DataBillDownloadUrlQuery(bm gopay.BodyMap) (aliRsp *DataBillDownloadUrlQueryResponse, err error) {
 	err = bm.CheckEmptyError("bill_type", "bill_date")
 	if err != nil {
@@ -723,7 +723,7 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 	if bodyStr != gopay.NULL {
 		pubBody.Set("biz_content", bodyStr)
 	}
-	sign, err := getRsaSign(pubBody, pubBody.Get("sign_type"), FormatPrivateKey(a.PrivateKey))
+	sign, err := GetRsaSign(pubBody, pubBody.Get("sign_type"), FormatPrivateKey(a.PrivateKey))
 	if err != nil {
 		return
 	}

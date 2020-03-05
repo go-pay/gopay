@@ -645,10 +645,10 @@ type MonitorHeartbeatSynResponse struct {
 
 // ===================================================
 type DataBillBalanceQueryResponse struct {
-	Response     *dataBillBalanceQueryResponse `json:"alipay_data_bill_balance_query,omitempty"`
-	AlipayCertSn string                    `json:"alipay_cert_sn,omitempty"`
-	SignData     string                    `json:"-"`
-	Sign         string                    `json:"sign"`
+	Response     *dataBillBalanceQueryResponse `json:"alipay_data_bill_balance_query_response,omitempty"`
+	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
+	SignData     string                        `json:"-"`
+	Sign         string                        `json:"sign"`
 }
 
 type dataBillBalanceQueryResponse struct {
@@ -656,7 +656,7 @@ type dataBillBalanceQueryResponse struct {
 	Msg             string `json:"msg,omitempty"`
 	SubCode         string `json:"sub_code,omitempty"`
 	SubMsg          string `json:"sub_msg,omitempty"`
-	TotaleAmount    string `json:"total_amount,omitempty"`
+	TotalAmount     string `json:"total_amount,omitempty"`
 	AvailableAmount string `json:"available_amount,omitempty"`
 	FreezeAmount    string `json:"freeze_amount,omitempty"`
 }
@@ -664,9 +664,9 @@ type dataBillBalanceQueryResponse struct {
 // ===================================================
 type DataBillDownloadUrlQueryResponse struct {
 	Response     *dataBillDownloadUrlQueryResponse `json:"alipay_data_dataservice_bill_downloadurl_query_response,omitempty"`
-	AlipayCertSn string                    `json:"alipay_cert_sn,omitempty"`
-	SignData     string                    `json:"-"`
-	Sign         string                    `json:"sign"`
+	AlipayCertSn string                            `json:"alipay_cert_sn,omitempty"`
+	SignData     string                            `json:"-"`
+	Sign         string                            `json:"sign"`
 }
 
 type dataBillDownloadUrlQueryResponse struct {

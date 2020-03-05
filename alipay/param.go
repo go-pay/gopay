@@ -163,8 +163,8 @@ func (a *Client) SetAuthToken(authToken string) (client *Client) {
 	return a
 }
 
-// 获取参数签名
-func getRsaSign(bm gopay.BodyMap, signType, privateKey string) (sign string, err error) {
+// 获取支付宝参数签名
+func GetRsaSign(bm gopay.BodyMap, signType, privateKey string) (sign string, err error) {
 	var (
 		block          *pem.Block
 		h              hash.Hash

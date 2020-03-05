@@ -1,3 +1,11 @@
+版本号：Release 1.5.5
+发布时间：2020/03/05 18:32
+修改记录：
+   (1) 支付宝：新增Client方法：client.DataBillBalanceQuery()，支付宝商家账户当前余额查询。
+   (2) 支付宝：新增Client方法：client.DataBillDownloadUrlQuery()，查询对账单下载地址。
+   (3) 支付宝：开放公共方法：alipay.GetRsaSign()，获取支付宝参数签名（参数sign值）。
+   (4) 支付宝：开放公共方法：alipay.FormatURLParam()，格式化支付宝请求URL参数。
+
 版本号：Release 1.5.4
 发布时间：2020/02/29 14:32
 修改记录：
