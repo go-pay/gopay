@@ -102,7 +102,7 @@ func main() {
 ---
 
 ### 支付宝支付API
-
+> #### 因支付宝接口太多，如有没实现的接口，还请开发者自行fork代码，添加新方法后提交PR，谢谢！
 * 手机网站支付接口2.0（手机网站支付）：client.TradeWapPay()
 * 统一收单下单并支付页面接口（电脑网站支付）：client.TradePagePay()
 * APP支付接口2.0（APP支付）：client.TradeAppPay()
