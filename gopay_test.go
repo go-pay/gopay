@@ -10,7 +10,7 @@ func TestBodyMap_CheckParamsNull(t *testing.T) {
 	bm.Set("name", "jerry")
 	bm.Set("age", 2)
 	bm.Set("phone", "")
-	bm.Set("pi", 3.14)
+	bm.Set("pi", 3.1415926)
 
 	err := bm.CheckEmptyError("name", "age", "phone")
 	if err != nil {
