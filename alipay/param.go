@@ -41,7 +41,7 @@ type OpenApiRoyaltyDetailInfoPojo struct {
 	Desc         string `json:"desc,omitempty"`
 }
 
-// 设置 支付宝 私钥类型，alipay.PKCS1 或 alipay.PKCS1，默认 PKCS1
+// 设置 支付宝 私钥类型，alipay.PKCS1 或 alipay.PKCS8，默认 PKCS1
 func (a *Client) SetPrivateKeyType(t PKCSType) (client *Client) {
 	a.mu.Lock()
 	a.PrivateKeyType = t
