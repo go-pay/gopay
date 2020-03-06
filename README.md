@@ -212,18 +212,19 @@ import (
 
 // 初始化支付宝客户端
 //    appId：应用ID
-//    privateKey：应用秘钥
+//    privateKey：应用私钥，支持PKCS1和PKCS8
 //    isProd：是否是正式环境
 client := alipay.NewClient("2016091200494382", privateKey, false)
 
 // 设置支付宝请求 公共参数
 //    注意：具体设置哪些参数，根据不同的方法而不同，此处列举出所以设置参数
 client.SetLocation().                       // 设置时区，不设置或出错均为默认服务器时间
+    SetPrivateKeyType().                    // 设置 支付宝 私钥类型，alipay.PKCS1 或 alipay.PKCS1，默认 PKCS1
     SetAliPayRootCertSN().                  // 设置支付宝根证书SN，通过 alipay.GetRootCertSN() 获取
     SetAppCertSN().                         // 设置应用公钥证书SN，通过 alipay.GetCertSN() 获取
     SetAliPayPublicCertSN().                // 设置支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
     SetCharset("utf-8").                    // 设置字符编码，不设置默认 utf-8
-    SetSignType("RSA2").                    // 设置签名类型，不设置默认 RSA2
+    SetSignType(alipay.RSA2).               // 设置签名类型，不设置默认 RSA2
     SetReturnUrl("https://www.gopay.ink").  // 设置返回URL
     SetNotifyUrl("https://www.gopay.ink").  // 设置异步通知URL
     SetAppAuthToken().                      // 设置第三方应用授权
@@ -554,7 +555,7 @@ import (
 
 // 换取授权访问令牌（默认使用utf-8，RSA2）
 //    appId：应用ID
-//    privateKey：应用私钥
+//    privateKey：应用私钥，支持PKCS1和PKCS8
 //    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
 //    codeOrToken：支付宝授权码或refresh_token
 rsp, err := alipay.SystemOauthToken(appId, privateKey, grantType, codeOrToken)
