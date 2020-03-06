@@ -7,7 +7,7 @@ const (
 	baseUrlUtf8        = "https://openapi.alipay.com/gateway.do?charset=utf-8"
 	sandboxBaseUrlUtf8 = "https://openapi.alipaydev.com/gateway.do?charset=utf-8"
 
-	locationShanghai          = "Asia/Shanghai"
+	LocationShanghai          = "Asia/Shanghai"
 	PKCS1            PKCSType = 1
 	PKCS8            PKCSType = 2
 	RSA                       = "RSA"
