@@ -13,6 +13,7 @@ import (
 
 type Client struct {
 	AppId              string
+	PrivateKeyType     PKCSType
 	PrivateKey         string
 	LocationName       string
 	AppCertSN          string
@@ -32,8 +33,8 @@ type Client struct {
 // 初始化支付宝客户端
 //    注意：如果使用支付宝公钥证书验签，请设置 支付宝根证书SN（client.SetAlipayRootCertSN()）、应用公钥证书SN（client.SetAppCertSN()）
 //    appId：应用ID
-//    PrivateKey：应用私钥
-//    IsProd：是否是正式环境
+//    privateKey：应用私钥，支持PKCS1和PKCS8
+//    isProd：是否是正式环境
 func NewClient(appId, privateKey string, isProd bool) (client *Client) {
 	return &Client{
 		AppId:      appId,
@@ -691,7 +692,7 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 		a.mu.RUnlock()
 	}
 	if a.SignType == gopay.NULL {
-		pubBody.Set("sign_type", "RSA2")
+		pubBody.Set("sign_type", RSA2)
 	} else {
 		a.mu.RLock()
 		pubBody.Set("sign_type", a.SignType)
@@ -723,7 +724,7 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 	if bodyStr != gopay.NULL {
 		pubBody.Set("biz_content", bodyStr)
 	}
-	sign, err := GetRsaSign(pubBody, pubBody.Get("sign_type"), FormatPrivateKey(a.PrivateKey))
+	sign, err := GetRsaSign(pubBody, pubBody.Get("sign_type"), a.PrivateKeyType, a.PrivateKey)
 	if err != nil {
 		return
 	}
