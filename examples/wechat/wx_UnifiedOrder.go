@@ -64,7 +64,7 @@ func UnifiedOrder() {
 
 	//获取小程序支付需要的paySign
 	//pac := "prepay_id=" + wxRsp.PrepayId
-	//paySign := gopay.GetMiniPaySign("wxdaa2ab9ef87b5497", wxRsp.NonceStr, pac, gopay.SignType_MD5, timeStamp, "GFDS8j98rewnmgl45wHTt980jg543abc")
+	//paySign := wechat.GetMiniPaySign("wxdaa2ab9ef87b5497", wxRsp.NonceStr, pac, gopay.SignType_MD5, timeStamp, "GFDS8j98rewnmgl45wHTt980jg543abc")
 	//fmt.Println("paySign:", paySign)
 
 	//获取H5支付需要的paySign
@@ -73,6 +73,6 @@ func UnifiedOrder() {
 	fmt.Println("paySign:", paySign)
 
 	//获取小程序需要的paySign
-	//paySign := gopay.GetAppPaySign("wxdaa2ab9ef87b5497","", wxRsp.NonceStr, wxRsp.PrepayId, gopay.SignType_MD5, timeStamp, "GFDS8j98rewnmgl45wHTt980jg543abc")
+	//paySign := wechat.GetAppPaySign("wxdaa2ab9ef87b5497","", wxRsp.NonceStr, wxRsp.PrepayId, gopay.SignType_MD5, timeStamp, "GFDS8j98rewnmgl45wHTt980jg543abc")
 	//fmt.Println("paySign:", paySign)
 }
