@@ -16,7 +16,8 @@ func SystemOauthToken() {
 	client := alipay.NewClient("2016091200494382", privateKey, false)
 	//配置公共参数
 	client.SetCharset("utf-8").
-		SetSignType("RSA2").
+		SetSignType(alipay.RSA2).
+		SetPrivateKeyType(alipay.PKCS1).
 		SetNotifyUrl("https://www.gopay.ink")
 
 	//请求参数
