@@ -22,22 +22,22 @@ func Transfer() {
 	}
 
 	// 初始化参数结构体
-	body := make(gopay.BodyMap)
-	body.Set("nonce_str", gopay.GetRandomString(32))
-	body.Set("partner_trade_no", gopay.GetRandomString(32))
-	body.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
-	body.Set("check_name", "FORCE_CHECK") // NO_CHECK：不校验真实姓名 , FORCE_CHECK：强校验真实姓名
-	body.Set("re_user_name", "付明明")       // 收款用户真实姓名。 如果check_name设置为FORCE_CHECK，则必填用户真实姓名
-	body.Set("amount", 30)                // 企业付款金额，单位为分
-	body.Set("desc", "测试转账")              // 企业付款备注，必填。注意：备注中的敏感词会被转成字符*
-	body.Set("spbill_create_ip", "127.0.0.1")
+	bm := make(gopay.BodyMap)
+	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("partner_trade_no", gopay.GetRandomString(32))
+	bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
+	bm.Set("check_name", "FORCE_CHECK") // NO_CHECK：不校验真实姓名 , FORCE_CHECK：强校验真实姓名
+	bm.Set("re_user_name", "付明明")       // 收款用户真实姓名。 如果check_name设置为FORCE_CHECK，则必填用户真实姓名
+	bm.Set("amount", 30)                // 企业付款金额，单位为分
+	bm.Set("desc", "测试转账")              // 企业付款备注，必填。注意：备注中的敏感词会被转成字符*
+	bm.Set("spbill_create_ip", "127.0.0.1")
 
 	// 企业向微信用户个人付款（不支持沙箱环境）
 	//    body：参数Body
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, err := client.Transfer(body, "", "", "")
+	wxRsp, err := client.Transfer(bm, "", "", "")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return

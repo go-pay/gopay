@@ -16,23 +16,23 @@ func Micropay() {
 	client := wechat.NewClient("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", false)
 
 	// 初始化参数Map
-	body := make(gopay.BodyMap)
-	body.Set("nonce_str", gopay.GetRandomString(32))
-	body.Set("body", "扫用户付款码支付")
+	bm := make(gopay.BodyMap)
+	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("body", "扫用户付款码支付")
 	number := gopay.GetRandomString(32)
 	fmt.Println("out_trade_no:", number)
-	body.Set("out_trade_no", number)
-	body.Set("total_fee", 1)
-	body.Set("spbill_create_ip", "127.0.0.1")
-	body.Set("auth_code", "134595229789828537")
-	body.Set("sign_type", wechat.SignType_MD5)
+	bm.Set("out_trade_no", number)
+	bm.Set("total_fee", 1)
+	bm.Set("spbill_create_ip", "127.0.0.1")
+	bm.Set("auth_code", "134595229789828537")
+	bm.Set("sign_type", wechat.SignType_MD5)
 
-	sign := wechat.GetParamSign("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", body)
+	sign := wechat.GetParamSign("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", bm)
 	//sign, _ := gopay.GetSanBoxParamSign("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", body)
 
-	body.Set("sign", sign)
+	bm.Set("sign", sign)
 	//请求支付，成功后得到结果
-	wxRsp, err := client.Micropay(body)
+	wxRsp, err := client.Micropay(bm)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return

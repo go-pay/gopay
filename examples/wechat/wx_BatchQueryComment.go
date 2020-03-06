@@ -17,15 +17,15 @@ func BatchQueryComment() {
 	client := wechat.NewClient("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", false)
 
 	// 初始化参数结构体
-	body := make(gopay.BodyMap)
-	body.Set("nonce_str", gopay.GetRandomString(32))
-	body.Set("sign_type", wechat.SignType_HMAC_SHA256)
-	body.Set("begin_time", "20190120000000")
-	body.Set("end_time", "20190122174000")
-	body.Set("offset", "0")
+	bm := make(gopay.BodyMap)
+	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("sign_type", wechat.SignType_HMAC_SHA256)
+	bm.Set("begin_time", "20190120000000")
+	bm.Set("end_time", "20190122174000")
+	bm.Set("offset", "0")
 
 	// 请求拉取订单评价数据，成功后得到结果，沙箱环境下，证书路径参数可传空
-	wxRsp, err := client.BatchQueryComment(body, "", "", "")
+	wxRsp, err := client.BatchQueryComment(bm, "", "", "")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
