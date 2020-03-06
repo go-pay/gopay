@@ -17,7 +17,8 @@ func TradeQuery() {
 	client := alipay.NewClient("2016091200494382", privateKey, false)
 	//配置公共参数
 	client.SetCharset("utf-8").
-		SetSignType("RSA2").
+		SetSignType(alipay.RSA2).
+		SetPrivateKeyType(alipay.PKCS1).
 		SetAppAuthToken("201908BB03f542de8ecc42b985900f5080407abc")
 
 	//请求参数

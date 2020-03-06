@@ -41,6 +41,14 @@ type OpenApiRoyaltyDetailInfoPojo struct {
 	Desc         string `json:"desc,omitempty"`
 }
 
+// 设置 支付宝 私钥类型，alipay.PKCS1 或 alipay.PKCS1，默认 PKCS1
+func (a *Client) SetPrivateKeyType(t PKCSType) (client *Client) {
+	a.mu.Lock()
+	a.PrivateKeyType = t
+	a.mu.Unlock()
+	return a
+}
+
 // 设置 时区，不设置或出错均为默认服务器时间
 func (a *Client) SetLocation(name string) (client *Client) {
 	location, err := time.LoadLocation(name)
@@ -139,7 +147,7 @@ func (a *Client) SetCharset(charset string) (client *Client) {
 func (a *Client) SetSignType(signType string) (client *Client) {
 	a.mu.Lock()
 	if signType == gopay.NULL {
-		a.SignType = "RSA2"
+		a.SignType = RSA2
 	} else {
 		a.SignType = signType
 	}
@@ -164,7 +172,11 @@ func (a *Client) SetAuthToken(authToken string) (client *Client) {
 }
 
 // 获取支付宝参数签名
-func GetRsaSign(bm gopay.BodyMap, signType, privateKey string) (sign string, err error) {
+//    bm：签名参数
+//    signType：签名类型，alipay.RSA 或 alipay.RSA2
+//    t：私钥类型，alipay.PKCS1 或 alipay.PKCS1，默认 PKCS1
+//    privateKey：应用私钥，支持PKCS1和PKCS8
+func GetRsaSign(bm gopay.BodyMap, signType string, t PKCSType, privateKey string) (sign string, err error) {
 	var (
 		block          *pem.Block
 		h              hash.Hash
@@ -172,18 +184,38 @@ func GetRsaSign(bm gopay.BodyMap, signType, privateKey string) (sign string, err
 		hashs          crypto.Hash
 		encryptedBytes []byte
 	)
+	pk := FormatPrivateKey(privateKey)
 
-	if block, _ = pem.Decode([]byte(privateKey)); block == nil {
+	if block, _ = pem.Decode([]byte(pk)); block == nil {
 		return gopay.NULL, errors.New("pem.Decode：privateKey decode error")
 	}
-	if key, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil {
-		return
+
+	switch t {
+	case PKCS1:
+		if key, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil {
+			return gopay.NULL, err
+		}
+	case PKCS8:
+		pkcs8Key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
+		if err != nil {
+			return gopay.NULL, err
+		}
+		pk8, ok := pkcs8Key.(*rsa.PrivateKey)
+		if !ok {
+			return gopay.NULL, errors.New("parse PKCS8 key error")
+		}
+		key = pk8
+	default:
+		if key, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil {
+			return gopay.NULL, err
+		}
 	}
+
 	switch signType {
-	case "RSA":
+	case RSA:
 		h = sha1.New()
 		hashs = crypto.SHA1
-	case "RSA2":
+	case RSA2:
 		h = sha256.New()
 		hashs = crypto.SHA256
 	default:

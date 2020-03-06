@@ -210,7 +210,7 @@ A：开发者上传自己的应用公钥证书后，开放平台会为开发者�
 func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error) {
 	// 支付宝公钥验签
 	pKey := FormatPublicKey(aliPayPublicKey)
-	if err = verifySign(signData, sign, "RSA2", pKey); err != nil {
+	if err = verifySign(signData, sign, RSA2, pKey); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -285,9 +285,9 @@ func verifySign(signData, sign, signType, aliPayPublicKey string) (err error) {
 		return errors.New("支付宝公钥转换错误")
 	}
 	switch signType {
-	case "RSA":
+	case RSA:
 		hashs = crypto.SHA1
-	case "RSA2":
+	case RSA2:
 		hashs = crypto.SHA256
 	default:
 		hashs = crypto.SHA256
@@ -369,9 +369,9 @@ func verifySignCert(signData, sign, signType, aliPayPublicKeyPath string) (err e
 		return errors.New("支付宝公钥转换错误")
 	}
 	switch signType {
-	case "RSA":
+	case RSA:
 		hashs = crypto.SHA1
-	case "RSA2":
+	case RSA2:
 		hashs = crypto.SHA256
 	default:
 		hashs = crypto.SHA256
@@ -586,12 +586,13 @@ func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap
 
 // SystemOauthToken 换取授权访问令牌（默认使用utf-8，RSA2）
 //    appId：应用ID
+//	  t：支付宝私钥类型，alipay.PKCS1 或 alipay.PKCS8，默认 PKCS1
 //    privateKey：应用私钥
 //    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
 //    codeOrToken：支付宝授权码或refresh_token
 //    signType：签名方式 RSA 或 RSA2，默认 RSA2
 //    文档：https://docs.open.alipay.com/api_9/alipay.system.oauth.token
-func SystemOauthToken(appId, privateKey, grantType, codeOrToken, signType string) (rsp *SystemOauthTokenResponse, err error) {
+func SystemOauthToken(appId string, t PKCSType, privateKey, grantType, codeOrToken, signType string) (rsp *SystemOauthTokenResponse, err error) {
 	var bs []byte
 	bm := make(gopay.BodyMap)
 	if "authorization_code" == grantType {
@@ -604,7 +605,7 @@ func SystemOauthToken(appId, privateKey, grantType, codeOrToken, signType string
 		bm.Set("grant_type", "authorization_code")
 		bm.Set("code", codeOrToken)
 	}
-	if bs, err = systemOauthToken(appId, privateKey, bm, "alipay.system.oauth.token", true, signType); err != nil {
+	if bs, err = systemOauthToken(appId, t, privateKey, bm, "alipay.system.oauth.token", true, signType); err != nil {
 		return
 	}
 	rsp = new(SystemOauthTokenResponse)
@@ -618,13 +619,13 @@ func SystemOauthToken(appId, privateKey, grantType, codeOrToken, signType string
 }
 
 // systemOauthToken 向支付宝发送请求
-func systemOauthToken(appId, privateKey string, bm gopay.BodyMap, method string, isProd bool, signType string) (bs []byte, err error) {
+func systemOauthToken(appId string, t PKCSType, privateKey string, bm gopay.BodyMap, method string, isProd bool, signType string) (bs []byte, err error) {
 	bm.Set("app_id", appId)
 	bm.Set("method", method)
 	bm.Set("format", "JSON")
 	bm.Set("charset", "utf-8")
 	if signType == gopay.NULL {
-		bm.Set("sign_type", "RSA2")
+		bm.Set("sign_type", RSA2)
 	} else {
 		bm.Set("sign_type", signType)
 	}
@@ -634,8 +635,7 @@ func systemOauthToken(appId, privateKey string, bm gopay.BodyMap, method string,
 		sign string
 		url  = baseUrlUtf8
 	)
-	pKey := FormatPrivateKey(privateKey)
-	if sign, err = GetRsaSign(bm, bm.Get("sign_type"), pKey); err != nil {
+	if sign, err = GetRsaSign(bm, bm.Get("sign_type"), t, privateKey); err != nil {
 		return nil, err
 	}
 	bm.Set("sign", sign)
@@ -651,11 +651,11 @@ func systemOauthToken(appId, privateKey string, bm gopay.BodyMap, method string,
 
 // monitor.heartbeat.syn(验签接口)
 //    appId：应用ID
-//    privateKey：应用私钥
-//    signType：签名方式 RSA 或 RSA2，默认 RSA2
+//    privateKey：应用私钥，支持PKCS1和PKCS8
+//    signType：签名方式 alipay.RSA 或 alipay.RSA2，默认 RSA2
 //    bizContent：验签时该参数不做任何处理，{任意值}，此参数具体看文档
 //    文档：https://docs.open.alipay.com/api_9/monitor.heartbeat.syn
-func MonitorHeartbeatSyn(appId, privateKey, signType, bizContent string) (rsp *MonitorHeartbeatSynResponse, err error) {
+func MonitorHeartbeatSyn(appId string, t PKCSType, privateKey, signType, bizContent string) (rsp *MonitorHeartbeatSynResponse, err error) {
 	var bs []byte
 	bm := make(gopay.BodyMap)
 	bm.Set("biz_content", bizContent)
@@ -664,15 +664,14 @@ func MonitorHeartbeatSyn(appId, privateKey, signType, bizContent string) (rsp *M
 	bm.Set("format", "JSON")
 	bm.Set("charset", "utf-8")
 	if signType == gopay.NULL {
-		bm.Set("sign_type", "RSA2")
+		bm.Set("sign_type", RSA2)
 	} else {
 		bm.Set("sign_type", signType)
 	}
 	bm.Set("timestamp", time.Now().Format(gopay.TimeLayout))
 	bm.Set("version", "1.0")
 
-	pKey := FormatPrivateKey(privateKey)
-	sign, err := GetRsaSign(bm, bm.Get("sign_type"), pKey)
+	sign, err := GetRsaSign(bm, bm.Get("sign_type"), t, privateKey)
 	if err != nil {
 		return nil, err
 	}

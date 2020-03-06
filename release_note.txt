@@ -1,3 +1,9 @@
+版本号：Release 1.5.6
+发布时间：2020/03/06 17:32
+修改记录：
+   (1) 支付宝：新增Client方法：client.SetPrivateKeyType()，设置 支付宝 私钥类型，alipay.PKCS1 或 alipay.PKCS1，默认 PKCS1。
+   (2) 支付宝：修改公共方法：alipay.GetRsaSign()，增加了私钥类型参数，并将私钥的格式化操作，移动到该方法内，传入的私钥无需事先格式化。
+
 版本号：Release 1.5.5
 发布时间：2020/03/05 18:32
 修改记录：

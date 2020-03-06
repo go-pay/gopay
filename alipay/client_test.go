@@ -19,12 +19,12 @@ func TestMain(m *testing.M) {
 
 	// 初始化支付宝客户端
 	//    appId：应用ID
-	//    privateKey：应用秘钥
+	//    privateKey：应用私钥，支持PKCS1和PKCS8
 	//    isProd：是否是正式环境
 	client = NewClient(appid, privateKey, false)
 	// 配置公共参数
 	client.SetCharset("utf-8").
-		SetSignType("RSA2")
+		SetSignType(RSA2)
 	// SetReturnUrl("https://www.gopay.ink").
 	// SetNotifyUrl("https://www.gopay.ink")
 
@@ -426,7 +426,7 @@ func TestSyncVerifySign(t *testing.T) {
 	sign := "bk3SzX0CZRI811IJioS2XKQHcgMixUT8mYyGQj+vcOAQas7GIYi6LpykqqSc3m7+yvqoG0TdX/c2JjYnpw/J53JxtC2IC4vsLuIPIgghVo5qafsfSxEJ22w20RZDatI2dYqFVcj8Jp+4aesQ8zMMNw7cX9NLyk7kw3DecYeyQp+zrZMueZPqLh88Z+54G+e6QuSU++0ouqQVd4PkpPqy6YI+8MdMUX4Ve0jOQxMmYH8BC6n5ZsTH/uEaLEtzYVZdSw/xdSQ7K1SH73aEH8XbRYx6rL7RkKksrdvhezX+ThDjQ+fTWjvNFrGcg3fmqXRy2elvoalu+BQmqlkWWjEJYA=="
 	aliPayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp8gueNlkbiDidz6FBQEBpqoRgH8h7JtsPtYW0nzAqy1MME4mFnDSMfSKlreUomS3a55gmBopL1eF4/Km/dEnaL5tCY9+24SKn1D4iyls+lvz/ZjvUjVwxoUYBh8kkcxMZSDeDz8//o+9qZTrICVP2a4sBB8T0XmU4gxfw8FsmtoomBH1nLk3AO7wgRN2a3+SRSAmxrhIGDmF1lljSlhY32eJpJ2TZQKaWNW+7yDBU/0Wt3kQVY84vr14yYagnSCiIfqyVFqePayRtmVJDr5qvSXr51tdqs2zKZCu+26X7JAF4BSsaq4gmY5DmDTm4TohCnBduI1+bPGD+igVmtl05wIDAQAB"
 	pKey := FormatPublicKey(aliPayPublicKey)
-	err := verifySign(signData, sign, "RSA2", pKey)
+	err := verifySign(signData, sign, RSA2, pKey)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -440,7 +440,7 @@ func TestVerifySign(t *testing.T) {
 	//bm := make(gopay.BodyMap)
 	//bm.Set("sign", "f19WZ3rko3cVpSG3uEEJF0eb4DuZVLt4/GXnNw9qg8iHUsJLkav0V91R5SSTDhW5lgkn3Xhq7TkFRJiDXdVXMu3XUlsONArp3Iu4tXagYJWt9jbcnc2/l29VYDXPLNcs7BXEWFEaCZLutQY2U82AumEwSc1XBKtsLC4mVX3M3f/ExFQHWklJEBHArYBGe4535uFRlsT2fk6WVuX8CuYZatCrVF1o02xMS5aD29eICPkmin/h87OcTbE1syktyCU1WVgcypagUdGGPTF0SVDFf7FRov7+w7fiCGGGL10tNlK/MLzcewtN2dyGF6RLUX3m+HQ7sNEk2wylRXLNUFig==")
 	//bm.Set("seller_email", "imonkey@100tal.com")
-	//bm.Set("sign_type", "RSA2")
+	//bm.Set("sign_type", RSA2)
 	//bm.Set("total_amount", "0.02")
 	//bm.Set("buyer_id", "2088812847201551")
 	//bm.Set("invoice_amount", "0.02")
@@ -483,7 +483,7 @@ func TestVerifySign(t *testing.T) {
 	req.ReceiptAmount = "0.02"
 	req.AppId = "2015102700040153"
 	req.BuyerPayAmount = "0.02"
-	req.SignType = "RSA2"
+	req.SignType = RSA2
 	req.SellerId = "2088631240818980"
 	req.GmtPayment = "2020-01-02 16:18:21"
 	req.NotifyTime = "2020-01-02 16:18:21"
@@ -507,7 +507,7 @@ func TestVerifySignWithCert(t *testing.T) {
 	// 测试，假数据，无法验签通过
 	bm := make(gopay.BodyMap)
 	bm.Set("sign", "kPbQIjX+xQc8F0/A6/AocELIjhhZnGbcBN6G4MM/HmfWL4ZiHM6fWl5NQhzXJusaklZ1LFuMo+lHQUELAYeugH8LYFvxnNajOvZhuxNFbN2LhF0l/KL8ANtj8oyPM4NN7Qft2kWJTDJUpQOzCzNnV9hDxh5AaT9FPqRS6ZKxnzM=")
-	bm.Set("sign_type", "RSA2")
+	bm.Set("sign_type", RSA2)
 	bm.Set("total_amount", "2.00")
 	bm.Set("buyer_id", "2088102116773037")
 	bm.Set("body", "大乐透2.1")
