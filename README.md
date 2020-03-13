@@ -201,7 +201,7 @@ client.AddCertFilePath()
 
 支付宝官方文档：[官方文档](https://docs.open.alipay.com/catalog)
 
-支付宝RSA秘钥生成文档：[生成 RSA 密钥](https://docs.open.alipay.com/291/105971/)
+支付宝RSA秘钥生成文档：[生成 RSA 密钥](https://docs.open.alipay.com/291/105971/)（推荐使用 RSA2）
 
 沙箱环境使用说明：[文档地址](https://docs.open.alipay.com/200/105311)
 
@@ -217,7 +217,7 @@ import (
 client := alipay.NewClient("2016091200494382", privateKey, false)
 
 // 设置支付宝请求 公共参数
-//    注意：具体设置哪些参数，根据不同的方法而不同，此处列举出所以设置参数
+//    注意：具体设置哪些参数，根据不同的方法而不同，此处列举出所有设置参数
 client.SetLocation().                       // 设置时区，不设置或出错均为默认服务器时间
     SetPrivateKeyType().                    // 设置 支付宝 私钥类型，alipay.PKCS1 或 alipay.PKCS8，默认 PKCS1
     SetAliPayRootCertSN().                  // 设置支付宝根证书SN，通过 alipay.GetRootCertSN() 获取
