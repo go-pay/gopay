@@ -726,7 +726,7 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 	}
 	sign, err := GetRsaSign(pubBody, pubBody.Get("sign_type"), a.PrivateKeyType, a.PrivateKey)
 	if err != nil {
-		return
+		return nil, fmt.Errorf("GetRsaSign Error: %v", err)
 	}
 	pubBody.Set("sign", sign)
 	param := FormatURLParam(pubBody)
