@@ -147,6 +147,9 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 			buf.WriteByte('&')
 		}
 	}
+	if buf.Len() <= 0 {
+		return NULL
+	}
 	return buf.String()[:buf.Len()-1]
 }
 
@@ -161,6 +164,9 @@ func (bm BodyMap) EncodeGetParams() string {
 			buf.WriteString(v)
 			buf.WriteByte('&')
 		}
+	}
+	if buf.Len() <= 0 {
+		return NULL
 	}
 	return buf.String()[:buf.Len()-1]
 }
