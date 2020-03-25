@@ -613,13 +613,13 @@ type UserCertifyOpenQueryResponse struct {
 }
 
 type userCertifyOpenQueryResponse struct {
-	Code         string   `json:"code,omitempty"`
-	Msg          string   `json:"msg,omitempty"`
-	SubCode      string   `json:"sub_code,omitempty"`
-	SubMsg       string   `json:"sub_msg,omitempty"`
-	Passed       []string `json:"passed,omitempty"`
-	IdentityInfo string   `json:"identity_info,omitempty"`
-	MaterialInfo string   `json:"material_info,omitempty"`
+	Code         string `json:"code,omitempty"`
+	Msg          string `json:"msg,omitempty"`
+	SubCode      string `json:"sub_code,omitempty"`
+	SubMsg       string `json:"sub_msg,omitempty"`
+	Passed       string `json:"passed,omitempty"`
+	IdentityInfo string `json:"identity_info,omitempty"`
+	MaterialInfo string `json:"material_info,omitempty"`
 }
 
 // ===================================================

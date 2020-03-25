@@ -478,3 +478,11 @@ func TestGetAppletAccessToken(t *testing.T) {
 	}
 	fmt.Println("token:", token)
 }
+
+func TestCode2Session(t *testing.T) {
+	session, err := Code2Session("wx2e92b2ff5ed4db71", "AppSecret", "081XxRPj1e8Krp0uGUQj1s0MPj1XxRP5")
+	if err != nil {
+		return
+	}
+	fmt.Println("Openid:", session.Openid)
+}
