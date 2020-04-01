@@ -34,6 +34,7 @@ var Types = map[string]string{
 type Client struct {
 	HttpClient    *http.Client
 	Transport     *http.Transport
+	Header        http.Header
 	Url           string
 	Method        string
 	RequestType   string
@@ -53,6 +54,7 @@ func NewHttpClient() (client *Client) {
 	c.Transport = &http.Transport{}
 	c.Transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	c.Transport.DisableKeepAlives = true
+	c.Header = make(http.Header)
 	c.RequestType = TypeUrlencoded
 	c.UnmarshalType = TypeJSON
 	c.Errors = make([]error, 0)
@@ -180,6 +182,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 		if err != nil {
 			return nil, err
 		}
+		req.Header = c.Header
 		req.Header.Set("Content-Type", c.ContentType)
 		c.HttpClient.Transport = c.Transport
 		return req, nil
