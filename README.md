@@ -93,6 +93,7 @@ func main() {
 * 退款查询：client.RefundQuery()
 * 交易账单：client.StatementDown()
 * 资金账单：client.AccRoll()
+* 自定义方法请求微信API接口：client.PostRequest()
 
 ### QQ公共API
 
