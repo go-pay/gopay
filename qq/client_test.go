@@ -21,7 +21,7 @@ func TestMain(m *testing.M) {
 	//    apiKey：API秘钥值
 	client = NewClient(mchId, apiKey)
 
-	//err := client.AddCertFilePath("", "", "")
+	//err := client.AddCertFilePath(nil, nil, nil)
 	//if err != nil {
 	//	panic(err)
 	//}

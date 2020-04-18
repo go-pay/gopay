@@ -1,6 +1,7 @@
 package qq
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"encoding/xml"
 	"errors"
@@ -13,6 +14,14 @@ import (
 
 	"github.com/iGoogle-ink/gopay"
 )
+
+// 向QQ发送Post请求，对于本库未提供的微信API，可自行实现，通过此方法发送请求
+//    bm：请求参数的BodyMap
+//    url：完整url地址，例如：https://qpay.qq.com/cgi-bin/pay/qpay_unified_order.cgi
+//    tlsConfig：tls配置，如无需证书请求，传nil
+func (q *Client) PostRequest(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs []byte, err error) {
+	return q.doQQ(bm, url, tlsConfig)
+}
 
 // 解析QQ支付异步通知的结果到BodyMap
 //    req：*http.Request

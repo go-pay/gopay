@@ -6,6 +6,7 @@ import (
 	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha256"
+	"crypto/tls"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
@@ -21,6 +22,14 @@ import (
 
 	"github.com/iGoogle-ink/gopay"
 )
+
+// 向微信发送Post请求，对于本库未提供的微信API，可自行实现，通过此方法发送请求
+//    bm：请求参数的BodyMap
+//    path：接口地址去掉baseURL的path，例如：url为https://api.mch.weixin.qq.com/pay/micropay，只需传 pay/micropay
+//    tlsConfig：tls配置，如无需证书请求，传nil
+func (w *Client) PostRequest(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
+	return w.doProdPost(bm, path, tlsConfig)
+}
 
 // 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
 //    注意：BodyMap中如无 sign_type 参数，默认赋值 sign_type 为 MD5

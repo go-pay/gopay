@@ -22,16 +22,19 @@ import (
 //    keyFilePath：apiclient_key.pem 路径
 //    pkcs12FilePath：apiclient_cert.p12 路径
 //    返回err
-func (q *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath string) (err error) {
-	cert, err := ioutil.ReadFile(certFilePath)
+func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) (err error) {
+	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return err
+	}
+	cert, err := ioutil.ReadFile(certFilePath.(string))
 	if err != nil {
 		return fmt.Errorf("ioutil.ReadFile：%w", err)
 	}
-	key, err := ioutil.ReadFile(keyFilePath)
+	key, err := ioutil.ReadFile(keyFilePath.(string))
 	if err != nil {
 		return fmt.Errorf("ioutil.ReadFile：%w", err)
 	}
-	pkcs, err := ioutil.ReadFile(pkcs12FilePath)
+	pkcs, err := ioutil.ReadFile(pkcs12FilePath.(string))
 	if err != nil {
 		return fmt.Errorf("ioutil.ReadFile：%w", err)
 	}
@@ -41,10 +44,29 @@ func (q *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath strin
 	}
 	pkcsPool := x509.NewCertPool()
 	pkcsPool.AppendCertsFromPEM(pkcs)
-	q.mu.Lock()
-	q.certificate = certificate
-	q.certPool = pkcsPool
-	q.mu.Unlock()
+	w.mu.Lock()
+	w.certificate = certificate
+	w.certPool = pkcsPool
+	w.mu.Unlock()
+	return nil
+}
+
+func checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) error {
+	if certFilePath != nil && keyFilePath != nil && pkcs12FilePath != nil {
+		if v, ok := certFilePath.(string); !ok || v == gopay.NULL {
+			return errors.New("certFilePath not string type or is null string")
+		}
+		if v, ok := keyFilePath.(string); !ok || v == gopay.NULL {
+			return errors.New("keyFilePath not string type or is null string")
+		}
+		if v, ok := pkcs12FilePath.(string); !ok || v == gopay.NULL {
+			return errors.New("pkcs12FilePath not string type or is null string")
+		}
+		return nil
+	}
+	if !(certFilePath == nil && keyFilePath == nil && pkcs12FilePath == nil) {
+		return errors.New("cert paths must all nil or all not nil")
+	}
 	return nil
 }
 
@@ -69,9 +91,8 @@ func getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign stri
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 }
 
-func (q *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath string) (tlsConfig *tls.Config, err error) {
-
-	if certFilePath == gopay.NULL && keyFilePath == gopay.NULL && pkcs12FilePath == gopay.NULL {
+func (q *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath interface{}) (tlsConfig *tls.Config, err error) {
+	if certFilePath == nil && keyFilePath == nil && pkcs12FilePath == nil {
 		q.mu.RLock()
 		defer q.mu.RUnlock()
 		if &q.certificate != nil && q.certPool != nil {
@@ -84,14 +105,22 @@ func (q *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath string)
 		}
 	}
 
-	if certFilePath != gopay.NULL && keyFilePath != gopay.NULL && pkcs12FilePath != gopay.NULL {
-		pkcs, err := ioutil.ReadFile(pkcs12FilePath)
+	if certFilePath != nil && keyFilePath != nil && pkcs12FilePath != nil {
+		cert, err := ioutil.ReadFile(certFilePath.(string))
+		if err != nil {
+			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
+		}
+		key, err := ioutil.ReadFile(keyFilePath.(string))
+		if err != nil {
+			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
+		}
+		pkcs, err := ioutil.ReadFile(pkcs12FilePath.(string))
 		if err != nil {
 			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
 		}
 		pkcsPool := x509.NewCertPool()
 		pkcsPool.AppendCertsFromPEM(pkcs)
-		certificate, err := tls.LoadX509KeyPair(certFilePath, keyFilePath)
+		certificate, err := tls.X509KeyPair(cert, key)
 		if err != nil {
 			return nil, fmt.Errorf("tls.LoadX509KeyPair：%w", err)
 		}
@@ -101,6 +130,5 @@ func (q *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath string)
 			InsecureSkipVerify: true}
 		return tlsConfig, nil
 	}
-
-	return nil, errors.New("certificate file path must be all input or all input null")
+	return nil, errors.New("cert paths must all nil or all not nil")
 }

@@ -45,10 +45,10 @@ func (w *Client) Micropay(bm gopay.BodyMap) (wxRsp *MicropayResponse, err error)
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChatPostProd(bm, microPay, nil)
+		bs, err = w.doProdPost(bm, microPay, nil)
 	} else {
 		bm.Set("total_fee", 1)
-		bs, err = w.doWeChatPostSanBox(bm, sandboxMicroPay)
+		bs, err = w.doSanBoxPost(bm, sandboxMicroPay)
 	}
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ func (w *Client) AuthCodeToOpenId(bm gopay.BodyMap) (wxRsp *AuthCodeToOpenIdResp
 		return nil, err
 	}
 
-	bs, err := w.doWeChatPostProd(bm, authCodeToOpenid, nil)
+	bs, err := w.doProdPost(bm, authCodeToOpenid, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -88,10 +88,10 @@ func (w *Client) UnifiedOrder(bm gopay.BodyMap) (wxRsp *UnifiedOrderResponse, er
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChatPostProd(bm, unifiedOrder, nil)
+		bs, err = w.doProdPost(bm, unifiedOrder, nil)
 	} else {
 		bm.Set("total_fee", 101)
-		bs, err = w.doWeChatPostSanBox(bm, sandboxUnifiedOrder)
+		bs, err = w.doSanBoxPost(bm, sandboxUnifiedOrder)
 	}
 	if err != nil {
 		return nil, err
@@ -115,9 +115,9 @@ func (w *Client) QueryOrder(bm gopay.BodyMap) (wxRsp *QueryOrderResponse, err er
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChatPostProd(bm, orderQuery, nil)
+		bs, err = w.doProdPost(bm, orderQuery, nil)
 	} else {
-		bs, err = w.doWeChatPostSanBox(bm, sandboxOrderQuery)
+		bs, err = w.doSanBoxPost(bm, sandboxOrderQuery)
 	}
 	if err != nil {
 		return nil, err
@@ -138,9 +138,9 @@ func (w *Client) CloseOrder(bm gopay.BodyMap) (wxRsp *CloseOrderResponse, err er
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChatPostProd(bm, closeOrder, nil)
+		bs, err = w.doProdPost(bm, closeOrder, nil)
 	} else {
-		bs, err = w.doWeChatPostSanBox(bm, sandboxCloseOrder)
+		bs, err = w.doSanBoxPost(bm, sandboxCloseOrder)
 	}
 	if err != nil {
 		return nil, err
@@ -155,7 +155,10 @@ func (w *Client) CloseOrder(bm gopay.BodyMap) (wxRsp *CloseOrderResponse, err er
 // 撤销订单
 //    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3
-func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *ReverseResponse, err error) {
+func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ReverseResponse, err error) {
+	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return nil, err
+	}
 	err = bm.CheckEmptyError("nonce_str", "out_trade_no")
 	if err != nil {
 		return nil, err
@@ -168,9 +171,9 @@ func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 			return nil, err
 		}
-		bs, err = w.doWeChatPostProd(bm, reverse, tlsConfig)
+		bs, err = w.doProdPost(bm, reverse, tlsConfig)
 	} else {
-		bs, err = w.doWeChatPostSanBox(bm, sandboxReverse)
+		bs, err = w.doSanBoxPost(bm, sandboxReverse)
 	}
 	if err != nil {
 		return nil, err
@@ -185,7 +188,10 @@ func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 // 申请退款
 //    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
-func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *RefundResponse, err error) {
+func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *RefundResponse, err error) {
+	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return nil, err
+	}
 	err = bm.CheckEmptyError("nonce_str", "out_refund_no", "total_fee", "refund_fee")
 	if err != nil {
 		return nil, err
@@ -201,9 +207,9 @@ func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 			return nil, err
 		}
-		bs, err = w.doWeChatPostProd(bm, refund, tlsConfig)
+		bs, err = w.doProdPost(bm, refund, tlsConfig)
 	} else {
-		bs, err = w.doWeChatPostSanBox(bm, sandboxRefund)
+		bs, err = w.doSanBoxPost(bm, sandboxRefund)
 	}
 	if err != nil {
 		return nil, err
@@ -227,9 +233,9 @@ func (w *Client) QueryRefund(bm gopay.BodyMap) (wxRsp *QueryRefundResponse, err 
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChatPostProd(bm, refundQuery, nil)
+		bs, err = w.doProdPost(bm, refundQuery, nil)
 	} else {
-		bs, err = w.doWeChatPostSanBox(bm, sandboxRefundQuery)
+		bs, err = w.doSanBoxPost(bm, sandboxRefundQuery)
 	}
 	if err != nil {
 		return nil, err
@@ -254,9 +260,9 @@ func (w *Client) DownloadBill(bm gopay.BodyMap) (wxRsp string, err error) {
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChatPostProd(bm, downloadBill, nil)
+		bs, err = w.doProdPost(bm, downloadBill, nil)
 	} else {
-		bs, err = w.doWeChatPostSanBox(bm, sandboxDownloadBill)
+		bs, err = w.doSanBoxPost(bm, sandboxDownloadBill)
 	}
 	if err != nil {
 		return gopay.NULL, err
@@ -268,7 +274,10 @@ func (w *Client) DownloadBill(bm gopay.BodyMap) (wxRsp string, err error) {
 //    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    貌似不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7
-func (w *Client) DownloadFundFlow(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
+func (w *Client) DownloadFundFlow(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp string, err error) {
+	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return gopay.NULL, err
+	}
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "account_type")
 	if err != nil {
 		return gopay.NULL, err
@@ -282,7 +291,7 @@ func (w *Client) DownloadFundFlow(bm gopay.BodyMap, certFilePath, keyFilePath, p
 	if err != nil {
 		return gopay.NULL, err
 	}
-	bs, err := w.doWeChatPostProd(bm, downloadFundFlow, tlsConfig)
+	bs, err := w.doProdPost(bm, downloadFundFlow, tlsConfig)
 	if err != nil {
 		return gopay.NULL, err
 	}
@@ -304,9 +313,9 @@ func (w *Client) Report(bm gopay.BodyMap) (wxRsp *ReportResponse, err error) {
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doWeChatPostProd(bm, report, nil)
+		bs, err = w.doProdPost(bm, report, nil)
 	} else {
-		bs, err = w.doWeChatPostSanBox(bm, sandboxReport)
+		bs, err = w.doSanBoxPost(bm, sandboxReport)
 	}
 	if err != nil {
 		return nil, err
@@ -322,7 +331,10 @@ func (w *Client) Report(bm gopay.BodyMap) (wxRsp *ReportResponse, err error) {
 //    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    貌似不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_17&index=11
-func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp string, err error) {
+func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp string, err error) {
+	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return gopay.NULL, err
+	}
 	err = bm.CheckEmptyError("nonce_str", "begin_time", "end_time", "offset")
 	if err != nil {
 		return gopay.NULL, err
@@ -332,7 +344,7 @@ func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, 
 	if err != nil {
 		return gopay.NULL, err
 	}
-	bs, err := w.doWeChatPostProd(bm, batchQueryComment, tlsConfig)
+	bs, err := w.doProdPost(bm, batchQueryComment, tlsConfig)
 	if err != nil {
 		return gopay.NULL, err
 	}
@@ -340,12 +352,14 @@ func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, 
 }
 
 // 企业向微信用户个人付款（正式）
-//    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
+//    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则3证书Path均不可为nil（string类型）
 //    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
-func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath string) (wxRsp *TransfersResponse, err error) {
-	err = bm.CheckEmptyError("nonce_str", "partner_trade_no", "openid", "check_name", "amount", "desc", "spbill_create_ip")
-	if err != nil {
+func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *TransfersResponse, err error) {
+	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return nil, err
+	}
+	if err = bm.CheckEmptyError("nonce_str", "partner_trade_no", "openid", "check_name", "amount", "desc", "spbill_create_ip"); err != nil {
 		return nil, err
 	}
 	bm.Set("mch_appid", w.AppId)
@@ -383,7 +397,7 @@ func (w *Client) EntrustPublic(bm gopay.BodyMap) (wxRsp *EntrustPublicResponse, 
 	if err != nil {
 		return nil, err
 	}
-	bs, err := w.doWeChatGetProd(bm, entrustPublic, SignType_MD5)
+	bs, err := w.doProdGet(bm, entrustPublic, SignType_MD5)
 	if err != nil {
 		return nil, err
 	}
@@ -401,7 +415,7 @@ func (w *Client) EntrustAppPre(bm gopay.BodyMap) (wxRsp *EntrustAppPreResponse, 
 	if err != nil {
 		return nil, err
 	}
-	bs, err := w.doWeChatPostProd(bm, entrustApp, nil)
+	bs, err := w.doProdPost(bm, entrustApp, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -419,7 +433,7 @@ func (w *Client) EntrustH5(bm gopay.BodyMap) (wxRsp *EntrustH5Response, err erro
 	if err != nil {
 		return nil, err
 	}
-	bs, err := w.doWeChatGetProd(bm, entrustH5, SignType_HMAC_SHA256)
+	bs, err := w.doProdGet(bm, entrustH5, SignType_HMAC_SHA256)
 	if err != nil {
 		return nil, err
 	}
@@ -440,7 +454,7 @@ func (w *Client) EntrustPaying(bm gopay.BodyMap) (wxRsp *EntrustPayingResponse, 
 	if err != nil {
 		return nil, err
 	}
-	bs, err := w.doWeChatPostProd(bm, entrustPaying, nil)
+	bs, err := w.doProdPost(bm, entrustPaying, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -451,8 +465,8 @@ func (w *Client) EntrustPaying(bm gopay.BodyMap) (wxRsp *EntrustPayingResponse, 
 	return wxRsp, nil
 }
 
-// Post请求
-func (w *Client) doWeChatPostSanBox(bm gopay.BodyMap, path string) (bs []byte, err error) {
+// doSanBoxPost sanbox环境post请求
+func (w *Client) doSanBoxPost(bm gopay.BodyMap, path string) (bs []byte, err error) {
 	var url = baseUrlCh + path
 	w.mu.RLock()
 	defer w.mu.RUnlock()
@@ -485,7 +499,7 @@ func (w *Client) doWeChatPostSanBox(bm gopay.BodyMap, path string) (bs []byte, e
 }
 
 // Post请求、正式
-func (w *Client) doWeChatPostProd(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
+func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
 	var url = baseUrlCh + path
 	w.mu.RLock()
 	defer w.mu.RUnlock()
@@ -518,7 +532,7 @@ func (w *Client) doWeChatPostProd(bm gopay.BodyMap, path string, tlsConfig *tls.
 }
 
 // Get请求、正式
-func (w *Client) doWeChatGetProd(bm gopay.BodyMap, path, signType string) (bs []byte, err error) {
+func (w *Client) doProdGet(bm gopay.BodyMap, path, signType string) (bs []byte, err error) {
 	var url = baseUrlCh + path
 	w.mu.RLock()
 	defer w.mu.RUnlock()

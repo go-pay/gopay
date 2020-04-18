@@ -45,16 +45,19 @@ func (w *Client) SetCountry(country Country) (client *Client) {
 //    keyFilePath：apiclient_key.pem 路径
 //    pkcs12FilePath：apiclient_cert.p12 路径
 //    返回err
-func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath string) (err error) {
-	cert, err := ioutil.ReadFile(certFilePath)
+func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) (err error) {
+	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return err
+	}
+	cert, err := ioutil.ReadFile(certFilePath.(string))
 	if err != nil {
 		return fmt.Errorf("ioutil.ReadFile：%w", err)
 	}
-	key, err := ioutil.ReadFile(keyFilePath)
+	key, err := ioutil.ReadFile(keyFilePath.(string))
 	if err != nil {
 		return fmt.Errorf("ioutil.ReadFile：%w", err)
 	}
-	pkcs, err := ioutil.ReadFile(pkcs12FilePath)
+	pkcs, err := ioutil.ReadFile(pkcs12FilePath.(string))
 	if err != nil {
 		return fmt.Errorf("ioutil.ReadFile：%w", err)
 	}
@@ -71,9 +74,8 @@ func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath strin
 	return nil
 }
 
-func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath string) (tlsConfig *tls.Config, err error) {
-
-	if certFilePath == gopay.NULL && keyFilePath == gopay.NULL && pkcs12FilePath == gopay.NULL {
+func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath interface{}) (tlsConfig *tls.Config, err error) {
+	if certFilePath == nil && keyFilePath == nil && pkcs12FilePath == nil {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
 		if &w.certificate != nil && w.certPool != nil {
@@ -86,16 +88,16 @@ func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath string)
 		}
 	}
 
-	if certFilePath != gopay.NULL && keyFilePath != gopay.NULL && pkcs12FilePath != gopay.NULL {
-		cert, err := ioutil.ReadFile(certFilePath)
+	if certFilePath != nil && keyFilePath != nil && pkcs12FilePath != nil {
+		cert, err := ioutil.ReadFile(certFilePath.(string))
 		if err != nil {
 			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
 		}
-		key, err := ioutil.ReadFile(keyFilePath)
+		key, err := ioutil.ReadFile(keyFilePath.(string))
 		if err != nil {
 			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
 		}
-		pkcs, err := ioutil.ReadFile(pkcs12FilePath)
+		pkcs, err := ioutil.ReadFile(pkcs12FilePath.(string))
 		if err != nil {
 			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
 		}
@@ -111,8 +113,26 @@ func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath string)
 			InsecureSkipVerify: true}
 		return tlsConfig, nil
 	}
+	return nil, errors.New("cert paths must all nil or all not nil")
+}
 
-	return nil, errors.New("certificate file path must be all input or all input null")
+func checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) error {
+	if certFilePath != nil && keyFilePath != nil && pkcs12FilePath != nil {
+		if v, ok := certFilePath.(string); !ok || v == gopay.NULL {
+			return errors.New("certFilePath not string type or is null string")
+		}
+		if v, ok := keyFilePath.(string); !ok || v == gopay.NULL {
+			return errors.New("keyFilePath not string type or is null string")
+		}
+		if v, ok := pkcs12FilePath.(string); !ok || v == gopay.NULL {
+			return errors.New("pkcs12FilePath not string type or is null string")
+		}
+		return nil
+	}
+	if !(certFilePath == nil && keyFilePath == nil && pkcs12FilePath == nil) {
+		return errors.New("cert paths must all nil or all not nil")
+	}
+	return nil
 }
 
 // 获取微信支付正式环境Sign值

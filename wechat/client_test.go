@@ -29,7 +29,7 @@ func TestMain(m *testing.M) {
 	// 设置国家，不设置默认就是 China
 	client.SetCountry(China)
 
-	//err := client.AddCertFilePath("", "", "")
+	//err := client.AddCertFilePath(nil, nil, nil)
 	//if err != nil {
 	//	panic(err)
 	//}
@@ -185,7 +185,7 @@ func TestClient_Refund(t *testing.T) {
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, err := client.Refund(bm, "", "", "")
+	wxRsp, err := client.Refund(bm, nil, nil, nil)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -219,8 +219,8 @@ func TestClient_Reverse(t *testing.T) {
 	bm.Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B")
 	bm.Set("sign_type", SignType_MD5)
 
-	// 请求撤销订单，成功后得到结果，沙箱环境下，证书路径参数可传空
-	wxRsp, err := client.Reverse(bm, "", "", "")
+	// 请求撤销订单，成功后得到结果，沙箱环境下，证书路径参数可传nil
+	wxRsp, err := client.Reverse(bm, nil, nil, nil)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -245,7 +245,7 @@ func TestClient_Transfer(t *testing.T) {
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, err := client.Transfer(bm, "", "", "")
+	wxRsp, err := client.Transfer(bm, nil, nil, nil)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -278,8 +278,8 @@ func TestClient_DownloadFundFlow(t *testing.T) {
 	bm.Set("bill_date", "20190122")
 	bm.Set("account_type", "Basic")
 
-	// 请求下载资金账单，成功后得到结果，沙箱环境下，证书路径参数可传空
-	wxRsp, err := client.DownloadFundFlow(bm, "", "", "")
+	// 请求下载资金账单，成功后得到结果，沙箱环境下，证书路径参数可传nil
+	wxRsp, err := client.DownloadFundFlow(bm, nil, nil, nil)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -296,8 +296,8 @@ func TestClient_BatchQueryComment(t *testing.T) {
 	bm.Set("end_time", "20190122174000")
 	bm.Set("offset", "0")
 
-	// 请求拉取订单评价数据，成功后得到结果，沙箱环境下，证书路径参数可传空
-	wxRsp, err := client.BatchQueryComment(bm, "", "", "")
+	// 请求拉取订单评价数据，成功后得到结果，沙箱环境下，证书路径参数可传nil
+	wxRsp, err := client.BatchQueryComment(bm, nil, nil, nil)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
