@@ -37,7 +37,7 @@ func Transfer() {
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, err := client.Transfer(bm, "", "", "")
+	wxRsp, err := client.Transfer(bm, nil, nil, nil)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return

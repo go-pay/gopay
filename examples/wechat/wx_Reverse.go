@@ -22,7 +22,7 @@ func Reverse() {
 	bm.Set("sign_type", wechat.SignType_MD5)
 
 	//请求撤销订单，成功后得到结果，沙箱环境下，证书路径参数可传空
-	wxRsp, err := client.Reverse(bm, "", "", "")
+	wxRsp, err := client.Reverse(bm, nil, nil, nil)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
