@@ -34,9 +34,9 @@ type NotifyRequest struct {
 	TradeState    string `xml:"trade_state,omitempty" json:"trade_state,omitempty"`
 	BankType      string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
 	FeeType       string `xml:"fee_type,omitempty" json:"fee_type,omitempty"`
-	TotalFee      int    `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
-	CashFee       int    `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
-	CouponFee     int    `xml:"coupon_fee,omitempty" json:"coupon_fee,omitempty"`
+	TotalFee      string `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
+	CashFee       string `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
+	CouponFee     string `xml:"coupon_fee,omitempty" json:"coupon_fee,omitempty"`
 	TransactionId string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
 	OutTradeNo    string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
 	Attach        string `xml:"attach,omitempty" json:"attach,omitempty"`
@@ -61,11 +61,11 @@ type MicroPayResponse struct {
 	TradeState     string `xml:"trade_state,omitempty" json:"trade_state,omitempty"`
 	BankType       string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
 	FeeType        string `xml:"fee_type,omitempty" json:"fee_type,omitempty"`
-	TotalFee       int    `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
-	CashFee        int    `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
-	CouponFee      int    `xml:"coupon_fee,omitempty" json:"coupon_fee,omitempty"`
-	CouponFee0     int    `xml:"coupon_fee_0,omitempty" json:"coupon_fee_0,omitempty"`
-	CouponFee1     int    `xml:"coupon_fee_1,omitempty" json:"coupon_fee_1,omitempty"`
+	TotalFee       string `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
+	CashFee        string `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
+	CouponFee      string `xml:"coupon_fee,omitempty" json:"coupon_fee,omitempty"`
+	CouponFee0     string `xml:"coupon_fee_0,omitempty" json:"coupon_fee_0,omitempty"`
+	CouponFee1     string `xml:"coupon_fee_1,omitempty" json:"coupon_fee_1,omitempty"`
 	TransactionId  string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
 	OutTradeNo     string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
 	Attach         string `xml:"attach,omitempty" json:"attach,omitempty"`
@@ -125,9 +125,9 @@ type OrderQueryResponse struct {
 	TradeState     string `xml:"trade_state,omitempty" json:"trade_state,omitempty"`
 	BankType       string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
 	FeeType        string `xml:"fee_type,omitempty" json:"fee_type,omitempty"`
-	TotalFee       int    `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
-	CashFee        int    `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
-	CouponFee      int    `xml:"coupon_fee,omitempty" json:"coupon_fee,omitempty"`
+	TotalFee       string `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
+	CashFee        string `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
+	CouponFee      string `xml:"coupon_fee,omitempty" json:"coupon_fee,omitempty"`
 	TransactionId  string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
 	OutTradeNo     string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
 	Attach         string `xml:"attach,omitempty" json:"attach,omitempty"`
@@ -164,11 +164,11 @@ type RefundResponse struct {
 	NonceStr      string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
 	TransactionId string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
 	OutTradeNo    string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
-	TotalFee      int    `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
+	TotalFee      string `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
 	OutRefundNo   string `xml:"out_refund_no,omitempty" json:"out_refund_no,omitempty"`
 	RefundId      string `xml:"refund_id,omitempty" json:"refund_id,omitempty"`
 	RefundChannel string `xml:"refund_channel,omitempty" json:"refund_channel,omitempty"`
-	RefundFee     int    `xml:"refund_fee,omitempty" json:"refund_fee,omitempty"`
+	RefundFee     string `xml:"refund_fee,omitempty" json:"refund_fee,omitempty"`
 }
 
 type RefundQueryResponse struct {
@@ -185,8 +185,8 @@ type RefundQueryResponse struct {
 	NonceStr          string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
 	TransactionId     string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
 	OutTradeNo        string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
-	TotalFee          int    `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
-	CashFee           int    `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
+	TotalFee          string `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
+	CashFee           string `xml:"cash_fee,omitempty" json:"cash_fee,omitempty"`
 	FeeType           string `xml:"fee_type,omitempty" json:"fee_type,omitempty"`
 	OutRefundNo0      string `xml:"out_refund_no_0,omitempty" json:"out_refund_no_0,omitempty"`
 	OutRefundNo1      string `xml:"out_refund_no_1,omitempty" json:"out_refund_no_1,omitempty"`
@@ -194,12 +194,12 @@ type RefundQueryResponse struct {
 	RefundId1         string `xml:"refund_id_1,omitempty" json:"refund_id_1,omitempty"`
 	RefundChannel0    string `xml:"refund_channel_0,omitempty" json:"refund_channel_0,omitempty"`
 	RefundChannel1    string `xml:"refund_channel_1,omitempty" json:"refund_channel_1,omitempty"`
-	RefundFee0        int    `xml:"refund_fee_0,omitempty" json:"refund_fee_0,omitempty"`
-	RefundFee1        int    `xml:"refund_fee_1,omitempty" json:"refund_fee_1,omitempty"`
-	CouponRefundFee0  int    `xml:"coupon_refund_fee_0,omitempty" json:"coupon_refund_fee_0,omitempty"`
-	CouponRefundFee1  int    `xml:"coupon_refund_fee_1,omitempty" json:"coupon_refund_fee_1,omitempty"`
-	CashRefundFee0    int    `xml:"cash_refund_fee_0,omitempty" json:"cash_refund_fee_0,omitempty"`
-	CashRefundFee1    int    `xml:"cash_refund_fee_1,omitempty" json:"cash_refund_fee_1,omitempty"`
+	RefundFee0        string `xml:"refund_fee_0,omitempty" json:"refund_fee_0,omitempty"`
+	RefundFee1        string `xml:"refund_fee_1,omitempty" json:"refund_fee_1,omitempty"`
+	CouponRefundFee0  string `xml:"coupon_refund_fee_0,omitempty" json:"coupon_refund_fee_0,omitempty"`
+	CouponRefundFee1  string `xml:"coupon_refund_fee_1,omitempty" json:"coupon_refund_fee_1,omitempty"`
+	CashRefundFee0    string `xml:"cash_refund_fee_0,omitempty" json:"cash_refund_fee_0,omitempty"`
+	CashRefundFee1    string `xml:"cash_refund_fee_1,omitempty" json:"cash_refund_fee_1,omitempty"`
 	RefundStatus0     string `xml:"refund_status_0,omitempty" json:"refund_status_0,omitempty"`
 	RefundStatus1     string `xml:"refund_status_1,omitempty" json:"refund_status_1,omitempty"`
 	RefundRecvAccout0 string `xml:"refund_recv_accout_0,omitempty" json:"refund_recv_accout_0,omitempty"`
