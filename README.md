@@ -56,6 +56,7 @@ func main() {
 * APP纯签约-预签约接口-获取预签约ID（正式）：client.EntrustAppPre()
 * H5纯签约（正式）：client.EntrustH5()
 * 支付中签约（正式）：client.EntrustPaying()
+* 自定义方法请求微信API接口：client.PostRequest()
 
 ### 微信公共API
 
