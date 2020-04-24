@@ -12,8 +12,6 @@ steps:
       GOOS: linux
     commands:
       - go version
-      - go mod tidy
-      - go fmt -x
       - go test ./...
 
 trigger:
