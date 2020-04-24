@@ -1,0 +1,24 @@
+kind: pipeline
+type: docker
+name: gopay
+
+steps:
+  - name: test
+    image: golang:1.13
+    environment:
+      GO111MODULE: "on"
+      GOPROXY: "https://goproxy.cn,direct"
+      CGO_ENABLED: "0"
+      GOOS: linux
+    commands:
+      - go version
+      - go mod tidy
+      - go fmt -x
+      - go test ./...
+
+trigger:
+  branch:
+    - master
+  event:
+    - push
+    - pull_request
