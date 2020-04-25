@@ -1,3 +1,15 @@
+版本号：Release 1.5.9
+发布时间：2020/04/25 15:32
+修改记录：
+   (1) 支付宝：异步验签，推荐使用 alipay.ParseNotifyToBodyMap()，解析参数后参数在Verify验签时，推荐传入参数BodyMap bm。
+   (2) 支付宝：修改公共方法：alipay.ParseNotifyResultToBodyMap() 为 alipay.ParseNotifyToBodyMap()
+   (3) 支付宝：修改公共方法：alipay.ParseNotifyResultByURLValues() 为 alipay.ParseNotifyByURLValues()
+   (4) 支付宝：废弃公共方法：alipay.ParseNotifyResult()，因为异步通知有参数因为支付接口不同，返回的字段不同，无法使用结构体全部定义好
+   (5) 支付宝：调整了部分接口的文档地址
+   (6) 微信：修改公共方法：wechat.ParseNotifyResultToBodyMap() 为 wechat.ParseNotifyToBodyMap()
+   (7) 微信：修改公共方法：wechat.ParseNotifyResult() 为 wechat.ParseNotify()
+   (8) 微信：修改公告方法：wechat.ParseRefundNotifyResult() 为 wechat.ParseRefundNotify()
+
 版本号：Release 1.5.8
 发布时间：2020/04/18 21:32
 修改记录：
