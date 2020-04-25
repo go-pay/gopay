@@ -65,9 +65,9 @@ func main() {
 * wechat.GetMiniPaySign() => 获取微信小程序支付所需要的paySign
 * wechat.GetH5PaySign() => 获取微信内H5支付所需要的paySign
 * wechat.GetAppPaySign() => 获取APP支付所需要的paySign
-* wechat.ParseNotifyResultToBodyMap() => 解析微信支付异步通知的参数到BodyMap
-* wechat.ParseNotifyResult() => 解析微信支付异步通知的参数
-* wechat.ParseRefundNotifyResult() => 解析微信退款异步通知的参数
+* wechat.ParseNotifyToBodyMap() => 解析微信支付异步通知的参数到BodyMap
+* wechat.ParseNotify() => 解析微信支付异步通知的参数
+* wechat.ParseRefundNotify() => 解析微信退款异步通知的参数
 * wechat.VerifySign() => 微信同步返回参数验签或异步通知参数验签
 * wechat.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
 * wechat.GetAppletAccessToken() => 获取微信小程序全局唯一后台接口调用凭据
@@ -97,8 +97,8 @@ func main() {
 
 ### QQ公共API
 
-* qq.ParseNotifyResultToBodyMap() => 解析QQ支付异步通知的结果到BodyMap
-* qq.ParseNotifyResult() => 解析QQ支付异步通知的参数
+* qq.ParseNotifyToBodyMap() => 解析QQ支付异步通知的结果到BodyMap
+* qq.ParseNotify() => 解析QQ支付异步通知的参数
 * qq.VerifySign() => QQ同步返回参数验签或异步通知参数验签
 
 ---
@@ -141,10 +141,10 @@ func main() {
 * alipay.FormatPrivateKey() => 格式化应用私钥
 * alipay.FormatPublicKey() => 格式化支付宝公钥
 * alipay.FormatURLParam() => 格式化支付宝请求URL参数
-* alipay.ParseNotifyResult() => 解析支付宝支付异步通知的参数到Struct
-* alipay.ParseNotifyResultByURLValues() => 通过 url.Values 解析支付宝支付异步通知的参数到Struct
-* alipay.ParseNotifyResultToBodyMap() => 解析支付宝支付异步通知的参数到BodyMap
+* alipay.ParseNotifyToBodyMap() => 解析支付宝支付异步通知的参数到BodyMap
+* alipay.ParseNotifyByURLValues() => 通过 url.Values 解析支付宝支付异步通知的参数到BodyMap
 * alipay.VerifySign() => 支付宝异步通知参数验签
+* alipay.VerifySignWithCert() => 支付宝异步通知参数验签（证书方式）
 * alipay.VerifySyncSign() => 支付宝同步返回参数验签
 * alipay.DecryptOpenDataToStruct() => 解密支付宝开放数据到 结构体
 * alipay.DecryptOpenDataToBodyMap() => 解密支付宝开放数据到 BodyMap
@@ -201,11 +201,11 @@ client.AddCertFilePath()
 
 * #### 支付宝
 
-支付宝官方文档：[官方文档](https://docs.open.alipay.com/catalog)
+支付宝官方文档：[官方文档](https://openhome.alipay.com/docCenter/docCenter.htm)
 
-支付宝RSA秘钥生成文档：[生成 RSA 密钥](https://docs.open.alipay.com/291/105971/)（推荐使用 RSA2）
+支付宝RSA秘钥生成文档：[生成RSA密钥](https://opendocs.alipay.com/open/291/105971) （推荐使用 RSA2）
 
-沙箱环境使用说明：[文档地址](https://docs.open.alipay.com/200/105311)
+沙箱环境使用说明：[文档地址](https://opendocs.alipay.com/open/200/105311)
 
 ```go
 import (
@@ -278,7 +278,7 @@ bm.Set("sign", sign)
 
 * #### 支付宝请求参数
 
-具体参数请根据不同接口查看：[支付宝支付API接口文档](https://docs.open.alipay.com/api_1/alipay.trade.wap.pay)
+具体参数请根据不同接口查看：[支付宝支付API接口文档](https://opendocs.alipay.com/apis/api_1/alipay.trade.wap.pay)
 ```go
 // 初始化 BodyMap
 bm := make(gopay.BodyMap)
@@ -425,7 +425,7 @@ ok, err := wechat.VerifySign(apiKey, wechat.SignType_MD5, wxRsp)
 //    req：*http.Request
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
-notifyReq, err := wechat.ParseNotifyResult(c.Request())    // c.Request()是 echo 框架的获取 *http.Request 的写法
+notifyReq, err := wechat.ParseNotify(c.Request())    // c.Request()是 echo 框架的获取 *http.Request 的写法
 // 验签操作
 ok, err := wechat.VerifySign(apiKey, wechat.SignType_MD5, notifyReq)
 
@@ -435,7 +435,7 @@ ok, err := wechat.VerifySign(apiKey, wechat.SignType_MD5, notifyReq)
 //    req：*http.Request
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
-notifyReq, err := wechat.ParseRefundNotifyResult(c.Request())
+notifyReq, err := wechat.ParseRefundNotify(c.Request())
 
 // ==解密退款异步通知的加密参数 req_info ==
 refundNotify, err := wechat.DecryptRefundNotifyReqInfo(notifyReq.ReqInfo, apiKey)
@@ -451,7 +451,7 @@ return c.String(http.StatusOK, rsp.ToXmlString())   // 此写法是 echo 框架�
 
 注意：APP支付、手机网站支付、电脑网站支付 暂不支持同步返回验签
 
-支付宝支付后的同步/异步通知验签文档：[支付结果通知](https://docs.open.alipay.com/200/106120)
+支付宝支付后的同步/异步通知验签文档：[支付结果通知](https://opendocs.alipay.com/open/200/106120)
 ```go
 import (
 	"github.com/iGoogle-ink/gopay/alipay"
@@ -473,12 +473,12 @@ ok, err := alipay.VerifySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
 //    req：*http.Request
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
-notifyReq, err = alipay.ParseNotifyResult(c.Request())     // c.Request()是 echo 框架的获取
+notifyReq, err = alipay.ParseNotify(c.Request())     // c.Request()是 echo 框架的获取
 // 验签操作
 ok, err = alipay.VerifySign(aliPayPublicKey, notifyReq)
 
 // ==异步通知，返回支付宝平台的信息==
-//    文档：https://docs.open.alipay.com/203/105286
+//    文档：https://opendocs.alipay.com/open/203/105286
 //    程序执行完后必须打印输出“success”（不包含引号）。如果商户反馈给支付宝的字符不是success这7个字符，支付宝服务器会不断重发通知，直到超过24小时22分钟。一般情况下，25小时以内完成8次通知（通知的间隔频率一般是：4m,10m,10m,1h,2h,6h,15h）
 return c.String(http.StatusOK, "success")   // 此写法是 echo 框架返回客户端数据的写法
 ```
@@ -545,11 +545,11 @@ fmt.Println("WeChatUserPhone:", bm)
 
 * #### 支付宝 公共API
 
-支付宝换取授权访问令牌文档：[换取授权访问令牌](https://docs.open.alipay.com/api_9/alipay.system.oauth.token)
+支付宝换取授权访问令牌文档：[换取授权访问令牌](https://opendocs.alipay.com/apis/api_9/alipay.system.oauth.token)
 
-获取用户手机号文档：[获取用户手机号](https://docs.alipay.com/mini/api/getphonenumber)
+获取用户手机号文档：[获取用户手机号](https://opendocs.alipay.com/mini/api/getphonenumber)
 
-支付宝加解密文档：[AES配置文档](https://docs.alipay.com/mini/introduce/aes)，[AES加解密文档](https://docs.open.alipay.com/common/104567)
+支付宝加解密文档：[AES配置文档](https://opendocs.alipay.com/mini/introduce/aes) ，[AES加解密文档](https://opendocs.alipay.com/open/common/104567)
 ```go
 import (
 	"github.com/iGoogle-ink/gopay/alipay"
