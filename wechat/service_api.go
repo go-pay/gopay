@@ -82,11 +82,11 @@ func GetSanBoxParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign str
 	return
 }
 
-// 解析微信支付异步通知的结果到BodyMap
+// 解析微信支付异步通知的结果到BodyMap（推荐）
 //    req：*http.Request
 //    返回参数bm：Notify请求的参数
 //    返回参数err：错误信息
-func ParseNotifyResultToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
+func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(2<<20))) // default 2MB change the size you want;
 	if err != nil {
 		return nil, fmt.Errorf("ioutil.ReadAll：%w", err)
@@ -102,7 +102,7 @@ func ParseNotifyResultToBodyMap(req *http.Request) (bm gopay.BodyMap, err error)
 //    req：*http.Request
 //    返回参数notifyReq：Notify请求的参数
 //    返回参数err：错误信息
-func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) {
+func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 	notifyReq = new(NotifyRequest)
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
 		return nil, fmt.Errorf("xml.NewDecoder.Decode：%w", err)
@@ -114,7 +114,7 @@ func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) 
 //    req：*http.Request
 //    返回参数notifyReq：Notify请求的参数
 //    返回参数err：错误信息
-func ParseRefundNotifyResult(req *http.Request) (notifyReq *RefundNotifyRequest, err error) {
+func ParseRefundNotify(req *http.Request) (notifyReq *RefundNotifyRequest, err error) {
 	notifyReq = new(RefundNotifyRequest)
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
 		return nil, fmt.Errorf("xml.NewDecoder.Decode：%w", err)
@@ -123,7 +123,7 @@ func ParseRefundNotifyResult(req *http.Request) (notifyReq *RefundNotifyRequest,
 }
 
 // 解密微信退款异步通知的加密数据
-//    reqInfo：gopay.ParseRefundNotifyResult() 方法获取的加密数据 req_info
+//    reqInfo：gopay.ParseRefundNotify() 方法获取的加密数据 req_info
 //    apiKey：API秘钥值
 //    返回参数refundNotify：RefundNotify请求的加密数据
 //    返回参数err：错误信息
@@ -174,7 +174,7 @@ func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNot
 // 微信同步返回参数验签或异步通知参数验签
 //    ApiKey：API秘钥值
 //    signType：签名类型（调用API方法时填写的类型）
-//    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq
+//    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq，推荐通 BodyMap 验签
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
 func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) {

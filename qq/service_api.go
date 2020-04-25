@@ -27,7 +27,7 @@ func (q *Client) PostRequest(bm gopay.BodyMap, url string, tlsConfig *tls.Config
 //    req：*http.Request
 //    返回参数bm：Notify请求的参数
 //    返回参数err：错误信息
-func ParseNotifyResultToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
+func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(2<<20))) // default 2MB change the size you want;
 	if err != nil {
 		return nil, fmt.Errorf("ioutil.ReadAll：%w", err)
@@ -43,7 +43,7 @@ func ParseNotifyResultToBodyMap(req *http.Request) (bm gopay.BodyMap, err error)
 //    req：*http.Request
 //    返回参数notifyReq：Notify请求的参数
 //    返回参数err：错误信息
-func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) {
+func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 	notifyReq = new(NotifyRequest)
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
 		return nil, fmt.Errorf("xml.NewDecoder.Decode：%w", err)
