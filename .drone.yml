@@ -12,6 +12,8 @@ steps:
     environment:
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_DATABASE: "gopay"
+    commands:
+      - mysql --version
 
   - name: test
     image: golang:1.13
