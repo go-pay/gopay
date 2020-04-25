@@ -185,11 +185,11 @@ func GetOpenIdByAuthCode() {
 }
 
 //解析notify参数、验签、返回数据到微信
-func ParseWeChatNotifyResultAndVerifyWeChatSign(req *http.Request) string {
+func ParseWeChatNotifyAndVerifyWeChatSign(req *http.Request) string {
 	rsp := new(wechat.NotifyResponse)
 
 	//解析参数
-	notifyReq, err := wechat.ParseNotifyResult(req)
+	notifyReq, err := wechat.ParseNotify(req)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -204,7 +204,7 @@ func ParseWeChatNotifyResultAndVerifyWeChatSign(req *http.Request) string {
 
 	//或者
 
-	bodyMap, err := wechat.ParseNotifyResultToBodyMap(req)
+	bodyMap, err := wechat.ParseNotifyToBodyMap(req)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -222,10 +222,10 @@ func ParseWeChatNotifyResultAndVerifyWeChatSign(req *http.Request) string {
 }
 
 // 解析微信退款异步通知的参数，解析出来的 req_info 是加密数据，需解密
-func ParseWeChatRefundNotifyResult(req *http.Request) string {
+func ParseWeChatRefundNotify(req *http.Request) string {
 	rsp := new(wechat.NotifyResponse)
 	// 解析参数
-	notifyReq, err := wechat.ParseRefundNotifyResult(req)
+	notifyReq, err := wechat.ParseRefundNotify(req)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
