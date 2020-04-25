@@ -26,6 +26,7 @@ steps:
       - go version
       - go env
       - go test ./...
+      - mysql -u roop -p root
 
 trigger:
   branch:
