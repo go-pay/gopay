@@ -16,6 +16,7 @@ const (
 
 type PKCSType uint8
 
+// Deprecated
 type NotifyRequest struct {
 	NotifyTime        string                   `json:"notify_time,omitempty"`
 	NotifyType        string                   `json:"notify_type,omitempty"`
@@ -49,15 +50,17 @@ type NotifyRequest struct {
 	FundBillList      []*FundBillListInfo      `json:"fund_bill_list,omitempty"`
 	PassbackParams    string                   `json:"passback_params,omitempty"`
 	VoucherDetailList []*VoucherDetailListInfo `json:"voucher_detail_list,omitempty"`
-	Method            string                   `json:"method,omitempty"`    //电脑网站支付 支付宝请求 return_url 同步返回参数
-	Timestamp         string                   `json:"timestamp,omitempty"` //电脑网站支付 支付宝请求 return_url 同步返回参数
+	Method            string                   `json:"method,omitempty"`    // 电脑网站支付 支付宝请求 return_url 同步返回参数
+	Timestamp         string                   `json:"timestamp,omitempty"` // 电脑网站支付 支付宝请求 return_url 同步返回参数
 }
 
+// Deprecated
 type FundBillListInfo struct {
 	Amount      string `json:"amount,omitempty"`
-	FundChannel string `json:"fundChannel,omitempty"` //异步通知里是 fundChannel
+	FundChannel string `json:"fundChannel,omitempty"` // 异步通知里是 fundChannel
 }
 
+// Deprecated
 type VoucherDetailListInfo struct {
 	Id                         string `json:"id,omitempty"`
 	Name                       string `json:"name,omitempty"`
@@ -274,6 +277,7 @@ type SystemOauthTokenResponse struct {
 	SignData      string          `json:"-"`
 	Sign          string          `json:"sign"`
 }
+
 type oauthTokenInfo struct {
 	AccessToken  string `json:"access_token,omitempty"`
 	AlipayUserId string `json:"alipay_user_id,omitempty"`

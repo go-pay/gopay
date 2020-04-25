@@ -434,68 +434,36 @@ func TestSyncVerifySign(t *testing.T) {
 
 func TestVerifySign(t *testing.T) {
 	// 测试，假数据，无法验签通过
-
 	publicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp8gueNlkbiDidz6FBQEBpqoRgH8h7JtsPtYW0nzAqy1MME4mFnDSMfSKlreUomS3a55gmBopL1eF4/Km/dEnaL5tCY9+24SKn1D4iyls+lvz/ZjvUjVwxoUYBh8kkcxMZSDeDz8//o+9qZTrICVP2a4sBB8T0XmU4gxfw8FsmtoomBH1nLk3AO7wgRN2a3+SRSAmxrhIGDmF1lljSlhY32eJpJ2TZQKaWNW+7yDBU/0Wt3kQVY84vr14yYagnSCiIfqyVFqePayRtmVJDr5qvSXr51tdqs2zKZCu+26X7JAF4BSsaq4gmY5DmDTm4TohCnBduI1+bPGD+igVmtl05wIDAQAB"
 
-	//bm := make(gopay.BodyMap)
-	//bm.Set("sign", "f19WZ3rko3cVpSG3uEEJF0eb4DuZVLt4/GXnNw9qg8iHUsJLkav0V91R5SSTDhW5lgkn3Xhq7TkFRJiDXdVXMu3XUlsONArp3Iu4tXagYJWt9jbcnc2/l29VYDXPLNcs7BXEWFEaCZLutQY2U82AumEwSc1XBKtsLC4mVX3M3f/ExFQHWklJEBHArYBGe4535uFRlsT2fk6WVuX8CuYZatCrVF1o02xMS5aD29eICPkmin/h87OcTbE1syktyCU1WVgcypagUdGGPTF0SVDFf7FRov7+w7fiCGGGL10tNlK/MLzcewtN2dyGF6RLUX3m+HQ7sNEk2wylRXLNUFig==")
-	//bm.Set("seller_email", "imonkey@100tal.com")
-	//bm.Set("sign_type", RSA2)
-	//bm.Set("total_amount", "0.02")
-	//bm.Set("buyer_id", "2088812847201551")
-	//bm.Set("invoice_amount", "0.02")
-	//bm.Set("fund_bill_list", `[{"amount":"0.02","fundChannel":"PCREDIT"}]`)
-	//bm.Set("trade_no", "2020010222001401551430614892")
-	//bm.Set("receipt_amount", "0.02")
-	//bm.Set("buyer_pay_amount", "0.02")
-	//bm.Set("notify_time", "2020-01-02 16:18:21")
-	//bm.Set("subject", "商品")
-	//bm.Set("auth_app_id", "2015102700040153")
-	//bm.Set("charset", "utf-8")
-	//bm.Set("point_amount", "0.00")
-	//bm.Set("notify_type", "trade_status_sync")
-	//bm.Set("out_trade_no", "1086209247658383466")
-	//bm.Set("gmt_payment", "2020-01-02 16:18:21")
-	//bm.Set("trade_status", "TRADE_SUCCESS")
-	//bm.Set("version", "1.0")
-	//bm.Set("buyer_logon_id", "185****2920")
-	//bm.Set("gmt_create", "2020-01-02 16:18:21")
-	//bm.Set("app_id", "2015102700040153")
-	//bm.Set("seller_id", "2088631240818980")
-	//bm.Set("notify_id", "2020010200222161821001551453140885")
+	bm := make(gopay.BodyMap)
+	bm.Set("sign", "f19WZ3rko3cVpSG3uEEJF0eb4DuZVLt4/GXnNw9qg8iHUsJLkav0V91R5SSTDhW5lgkn3Xhq7TkFRJiDXdVXMu3XUlsONArp3Iu4tXagYJWt9jbcnc2/l29VYDXPLNcs7BXEWFEaCZLutQY2U82AumEwSc1XBKtsLC4mVX3M3f/ExFQHWklJEBHArYBGe4535uFRlsT2fk6WVuX8CuYZatCrVF1o02xMS5aD29eICPkmin/h87OcTbE1syktyCU1WVgcypagUdGGPTF0SVDFf7FRov7+w7fiCGGGL10tNlK/MLzcewtN2dyGF6RLUX3m+HQ7sNEk2wylRXLNUFig==")
+	bm.Set("seller_email", "imonkey@100tal.com")
+	bm.Set("sign_type", RSA2)
+	bm.Set("total_amount", "0.02")
+	bm.Set("buyer_id", "2088812847201551")
+	bm.Set("invoice_amount", "0.02")
+	bm.Set("fund_bill_list", `[{"amount":"0.02","fundChannel":"PCREDIT"}]`)
+	bm.Set("trade_no", "2020010222001401551430614892")
+	bm.Set("receipt_amount", "0.02")
+	bm.Set("buyer_pay_amount", "0.02")
+	bm.Set("notify_time", "2020-01-02 16:18:21")
+	bm.Set("subject", "商品")
+	bm.Set("auth_app_id", "2015102700040153")
+	bm.Set("charset", "utf-8")
+	bm.Set("point_amount", "0.00")
+	bm.Set("notify_type", "trade_status_sync")
+	bm.Set("out_trade_no", "1086209247658383466")
+	bm.Set("gmt_payment", "2020-01-02 16:18:21")
+	bm.Set("trade_status", "TRADE_SUCCESS")
+	bm.Set("version", "1.0")
+	bm.Set("buyer_logon_id", "185****2920")
+	bm.Set("gmt_create", "2020-01-02 16:18:21")
+	bm.Set("app_id", "2015102700040153")
+	bm.Set("seller_id", "2088631240818980")
+	bm.Set("notify_id", "2020010200222161821001551453140885")
 
-	req := new(NotifyRequest)
-	req.GmtCreate = "2020-01-02 16:18:21"
-	req.Charset = "utf-8"
-	req.SellerEmail = "imonkey@100tal.com"
-	req.Subject = "商品"
-	req.Sign = "f19WZ3rko3cVpSG3uEEJF0eb4DuZVLt4/GXnNw9qg8iHUsJLkav0V91R5SSTDhW5lgkn3Xhq7TkFRJiDXdVXMu3XUlsONArp3Iu4tXagYJWt9jbcnc2/l29VYDXPLNcs7BXEWFEaCZLutQY2U82AumEwSc1XBKtsLC4mVX3M3f/ExFQHWklJEBHArYBGe4535uFRlsT2fk6WVuX8CuYZatCrVF1o02xMS5aD29eICPkmin/h87OcTbE1syktyCU1WVgcypagUdGGPTF0SVDFf7FRov7+w7fiCGGGL10tNlK/MLzcewtN2dyGF6RLUX3m+HQ7sNEk2wylRXLNUFig=="
-	req.BuyerId = "2088812847201551"
-	req.InvoiceAmount = "0.02"
-	req.NotifyId = "2020010200222161821001551453140885"
-	infos := []*FundBillListInfo{&FundBillListInfo{
-		Amount:      "0.02",
-		FundChannel: "PCREDIT",
-	}}
-	req.FundBillList = infos
-	req.NotifyType = "trade_status_sync"
-	req.TradeStatus = "TRADE_SUCCESS"
-	req.ReceiptAmount = "0.02"
-	req.AppId = "2015102700040153"
-	req.BuyerPayAmount = "0.02"
-	req.SignType = RSA2
-	req.SellerId = "2088631240818980"
-	req.GmtPayment = "2020-01-02 16:18:21"
-	req.NotifyTime = "2020-01-02 16:18:21"
-	req.Version = "1.0"
-	req.OutTradeNo = "1086209247658383466"
-	req.TotalAmount = "0.02"
-	req.TradeNo = "2020010222001401551430614892"
-	req.AuthAppId = "2015102700040153"
-	req.BuyerLogonId = "185****2920"
-	req.PointAmount = "0.00"
-
-	ok, err := VerifySign(publicKey, req)
+	ok, err := VerifySign(publicKey, bm)
 	if err != nil {
 		fmt.Println("err:", err)
 		return
