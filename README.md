@@ -7,9 +7,9 @@ QQ、微信、支付宝的Golang版本SDK
 
 [![Golang](https://img.shields.io/badge/golang-1.13+-brightgreen.svg)](https://golang.google.cn)
 [![GoDoc](https://img.shields.io/badge/doc-go.dev-informational.svg)](https://pkg.go.dev/github.com/iGoogle-ink/gopay)
-[![Drone with branch](https://img.shields.io/drone/build/iGoogle-ink/gopay/master)](https://cloud.drone.io/iGoogle-ink/gopay)
-[![GitHub release ](https://img.shields.io/github/v/release/iGoogle-ink/gopay)](https://github.com/iGoogle-ink/gopay/releases)
-![License](https://img.shields.io/github/license/iGoogle-ink/gopay)
+[![Drone CI](https://cloud.drone.io/api/badges/iGoogle-ink/gopay/status.svg)](https://cloud.drone.io/iGoogle-ink/gopay)
+[![GitHub Release](https://img.shields.io/github/v/release/iGoogle-ink/gopay)](https://github.com/iGoogle-ink/gopay/releases)
+[![License](https://img.shields.io/github/license/iGoogle-ink/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
 
 # 一、安装
 

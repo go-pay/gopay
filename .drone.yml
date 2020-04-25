@@ -7,6 +7,12 @@ platform:
   arch: amd64
 
 steps:
+  - name: mysql
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "gopay"
+
   - name: test
     image: golang:1.13
     environment:
@@ -26,10 +32,3 @@ trigger:
     - push
     - pull_request
     - tag
-
-services:
-  - name: mysql
-    image: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: "gopay"
