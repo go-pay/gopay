@@ -2,6 +2,10 @@ kind: pipeline
 type: docker
 name: gopay
 
+platform:
+  os: linux
+  arch: amd64
+
 steps:
   - name: test
     image: golang:1.13
