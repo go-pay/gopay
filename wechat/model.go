@@ -409,23 +409,22 @@ type RefundNotify struct {
 
 type Code2SessionRsp struct {
 	SessionKey string `json:"session_key,omitempty"` // 会话密钥
-	ExpiresIn  string `json:"expires_in,omitempty"`  // SessionKey超时时间（秒）
 	Openid     string `json:"openid,omitempty"`      // 用户唯一标识
 	Unionid    string `json:"unionid,omitempty"`     // 用户在开放平台的唯一标识符
-	Errcode    string `json:"errcode,omitempty"`     // 错误码
+	Errcode    int    `json:"errcode,omitempty"`     // 错误码
 	Errmsg     string `json:"errmsg,omitempty"`      // 错误信息
 }
 
 type PaidUnionId struct {
 	Unionid string `json:"unionid,omitempty"` // 用户在开放平台的唯一标识符
-	Errcode string `json:"errcode,omitempty"` // 错误码
+	Errcode int    `json:"errcode,omitempty"` // 错误码
 	Errmsg  string `json:"errmsg,omitempty"`  // 错误信息
 }
 
 type AccessToken struct {
 	AccessToken string `json:"access_token,omitempty"` // 获取到的凭证
-	ExpiresIn   string `json:"expires_in,omitempty"`   // SessionKey超时时间（秒）
-	Errcode     string `json:"errcode,omitempty"`      // 错误码
+	ExpiresIn   int    `json:"expires_in,omitempty"`   // SessionKey超时时间（秒）
+	Errcode     int    `json:"errcode,omitempty"`      // 错误码
 	Errmsg      string `json:"errmsg,omitempty"`       // 错误信息
 }
 
@@ -492,22 +491,22 @@ type OpenIdByAuthCodeRsp struct {
 // App应用微信第三方登录，code换取access_token
 type AppLoginAccessToken struct {
 	AccessToken  string `json:"access_token,omitempty"`
-	ExpiresIn    string `json:"expires_in,omitempty"`
-	Openid       string `json:"openid,omitempty"`
+	ExpiresIn    int    `json:"expires_in,omitempty"`
 	RefreshToken string `json:"refresh_token,omitempty"`
+	Openid       string `json:"openid,omitempty"`
 	Scope        string `json:"scope,omitempty"`
 	Unionid      string `json:"unionid,omitempty"`
-	Errcode      string `json:"errcode,omitempty"` // 错误码
+	Errcode      int    `json:"errcode,omitempty"` // 错误码
 	Errmsg       string `json:"errmsg,omitempty"`  // 错误信息
 }
 
 // 刷新App应用微信第三方登录后，获取的 access_token
 type RefreshAppLoginAccessTokenRsp struct {
 	AccessToken  string `json:"access_token,omitempty"`
-	ExpiresIn    string `json:"expires_in,omitempty"`
-	Openid       string `json:"openid,omitempty"`
+	ExpiresIn    int    `json:"expires_in,omitempty"`
 	RefreshToken string `json:"refresh_token,omitempty"`
+	Openid       string `json:"openid,omitempty"`
 	Scope        string `json:"scope,omitempty"`
-	Errcode      string `json:"errcode,omitempty"` // 错误码
+	Errcode      int    `json:"errcode,omitempty"` // 错误码
 	Errmsg       string `json:"errmsg,omitempty"`  // 错误信息
 }
