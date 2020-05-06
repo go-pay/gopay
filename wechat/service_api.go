@@ -413,6 +413,7 @@ func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.Bo
 //    appId：应用唯一标识，在微信开放平台提交应用审核通过后获得
 //    appSecret：应用密钥AppSecret，在微信开放平台提交应用审核通过后获得
 //    code：App用户换取access_token的code
+//    文档：https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
 func GetAppLoginAccessToken(appId, appSecret, code string) (accessToken *AppLoginAccessToken, err error) {
 	accessToken = new(AppLoginAccessToken)
 	url := "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type=authorization_code"
@@ -428,6 +429,7 @@ func GetAppLoginAccessToken(appId, appSecret, code string) (accessToken *AppLogi
 //    appId：应用唯一标识，在微信开放平台提交应用审核通过后获得
 //    appSecret：应用密钥AppSecret，在微信开放平台提交应用审核通过后获得
 //    code：App用户换取access_token的code
+//    文档：https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
 func RefreshAppLoginAccessToken(appId, refreshToken string) (accessToken *RefreshAppLoginAccessTokenRsp, err error) {
 	accessToken = new(RefreshAppLoginAccessTokenRsp)
 	url := "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=" + appId + "&grant_type=refresh_token&refresh_token=" + refreshToken
