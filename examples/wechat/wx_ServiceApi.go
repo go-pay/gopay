@@ -19,7 +19,6 @@ func Code2Session() {
 		return
 	}
 	fmt.Println("SessionKey:", userIdRsp.SessionKey)
-	fmt.Println("ExpiresIn:", userIdRsp.ExpiresIn)
 	fmt.Println("OpenID:", userIdRsp.Openid)
 	fmt.Println("UnionID:", userIdRsp.Unionid)
 	fmt.Println("Errcode:", userIdRsp.Errcode)
