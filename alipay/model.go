@@ -281,8 +281,8 @@ type SystemOauthTokenResponse struct {
 type oauthTokenInfo struct {
 	AccessToken  string `json:"access_token,omitempty"`
 	AlipayUserId string `json:"alipay_user_id,omitempty"`
-	ExpiresIn    int    `json:"expires_in,omitempty"`
-	ReExpiresIn  int    `json:"re_expires_in,omitempty"`
+	ExpiresIn    int64  `json:"expires_in,omitempty"`
+	ReExpiresIn  int64  `json:"re_expires_in,omitempty"`
 	RefreshToken string `json:"refresh_token,omitempty"`
 	UserId       string `json:"user_id,omitempty"`
 }

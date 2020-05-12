@@ -1,3 +1,3 @@
-module github.com/JaydenLee/gopay
+module github.com/iGoogle-ink/gopay
 
 go 1.13
