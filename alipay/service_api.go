@@ -586,17 +586,17 @@ func systemOauthToken(appId string, t PKCSType, privateKey string, bm gopay.Body
 	bm.Set("timestamp", time.Now().Format(gopay.TimeLayout))
 	bm.Set("version", "1.0")
 	var (
-		sign string
-		url  = baseUrlUtf8
+		sign    string
+		baseUrl = baseUrlUtf8
 	)
 	if sign, err = GetRsaSign(bm, bm.Get("sign_type"), t, privateKey); err != nil {
 		return nil, err
 	}
 	bm.Set("sign", sign)
 	if !isProd {
-		url = sandboxBaseUrlUtf8
+		baseUrl = sandboxBaseUrlUtf8
 	}
-	_, bs, errs := gopay.NewHttpClient().Type(gopay.TypeForm).Post(url).SendString(FormatURLParam(bm)).EndBytes()
+	_, bs, errs := gopay.NewHttpClient().Type(gopay.TypeForm).Post(baseUrl).SendString(FormatURLParam(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
