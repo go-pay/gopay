@@ -49,16 +49,17 @@ type Client struct {
 
 // NewHttpClient , default tls.Config{InsecureSkipVerify: true}
 func NewHttpClient() (client *Client) {
-	c := new(Client)
-	c.HttpClient = &http.Client{}
-	c.Transport = &http.Transport{}
-	c.Transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	c.Transport.DisableKeepAlives = true
-	c.Header = make(http.Header)
-	c.RequestType = TypeUrlencoded
-	c.UnmarshalType = TypeJSON
-	c.Errors = make([]error, 0)
-	return c
+	client = &Client{
+		HttpClient:    &http.Client{},
+		Transport:     &http.Transport{},
+		Header:        make(http.Header),
+		RequestType:   TypeUrlencoded,
+		UnmarshalType: TypeJSON,
+		Errors:        make([]error, 0),
+	}
+	client.Transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	client.Transport.DisableKeepAlives = true
+	return client
 }
 
 func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
