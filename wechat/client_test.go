@@ -102,12 +102,13 @@ func TestClient_QueryOrder(t *testing.T) {
 	bm.Set("sign_type", SignType_MD5)
 
 	// 请求订单查询，成功后得到结果
-	wxRsp, err := client.QueryOrder(bm)
+	wxRsp, resBm, err := client.QueryOrder(bm)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 	fmt.Println("wxRsp：", *wxRsp)
+	fmt.Println("resBm：", resBm)
 }
 
 func TestClient_CloseOrder(t *testing.T) {
@@ -185,12 +186,13 @@ func TestClient_Refund(t *testing.T) {
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, err := client.Refund(bm, nil, nil, nil)
+	wxRsp, resBm, err := client.Refund(bm, nil, nil, nil)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 	fmt.Println("wxRsp：", *wxRsp)
+	fmt.Println("resBm：", resBm)
 }
 
 func TestClient_QueryRefund(t *testing.T) {
@@ -204,12 +206,13 @@ func TestClient_QueryRefund(t *testing.T) {
 	bm.Set("sign_type", SignType_MD5)
 
 	// 请求申请退款
-	wxRsp, err := client.QueryRefund(bm)
+	wxRsp, resBm, err := client.QueryRefund(bm)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 	fmt.Println("wxRsp：", *wxRsp)
+	fmt.Println("resBm：", resBm)
 }
 
 func TestClient_Reverse(t *testing.T) {
@@ -246,6 +249,25 @@ func TestClient_Transfer(t *testing.T) {
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
 	wxRsp, err := client.Transfer(bm, nil, nil, nil)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Println("wxRsp：", *wxRsp)
+}
+
+func TestClient_GetTransferInfo(t *testing.T) {
+	// 初始化参数结构体
+	bm := make(gopay.BodyMap)
+	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("partner_trade_no", gopay.GetRandomString(32))
+
+	// 查询企业付款
+	//    body：参数Body
+	//    certFilePath：cert证书路径
+	//    keyFilePath：Key证书路径
+	//    pkcs12FilePath：p12证书路径
+	wxRsp, err := client.GetTransferInfo(bm, nil, nil, nil)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return

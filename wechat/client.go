@@ -105,13 +105,13 @@ func (w *Client) UnifiedOrder(bm gopay.BodyMap) (wxRsp *UnifiedOrderResponse, er
 
 // 查询订单
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
-func (w *Client) QueryOrder(bm gopay.BodyMap) (wxRsp *QueryOrderResponse, err error) {
+func (w *Client) QueryOrder(bm gopay.BodyMap) (wxRsp *QueryOrderResponse, resBm gopay.BodyMap, err error) {
 	err = bm.CheckEmptyError("nonce_str")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("transaction_id") == gopay.NULL {
-		return nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
+		return nil, nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
 	}
 	var bs []byte
 	if w.IsProd {
@@ -120,13 +120,17 @@ func (w *Client) QueryOrder(bm gopay.BodyMap) (wxRsp *QueryOrderResponse, err er
 		bs, err = w.doSanBoxPost(bm, sandboxOrderQuery)
 	}
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	wxRsp = new(QueryOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	resBm = make(gopay.BodyMap)
+	if err = xml.Unmarshal(bs, &resBm); err != nil {
+		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s)：%w", string(bs), err)
+	}
+	return wxRsp, resBm, nil
 }
 
 // 关闭订单
@@ -188,16 +192,16 @@ func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 // 申请退款
 //    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
-func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *RefundResponse, err error) {
+func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *RefundResponse, resBm gopay.BodyMap, err error) {
 	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "out_refund_no", "total_fee", "refund_fee")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("transaction_id") == gopay.NULL {
-		return nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
+		return nil, nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
 	}
 	var (
 		bs        []byte
@@ -205,31 +209,35 @@ func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 	)
 	if w.IsProd {
 		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		bs, err = w.doProdPost(bm, refund, tlsConfig)
 	} else {
 		bs, err = w.doSanBoxPost(bm, sandboxRefund)
 	}
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	wxRsp = new(RefundResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	resBm = make(gopay.BodyMap)
+	if err = xml.Unmarshal(bs, &resBm); err != nil {
+		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s)：%w", string(bs), err)
+	}
+	return wxRsp, resBm, nil
 }
 
 // 查询退款
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_5
-func (w *Client) QueryRefund(bm gopay.BodyMap) (wxRsp *QueryRefundResponse, err error) {
+func (w *Client) QueryRefund(bm gopay.BodyMap) (wxRsp *QueryRefundResponse, resBm gopay.BodyMap, err error) {
 	err = bm.CheckEmptyError("nonce_str")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	if bm.Get("refund_id") == gopay.NULL && bm.Get("out_refund_no") == gopay.NULL && bm.Get("transaction_id") == gopay.NULL && bm.Get("out_trade_no") == gopay.NULL {
-		return nil, errors.New("refund_id, out_refund_no, out_trade_no, transaction_id are not allowed to be null at the same time")
+		return nil, nil, errors.New("refund_id, out_refund_no, out_trade_no, transaction_id are not allowed to be null at the same time")
 	}
 	var bs []byte
 	if w.IsProd {
@@ -238,13 +246,17 @@ func (w *Client) QueryRefund(bm gopay.BodyMap) (wxRsp *QueryRefundResponse, err 
 		bs, err = w.doSanBoxPost(bm, sandboxRefundQuery)
 	}
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	wxRsp = new(QueryRefundResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	resBm = make(gopay.BodyMap)
+	if err = xml.Unmarshal(bs, &resBm); err != nil {
+		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s)：%w", string(bs), err)
+	}
+	return wxRsp, resBm, nil
 }
 
 // 下载对账单
@@ -351,7 +363,7 @@ func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, 
 	return string(bs), nil
 }
 
-// 企业向微信用户个人付款（正式）
+// 企业付款（企业向微信用户个人付款）
 //    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则3证书Path均不可为nil（string类型）
 //    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
@@ -380,6 +392,44 @@ func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fil
 		w.mu.RUnlock()
 	}
 	wxRsp = new(TransfersResponse)
+	res, errs := httpClient.Post(url).SendString(generateXml(bm)).EndStruct(wxRsp)
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	return wxRsp, nil
+}
+
+// 查询企业付款
+//    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则3证书Path均不可为nil（string类型）
+//    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
+//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_3
+func (w *Client) GetTransferInfo(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *TransfersInfoResponse, err error) {
+	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return nil, err
+	}
+	if err = bm.CheckEmptyError("nonce_str", "partner_trade_no"); err != nil {
+		return nil, err
+	}
+	bm.Set("appid", w.AppId)
+	bm.Set("mch_id", w.MchId)
+	var (
+		tlsConfig *tls.Config
+		url       = baseUrlCh + getTransferInfo
+	)
+	if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return nil, err
+	}
+	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
+	httpClient := gopay.NewHttpClient().SetTLSConfig(tlsConfig).Type(gopay.TypeXML)
+	if w.BaseURL != gopay.NULL {
+		w.mu.RLock()
+		url = w.BaseURL + getTransferInfo
+		w.mu.RUnlock()
+	}
+	wxRsp = new(TransfersInfoResponse)
 	res, errs := httpClient.Post(url).SendString(generateXml(bm)).EndStruct(wxRsp)
 	if len(errs) > 0 {
 		return nil, errs[0]
