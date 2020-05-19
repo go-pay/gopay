@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+	"time"
 )
 
 const (
@@ -35,6 +36,7 @@ type Client struct {
 	HttpClient    *http.Client
 	Transport     *http.Transport
 	Header        http.Header
+	Timeout       time.Duration
 	Url           string
 	Method        string
 	RequestType   string
@@ -50,21 +52,32 @@ type Client struct {
 // NewHttpClient , default tls.Config{InsecureSkipVerify: true}
 func NewHttpClient() (client *Client) {
 	client = &Client{
-		HttpClient:    &http.Client{},
+		HttpClient: &http.Client{
+			Timeout: 60 * time.Second,
+			Transport: &http.Transport{
+				TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
+				DisableKeepAlives: true,
+			},
+		},
 		Transport:     &http.Transport{},
 		Header:        make(http.Header),
 		RequestType:   TypeUrlencoded,
 		UnmarshalType: TypeJSON,
 		Errors:        make([]error, 0),
 	}
-	client.Transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	client.Transport.DisableKeepAlives = true
 	return client
 }
 
 func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
 	c.mu.Lock()
 	c.Transport.TLSClientConfig = tlsCfg
+	c.mu.Unlock()
+	return c
+}
+
+func (c *Client) SetTimeout(timeout time.Duration) (client *Client) {
+	c.mu.Lock()
+	c.Timeout = timeout
 	c.mu.Unlock()
 	return c
 }
@@ -192,14 +205,16 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 		c.Errors = append(c.Errors, err)
 		return nil, nil, c.Errors
 	}
-
+	if c.Timeout != time.Duration(0) {
+		c.HttpClient.Timeout = c.Timeout
+	}
 	res, err = c.HttpClient.Do(req)
 	if err != nil {
 		c.Errors = append(c.Errors, err)
 		return nil, nil, c.Errors
 	}
 	defer res.Body.Close()
-	bs, err = ioutil.ReadAll(io.LimitReader(res.Body, int64(2<<20))) // default 2MB change the size you want
+	bs, err = ioutil.ReadAll(io.LimitReader(res.Body, int64(3<<20))) // default 3MB change the size you want
 	if err != nil {
 		c.Errors = append(c.Errors, err)
 		return nil, nil, c.Errors
