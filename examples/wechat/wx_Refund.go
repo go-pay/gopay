@@ -32,10 +32,11 @@ func Refund() {
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, err := client.Refund(bm, "iguiyu_cert/apiclient_cert.pem", "iguiyu_cert/apiclient_key.pem", "iguiyu_cert/apiclient_cert.p12")
+	wxRsp, resBm, err := client.Refund(bm, "iguiyu_cert/apiclient_cert.pem", "iguiyu_cert/apiclient_key.pem", "iguiyu_cert/apiclient_cert.p12")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
 	fmt.Println("wxRsp：", *wxRsp)
+	fmt.Println("resBm:", resBm)
 }
