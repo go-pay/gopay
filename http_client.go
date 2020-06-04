@@ -68,6 +68,17 @@ func NewHttpClient() (client *Client) {
 	return client
 }
 
+func (c *Client) Reset() {
+	c.HttpClient = &http.Client{}
+	c.Transport = &http.Transport{}
+	c.Header = make(http.Header)
+	c.RequestType = TypeUrlencoded
+	c.UnmarshalType = TypeJSON
+	c.Errors = make([]error, 0)
+	c.Transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	c.Transport.DisableKeepAlives = true
+}
+
 func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
 	c.mu.Lock()
 	c.Transport.TLSClientConfig = tlsCfg
@@ -98,6 +109,13 @@ func (c *Client) Type(typeStr string) (client *Client) {
 	} else {
 		c.Errors = append(c.Errors, errors.New("Type func: incorrect type \""+typeStr+"\""))
 	}
+	return c
+}
+
+func (c *Client) SetHeaders(header http.Header) (client *Client) {
+	c.mu.Lock()
+	c.Header = header
+	c.mu.Unlock()
 	return c
 }
 
@@ -196,8 +214,14 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 		if err != nil {
 			return nil, err
 		}
-		req.Header = c.Header
 		req.Header.Set("Content-Type", c.ContentType)
+		if c.Header != nil && len(c.Header) > 0 {
+			for k, v := range c.Header {
+				if len(v) > 0 {
+					req.Header.Set(k, v[0])
+				}
+			}
+		}
 		c.HttpClient.Transport = c.Transport
 		return req, nil
 	}()
