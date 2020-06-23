@@ -15,6 +15,7 @@ import (
 	"strings"
 
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/goutil"
 )
 
 // 添加QQ证书 Path 路径
@@ -53,13 +54,13 @@ func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath inter
 
 func checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) error {
 	if certFilePath != nil && keyFilePath != nil && pkcs12FilePath != nil {
-		if v, ok := certFilePath.(string); !ok || v == gopay.NULL {
+		if v, ok := certFilePath.(string); !ok || v == goutil.NULL {
 			return errors.New("certFilePath not string type or is null string")
 		}
-		if v, ok := keyFilePath.(string); !ok || v == gopay.NULL {
+		if v, ok := keyFilePath.(string); !ok || v == goutil.NULL {
 			return errors.New("keyFilePath not string type or is null string")
 		}
-		if v, ok := pkcs12FilePath.(string); !ok || v == gopay.NULL {
+		if v, ok := pkcs12FilePath.(string); !ok || v == goutil.NULL {
 			return errors.New("pkcs12FilePath not string type or is null string")
 		}
 		return nil
@@ -74,7 +75,7 @@ func checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) er
 func generateXml(bm gopay.BodyMap) (reqXml string) {
 	bs, err := xml.Marshal(bm)
 	if err != nil {
-		return gopay.NULL
+		return goutil.NULL
 	}
 	return string(bs)
 }

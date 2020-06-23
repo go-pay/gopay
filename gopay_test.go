@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/iGoogle-ink/goutil/xhttp"
 )
 
 func TestBodyMap_CheckParamsNull(t *testing.T) {
@@ -22,7 +24,7 @@ func TestBodyMap_CheckParamsNull(t *testing.T) {
 }
 
 func TestNewHttpClient(t *testing.T) {
-	client := NewHttpClient()
+	client := xhttp.NewHttpClient()
 	res, _, errs := client.Get("http://www.baidu.com").SetTimeout(30 * time.Second).EndBytes()
 	if len(errs) > 0 {
 		fmt.Println("err:", errs[0])

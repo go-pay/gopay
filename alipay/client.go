@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/goutil"
+	"github.com/iGoogle-ink/goutil/xhttp"
 )
 
 type Client struct {
@@ -46,7 +48,7 @@ func NewClient(appId, privateKey string, isProd bool) (client *Client) {
 // alipay.trade.fastpay.refund.query(统一收单交易退款查询)
 //    文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.fastpay.refund.query
 func (a *Client) TradeFastPayRefundQuery(bm gopay.BodyMap) (aliRsp *TradeFastpayRefundQueryResponse, err error) {
-	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == goutil.NULL && bm.Get("trade_no") == goutil.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	err = bm.CheckEmptyError("out_request_no")
@@ -118,7 +120,7 @@ func (a *Client) TradeCreate(bm gopay.BodyMap) (aliRsp *TradeCreateResponse, err
 // alipay.trade.close(统一收单交易关闭接口)
 //    文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.close
 func (a *Client) TradeClose(bm gopay.BodyMap) (aliRsp *TradeCloseResponse, err error) {
-	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == goutil.NULL && bm.Get("trade_no") == goutil.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	var bs []byte
@@ -140,7 +142,7 @@ func (a *Client) TradeClose(bm gopay.BodyMap) (aliRsp *TradeCloseResponse, err e
 // alipay.trade.cancel(统一收单交易撤销接口)
 //    文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.cancel
 func (a *Client) TradeCancel(bm gopay.BodyMap) (aliRsp *TradeCancelResponse, err error) {
-	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == goutil.NULL && bm.Get("trade_no") == goutil.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	var bs []byte
@@ -162,7 +164,7 @@ func (a *Client) TradeCancel(bm gopay.BodyMap) (aliRsp *TradeCancelResponse, err
 // alipay.trade.refund(统一收单交易退款接口)
 //    文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.refund
 func (a *Client) TradeRefund(bm gopay.BodyMap) (aliRsp *TradeRefundResponse, err error) {
-	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == goutil.NULL && bm.Get("trade_no") == goutil.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	err = bm.CheckEmptyError("refund_amount")
@@ -188,7 +190,7 @@ func (a *Client) TradeRefund(bm gopay.BodyMap) (aliRsp *TradeRefundResponse, err
 // alipay.trade.page.refund(统一收单退款页面接口)
 //    文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.page.refund
 func (a *Client) TradePageRefund(bm gopay.BodyMap) (aliRsp *TradePageRefundResponse, err error) {
-	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == goutil.NULL && bm.Get("trade_no") == goutil.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	err = bm.CheckEmptyError("out_request_no", "refund_amount")
@@ -264,7 +266,7 @@ func (a *Client) TradePay(bm gopay.BodyMap) (aliRsp *TradePayResponse, err error
 // alipay.trade.query(统一收单线下交易查询)
 //    文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.query
 func (a *Client) TradeQuery(bm gopay.BodyMap) (aliRsp *TradeQueryResponse, err error) {
-	if bm.Get("out_trade_no") == gopay.NULL && bm.Get("trade_no") == gopay.NULL {
+	if bm.Get("out_trade_no") == goutil.NULL && bm.Get("trade_no") == goutil.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	var bs []byte
@@ -288,11 +290,11 @@ func (a *Client) TradeQuery(bm gopay.BodyMap) (aliRsp *TradeQueryResponse, err e
 func (a *Client) TradeAppPay(bm gopay.BodyMap) (payParam string, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
-		return gopay.NULL, err
+		return goutil.NULL, err
 	}
 	var bs []byte
 	if bs, err = a.doAliPay(bm, "alipay.trade.app.pay"); err != nil {
-		return gopay.NULL, err
+		return goutil.NULL, err
 	}
 	payParam = string(bs)
 	return payParam, nil
@@ -304,11 +306,11 @@ func (a *Client) TradeWapPay(bm gopay.BodyMap) (payUrl string, err error) {
 	bm.Set("product_code", "QUICK_WAP_WAY")
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
-		return gopay.NULL, err
+		return goutil.NULL, err
 	}
 	var bs []byte
 	if bs, err = a.doAliPay(bm, "alipay.trade.wap.pay"); err != nil {
-		return gopay.NULL, err
+		return goutil.NULL, err
 	}
 	payUrl = string(bs)
 	return payUrl, nil
@@ -320,11 +322,11 @@ func (a *Client) TradePagePay(bm gopay.BodyMap) (payUrl string, err error) {
 	bm.Set("product_code", "FAST_INSTANT_TRADE_PAY")
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
-		return gopay.NULL, err
+		return goutil.NULL, err
 	}
 	var bs []byte
 	if bs, err = a.doAliPay(bm, "alipay.trade.page.pay"); err != nil {
-		return gopay.NULL, err
+		return goutil.NULL, err
 	}
 	payUrl = string(bs)
 	return payUrl, nil
@@ -334,7 +336,7 @@ func (a *Client) TradePagePay(bm gopay.BodyMap) (payUrl string, err error) {
 //    文档地址：https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.toaccount.transfer
 //    注意：此接口官方以升级替换为 alipay.fund.trans.uni.transfer
 func (a *Client) FundTransToaccountTransfer(bm gopay.BodyMap) (aliRsp *FundTransToaccountTransferResponse, err error) {
-	if bm.Get("out_biz_no") == gopay.NULL {
+	if bm.Get("out_biz_no") == goutil.NULL {
 		return nil, errors.New("out_biz_no is not allowed to be null")
 	}
 	var bs []byte
@@ -427,7 +429,7 @@ func (a *Client) TradeOrderinfoSync(body gopay.BodyMap) {
 // alipay.system.oauth.token(换取授权访问令牌)
 //    文档地址：https://opendocs.alipay.com/apis/api_9/alipay.system.oauth.token
 func (a *Client) SystemOauthToken(bm gopay.BodyMap) (aliRsp *SystemOauthTokenResponse, err error) {
-	if bm.Get("code") == gopay.NULL && bm.Get("refresh_token") == gopay.NULL {
+	if bm.Get("code") == goutil.NULL && bm.Get("refresh_token") == goutil.NULL {
 		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
 	}
 	err = bm.CheckEmptyError("grant_type")
@@ -473,7 +475,7 @@ func (a *Client) UserInfoShare() (aliRsp *UserInfoShareResponse, err error) {
 // alipay.open.auth.token.app(换取应用授权令牌)
 //    文档地址：https://opendocs.alipay.com/apis/api_9/alipay.open.auth.token.app
 func (a *Client) OpenAuthTokenApp(bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppResponse, err error) {
-	if bm.Get("code") == gopay.NULL && bm.Get("refresh_token") == gopay.NULL {
+	if bm.Get("code") == goutil.NULL && bm.Get("refresh_token") == goutil.NULL {
 		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
 	}
 	err = bm.CheckEmptyError("grant_type")
@@ -499,7 +501,7 @@ func (a *Client) OpenAuthTokenApp(bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppRes
 // zhima.credit.score.get(芝麻分)
 //    文档地址：https://opendocs.alipay.com/apis/api_8/zhima.credit.score.get
 func (a *Client) ZhimaCreditScoreGet(bm gopay.BodyMap) (aliRsp *ZhimaCreditScoreGetResponse, err error) {
-	if bm.Get("product_code") == gopay.NULL {
+	if bm.Get("product_code") == goutil.NULL {
 		bm.Set("product_code", "w1010100100000000001")
 	}
 	err = bm.CheckEmptyError("transaction_id")
@@ -551,11 +553,11 @@ func (a *Client) UserCertifyOpenInit(bm gopay.BodyMap) (aliRsp *UserCertifyOpenI
 func (a *Client) UserCertifyOpenCertify(bm gopay.BodyMap) (certifyUrl string, err error) {
 	err = bm.CheckEmptyError("certify_id")
 	if err != nil {
-		return gopay.NULL, err
+		return goutil.NULL, err
 	}
 	var bs []byte
 	if bs, err = a.doAliPay(bm, "alipay.user.certify.open.certify"); err != nil {
-		return gopay.NULL, err
+		return goutil.NULL, err
 	}
 	certifyUrl = string(bs)
 	return certifyUrl, nil
@@ -669,59 +671,59 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 	pubBody.Set("app_id", a.AppId)
 	pubBody.Set("method", method)
 	pubBody.Set("format", "JSON")
-	if a.AppCertSN != gopay.NULL {
+	if a.AppCertSN != goutil.NULL {
 		a.mu.RLock()
 		pubBody.Set("app_cert_sn", a.AppCertSN)
 		a.mu.RUnlock()
 	}
-	if a.AliPayRootCertSN != gopay.NULL {
+	if a.AliPayRootCertSN != goutil.NULL {
 		a.mu.RLock()
 		pubBody.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
 		a.mu.RUnlock()
 	}
-	if a.ReturnUrl != gopay.NULL {
+	if a.ReturnUrl != goutil.NULL {
 		a.mu.RLock()
 		pubBody.Set("return_url", a.ReturnUrl)
 		a.mu.RUnlock()
 	}
-	if a.Charset == gopay.NULL {
+	if a.Charset == goutil.NULL {
 		pubBody.Set("charset", "utf-8")
 	} else {
 		a.mu.RLock()
 		pubBody.Set("charset", a.Charset)
 		a.mu.RUnlock()
 	}
-	if a.SignType == gopay.NULL {
+	if a.SignType == goutil.NULL {
 		pubBody.Set("sign_type", RSA2)
 	} else {
 		a.mu.RLock()
 		pubBody.Set("sign_type", a.SignType)
 		a.mu.RUnlock()
 	}
-	if a.LocationName != gopay.NULL && a.location != nil {
+	if a.LocationName != goutil.NULL && a.location != nil {
 		a.mu.RLock()
-		pubBody.Set("timestamp", time.Now().In(a.location).Format(gopay.TimeLayout))
+		pubBody.Set("timestamp", time.Now().In(a.location).Format(goutil.TimeLayout))
 		a.mu.RUnlock()
 	} else {
-		pubBody.Set("timestamp", time.Now().Format(gopay.TimeLayout))
+		pubBody.Set("timestamp", time.Now().Format(goutil.TimeLayout))
 	}
 	pubBody.Set("version", "1.0")
-	if a.NotifyUrl != gopay.NULL {
+	if a.NotifyUrl != goutil.NULL {
 		a.mu.RLock()
 		pubBody.Set("notify_url", a.NotifyUrl)
 		a.mu.RUnlock()
 	}
-	if a.AppAuthToken != gopay.NULL {
+	if a.AppAuthToken != goutil.NULL {
 		a.mu.RLock()
 		pubBody.Set("app_auth_token", a.AppAuthToken)
 		a.mu.RUnlock()
 	}
-	if a.AuthToken != gopay.NULL {
+	if a.AuthToken != goutil.NULL {
 		a.mu.RLock()
 		pubBody.Set("auth_token", a.AuthToken)
 		a.mu.RUnlock()
 	}
-	if bodyStr != gopay.NULL {
+	if bodyStr != goutil.NULL {
 		pubBody.Set("biz_content", bodyStr)
 	}
 	sign, err := GetRsaSign(pubBody, pubBody.Get("sign_type"), a.PrivateKeyType, a.PrivateKey)
@@ -740,13 +742,13 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 		}
 		return []byte(baseUrl + "?" + param), nil
 	default:
-		httpClient := gopay.NewHttpClient()
+		httpClient := xhttp.NewHttpClient()
 		if !a.IsProd {
 			url = sandboxBaseUrlUtf8
 		} else {
 			url = baseUrlUtf8
 		}
-		res, bs, errs := httpClient.Type(gopay.TypeForm).Post(url).SendString(param).EndBytes()
+		res, bs, errs := httpClient.Type(xhttp.TypeForm).Post(url).SendString(param).EndBytes()
 		if len(errs) > 0 {
 			return nil, errs[0]
 		}

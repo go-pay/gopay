@@ -248,7 +248,7 @@ import (
 
 // 初始化 BodyMap
 bm := make(gopay.BodyMap)
-bm.Set("nonce_str", gopay.GetRandomString(32))
+bm.Set("nonce_str", goutil.GetRandomString(32))
 bm.Set("body", "小程序测试支付")
 bm.Set("out_trade_no", number)
 bm.Set("total_fee", 1)

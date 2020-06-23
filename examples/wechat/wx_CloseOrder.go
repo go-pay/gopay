@@ -5,6 +5,7 @@ import (
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/iGoogle-ink/goutil"
 )
 
 func CloseOrder() {
@@ -18,7 +19,7 @@ func CloseOrder() {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ")
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", goutil.GetRandomString(32))
 	bm.Set("sign_type", wechat.SignType_MD5)
 
 	// 请求关闭订单，成功后得到结果
