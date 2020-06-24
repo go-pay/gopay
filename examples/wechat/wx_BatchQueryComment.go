@@ -5,7 +5,7 @@ import (
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
-	"github.com/iGoogle-ink/goutil"
+	"github.com/iGoogle-ink/gotil"
 )
 
 func BatchQueryComment() {
@@ -19,7 +19,7 @@ func BatchQueryComment() {
 
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", wechat.SignType_HMAC_SHA256)
 	bm.Set("begin_time", "20190120000000")
 	bm.Set("end_time", "20190122174000")

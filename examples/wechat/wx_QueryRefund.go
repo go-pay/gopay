@@ -5,7 +5,7 @@ import (
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
-	"github.com/iGoogle-ink/goutil"
+	"github.com/iGoogle-ink/gotil"
 )
 
 func QueryRefund() {
@@ -22,7 +22,7 @@ func QueryRefund() {
 	//bm.Set("out_refund_no", "vk4264I1UQ3Hm3E4AKsavK8npylGSgQA092f9ckUxp8A2gXmnsLEdsupURVTcaC7")
 	//bm.Set("transaction_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")
 	//bm.Set("refund_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", wechat.SignType_MD5)
 
 	//请求申请退款

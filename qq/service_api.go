@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/goutil"
+	"github.com/iGoogle-ink/gotil"
 )
 
 // 向QQ发送Post请求，对于本库未提供的微信API，可自行实现，通过此方法发送请求
@@ -59,7 +59,7 @@ func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
 func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) {
-	if apiKey == goutil.NULL || signType == goutil.NULL {
+	if apiKey == gotil.NULL || signType == gotil.NULL {
 		return false, errors.New("apiKey or signType can not null")
 	}
 	if bean == nil {
@@ -97,7 +97,7 @@ func (w *NotifyResponse) ToXmlString() (xmlStr string) {
 	buffer.WriteString("<xml><return_code>")
 	buffer.WriteString(w.ReturnCode)
 	buffer.WriteString("</return_code>")
-	if w.ReturnMsg != goutil.NULL {
+	if w.ReturnMsg != gotil.NULL {
 		buffer.WriteString("<return_msg>")
 		buffer.WriteString(w.ReturnMsg)
 		buffer.WriteString("</return_msg>")

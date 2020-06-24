@@ -5,7 +5,7 @@ import (
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
-	"github.com/iGoogle-ink/goutil"
+	"github.com/iGoogle-ink/gotil"
 )
 
 func ZhimaCreditScoreGet() {
@@ -23,7 +23,7 @@ func ZhimaCreditScoreGet() {
 
 	//请求参数
 	body := make(gopay.BodyMap)
-	transaction_id := goutil.GetRandomString(48)
+	transaction_id := gotil.GetRandomString(48)
 	body.Set("transaction_id", transaction_id)
 	body.Set("product_code", "w1010100100000000001")
 

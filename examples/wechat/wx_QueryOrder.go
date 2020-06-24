@@ -5,7 +5,7 @@ import (
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
-	"github.com/iGoogle-ink/goutil"
+	"github.com/iGoogle-ink/gotil"
 )
 
 func QueryOrder() {
@@ -19,7 +19,7 @@ func QueryOrder() {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "GW201908091551421156")
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", wechat.SignType_MD5)
 
 	// 请求订单查询，成功后得到结果

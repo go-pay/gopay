@@ -21,9 +21,9 @@ import (
 	"strings"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/goutil"
-	xaes "github.com/iGoogle-ink/goutil/aes"
-	"github.com/iGoogle-ink/goutil/xhttp"
+	"github.com/iGoogle-ink/gotil"
+	xaes "github.com/iGoogle-ink/gotil/aes"
+	"github.com/iGoogle-ink/gotil/xhttp"
 )
 
 // 向微信发送Post请求，对于本库未提供的微信API，可自行实现，通过此方法发送请求
@@ -48,7 +48,7 @@ func GetParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string) {
 		h        hash.Hash
 	)
 	signType = bm.Get("sign_type")
-	if signType == goutil.NULL {
+	if signType == gotil.NULL {
 		bm.Set("sign_type", SignType_MD5)
 	}
 	if signType == SignType_HMAC_SHA256 {
@@ -76,7 +76,7 @@ func GetSanBoxParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign str
 		sandBoxApiKey string
 		hashMd5       hash.Hash
 	)
-	if sandBoxApiKey, err = getSanBoxKey(mchId, goutil.GetRandomString(32), apiKey, SignType_MD5); err != nil {
+	if sandBoxApiKey, err = getSanBoxKey(mchId, gotil.GetRandomString(32), apiKey, SignType_MD5); err != nil {
 		return
 	}
 	hashMd5 = md5.New()
@@ -132,7 +132,7 @@ func ParseRefundNotify(req *http.Request) (notifyReq *RefundNotifyRequest, err e
 //    返回参数err：错误信息
 //    文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_16&index=10
 func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNotify, err error) {
-	if reqInfo == goutil.NULL || apiKey == goutil.NULL {
+	if reqInfo == gotil.NULL || apiKey == gotil.NULL {
 		return nil, errors.New("reqInfo or apiKey is null")
 	}
 	var (
@@ -339,7 +339,7 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 //    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr interface{}) (err error) {
-	if encryptedData == goutil.NULL || iv == goutil.NULL || sessionKey == goutil.NULL {
+	if encryptedData == gotil.NULL || iv == gotil.NULL || sessionKey == gotil.NULL {
 		return errors.New("input params can not null")
 	}
 	var (
@@ -381,7 +381,7 @@ func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr inter
 //    sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.BodyMap, err error) {
-	if encryptedData == goutil.NULL || iv == goutil.NULL || sessionKey == goutil.NULL {
+	if encryptedData == gotil.NULL || iv == gotil.NULL || sessionKey == gotil.NULL {
 		return nil, errors.New("input params can not null")
 	}
 	var (

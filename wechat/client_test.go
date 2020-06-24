@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/goutil"
+	"github.com/iGoogle-ink/gotil"
 )
 
 var (
@@ -39,11 +39,11 @@ func TestMain(m *testing.M) {
 }
 
 func TestClient_UnifiedOrder(t *testing.T) {
-	number := goutil.GetRandomString(32)
+	number := gotil.GetRandomString(32)
 	fmt.Println("out_trade_no:", number)
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("body", "H5支付")
 	bm.Set("out_trade_no", number)
 	bm.Set("total_fee", 1)
@@ -99,7 +99,7 @@ func TestClient_QueryOrder(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ")
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_MD5)
 
 	// 请求订单查询，成功后得到结果
@@ -116,7 +116,7 @@ func TestClient_CloseOrder(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ")
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_MD5)
 
 	// 请求关闭订单，成功后得到结果
@@ -129,11 +129,11 @@ func TestClient_CloseOrder(t *testing.T) {
 }
 
 func TestClient_Micropay(t *testing.T) {
-	number := goutil.GetRandomString(32)
+	number := gotil.GetRandomString(32)
 	fmt.Println("out_trade_no:", number)
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("body", "扫用户付款码支付")
 	bm.Set("out_trade_no", number)
 	bm.Set("total_fee", 1)
@@ -158,7 +158,7 @@ func TestClient_Micropay(t *testing.T) {
 func TestClient_AuthCodeToOpenId(t *testing.T) {
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("auth_code", "134753997737645794")
 
 	wxRsp, err := client.AuthCodeToOpenId(bm)
@@ -173,9 +173,9 @@ func TestClient_Refund(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "QRcTBTbJLoDrWSW9FtpSFlgWhft2QbaY")
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_MD5)
-	s := goutil.GetRandomString(64)
+	s := gotil.GetRandomString(64)
 	fmt.Println("out_refund_no:", s)
 	bm.Set("out_refund_no", s)
 	bm.Set("total_fee", 101)
@@ -203,7 +203,7 @@ func TestClient_QueryRefund(t *testing.T) {
 	//bm.Set("out_refund_no", "vk4264I1UQ3Hm3E4AKsavK8npylGSgQA092f9ckUxp8A2gXmnsLEdsupURVTcaC7")
 	//bm.Set("transaction_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")
 	//bm.Set("refund_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_MD5)
 
 	// 请求申请退款
@@ -219,7 +219,7 @@ func TestClient_QueryRefund(t *testing.T) {
 func TestClient_Reverse(t *testing.T) {
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B")
 	bm.Set("sign_type", SignType_MD5)
 
@@ -235,8 +235,8 @@ func TestClient_Reverse(t *testing.T) {
 func TestClient_Transfer(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", goutil.GetRandomString(32))
-	bm.Set("partner_trade_no", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
+	bm.Set("partner_trade_no", gotil.GetRandomString(32))
 	bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 	bm.Set("check_name", "FORCE_CHECK") // NO_CHECK：不校验真实姓名 , FORCE_CHECK：强校验真实姓名
 	bm.Set("re_user_name", "付明明")       // 收款用户真实姓名。 如果check_name设置为FORCE_CHECK，则必填用户真实姓名
@@ -260,8 +260,8 @@ func TestClient_Transfer(t *testing.T) {
 func TestClient_GetTransferInfo(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", goutil.GetRandomString(32))
-	bm.Set("partner_trade_no", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
+	bm.Set("partner_trade_no", gotil.GetRandomString(32))
 
 	// 查询企业付款
 	//    body：参数Body
@@ -279,7 +279,7 @@ func TestClient_GetTransferInfo(t *testing.T) {
 func TestClient_DownloadBill(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_MD5)
 	bm.Set("bill_date", "20190722")
 	bm.Set("bill_type", "ALL")
@@ -296,7 +296,7 @@ func TestClient_DownloadBill(t *testing.T) {
 func TestClient_DownloadFundFlow(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bm.Set("bill_date", "20190122")
 	bm.Set("account_type", "Basic")
@@ -313,7 +313,7 @@ func TestClient_DownloadFundFlow(t *testing.T) {
 func TestClient_BatchQueryComment(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bm.Set("begin_time", "20190120000000")
 	bm.Set("end_time", "20190122174000")
@@ -390,14 +390,14 @@ func TestClient_EntrustH5(t *testing.T) {
 }
 
 func TestClient_EntrustPaying(t *testing.T) {
-	number := goutil.GetRandomString(32)
+	number := gotil.GetRandomString(32)
 	fmt.Println("out_trade_no:", number)
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("contract_mchid", mchId)
 	bm.Set("contract_appid", appId)
 	bm.Set("out_trade_no", number)
-	bm.Set("nonce_str", goutil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("body", "测试签约")
 	bm.Set("total_fee", 1)
 	bm.Set("spbill_create_ip", "127.0.0.1")

@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/iGoogle-ink/goutil/xhttp"
+	"github.com/iGoogle-ink/gotil/xhttp"
 )
 
 func TestBodyMap_CheckParamsNull(t *testing.T) {
