@@ -18,6 +18,7 @@ steps:
     commands:
       - go version
       - go env
+      - go mod tidy
       - go test ./...
 
 trigger:
