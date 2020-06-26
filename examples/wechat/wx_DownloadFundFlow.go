@@ -5,6 +5,7 @@ import (
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/iGoogle-ink/gotil"
 )
 
 func DownloadFundFlow() {
@@ -18,7 +19,7 @@ func DownloadFundFlow() {
 
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", wechat.SignType_HMAC_SHA256)
 	bm.Set("bill_date", "20190122")
 	bm.Set("account_type", "Basic")

@@ -1,3 +1,10 @@
+版本号：Release 1.5.13
+发布时间：2020/06/27 10:10
+修改记录：
+   (1) 引入 github.com/iGoogle-ink/gotil 包
+   (2) 替换 log 输出样式
+   (3) 支付宝：新增client方法：client.PostAliPayAPISelf()，支付宝接口自行实现方法
+
 版本号：Release 1.5.12
 发布时间：2020/05/20 02:10
 修改记录：

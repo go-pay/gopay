@@ -5,6 +5,7 @@ import (
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/iGoogle-ink/gotil"
 )
 
 func Refund() {
@@ -18,9 +19,9 @@ func Refund() {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "SdZBAqJHBQGKVwb7aMR2mUwC588NG2Sd")
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", wechat.SignType_MD5)
-	s := gopay.GetRandomString(64)
+	s := gotil.GetRandomString(64)
 	fmt.Println("out_refund_no:", s)
 	bm.Set("out_refund_no", s)
 	bm.Set("total_fee", 1)

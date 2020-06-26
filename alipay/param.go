@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gotil"
 )
 
 //	AppId      string `json:"app_id"`      //支付宝分配给开发者的应用ID
@@ -134,7 +135,7 @@ func (a *Client) SetNotifyUrl(url string) (client *Client) {
 // 设置编码格式，如utf-8,gbk,gb2312等，默认推荐使用 utf-8
 func (a *Client) SetCharset(charset string) (client *Client) {
 	a.mu.Lock()
-	if charset == gopay.NULL {
+	if charset == gotil.NULL {
 		a.Charset = "utf-8"
 	} else {
 		a.Charset = charset
@@ -146,7 +147,7 @@ func (a *Client) SetCharset(charset string) (client *Client) {
 // 设置签名算法类型，目前支持RSA2和RSA，默认推荐使用 RSA2
 func (a *Client) SetSignType(signType string) (client *Client) {
 	a.mu.Lock()
-	if signType == gopay.NULL {
+	if signType == gotil.NULL {
 		a.SignType = RSA2
 	} else {
 		a.SignType = signType
@@ -187,27 +188,27 @@ func GetRsaSign(bm gopay.BodyMap, signType string, t PKCSType, privateKey string
 	pk := FormatPrivateKey(privateKey)
 
 	if block, _ = pem.Decode([]byte(pk)); block == nil {
-		return gopay.NULL, errors.New("pem.Decode：privateKey decode error")
+		return gotil.NULL, errors.New("pem.Decode：privateKey decode error")
 	}
 
 	switch t {
 	case PKCS1:
 		if key, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil {
-			return gopay.NULL, err
+			return gotil.NULL, err
 		}
 	case PKCS8:
 		pkcs8Key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
 		if err != nil {
-			return gopay.NULL, err
+			return gotil.NULL, err
 		}
 		pk8, ok := pkcs8Key.(*rsa.PrivateKey)
 		if !ok {
-			return gopay.NULL, errors.New("parse PKCS8 key error")
+			return gotil.NULL, errors.New("parse PKCS8 key error")
 		}
 		key = pk8
 	default:
 		if key, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil {
-			return gopay.NULL, err
+			return gotil.NULL, err
 		}
 	}
 
