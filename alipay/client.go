@@ -45,6 +45,19 @@ func NewClient(appId, privateKey string, isProd bool) (client *Client) {
 	}
 }
 
+// PostAliPayAPISelf 支付宝接口自行实现方法
+//    示例：请参考 client_test.go 的 TestClient_PostAliPayAPISelf() 方法
+func (a *Client) PostAliPayAPISelf(bm gopay.BodyMap, method string, aliRsp interface{}) (err error) {
+	var bs []byte
+	if bs, err = a.doAliPay(bm, method); err != nil {
+		return err
+	}
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return err
+	}
+	return nil
+}
+
 // alipay.trade.fastpay.refund.query(统一收单交易退款查询)
 //    文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.fastpay.refund.query
 func (a *Client) TradeFastPayRefundQuery(bm gopay.BodyMap) (aliRsp *TradeFastpayRefundQueryResponse, err error) {
@@ -742,7 +755,7 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 		}
 		return []byte(baseUrl + "?" + param), nil
 	default:
-		httpClient := xhttp.NewHttpClient()
+		httpClient := xhttp.NewClient()
 		if !a.IsProd {
 			url = sandboxBaseUrlUtf8
 		} else {

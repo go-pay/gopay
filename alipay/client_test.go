@@ -38,6 +38,21 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+func TestClient_PostAliPayAPISelf(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "预创建创建订单")
+	bm.Set("out_trade_no", gotil.GetRandomString(32))
+	bm.Set("total_amount", "100")
+
+	aliPsp := new(TradePrecreateResponse)
+	err := client.PostAliPayAPISelf(bm, "alipay.trade.precreate", aliPsp)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug(aliPsp.Response)
+}
+
 func TestClient_TradePrecreate(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
