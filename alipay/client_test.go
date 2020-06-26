@@ -1,12 +1,12 @@
 package alipay
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 var (
@@ -48,12 +48,12 @@ func TestClient_TradePrecreate(t *testing.T) {
 	// 创建订单
 	aliRsp, err := client.TradePrecreate(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.TradePrecreate(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
-	fmt.Println("aliRsp.QrCode:", aliRsp.Response.QrCode)
-	fmt.Println("aliRsp.OutTradeNo:", aliRsp.Response.OutTradeNo)
+	xlog.Debug("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp.QrCode:", aliRsp.Response.QrCode)
+	xlog.Debug("aliRsp.OutTradeNo:", aliRsp.Response.OutTradeNo)
 }
 
 func TestClient_TradeCreate(t *testing.T) {
@@ -67,11 +67,11 @@ func TestClient_TradeCreate(t *testing.T) {
 	// 创建订单
 	aliRsp, err := client.TradeCreate(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.TradeCreate(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
-	fmt.Println("aliRsp.TradeNo:", aliRsp.Response.TradeNo)
+	xlog.Debug("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp.TradeNo:", aliRsp.Response.TradeNo)
 }
 
 func TestClient_TradeAppPay(t *testing.T) {
@@ -84,10 +84,10 @@ func TestClient_TradeAppPay(t *testing.T) {
 	// 手机APP支付参数请求
 	payParam, err := client.TradeAppPay(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.TradeAppPay(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("payParam:", payParam)
+	xlog.Debug("payParam:", payParam)
 }
 
 func TestClient_TradeCancel(t *testing.T) {
@@ -98,10 +98,10 @@ func TestClient_TradeCancel(t *testing.T) {
 	// 撤销支付订单
 	aliRsp, err := client.TradeCancel(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.TradeCancel(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }
 
 func TestClient_TradeClose(t *testing.T) {
@@ -112,10 +112,10 @@ func TestClient_TradeClose(t *testing.T) {
 	// 条码支付
 	aliRsp, err := client.TradeClose(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.TradeClose(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }
 
 func TestClient_TradePay(t *testing.T) {
@@ -131,17 +131,17 @@ func TestClient_TradePay(t *testing.T) {
 	// 条码支付
 	aliRsp, err := client.TradePay(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.TradePay(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 
 	// 同步返回验签
 	ok, err := VerifySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
 	if err != nil {
-		fmt.Println("err:::", err)
+		xlog.Errorf("VerifySyncSign(%s,%s,%s),error:%+v", aliPayPublicKey, aliRsp.SignData, aliRsp.Sign, err)
 	}
-	fmt.Println("同步返回验签：", ok)
+	xlog.Debug("同步返回验签：", ok)
 }
 
 func TestClient_TradeQuery(t *testing.T) {
@@ -152,10 +152,10 @@ func TestClient_TradeQuery(t *testing.T) {
 	// 查询订单
 	aliRsp, err := client.TradeQuery(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.TradeQuery(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }
 
 func TestClient_TradeWapPay(t *testing.T) {
@@ -170,10 +170,10 @@ func TestClient_TradeWapPay(t *testing.T) {
 	// 手机网站支付请求
 	payUrl, err := client.TradeWapPay(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.TradeWapPay(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("payUrl:", payUrl)
+	xlog.Debug("payUrl:", payUrl)
 }
 
 func TestClient_TradePagePay(t *testing.T) {
@@ -187,26 +187,26 @@ func TestClient_TradePagePay(t *testing.T) {
 	// 电脑网站支付请求
 	payUrl, err := client.TradePagePay(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.TradePagePay(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("payUrl:", payUrl)
+	xlog.Debug("payUrl:", payUrl)
 }
 
 func TestClient_TradeRefund(t *testing.T) {
 	// 请求参数
-	body := make(gopay.BodyMap)
-	body.Set("out_trade_no", "GZ201909081743431443")
-	body.Set("refund_amount", "5")
-	body.Set("refund_reason", "测试退款")
+	bm := make(gopay.BodyMap)
+	bm.Set("out_trade_no", "GZ201909081743431443")
+	bm.Set("refund_amount", "5")
+	bm.Set("refund_reason", "测试退款")
 
 	// 发起退款请求
-	aliRsp, err := client.TradeRefund(body)
+	aliRsp, err := client.TradeRefund(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.TradeRefund(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }
 
 func TestClient_TradePageRefund(t *testing.T) {
@@ -219,10 +219,10 @@ func TestClient_TradePageRefund(t *testing.T) {
 	// 发起退款请求
 	aliRsp, err := client.TradePageRefund(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.TradePageRefund(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }
 
 func TestClient_SystemOauthToken(t *testing.T) {
@@ -234,12 +234,12 @@ func TestClient_SystemOauthToken(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.SystemOauthToken(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.SystemOauthToken(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
-	fmt.Println("aliRsp:", aliRsp.Response.AccessToken)
-	fmt.Println("aliRsp:", aliRsp.SignData)
+	xlog.Debug("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", aliRsp.Response.AccessToken)
+	xlog.Debug("aliRsp:", aliRsp.SignData)
 }
 
 func TestClient_TradeOrderSettle(t *testing.T) {
@@ -257,10 +257,10 @@ func TestClient_TradeOrderSettle(t *testing.T) {
 	// 发起交易结算接口
 	aliRsp, err := client.TradeOrderSettle(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.TradeOrderSettle(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }
 
 func TestClient_OpenAuthTokenApp(t *testing.T) {
@@ -272,10 +272,10 @@ func TestClient_OpenAuthTokenApp(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.OpenAuthTokenApp(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.OpenAuthTokenApp(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }
 
 func TestClient_TradeFastPayRefundQuery(t *testing.T) {
@@ -287,10 +287,10 @@ func TestClient_TradeFastPayRefundQuery(t *testing.T) {
 	// 发起退款查询请求
 	aliRsp, err := client.TradeFastPayRefundQuery(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.TradeFastPayRefundQuery(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }
 
 func TestClient_FundTransToaccountTransfer(t *testing.T) {
@@ -307,10 +307,10 @@ func TestClient_FundTransToaccountTransfer(t *testing.T) {
 	// 转账
 	aliRsp, err := client.FundTransToaccountTransfer(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.FundTransToaccountTransfer(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }
 
 func TestClient_UserCertifyOpenInit(t *testing.T) {
@@ -334,10 +334,10 @@ func TestClient_UserCertifyOpenInit(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserCertifyOpenInit(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.UserCertifyOpenInit(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }
 
 func TestClient_UserCertifyOpenCertify(t *testing.T) {
@@ -349,10 +349,10 @@ func TestClient_UserCertifyOpenCertify(t *testing.T) {
 	// 发起请求
 	certifyUrl, err := client.UserCertifyOpenCertify(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.UserCertifyOpenCertify(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("certifyUrl:", certifyUrl)
+	xlog.Debug("certifyUrl:", certifyUrl)
 }
 
 func TestClient_UserCertifyOpenQuery(t *testing.T) {
@@ -364,11 +364,11 @@ func TestClient_UserCertifyOpenQuery(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserCertifyOpenQuery(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.UserCertifyOpenQuery(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
-	fmt.Println("aliRsp.Response.Passed:", aliRsp.Response.Passed)
+	xlog.Debug("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp.Response.Passed:", aliRsp.Response.Passed)
 }
 
 func TestClient_UserInfoAuth(t *testing.T) {
@@ -381,43 +381,43 @@ func TestClient_UserInfoAuth(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserInfoAuth(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.UserInfoAuth(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }
 
 func TestClient_UserInfoShare(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserInfoShare()
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.UserInfoShare(),error:%+v", err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 
 	// 同步返回验签
 	ok, err := VerifySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
 	if err != nil {
-		fmt.Println("VerifySign-err:", err)
+		xlog.Errorf("client.VerifySyncSign(%s,%s,%s),error:%+v", aliPayPublicKey, aliRsp.SignData, aliRsp.Sign, err)
 		return
 	}
-	fmt.Println("ok:", ok)
+	xlog.Debug("ok:", ok)
 }
 
 func TestClient_ZhimaCreditScoreGet(t *testing.T) {
 	// 请求参数
-	body := make(gopay.BodyMap)
-	body.Set("transaction_id", gotil.GetRandomString(48))
-	body.Set("product_code", "w1010100100000000001")
+	bm := make(gopay.BodyMap)
+	bm.Set("transaction_id", gotil.GetRandomString(48))
+	bm.Set("product_code", "w1010100100000000001")
 
 	// 芝麻分
-	aliRsp, err := client.ZhimaCreditScoreGet(body)
+	aliRsp, err := client.ZhimaCreditScoreGet(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.ZhimaCreditScoreGet(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }
 
 // =================================================
@@ -429,7 +429,7 @@ func TestSyncVerifySign(t *testing.T) {
 	pKey := FormatPublicKey(aliPayPublicKey)
 	err := verifySign(signData, sign, RSA2, pKey)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("verifySign(),error:%+v", err)
 	}
 }
 
@@ -466,10 +466,10 @@ func TestVerifySign(t *testing.T) {
 
 	ok, err := VerifySign(publicKey, bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("VerifySign(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("OK:", ok)
+	xlog.Debug("OK:", ok)
 }
 
 func TestVerifySignWithCert(t *testing.T) {
@@ -498,36 +498,36 @@ func TestVerifySignWithCert(t *testing.T) {
 
 	ok, err := VerifySignWithCert("/cert/alipayCertPublicKey_RSA2.crt", bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("VerifySignWithCert(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("OK:", ok)
+	xlog.Debug("OK:", ok)
 }
 
 func TestGetCertSN(t *testing.T) {
 	sn, err := GetCertSN("cert/alipayCertPublicKey_RSA2.crt")
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("GetCertSN(),error:%+v", err)
 		return
 	}
 	// 04afd423ea5bd6f5c5482854ed73278c
-	fmt.Println("alipayCertPublicKey_RSA2:", sn)
+	xlog.Info("alipayCertPublicKey_RSA2:", sn)
 
 	sn, err = GetCertSN("cert/appCertPublicKey.crt")
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("GetCertSN(),error:%+v", err)
 		return
 	}
 	// 4498aaa8ab0c8986c15c41b36186db7d
-	fmt.Println("appCertPublicKey:", sn)
+	xlog.Info("appCertPublicKey:", sn)
 
 	sn, err = GetRootCertSN("cert/alipayRootCert.crt")
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("GetCertSN(),error:%+v", err)
 		return
 	}
 	// 687b59193f3f462dd5336e5abf83c5d8_02941eef3187dddf3d3b83462e1dfcf6
-	fmt.Println("alipay_root_cert_sn:", sn)
+	xlog.Info("alipay_root_cert_sn:", sn)
 }
 
 func TestDecryptOpenDataToBodyMap(t *testing.T) {
@@ -535,8 +535,8 @@ func TestDecryptOpenDataToBodyMap(t *testing.T) {
 	key := "TDftre9FpItr46e9BVNJcw=="
 	bm, err := DecryptOpenDataToBodyMap(data, key)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("DecryptOpenDataToBodyMap(%s,%s),error:%+v", data, key, err)
 		return
 	}
-	fmt.Println("bm:", bm)
+	xlog.Info("bm:", bm)
 }

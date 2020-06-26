@@ -1,12 +1,12 @@
 package qq
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 var (
@@ -26,7 +26,6 @@ func TestMain(m *testing.M) {
 	//if err != nil {
 	//	panic(err)
 	//}
-
 	os.Exit(m.Run())
 }
 
@@ -36,19 +35,19 @@ func TestClient_MicroPay(t *testing.T) {
 
 	qqRsp, err := client.MicroPay(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("client.Micropay(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("qqRsp:", *qqRsp)
+	xlog.Debug("qqRsp:", *qqRsp)
 }
 
 func TestNotifyResponse_ToXmlString(t *testing.T) {
 	n := new(NotifyResponse)
 	n.ReturnCode = "SUCCESS"
-	fmt.Println(n.ToXmlString())
+	xlog.Info(n.ToXmlString())
 
 	n.ReturnCode = "FAIL"
 	n.ReturnMsg = "abc"
-	fmt.Println(n.ToXmlString())
+	xlog.Info(n.ToXmlString())
 
 }

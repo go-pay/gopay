@@ -2,11 +2,11 @@ package gopay
 
 import (
 	"encoding/xml"
-	"fmt"
 	"testing"
 	"time"
 
 	"github.com/iGoogle-ink/gotil/xhttp"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func TestBodyMap_CheckParamsNull(t *testing.T) {
@@ -18,19 +18,19 @@ func TestBodyMap_CheckParamsNull(t *testing.T) {
 
 	err := bm.CheckEmptyError("name", "age", "phone")
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("bm.CheckEmptyError():error:%+v", err)
 		return
 	}
 }
 
-func TestNewHttpClient(t *testing.T) {
-	client := xhttp.NewHttpClient()
+func TestNewClient(t *testing.T) {
+	client := xhttp.NewClient()
 	res, _, errs := client.Get("http://www.baidu.com").SetTimeout(30 * time.Second).EndBytes()
 	if len(errs) > 0 {
-		fmt.Println("err:", errs[0])
+		xlog.Error(errs[0])
 		return
 	}
-	fmt.Println("bs:", res.StatusCode)
+	xlog.Info("bs:", res.StatusCode)
 }
 
 func TestBodyMap_UnmarshalXML(t *testing.T) {
@@ -54,10 +54,10 @@ func TestBodyMap_UnmarshalXML(t *testing.T) {
 	mm := make(BodyMap)
 	err := xml.Unmarshal([]byte(xmlData), &mm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("xml.Unmarshal(%s),error:%+v", xmlData, err)
 		return
 	}
 	for k, v := range mm {
-		fmt.Printf("%s:%s\n", k, v)
+		xlog.Infof("%s:%s\n", k, v)
 	}
 }
