@@ -229,7 +229,7 @@ func (q *Client) doQQ(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs [
 		bm.Set("sign", sign)
 	}
 
-	httpClient := xhttp.NewHttpClient()
+	httpClient := xhttp.NewClient()
 	if tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}

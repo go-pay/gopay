@@ -599,7 +599,7 @@ func systemOauthToken(appId string, t PKCSType, privateKey string, bm gopay.Body
 	if !isProd {
 		baseUrl = sandboxBaseUrlUtf8
 	}
-	_, bs, errs := xhttp.NewHttpClient().Type(xhttp.TypeForm).Post(baseUrl).SendString(FormatURLParam(bm)).EndBytes()
+	_, bs, errs := xhttp.NewClient().Type(xhttp.TypeForm).Post(baseUrl).SendString(FormatURLParam(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -634,7 +634,7 @@ func MonitorHeartbeatSyn(appId string, t PKCSType, privateKey, signType, bizCont
 	}
 	bm.Set("sign", sign)
 
-	_, bs, errs := xhttp.NewHttpClient().Type(xhttp.TypeForm).Post(baseUrlUtf8).SendString(FormatURLParam(bm)).EndBytes()
+	_, bs, errs := xhttp.NewClient().Type(xhttp.TypeForm).Post(baseUrlUtf8).SendString(FormatURLParam(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}

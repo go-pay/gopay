@@ -184,7 +184,7 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 	reqs.Set("sign", sign)
 
 	keyResponse := new(getSignKeyResponse)
-	_, errs := xhttp.NewHttpClient().Type(xhttp.TypeXML).Post(sandboxGetSignKey).SendString(generateXml(reqs)).EndStruct(keyResponse)
+	_, errs := xhttp.NewClient().Type(xhttp.TypeXML).Post(sandboxGetSignKey).SendString(generateXml(reqs)).EndStruct(keyResponse)
 	if len(errs) > 0 {
 		return gotil.NULL, errs[0]
 	}

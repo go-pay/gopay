@@ -387,7 +387,7 @@ func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fil
 	}
 	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
 
-	httpClient := xhttp.NewHttpClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
+	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
 	if w.BaseURL != gotil.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + transfers
@@ -425,7 +425,7 @@ func (w *Client) GetTransferInfo(bm gopay.BodyMap, certFilePath, keyFilePath, pk
 		return nil, err
 	}
 	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
-	httpClient := xhttp.NewHttpClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
+	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
 	if w.BaseURL != gotil.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + getTransferInfo
@@ -537,7 +537,7 @@ func (w *Client) doSanBoxPost(bm gopay.BodyMap, path string) (bs []byte, err err
 	if w.BaseURL != gotil.NULL {
 		url = w.BaseURL + path
 	}
-	res, bs, errs := xhttp.NewHttpClient().Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndBytes()
+	res, bs, errs := xhttp.NewClient().Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -563,7 +563,7 @@ func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config
 		bm.Set("sign", sign)
 	}
 
-	httpClient := xhttp.NewHttpClient()
+	httpClient := xhttp.NewClient()
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
@@ -601,7 +601,7 @@ func (w *Client) doProdGet(bm gopay.BodyMap, path, signType string) (bs []byte, 
 	}
 	param := bm.EncodeGetParams()
 	url = url + "?" + param
-	res, bs, errs := xhttp.NewHttpClient().Get(url).EndBytes()
+	res, bs, errs := xhttp.NewClient().Get(url).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}

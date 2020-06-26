@@ -421,7 +421,7 @@ func GetAppLoginAccessToken(appId, appSecret, code string) (accessToken *AppLogi
 	accessToken = new(AppLoginAccessToken)
 	url := "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type=authorization_code"
 
-	_, errs := xhttp.NewHttpClient().Get(url).EndStruct(accessToken)
+	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -437,7 +437,7 @@ func RefreshAppLoginAccessToken(appId, refreshToken string) (accessToken *Refres
 	accessToken = new(RefreshAppLoginAccessTokenRsp)
 	url := "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=" + appId + "&grant_type=refresh_token&refresh_token=" + refreshToken
 
-	_, errs := xhttp.NewHttpClient().Get(url).EndStruct(accessToken)
+	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -452,7 +452,7 @@ func RefreshAppLoginAccessToken(appId, refreshToken string) (accessToken *Refres
 func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp, err error) {
 	sessionRsp = new(Code2SessionRsp)
 	url := "https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + appSecret + "&js_code=" + wxCode + "&grant_type=authorization_code"
-	_, errs := xhttp.NewHttpClient().Get(url).EndStruct(sessionRsp)
+	_, errs := xhttp.NewClient().Get(url).EndStruct(sessionRsp)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -466,7 +466,7 @@ func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp,
 func GetAppletAccessToken(appId, appSecret string) (accessToken *AccessToken, err error) {
 	accessToken = new(AccessToken)
 	url := "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appId + "&secret=" + appSecret
-	_, errs := xhttp.NewHttpClient().Get(url).EndStruct(accessToken)
+	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -494,7 +494,7 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 	bm.Set("sign", getReleaseSign(apiKey, SignType_MD5, bm))
 
 	openIdRsp = new(OpenIdByAuthCodeRsp)
-	_, errs := xhttp.NewHttpClient().Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndStruct(openIdRsp)
+	_, errs := xhttp.NewClient().Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndStruct(openIdRsp)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -509,7 +509,7 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 func GetAppletPaidUnionId(accessToken, openId, transactionId string) (unionId *PaidUnionId, err error) {
 	unionId = new(PaidUnionId)
 	url := "https://api.weixin.qq.com/wxa/getpaidunionid?access_token=" + accessToken + "&openid=" + openId + "&transaction_id=" + transactionId
-	_, errs := xhttp.NewHttpClient().Get(url).EndStruct(unionId)
+	_, errs := xhttp.NewClient().Get(url).EndStruct(unionId)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -527,7 +527,7 @@ func GetUserInfo(accessToken, openId string, lang ...string) (userInfo *UserInfo
 	if len(lang) > 0 {
 		url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + accessToken + "&openid=" + openId + "&lang=" + lang[0]
 	}
-	_, errs := xhttp.NewHttpClient().Get(url).EndStruct(userInfo)
+	_, errs := xhttp.NewClient().Get(url).EndStruct(userInfo)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
