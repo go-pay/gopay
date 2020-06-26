@@ -8,7 +8,7 @@ platform:
 
 steps:
   - name: ci
-    image: golang:1.13
+    image: golang:1.14
     environment:
       GO111MODULE: "on"
       GOPROXY: "https://goproxy.cn,direct"
