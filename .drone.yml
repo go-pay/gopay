@@ -7,12 +7,12 @@ platform:
   arch: amd64
 
 steps:
-  - name: test
-    pull: if-not-exists
+  - name: ci
     image: golang:1.13
     environment:
       GO111MODULE: "on"
       GOPROXY: "https://goproxy.cn,direct"
+      GOSUMDB: "off"
       CGO_ENABLED: "0"
       GOOS: "linux"
     commands:
