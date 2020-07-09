@@ -522,8 +522,8 @@ func (w *Client) EntrustPaying(bm gopay.BodyMap) (wxRsp *EntrustPayingResponse, 
 // 单次分账请求按照传入的分账接收方账号和资金进行分账，
 // 同时会将订单剩余的待分账金额解冻给本商户。
 // 故操作成功后，订单不能再进行分账，也不能进行分账完结。
-func (w *Client) ProfitSharing(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, err error) {
-	return w.profitSharing(bm, profitSharing)
+func (w *Client) ProfitSharing(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingResponse, err error) {
+	return w.profitSharing(bm, profitSharing, certFilePath, keyFilePath, pkcs12FilePath)
 }
 
 // MultiProfitSharing 请求多次分账
@@ -532,11 +532,14 @@ func (w *Client) ProfitSharing(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, 
 // 故操作成功后，在待分账金额不等于零时，订单依旧能够再次进行分账。
 // 多次分账，可以将本商户作为分账接收方直接传入，实现释放资金给本商户的功能
 // 对同一笔订单最多能发起20次多次分账请求
-func (w *Client) MultiProfitSharing(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, err error) {
-	return w.profitSharing(bm, multiProfitSharing)
+func (w *Client) MultiProfitSharing(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingResponse, err error) {
+	return w.profitSharing(bm, multiProfitSharing, certFilePath, keyFilePath, pkcs12FilePath)
 }
 
-func (w *Client) profitSharing(bm gopay.BodyMap, uri string) (wxRsp *ProfitSharingResponse, err error) {
+func (w *Client) profitSharing(bm gopay.BodyMap, uri string, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingResponse, err error) {
+	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return nil, err
+	}
 	err = bm.CheckEmptyError("nonce_str", "transaction_id", "out_order_no", "receivers")
 	if err != nil {
 		return nil, err
@@ -556,7 +559,13 @@ func (w *Client) profitSharing(bm gopay.BodyMap, uri string) (wxRsp *ProfitShari
 			return nil, err
 		}
 	}
-	bs, err := w.doProdPost(bm, uri, nil)
+	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	bm.Set("sign_type", SignType_HMAC_SHA256)
+	tlsConfig, err := w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
+	if err != nil {
+		return nil, err
+	}
+	bs, err := w.doProdPost(bm, uri, tlsConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -575,6 +584,8 @@ func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQuery
 	if err != nil {
 		return nil, err
 	}
+	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bs, err := w.doProdPost(bm, profitSharingQuery, nil)
 	if err != nil {
 		return nil, err
@@ -603,6 +614,8 @@ func (w *Client) ProfitSharingAddReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharin
 	if err != nil {
 		return nil, err
 	}
+	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bs, err := w.doProdPost(bm, profitSharingAddReceiver, nil)
 	if err != nil {
 		return nil, err
@@ -631,6 +644,8 @@ func (w *Client) ProfitSharingRemoveReceiver(bm gopay.BodyMap) (wxRsp *ProfitSha
 	if err != nil {
 		return nil, err
 	}
+	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bs, err := w.doProdPost(bm, profitSharingRemoveReceiver, nil)
 	if err != nil {
 		return nil, err
@@ -647,13 +662,21 @@ func (w *Client) ProfitSharingRemoveReceiver(bm gopay.BodyMap) (wxRsp *ProfitSha
 // 1、不需要进行分账的订单，可直接调用本接口将订单的金额全部解冻给本商户
 // 2、调用多次分账接口后，需要解冻剩余资金时，调用本接口将剩余的分账金额全部解冻给特约商户
 // 3、已调用请求单次分账后，剩余待分账金额为零，不需要再调用此接口。
-func (w *Client) ProfitSharingFinish(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, err error) {
+func (w *Client) ProfitSharingFinish(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingResponse, err error) {
+	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return nil, err
+	}
 	err = bm.CheckEmptyError("nonce_str", "transaction_id", "out_order_no", "description")
 	if err != nil {
 		return nil, err
 	}
-
-	bs, err := w.doProdPost(bm, profitSharingFinish, nil)
+	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	bm.Set("sign_type", SignType_HMAC_SHA256)
+	tlsConfig, err := w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
+	if err != nil {
+		return nil, err
+	}
+	bs, err := w.doProdPost(bm, profitSharingFinish, tlsConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -670,7 +693,10 @@ func (w *Client) ProfitSharingFinish(bm gopay.BodyMap) (wxRsp *ProfitSharingResp
 // 回退以原分账请求为依据，可以对分给分账接收方的金额进行多次回退，只要满足累计回退不超过该请求中分给接收方的金额。
 // 此接口采用同步处理模式，即在接收到商户请求后，会实时返回处理结果
 // 此功能需要接收方在商户平台-交易中心-分账-分账接收设置下，开启同意分账回退后，才能使用。
-func (w *Client) ProfitSharingReturn(bm gopay.BodyMap) (wxRsp *ProfitSharingReturnResponse, err error) {
+func (w *Client) ProfitSharingReturn(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingReturnResponse, err error) {
+	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return nil, err
+	}
 	err = bm.CheckEmptyError("nonce_str", "out_return_no", "return_account_type", "return_account", "return_amount", "description")
 	if err != nil {
 		return nil, err
@@ -679,8 +705,13 @@ func (w *Client) ProfitSharingReturn(bm gopay.BodyMap) (wxRsp *ProfitSharingRetu
 	if (bm.Get("order_id") == gotil.NULL) && (bm.Get("out_order_no") == gotil.NULL) {
 		return nil, errors.New("param order_id and out_order_no can not be null at the same time")
 	}
-
-	bs, err := w.doProdPost(bm, profitSharingReturn, nil)
+	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	bm.Set("sign_type", SignType_HMAC_SHA256)
+	tlsConfig, err := w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
+	if err != nil {
+		return nil, err
+	}
+	bs, err := w.doProdPost(bm, profitSharingReturn, tlsConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -704,7 +735,8 @@ func (w *Client) ProfitSharingReturnQuery(bm gopay.BodyMap) (wxRsp *ProfitSharin
 	if (bm.Get("order_id") == gotil.NULL) && (bm.Get("out_order_no") == gotil.NULL) {
 		return nil, errors.New("param order_id and out_order_no can not be null at the same time")
 	}
-
+	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bs, err := w.doProdPost(bm, profitSharingReturnQuery, nil)
 	if err != nil {
 		return nil, err
