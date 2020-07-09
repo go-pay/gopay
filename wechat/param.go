@@ -76,6 +76,56 @@ func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath inter
 	return nil
 }
 
+func (w *Client) addCertConfig2(pkcs12FilePath interface{}) (tlsConfig *tls.Config, err error) {
+
+	if pkcs12FilePath != nil {
+		pkcs, err := ioutil.ReadFile(pkcs12FilePath.(string))
+		if err != nil {
+			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
+		}
+		//pk, cert, err := pkcs12.Decode(pkcs, w.MchId)
+		//if err != nil {
+		//	return nil, fmt.Errorf("pkcs12.Decode：%w", err)
+		//}
+		//privateKey := pk.(*rsa.PrivateKey)
+		pkcsPool := x509.NewCertPool()
+		pkcsPool.AppendCertsFromPEM(pkcs)
+		//tls.LoadX509KeyPair()
+		//certificate, err := tls.X509KeyPair(cert, privateKey)
+		//if err != nil {
+		//	return nil, fmt.Errorf("tls.LoadX509KeyPair：%w", err)
+		//}
+		tlsConfig = &tls.Config{
+			//Certificates: []tls.Certificate{certificate},
+			RootCAs: pkcsPool,
+		}
+		return tlsConfig, nil
+	}
+	return nil, errors.New("cert paths must all nil or all not nil")
+}
+
+func (w *Client) addCertConfig3(certFilePath, keyFilePath, pkcs12FilePath interface{}) (tlsConfig *tls.Config, err error) {
+	if certFilePath != nil && keyFilePath != nil {
+		certificate, err := tls.LoadX509KeyPair(certFilePath.(string), keyFilePath.(string))
+		if err != nil {
+			return nil, fmt.Errorf("tls.LoadX509KeyPair：%w", err)
+		}
+		pkcsPool := x509.NewCertPool()
+		pkcs, err := ioutil.ReadFile(pkcs12FilePath.(string))
+		if err != nil {
+			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
+		}
+		pkcsPool.AppendCertsFromPEM(pkcs)
+		tlsConfig = &tls.Config{
+			RootCAs:            pkcsPool,
+			Certificates:       []tls.Certificate{certificate},
+			InsecureSkipVerify: true,
+		}
+		return tlsConfig, nil
+	}
+	return nil, errors.New("cert paths must all nil or all not nil")
+}
+
 func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath interface{}) (tlsConfig *tls.Config, err error) {
 	if certFilePath == nil && keyFilePath == nil && pkcs12FilePath == nil {
 		w.mu.RLock()

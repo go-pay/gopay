@@ -1,0 +1,34 @@
+﻿欢迎使用微信支付！
+附件中的三份文件（证书pkcs12格式、证书pem格式、证书密钥pem格式）,为接口中强制要求时需携带的证书文件。
+
+证书属于敏感信息，请妥善保管不要泄露和被他人复制。
+不同开发语言下的证书格式不同，以下为说明指引：
+    
+证书pkcs12格式（apiclient_cert.p12）
+        
+包含了私钥信息的证书文件，为p12(pfx)格式，由微信支付签发给您用来标识和界定您的身份
+        
+部分安全性要求较高的API需要使用该证书来确认您的调用身份
+        
+windows上可以直接双击导入系统，导入过程中会提示输入证书密码，证书密码默认为您的商户ID（如：10010000）
+    
+
+证书pem格式（apiclient_cert.pem）
+        
+从apiclient_cert.p12中导出证书部分的文件，为pem格式，请妥善保管不要泄漏和被他人复制
+        
+部分开发语言和环境，不能直接使用p12文件，而需要使用pem，所以为了方便您使用，已为您直接提供
+        
+您也可以使用openssl命令来自己导出：openssl pkcs12 -clcerts -nokeys -in apiclient_cert.p12 -out apiclient_cert.pem
+    
+
+证书密钥pem格式（apiclient_key.pem）
+        
+从apiclient_cert.p12中导出密钥部分的文件，为pem格式
+        
+部分开发语言和环境，不能直接使用p12文件，而需要使用pem，所以为了方便您使用，已为您直接提供
+        
+您也可以使用openssl命令来自己导出：openssl pkcs12 -nocerts -in apiclient_cert.p12 -out apiclient_key.pem
+备注说明：  
+        
+由于绝大部分操作系统已内置了微信支付服务器证书的根CA证书,  2018年3月6日后, 不再提供CA证书文件（rootca.pem）下载 

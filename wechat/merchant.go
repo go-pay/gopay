@@ -14,9 +14,9 @@ import (
 //    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
 func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *TransfersResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
+	//if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	//	return nil, err
+	//}
 	if err = bm.CheckEmptyError("nonce_str", "partner_trade_no", "openid", "check_name", "amount", "desc", "spbill_create_ip"); err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fil
 		tlsConfig *tls.Config
 		url       = baseUrlCh + transfers
 	)
-	if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if tlsConfig, err = w.addCertConfig3(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))

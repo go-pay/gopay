@@ -16,7 +16,7 @@ var (
 	client *Client
 	appId  = "wxdaa2ab9ef87b5497"
 	mchId  = "1368139502"
-	apiKey = "GFDS8j98rewnmgl45wHTt980jg543abc"
+	apiKey = "GFDS8j98rewnmgl45wHTt980jg543wmg"
 )
 
 func TestMain(m *testing.M) {
@@ -241,8 +241,8 @@ func TestClient_Transfer(t *testing.T) {
 	bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 	bm.Set("check_name", "FORCE_CHECK") // NO_CHECK：不校验真实姓名 , FORCE_CHECK：强校验真实姓名
 	bm.Set("re_user_name", "付明明")       // 收款用户真实姓名。 如果check_name设置为FORCE_CHECK，则必填用户真实姓名
-	bm.Set("amount", 30)                // 企业付款金额，单位为分
-	bm.Set("desc", "测试转账")              // 企业付款备注，必填。注意：备注中的敏感词会被转成字符*
+	bm.Set("amount", 100)               // 企业付款金额，单位为分
+	bm.Set("desc", "点点点")               // 企业付款备注，必填。注意：备注中的敏感词会被转成字符*
 	bm.Set("spbill_create_ip", "127.0.0.1")
 
 	// 企业向微信用户个人付款（不支持沙箱环境）
@@ -250,7 +250,7 @@ func TestClient_Transfer(t *testing.T) {
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, err := client.Transfer(bm, nil, nil, nil)
+	wxRsp, err := client.Transfer(bm, "cert/apiclient_cert.pem", "cert/apiclient_key.pem", "cert/apiclient_cert.p12")
 	if err != nil {
 		xlog.Errorf("client.Transfer(%+v),error:%+v", bm, err)
 		return
@@ -269,7 +269,7 @@ func TestClient_GetTransferInfo(t *testing.T) {
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, err := client.GetTransferInfo(bm, nil, nil, nil)
+	wxRsp, err := client.GetTransferInfo(bm, "cert/apiclient_cert.pem", "cert/apiclient_key.pem", "cert/apiclient_cert.p12")
 	if err != nil {
 		xlog.Errorf("client.GetTransferInfo(%+v),error:%+v", bm, err)
 		return
@@ -303,7 +303,7 @@ func TestClient_DownloadFundFlow(t *testing.T) {
 	bm.Set("account_type", "Basic")
 
 	// 请求下载资金账单，成功后得到结果，沙箱环境下，证书路径参数可传nil
-	wxRsp, err := client.DownloadFundFlow(bm, nil, nil, nil)
+	wxRsp, err := client.DownloadFundFlow(bm, "cert/apiclient_cert.pem", "cert/apiclient_key.pem", "cert/apiclient_cert.p12")
 	if err != nil {
 		xlog.Errorf("client.DownloadFundFlow(%+v),error:%+v", bm, err)
 		return
@@ -316,12 +316,12 @@ func TestClient_BatchQueryComment(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_HMAC_SHA256)
-	bm.Set("begin_time", "20190120000000")
-	bm.Set("end_time", "20190122174000")
+	bm.Set("begin_time", "20200520000000")
+	bm.Set("end_time", "20200622174000")
 	bm.Set("offset", "0")
 
 	// 请求拉取订单评价数据，成功后得到结果，沙箱环境下，证书路径参数可传nil
-	wxRsp, err := client.BatchQueryComment(bm, nil, nil, nil)
+	wxRsp, err := client.BatchQueryComment(bm, "cert/apiclient_cert.pem", "cert/apiclient_key.pem", "cert/apiclient_cert.p12")
 	if err != nil {
 		xlog.Errorf("client.BatchQueryComment(%+v),error:%+v", bm, err)
 		return
