@@ -16,7 +16,7 @@ var (
 	client *Client
 	appId  = "wxdaa2ab9ef87b5497"
 	mchId  = "1368139502"
-	apiKey = "GFDS8j98rewnmgl45wHTt980jg543wmg"
+	apiKey = "GFDS8j98rewnmgl45wHTt980jg543abc"
 )
 
 func TestMain(m *testing.M) {
