@@ -57,6 +57,14 @@ func main() {
 * APP纯签约-预签约接口-获取预签约ID（正式）：client.EntrustAppPre()
 * H5纯签约（正式）：client.EntrustH5()
 * 支付中签约（正式）：client.EntrustPaying()
+* 请求单次分账（正式）：client.ProfitSharing() 
+* 请求多次分账（正式）：client.MultiProfitSharing()
+* 查询分账结果（正式）：client.ProfitSharingQuery()
+* 添加分账接收方（正式）：client.ProfitSharingAddReceiver()
+* 删除分账接收方（正式）：client.ProfitSharingRemoveReceiver()
+* 完结分账（正式）：client.ProfitSharingFinish()
+* 分账回退（正式）：client.ProfitSharingReturn()
+* 分账回退结果查询（正式）：client.ProfitSharingReturnQuery()
 * 自定义方法请求微信API接口：client.PostRequest()
 
 ### 微信公共API

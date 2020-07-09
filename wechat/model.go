@@ -14,28 +14,36 @@ const (
 	baseUrlUs  = "https://apius.mch.weixin.qq.com/" // 其他
 
 	// 正式
-	microPay          = "pay/micropay"                          // 提交付款码支付
-	unifiedOrder      = "pay/unifiedorder"                      // 统一下单
-	orderQuery        = "pay/orderquery"                        // 查询订单
-	closeOrder        = "pay/closeorder"                        // 关闭订单
-	refund            = "secapi/pay/refund"                     // 申请退款
-	reverse           = "secapi/pay/reverse"                    // 撤销订单
-	refundQuery       = "pay/refundquery"                       // 查询退款
-	downloadBill      = "pay/downloadbill"                      // 下载对账单
-	downloadFundFlow  = "pay/downloadfundflow"                  // 下载资金账单
-	report            = "payitil/report"                        // 交易保障
-	batchQueryComment = "billcommentsp/batchquerycomment"       // 拉取订单评价数据
-	transfers         = "mmpaymkttransfers/promotion/transfers" // 企业付款（企业向微信用户个人付款）
-	getTransferInfo   = "mmpaymkttransfers/gettransferinfo"     // 查询企业付款
-	authCodeToOpenid  = "tools/authcodetoopenid"                // 授权码查询openid
-	entrustPublic     = "papay/entrustweb"                      // 公众号纯签约
-	entrustApp        = "papay/preentrustweb"                   // APP纯签约
-	entrustH5         = "papay/h5entrustweb"                    // H5纯签约
-	entrustPaying     = "pay/contractorder"                     // 支付中签约
-	entrustQuery      = "papay/querycontract"                   // 查询签约关系
-	entrustApplyPay   = "pay/pappayapply"                       // 申请扣款
-	entrustDelete     = "papay/deletecontract"                  // 申请解约
-	entrustQueryOrder = "pay/paporderquery"                     // 查询扣款订单
+	microPay                    = "pay/micropay"                          // 提交付款码支付
+	unifiedOrder                = "pay/unifiedorder"                      // 统一下单
+	orderQuery                  = "pay/orderquery"                        // 查询订单
+	closeOrder                  = "pay/closeorder"                        // 关闭订单
+	refund                      = "secapi/pay/refund"                     // 申请退款
+	reverse                     = "secapi/pay/reverse"                    // 撤销订单
+	refundQuery                 = "pay/refundquery"                       // 查询退款
+	downloadBill                = "pay/downloadbill"                      // 下载对账单
+	downloadFundFlow            = "pay/downloadfundflow"                  // 下载资金账单
+	report                      = "payitil/report"                        // 交易保障
+	batchQueryComment           = "billcommentsp/batchquerycomment"       // 拉取订单评价数据
+	transfers                   = "mmpaymkttransfers/promotion/transfers" // 企业付款（企业向微信用户个人付款）
+	getTransferInfo             = "mmpaymkttransfers/gettransferinfo"     // 查询企业付款
+	authCodeToOpenid            = "tools/authcodetoopenid"                // 授权码查询openid
+	entrustPublic               = "papay/entrustweb"                      // 公众号纯签约
+	entrustApp                  = "papay/preentrustweb"                   // APP纯签约
+	entrustH5                   = "papay/h5entrustweb"                    // H5纯签约
+	entrustPaying               = "pay/contractorder"                     // 支付中签约
+	entrustQuery                = "papay/querycontract"                   // 查询签约关系
+	entrustApplyPay             = "pay/pappayapply"                       // 申请扣款
+	entrustDelete               = "papay/deletecontract"                  // 申请解约
+	entrustQueryOrder           = "pay/paporderquery"                     // 查询扣款订单
+	profitSharing               = "secapi/pay/profitsharing"              // 请求单次分账
+	multiProfitSharing          = "secapi/pay/multiprofitsharing "        // 请求多次分账
+	profitSharingQuery          = "pay/profitsharingquery"                // 查询分账结果
+	profitSharingAddReceiver    = "pay/profitsharingaddreceiver"          // 添加分账接收方
+	profitSharingRemoveReceiver = "pay/profitsharingremovereceiver"       // 删除分账接收方
+	profitSharingFinish         = "secapi/pay/profitsharingfinish"        // 完结分账
+	profitSharingReturn         = "secapi/pay/profitsharingreturn"        // 分账退回
+	profitSharingReturnQuery    = "pay/profitsharingreturnquery"          // 分账回退结果查询
 
 	// SanBox
 	sandboxGetSignKey   = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
@@ -99,7 +107,6 @@ type NotifyRequest struct {
 	Attach             string `xml:"attach,omitempty" json:"attach,omitempty"`
 	TimeEnd            string `xml:"time_end,omitempty" json:"time_end,omitempty"`
 }
-
 type UnifiedOrderResponse struct {
 	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
 	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
@@ -559,4 +566,87 @@ type RefreshAppLoginAccessTokenRsp struct {
 	Scope        string `json:"scope,omitempty"`
 	Errcode      int    `json:"errcode,omitempty"` // 错误码
 	Errmsg       string `json:"errmsg,omitempty"`  // 错误信息
+}
+
+// ProfitSharingResponse 请求分账返回结果
+type ProfitSharingResponse struct {
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"` // 返回状态码 SUCCESS/FAIL 此字段是通信标识，非交易标识
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`   // 返回信息，如非空，为错误原因
+	//以下字段在return_code为SUCCESS的时候有返回
+	ResultCode    string `xml:"result_code,omitempty" json:"result_code,omitempty"`       // 业务结果 SUCCESS：分账申请接收成功，结果通过分账查询接口查询 FAIL ：提交业务失败
+	ErrCode       string `xml:"err_code,omitempty" json:"err_code,omitempty"`             // 错误代码
+	ErrCodeDes    string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`     // 错误代码描述
+	MchId         string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`                 // 商户号
+	Appid         string `xml:"appid,omitempty" json:"appid,omitempty"`                   // 公众账号ID
+	NonceStr      string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`           // 随机字符串
+	Sign          string `xml:"sign,omitempty" json:"sign,omitempty"`                     // 签名
+	TransactionId string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"` // 微信订单号
+	OutOrderNo    string `xml:"out_order_no,omitempty" json:"out_order_no,omitempty"`     // 商户分账单号
+	OrderId       string `xml:"order_id,omitempty" json:"order_id,omitempty"`             // 微信分账单号
+}
+
+// ProfitSharingQueryResponse 查询分账结果
+type ProfitSharingQueryResponse struct {
+	ReturnCode    string                   `xml:"return_code,omitempty" json:"return_code,omitempty"`       // 返回状态码 SUCCESS/FAIL 此字段是通信标识，非交易标识
+	ReturnMsg     string                   `xml:"return_msg,omitempty" json:"return_msg,omitempty"`         // 返回信息，如非空，为错误原因
+	ResultCode    string                   `xml:"result_code,omitempty" json:"result_code,omitempty"`       // 业务结果 SUCCESS：分账申请接收成功，结果通过分账查询接口查询 FAIL ：提交业务失败
+	ErrCode       string                   `xml:"err_code,omitempty" json:"err_code,omitempty"`             // 错误代码
+	ErrCodeDes    string                   `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`     // 错误代码描述
+	MchId         string                   `xml:"mch_id,omitempty" json:"mch_id,omitempty"`                 // 商户号
+	NonceStr      string                   `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`           // 随机字符串
+	Sign          string                   `xml:"sign,omitempty" json:"sign,omitempty"`                     // 签名
+	TransactionId string                   `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"` // 微信订单号
+	OutOrderNo    string                   `xml:"out_order_no,omitempty" json:"out_order_no,omitempty"`     // 商户分账单号
+	OrderId       string                   `xml:"order_id,omitempty" json:"order_id,omitempty"`             // 微信分账单号
+	Status        string                   `xml:"status,omitempty" json:"status,omitempty"`                 // 分账单状态 ACCEPTED—受理成功 PROCESSING—处理中 FINISHED—处理完成 CLOSED—处理失败，已关单
+	CloseReason   string                   `xml:"close_reason,omitempty" json:"close_reason,omitempty"`     // 关单原因 NO_AUTH:分账授权已解除
+	Receivers     []*profitSharingReceiver `xml:"receivers,omitempty" json:"receivers,omitempty"`
+}
+
+type profitSharingReceiver struct {
+	Amount       int    `xml:"amount,omitempty" json:"amount,omitempty"`           // 分账金额 分账金额，单位为分，只能为整数，不能超过原订单支付金额及最大分账比例金额
+	Description  string `xml:"description,omitempty" json:"description,omitempty"` // 分账描述
+	ReceiverType string `xml:"type,omitempty" json:"type,omitempty"`               // 分账接收方类型 MERCHANT_ID：商户ID ;PERSONAL_OPENID：个人openid
+	Account      string `xml:"account,omitempty" json:"account,omitempty"`         // 分账接收方账号
+	Result       string `xml:"result,omitempty" json:"result,omitempty"`           // 分账结果 PENDING:待分账 SUCCESS:分账成功 ADJUST:分账失败待调账 RETURNED:已转回分账方 CLOSED: 已关闭
+	FinishTime   string `xml:"finish_time,omitempty" json:"finish_time,omitempty"` // 分账完成时间
+	FailReason   string `xml:"fail_reason,omitempty" json:"fail_reason,omitempty"` // 分账失败原因 ACCOUNT_ABNORMAL:分账接收账户异常 NO_RELATION：分账关系已解除 RECEIVER_HIGH_RISK:高风险接收方
+}
+
+// ProfitSharingAddReceiverResponse 添加分账接收者结果
+type ProfitSharingAddReceiverResponse struct {
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"` // 返回状态码 SUCCESS/FAIL 此字段是通信标识，非交易标识
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`   // 返回信息，如非空，为错误原因
+	//以下字段在return_code为SUCCESS的时候有返回
+	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`   // 业务结果 SUCCESS：分账申请接收成功，结果通过分账查询接口查询 FAIL ：提交业务失败
+	ErrCode    string `xml:"err_code,omitempty" json:"err_code,omitempty"`         // 错误代码
+	ErrCodeDes string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"` // 错误代码描述
+	MchId      string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`             // 商户号
+	Appid      string `xml:"appid,omitempty" json:"appid,omitempty"`               // 公众账号ID
+	NonceStr   string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`       // 随机字符串
+	Sign       string `xml:"sign,omitempty" json:"sign,omitempty"`                 // 签名
+	Receiver   string `xml:"receiver,omitempty" json:"receiver,omitempty"`         // 接收方
+}
+
+// ProfitSharingReturnResponse 分账退回响应结果
+type ProfitSharingReturnResponse struct {
+	ReturnCode        string `xml:"return_code,omitempty" json:"return_code,omitempty"`                 // 返回状态码 SUCCESS/FAIL 此字段是通信标识，非交易标识
+	ErrCode           string `xml:"err_code,omitempty" json:"err_code,omitempty"`                       // 错误代码
+	ErrorMsg          string `xml:"error_msg,omitempty" json:"error_msg,omitempty"`                     // 返回信息 如果返回状态码为FAIL，则本字段存在，且为失败的错误信息
+	ErrCodeDes        string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`               // 错误代码描述
+	MchId             string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`                           // 商户号
+	AppId             string `xml:"app_id,omitempty" json:"app_id,omitempty"`                           // 调用接口提供的公众账号ID
+	NonceStr          string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`                     // 随机字符串
+	Sign              string `xml:"sign,omitempty" json:"sign,omitempty"`                               // 签名
+	OrderId           string `xml:"order_id,omitempty" json:"order_id,omitempty"`                       // 微信分账单号
+	OutOrderNo        string `xml:"out_order_no,omitempty" json:"out_order_no,omitempty"`               // 商户分账单号
+	OutReturnNo       string `xml:"out_return_no,omitempty" json:"out_return_no,omitempty"`             // 商户回退单号 调用接口提供的商户系统内部的回退单号
+	ReturnNo          string `xml:"return_no,omitempty" json:"return_no,omitempty"`                     // 微信回退单号 微信分账回退单号，微信系统返回的唯一标识
+	ReturnAccountType string `xml:"return_account_type,omitempty" json:"return_account_type,omitempty"` // 回退方类型
+	ReturnAccount     string `xml:"return_account,omitempty" json:"return_account,omitempty"`           // 回退方账号
+	ReturnAmount      string `xml:"return_amount,omitempty" json:"return_amount,omitempty"`             // 回退金额
+	Description       string `xml:"description,omitempty" json:"description,omitempty"`                 // 退回描述
+	Result            string `xml:"result,omitempty" json:"result,omitempty"`                           // 退回结果
+	FailReason        string `xml:"fail_reason,omitempty" json:"fail_reason,omitempty"`                 // 失败原因
+	FinishTime        string `xml:"finish_time,omitempty" json:"finish_time,omitempty"`                 // 完成时间
 }
