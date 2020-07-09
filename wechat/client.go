@@ -38,6 +38,14 @@ func NewClient(appId, mchId, apiKey string, isProd bool) (client *Client) {
 		IsProd: isProd}
 }
 
+// 向微信发送Post请求，对于本库未提供的微信API，可自行实现，通过此方法发送请求
+//    bm：请求参数的BodyMap
+//    path：接口地址去掉baseURL的path，例如：url为https://api.mch.weixin.qq.com/pay/micropay，只需传 pay/micropay
+//    tlsConfig：tls配置，如无需证书请求，传nil
+func (w *Client) PostWeChatAPISelf(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
+	return w.doProdPost(bm, path, tlsConfig)
+}
+
 // 提交付款码支付
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
 func (w *Client) Micropay(bm gopay.BodyMap) (wxRsp *MicropayResponse, err error) {

@@ -65,7 +65,10 @@ func main() {
 * 完结分账（正式）：client.ProfitSharingFinish()
 * 分账回退（正式）：client.ProfitSharingReturn()
 * 分账回退结果查询（正式）：client.ProfitSharingReturnQuery()
-* 自定义方法请求微信API接口：client.PostRequest()
+* 企业付款到银行卡API（正式）：client.PayBank()
+* 查询企业付款到银行卡API（正式）：client.QueryBank()
+* 获取RSA加密公钥API（正式）：client.GetRSAPublicKey()
+* 自定义方法请求微信API接口：client.PostWeChatAPISelf()
 
 ### 微信公共API
 
@@ -102,7 +105,7 @@ func main() {
 * 退款查询：client.RefundQuery()
 * 交易账单：client.StatementDown()
 * 资金账单：client.AccRoll()
-* 自定义方法请求微信API接口：client.PostRequest()
+* 自定义方法请求微信API接口：client.PostQQAPISelf()
 
 ### QQ公共API
 
