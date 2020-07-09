@@ -90,8 +90,10 @@ func (w *Client) GetTransferInfo(bm gopay.BodyMap, certFilePath, keyFilePath, pk
 // 企业付款到银行卡API
 //    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则3证书Path均不可为nil（string类型）
 //    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
-//    注意：enc_bank_no、enc_true_name 两参数，开发者需自行加密后 Set 到 BodyMap
+//    注意：enc_bank_no、enc_true_name 两参数，开发者需自行获取RSA公钥，加密后再 Set 到 BodyMap，参考 client_test.go 里的 TestClient_PayBank() 方法
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_2
+//    RSA加密文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_7
+//    银行编码查看地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_4&index=5
 func (w *Client) PayBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *PayBankResponse, err error) {
 	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
