@@ -1,3 +1,21 @@
+版本号：Release 1.5.15
+发布时间：2020/07/09 18:30
+修改记录：
+   (1) 微信：新增client方法：client.ProfitSharing()
+   (2) 微信：新增client方法：client.MultiProfitSharing()
+   (3) 微信：新增client方法：client.ProfitSharingQuery()
+   (4) 微信：新增client方法：client.ProfitSharingAddReceiver()
+   (5) 微信：新增client方法：client.ProfitSharingRemoveReceiver()
+   (6) 微信：新增client方法：client.ProfitSharingFinish()
+   (7) 微信：新增client方法：client.ProfitSharingReturn()
+   (8) 微信：新增client方法：client.ProfitSharingReturnQuery()
+   (9) 微信：新增client方法：client.PayBank()
+   (10) 微信：新增client方法：client.QueryBank()
+   (11) 微信：新增client方法：client.GetRSAPublicKey()
+   (12) 微信：修改client方法名：client.PostRequest() -> client.PostWeChatAPISelf()
+   (13) QQ：修改client方法名：client.PostRequest() -> client.PostQQAPISelf()
+   (14) 说明：方法未经严格测试，还请开发者在开始使用时确认是否正常使用，有问题请提 issue
+
 版本号：Release 1.5.14
 发布时间：2020/06/27 3:30
 修改记录：

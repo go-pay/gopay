@@ -14,36 +14,39 @@ const (
 	baseUrlUs  = "https://apius.mch.weixin.qq.com/" // 其他
 
 	// 正式
-	microPay                    = "pay/micropay"                          // 提交付款码支付
-	unifiedOrder                = "pay/unifiedorder"                      // 统一下单
-	orderQuery                  = "pay/orderquery"                        // 查询订单
-	closeOrder                  = "pay/closeorder"                        // 关闭订单
-	refund                      = "secapi/pay/refund"                     // 申请退款
-	reverse                     = "secapi/pay/reverse"                    // 撤销订单
-	refundQuery                 = "pay/refundquery"                       // 查询退款
-	downloadBill                = "pay/downloadbill"                      // 下载对账单
-	downloadFundFlow            = "pay/downloadfundflow"                  // 下载资金账单
-	report                      = "payitil/report"                        // 交易保障
-	batchQueryComment           = "billcommentsp/batchquerycomment"       // 拉取订单评价数据
-	transfers                   = "mmpaymkttransfers/promotion/transfers" // 企业付款（企业向微信用户个人付款）
-	getTransferInfo             = "mmpaymkttransfers/gettransferinfo"     // 查询企业付款
-	authCodeToOpenid            = "tools/authcodetoopenid"                // 授权码查询openid
-	entrustPublic               = "papay/entrustweb"                      // 公众号纯签约
-	entrustApp                  = "papay/preentrustweb"                   // APP纯签约
-	entrustH5                   = "papay/h5entrustweb"                    // H5纯签约
-	entrustPaying               = "pay/contractorder"                     // 支付中签约
-	entrustQuery                = "papay/querycontract"                   // 查询签约关系
-	entrustApplyPay             = "pay/pappayapply"                       // 申请扣款
-	entrustDelete               = "papay/deletecontract"                  // 申请解约
-	entrustQueryOrder           = "pay/paporderquery"                     // 查询扣款订单
-	profitSharing               = "secapi/pay/profitsharing"              // 请求单次分账
-	multiProfitSharing          = "secapi/pay/multiprofitsharing "        // 请求多次分账
-	profitSharingQuery          = "pay/profitsharingquery"                // 查询分账结果
-	profitSharingAddReceiver    = "pay/profitsharingaddreceiver"          // 添加分账接收方
-	profitSharingRemoveReceiver = "pay/profitsharingremovereceiver"       // 删除分账接收方
-	profitSharingFinish         = "secapi/pay/profitsharingfinish"        // 完结分账
-	profitSharingReturn         = "secapi/pay/profitsharingreturn"        // 分账退回
-	profitSharingReturnQuery    = "pay/profitsharingreturnquery"          // 分账回退结果查询
+	microPay                    = "pay/micropay"                                      // 提交付款码支付
+	unifiedOrder                = "pay/unifiedorder"                                  // 统一下单
+	orderQuery                  = "pay/orderquery"                                    // 查询订单
+	closeOrder                  = "pay/closeorder"                                    // 关闭订单
+	refund                      = "secapi/pay/refund"                                 // 申请退款
+	reverse                     = "secapi/pay/reverse"                                // 撤销订单
+	refundQuery                 = "pay/refundquery"                                   // 查询退款
+	downloadBill                = "pay/downloadbill"                                  // 下载对账单
+	downloadFundFlow            = "pay/downloadfundflow"                              // 下载资金账单
+	report                      = "payitil/report"                                    // 交易保障
+	batchQueryComment           = "billcommentsp/batchquerycomment"                   // 拉取订单评价数据
+	transfers                   = "mmpaymkttransfers/promotion/transfers"             // 企业付款（企业向微信用户个人付款）
+	getTransferInfo             = "mmpaymkttransfers/gettransferinfo"                 // 查询企业付款
+	authCodeToOpenid            = "tools/authcodetoopenid"                            // 授权码查询openid
+	entrustPublic               = "papay/entrustweb"                                  // 公众号纯签约
+	entrustApp                  = "papay/preentrustweb"                               // APP纯签约
+	entrustH5                   = "papay/h5entrustweb"                                // H5纯签约
+	entrustPaying               = "pay/contractorder"                                 // 支付中签约
+	entrustQuery                = "papay/querycontract"                               // 查询签约关系
+	entrustApplyPay             = "pay/pappayapply"                                   // 申请扣款
+	entrustDelete               = "papay/deletecontract"                              // 申请解约
+	entrustQueryOrder           = "pay/paporderquery"                                 // 查询扣款订单
+	profitSharing               = "secapi/pay/profitsharing"                          // 请求单次分账
+	multiProfitSharing          = "secapi/pay/multiprofitsharing "                    // 请求多次分账
+	profitSharingQuery          = "pay/profitsharingquery"                            // 查询分账结果
+	profitSharingAddReceiver    = "pay/profitsharingaddreceiver"                      // 添加分账接收方
+	profitSharingRemoveReceiver = "pay/profitsharingremovereceiver"                   // 删除分账接收方
+	profitSharingFinish         = "secapi/pay/profitsharingfinish"                    // 完结分账
+	profitSharingReturn         = "secapi/pay/profitsharingreturn"                    // 分账退回
+	profitSharingReturnQuery    = "pay/profitsharingreturnquery"                      // 分账回退结果查询
+	payBank                     = "mmpaysptrans/pay_bank"                             // 企业付款到银行卡API
+	queryBank                   = "mmpaysptrans/query_bank"                           // 查询企业付款到银行卡API
+	getPublicKey                = "https://fraud.mch.weixin.qq.com/risk/getpublickey" // 获取RSA加密公钥API
 
 	// SanBox
 	sandboxGetSignKey   = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
@@ -649,4 +652,48 @@ type ProfitSharingReturnResponse struct {
 	Result            string `xml:"result,omitempty" json:"result,omitempty"`                           // 退回结果
 	FailReason        string `xml:"fail_reason,omitempty" json:"fail_reason,omitempty"`                 // 失败原因
 	FinishTime        string `xml:"finish_time,omitempty" json:"finish_time,omitempty"`                 // 完成时间
+}
+
+type PayBankResponse struct {
+	ReturnCode     string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg      string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode     string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode        string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes     string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	MchId          string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	PartnerTradeNo string `xml:"partner_trade_no,omitempty" json:"partner_trade_no,omitempty"`
+	Amount         string `xml:"amount,omitempty" json:"amount,omitempty"`
+	NonceStr       string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign           string `xml:"sign,omitempty" json:"sign,omitempty"`
+	PaymentNo      string `xml:"payment_no,omitempty" json:"payment_no,omitempty"`
+	CmmsAmt        string `xml:"cmms_amt,omitempty" json:"cmms_amt,omitempty"`
+}
+
+type QueryBankResponse struct {
+	ReturnCode     string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg      string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode     string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode        string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes     string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	MchId          string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	PartnerTradeNo string `xml:"partner_trade_no,omitempty" json:"partner_trade_no,omitempty"`
+	PaymentNo      string `xml:"payment_no,omitempty" json:"payment_no,omitempty"`
+	BankNoMd5      string `xml:"bank_no_md5,omitempty" json:"bank_no_md5,omitempty"`
+	TrueNameMd5    string `xml:"true_name_md5,omitempty" json:"true_name_md5,omitempty"`
+	Amount         string `xml:"amount,omitempty" json:"amount,omitempty"`
+	Status         string `xml:"status,omitempty" json:"status,omitempty"`
+	CmmsAmt        string `xml:"cmms_amt,omitempty" json:"cmms_amt,omitempty"`
+	CreateTime     string `xml:"create_time,omitempty" json:"create_time,omitempty"`
+	PaySuccTime    string `xml:"pay_succ_time,omitempty" json:"pay_succ_time,omitempty"`
+	Reason         string `xml:"reason,omitempty" json:"reason,omitempty"`
+}
+
+type RSAPublicKeyResponse struct {
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode    string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	MchId      string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	PubKey     string `xml:"pub_key,omitempty" json:"pub_key,omitempty"`
 }

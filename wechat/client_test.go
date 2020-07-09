@@ -9,6 +9,7 @@ import (
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gotil"
 	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gotil/xrsa"
 )
 
 var (
@@ -413,6 +414,36 @@ func TestClient_EntrustPaying(t *testing.T) {
 
 	// 支付中签约
 	wxRsp, err := client.EntrustPaying(bm)
+	if err != nil {
+		xlog.Errorf("client.EntrustPaying(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("wxRsp：", wxRsp)
+}
+
+func TestClient_PayBank(t *testing.T) {
+	// 初始化参数结构体
+	bm := make(gopay.BodyMap)
+	bm.Set("partner_trade_no", mchId)
+	bm.Set("nonce_str", gotil.GetRandomString(32))
+	bm.Set("bank_code", "1001") // 招商银行，https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_4&index=5
+	bm.Set("amount", 1)
+
+	encryptBank, err := xrsa.RsaEncryptData("621400000000567", "publicKey.pem")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	encryptName, err := xrsa.RsaEncryptData("Jerry", "publicKey.pem")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	bm.Set("enc_bank_no", encryptBank)
+	bm.Set("enc_true_name", encryptName)
+
+	// 企业付款到银行卡API
+	wxRsp, err := client.PayBank(bm, "certFilePath", "keyFilePath", "pkcs12FilePath")
 	if err != nil {
 		xlog.Errorf("client.EntrustPaying(%+v),error:%+v", bm, err)
 		return

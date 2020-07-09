@@ -36,6 +36,14 @@ func NewClient(mchId, apiKey string) (client *Client) {
 	return nil
 }
 
+// 向QQ发送Post请求，对于本库未提供的QQ API，可自行实现，通过此方法发送请求
+//    bm：请求参数的BodyMap
+//    url：完整url地址，例如：https://qpay.qq.com/cgi-bin/pay/qpay_unified_order.cgi
+//    tlsConfig：tls配置，如无需证书请求，传nil
+func (q *Client) PostQQAPISelf(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs []byte, err error) {
+	return q.doQQ(bm, url, tlsConfig)
+}
+
 // 提交付款码支付
 //    文档地址：https://qpay.qq.com/buss/wiki/1/1122
 func (q *Client) MicroPay(bm gopay.BodyMap) (qqRsp *MicroPayResponse, err error) {

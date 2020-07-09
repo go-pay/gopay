@@ -38,6 +38,14 @@ func NewClient(appId, mchId, apiKey string, isProd bool) (client *Client) {
 		IsProd: isProd}
 }
 
+// 向微信发送Post请求，对于本库未提供的微信API，可自行实现，通过此方法发送请求
+//    bm：请求参数的BodyMap
+//    path：接口地址去掉baseURL的path，例如：url为https://api.mch.weixin.qq.com/pay/micropay，只需传 pay/micropay
+//    tlsConfig：tls配置，如无需证书请求，传nil
+func (w *Client) PostWeChatAPISelf(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
+	return w.doProdPost(bm, path, tlsConfig)
+}
+
 // 提交付款码支付
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
 func (w *Client) Micropay(bm gopay.BodyMap) (wxRsp *MicropayResponse, err error) {
@@ -365,83 +373,6 @@ func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, 
 	return string(bs), nil
 }
 
-// 企业付款（企业向微信用户个人付款）
-//    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则3证书Path均不可为nil（string类型）
-//    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
-//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
-func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *TransfersResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
-	if err = bm.CheckEmptyError("nonce_str", "partner_trade_no", "openid", "check_name", "amount", "desc", "spbill_create_ip"); err != nil {
-		return nil, err
-	}
-	bm.Set("mch_appid", w.AppId)
-	bm.Set("mchid", w.MchId)
-	var (
-		tlsConfig *tls.Config
-		url       = baseUrlCh + transfers
-	)
-	if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
-	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
-
-	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
-	if w.BaseURL != gotil.NULL {
-		w.mu.RLock()
-		url = w.BaseURL + transfers
-		w.mu.RUnlock()
-	}
-	wxRsp = new(TransfersResponse)
-	res, errs := httpClient.Post(url).SendString(generateXml(bm)).EndStruct(wxRsp)
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
-	}
-	return wxRsp, nil
-}
-
-// 查询企业付款
-//    注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则3证书Path均不可为nil（string类型）
-//    注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
-//    文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_3
-func (w *Client) GetTransferInfo(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *TransfersInfoResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
-	if err = bm.CheckEmptyError("nonce_str", "partner_trade_no"); err != nil {
-		return nil, err
-	}
-	bm.Set("appid", w.AppId)
-	bm.Set("mch_id", w.MchId)
-	var (
-		tlsConfig *tls.Config
-		url       = baseUrlCh + getTransferInfo
-	)
-	if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
-	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
-	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
-	if w.BaseURL != gotil.NULL {
-		w.mu.RLock()
-		url = w.BaseURL + getTransferInfo
-		w.mu.RUnlock()
-	}
-	wxRsp = new(TransfersInfoResponse)
-	res, errs := httpClient.Post(url).SendString(generateXml(bm)).EndStruct(wxRsp)
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
-	}
-	return wxRsp, nil
-}
-
 // 公众号纯签约（正式）
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/pap.php?chapter=18_1&index=1
 func (w *Client) EntrustPublic(bm gopay.BodyMap) (wxRsp *EntrustPublicResponse, err error) {
@@ -519,19 +450,19 @@ func (w *Client) EntrustPaying(bm gopay.BodyMap) (wxRsp *EntrustPayingResponse, 
 
 // ProfitSharing 请求单次分账
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_1&index=1
-// 单次分账请求按照传入的分账接收方账号和资金进行分账，
-// 同时会将订单剩余的待分账金额解冻给本商户。
-// 故操作成功后，订单不能再进行分账，也不能进行分账完结。
+//    单次分账请求按照传入的分账接收方账号和资金进行分账，
+//    同时会将订单剩余的待分账金额解冻给本商户。
+//    故操作成功后，订单不能再进行分账，也不能进行分账完结。
 func (w *Client) ProfitSharing(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingResponse, err error) {
 	return w.profitSharing(bm, profitSharing, certFilePath, keyFilePath, pkcs12FilePath)
 }
 
 // MultiProfitSharing 请求多次分账
 //    文档地址：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_1&index=1
-// 微信订单支付成功后，商户发起分账请求，将结算后的钱分到分账接收方。多次分账请求仅会按照传入的分账接收方进行分账，不会对剩余的金额进行任何操作。
-// 故操作成功后，在待分账金额不等于零时，订单依旧能够再次进行分账。
-// 多次分账，可以将本商户作为分账接收方直接传入，实现释放资金给本商户的功能
-// 对同一笔订单最多能发起20次多次分账请求
+//    微信订单支付成功后，商户发起分账请求，将结算后的钱分到分账接收方。多次分账请求仅会按照传入的分账接收方进行分账，不会对剩余的金额进行任何操作。
+//    故操作成功后，在待分账金额不等于零时，订单依旧能够再次进行分账。
+//    多次分账，可以将本商户作为分账接收方直接传入，实现释放资金给本商户的功能
+//    对同一笔订单最多能发起20次多次分账请求
 func (w *Client) MultiProfitSharing(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingResponse, err error) {
 	return w.profitSharing(bm, multiProfitSharing, certFilePath, keyFilePath, pkcs12FilePath)
 }
@@ -552,14 +483,14 @@ func (w *Client) profitSharing(bm gopay.BodyMap, uri string, certFilePath, keyFi
 	if len(arr) == 0 {
 		return nil, errors.New("receivers is empty")
 	}
-	//检查每个分账接收者的必传属性
+	// 检查每个分账接收者的必传属性
 	for _, r := range arr {
 		err = r.CheckEmptyError("type", "account", "amount", "description")
 		if err != nil {
 			return nil, err
 		}
 	}
-	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	tlsConfig, err := w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
 	if err != nil {
@@ -577,14 +508,14 @@ func (w *Client) profitSharing(bm gopay.BodyMap, uri string, certFilePath, keyFi
 }
 
 // ProfitSharingQuery 查询分账结果
-// 微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_2&index=3
-// 发起分账请求后，可调用此接口查询分账结果；发起分账完结请求后，可调用此接口查询分账完结的执行结果。
+//    微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_2&index=3
+//    发起分账请求后，可调用此接口查询分账结果；发起分账完结请求后，可调用此接口查询分账完结的执行结果。
 func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQueryResponse, err error) {
 	err = bm.CheckEmptyError("transaction_id", "out_order_no", "nonce_str")
 	if err != nil {
 		return nil, err
 	}
-	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bs, err := w.doProdPost(bm, profitSharingQuery, nil)
 	if err != nil {
@@ -598,14 +529,14 @@ func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQuery
 }
 
 // ProfitSharingAddReceiver 添加分账接收方
-// 微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_3&index=4
-// 商户发起添加分账接收方请求，后续可通过发起分账请求将结算后的钱分到该分账接收方。
+//    微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_3&index=4
+//    商户发起添加分账接收方请求，后续可通过发起分账请求将结算后的钱分到该分账接收方。
 func (w *Client) ProfitSharingAddReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharingAddReceiverResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "receiver")
 	if err != nil {
 		return nil, err
 	}
-	//输入参数 接收方
+	// 输入参数 接收方
 	r, err := bm.GetBodyMap("receiver")
 	if err != nil {
 		return nil, err
@@ -614,7 +545,7 @@ func (w *Client) ProfitSharingAddReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharin
 	if err != nil {
 		return nil, err
 	}
-	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bs, err := w.doProdPost(bm, profitSharingAddReceiver, nil)
 	if err != nil {
@@ -628,14 +559,14 @@ func (w *Client) ProfitSharingAddReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharin
 }
 
 // ProfitSharingRemoveReceiver 删除分账接收方
-// 微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_4&index=5
-// 商户发起删除分账接收方请求，删除后不支持将结算后的钱分到该分账接收方
+//    微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_4&index=5
+//    商户发起删除分账接收方请求，删除后不支持将结算后的钱分到该分账接收方
 func (w *Client) ProfitSharingRemoveReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharingAddReceiverResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "receiver")
 	if err != nil {
 		return nil, err
 	}
-	//输入参数 接收方
+	// 输入参数 接收方
 	r, err := bm.GetBodyMap("receiver")
 	if err != nil {
 		return nil, err
@@ -644,7 +575,7 @@ func (w *Client) ProfitSharingRemoveReceiver(bm gopay.BodyMap) (wxRsp *ProfitSha
 	if err != nil {
 		return nil, err
 	}
-	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bs, err := w.doProdPost(bm, profitSharingRemoveReceiver, nil)
 	if err != nil {
@@ -658,10 +589,10 @@ func (w *Client) ProfitSharingRemoveReceiver(bm gopay.BodyMap) (wxRsp *ProfitSha
 }
 
 // ProfitSharingFinish 完结分账
-// 微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_5&index=6
-// 1、不需要进行分账的订单，可直接调用本接口将订单的金额全部解冻给本商户
-// 2、调用多次分账接口后，需要解冻剩余资金时，调用本接口将剩余的分账金额全部解冻给特约商户
-// 3、已调用请求单次分账后，剩余待分账金额为零，不需要再调用此接口。
+//    微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_5&index=6
+//    1、不需要进行分账的订单，可直接调用本接口将订单的金额全部解冻给本商户
+//    2、调用多次分账接口后，需要解冻剩余资金时，调用本接口将剩余的分账金额全部解冻给特约商户
+//    3、已调用请求单次分账后，剩余待分账金额为零，不需要再调用此接口。
 func (w *Client) ProfitSharingFinish(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingResponse, err error) {
 	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
@@ -670,7 +601,7 @@ func (w *Client) ProfitSharingFinish(bm gopay.BodyMap, certFilePath, keyFilePath
 	if err != nil {
 		return nil, err
 	}
-	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	tlsConfig, err := w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
 	if err != nil {
@@ -688,11 +619,11 @@ func (w *Client) ProfitSharingFinish(bm gopay.BodyMap, certFilePath, keyFilePath
 }
 
 // ProfitSharingReturn 分账回退
-// 微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_7&index=7
-// 对订单进行退款时，如果订单已经分账，可以先调用此接口将指定的金额从分账接收方（仅限商户类型的分账接收方）回退给本商户，然后再退款。
-// 回退以原分账请求为依据，可以对分给分账接收方的金额进行多次回退，只要满足累计回退不超过该请求中分给接收方的金额。
-// 此接口采用同步处理模式，即在接收到商户请求后，会实时返回处理结果
-// 此功能需要接收方在商户平台-交易中心-分账-分账接收设置下，开启同意分账回退后，才能使用。
+//    微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_7&index=7
+//    对订单进行退款时，如果订单已经分账，可以先调用此接口将指定的金额从分账接收方（仅限商户类型的分账接收方）回退给本商户，然后再退款。
+//    回退以原分账请求为依据，可以对分给分账接收方的金额进行多次回退，只要满足累计回退不超过该请求中分给接收方的金额。
+//    此接口采用同步处理模式，即在接收到商户请求后，会实时返回处理结果
+//    此功能需要接收方在商户平台-交易中心-分账-分账接收设置下，开启同意分账回退后，才能使用。
 func (w *Client) ProfitSharingReturn(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingReturnResponse, err error) {
 	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
@@ -705,7 +636,7 @@ func (w *Client) ProfitSharingReturn(bm gopay.BodyMap, certFilePath, keyFilePath
 	if (bm.Get("order_id") == gotil.NULL) && (bm.Get("out_order_no") == gotil.NULL) {
 		return nil, errors.New("param order_id and out_order_no can not be null at the same time")
 	}
-	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	tlsConfig, err := w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
 	if err != nil {
@@ -723,9 +654,9 @@ func (w *Client) ProfitSharingReturn(bm gopay.BodyMap, certFilePath, keyFilePath
 }
 
 // ProfitSharingReturnQuery 回退结果查询
-// 微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_8&index=8
-// 商户需要核实回退结果，可调用此接口查询回退结果。
-// 如果分账回退接口返回状态为处理中，可调用此接口查询回退结果
+//    微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_8&index=8
+//    商户需要核实回退结果，可调用此接口查询回退结果。
+//    如果分账回退接口返回状态为处理中，可调用此接口查询回退结果
 func (w *Client) ProfitSharingReturnQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingReturnResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_return_no")
 	if err != nil {
@@ -735,7 +666,7 @@ func (w *Client) ProfitSharingReturnQuery(bm gopay.BodyMap) (wxRsp *ProfitSharin
 	if (bm.Get("order_id") == gotil.NULL) && (bm.Get("out_order_no") == gotil.NULL) {
 		return nil, errors.New("param order_id and out_order_no can not be null at the same time")
 	}
-	//设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bs, err := w.doProdPost(bm, profitSharingReturnQuery, nil)
 	if err != nil {
