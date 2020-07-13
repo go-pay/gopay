@@ -1,11 +1,10 @@
 package wechat
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
 	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func DownloadFundFlow() {
@@ -27,8 +26,8 @@ func DownloadFundFlow() {
 	// 请求下载资金账单，成功后得到结果，沙箱环境下，证书路径参数可传空
 	wxRsp, err := client.DownloadFundFlow(bm, nil, nil, nil)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("wxRsp：", wxRsp)
+	xlog.Debug("Response：", wxRsp)
 }

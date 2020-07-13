@@ -1,11 +1,10 @@
 package wechat
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
 	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func QueryRefund() {
@@ -28,10 +27,10 @@ func QueryRefund() {
 	//请求申请退款
 	wxRsp, resBm, err := client.QueryRefund(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("wxRsp：", *wxRsp)
-	fmt.Println("resBm：", resBm)
+	xlog.Debug("wxRsp：", wxRsp)
+	xlog.Debug("resBm:", resBm)
 
 }

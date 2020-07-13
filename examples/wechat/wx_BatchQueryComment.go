@@ -1,11 +1,10 @@
 package wechat
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
 	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func BatchQueryComment() {
@@ -28,8 +27,8 @@ func BatchQueryComment() {
 	// 请求拉取订单评价数据，成功后得到结果，沙箱环境下，证书路径参数可传空
 	wxRsp, err := client.BatchQueryComment(bm, nil, nil, nil)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("Response：", wxRsp)
+	xlog.Debug("Response：", wxRsp)
 }

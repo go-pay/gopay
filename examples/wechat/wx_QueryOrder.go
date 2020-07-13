@@ -1,11 +1,10 @@
 package wechat
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
 	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func QueryOrder() {
@@ -25,9 +24,9 @@ func QueryOrder() {
 	// 请求订单查询，成功后得到结果
 	wxRsp, resBm, err := client.QueryOrder(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("wxRsp：", *wxRsp)
-	fmt.Println("resBm:", resBm)
+	xlog.Debug("wxRsp：", wxRsp)
+	xlog.Debug("resBm:", resBm)
 }

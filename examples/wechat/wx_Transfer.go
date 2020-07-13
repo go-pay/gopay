@@ -1,11 +1,10 @@
 package wechat
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
 	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func Transfer() {
@@ -18,7 +17,7 @@ func Transfer() {
 
 	err := client.AddCertFilePath("iguiyu_cert/apiclient_cert.pem", "iguiyu_cert/apiclient_key.pem", "iguiyu_cert/apiclient_cert.p12")
 	if err != nil {
-		fmt.Println("client.AddCertFilePath err:", err)
+		xlog.Error(err)
 		return
 	}
 
@@ -40,8 +39,8 @@ func Transfer() {
 	//    pkcs12FilePath：p12证书路径
 	wxRsp, err := client.Transfer(bm, nil, nil, nil)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("wxRsp：", *wxRsp)
+	xlog.Debug("Response：", wxRsp)
 }

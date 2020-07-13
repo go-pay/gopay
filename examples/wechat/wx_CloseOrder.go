@@ -1,11 +1,10 @@
 package wechat
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
 	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func CloseOrder() {
@@ -25,8 +24,8 @@ func CloseOrder() {
 	// 请求关闭订单，成功后得到结果
 	wxRsp, err := client.CloseOrder(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("wxRsp：", *wxRsp)
+	xlog.Debug("Response：", wxRsp)
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
 	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func Refund() {
@@ -35,9 +36,9 @@ func Refund() {
 	//    pkcs12FilePath：p12证书路径
 	wxRsp, resBm, err := client.Refund(bm, "iguiyu_cert/apiclient_cert.pem", "iguiyu_cert/apiclient_key.pem", "iguiyu_cert/apiclient_cert.p12")
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("wxRsp：", *wxRsp)
-	fmt.Println("resBm:", resBm)
+	xlog.Debug("wxRsp：", wxRsp)
+	xlog.Debug("resBm:", resBm)
 }
