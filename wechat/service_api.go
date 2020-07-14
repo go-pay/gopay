@@ -144,19 +144,25 @@ func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNot
 		return nil, err
 	}
 	blockSize = block.BlockSize()
-	func(dst, src []byte) {
+
+	err = func(dst, src []byte) error {
 		if len(src)%blockSize != 0 {
-			panic("crypto/cipher: input not full blocks")
+			return errors.New("crypto/cipher: input not full blocks")
 		}
 		if len(dst) < len(src) {
-			panic("crypto/cipher: output smaller than input")
+			return errors.New("crypto/cipher: output smaller than input")
 		}
 		for len(src) > 0 {
 			block.Decrypt(dst, src[:blockSize])
 			src = src[blockSize:]
 			dst = dst[blockSize:]
 		}
+		return nil
 	}(encryptionB, encryptionB)
+	if err != nil {
+		return nil, err
+	}
+
 	bs = xaes.PKCS7UnPadding(encryptionB)
 	refundNotify = new(RefundNotify)
 	if err = xml.Unmarshal(bs, refundNotify); err != nil {
