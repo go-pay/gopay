@@ -85,6 +85,7 @@ func main() {
 * wechat.GetAppletAccessToken() => 获取微信小程序全局唯一后台接口调用凭据
 * wechat.GetAppletPaidUnionId() => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
 * wechat.GetUserInfo() => 微信公众号：获取用户基本信息(UnionID机制)
+* wechat.GetUserInfoOpen() => 微信开放平台：获取用户个人信息(UnionID机制)
 * wechat.DecryptOpenDataToStruct() => 加密数据，解密到指定结构体
 * wechat.DecryptOpenDataToBodyMap() => 加密数据，解密到 BodyMap
 * wechat.GetOpenIdByAuthCode() => 授权码查询openid
@@ -184,6 +185,9 @@ QQ群：
 * #### 微信
 
 微信官方文档：[官方文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
+
+> 注意：微信支付下单等操作可用沙箱环境测试是否成功，但真正支付时，请使用正式环境 isProd = true，不然会报错。
+
 ```go
 import (
 	"github.com/iGoogle-ink/gopay/wechat"

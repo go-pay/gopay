@@ -513,7 +513,7 @@ func GetAppletPaidUnionId(accessToken, openId, transactionId string) (unionId *P
 	return unionId, nil
 }
 
-// 获取用户基本信息(UnionID机制)
+// 获取用户基本信息(UnionID机制)(微信公众号)
 //    accessToken：接口调用凭据
 //    openId：用户的OpenID
 //    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
@@ -531,11 +531,11 @@ func GetUserInfo(accessToken, openId string, lang ...string) (userInfo *UserInfo
 	return userInfo, nil
 }
 
-// 获取用户基本信息(UnionID机制)(微信开放平台)
+// 获取用户个人信息(UnionID 机制)(微信开放平台)
 //    accessToken：接口调用凭据
 //    openId：用户的OpenID
 //    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
-//    获取用户基本信息(UnionID机制)文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140839
+//    获取用户基本信息(UnionID机制)文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Authorized_API_call_UnionID.html
 func GetUserInfoOpen(accessToken, openId string, lang ...string) (userInfo *UserInfo, err error) {
 	userInfo = new(UserInfo)
 	url := "https://api.weixin.qq.com/sns/userinfo?access_token=" + accessToken + "&openid=" + openId + "&lang=zh_CN"
