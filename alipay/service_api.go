@@ -224,7 +224,7 @@ func VerifySign(aliPayPublicKey string, bean interface{}) (ok bool, err error) {
 
 // VerifySignWithCert 支付宝异步通知验签
 //    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
-//    aliPayPublicKeyPath：支付宝公钥存放路径 alipayCertPublicKey_RSA2.crt
+//    aliPayPublicKey：支付宝公钥存放路径 alipayCertPublicKey_RSA2.crt 或文件 buffer
 //    bean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
