@@ -456,6 +456,7 @@ func GetRootCertSN(rootCertPathOrData interface{}) (sn string, err error) {
 	case []byte:
 		certData = rootCertPathOrData.([]byte)
 	default:
+		return gotil.NULL, errors.New("rootCertPathOrData 断言异常")
 	}
 	if err != nil {
 		return gotil.NULL, err
