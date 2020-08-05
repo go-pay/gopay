@@ -229,7 +229,7 @@ func VerifySign(aliPayPublicKey string, bean interface{}) (ok bool, err error) {
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
 //    验签文档：https://opendocs.alipay.com/open/200/106120
-func VerifySignWithCert(aliPayPublicKey interface{}, bean interface{}) (ok bool, err error) {
+func VerifySignWithCert(aliPayPublicKey, bean interface{}) (ok bool, err error) {
 	switch aliPayPublicKey.(type) {
 	case string:
 		if aliPayPublicKey == gotil.NULL {
