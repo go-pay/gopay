@@ -1,6 +1,8 @@
 package alipay
 
 import (
+	"fmt"
+	"io/ioutil"
 	"os"
 	"testing"
 
@@ -510,39 +512,66 @@ func TestVerifySignWithCert(t *testing.T) {
 	bm.Set("app_id", "2015102700040153")
 	bm.Set("seller_id", "2088102119685838")
 	bm.Set("notify_id", "4a91b7a78a503640467525113fb7d8bg8e")
-
-	ok, err := VerifySignWithCert("/cert/alipayCertPublicKey_RSA2.crt", bm)
+	filepath := "/cert/alipayCertPublicKey_RSA2.crt"
+	ok, err := VerifySignWithCert(filepath, bm)
+	if err != nil {
+		xlog.Errorf("VerifySignWithCert(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("OK:", ok)
+	bts, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		xlog.Errorf("VerifySignWithCert(%+v),error:%+v", bm, err)
+		return
+	}
+	ok, err = VerifySignWithCert(bts, bm)
 	if err != nil {
 		xlog.Errorf("VerifySignWithCert(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("OK:", ok)
 }
-
-func TestGetCertSN(t *testing.T) {
+func ExampleGetCertSN() {
 	sn, err := GetCertSN("cert/alipayCertPublicKey_RSA2.crt")
 	if err != nil {
 		xlog.Errorf("GetCertSN(),error:%+v", err)
 		return
 	}
+	fmt.Println(sn)
+	pubKeyPath := "cert/appCertPublicKey.crt"
+	sn, err = GetCertSN(pubKeyPath)
+	if err != nil {
+		xlog.Errorf("GetCertSN(),error:%+v", err)
+		return
+	}
+	fmt.Println(sn)
+	bts, _ := ioutil.ReadFile(pubKeyPath)
+	sn, err = GetCertSN(bts)
+	if err != nil {
+		xlog.Errorf("GetCertSN(),error:%+v", err)
+		return
+	}
+	fmt.Println(sn)
+	rootCrtPath := "cert/alipayRootCert.crt"
+	sn, err = GetRootCertSN(rootCrtPath)
+	if err != nil {
+		xlog.Errorf("GetCertSN(),error:%+v", err)
+		return
+	}
+	fmt.Println(sn)
+	bts, _ = ioutil.ReadFile(rootCrtPath)
+	sn, err = GetRootCertSN(bts)
+	if err != nil {
+		xlog.Errorf("GetCertSN(),error:%+v", err)
+		return
+	}
+	fmt.Println(sn)
+	// Output:
 	// 04afd423ea5bd6f5c5482854ed73278c
-	xlog.Info("alipayCertPublicKey_RSA2:", sn)
-
-	sn, err = GetCertSN("cert/appCertPublicKey.crt")
-	if err != nil {
-		xlog.Errorf("GetCertSN(),error:%+v", err)
-		return
-	}
 	// 4498aaa8ab0c8986c15c41b36186db7d
-	xlog.Info("appCertPublicKey:", sn)
-
-	sn, err = GetRootCertSN("cert/alipayRootCert.crt")
-	if err != nil {
-		xlog.Errorf("GetCertSN(),error:%+v", err)
-		return
-	}
+	// 4498aaa8ab0c8986c15c41b36186db7d
 	// 687b59193f3f462dd5336e5abf83c5d8_02941eef3187dddf3d3b83462e1dfcf6
-	xlog.Info("alipay_root_cert_sn:", sn)
+	// 687b59193f3f462dd5336e5abf83c5d8_02941eef3187dddf3d3b83462e1dfcf6
 }
 
 func TestDecryptOpenDataToBodyMap(t *testing.T) {

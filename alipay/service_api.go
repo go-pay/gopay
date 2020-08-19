@@ -224,14 +224,20 @@ func VerifySign(aliPayPublicKey string, bean interface{}) (ok bool, err error) {
 
 // VerifySignWithCert 支付宝异步通知验签
 //    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
-//    aliPayPublicKeyPath：支付宝公钥存放路径 alipayCertPublicKey_RSA2.crt
+//    aliPayPublicKey：支付宝公钥存放路径 alipayCertPublicKey_RSA2.crt 或文件 buffer
 //    bean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
 //    验签文档：https://opendocs.alipay.com/open/200/106120
-func VerifySignWithCert(aliPayPublicKeyPath string, bean interface{}) (ok bool, err error) {
-	if aliPayPublicKeyPath == gotil.NULL {
-		return false, errors.New("aliPayPublicKeyPath is null")
+func VerifySignWithCert(aliPayPublicKey, bean interface{}) (ok bool, err error) {
+	switch aliPayPublicKey.(type) {
+	case string:
+		if aliPayPublicKey == gotil.NULL {
+			return false, errors.New("aliPayPublicKeyPath is null")
+		}
+	case []byte:
+	default:
+		return false, errors.New("aliPayPublicKeyPath type assert error")
 	}
 	if bean == nil {
 		return false, errors.New("bean is nil")
@@ -264,7 +270,7 @@ func VerifySignWithCert(aliPayPublicKeyPath string, bean interface{}) (ok bool, 
 		bm.Remove("sign_type")
 		signData = bm.EncodeAliPaySignParams()
 	}
-	if err = verifySignCert(signData, bodySign, bodySignType, aliPayPublicKeyPath); err != nil {
+	if err = verifySignCert(signData, bodySign, bodySignType, aliPayPublicKey); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -302,7 +308,7 @@ func verifySign(signData, sign, signType, aliPayPublicKey string) (err error) {
 	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
 }
 
-func verifySignCert(signData, sign, signType, aliPayPublicKeyPath string) (err error) {
+func verifySignCert(signData, sign, signType string, aliPayPublicKey interface{}) (err error) {
 	var (
 		h         hash.Hash
 		hashs     crypto.Hash
@@ -312,8 +318,15 @@ func verifySignCert(signData, sign, signType, aliPayPublicKeyPath string) (err e
 		ok        bool
 		bytes     []byte
 	)
-	if bytes, err = ioutil.ReadFile(aliPayPublicKeyPath); err != nil {
-		return fmt.Errorf("支付宝公钥文件读取失败: %w", err)
+	if v, ok := aliPayPublicKey.(string); ok {
+		if bytes, err = ioutil.ReadFile(v); err != nil {
+			return fmt.Errorf("支付宝公钥文件读取失败: %w", err)
+		}
+	} else {
+		bytes, ok = aliPayPublicKey.([]byte)
+		if !ok {
+			return fmt.Errorf("支付宝公钥读取失败: %w", err)
+		}
 	}
 	signBytes, _ := base64.StdEncoding.DecodeString(sign)
 	if block, _ = pem.Decode(bytes); block == nil {
@@ -395,11 +408,19 @@ func FormatPublicKey(publicKey string) (pKey string) {
 }
 
 // GetCertSN 获取证书序列号SN
-//    certPath：X.509证书文件路径(appCertPublicKey.crt、alipayCertPublicKey_RSA2.crt)
+//    certPathOrData.509证书文件路径(appCertPublicKey.crt、alipayCertPublicKey_RSA2.crt) 或证书 buffer
 //    返回 sn：证书序列号(app_cert_sn、alipay_cert_sn)
 //    返回 err：error 信息
-func GetCertSN(certPath string) (sn string, err error) {
-	certData, err := ioutil.ReadFile(certPath)
+func GetCertSN(certPathOrData interface{}) (sn string, err error) {
+	var certData []byte
+	switch certPathOrData.(type) {
+	case string:
+		certData, err = ioutil.ReadFile(certPathOrData.(string))
+	case []byte:
+		certData = certPathOrData.([]byte)
+	default:
+		return gotil.NULL, errors.New("certPathOrData 证书类型断言错误")
+	}
 	if err != nil {
 		return gotil.NULL, err
 	}
@@ -423,13 +444,20 @@ func GetCertSN(certPath string) (sn string, err error) {
 }
 
 // GetRootCertSN 获取root证书序列号SN
-//    rootCertPath：X.509证书文件路径(alipayRootCert.crt)
+//    rootCertPathOrData.509证书文件路径(alipayRootCert.crt) 或文件 buffer
 //    返回 sn：证书序列号(alipay_root_cert_sn)
 //    返回 err：error 信息
-func GetRootCertSN(rootCertPath string) (sn string, err error) {
+func GetRootCertSN(rootCertPathOrData interface{}) (sn string, err error) {
+	var certData []byte
 	var certEnd = `-----END CERTIFICATE-----`
-
-	certData, err := ioutil.ReadFile(rootCertPath)
+	switch rootCertPathOrData.(type) {
+	case string:
+		certData, err = ioutil.ReadFile(rootCertPathOrData.(string))
+	case []byte:
+		certData = rootCertPathOrData.([]byte)
+	default:
+		return gotil.NULL, errors.New("rootCertPathOrData 断言异常")
+	}
 	if err != nil {
 		return gotil.NULL, err
 	}
