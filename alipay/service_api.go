@@ -580,16 +580,19 @@ func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap
 func SystemOauthToken(appId string, t PKCSType, privateKey, grantType, codeOrToken, signType string) (rsp *SystemOauthTokenResponse, err error) {
 	var bs []byte
 	bm := make(gopay.BodyMap)
-	if "authorization_code" == grantType {
+
+	switch grantType {
+	case "authorization_code":
 		bm.Set("grant_type", "authorization_code")
 		bm.Set("code", codeOrToken)
-	} else if "refresh_token" == grantType {
+	case "refresh_token":
 		bm.Set("grant_type", "refresh_token")
 		bm.Set("refresh_token", codeOrToken)
-	} else {
+	default:
 		bm.Set("grant_type", "authorization_code")
 		bm.Set("code", codeOrToken)
 	}
+
 	if bs, err = systemOauthToken(appId, t, privateKey, bm, "alipay.system.oauth.token", true, signType); err != nil {
 		return
 	}
