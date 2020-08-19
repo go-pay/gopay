@@ -201,11 +201,11 @@ import (
 client := wechat.NewClient("wxdaa2ab9ef87b5497", mchId, apiKey, false)
 
 // 设置国家：不设置默认 中国国内
-//    gopay.China：中国国内
-//    gopay.China2：中国国内备用
-//    gopay.SoutheastAsia：东南亚
-//    gopay.Other：其他国家
-client.SetCountry(gopay.China)
+//    wechat.China：中国国内
+//    wechat.China2：中国国内备用
+//    wechat.SoutheastAsia：东南亚
+//    wechat.Other：其他国家
+client.SetCountry(wechat.China)
 
 // 添加微信证书 Path 路径
 //    certFilePath：apiclient_cert.pem 路径
@@ -270,9 +270,9 @@ bm.Set("out_trade_no", number)
 bm.Set("total_fee", 1)
 bm.Set("spbill_create_ip", "127.0.0.1")
 bm.Set("notify_url", "http://www.gopay.ink")
-bm.Set("trade_type", gopay.TradeType_Mini)
+bm.Set("trade_type", wechat.TradeType_Mini)
 bm.Set("device_info", "WEB")
-bm.Set("sign_type", gopay.SignType_MD5)
+bm.Set("sign_type", wechat.SignType_MD5)
 bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 
 // 嵌套json格式数据（例如：H5支付的 scene_info 参数）
@@ -338,7 +338,7 @@ payParam, err := client.TradeAppPay(bm)
 aliRsp, err := client.TradePay(bm)
 
 // 支付宝小程序支付时 buyer_id 为必传参数，需要提前获取，获取方法如下两种
-//    1、gopay.SystemOauthToken()     返回取值：rsp.SystemOauthTokenResponse.UserId
+//    1、alipay.SystemOauthToken()     返回取值：rsp.SystemOauthTokenResponse.UserId
 //    2、client.SystemOauthToken()    返回取值：aliRsp.SystemOauthTokenResponse.UserId
 aliRsp, err := client.TradeCreate(bm)
 
@@ -530,7 +530,7 @@ phone := new(wechat.UserPhone)
 // 解密开放数据
 //    encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
 //    iv：加密算法的初始向量，小程序获取到
-//    sessionKey：会话密钥，通过 gopay.Code2Session() 方法获取到
+//    sessionKey：会话密钥，通过 wechat.Code2Session() 方法获取到
 //    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
 err := wechat.DecryptOpenDataToStruct(data, iv, session, phone)
 fmt.Println(*phone)
