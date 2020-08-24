@@ -1,3 +1,11 @@
+版本号：Release 1.5.17
+发布时间：2020/08/23 15:30
+修改记录：
+   (1) 微信：Response model 增加字段
+   (2) ReadMe：修改部分遗留未更改的文档内容
+   (3) 支付宝：添加证书由只支持证书路径，改为支持证书路径或者这书Byte数组
+   (4) 支付宝：修复SystemOauthToken()方法未添加 AppCertSN 和 AliPayRootCertSN 的问题
+
 版本号：Release 1.5.16
 发布时间：2020/07/29 18:30
 修改记录：

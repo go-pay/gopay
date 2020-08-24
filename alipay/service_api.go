@@ -230,6 +230,9 @@ func VerifySign(aliPayPublicKey string, bean interface{}) (ok bool, err error) {
 //    返回参数err：错误信息
 //    验签文档：https://opendocs.alipay.com/open/200/106120
 func VerifySignWithCert(aliPayPublicKey, bean interface{}) (ok bool, err error) {
+	if bean == nil || aliPayPublicKey == nil {
+		return false, errors.New("aliPayPublicKey or bean is nil")
+	}
 	switch aliPayPublicKey.(type) {
 	case string:
 		if aliPayPublicKey == gotil.NULL {
@@ -238,9 +241,6 @@ func VerifySignWithCert(aliPayPublicKey, bean interface{}) (ok bool, err error) 
 	case []byte:
 	default:
 		return false, errors.New("aliPayPublicKeyPath type assert error")
-	}
-	if bean == nil {
-		return false, errors.New("bean is nil")
 	}
 	var (
 		bodySign     string

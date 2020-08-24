@@ -512,13 +512,14 @@ func TestVerifySignWithCert(t *testing.T) {
 	bm.Set("app_id", "2015102700040153")
 	bm.Set("seller_id", "2088102119685838")
 	bm.Set("notify_id", "4a91b7a78a503640467525113fb7d8bg8e")
+	// filePath
 	filepath := "/cert/alipayCertPublicKey_RSA2.crt"
 	ok, err := VerifySignWithCert(filepath, bm)
 	if err != nil {
 		xlog.Errorf("VerifySignWithCert(%+v),error:%+v", bm, err)
 		return
 	}
-	xlog.Debug("OK:", ok)
+	// fileByte
 	bts, err := ioutil.ReadFile(filepath)
 	if err != nil {
 		xlog.Errorf("VerifySignWithCert(%+v),error:%+v", bm, err)

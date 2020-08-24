@@ -449,12 +449,18 @@ func (a *Client) SystemOauthToken(bm gopay.BodyMap) (aliRsp *SystemOauthTokenRes
 	if err != nil {
 		return nil, err
 	}
-	
-	if a.AppCertSN != gopay.NULL {
+
+	if a.AppCertSN != gotil.NULL {
+		a.mu.RLock()
 		bm.Set("app_cert_sn", a.AppCertSN)
-		bm.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
+		a.mu.RUnlock()
 	}
-	
+	if a.AliPayRootCertSN != gotil.NULL {
+		a.mu.RLock()
+		bm.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
+		a.mu.RUnlock()
+	}
+
 	var bs []byte
 	if bs, err = systemOauthToken(a.AppId, a.PrivateKeyType, a.PrivateKey, bm, "alipay.system.oauth.token", a.IsProd, a.SignType); err != nil {
 		return nil, err
