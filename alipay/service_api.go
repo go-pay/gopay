@@ -22,6 +22,9 @@ import (
 	"time"
 
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gotil"
+	xaes "github.com/iGoogle-ink/gotil/aes"
+	"github.com/iGoogle-ink/gotil/xhttp"
 )
 
 // 允许进行 sn 提取的证书签名算法
@@ -114,7 +117,7 @@ func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) 
 	notifyReq.PassbackParams = req.Form.Get("passback_params")
 
 	billList := req.Form.Get("fund_bill_list")
-	if billList != gopay.NULL {
+	if billList != gotil.NULL {
 		bills := make([]*FundBillListInfo, 0)
 		if err = json.Unmarshal([]byte(billList), &bills); err != nil {
 			return nil, fmt.Errorf(`"fund_bill_list" xml.Unmarshal(%s)：%w`, billList, err)
@@ -125,7 +128,7 @@ func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) 
 	}
 
 	detailList := req.Form.Get("voucher_detail_list")
-	if detailList != gopay.NULL {
+	if detailList != gotil.NULL {
 		details := make([]*VoucherDetailListInfo, 0)
 		if err = json.Unmarshal([]byte(detailList), &details); err != nil {
 			return nil, fmt.Errorf(`"voucher_detail_list" xml.Unmarshal(%s)：%w`, detailList, err)
@@ -178,7 +181,7 @@ func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error)
 //    返回参数err：错误信息
 //    验签文档：https://opendocs.alipay.com/open/200/106120
 func VerifySign(aliPayPublicKey string, bean interface{}) (ok bool, err error) {
-	if aliPayPublicKey == gopay.NULL {
+	if aliPayPublicKey == gotil.NULL {
 		return false, errors.New("aliPayPublicKey is null")
 	}
 	if bean == nil {
@@ -219,6 +222,60 @@ func VerifySign(aliPayPublicKey string, bean interface{}) (ok bool, err error) {
 	return true, nil
 }
 
+// VerifySignWithCert 支付宝异步通知验签
+//    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
+//    aliPayPublicKey：支付宝公钥存放路径 alipayCertPublicKey_RSA2.crt 或文件 buffer
+//    bean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
+//    返回参数ok：是否验签通过
+//    返回参数err：错误信息
+//    验签文档：https://opendocs.alipay.com/open/200/106120
+func VerifySignWithCert(aliPayPublicKey, bean interface{}) (ok bool, err error) {
+	if bean == nil || aliPayPublicKey == nil {
+		return false, errors.New("aliPayPublicKey or bean is nil")
+	}
+	switch aliPayPublicKey.(type) {
+	case string:
+		if aliPayPublicKey == gotil.NULL {
+			return false, errors.New("aliPayPublicKeyPath is null")
+		}
+	case []byte:
+	default:
+		return false, errors.New("aliPayPublicKeyPath type assert error")
+	}
+	var (
+		bodySign     string
+		bodySignType string
+		signData     string
+		bm           = make(gopay.BodyMap)
+	)
+	if reflect.ValueOf(bean).Kind() == reflect.Map {
+		if bm, ok = bean.(gopay.BodyMap); ok {
+			bodySign = bm.Get("sign")
+			bodySignType = bm.Get("sign_type")
+			bm.Remove("sign")
+			bm.Remove("sign_type")
+			signData = bm.EncodeAliPaySignParams()
+		}
+	} else {
+		bs, err := json.Marshal(bean)
+		if err != nil {
+			return false, fmt.Errorf("json.Marshal：%w", err)
+		}
+		if err = json.Unmarshal(bs, &bm); err != nil {
+			return false, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		}
+		bodySign = bm.Get("sign")
+		bodySignType = bm.Get("sign_type")
+		bm.Remove("sign")
+		bm.Remove("sign_type")
+		signData = bm.EncodeAliPaySignParams()
+	}
+	if err = verifySignCert(signData, bodySign, bodySignType, aliPayPublicKey); err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
 func verifySign(signData, sign, signType, aliPayPublicKey string) (err error) {
 	var (
 		h         hash.Hash
@@ -251,55 +308,7 @@ func verifySign(signData, sign, signType, aliPayPublicKey string) (err error) {
 	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
 }
 
-// VerifySignWithCert 支付宝异步通知验签
-//    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
-//    aliPayPublicKeyPath：支付宝公钥存放路径 alipayCertPublicKey_RSA2.crt
-//    bean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
-//    返回参数ok：是否验签通过
-//    返回参数err：错误信息
-//    验签文档：https://opendocs.alipay.com/open/200/106120
-func VerifySignWithCert(aliPayPublicKeyPath string, bean interface{}) (ok bool, err error) {
-	if aliPayPublicKeyPath == gopay.NULL {
-		return false, errors.New("aliPayPublicKeyPath is null")
-	}
-	if bean == nil {
-		return false, errors.New("bean is nil")
-	}
-	var (
-		bodySign     string
-		bodySignType string
-		signData     string
-		bm           = make(gopay.BodyMap)
-	)
-	if reflect.ValueOf(bean).Kind() == reflect.Map {
-		if bm, ok = bean.(gopay.BodyMap); ok {
-			bodySign = bm.Get("sign")
-			bodySignType = bm.Get("sign_type")
-			bm.Remove("sign")
-			bm.Remove("sign_type")
-			signData = bm.EncodeAliPaySignParams()
-		}
-	} else {
-		bs, err := json.Marshal(bean)
-		if err != nil {
-			return false, fmt.Errorf("json.Marshal：%w", err)
-		}
-		if err = json.Unmarshal(bs, &bm); err != nil {
-			return false, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
-		}
-		bodySign = bm.Get("sign")
-		bodySignType = bm.Get("sign_type")
-		bm.Remove("sign")
-		bm.Remove("sign_type")
-		signData = bm.EncodeAliPaySignParams()
-	}
-	if err = verifySignCert(signData, bodySign, bodySignType, aliPayPublicKeyPath); err != nil {
-		return false, err
-	}
-	return true, nil
-}
-
-func verifySignCert(signData, sign, signType, aliPayPublicKeyPath string) (err error) {
+func verifySignCert(signData, sign, signType string, aliPayPublicKey interface{}) (err error) {
 	var (
 		h         hash.Hash
 		hashs     crypto.Hash
@@ -309,8 +318,15 @@ func verifySignCert(signData, sign, signType, aliPayPublicKeyPath string) (err e
 		ok        bool
 		bytes     []byte
 	)
-	if bytes, err = ioutil.ReadFile(aliPayPublicKeyPath); err != nil {
-		return fmt.Errorf("支付宝公钥文件读取失败: %w", err)
+	if v, ok := aliPayPublicKey.(string); ok {
+		if bytes, err = ioutil.ReadFile(v); err != nil {
+			return fmt.Errorf("支付宝公钥文件读取失败: %w", err)
+		}
+	} else {
+		bytes, ok = aliPayPublicKey.([]byte)
+		if !ok {
+			return fmt.Errorf("支付宝公钥读取失败: %w", err)
+		}
 	}
 	signBytes, _ := base64.StdEncoding.DecodeString(sign)
 	if block, _ = pem.Decode(bytes); block == nil {
@@ -392,19 +408,27 @@ func FormatPublicKey(publicKey string) (pKey string) {
 }
 
 // GetCertSN 获取证书序列号SN
-//    certPath：X.509证书文件路径(appCertPublicKey.crt、alipayCertPublicKey_RSA2.crt)
+//    certPathOrData.509证书文件路径(appCertPublicKey.crt、alipayCertPublicKey_RSA2.crt) 或证书 buffer
 //    返回 sn：证书序列号(app_cert_sn、alipay_cert_sn)
 //    返回 err：error 信息
-func GetCertSN(certPath string) (sn string, err error) {
-	certData, err := ioutil.ReadFile(certPath)
+func GetCertSN(certPathOrData interface{}) (sn string, err error) {
+	var certData []byte
+	switch certPathOrData.(type) {
+	case string:
+		certData, err = ioutil.ReadFile(certPathOrData.(string))
+	case []byte:
+		certData = certPathOrData.([]byte)
+	default:
+		return gotil.NULL, errors.New("certPathOrData 证书类型断言错误")
+	}
 	if err != nil {
-		return gopay.NULL, err
+		return gotil.NULL, err
 	}
 
 	if block, _ := pem.Decode(certData); block != nil {
 		cert, err := x509.ParseCertificate(block.Bytes)
 		if err != nil {
-			return gopay.NULL, err
+			return gotil.NULL, err
 		}
 		name := cert.Issuer.String()
 		serialNumber := cert.SerialNumber.String()
@@ -413,22 +437,29 @@ func GetCertSN(certPath string) (sn string, err error) {
 		h.Write([]byte(serialNumber))
 		sn = hex.EncodeToString(h.Sum(nil))
 	}
-	if sn == gopay.NULL {
-		return gopay.NULL, errors.New("failed to get sn,please check your cert")
+	if sn == gotil.NULL {
+		return gotil.NULL, errors.New("failed to get sn,please check your cert")
 	}
 	return sn, nil
 }
 
 // GetRootCertSN 获取root证书序列号SN
-//    rootCertPath：X.509证书文件路径(alipayRootCert.crt)
+//    rootCertPathOrData.509证书文件路径(alipayRootCert.crt) 或文件 buffer
 //    返回 sn：证书序列号(alipay_root_cert_sn)
 //    返回 err：error 信息
-func GetRootCertSN(rootCertPath string) (sn string, err error) {
+func GetRootCertSN(rootCertPathOrData interface{}) (sn string, err error) {
+	var certData []byte
 	var certEnd = `-----END CERTIFICATE-----`
-
-	certData, err := ioutil.ReadFile(rootCertPath)
+	switch rootCertPathOrData.(type) {
+	case string:
+		certData, err = ioutil.ReadFile(rootCertPathOrData.(string))
+	case []byte:
+		certData = rootCertPathOrData.([]byte)
+	default:
+		return gotil.NULL, errors.New("rootCertPathOrData 断言异常")
+	}
 	if err != nil {
-		return gopay.NULL, err
+		return gotil.NULL, err
 	}
 
 	pems := strings.Split(string(certData), certEnd)
@@ -446,15 +477,15 @@ func GetRootCertSN(rootCertPath string) (sn string, err error) {
 			h := md5.New()
 			h.Write([]byte(name))
 			h.Write([]byte(serialNumber))
-			if sn == gopay.NULL {
+			if sn == gotil.NULL {
 				sn += hex.EncodeToString(h.Sum(nil))
 			} else {
 				sn += "_" + hex.EncodeToString(h.Sum(nil))
 			}
 		}
 	}
-	if sn == gopay.NULL {
-		return gopay.NULL, errors.New("failed to get sn,please check your cert")
+	if sn == gotil.NULL {
+		return gotil.NULL, errors.New("failed to get sn,please check your cert")
 	}
 	return sn, nil
 }
@@ -466,7 +497,7 @@ func GetRootCertSN(rootCertPath string) (sn string, err error) {
 //    文档：https://opendocs.alipay.com/mini/introduce/aes
 //    文档：https://opendocs.alipay.com/open/common/104567
 func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{}) (err error) {
-	if encryptedData == gopay.NULL || secretKey == gopay.NULL {
+	if encryptedData == gotil.NULL || secretKey == gotil.NULL {
 		return errors.New("encryptedData or secretKey is null")
 	}
 	beanValue := reflect.ValueOf(beanPtr)
@@ -494,7 +525,7 @@ func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{
 	originData = make([]byte, len(secretData))
 	blockMode.CryptBlocks(originData, secretData)
 	if len(originData) > 0 {
-		originData = gopay.PKCS5UnPadding(originData)
+		originData = xaes.PKCS5UnPadding(originData)
 	}
 	if err = json.Unmarshal(originData, beanPtr); err != nil {
 		return fmt.Errorf("json.Unmarshal(%s)：%w", string(originData), err)
@@ -508,7 +539,7 @@ func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{
 //    文档：https://opendocs.alipay.com/mini/introduce/aes
 //    文档：https://opendocs.alipay.com/open/common/104567
 func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap, err error) {
-	if encryptedData == gopay.NULL || secretKey == gopay.NULL {
+	if encryptedData == gotil.NULL || secretKey == gotil.NULL {
 		return nil, errors.New("encryptedData or secretKey is null")
 	}
 	var (
@@ -529,7 +560,7 @@ func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap
 	originData = make([]byte, len(secretData))
 	blockMode.CryptBlocks(originData, secretData)
 	if len(originData) > 0 {
-		originData = gopay.PKCS5UnPadding(originData)
+		originData = xaes.PKCS5UnPadding(originData)
 	}
 	bm = make(gopay.BodyMap)
 	if err = json.Unmarshal(originData, &bm); err != nil {
@@ -549,16 +580,19 @@ func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap
 func SystemOauthToken(appId string, t PKCSType, privateKey, grantType, codeOrToken, signType string) (rsp *SystemOauthTokenResponse, err error) {
 	var bs []byte
 	bm := make(gopay.BodyMap)
-	if "authorization_code" == grantType {
+
+	switch grantType {
+	case "authorization_code":
 		bm.Set("grant_type", "authorization_code")
 		bm.Set("code", codeOrToken)
-	} else if "refresh_token" == grantType {
+	case "refresh_token":
 		bm.Set("grant_type", "refresh_token")
 		bm.Set("refresh_token", codeOrToken)
-	} else {
+	default:
 		bm.Set("grant_type", "authorization_code")
 		bm.Set("code", codeOrToken)
 	}
+
 	if bs, err = systemOauthToken(appId, t, privateKey, bm, "alipay.system.oauth.token", true, signType); err != nil {
 		return
 	}
@@ -578,25 +612,25 @@ func systemOauthToken(appId string, t PKCSType, privateKey string, bm gopay.Body
 	bm.Set("method", method)
 	bm.Set("format", "JSON")
 	bm.Set("charset", "utf-8")
-	if signType == gopay.NULL {
+	if signType == gotil.NULL {
 		bm.Set("sign_type", RSA2)
 	} else {
 		bm.Set("sign_type", signType)
 	}
-	bm.Set("timestamp", time.Now().Format(gopay.TimeLayout))
+	bm.Set("timestamp", time.Now().Format(gotil.TimeLayout))
 	bm.Set("version", "1.0")
 	var (
-		sign string
-		url  = baseUrlUtf8
+		sign    string
+		baseUrl = baseUrlUtf8
 	)
 	if sign, err = GetRsaSign(bm, bm.Get("sign_type"), t, privateKey); err != nil {
 		return nil, err
 	}
 	bm.Set("sign", sign)
 	if !isProd {
-		url = sandboxBaseUrlUtf8
+		baseUrl = sandboxBaseUrlUtf8
 	}
-	_, bs, errs := gopay.NewHttpClient().Type(gopay.TypeForm).Post(url).SendString(FormatURLParam(bm)).EndBytes()
+	_, bs, errs := xhttp.NewClient().Type(xhttp.TypeForm).Post(baseUrl).SendString(FormatURLParam(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -617,12 +651,12 @@ func MonitorHeartbeatSyn(appId string, t PKCSType, privateKey, signType, bizCont
 	bm.Set("method", "monitor.heartbeat.syn")
 	bm.Set("format", "JSON")
 	bm.Set("charset", "utf-8")
-	if signType == gopay.NULL {
+	if signType == gotil.NULL {
 		bm.Set("sign_type", RSA2)
 	} else {
 		bm.Set("sign_type", signType)
 	}
-	bm.Set("timestamp", time.Now().Format(gopay.TimeLayout))
+	bm.Set("timestamp", time.Now().Format(gotil.TimeLayout))
 	bm.Set("version", "1.0")
 
 	sign, err := GetRsaSign(bm, bm.Get("sign_type"), t, privateKey)
@@ -631,7 +665,7 @@ func MonitorHeartbeatSyn(appId string, t PKCSType, privateKey, signType, bizCont
 	}
 	bm.Set("sign", sign)
 
-	_, bs, errs := gopay.NewHttpClient().Type(gopay.TypeForm).Post(baseUrlUtf8).SendString(FormatURLParam(bm)).EndBytes()
+	_, bs, errs := xhttp.NewClient().Type(xhttp.TypeForm).Post(baseUrlUtf8).SendString(FormatURLParam(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}

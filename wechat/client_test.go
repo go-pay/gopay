@@ -1,13 +1,15 @@
 package wechat
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 	"testing"
 	"time"
 
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gotil/xrsa"
 )
 
 var (
@@ -38,11 +40,11 @@ func TestMain(m *testing.M) {
 }
 
 func TestClient_UnifiedOrder(t *testing.T) {
-	number := gopay.GetRandomString(32)
-	fmt.Println("out_trade_no:", number)
+	number := gotil.GetRandomString(32)
+	xlog.Info("out_trade_no:", number)
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("body", "H5支付")
 	bm.Set("out_trade_no", number)
 	bm.Set("total_fee", 1)
@@ -71,67 +73,68 @@ func TestClient_UnifiedOrder(t *testing.T) {
 	// 请求支付下单，成功后得到结果
 	wxRsp, err := client.UnifiedOrder(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.UnifiedOrder(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("wxRsp:", *wxRsp)
-	//fmt.Println("wxRsp.MwebUrl:", wxRsp.MwebUrl)
+	xlog.Info("wxRsp:", *wxRsp)
+	//xlog.Info("wxRsp.MwebUrl:", wxRsp.MwebUrl)
 
 	timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
 
 	// 获取小程序支付需要的paySign
 	//pac := "prepay_id=" + wxRsp.PrepayId
 	//paySign := GetMiniPaySign(appId, wxRsp.NonceStr, pac, SignType_MD5, timeStamp, apiKey)
-	//fmt.Println("paySign:", paySign)
+	//xlog.Info("paySign:", paySign)
 
 	// 获取H5支付需要的paySign
 	pac := "prepay_id=" + wxRsp.PrepayId
 	paySign := GetH5PaySign(appId, wxRsp.NonceStr, pac, SignType_MD5, timeStamp, apiKey)
-	fmt.Println("paySign:", paySign)
+	xlog.Debug("paySign:", paySign)
 
 	// 获取小程序需要的paySign
 	//paySign := GetAppPaySign(appId,"partnerid", wxRsp.NonceStr, wxRsp.PrepayId, SignType_MD5, timeStamp, apiKey)
-	//fmt.Println("paySign:", paySign)
+	//xlog.Info("paySign:", paySign)
 }
 
 func TestClient_QueryOrder(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ")
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_MD5)
 
 	// 请求订单查询，成功后得到结果
-	wxRsp, err := client.QueryOrder(bm)
+	wxRsp, resBm, err := client.QueryOrder(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.QueryOrder(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("wxRsp：", *wxRsp)
+	xlog.Debug("wxRsp：", *wxRsp)
+	xlog.Debug("resBm：", resBm)
 }
 
 func TestClient_CloseOrder(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ")
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_MD5)
 
 	// 请求关闭订单，成功后得到结果
 	wxRsp, err := client.CloseOrder(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.CloseOrder(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("wxRsp：", *wxRsp)
+	xlog.Debug("wxRsp：", *wxRsp)
 }
 
 func TestClient_Micropay(t *testing.T) {
-	number := gopay.GetRandomString(32)
-	fmt.Println("out_trade_no:", number)
+	number := gotil.GetRandomString(32)
+	xlog.Info("out_trade_no:", number)
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("body", "扫用户付款码支付")
 	bm.Set("out_trade_no", number)
 	bm.Set("total_fee", 1)
@@ -142,39 +145,39 @@ func TestClient_Micropay(t *testing.T) {
 	// 请求支付，成功后得到结果
 	wxRsp, err := client.Micropay(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.Micropay(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("Response:", *wxRsp)
+	xlog.Debug("Response:", *wxRsp)
 	ok, err := VerifySign(apiKey, SignType_MD5, wxRsp)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error(err)
 	}
-	fmt.Println("同步验签结果：", ok) // 沙箱环境验签失败请用正式环境测
+	xlog.Debug("同步验签结果：", ok) // 沙箱环境验签失败请用正式环境测
 }
 
 func TestClient_AuthCodeToOpenId(t *testing.T) {
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("auth_code", "134753997737645794")
 
 	wxRsp, err := client.AuthCodeToOpenId(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.AuthCodeToOpenId(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("Response:", *wxRsp)
+	xlog.Debug("Response:", *wxRsp)
 }
 
 func TestClient_Refund(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "QRcTBTbJLoDrWSW9FtpSFlgWhft2QbaY")
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_MD5)
-	s := gopay.GetRandomString(64)
-	fmt.Println("out_refund_no:", s)
+	s := gotil.GetRandomString(64)
+	xlog.Info("out_refund_no:", s)
 	bm.Set("out_refund_no", s)
 	bm.Set("total_fee", 101)
 	bm.Set("refund_fee", 101)
@@ -185,12 +188,13 @@ func TestClient_Refund(t *testing.T) {
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, err := client.Refund(bm, nil, nil, nil)
+	wxRsp, resBm, err := client.Refund(bm, nil, nil, nil)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.Refund(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("wxRsp：", *wxRsp)
+	xlog.Debug("wxRsp：", *wxRsp)
+	xlog.Debug("resBm：", resBm)
 }
 
 func TestClient_QueryRefund(t *testing.T) {
@@ -200,39 +204,40 @@ func TestClient_QueryRefund(t *testing.T) {
 	//bm.Set("out_refund_no", "vk4264I1UQ3Hm3E4AKsavK8npylGSgQA092f9ckUxp8A2gXmnsLEdsupURVTcaC7")
 	//bm.Set("transaction_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")
 	//bm.Set("refund_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_MD5)
 
 	// 请求申请退款
-	wxRsp, err := client.QueryRefund(bm)
+	wxRsp, resBm, err := client.QueryRefund(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.QueryRefund(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("wxRsp：", *wxRsp)
+	xlog.Debug("wxRsp：", *wxRsp)
+	xlog.Debug("resBm：", resBm)
 }
 
 func TestClient_Reverse(t *testing.T) {
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B")
 	bm.Set("sign_type", SignType_MD5)
 
 	// 请求撤销订单，成功后得到结果，沙箱环境下，证书路径参数可传nil
 	wxRsp, err := client.Reverse(bm, nil, nil, nil)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.Reverse(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("Response:", wxRsp)
+	xlog.Debug("Response:", wxRsp)
 }
 
 func TestClient_Transfer(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gopay.GetRandomString(32))
-	bm.Set("partner_trade_no", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
+	bm.Set("partner_trade_no", gotil.GetRandomString(32))
 	bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 	bm.Set("check_name", "FORCE_CHECK") // NO_CHECK：不校验真实姓名 , FORCE_CHECK：强校验真实姓名
 	bm.Set("re_user_name", "付明明")       // 收款用户真实姓名。 如果check_name设置为FORCE_CHECK，则必填用户真实姓名
@@ -247,16 +252,35 @@ func TestClient_Transfer(t *testing.T) {
 	//    pkcs12FilePath：p12证书路径
 	wxRsp, err := client.Transfer(bm, nil, nil, nil)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.Transfer(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("wxRsp：", *wxRsp)
+	xlog.Debug("wxRsp：", *wxRsp)
+}
+
+func TestClient_GetTransferInfo(t *testing.T) {
+	// 初始化参数结构体
+	bm := make(gopay.BodyMap)
+	bm.Set("nonce_str", gotil.GetRandomString(32))
+	bm.Set("partner_trade_no", gotil.GetRandomString(32))
+
+	// 查询企业付款
+	//    body：参数Body
+	//    certFilePath：cert证书路径
+	//    keyFilePath：Key证书路径
+	//    pkcs12FilePath：p12证书路径
+	wxRsp, err := client.GetTransferInfo(bm, nil, nil, nil)
+	if err != nil {
+		xlog.Errorf("client.GetTransferInfo(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("wxRsp：", *wxRsp)
 }
 
 func TestClient_DownloadBill(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_MD5)
 	bm.Set("bill_date", "20190722")
 	bm.Set("bill_type", "ALL")
@@ -264,16 +288,16 @@ func TestClient_DownloadBill(t *testing.T) {
 	// 请求下载对账单，成功后得到结果（string类型字符串）
 	wxRsp, err := client.DownloadBill(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.DownloadBill(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("wxRsp：", wxRsp)
+	xlog.Debug("wxRsp：", wxRsp)
 }
 
 func TestClient_DownloadFundFlow(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bm.Set("bill_date", "20190122")
 	bm.Set("account_type", "Basic")
@@ -281,16 +305,16 @@ func TestClient_DownloadFundFlow(t *testing.T) {
 	// 请求下载资金账单，成功后得到结果，沙箱环境下，证书路径参数可传nil
 	wxRsp, err := client.DownloadFundFlow(bm, nil, nil, nil)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.DownloadFundFlow(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("wxRsp：", wxRsp)
+	xlog.Debug("wxRsp：", wxRsp)
 }
 
 func TestClient_BatchQueryComment(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bm.Set("begin_time", "20190120000000")
 	bm.Set("end_time", "20190122174000")
@@ -299,10 +323,10 @@ func TestClient_BatchQueryComment(t *testing.T) {
 	// 请求拉取订单评价数据，成功后得到结果，沙箱环境下，证书路径参数可传nil
 	wxRsp, err := client.BatchQueryComment(bm, nil, nil, nil)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.BatchQueryComment(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("wxRsp：", wxRsp)
+	xlog.Debug("wxRsp：", wxRsp)
 }
 
 func TestClient_EntrustPublic(t *testing.T) {
@@ -319,10 +343,10 @@ func TestClient_EntrustPublic(t *testing.T) {
 	// 公众号纯签约
 	wxRsp, err := client.EntrustPublic(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.EntrustPublic(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("wxRsp：", wxRsp)
+	xlog.Debug("wxRsp：", wxRsp)
 }
 
 func TestClient_EntrustAppPre(t *testing.T) {
@@ -339,10 +363,10 @@ func TestClient_EntrustAppPre(t *testing.T) {
 	// APP纯签约
 	wxRsp, err := client.EntrustAppPre(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.EntrustAppPre(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("wxRsp：", wxRsp)
+	xlog.Debug("wxRsp：", wxRsp)
 }
 
 func TestClient_EntrustH5(t *testing.T) {
@@ -360,21 +384,21 @@ func TestClient_EntrustH5(t *testing.T) {
 	// H5纯签约
 	wxRsp, err := client.EntrustH5(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.EntrustH5(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("wxRsp：", wxRsp)
+	xlog.Debug("wxRsp：", wxRsp)
 }
 
 func TestClient_EntrustPaying(t *testing.T) {
-	number := gopay.GetRandomString(32)
-	fmt.Println("out_trade_no:", number)
+	number := gotil.GetRandomString(32)
+	xlog.Info("out_trade_no:", number)
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("contract_mchid", mchId)
 	bm.Set("contract_appid", appId)
 	bm.Set("out_trade_no", number)
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("body", "测试签约")
 	bm.Set("total_fee", 1)
 	bm.Set("spbill_create_ip", "127.0.0.1")
@@ -391,10 +415,40 @@ func TestClient_EntrustPaying(t *testing.T) {
 	// 支付中签约
 	wxRsp, err := client.EntrustPaying(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Errorf("client.EntrustPaying(%+v),error:%+v", bm, err)
 		return
 	}
-	fmt.Println("wxRsp：", wxRsp)
+	xlog.Debug("wxRsp：", wxRsp)
+}
+
+func TestClient_PayBank(t *testing.T) {
+	// 初始化参数结构体
+	bm := make(gopay.BodyMap)
+	bm.Set("partner_trade_no", mchId)
+	bm.Set("nonce_str", gotil.GetRandomString(32))
+	bm.Set("bank_code", "1001") // 招商银行，https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_4&index=5
+	bm.Set("amount", 1)
+
+	encryptBank, err := xrsa.RsaEncryptData("621400000000567", "publicKey.pem")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	encryptName, err := xrsa.RsaEncryptData("Jerry", "publicKey.pem")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	bm.Set("enc_bank_no", encryptBank)
+	bm.Set("enc_true_name", encryptName)
+
+	// 企业付款到银行卡API
+	wxRsp, err := client.PayBank(bm, "certFilePath", "keyFilePath", "pkcs12FilePath")
+	if err != nil {
+		xlog.Errorf("client.EntrustPaying(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("wxRsp：", wxRsp)
 }
 
 // =======================
@@ -411,13 +465,13 @@ func TestDecryptOpenDataToStruct(t *testing.T) {
 	//    beanPtr:需要解析到的结构体指针
 	err := DecryptOpenDataToStruct(data, iv, session, phone)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("PhoneNumber:", phone.PhoneNumber)
-	fmt.Println("PurePhoneNumber:", phone.PurePhoneNumber)
-	fmt.Println("CountryCode:", phone.CountryCode)
-	fmt.Println("Watermark:", phone.Watermark)
+	xlog.Debug("PhoneNumber:", phone.PhoneNumber)
+	xlog.Debug("PurePhoneNumber:", phone.PurePhoneNumber)
+	xlog.Debug("CountryCode:", phone.CountryCode)
+	xlog.Debug("Watermark:", phone.Watermark)
 
 	sessionKey := "tiihtNczf5v6AKRyjwEUhQ=="
 	encryptedData := "CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZMQmRzooG2xrDcvSnxIMXFufNstNGTyaGS9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+3hVbJSRgv+4lGOETKUQz6OYStslQ142dNCuabNPGBzlooOmB231qMM85d2/fV6ChevvXvQP8Hkue1poOFtnEtpyxVLW1zAo6/1Xx1COxFvrc2d7UL/lmHInNlxuacJXwu0fjpXfz/YqYzBIBzD6WUfTIF9GRHpOn/Hz7saL8xz+W//FRAUid1OksQaQx4CMs8LOddcQhULW4ucetDf96JcR3g0gfRK4PC7E/r7Z6xNrXd2UIeorGj5Ef7b1pJAYB6Y5anaHqZ9J6nKEBvB4DnNLIVWSgARns/8wR2SiRS7MNACwTyrGvt9ts8p12PKFdlqYTopNHR1Vf7XjfhQlVsAJdNiKdYmYVoKlaRv85IfVunYzO0IKXsyl7JCUjCpoG20f0a04COwfneQAGGwd5oa+T8yO5hzuyDb/XcxxmK01EpqOyuxINew=="
@@ -428,18 +482,18 @@ func TestDecryptOpenDataToStruct(t *testing.T) {
 
 	err = DecryptOpenDataToStruct(encryptedData, iv2, sessionKey, userInfo)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("NickName:", userInfo.NickName)
-	fmt.Println("AvatarUrl:", userInfo.AvatarUrl)
-	fmt.Println("Country:", userInfo.Country)
-	fmt.Println("Province:", userInfo.Province)
-	fmt.Println("City:", userInfo.City)
-	fmt.Println("Gender:", userInfo.Gender)
-	fmt.Println("OpenId:", userInfo.OpenId)
-	fmt.Println("UnionId:", userInfo.UnionId)
-	fmt.Println("Watermark:", userInfo.Watermark)
+	xlog.Debug("NickName:", userInfo.NickName)
+	xlog.Debug("AvatarUrl:", userInfo.AvatarUrl)
+	xlog.Debug("Country:", userInfo.Country)
+	xlog.Debug("Province:", userInfo.Province)
+	xlog.Debug("City:", userInfo.City)
+	xlog.Debug("Gender:", userInfo.Gender)
+	xlog.Debug("OpenId:", userInfo.OpenId)
+	xlog.Debug("UnionId:", userInfo.UnionId)
+	xlog.Debug("Watermark:", userInfo.Watermark)
 }
 
 func TestDecryptOpenDataToBodyMap(t *testing.T) {
@@ -453,10 +507,10 @@ func TestDecryptOpenDataToBodyMap(t *testing.T) {
 	//    sessionKey:会话密钥
 	bm, err := DecryptOpenDataToBodyMap(data, iv, session)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("WeChatUserPhone:", bm)
+	xlog.Debug("WeChatUserPhone:", bm)
 }
 
 func TestDecryptRefundNotifyReqInfo(t *testing.T) {
@@ -464,25 +518,26 @@ func TestDecryptRefundNotifyReqInfo(t *testing.T) {
 	data := "YYwp8C48th0wnQzTqeI+41pflB26v+smFj9z6h9RPBgxTyZyxc+4YNEz7QEgZNWj/6rIb2MfyWMZmCc41CfjKSssoSZPXxOhUayb6KvNSZ1p6frOX1PDWzhyruXK7ouNND+gDsG4yZ0XXzsL4/pYNwLLba/71QrnkJ/BHcByk4EXnglju5DLup9pJQSnTxjomI9Rxu57m9jg5lLQFxMWXyeASZJNvof0ulnHlWJswS4OxKOkmW7VEyKyLGV6npoOm03Qsx2wkRxLsSa9gPpg4hdaReeUqh1FMbm7aWjyrVYT/MEZWg98p4GomEIYvz34XfDncTezX4bf/ZiSLXt79aE1/YTZrYfymXeCrGjlbe0rg/T2ezJHAC870u2vsVbY1/KcE2A443N+DEnAziXlBQ1AeWq3Rqk/O6/TMM0lomzgctAOiAMg+bh5+Gu1ubA9O3E+vehULydD5qx2o6i3+qA9ORbH415NyRrQdeFq5vmCiRikp5xYptWiGZA0tkoaLKMPQ4ndE5gWHqiBbGPfULZWokI+QjjhhBmwgbd6J0VqpRorwOuzC/BHdkP72DCdNcm7IDUpggnzBIy0+seWIkcHEryKjge3YDHpJeQCqrAH0CgxXHDt1xtbQbST1VqFyuhPhUjDXMXrknrGPN/oE1t0rLRq+78cI+k8xe5E6seeUXQsEe8r3358mpcDYSmXWSXVZxK6er9EF98APqHwcndyEJD2YyCh/mMVhERuX+7kjlRXSiNUWa/Cv/XAKFQuvUYA5ea2eYWtPRHa4DpyuF1SNsaqVKfgqKXZrJHfAgslVpSVqUpX4zkKszHF4kwMZO3M7J1P94Mxa7Tm9mTOJePOoHPXeEB+m9rX6pSfoi3mJDQ5inJ+Vc4gOkg/Wd/lqiy6TTyP/dHDN6/v+AuJx5AXBo/2NDD3fWhHjkqEKIuARr2ClZt9ZRQO4HkXdZo7CN06sGCHk48Tg8PmxnxKcMZm7Aoquv5yMIM2gWSWIRJhwJ8cUpafIHc+GesDlbF6Zbt+/KXkafJAQq2RklEN+WvZ/zFz113EPgWPjp16TwBoziq96MMekvWKY/vdhjol8VFtGH9F61Oy1Xwf6DJtPw=="
 	refundNotify, err := DecryptRefundNotifyReqInfo(data, key)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("refundNotify:", *refundNotify)
+	xlog.Debug("refundNotify:", *refundNotify)
 }
 
 func TestGetAppletAccessToken(t *testing.T) {
 	token, err := GetAppletAccessToken("wxdaa2ab9ef87b5497", "AppSecret")
 	if err != nil {
-		fmt.Println(err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("token:", token)
+	xlog.Debug("token:", token)
 }
 
 func TestCode2Session(t *testing.T) {
 	session, err := Code2Session("wx2e92b2ff5ed4db71", "AppSecret", "081XxRPj1e8Krp0uGUQj1s0MPj1XxRP5")
 	if err != nil {
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("Openid:", session.Openid)
+	xlog.Debug("Openid:", session.Openid)
 }

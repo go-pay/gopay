@@ -1,8 +1,9 @@
 package alipay
 
 import (
-	"fmt"
 	"testing"
+
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func TestMonitorHeartbeatSyn(t *testing.T) {
@@ -12,8 +13,8 @@ func TestMonitorHeartbeatSyn(t *testing.T) {
 
 	rsp, err := MonitorHeartbeatSyn(appid, PKCS1, privateKey, RSA2, bizContent)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Errorf("MonitorHeartbeatSyn(),error:%+v", err)
 		return
 	}
-	fmt.Println("rsp.Response:", *rsp.Response)
+	xlog.Info("rsp.Response:", *rsp.Response)
 }

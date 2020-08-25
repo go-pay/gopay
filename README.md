@@ -50,13 +50,25 @@ func main() {
 * 下载资金账单（正式）：client.DownloadFundFlow()
 * 交易保障：client.Report()
 * 拉取订单评价数据（正式）：client.BatchQueryComment()
-* 企业向微信用户个人付款（正式）：client.Transfer()
+* 企业付款（正式）：client.Transfer()
+* 查询企业付款（正式）：client.GetTransferInfo()
 * 授权码查询OpenId（正式）：client.AuthCodeToOpenId()
 * 公众号纯签约（正式）：client.EntrustPublic()
 * APP纯签约-预签约接口-获取预签约ID（正式）：client.EntrustAppPre()
 * H5纯签约（正式）：client.EntrustH5()
 * 支付中签约（正式）：client.EntrustPaying()
-* 自定义方法请求微信API接口：client.PostRequest()
+* 请求单次分账（正式）：client.ProfitSharing() 
+* 请求多次分账（正式）：client.MultiProfitSharing()
+* 查询分账结果（正式）：client.ProfitSharingQuery()
+* 添加分账接收方（正式）：client.ProfitSharingAddReceiver()
+* 删除分账接收方（正式）：client.ProfitSharingRemoveReceiver()
+* 完结分账（正式）：client.ProfitSharingFinish()
+* 分账回退（正式）：client.ProfitSharingReturn()
+* 分账回退结果查询（正式）：client.ProfitSharingReturnQuery()
+* 企业付款到银行卡API（正式）：client.PayBank()
+* 查询企业付款到银行卡API（正式）：client.QueryBank()
+* 获取RSA加密公钥API（正式）：client.GetRSAPublicKey()
+* 自定义方法请求微信API接口：client.PostWeChatAPISelf()
 
 ### 微信公共API
 
@@ -73,6 +85,7 @@ func main() {
 * wechat.GetAppletAccessToken() => 获取微信小程序全局唯一后台接口调用凭据
 * wechat.GetAppletPaidUnionId() => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
 * wechat.GetUserInfo() => 微信公众号：获取用户基本信息(UnionID机制)
+* wechat.GetUserInfoOpen() => 微信开放平台：获取用户个人信息(UnionID机制)
 * wechat.DecryptOpenDataToStruct() => 加密数据，解密到指定结构体
 * wechat.DecryptOpenDataToBodyMap() => 加密数据，解密到 BodyMap
 * wechat.GetOpenIdByAuthCode() => 授权码查询openid
@@ -93,7 +106,7 @@ func main() {
 * 退款查询：client.RefundQuery()
 * 交易账单：client.StatementDown()
 * 资金账单：client.AccRoll()
-* 自定义方法请求微信API接口：client.PostRequest()
+* 自定义方法请求微信API接口：client.PostQQAPISelf()
 
 ### QQ公共API
 
@@ -104,7 +117,8 @@ func main() {
 ---
 
 ### 支付宝支付API
-> #### 因支付宝接口太多，如有没实现的接口，还请开发者自行fork代码，添加新方法后提交PR，谢谢！
+> #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用client.PostAliPayAPISelf()方法实现！
+* 支付宝接口自行实现方法：client.PostAliPayAPISelf()
 * 手机网站支付接口2.0（手机网站支付）：client.TradeWapPay()
 * 统一收单下单并支付页面接口（电脑网站支付）：client.TradePagePay()
 * APP支付接口2.0（APP支付）：client.TradeAppPay()
@@ -171,6 +185,9 @@ QQ群：
 * #### 微信
 
 微信官方文档：[官方文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
+
+> 注意：微信支付下单等操作可用沙箱环境测试是否成功，但真正支付时，请使用正式环境 isProd = true，不然会报错。
+
 ```go
 import (
 	"github.com/iGoogle-ink/gopay/wechat"
@@ -184,11 +201,11 @@ import (
 client := wechat.NewClient("wxdaa2ab9ef87b5497", mchId, apiKey, false)
 
 // 设置国家：不设置默认 中国国内
-//    gopay.China：中国国内
-//    gopay.China2：中国国内备用
-//    gopay.SoutheastAsia：东南亚
-//    gopay.Other：其他国家
-client.SetCountry(gopay.China)
+//    wechat.China：中国国内
+//    wechat.China2：中国国内备用
+//    wechat.SoutheastAsia：东南亚
+//    wechat.Other：其他国家
+client.SetCountry(wechat.China)
 
 // 添加微信证书 Path 路径
 //    certFilePath：apiclient_cert.pem 路径
@@ -247,15 +264,15 @@ import (
 
 // 初始化 BodyMap
 bm := make(gopay.BodyMap)
-bm.Set("nonce_str", gopay.GetRandomString(32))
+bm.Set("nonce_str", gotil.GetRandomString(32))
 bm.Set("body", "小程序测试支付")
 bm.Set("out_trade_no", number)
 bm.Set("total_fee", 1)
 bm.Set("spbill_create_ip", "127.0.0.1")
 bm.Set("notify_url", "http://www.gopay.ink")
-bm.Set("trade_type", gopay.TradeType_Mini)
+bm.Set("trade_type", wechat.TradeType_Mini)
 bm.Set("device_info", "WEB")
-bm.Set("sign_type", gopay.SignType_MD5)
+bm.Set("sign_type", wechat.SignType_MD5)
 bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 
 // 嵌套json格式数据（例如：H5支付的 scene_info 参数）
@@ -321,7 +338,7 @@ payParam, err := client.TradeAppPay(bm)
 aliRsp, err := client.TradePay(bm)
 
 // 支付宝小程序支付时 buyer_id 为必传参数，需要提前获取，获取方法如下两种
-//    1、gopay.SystemOauthToken()     返回取值：rsp.SystemOauthTokenResponse.UserId
+//    1、alipay.SystemOauthToken()     返回取值：rsp.SystemOauthTokenResponse.UserId
 //    2、client.SystemOauthToken()    返回取值：aliRsp.SystemOauthTokenResponse.UserId
 aliRsp, err := client.TradeCreate(bm)
 
@@ -513,7 +530,7 @@ phone := new(wechat.UserPhone)
 // 解密开放数据
 //    encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
 //    iv：加密算法的初始向量，小程序获取到
-//    sessionKey：会话密钥，通过 gopay.Code2Session() 方法获取到
+//    sessionKey：会话密钥，通过 wechat.Code2Session() 方法获取到
 //    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
 err := wechat.DecryptOpenDataToStruct(data, iv, session, phone)
 fmt.Println(*phone)

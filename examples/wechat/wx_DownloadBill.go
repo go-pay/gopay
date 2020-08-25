@@ -1,10 +1,10 @@
 package wechat
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func DownloadBill() {
@@ -17,7 +17,7 @@ func DownloadBill() {
 
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("sign_type", wechat.SignType_MD5)
 	bm.Set("bill_date", "20190722")
 	bm.Set("bill_type", "ALL")
@@ -25,8 +25,8 @@ func DownloadBill() {
 	//请求下载对账单，成功后得到结果（string类型字符串）
 	wxRsp, err := client.DownloadBill(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("wxRsp：", wxRsp)
+	xlog.Debug("Response：", wxRsp)
 }

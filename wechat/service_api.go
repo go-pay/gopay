@@ -6,7 +6,6 @@ import (
 	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha256"
-	"crypto/tls"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
@@ -21,15 +20,10 @@ import (
 	"strings"
 
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gotil"
+	xaes "github.com/iGoogle-ink/gotil/aes"
+	"github.com/iGoogle-ink/gotil/xhttp"
 )
-
-// 向微信发送Post请求，对于本库未提供的微信API，可自行实现，通过此方法发送请求
-//    bm：请求参数的BodyMap
-//    path：接口地址去掉baseURL的path，例如：url为https://api.mch.weixin.qq.com/pay/micropay，只需传 pay/micropay
-//    tlsConfig：tls配置，如无需证书请求，传nil
-func (w *Client) PostRequest(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
-	return w.doProdPost(bm, path, tlsConfig)
-}
 
 // 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
 //    注意：BodyMap中如无 sign_type 参数，默认赋值 sign_type 为 MD5
@@ -45,7 +39,7 @@ func GetParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string) {
 		h        hash.Hash
 	)
 	signType = bm.Get("sign_type")
-	if signType == gopay.NULL {
+	if signType == gotil.NULL {
 		bm.Set("sign_type", SignType_MD5)
 	}
 	if signType == SignType_HMAC_SHA256 {
@@ -73,7 +67,7 @@ func GetSanBoxParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign str
 		sandBoxApiKey string
 		hashMd5       hash.Hash
 	)
-	if sandBoxApiKey, err = getSanBoxKey(mchId, gopay.GetRandomString(32), apiKey, SignType_MD5); err != nil {
+	if sandBoxApiKey, err = getSanBoxKey(mchId, gotil.GetRandomString(32), apiKey, SignType_MD5); err != nil {
 		return
 	}
 	hashMd5 = md5.New()
@@ -87,7 +81,7 @@ func GetSanBoxParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign str
 //    返回参数bm：Notify请求的参数
 //    返回参数err：错误信息
 func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
-	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(2<<20))) // default 2MB change the size you want;
+	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
 	if err != nil {
 		return nil, fmt.Errorf("ioutil.ReadAll：%w", err)
 	}
@@ -129,7 +123,7 @@ func ParseRefundNotify(req *http.Request) (notifyReq *RefundNotifyRequest, err e
 //    返回参数err：错误信息
 //    文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_16&index=10
 func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNotify, err error) {
-	if reqInfo == gopay.NULL || apiKey == gopay.NULL {
+	if reqInfo == gotil.NULL || apiKey == gotil.NULL {
 		return nil, errors.New("reqInfo or apiKey is null")
 	}
 	var (
@@ -150,20 +144,26 @@ func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNot
 		return nil, err
 	}
 	blockSize = block.BlockSize()
-	func(dst, src []byte) {
+
+	err = func(dst, src []byte) error {
 		if len(src)%blockSize != 0 {
-			panic("crypto/cipher: input not full blocks")
+			return errors.New("crypto/cipher: input not full blocks")
 		}
 		if len(dst) < len(src) {
-			panic("crypto/cipher: output smaller than input")
+			return errors.New("crypto/cipher: output smaller than input")
 		}
 		for len(src) > 0 {
 			block.Decrypt(dst, src[:blockSize])
 			src = src[blockSize:]
 			dst = dst[blockSize:]
 		}
+		return nil
 	}(encryptionB, encryptionB)
-	bs = gopay.PKCS7UnPadding(encryptionB)
+	if err != nil {
+		return nil, err
+	}
+
+	bs = xaes.PKCS7UnPadding(encryptionB)
 	refundNotify = new(RefundNotify)
 	if err = xml.Unmarshal(bs, refundNotify); err != nil {
 		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
@@ -336,7 +336,7 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 //    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr interface{}) (err error) {
-	if encryptedData == gopay.NULL || iv == gopay.NULL || sessionKey == gopay.NULL {
+	if encryptedData == gotil.NULL || iv == gotil.NULL || sessionKey == gotil.NULL {
 		return errors.New("input params can not null")
 	}
 	var (
@@ -364,7 +364,7 @@ func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr inter
 	plainText = make([]byte, len(cipherText))
 	blockMode.CryptBlocks(plainText, cipherText)
 	if len(plainText) > 0 {
-		plainText = gopay.PKCS7UnPadding(plainText)
+		plainText = xaes.PKCS7UnPadding(plainText)
 	}
 	if err = json.Unmarshal(plainText, beanPtr); err != nil {
 		return fmt.Errorf("json.Marshal(%s)：%w", string(plainText), err)
@@ -378,7 +378,7 @@ func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr inter
 //    sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
 //    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.BodyMap, err error) {
-	if encryptedData == gopay.NULL || iv == gopay.NULL || sessionKey == gopay.NULL {
+	if encryptedData == gotil.NULL || iv == gotil.NULL || sessionKey == gotil.NULL {
 		return nil, errors.New("input params can not null")
 	}
 	var (
@@ -399,7 +399,7 @@ func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.Bo
 		plainText = make([]byte, len(cipherText))
 		blockMode.CryptBlocks(plainText, cipherText)
 		if len(plainText) > 0 {
-			plainText = gopay.PKCS7UnPadding(plainText)
+			plainText = xaes.PKCS7UnPadding(plainText)
 		}
 		bm = make(gopay.BodyMap)
 		if err = json.Unmarshal(plainText, &bm); err != nil {
@@ -418,7 +418,7 @@ func GetAppLoginAccessToken(appId, appSecret, code string) (accessToken *AppLogi
 	accessToken = new(AppLoginAccessToken)
 	url := "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type=authorization_code"
 
-	_, errs := gopay.NewHttpClient().Get(url).EndStruct(accessToken)
+	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -434,7 +434,7 @@ func RefreshAppLoginAccessToken(appId, refreshToken string) (accessToken *Refres
 	accessToken = new(RefreshAppLoginAccessTokenRsp)
 	url := "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=" + appId + "&grant_type=refresh_token&refresh_token=" + refreshToken
 
-	_, errs := gopay.NewHttpClient().Get(url).EndStruct(accessToken)
+	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -449,7 +449,7 @@ func RefreshAppLoginAccessToken(appId, refreshToken string) (accessToken *Refres
 func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp, err error) {
 	sessionRsp = new(Code2SessionRsp)
 	url := "https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + appSecret + "&js_code=" + wxCode + "&grant_type=authorization_code"
-	_, errs := gopay.NewHttpClient().Get(url).EndStruct(sessionRsp)
+	_, errs := xhttp.NewClient().Get(url).EndStruct(sessionRsp)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -463,7 +463,7 @@ func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp,
 func GetAppletAccessToken(appId, appSecret string) (accessToken *AccessToken, err error) {
 	accessToken = new(AccessToken)
 	url := "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appId + "&secret=" + appSecret
-	_, errs := gopay.NewHttpClient().Get(url).EndStruct(accessToken)
+	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -491,7 +491,7 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 	bm.Set("sign", getReleaseSign(apiKey, SignType_MD5, bm))
 
 	openIdRsp = new(OpenIdByAuthCodeRsp)
-	_, errs := gopay.NewHttpClient().Type(gopay.TypeXML).Post(url).SendString(generateXml(bm)).EndStruct(openIdRsp)
+	_, errs := xhttp.NewClient().Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndStruct(openIdRsp)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -506,14 +506,14 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 func GetAppletPaidUnionId(accessToken, openId, transactionId string) (unionId *PaidUnionId, err error) {
 	unionId = new(PaidUnionId)
 	url := "https://api.weixin.qq.com/wxa/getpaidunionid?access_token=" + accessToken + "&openid=" + openId + "&transaction_id=" + transactionId
-	_, errs := gopay.NewHttpClient().Get(url).EndStruct(unionId)
+	_, errs := xhttp.NewClient().Get(url).EndStruct(unionId)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
 	return unionId, nil
 }
 
-// 获取用户基本信息(UnionID机制)
+// 获取用户基本信息(UnionID机制)(微信公众号)
 //    accessToken：接口调用凭据
 //    openId：用户的OpenID
 //    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
@@ -524,7 +524,26 @@ func GetUserInfo(accessToken, openId string, lang ...string) (userInfo *UserInfo
 	if len(lang) > 0 {
 		url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + accessToken + "&openid=" + openId + "&lang=" + lang[0]
 	}
-	_, errs := gopay.NewHttpClient().Get(url).EndStruct(userInfo)
+	_, errs := xhttp.NewClient().Get(url).EndStruct(userInfo)
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	return userInfo, nil
+}
+
+// 获取用户个人信息(UnionID 机制)(微信开放平台)
+//    accessToken：接口调用凭据
+//    openId：用户的OpenID
+//    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
+//    获取用户基本信息(UnionID机制)文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Authorized_API_call_UnionID.html
+func GetUserInfoOpen(accessToken, openId string, lang ...string) (userInfo *UserInfo, err error) {
+	userInfo = new(UserInfo)
+	url := "https://api.weixin.qq.com/sns/userinfo?access_token=" + accessToken + "&openid=" + openId + "&lang=zh_CN"
+	if len(lang) > 0 {
+		url = "https://api.weixin.qq.com/sns/userinfo?access_token=" + accessToken + "&openid=" + openId + "&lang" +
+			"=" + lang[0]
+	}
+	_, errs := xhttp.NewClient().Get(url).EndStruct(userInfo)
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}

@@ -5,6 +5,7 @@ import (
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gotil"
 )
 
 func FundTransToaccountTransfer() {
@@ -21,7 +22,7 @@ func FundTransToaccountTransfer() {
 
 	//请求参数
 	body := make(gopay.BodyMap)
-	out_biz_no := gopay.GetRandomString(32)
+	out_biz_no := gotil.GetRandomString(32)
 	body.Set("out_biz_no", out_biz_no)
 	body.Set("payee_type", "ALIPAY_LOGONID")
 	body.Set("payee_account", "otmdfd2378@sandbox.com")

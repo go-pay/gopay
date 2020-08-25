@@ -1,10 +1,10 @@
 package wechat
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func Transfer() {
@@ -17,14 +17,14 @@ func Transfer() {
 
 	err := client.AddCertFilePath("iguiyu_cert/apiclient_cert.pem", "iguiyu_cert/apiclient_key.pem", "iguiyu_cert/apiclient_cert.p12")
 	if err != nil {
-		fmt.Println("client.AddCertFilePath err:", err)
+		xlog.Error(err)
 		return
 	}
 
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gopay.GetRandomString(32))
-	bm.Set("partner_trade_no", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
+	bm.Set("partner_trade_no", gotil.GetRandomString(32))
 	bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 	bm.Set("check_name", "FORCE_CHECK") // NO_CHECK：不校验真实姓名 , FORCE_CHECK：强校验真实姓名
 	bm.Set("re_user_name", "付明明")       // 收款用户真实姓名。 如果check_name设置为FORCE_CHECK，则必填用户真实姓名
@@ -39,8 +39,8 @@ func Transfer() {
 	//    pkcs12FilePath：p12证书路径
 	wxRsp, err := client.Transfer(bm, nil, nil, nil)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("wxRsp：", *wxRsp)
+	xlog.Debug("Response：", wxRsp)
 }

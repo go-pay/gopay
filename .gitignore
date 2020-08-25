@@ -1,1 +1,7 @@
 /.idea
+
+.vscode
+
+settings.json
+
+vendor

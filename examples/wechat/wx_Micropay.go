@@ -1,10 +1,10 @@
 package wechat
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func Micropay() {
@@ -17,10 +17,10 @@ func Micropay() {
 
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gopay.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32))
 	bm.Set("body", "扫用户付款码支付")
-	number := gopay.GetRandomString(32)
-	fmt.Println("out_trade_no:", number)
+	number := gotil.GetRandomString(32)
+	xlog.Debug("out_trade_no:", number)
 	bm.Set("out_trade_no", number)
 	bm.Set("total_fee", 1)
 	bm.Set("spbill_create_ip", "127.0.0.1")
@@ -30,18 +30,20 @@ func Micropay() {
 	sign := wechat.GetParamSign("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", bm)
 	//sign, _ := gopay.GetSanBoxParamSign("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", body)
 
+	// Set Sign 也可以忽略不设置，内部已经自动计算sign并赋值到请求参数中了
 	bm.Set("sign", sign)
 	//请求支付，成功后得到结果
 	wxRsp, err := client.Micropay(bm)
 	if err != nil {
-		fmt.Println("Error:", err)
+		xlog.Error(err)
 		return
 	}
-	fmt.Println("Response:", *wxRsp)
+	xlog.Debug("Response：", wxRsp)
 
 	ok, err := wechat.VerifySign("GFDS8j98rewnmgl45wHTt980jg543abc", wechat.SignType_MD5, wxRsp)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error(err)
+		return
 	}
-	fmt.Println("同步验签结果：", ok)
+	xlog.Debug("SignOk?：", ok)
 }

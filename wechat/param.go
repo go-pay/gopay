@@ -15,6 +15,8 @@ import (
 	"strings"
 
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xhttp"
 )
 
 type Country int
@@ -118,13 +120,13 @@ func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath interfa
 
 func checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) error {
 	if certFilePath != nil && keyFilePath != nil && pkcs12FilePath != nil {
-		if v, ok := certFilePath.(string); !ok || v == gopay.NULL {
+		if v, ok := certFilePath.(string); !ok || v == gotil.NULL {
 			return errors.New("certFilePath not string type or is null string")
 		}
-		if v, ok := keyFilePath.(string); !ok || v == gopay.NULL {
+		if v, ok := keyFilePath.(string); !ok || v == gotil.NULL {
 			return errors.New("keyFilePath not string type or is null string")
 		}
-		if v, ok := pkcs12FilePath.(string); !ok || v == gopay.NULL {
+		if v, ok := pkcs12FilePath.(string); !ok || v == gotil.NULL {
 			return errors.New("pkcs12FilePath not string type or is null string")
 		}
 		return nil
@@ -153,7 +155,7 @@ func getSignBoxSign(mchId, apiKey string, bm gopay.BodyMap) (sign string, err er
 		sandBoxApiKey string
 		h             hash.Hash
 	)
-	if sandBoxApiKey, err = getSanBoxKey(mchId, gopay.GetRandomString(32), apiKey, SignType_MD5); err != nil {
+	if sandBoxApiKey, err = getSanBoxKey(mchId, gotil.GetRandomString(32), apiKey, SignType_MD5); err != nil {
 		return
 	}
 	h = md5.New()
@@ -182,12 +184,12 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 	reqs.Set("sign", sign)
 
 	keyResponse := new(getSignKeyResponse)
-	_, errs := gopay.NewHttpClient().Type(gopay.TypeXML).Post(sandboxGetSignKey).SendString(generateXml(reqs)).EndStruct(keyResponse)
+	_, errs := xhttp.NewClient().Type(xhttp.TypeXML).Post(sandboxGetSignKey).SendString(generateXml(reqs)).EndStruct(keyResponse)
 	if len(errs) > 0 {
-		return gopay.NULL, errs[0]
+		return gotil.NULL, errs[0]
 	}
 	if keyResponse.ReturnCode == "FAIL" {
-		return gopay.NULL, errors.New(keyResponse.ReturnMsg)
+		return gotil.NULL, errors.New(keyResponse.ReturnMsg)
 	}
 	return keyResponse.SandboxSignkey, nil
 }
@@ -196,7 +198,7 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 func generateXml(bm gopay.BodyMap) (reqXml string) {
 	bs, err := xml.Marshal(bm)
 	if err != nil {
-		return gopay.NULL
+		return gotil.NULL
 	}
 	return string(bs)
 }

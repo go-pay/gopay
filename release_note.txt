@@ -1,3 +1,57 @@
+版本号：Release 1.5.17
+发布时间：2020/08/23 15:30
+修改记录：
+   (1) 微信：Response model 增加字段
+   (2) ReadMe：修改部分遗留未更改的文档内容
+   (3) 支付宝：添加证书由只支持证书路径，改为支持证书路径或者这书Byte数组
+   (4) 支付宝：修复SystemOauthToken()方法未添加 AppCertSN 和 AliPayRootCertSN 的问题
+
+版本号：Release 1.5.16
+发布时间：2020/07/29 18:30
+修改记录：
+   (1) 微信：新增公共方法：wechat.GetUserInfoOpen()，微信开放平台：获取用户个人信息(UnionID机制)
+   (2) Gotil：升级 gotil 到 v1.0.4 版本
+   (3) 微信：新增ReadMe说明，微信支付下单等操作可用沙箱环境测试是否成功，但真正支付时，请使用正式环境，isProd = true，不然会报错
+
+版本号：Release 1.5.15
+发布时间：2020/07/09 18:30
+修改记录：
+   (1) 微信：新增client方法：client.ProfitSharing()，请求单次分账
+   (2) 微信：新增client方法：client.MultiProfitSharing()，请求多次分账
+   (3) 微信：新增client方法：client.ProfitSharingQuery()，查询分账结果
+   (4) 微信：新增client方法：client.ProfitSharingAddReceiver()，添加分账接收方
+   (5) 微信：新增client方法：client.ProfitSharingRemoveReceiver()，删除分账接收方
+   (6) 微信：新增client方法：client.ProfitSharingFinish()，完结分账
+   (7) 微信：新增client方法：client.ProfitSharingReturn()，分账回退
+   (8) 微信：新增client方法：client.ProfitSharingReturnQuery()，分账回退结果查询
+   (9) 微信：新增client方法：client.PayBank()，企业付款到银行卡API
+   (10) 微信：新增client方法：client.QueryBank()，查询企业付款到银行卡API
+   (11) 微信：新增client方法：client.GetRSAPublicKey()，获取RSA加密公钥API
+   (12) 微信：修改client方法名：client.PostRequest() -> client.PostWeChatAPISelf()
+   (13) QQ：修改client方法名：client.PostRequest() -> client.PostQQAPISelf()
+   (14) 说明：方法未经严格测试，还请开发者在开始使用时确认是否正常使用，有问题请提 issue
+
+版本号：Release 1.5.14
+发布时间：2020/06/27 3:30
+修改记录：
+   (1) 引入 github.com/iGoogle-ink/gotil 包
+   (2) 替换 log 输出样式
+   (3) 支付宝：新增client方法：client.PostAliPayAPISelf()，支付宝接口自行实现方法
+
+版本号：Release 1.5.12
+发布时间：2020/05/20 02:10
+修改记录：
+   (1) http_client：增加默认请求的超时时间 60s，增加 SetTimeout() 方法，可自定义超时时间
+   (2) 微信：修改 申请退款、退款查询、订单查询 接口的返回结构体，增加带下标的部分字段
+   (3) 微信：增加 申请退款、退款查询、订单查询 接口的返回值，新增了 resBm BodyMap 类型，方便接收结构体中未定义到的下标字段
+   (4) 微信：新增client方法：client.GetTransferInfo()，查询企业退款，此方法实际暂未测试，请自行测试，有问题提issue
+
+版本号：Release 1.5.11
+发布时间：2020/05/13 17:15
+修改记录：
+   (1) 支付宝：修复rsp解析出错的问题 client.SystemOauthToken()
+   (2) 微信：修改部分公共方法Rsp结构体参数问题，同步微信文档
+
 版本号：Release 1.5.10
 发布时间：2020/05/06 20:15
 修改记录：
