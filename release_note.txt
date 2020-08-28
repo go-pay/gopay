@@ -1,3 +1,10 @@
+版本号：Release 1.5.18
+发布时间：2020/08/28 18:30
+修改记录：
+   (1) 微信：修复 client.AddCertFilePath() 无效的Bug
+   (2) QQ：修复 client.AddCertFilePath() 无效的Bug
+   (3) Gotil：升级 gotil 到 v1.0.7-beta2 版本
+
 版本号：Release 1.5.17
 发布时间：2020/08/23 15:30
 修改记录：
