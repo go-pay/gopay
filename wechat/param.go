@@ -80,7 +80,7 @@ func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath interfa
 	if certFilePath == nil && keyFilePath == nil && pkcs12FilePath == nil {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if &w.certificate != nil && w.certPool != nil {
+		if w.certPool != nil {
 			tlsConfig = &tls.Config{
 				Certificates:       []tls.Certificate{w.certificate},
 				RootCAs:            w.certPool,
