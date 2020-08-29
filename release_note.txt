@@ -1,9 +1,10 @@
 版本号：Release 1.5.18
-发布时间：2020/08/28 18:30
+发布时间：2020/08/29 18:30
 修改记录：
    (1) 微信：修复 client.AddCertFilePath() 无效的Bug
    (2) QQ：修复 client.AddCertFilePath() 无效的Bug
    (3) Gotil：升级 gotil 到 v1.0.7-beta2 版本
+   (4) 支付宝：OpenAuthTokenAppResponse 结构体中 ExpiresIn、ReExpiresIn 字段改为int64（有用户反馈返回的是int类型，但文档写的是string），如果此处有问题，请立马联系改回去。
 
 版本号：Release 1.5.17
 发布时间：2020/08/23 15:30
