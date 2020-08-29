@@ -565,14 +565,14 @@ type authTokenAppResponse struct {
 	AuthAppId       string `json:"auth_app_id,omitempty"`
 	AppAuthToken    string `json:"app_auth_token,omitempty"`
 	AppRefreshToken string `json:"app_refresh_token,omitempty"`
-	ExpiresIn       string `json:"expires_in,omitempty"`
-	ReExpiresIn     string `json:"re_expires_in,omitempty"`
+	ExpiresIn       int64  `json:"expires_in,omitempty"`
+	ReExpiresIn     int64  `json:"re_expires_in,omitempty"`
 	Tokens          []*struct {
 		AppAuthToken    string `json:"app_auth_token,omitempty"`
 		AppRefreshToken string `json:"app_refresh_token,omitempty"`
 		AuthAppId       string `json:"auth_app_id,omitempty"`
-		ExpiresIn       string `json:"expires_in,omitempty"`
-		ReExpiresIn     string `json:"re_expires_in,omitempty"`
+		ExpiresIn       int64  `json:"expires_in,omitempty"`
+		ReExpiresIn     int64  `json:"re_expires_in,omitempty"`
 		UserId          string `json:"user_id,omitempty"`
 	} `json:"tokens,omitempty"`
 }
