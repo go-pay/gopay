@@ -341,7 +341,6 @@ aliRsp, err := client.TradePay(bm)
 //    1、alipay.SystemOauthToken()     返回取值：rsp.SystemOauthTokenResponse.UserId
 //    2、client.SystemOauthToken()    返回取值：aliRsp.SystemOauthTokenResponse.UserId
 aliRsp, err := client.TradeCreate(bm)
-
 aliRsp, err := client.TradeQuery(bm)
 aliRsp, err := client.TradeClose(bm)
 aliRsp, err := client.TradeCancel(bm)
@@ -417,6 +416,7 @@ paySign := wechat.GetH5PaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_
 异步参数需要先解析，解析出来的结构体或BodyMap再验签
 
 [Gin Web框架](https://github.com/gin-gonic/gin)
+
 [Echo Web框架](https://github.com/labstack/echo)
 
 异步通知处理完后，需回复平台固定数据
