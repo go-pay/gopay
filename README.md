@@ -442,7 +442,7 @@ ok, err := wechat.VerifySign(apiKey, wechat.SignType_MD5, wxRsp)
 //    req：*http.Request
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
-notifyReq, err := wechat.ParseNotify(c.Request())    // c.Request()是 echo 框架的获取 *http.Request 的写法
+notifyReq, err := wechat.ParseNotifyToBodyMap(c.Request())    // c.Request()是 echo 框架的获取 *http.Request 的写法
 // 验签操作
 ok, err := wechat.VerifySign(apiKey, wechat.SignType_MD5, notifyReq)
 
@@ -452,6 +452,8 @@ ok, err := wechat.VerifySign(apiKey, wechat.SignType_MD5, notifyReq)
 //    req：*http.Request
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
+notifyReq, err := wechat.ParseNotifyToBodyMap(c.Request())
+ 或
 notifyReq, err := wechat.ParseRefundNotify(c.Request())
 
 // ==解密退款异步通知的加密参数 req_info ==
@@ -490,9 +492,14 @@ ok, err := alipay.VerifySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
 //    req：*http.Request
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
-notifyReq, err = alipay.ParseNotify(c.Request())     // c.Request()是 echo 框架的获取
+notifyReq, err = alipay.ParseNotifyToBodyMap(c.Request())     // c.Request()是 echo 框架的获取
+ 或
+notifyReq, err = alipay.ParseNotifyByURLValues()
+
 // 验签操作
 ok, err = alipay.VerifySign(aliPayPublicKey, notifyReq)
+// 证书验签操作
+ok, err = alipay.VerifySignWithCert("alipayCertPublicKey_RSA2.crt", aliPayPublicKey, notifyReq)
 
 // ==异步通知，返回支付宝平台的信息==
 //    文档：https://opendocs.alipay.com/open/203/105286
