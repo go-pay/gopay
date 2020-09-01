@@ -416,7 +416,8 @@ paySign := wechat.GetH5PaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_
 
 异步参数需要先解析，解析出来的结构体或BodyMap再验签
 
-[Echo Web框架](https://github.com/labstack/echo)，有兴趣的可以尝试一下
+[Gin Web框架](https://github.com/gin-gonic/gin)
+[Echo Web框架](https://github.com/labstack/echo)
 
 异步通知处理完后，需回复平台固定数据
 
@@ -440,9 +441,12 @@ ok, err := wechat.VerifySign(apiKey, wechat.SignType_MD5, wxRsp)
 // ====支付异步通知参数解析和验签Sign====
 // 解析支付异步通知的参数
 //    req：*http.Request
+//    ctx.Request   是 gin 框架的获取 *http.Request
+//    ctx.Request() 是 echo 框架的获取 *http.Request
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
-notifyReq, err := wechat.ParseNotifyToBodyMap(c.Request())    // c.Request()是 echo 框架的获取 *http.Request 的写法
+notifyReq, err := wechat.ParseNotifyToBodyMap(ctx.Request)
+
 // 验签操作
 ok, err := wechat.VerifySign(apiKey, wechat.SignType_MD5, notifyReq)
 
@@ -450,11 +454,13 @@ ok, err := wechat.VerifySign(apiKey, wechat.SignType_MD5, notifyReq)
 // 
 // 解析退款异步通知的参数，解析出来的 req_info 是加密数据，需解密
 //    req：*http.Request
+//    ctx.Request   是 gin 框架的获取 *http.Request
+//    ctx.Request() 是 echo 框架的获取 *http.Request
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
-notifyReq, err := wechat.ParseNotifyToBodyMap(c.Request())
+notifyReq, err := wechat.ParseNotifyToBodyMap(c.Request)
  或
-notifyReq, err := wechat.ParseRefundNotify(c.Request())
+notifyReq, err := wechat.ParseRefundNotify(c.Request)
 
 // ==解密退款异步通知的加密参数 req_info ==
 refundNotify, err := wechat.DecryptRefundNotifyReqInfo(notifyReq.ReqInfo, apiKey)
@@ -463,7 +469,9 @@ refundNotify, err := wechat.DecryptRefundNotifyReqInfo(notifyReq.ReqInfo, apiKey
 rsp := new(wechat.NotifyResponse) // 回复微信的数据
 rsp.ReturnCode = gopay.SUCCESS
 rsp.ReturnMsg = gopay.OK
-return c.String(http.StatusOK, rsp.ToXmlString())   // 此写法是 echo 框架返回客户端数据的写法
+
+return c.String(http.StatusOK, rsp.ToXmlString())   // 此写法是 echo 框架返回微信的写法
+c.String(http.StatusOK, "%s", rsp.ToXmlString())    // 此写法是 gin 框架返回微信的写法
 ```
 
 * #### 支付宝
@@ -504,7 +512,8 @@ ok, err = alipay.VerifySignWithCert("alipayCertPublicKey_RSA2.crt", aliPayPublic
 // ==异步通知，返回支付宝平台的信息==
 //    文档：https://opendocs.alipay.com/open/203/105286
 //    程序执行完后必须打印输出“success”（不包含引号）。如果商户反馈给支付宝的字符不是success这7个字符，支付宝服务器会不断重发通知，直到超过24小时22分钟。一般情况下，25小时以内完成8次通知（通知的间隔频率一般是：4m,10m,10m,1h,2h,6h,15h）
-return c.String(http.StatusOK, "success")   // 此写法是 echo 框架返回客户端数据的写法
+return c.String(http.StatusOK, "success")   // 此写法是 echo 框架返回支付宝的写法
+c.String(http.StatusOK, "%s", "success")    // 此写法是 gin 框架返回支付宝的写法
 ```
 
 ## 6、微信、支付宝 公共API（仅部分说明）
