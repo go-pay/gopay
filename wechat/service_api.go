@@ -92,6 +92,7 @@ func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	return
 }
 
+// Deprecated
 // 解析微信支付异步通知的参数
 //    req：*http.Request
 //    返回参数notifyReq：Notify请求的参数
@@ -104,6 +105,7 @@ func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 	return
 }
 
+// Deprecated
 // 解析微信退款异步通知的参数
 //    req：*http.Request
 //    返回参数notifyReq：Notify请求的参数
