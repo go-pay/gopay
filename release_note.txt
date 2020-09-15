@@ -1,3 +1,10 @@
+版本号：Release 1.5.19
+发布时间：2020/09/15 13:00
+修改记录：
+   (1) 微信：修复 client.ProfitSharingQuery() 接口的Bug，https://github.com/iGoogle-ink/gopay/issues/68
+   (2) 微信：优化 client.doProdPost()
+   (3) 支付宝：优化 client.doAliPay()
+
 版本号：Release 1.5.18
 发布时间：2020/08/29 18:30
 修改记录：
