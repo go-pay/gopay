@@ -693,61 +693,46 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 		bodyStr = string(bodyBs)
 	}
 	pubBody := make(gopay.BodyMap)
-	pubBody.Set("app_id", a.AppId)
-	pubBody.Set("method", method)
-	pubBody.Set("format", "JSON")
-	if a.AppCertSN != gotil.NULL {
+	func() {
 		a.mu.RLock()
-		pubBody.Set("app_cert_sn", a.AppCertSN)
-		a.mu.RUnlock()
-	}
-	if a.AliPayRootCertSN != gotil.NULL {
-		a.mu.RLock()
-		pubBody.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
-		a.mu.RUnlock()
-	}
-	if a.ReturnUrl != gotil.NULL {
-		a.mu.RLock()
-		pubBody.Set("return_url", a.ReturnUrl)
-		a.mu.RUnlock()
-	}
-	if a.Charset == gotil.NULL {
+		defer a.mu.RUnlock()
+
+		pubBody.Set("app_id", a.AppId)
+		pubBody.Set("method", method)
+		pubBody.Set("format", "JSON")
+		if a.AppCertSN != gotil.NULL {
+			pubBody.Set("app_cert_sn", a.AppCertSN)
+		}
+		if a.AliPayRootCertSN != gotil.NULL {
+			pubBody.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
+		}
+		if a.ReturnUrl != gotil.NULL {
+			pubBody.Set("return_url", a.ReturnUrl)
+		}
 		pubBody.Set("charset", "utf-8")
-	} else {
-		a.mu.RLock()
-		pubBody.Set("charset", a.Charset)
-		a.mu.RUnlock()
-	}
-	if a.SignType == gotil.NULL {
+		if a.Charset != gotil.NULL {
+			pubBody.Set("charset", a.Charset)
+		}
 		pubBody.Set("sign_type", RSA2)
-	} else {
-		a.mu.RLock()
-		pubBody.Set("sign_type", a.SignType)
-		a.mu.RUnlock()
-	}
-	if a.LocationName != gotil.NULL && a.location != nil {
-		a.mu.RLock()
-		pubBody.Set("timestamp", time.Now().In(a.location).Format(gotil.TimeLayout))
-		a.mu.RUnlock()
-	} else {
+		if a.SignType != gotil.NULL {
+			pubBody.Set("sign_type", a.SignType)
+		}
 		pubBody.Set("timestamp", time.Now().Format(gotil.TimeLayout))
-	}
-	pubBody.Set("version", "1.0")
-	if a.NotifyUrl != gotil.NULL {
-		a.mu.RLock()
-		pubBody.Set("notify_url", a.NotifyUrl)
-		a.mu.RUnlock()
-	}
-	if a.AppAuthToken != gotil.NULL {
-		a.mu.RLock()
-		pubBody.Set("app_auth_token", a.AppAuthToken)
-		a.mu.RUnlock()
-	}
-	if a.AuthToken != gotil.NULL {
-		a.mu.RLock()
-		pubBody.Set("auth_token", a.AuthToken)
-		a.mu.RUnlock()
-	}
+		if a.LocationName != gotil.NULL && a.location != nil {
+			pubBody.Set("timestamp", time.Now().In(a.location).Format(gotil.TimeLayout))
+		}
+		pubBody.Set("version", "1.0")
+		if a.NotifyUrl != gotil.NULL {
+			pubBody.Set("notify_url", a.NotifyUrl)
+		}
+		if a.AppAuthToken != gotil.NULL {
+			pubBody.Set("app_auth_token", a.AppAuthToken)
+		}
+		if a.AuthToken != gotil.NULL {
+			pubBody.Set("auth_token", a.AuthToken)
+		}
+	}()
+
 	if bodyStr != gotil.NULL {
 		pubBody.Set("biz_content", bodyStr)
 	}
