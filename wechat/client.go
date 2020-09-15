@@ -517,7 +517,37 @@ func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQuery
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
-	bs, err := w.doProdPost(bm, profitSharingQuery, nil)
+
+	bs, err := func(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
+		var url = baseUrlCh + path
+		func() {
+			w.mu.RLock()
+			defer w.mu.RUnlock()
+			bm.Set("mch_id", w.MchId)
+			if bm.Get("sign") == gotil.NULL {
+				sign := getReleaseSign(w.ApiKey, bm.Get("sign_type"), bm)
+				bm.Set("sign", sign)
+			}
+		}()
+		httpClient := xhttp.NewClient()
+		if w.IsProd && tlsConfig != nil {
+			httpClient.SetTLSConfig(tlsConfig)
+		}
+		if w.BaseURL != gotil.NULL {
+			url = w.BaseURL + path
+		}
+		res, bs, errs := httpClient.Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndBytes()
+		if len(errs) > 0 {
+			return nil, errs[0]
+		}
+		if res.StatusCode != 200 {
+			return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+		}
+		if strings.Contains(string(bs), "HTML") || strings.Contains(string(bs), "html") {
+			return nil, errors.New(string(bs))
+		}
+		return bs, nil
+	}(bm, profitSharingQuery, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -715,16 +745,16 @@ func (w *Client) doSanBoxPost(bm gopay.BodyMap, path string) (bs []byte, err err
 // Post请求、正式
 func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	w.mu.RLock()
-	defer w.mu.RUnlock()
-	bm.Set("appid", w.AppId)
-	bm.Set("mch_id", w.MchId)
-
-	if bm.Get("sign") == gotil.NULL {
-		sign := getReleaseSign(w.ApiKey, bm.Get("sign_type"), bm)
-		bm.Set("sign", sign)
-	}
-
+	func() {
+		w.mu.RLock()
+		defer w.mu.RUnlock()
+		bm.Set("appid", w.AppId)
+		bm.Set("mch_id", w.MchId)
+		if bm.Get("sign") == gotil.NULL {
+			sign := getReleaseSign(w.ApiKey, bm.Get("sign_type"), bm)
+			bm.Set("sign", sign)
+		}
+	}()
 	httpClient := xhttp.NewClient()
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
@@ -748,14 +778,15 @@ func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config
 // Get请求、正式
 func (w *Client) doProdGet(bm gopay.BodyMap, path, signType string) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	w.mu.RLock()
-	defer w.mu.RUnlock()
-	bm.Set("appid", w.AppId)
-	bm.Set("mch_id", w.MchId)
-	bm.Remove("sign")
-	sign := getReleaseSign(w.ApiKey, signType, bm)
-	bm.Set("sign", sign)
-
+	func() {
+		w.mu.RLock()
+		defer w.mu.RUnlock()
+		bm.Set("appid", w.AppId)
+		bm.Set("mch_id", w.MchId)
+		bm.Remove("sign")
+		sign := getReleaseSign(w.ApiKey, signType, bm)
+		bm.Set("sign", sign)
+	}()
 	if w.BaseURL != gotil.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + path
