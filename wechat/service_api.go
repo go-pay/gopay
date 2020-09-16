@@ -227,13 +227,13 @@ func (w *NotifyResponse) ToXmlString() (xmlStr string) {
 // JSAPI支付，统一下单获取支付参数后，再次计算出小程序用的paySign
 //    appId：APPID
 //    nonceStr：随即字符串
-//    prepayId：统一下单成功后得到的值
+//    packages：统一下单成功后拼接得到的值
 //    signType：签名类型
 //    timeStamp：时间
 //    ApiKey：API秘钥值
 //    微信小程序支付API：https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html
 //    微信小程序支付PaySign计算文档：https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=3
-func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey string) (paySign string) {
+func GetMiniPaySign(appId, nonceStr, packages, signType, timeStamp, apiKey string) (paySign string) {
 	var (
 		buffer strings.Builder
 		h      hash.Hash
@@ -243,7 +243,7 @@ func GetMiniPaySign(appId, nonceStr, prepayId, signType, timeStamp, apiKey strin
 	buffer.WriteString("&nonceStr=")
 	buffer.WriteString(nonceStr)
 	buffer.WriteString("&package=")
-	buffer.WriteString(prepayId)
+	buffer.WriteString(packages)
 	buffer.WriteString("&signType=")
 	buffer.WriteString(signType)
 	buffer.WriteString("&timeStamp=")
