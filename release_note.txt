@@ -4,6 +4,12 @@
    (1) 微信：修复 client.ProfitSharingQuery() 接口的Bug，https://github.com/iGoogle-ink/gopay/issues/68
    (2) 微信：优化 client.doProdPost()
    (3) 支付宝：优化 client.doAliPay()
+   (1) 微信：项目文件区分改动，开放平台接口和微信公众号区分
+   (2) 微信：替换 wechat.GetAppLoginAccessToken() = > wechat.GetOauth2AccessToken()
+   (3) 微信：替换 wechat.RefreshAppLoginAccessToken() = > wechat.RefreshOauth2AccessToken()
+   (4) 微信：替换 wechat.GetUserInfoOpen() = > wechat.GetOauth2UserInfo()
+   (5) 微信：新增 wechat.CheckOauth2AccessToken() 检验授权凭证（access_token）是否有效
+   (5) 微信：新增 wechat.GetPublicUserInfoBatch() 批量获取用户基本信息（微信公众号）
 
 版本号：Release 1.5.18
 发布时间：2020/08/29 18:30
