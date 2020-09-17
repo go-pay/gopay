@@ -84,13 +84,15 @@ func main() {
 * wechat.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
 * wechat.GetAppletAccessToken() => 获取微信小程序全局唯一后台接口调用凭据
 * wechat.GetAppletPaidUnionId() => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
-* wechat.GetUserInfo() => 微信公众号：获取用户基本信息(UnionID机制)
-* wechat.GetUserInfoOpen() => 微信开放平台：获取用户个人信息(UnionID机制)
+* wechat.GetPublicUserInfo() => 微信公众号：获取用户基本信息
+* wechat.GetPublicUserInfoBatch() => 微信公众号：批量获取用户基本信息
 * wechat.DecryptOpenDataToStruct() => 加密数据，解密到指定结构体
 * wechat.DecryptOpenDataToBodyMap() => 加密数据，解密到 BodyMap
 * wechat.GetOpenIdByAuthCode() => 授权码查询openid
-* wechat.GetAppLoginAccessToken() => App应用微信第三方登录，code换取access_token
-* wechat.RefreshAppLoginAccessToken() => 刷新App应用微信第三方登录后，获取的 access_token
+* wechat.GetOauth2AccessToken() => 微信第三方登录，code 换取 access_token
+* wechat.RefreshOauth2AccessToken() => 刷新微信第三方登录后，获取到的 access_token
+* wechat.CheckOauth2AccessToken() => 检验授权凭证（access_token）是否有效
+* wechat.GetOauth2UserInfo() => 微信开放平台：获取用户个人信息
 * wechat.DecryptRefundNotifyReqInfo() => 解密微信退款异步通知的加密数据
 
 ---

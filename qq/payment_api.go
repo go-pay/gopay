@@ -1,3 +1,8 @@
+/*
+	QQ 支付
+	文档：https://qpay.qq.com/buss/doc.shtml
+*/
+
 package qq
 
 import (
@@ -15,7 +20,7 @@ import (
 	"github.com/iGoogle-ink/gotil"
 )
 
-// 解析QQ支付异步通知的结果到BodyMap
+// ParseNotifyToBodyMap 解析QQ支付异步通知的结果到BodyMap
 //    req：*http.Request
 //    返回参数bm：Notify请求的参数
 //    返回参数err：错误信息
@@ -31,10 +36,8 @@ func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	return
 }
 
-// 解析QQ支付异步通知的参数
-//    req：*http.Request
-//    返回参数notifyReq：Notify请求的参数
-//    返回参数err：错误信息
+// Deprecated
+// 推荐使用 ParseNotifyToBodyMap
 func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 	notifyReq = new(NotifyRequest)
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
@@ -43,12 +46,12 @@ func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 	return
 }
 
-// QQ同步返回参数验签或异步通知参数验签
+// VerifySign QQ同步返回参数验签或异步通知参数验签
 //    ApiKey：API秘钥值
 //    signType：签名类型（调用API方法时填写的类型）
 //    bean：微信同步返回的结构体 qqRsp 或 异步通知解析的结构体 notifyReq
 //    返回参数ok：是否验签通过
-//    返回参数err：错误信息
+//    返回参数err：其他错误信息，不要根据 error 是否为空来判断验签正确与否，需再单独判断返回的 ok
 func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) {
 	if apiKey == gotil.NULL || signType == gotil.NULL {
 		return false, errors.New("apiKey or signType can not null")
@@ -82,7 +85,7 @@ type NotifyResponse struct {
 	ReturnMsg  string `xml:"return_msg"`
 }
 
-// 返回数据给QQ
+// ToXmlString 返回数据给QQ
 func (w *NotifyResponse) ToXmlString() (xmlStr string) {
 	var buffer strings.Builder
 	buffer.WriteString("<xml><return_code>")
@@ -94,7 +97,6 @@ func (w *NotifyResponse) ToXmlString() (xmlStr string) {
 		buffer.WriteString("</return_msg>")
 	}
 	buffer.WriteString("</xml>")
-
 	xmlStr = buffer.String()
 	return
 }

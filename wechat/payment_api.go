@@ -1,3 +1,8 @@
+/*
+	微信支付
+	文档：https://pay.weixin.qq.com/wiki/doc/api/index.html
+*/
+
 package wechat
 
 import (
@@ -25,7 +30,7 @@ import (
 	"github.com/iGoogle-ink/gotil/xhttp"
 )
 
-// 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
+// GetParamSign 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
 //    注意：BodyMap中如无 sign_type 参数，默认赋值 sign_type 为 MD5
 //    appId：应用ID
 //    mchId：商户ID
@@ -52,7 +57,7 @@ func GetParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string) {
 	return
 }
 
-// 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
+// GetSanBoxParamSign 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
 //    注意：沙箱环境默认 sign_type 为 MD5
 //    appId：应用ID
 //    mchId：商户ID
@@ -76,7 +81,7 @@ func GetSanBoxParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign str
 	return
 }
 
-// 解析微信支付异步通知的结果到BodyMap（推荐）
+// ParseNotifyToBodyMap 解析微信支付异步通知的结果到BodyMap（推荐）
 //    req：*http.Request
 //    返回参数bm：Notify请求的参数
 //    返回参数err：错误信息
@@ -93,10 +98,7 @@ func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 }
 
 // Deprecated
-// 解析微信支付异步通知的参数
-//    req：*http.Request
-//    返回参数notifyReq：Notify请求的参数
-//    返回参数err：错误信息
+// 推荐使用 ParseNotifyToBodyMap
 func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 	notifyReq = new(NotifyRequest)
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
@@ -105,8 +107,7 @@ func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 	return
 }
 
-// Deprecated
-// 解析微信退款异步通知的参数
+// ParseRefundNotify 解析微信退款异步通知的参数
 //    req：*http.Request
 //    返回参数notifyReq：Notify请求的参数
 //    返回参数err：错误信息
@@ -118,7 +119,7 @@ func ParseRefundNotify(req *http.Request) (notifyReq *RefundNotifyRequest, err e
 	return
 }
 
-// 解密微信退款异步通知的加密数据
+// DecryptRefundNotifyReqInfo 解密微信退款异步通知的加密数据
 //    reqInfo：gopay.ParseRefundNotify() 方法获取的加密数据 req_info
 //    apiKey：API秘钥值
 //    返回参数refundNotify：RefundNotify请求的加密数据
@@ -173,12 +174,12 @@ func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNot
 	return
 }
 
-// 微信同步返回参数验签或异步通知参数验签
+// VerifySign 微信同步返回参数验签或异步通知参数验签
 //    ApiKey：API秘钥值
 //    signType：签名类型（调用API方法时填写的类型）
 //    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq，推荐通 BodyMap 验签
 //    返回参数ok：是否验签通过
-//    返回参数err：错误信息
+//    返回参数err：其他错误信息，不要根据 error 是否为空来判断验签正确与否，需再单独判断返回的 ok
 func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) {
 	if bean == nil {
 		return false, errors.New("bean is nil")
@@ -188,8 +189,7 @@ func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) 
 		bm := bean.(gopay.BodyMap)
 		bodySign := bm.Get("sign")
 		bm.Remove("sign")
-		sign := getReleaseSign(apiKey, signType, bm)
-		return sign == bodySign, nil
+		return getReleaseSign(apiKey, signType, bm) == bodySign, nil
 	}
 
 	bs, err := json.Marshal(bean)
@@ -202,8 +202,7 @@ func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) 
 	}
 	bodySign := bm.Get("sign")
 	bm.Remove("sign")
-	sign := getReleaseSign(apiKey, signType, bm)
-	return sign == bodySign, nil
+	return getReleaseSign(apiKey, signType, bm) == bodySign, nil
 }
 
 type NotifyResponse struct {
@@ -211,7 +210,7 @@ type NotifyResponse struct {
 	ReturnMsg  string `xml:"return_msg"`
 }
 
-// 返回数据给微信
+// ToXmlString 返回数据给微信
 func (w *NotifyResponse) ToXmlString() (xmlStr string) {
 	var buffer strings.Builder
 	buffer.WriteString("<xml><return_code><![CDATA[")
@@ -224,7 +223,7 @@ func (w *NotifyResponse) ToXmlString() (xmlStr string) {
 	return
 }
 
-// JSAPI支付，统一下单获取支付参数后，再次计算出小程序用的paySign
+// GetMiniPaySign JSAPI支付，统一下单获取支付参数后，再次计算出小程序用的paySign
 //    appId：APPID
 //    nonceStr：随即字符串
 //    packages：统一下单成功后拼接得到的值
@@ -259,7 +258,7 @@ func GetMiniPaySign(appId, nonceStr, packages, signType, timeStamp, apiKey strin
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 }
 
-// 微信内H5支付，统一下单获取支付参数后，再次计算出微信内H5支付需要用的paySign
+// GetH5PaySign 微信内H5支付，统一下单获取支付参数后，再次计算出微信内H5支付需要用的paySign
 //    appId：APPID
 //    nonceStr：随即字符串
 //    packages：统一下单成功后拼接得到的值
@@ -294,7 +293,7 @@ func GetH5PaySign(appId, nonceStr, packages, signType, timeStamp, apiKey string)
 	return
 }
 
-// APP支付，统一下单获取支付参数后，再次计算APP支付所需要的的sign
+// GetAppPaySign APP支付，统一下单获取支付参数后，再次计算APP支付所需要的的sign
 //    appId：APPID
 //    partnerid：partnerid
 //    nonceStr：随即字符串
@@ -331,50 +330,7 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 	return
 }
 
-// 解密开放数据到结构体
-//    encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
-//    iv：加密算法的初始向量，小程序获取到
-//    sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
-//    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
-//    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
-func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr interface{}) (err error) {
-	if encryptedData == gotil.NULL || iv == gotil.NULL || sessionKey == gotil.NULL {
-		return errors.New("input params can not null")
-	}
-	var (
-		cipherText, aesKey, ivKey, plainText []byte
-		block                                cipher.Block
-		blockMode                            cipher.BlockMode
-	)
-	beanValue := reflect.ValueOf(beanPtr)
-	if beanValue.Kind() != reflect.Ptr {
-		return errors.New("传入beanPtr类型必须是以指针形式")
-	}
-	if beanValue.Elem().Kind() != reflect.Struct {
-		return errors.New("传入interface{}必须是结构体")
-	}
-	cipherText, _ = base64.StdEncoding.DecodeString(encryptedData)
-	aesKey, _ = base64.StdEncoding.DecodeString(sessionKey)
-	ivKey, _ = base64.StdEncoding.DecodeString(iv)
-	if len(cipherText)%len(aesKey) != 0 {
-		return errors.New("encryptedData is error")
-	}
-	if block, err = aes.NewCipher(aesKey); err != nil {
-		return fmt.Errorf("aes.NewCipher：%w", err)
-	}
-	blockMode = cipher.NewCBCDecrypter(block, ivKey)
-	plainText = make([]byte, len(cipherText))
-	blockMode.CryptBlocks(plainText, cipherText)
-	if len(plainText) > 0 {
-		plainText = xaes.PKCS7UnPadding(plainText)
-	}
-	if err = json.Unmarshal(plainText, beanPtr); err != nil {
-		return fmt.Errorf("json.Marshal(%s)：%w", string(plainText), err)
-	}
-	return
-}
-
-// 解密开放数据到 BodyMap
+// DecryptOpenDataToBodyMap 解密开放数据到 BodyMap
 //    encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
 //    iv：加密算法的初始向量，小程序获取到
 //    sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
@@ -411,68 +367,7 @@ func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.Bo
 	}
 }
 
-// App应用微信第三方登录，code换取access_token
-//    appId：应用唯一标识，在微信开放平台提交应用审核通过后获得
-//    appSecret：应用密钥AppSecret，在微信开放平台提交应用审核通过后获得
-//    code：App用户换取access_token的code
-//    文档：https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
-func GetAppLoginAccessToken(appId, appSecret, code string) (accessToken *AppLoginAccessToken, err error) {
-	accessToken = new(AppLoginAccessToken)
-	url := "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type=authorization_code"
-
-	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	return accessToken, nil
-}
-
-// 刷新App应用微信第三方登录后，获取的 access_token
-//    appId：应用唯一标识，在微信开放平台提交应用审核通过后获得
-//    appSecret：应用密钥AppSecret，在微信开放平台提交应用审核通过后获得
-//    code：App用户换取access_token的code
-//    文档：https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
-func RefreshAppLoginAccessToken(appId, refreshToken string) (accessToken *RefreshAppLoginAccessTokenRsp, err error) {
-	accessToken = new(RefreshAppLoginAccessTokenRsp)
-	url := "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=" + appId + "&grant_type=refresh_token&refresh_token=" + refreshToken
-
-	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	return accessToken, nil
-}
-
-// 获取微信小程序用户的OpenId、SessionKey、UnionId
-//    appId:APPID
-//    appSecret:AppSecret
-//    wxCode:小程序调用wx.login 获取的code
-//    文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
-func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp, err error) {
-	sessionRsp = new(Code2SessionRsp)
-	url := "https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + appSecret + "&js_code=" + wxCode + "&grant_type=authorization_code"
-	_, errs := xhttp.NewClient().Get(url).EndStruct(sessionRsp)
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	return sessionRsp, nil
-}
-
-// 获取微信小程序全局唯一后台接口调用凭据(AccessToken:157字符)
-//    appId:APPID
-//    appSecret:AppSecret
-//    获取access_token文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
-func GetAppletAccessToken(appId, appSecret string) (accessToken *AccessToken, err error) {
-	accessToken = new(AccessToken)
-	url := "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appId + "&secret=" + appSecret
-	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	return accessToken, nil
-}
-
-// 授权码查询openid(AccessToken:157字符)
+// GetOpenIdByAuthCode 授权码查询openid(AccessToken:157字符)
 //    appId:APPID
 //    mchId:商户号
 //    ApiKey:apiKey
@@ -498,56 +393,4 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 		return nil, errs[0]
 	}
 	return openIdRsp, nil
-}
-
-// 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权。
-//    accessToken：接口调用凭据
-//    openId：用户的OpenID
-//    transactionId：微信支付订单号
-//    文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/user-info/auth.getPaidUnionId.html
-func GetAppletPaidUnionId(accessToken, openId, transactionId string) (unionId *PaidUnionId, err error) {
-	unionId = new(PaidUnionId)
-	url := "https://api.weixin.qq.com/wxa/getpaidunionid?access_token=" + accessToken + "&openid=" + openId + "&transaction_id=" + transactionId
-	_, errs := xhttp.NewClient().Get(url).EndStruct(unionId)
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	return unionId, nil
-}
-
-// 获取用户基本信息(UnionID机制)(微信公众号)
-//    accessToken：接口调用凭据
-//    openId：用户的OpenID
-//    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
-//    获取用户基本信息(UnionID机制)文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140839
-func GetUserInfo(accessToken, openId string, lang ...string) (userInfo *UserInfo, err error) {
-	userInfo = new(UserInfo)
-	url := "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + accessToken + "&openid=" + openId + "&lang=zh_CN"
-	if len(lang) > 0 {
-		url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + accessToken + "&openid=" + openId + "&lang=" + lang[0]
-	}
-	_, errs := xhttp.NewClient().Get(url).EndStruct(userInfo)
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	return userInfo, nil
-}
-
-// 获取用户个人信息(UnionID 机制)(微信开放平台)
-//    accessToken：接口调用凭据
-//    openId：用户的OpenID
-//    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
-//    获取用户基本信息(UnionID机制)文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Authorized_API_call_UnionID.html
-func GetUserInfoOpen(accessToken, openId string, lang ...string) (userInfo *UserInfo, err error) {
-	userInfo = new(UserInfo)
-	url := "https://api.weixin.qq.com/sns/userinfo?access_token=" + accessToken + "&openid=" + openId + "&lang=zh_CN"
-	if len(lang) > 0 {
-		url = "https://api.weixin.qq.com/sns/userinfo?access_token=" + accessToken + "&openid=" + openId + "&lang" +
-			"=" + lang[0]
-	}
-	_, errs := xhttp.NewClient().Get(url).EndStruct(userInfo)
-	if len(errs) > 0 {
-		return nil, errs[0]
-	}
-	return userInfo, nil
 }
