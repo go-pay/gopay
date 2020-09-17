@@ -375,15 +375,15 @@ import (
 
 // ====微信小程序 paySign====
 timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
-prepayId := "prepay_id=" + wxRsp.PrepayId   // 此处的 wxRsp.PrepayId ,统一下单成功后得到
+packages := "prepay_id=" + wxRsp.PrepayId   // 此处的 wxRsp.PrepayId ,统一下单成功后得到
 // 获取微信小程序支付的 paySign
 //    appId：AppID
 //    nonceStr：随机字符串
-//    prepayId：统一下单成功后得到的值
+//    packages：统一下单成功后拼接得到的值
 //    signType：签名方式，务必与统一下单时用的签名方式一致
 //    timeStamp：时间
 //    apiKey：API秘钥值
-paySign := wechat.GetMiniPaySign(AppID, wxRsp.NonceStr, prepayId, wechat.SignType_MD5, timeStamp, apiKey)
+paySign := wechat.GetMiniPaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_MD5, timeStamp, apiKey)
 
 // ====APP支付 paySign====
 timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
