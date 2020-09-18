@@ -19,10 +19,10 @@ import (
 )
 
 // 添加QQ证书 Path 路径
-//    certFilePath：apiclient_cert.pem 路径
-//    keyFilePath：apiclient_key.pem 路径
-//    pkcs12FilePath：apiclient_cert.p12 路径
-//    返回err
+//	certFilePath：apiclient_cert.pem 路径
+//	keyFilePath：apiclient_key.pem 路径
+//	pkcs12FilePath：apiclient_cert.p12 路径
+//	返回err
 func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) (err error) {
 	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return err

@@ -8,10 +8,10 @@ package wechat
 import "github.com/iGoogle-ink/gotil/xhttp"
 
 // GetPublicUserInfo 获取用户基本信息（微信公众号）
-//    accessToken：接口调用凭据
-//    openId：用户的OpenID
-//    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
-//    获取公众号用户基本信息文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140839
+//	accessToken：接口调用凭据
+//	openId：用户的OpenID
+//	lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
+//	获取公众号用户基本信息文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140839
 func GetPublicUserInfo(accessToken, openId string, lang ...string) (userInfo *PublicUserInfo, err error) {
 	userInfo = new(PublicUserInfo)
 	url := "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + accessToken + "&openid=" + openId
@@ -26,9 +26,9 @@ func GetPublicUserInfo(accessToken, openId string, lang ...string) (userInfo *Pu
 }
 
 // GetPublicUserInfoBatch 批量获取用户基本信息（微信公众号）
-//    accessToken：接口调用凭据
-//    注意：开发者可通过该接口来批量获取用户基本信息。最多支持一次拉取100条。
-//    文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140839
+//	accessToken：接口调用凭据
+//	注意：开发者可通过该接口来批量获取用户基本信息。最多支持一次拉取100条。
+//	文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140839
 func GetPublicUserInfoBatch(accessToken string, users *PublicOpenids) (userInfos *PublicUserInfoBatch, err error) {
 	userInfos = new(PublicUserInfoBatch)
 	url := "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=" + accessToken

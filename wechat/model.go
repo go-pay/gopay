@@ -27,6 +27,10 @@ const (
 	batchQueryComment           = "billcommentsp/batchquerycomment"                   // 拉取订单评价数据
 	transfers                   = "mmpaymkttransfers/promotion/transfers"             // 企业付款（企业向微信用户个人付款）
 	getTransferInfo             = "mmpaymkttransfers/gettransferinfo"                 // 查询企业付款
+	sendCashRed                 = "mmpaymkttransfers/sendredpack"                     // 发放现金红包
+	sendAppletRed               = "mmpaymkttransfers/sendminiprogramhb"               // 发放小程序红包
+	sendGroupCashRed            = "mmpaymkttransfers/sendgroupredpack"                // 发放裂变红包
+	getRedRecord                = "mmpaymkttransfers/gethbinfo"                       // 查询红包记录
 	authCodeToOpenid            = "tools/authcodetoopenid"                            // 授权码查询openid
 	entrustPublic               = "papay/entrustweb"                                  // 公众号纯签约
 	entrustApp                  = "papay/preentrustweb"                               // APP纯签约
@@ -37,7 +41,7 @@ const (
 	entrustDelete               = "papay/deletecontract"                              // 申请解约
 	entrustQueryOrder           = "pay/paporderquery"                                 // 查询扣款订单
 	profitSharing               = "secapi/pay/profitsharing"                          // 请求单次分账
-	multiProfitSharing          = "secapi/pay/multiprofitsharing "                    // 请求多次分账
+	multiProfitSharing          = "secapi/pay/multiprofitsharing"                     // 请求多次分账
 	profitSharingQuery          = "pay/profitsharingquery"                            // 查询分账结果
 	profitSharingAddReceiver    = "pay/profitsharingaddreceiver"                      // 添加分账接收方
 	profitSharingRemoveReceiver = "pay/profitsharingremovereceiver"                   // 删除分账接收方
@@ -760,4 +764,67 @@ type RSAPublicKeyResponse struct {
 	ErrCodeDes string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
 	MchId      string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
 	PubKey     string `xml:"pub_key,omitempty" json:"pub_key,omitempty"`
+}
+
+type SendCashRedResponse struct {
+	ReturnCode  string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg   string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode  string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode     string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes  string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	MchBillno   string `xml:"mch_billno,omitempty" json:"mch_billno,omitempty"`
+	MchId       string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	Wxappid     string `xml:"wxappid,omitempty" json:"wxappid,omitempty"`
+	ReOpenid    string `xml:"re_openid,omitempty" json:"re_openid,omitempty"`
+	TotalAmount string `xml:"total_amount,omitempty" json:"total_amount,omitempty"`
+	SendListid  string `xml:"send_listid,omitempty" json:"send_listid,omitempty"`
+}
+
+type SendAppletRedResponse struct {
+	ReturnCode  string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg   string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode  string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode     string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes  string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	MchBillno   string `xml:"mch_billno,omitempty" json:"mch_billno,omitempty"`
+	MchId       string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	Wxappid     string `xml:"wxappid,omitempty" json:"wxappid,omitempty"`
+	ReOpenid    string `xml:"re_openid,omitempty" json:"re_openid,omitempty"`
+	TotalAmount string `xml:"total_amount,omitempty" json:"total_amount,omitempty"`
+	SendListid  string `xml:"send_listid,omitempty" json:"send_listid,omitempty"`
+	Packages    string `xml:"package,omitempty" json:"package,omitempty"`
+}
+
+type QueryRedRecordResponse struct {
+	ReturnCode   string  `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg    string  `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode   string  `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode      string  `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes   string  `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	MchBillno    string  `xml:"mch_billno,omitempty" json:"mch_billno,omitempty"`
+	MchId        string  `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	DetailId     string  `xml:"detail_id,omitempty" json:"detail_id,omitempty"`
+	Status       string  `xml:"status,omitempty" json:"status,omitempty"`
+	SendType     string  `xml:"send_type,omitempty" json:"send_type,omitempty"`
+	HbType       string  `xml:"hb_type,omitempty" json:"hb_type,omitempty"`
+	TotalNum     string  `xml:"total_num,omitempty" json:"total_num,omitempty"`
+	TotalAmount  string  `xml:"total_amount,omitempty" json:"total_amount,omitempty"`
+	Reason       string  `xml:"reason,omitempty" json:"reason,omitempty"`
+	SendTime     string  `xml:"send_time,omitempty" json:"send_time,omitempty"`
+	RefundTime   string  `xml:"refund_time,omitempty" json:"refund_time,omitempty"`
+	RefundAmount string  `xml:"refund_amount,omitempty" json:"refund_amount,omitempty"`
+	Wishing      string  `xml:"wishing,omitempty" json:"wishing,omitempty"`
+	Remark       string  `xml:"remark,omitempty" json:"remark,omitempty"`
+	ActName      string  `xml:"act_name,omitempty" json:"act_name,omitempty"`
+	Hblist       *hbList `xml:"hblist,omitempty" json:"hblist,omitempty"`
+}
+
+type hbList struct {
+	HbinfoList []*hbinfo `xml:"hbinfo,omitempty" json:"hbinfo,omitempty"`
+}
+
+type hbinfo struct {
+	Openid  string `xml:"openid,omitempty" json:"openid,omitempty"`
+	Amount  string `xml:"amount,omitempty" json:"amount,omitempty"`
+	RcvTime string `xml:"rcv_time,omitempty" json:"rcv_time,omitempty"`
 }

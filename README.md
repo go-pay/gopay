@@ -68,6 +68,10 @@ func main() {
 * 企业付款到银行卡API（正式）：client.PayBank()
 * 查询企业付款到银行卡API（正式）：client.QueryBank()
 * 获取RSA加密公钥API（正式）：client.GetRSAPublicKey()
+* 发放现金红包：client.SendCashRed()
+* 发放现金裂变红包：client.SendGroupCashRed()
+* 发放小程序红包：client.SendAppletRed()
+* 查询红包记录：client.QueryRedRecord()
 * 自定义方法请求微信API接口：client.PostWeChatAPISelf()
 
 ### 微信公共API

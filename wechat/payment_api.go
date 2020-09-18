@@ -31,11 +31,11 @@ import (
 )
 
 // GetParamSign 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
-//    注意：BodyMap中如无 sign_type 参数，默认赋值 sign_type 为 MD5
-//    appId：应用ID
-//    mchId：商户ID
-//    ApiKey：API秘钥值
-//    返回参数 sign：通过Appid、MchId、ApiKey和BodyMap中的参数计算出的Sign值
+//	注意：BodyMap中如无 sign_type 参数，默认赋值 sign_type 为 MD5
+//	appId：应用ID
+//	mchId：商户ID
+//	ApiKey：API秘钥值
+//	返回参数 sign：通过Appid、MchId、ApiKey和BodyMap中的参数计算出的Sign值
 func GetParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string) {
 	bm.Set("appid", appId)
 	bm.Set("mch_id", mchId)
@@ -58,11 +58,11 @@ func GetParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string) {
 }
 
 // GetSanBoxParamSign 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
-//    注意：沙箱环境默认 sign_type 为 MD5
-//    appId：应用ID
-//    mchId：商户ID
-//    ApiKey：API秘钥值
-//    返回参数 sign：通过Appid、MchId、ApiKey和BodyMap中的参数计算出的Sign值
+//	注意：沙箱环境默认 sign_type 为 MD5
+//	appId：应用ID
+//	mchId：商户ID
+//	ApiKey：API秘钥值
+//	返回参数 sign：通过Appid、MchId、ApiKey和BodyMap中的参数计算出的Sign值
 func GetSanBoxParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
 	bm.Set("appid", appId)
 	bm.Set("mch_id", mchId)
@@ -82,9 +82,9 @@ func GetSanBoxParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign str
 }
 
 // ParseNotifyToBodyMap 解析微信支付异步通知的结果到BodyMap（推荐）
-//    req：*http.Request
-//    返回参数bm：Notify请求的参数
-//    返回参数err：错误信息
+//	req：*http.Request
+//	返回参数bm：Notify请求的参数
+//	返回参数err：错误信息
 func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
 	if err != nil {
@@ -108,9 +108,9 @@ func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 }
 
 // ParseRefundNotify 解析微信退款异步通知的参数
-//    req：*http.Request
-//    返回参数notifyReq：Notify请求的参数
-//    返回参数err：错误信息
+//	req：*http.Request
+//	返回参数notifyReq：Notify请求的参数
+//	返回参数err：错误信息
 func ParseRefundNotify(req *http.Request) (notifyReq *RefundNotifyRequest, err error) {
 	notifyReq = new(RefundNotifyRequest)
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
@@ -120,11 +120,11 @@ func ParseRefundNotify(req *http.Request) (notifyReq *RefundNotifyRequest, err e
 }
 
 // DecryptRefundNotifyReqInfo 解密微信退款异步通知的加密数据
-//    reqInfo：gopay.ParseRefundNotify() 方法获取的加密数据 req_info
-//    apiKey：API秘钥值
-//    返回参数refundNotify：RefundNotify请求的加密数据
-//    返回参数err：错误信息
-//    文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_16&index=10
+//	reqInfo：gopay.ParseRefundNotify() 方法获取的加密数据 req_info
+//	apiKey：API秘钥值
+//	返回参数refundNotify：RefundNotify请求的加密数据
+//	返回参数err：错误信息
+//	文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_16&index=10
 func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNotify, err error) {
 	if reqInfo == gotil.NULL || apiKey == gotil.NULL {
 		return nil, errors.New("reqInfo or apiKey is null")
@@ -175,11 +175,11 @@ func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNot
 }
 
 // VerifySign 微信同步返回参数验签或异步通知参数验签
-//    ApiKey：API秘钥值
-//    signType：签名类型（调用API方法时填写的类型）
-//    bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq，推荐通 BodyMap 验签
-//    返回参数ok：是否验签通过
-//    返回参数err：其他错误信息，不要根据 error 是否为空来判断验签正确与否，需再单独判断返回的 ok
+//	ApiKey：API秘钥值
+//	signType：签名类型（调用API方法时填写的类型）
+//	bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq，推荐通 BodyMap 验签
+//	返回参数ok：是否验签通过
+//	返回参数err：其他错误信息，不要根据 error 是否为空来判断验签正确与否，需再单独判断返回的 ok
 func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) {
 	if bean == nil {
 		return false, errors.New("bean is nil")
@@ -224,14 +224,14 @@ func (w *NotifyResponse) ToXmlString() (xmlStr string) {
 }
 
 // GetMiniPaySign JSAPI支付，统一下单获取支付参数后，再次计算出小程序用的paySign
-//    appId：APPID
-//    nonceStr：随即字符串
-//    packages：统一下单成功后拼接得到的值
-//    signType：签名类型
-//    timeStamp：时间
-//    ApiKey：API秘钥值
-//    微信小程序支付API：https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html
-//    微信小程序支付PaySign计算文档：https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=3
+//	appId：APPID
+//	nonceStr：随即字符串
+//	packages：统一下单成功后拼接得到的值
+//	signType：签名类型
+//	timeStamp：时间
+//	ApiKey：API秘钥值
+//	微信小程序支付API：https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html
+//	微信小程序支付PaySign计算文档：https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=3
 func GetMiniPaySign(appId, nonceStr, packages, signType, timeStamp, apiKey string) (paySign string) {
 	var (
 		buffer strings.Builder
@@ -259,13 +259,13 @@ func GetMiniPaySign(appId, nonceStr, packages, signType, timeStamp, apiKey strin
 }
 
 // GetH5PaySign 微信内H5支付，统一下单获取支付参数后，再次计算出微信内H5支付需要用的paySign
-//    appId：APPID
-//    nonceStr：随即字符串
-//    packages：统一下单成功后拼接得到的值
-//    signType：签名类型
-//    timeStamp：时间
-//    ApiKey：API秘钥值
-//    微信内H5支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6
+//	appId：APPID
+//	nonceStr：随即字符串
+//	packages：统一下单成功后拼接得到的值
+//	signType：签名类型
+//	timeStamp：时间
+//	ApiKey：API秘钥值
+//	微信内H5支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6
 func GetH5PaySign(appId, nonceStr, packages, signType, timeStamp, apiKey string) (paySign string) {
 	var (
 		buffer strings.Builder
@@ -294,14 +294,14 @@ func GetH5PaySign(appId, nonceStr, packages, signType, timeStamp, apiKey string)
 }
 
 // GetAppPaySign APP支付，统一下单获取支付参数后，再次计算APP支付所需要的的sign
-//    appId：APPID
-//    partnerid：partnerid
-//    nonceStr：随即字符串
-//    prepayId：统一下单成功后得到的值
-//    signType：此处签名方式，务必与统一下单时用的签名方式一致
-//    timeStamp：时间
-//    ApiKey：API秘钥值
-//    APP支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12
+//	appId：APPID
+//	partnerid：partnerid
+//	nonceStr：随即字符串
+//	prepayId：统一下单成功后得到的值
+//	signType：此处签名方式，务必与统一下单时用的签名方式一致
+//	timeStamp：时间
+//	ApiKey：API秘钥值
+//	APP支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12
 func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, apiKey string) (paySign string) {
 	var (
 		buffer strings.Builder
@@ -331,10 +331,10 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 }
 
 // DecryptOpenDataToBodyMap 解密开放数据到 BodyMap
-//    encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
-//    iv：加密算法的初始向量，小程序获取到
-//    sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
-//    文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
+//	encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
+//	iv：加密算法的初始向量，小程序获取到
+//	sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
+//	文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.BodyMap, err error) {
 	if encryptedData == gotil.NULL || iv == gotil.NULL || sessionKey == gotil.NULL {
 		return nil, errors.New("input params can not null")
@@ -368,12 +368,12 @@ func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.Bo
 }
 
 // GetOpenIdByAuthCode 授权码查询openid(AccessToken:157字符)
-//    appId:APPID
-//    mchId:商户号
-//    ApiKey:apiKey
-//    authCode:用户授权码
-//    nonceStr:随即字符串
-//    文档：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_13&index=9
+//	appId:APPID
+//	mchId:商户号
+//	ApiKey:apiKey
+//	authCode:用户授权码
+//	nonceStr:随即字符串
+//	文档：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_13&index=9
 func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openIdRsp *OpenIdByAuthCodeRsp, err error) {
 	var (
 		url string

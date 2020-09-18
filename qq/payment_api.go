@@ -21,9 +21,9 @@ import (
 )
 
 // ParseNotifyToBodyMap 解析QQ支付异步通知的结果到BodyMap
-//    req：*http.Request
-//    返回参数bm：Notify请求的参数
-//    返回参数err：错误信息
+//	req：*http.Request
+//	返回参数bm：Notify请求的参数
+//	返回参数err：错误信息
 func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
 	if err != nil {
@@ -47,11 +47,11 @@ func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 }
 
 // VerifySign QQ同步返回参数验签或异步通知参数验签
-//    ApiKey：API秘钥值
-//    signType：签名类型（调用API方法时填写的类型）
-//    bean：微信同步返回的结构体 qqRsp 或 异步通知解析的结构体 notifyReq
-//    返回参数ok：是否验签通过
-//    返回参数err：其他错误信息，不要根据 error 是否为空来判断验签正确与否，需再单独判断返回的 ok
+//	ApiKey：API秘钥值
+//	signType：签名类型（调用API方法时填写的类型）
+//	bean：微信同步返回的结构体 qqRsp 或 异步通知解析的结构体 notifyReq
+//	返回参数ok：是否验签通过
+//	返回参数err：其他错误信息，不要根据 error 是否为空来判断验签正确与否，需再单独判断返回的 ok
 func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) {
 	if apiKey == gotil.NULL || signType == gotil.NULL {
 		return false, errors.New("apiKey or signType can not null")

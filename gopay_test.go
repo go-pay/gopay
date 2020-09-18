@@ -61,3 +61,47 @@ func TestBodyMap_UnmarshalXML(t *testing.T) {
 		xlog.Infof("%s:%s\n", k, v)
 	}
 }
+
+type QueryRedRecordResponse struct {
+	HbType string  `xml:"hb_type,omitempty" json:"hb_type,omitempty"`
+	Hblist *hbList `xml:"hblist,omitempty" json:"hblist,omitempty"`
+}
+type hbList struct {
+	HbinfoList []*hbinfo `xml:"hbinfo,omitempty" json:"hbinfo,omitempty"`
+}
+
+type hbinfo struct {
+	Openid  string `xml:"openid,omitempty" json:"openid,omitempty"`
+	Amount  string `xml:"amount,omitempty" json:"amount,omitempty"`
+	RcvTime string `xml:"rcv_time,omitempty" json:"rcv_time,omitempty"`
+}
+
+func TestBodyMap_UnmarshalXML2(t *testing.T) {
+	xmlData := `
+<xml>
+<hb_type><![CDATA[NORMAL]]></hb_type>
+<hblist>
+	<hbinfo>
+		<openid><![CDATA[111]]></openid>
+		<amount>222</amount>
+		<rcv_time><![CDATA[333]]></rcv_time>
+	</hbinfo>
+	<hbinfo>
+		<openid><![CDATA[444]]></openid>
+		<amount>555</amount>
+		<rcv_time><![CDATA[666]]></rcv_time>
+	</hbinfo>
+</hblist>
+</xml>`
+
+	mm := new(QueryRedRecordResponse)
+	err := xml.Unmarshal([]byte(xmlData), &mm)
+	if err != nil {
+		xlog.Errorf("xml.Unmarshal(%s),error:%+v", xmlData, err)
+		return
+	}
+	xlog.Debugf("%+v", mm)
+	for _, v := range mm.Hblist.HbinfoList {
+		xlog.Debugf("%+v", v)
+	}
+}

@@ -8,8 +8,13 @@
    (2) 微信：替换 wechat.GetAppLoginAccessToken() = > wechat.GetOauth2AccessToken()
    (3) 微信：替换 wechat.RefreshAppLoginAccessToken() = > wechat.RefreshOauth2AccessToken()
    (4) 微信：替换 wechat.GetUserInfoOpen() = > wechat.GetOauth2UserInfo()
+   (4) 微信：替换 wechat.GetUserInfo() = > wechat.GetPublicUserInfo()
    (5) 微信：新增 wechat.CheckOauth2AccessToken() 检验授权凭证（access_token）是否有效
    (5) 微信：新增 wechat.GetPublicUserInfoBatch() 批量获取用户基本信息（微信公众号）
+   (5) 微信：新增 client.SendCashRed() 发放现金红包
+   (5) 微信：新增 client.SendGroupCashRed() 发放现金裂变红包
+   (5) 微信：新增 client.SendAppletRed() 发放小程序红包
+   (5) 微信：新增 client.QueryRedRecord() 查询红包记录
 
 版本号：Release 1.5.18
 发布时间：2020/08/29 18:30
