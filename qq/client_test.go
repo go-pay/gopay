@@ -49,5 +49,15 @@ func TestNotifyResponse_ToXmlString(t *testing.T) {
 	n.ReturnCode = "FAIL"
 	n.ReturnMsg = "abc"
 	xlog.Info(n.ToXmlString())
+}
 
+func TestClient_DownloadRedListFile(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("date", 20160803)
+	file, err := client.DownloadRedListFile(bm)
+	if err != nil {
+		xlog.Errorf("client.DownloadRedListFile(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("qqRsp:", file)
 }

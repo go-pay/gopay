@@ -27,7 +27,7 @@ func Code2Session() {
 }
 
 func GetAppWeChatLoginAccessToken() {
-	accessToken, err := wechat.GetAppLoginAccessToken("AppID", "AppSecret", "code")
+	accessToken, err := wechat.GetOauth2AccessToken("AppID", "AppSecret", "code")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -42,7 +42,7 @@ func GetAppWeChatLoginAccessToken() {
 }
 
 func RefreshAppWeChatLoginAccessToken() {
-	accessToken, err := wechat.RefreshAppLoginAccessToken("AppID", "refreshToken")
+	accessToken, err := wechat.RefreshOauth2AccessToken("AppID", "refreshToken")
 	if err != nil {
 		fmt.Println("err:", err)
 		return
@@ -103,11 +103,6 @@ func GetWeChatUserInfo() {
 func GetWeChatUserInfoOpen() {
 	accessToken := "21_3puo3mxoK6Ry2bR7Dh-qdn41wUP1wClwke8Zhf9a_i39jfWRq9rhNJZZZHaOt_Yad-Gp6u9_46dGW0RbIMz3nANInRI3m-1glvCnGW47v63sjYWV1iyTKOHGwDVxEv78kY-0OfkmkiIveVqAZCZaAAAQTQ"
 
-	// 获取用户个人信息(UnionID 机制)(微信开放平台)
-	//    accessToken：接口调用凭据
-	//    openId：用户的OpenID
-	//    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
-	//    获取用户基本信息(UnionID机制)文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Authorized_API_call_UnionID.html
 	userInfo, err := wechat.GetUserInfoOpen(accessToken, "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 	if err != nil {
 		fmt.Println("err:", err)
@@ -205,28 +200,13 @@ func ParseWeChatNotifyAndVerifyWeChatSign(req *http.Request) string {
 	rsp := new(wechat.NotifyResponse)
 
 	// 解析参数
-	notifyReq, err := wechat.ParseNotify(req)
-	if err != nil {
-		fmt.Println("err:", err)
-	}
-	fmt.Println("notifyReq:", *notifyReq)
-
-	// 验签
-	ok, err := wechat.VerifySign("GFDS8j98rewnmgl45wHTt980jg543abc", wechat.SignType_MD5, notifyReq)
-	if err != nil {
-		fmt.Println("err:", err)
-	}
-	fmt.Println("微信验签是否通过:", ok)
-
-	// 或者
-
 	bodyMap, err := wechat.ParseNotifyToBodyMap(req)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
 	fmt.Println("bodyMap:", bodyMap)
 
-	ok, err = wechat.VerifySign("GFDS8j98rewnmgl45wHTt980jg543abc", wechat.SignType_MD5, bodyMap)
+	ok, err := wechat.VerifySign("GFDS8j98rewnmgl45wHTt980jg543abc", wechat.SignType_MD5, bodyMap)
 	if err != nil {
 		fmt.Println("err:", err)
 	}
@@ -254,6 +234,21 @@ func ParseWeChatRefundNotify(req *http.Request) string {
 		fmt.Println("err:", err)
 	}
 	fmt.Println("refundNotify:", *refundNotify)
+
+	// 或者
+
+	bodyMap, err := wechat.ParseNotifyToBodyMap(req)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("bodyMap:", bodyMap)
+
+	// 解密退款异步通知的加密数据
+	refundNotify2, err := wechat.DecryptRefundNotifyReqInfo(bodyMap.Get("req_info"), "GFDS8j98rewnmgl45wHTt980jg543abc")
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+	fmt.Println("refundNotify:", *refundNotify2)
 
 	// 返回微信
 	rsp.ReturnCode = gopay.SUCCESS

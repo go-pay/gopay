@@ -1,9 +1,23 @@
 版本号：Release 1.5.19
-发布时间：2020/09/15 13:00
+发布时间：2020/09/20 23:58
 修改记录：
    (1) 微信：修复 client.ProfitSharingQuery() 接口的Bug，https://github.com/iGoogle-ink/gopay/issues/68
    (2) 微信：优化 client.doProdPost()
    (3) 支付宝：优化 client.doAliPay()
+   (4) 微信：项目文件区分改动，开放平台接口和微信公众号区分
+   (5) 微信：替换 wechat.GetAppLoginAccessToken() = > wechat.GetOauth2AccessToken()
+   (6) 微信：替换 wechat.RefreshAppLoginAccessToken() = > wechat.RefreshOauth2AccessToken()
+   (7) 微信：替换 wechat.GetUserInfoOpen() = > wechat.GetOauth2UserInfo()
+   (8) 微信：替换 wechat.GetUserInfo() = > wechat.GetPublicUserInfo()
+   (9) 微信：新增 wechat.CheckOauth2AccessToken() 检验授权凭证（access_token）是否有效
+   (10) 微信：新增 wechat.GetPublicUserInfoBatch() 批量获取用户基本信息（微信公众号）
+   (11) 微信：新增 client.SendCashRed() 发放现金红包
+   (12) 微信：新增 client.SendGroupCashRed() 发放现金裂变红包
+   (13) 微信：新增 client.SendAppletRed() 发放小程序红包
+   (14) 微信：新增 client.QueryRedRecord() 查询红包记录
+   (15) QQ：新增 client.SendCashRed() 创建现金红包，（未经测试，有条件的帮忙测一下吧，有问题提PR）
+   (16) QQ：新增 client.DownloadRedListFile() 对账单下载，（未经测试，有条件的帮忙测一下吧，有问题提PR）
+   (17) QQ：新增 client.QueryRedInfo() 查询红包详情，（未经测试，有条件的帮忙测一下吧，有问题提PR）
 
 版本号：Release 1.5.18
 发布时间：2020/08/29 18:30
