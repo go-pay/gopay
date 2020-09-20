@@ -12,6 +12,10 @@ const (
 	reverse       = "https://api.qpay.qq.com/cgi-bin/pay/qpay_reverse.cgi"                // 撤销订单
 	refund        = "https://api.qpay.qq.com/cgi-bin/pay/qpay_refund.cgi"                 // 申请退款
 
+	createCashRed = "https://api.qpay.qq.com/cgi-bin/hongbao/qpay_hb_mch_send.cgi"           // 创建现金红包
+	redFileDown   = "https://api.qpay.qq.com/cgi-bin/hongbao/qpay_hb_mch_down_list_file.cgi" // 红包对账单下载
+	queryRedInfo  = "https://qpay.qq.com/cgi-bin/mch_query/qpay_hb_mch_list_query.cgi"       // 红包详情查询
+
 	// 支付类型
 	TradeType_MicroPay = "MICROPAY" // 提交付款码支付
 	TradeType_JsApi    = "JSAPI"    // 公众号支付
@@ -204,4 +208,28 @@ type RefundQueryResponse struct {
 	RefundStatus1     string `xml:"refund_status_1,omitempty" json:"refund_status_1,omitempty"`
 	RefundRecvAccout0 string `xml:"refund_recv_accout_0,omitempty" json:"refund_recv_accout_0,omitempty"`
 	RefundRecvAccout1 string `xml:"refund_recv_accout_1,omitempty" json:"refund_recv_accout_1,omitempty"`
+}
+
+type SendCashRedResponse struct {
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	RetCode    string `xml:"retcode,omitempty" json:"retcode,omitempty"`
+	RetMsg     string `xml:"retmsg,omitempty" json:"retmsg,omitempty"`
+	Listid     string `xml:"listid,omitempty" json:"listid,omitempty"`
+}
+
+type QueryRedInfoResponse struct {
+	Result      string  `xml:"result,omitempty" json:"result,omitempty"`
+	ResInfo     string  `xml:"res_info,omitempty" json:"res_info,omitempty"`
+	Listid      string  `xml:"listid,omitempty" json:"listid,omitempty"`
+	State       string  `xml:"state,omitempty" json:"state,omitempty"`
+	TotalNum    string  `xml:"total_num,omitempty" json:"total_num,omitempty"`
+	RecvNum     string  `xml:"recv_num,omitempty" json:"recv_num,omitempty"`
+	TotalAmount string  `xml:"total_amount,omitempty" json:"total_amount,omitempty"`
+	RecvAmount  string  `xml:"recv_amount,omitempty" json:"recv_amount,omitempty"`
+	RecvDetails *Detail `xml:"recv_details,omitempty" json:"recv_details,omitempty"`
+}
+
+type Detail struct {
+	Uin []string `xml:"uin,omitempty" json:"uin,omitempty"`
 }

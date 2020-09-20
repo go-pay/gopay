@@ -12,6 +12,7 @@ import (
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gotil"
 	"github.com/iGoogle-ink/gotil/xhttp"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 type Client struct {
@@ -139,7 +140,7 @@ func (q *Client) CloseOrder(bm gopay.BodyMap) (qqRsp *CloseOrderResponse, err er
 }
 
 // 申请退款
-//	注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 ""，否则，3证书Path均不可空
+//	注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 nil，否则，3证书Path均不可空
 //	文档地址：https://qpay.qq.com/buss/wiki/38/1207
 func (q *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (qqRsp *RefundResponse, err error) {
 	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
@@ -226,16 +227,85 @@ func (q *Client) AccRoll(bm gopay.BodyMap) (qqRsp string, err error) {
 
 // 向QQ发送请求
 func (q *Client) doQQ(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs []byte, err error) {
-	bm.Set("mch_id", q.MchId)
-	if bm.Get("fee_type") == gotil.NULL {
-		bm.Set("fee_type", "CNY")
+
+	func() {
+		q.mu.RLock()
+		defer q.mu.RUnlock()
+
+		if bm.Get("mch_id") == gotil.NULL {
+			bm.Set("mch_id", q.MchId)
+		}
+		if bm.Get("fee_type") == gotil.NULL {
+			bm.Set("fee_type", "CNY")
+		}
+
+		if bm.Get("sign") == gotil.NULL {
+			sign := getReleaseSign(q.ApiKey, bm.Get("sign_type"), bm)
+			bm.Set("sign", sign)
+		}
+	}()
+
+	httpClient := xhttp.NewClient()
+	if tlsConfig != nil {
+		httpClient.SetTLSConfig(tlsConfig)
 	}
 
-	if bm.Get("sign") == gotil.NULL {
-		var sign string
-		sign = getReleaseSign(q.ApiKey, bm.Get("sign_type"), bm)
-		bm.Set("sign", sign)
+	res, bs, errs := httpClient.Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndBytes()
+	if len(errs) > 0 {
+		return nil, errs[0]
 	}
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	if strings.Contains(string(bs), "HTML") {
+		return nil, errors.New(string(bs))
+	}
+	return bs, nil
+}
+
+// Get请求、正式
+func (q *Client) doQQGet(bm gopay.BodyMap, url, signType string) (bs []byte, err error) {
+	func() {
+		q.mu.RLock()
+		defer q.mu.RUnlock()
+		if bm.Get("mch_id") == gotil.NULL {
+			bm.Set("mch_id", q.MchId)
+		}
+		bm.Remove("sign")
+		sign := getReleaseSign(q.ApiKey, signType, bm)
+		bm.Set("sign", sign)
+	}()
+
+	param := bm.EncodeGetParams()
+	url = url + "?" + param
+	xlog.Debug(url)
+	res, bs, errs := xhttp.NewClient().Get(url).EndBytes()
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	if strings.Contains(string(bs), "HTML") || strings.Contains(string(bs), "html") {
+		return nil, errors.New(string(bs))
+	}
+	return bs, nil
+}
+
+func (q *Client) doQQRed(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs []byte, err error) {
+
+	func() {
+		q.mu.RLock()
+		defer q.mu.RUnlock()
+
+		if bm.Get("mch_id") == gotil.NULL {
+			bm.Set("mch_id", q.MchId)
+		}
+		if bm.Get("sign") == gotil.NULL {
+			sign := getReleaseSign(q.ApiKey, SignType_MD5, bm)
+			bm.Set("sign", sign)
+		}
+	}()
 
 	httpClient := xhttp.NewClient()
 	if tlsConfig != nil {
