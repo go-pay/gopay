@@ -555,12 +555,11 @@ func (w *Client) doProdGet(bm gopay.BodyMap, path, signType string) (bs []byte, 
 		bm.Remove("sign")
 		sign := getReleaseSign(w.ApiKey, signType, bm)
 		bm.Set("sign", sign)
+		if w.BaseURL != gotil.NULL {
+			url = w.BaseURL + path
+		}
 	}()
-	if w.BaseURL != gotil.NULL {
-		w.mu.RLock()
-		url = w.BaseURL + path
-		w.mu.RUnlock()
-	}
+
 	param := bm.EncodeGetParams()
 	url = url + "?" + param
 	res, bs, errs := xhttp.NewClient().Get(url).EndBytes()

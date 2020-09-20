@@ -112,6 +112,9 @@ func main() {
 * 退款查询：client.RefundQuery()
 * 交易账单：client.StatementDown()
 * 资金账单：client.AccRoll()
+* 创建现金红包（未测试可用性）：client.SendCashRed()
+* 对账单下载（未测试可用性）：client.DownloadRedListFile()
+* 查询红包详情（未测试可用性）：client.QueryRedInfo()
 * 自定义方法请求微信API接口：client.PostQQAPISelf()
 
 ### QQ公共API
