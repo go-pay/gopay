@@ -1,10 +1,9 @@
 package alipay
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func OpenAuthTokenApp() {
@@ -27,8 +26,8 @@ func OpenAuthTokenApp() {
 	//发起请求
 	aliRsp, err := client.OpenAuthTokenApp(body)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }

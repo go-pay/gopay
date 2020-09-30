@@ -3,6 +3,7 @@ package qq
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -19,6 +20,7 @@ type Client struct {
 	MchId       string
 	ApiKey      string
 	IsProd      bool
+	DebugSwitch gopay.DebugSwitch
 	certificate tls.Certificate
 	certPool    *x509.CertPool
 	mu          sync.RWMutex
@@ -28,13 +30,11 @@ type Client struct {
 //	mchId：商户ID
 //	ApiKey：API秘钥值
 func NewClient(mchId, apiKey string) (client *Client) {
-	if mchId != gotil.NULL && apiKey != gotil.NULL {
-		return &Client{
-			MchId:  mchId,
-			ApiKey: apiKey,
-		}
+	return &Client{
+		MchId:       mchId,
+		ApiKey:      apiKey,
+		DebugSwitch: gopay.DebugOff,
 	}
-	return nil
 }
 
 // 向QQ发送Post请求，对于本库未提供的QQ API，可自行实现，通过此方法发送请求
@@ -249,10 +249,16 @@ func (q *Client) doQQ(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs [
 	if tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
-
+	if q.DebugSwitch == gopay.DebugOn {
+		req, _ := json.Marshal(bm)
+		xlog.Debugf("QQ_Request: %s", req)
+	}
 	res, bs, errs := httpClient.Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
+	}
+	if q.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("QQ_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -275,13 +281,18 @@ func (q *Client) doQQGet(bm gopay.BodyMap, url, signType string) (bs []byte, err
 		sign := getReleaseSign(q.ApiKey, signType, bm)
 		bm.Set("sign", sign)
 	}()
-
+	if q.DebugSwitch == gopay.DebugOn {
+		req, _ := json.Marshal(bm)
+		xlog.Debugf("QQ_Request: %s", req)
+	}
 	param := bm.EncodeGetParams()
 	url = url + "?" + param
-	xlog.Debug(url)
 	res, bs, errs := xhttp.NewClient().Get(url).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
+	}
+	if q.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("QQ_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -311,10 +322,16 @@ func (q *Client) doQQRed(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (b
 	if tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
-
+	if q.DebugSwitch == gopay.DebugOn {
+		req, _ := json.Marshal(bm)
+		xlog.Debugf("QQ_Request: %s", req)
+	}
 	res, bs, errs := httpClient.Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
+	}
+	if q.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("QQ_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)

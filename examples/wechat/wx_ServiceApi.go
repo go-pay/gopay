@@ -1,12 +1,12 @@
 package wechat
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/wechat"
 	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func Code2Session() {
@@ -16,43 +16,43 @@ func Code2Session() {
 	//    wxCode:小程序调用wx.login 获取的code
 	userIdRsp, err := wechat.Code2Session("AppID", "APPSecret", "011EZg6p0VO47n1p2W4p0mle6p0EZg6u")
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("SessionKey:", userIdRsp.SessionKey)
-	fmt.Println("OpenID:", userIdRsp.Openid)
-	fmt.Println("UnionID:", userIdRsp.Unionid)
-	fmt.Println("Errcode:", userIdRsp.Errcode)
-	fmt.Println("Errmsg:", userIdRsp.Errmsg)
+	xlog.Debug("SessionKey:", userIdRsp.SessionKey)
+	xlog.Debug("OpenID:", userIdRsp.Openid)
+	xlog.Debug("UnionID:", userIdRsp.Unionid)
+	xlog.Debug("Errcode:", userIdRsp.Errcode)
+	xlog.Debug("Errmsg:", userIdRsp.Errmsg)
 }
 
 func GetAppWeChatLoginAccessToken() {
 	accessToken, err := wechat.GetOauth2AccessToken("AppID", "AppSecret", "code")
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("AccessToken:", accessToken.AccessToken)
-	fmt.Println("Openid:", accessToken.Openid)
-	fmt.Println("Unionid:", accessToken.Unionid)
-	fmt.Println("Scope:", accessToken.Scope)
-	fmt.Println("ExpiresIn:", accessToken.ExpiresIn)
-	fmt.Println("Errcode:", accessToken.Errcode)
-	fmt.Println("Errmsg:", accessToken.Errmsg)
+	xlog.Debug("AccessToken:", accessToken.AccessToken)
+	xlog.Debug("Openid:", accessToken.Openid)
+	xlog.Debug("Unionid:", accessToken.Unionid)
+	xlog.Debug("Scope:", accessToken.Scope)
+	xlog.Debug("ExpiresIn:", accessToken.ExpiresIn)
+	xlog.Debug("Errcode:", accessToken.Errcode)
+	xlog.Debug("Errmsg:", accessToken.Errmsg)
 }
 
 func RefreshAppWeChatLoginAccessToken() {
 	accessToken, err := wechat.RefreshOauth2AccessToken("AppID", "refreshToken")
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("AccessToken:", accessToken.AccessToken)
-	fmt.Println("Openid:", accessToken.Openid)
-	fmt.Println("Scope:", accessToken.Scope)
-	fmt.Println("ExpiresIn:", accessToken.ExpiresIn)
-	fmt.Println("Errcode:", accessToken.Errcode)
-	fmt.Println("Errmsg:", accessToken.Errmsg)
+	xlog.Debug("AccessToken:", accessToken.AccessToken)
+	xlog.Debug("Openid:", accessToken.Openid)
+	xlog.Debug("Scope:", accessToken.Scope)
+	xlog.Debug("ExpiresIn:", accessToken.ExpiresIn)
+	xlog.Debug("Errcode:", accessToken.Errcode)
+	xlog.Debug("Errmsg:", accessToken.Errmsg)
 }
 
 func GetWeChatAppletAccessToken() {
@@ -61,13 +61,13 @@ func GetWeChatAppletAccessToken() {
 	//    appSecret:AppSecret
 	accessToken, err := wechat.GetAppletAccessToken("AppID", "AppSecret")
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("AccessToken:", accessToken.AccessToken)
-	fmt.Println("ExpiresIn:", accessToken.ExpiresIn)
-	fmt.Println("Errcode:", accessToken.Errcode)
-	fmt.Println("Errmsg:", accessToken.Errmsg)
+	xlog.Debug("AccessToken:", accessToken.AccessToken)
+	xlog.Debug("ExpiresIn:", accessToken.ExpiresIn)
+	xlog.Debug("Errcode:", accessToken.Errcode)
+	xlog.Debug("Errmsg:", accessToken.Errmsg)
 }
 
 func GetWeChatAppletPaidUnionId() {
@@ -78,12 +78,12 @@ func GetWeChatAppletPaidUnionId() {
 	//    transactionId：微信支付订单号
 	rsp, err := wechat.GetAppletPaidUnionId(accessToken, "o0Df70MSI4Ygv2KQ2cLnoMN5CXI8", "4200000326201905256499385970")
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("Unionid:", rsp.Unionid)
-	fmt.Println("Errcode:", rsp.Errcode)
-	fmt.Println("Errmsg:", rsp.Errmsg)
+	xlog.Debug("Unionid:", rsp.Unionid)
+	xlog.Debug("Errcode:", rsp.Errcode)
+	xlog.Debug("Errmsg:", rsp.Errmsg)
 }
 
 func GetWeChatUserInfo() {
@@ -94,10 +94,10 @@ func GetWeChatUserInfo() {
 	//    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
 	userInfo, err := wechat.GetUserInfo(accessToken, "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("userInfo:", *userInfo)
+	xlog.Debug("userInfo:", *userInfo)
 }
 
 func GetWeChatUserInfoOpen() {
@@ -105,10 +105,10 @@ func GetWeChatUserInfoOpen() {
 
 	userInfo, err := wechat.GetUserInfoOpen(accessToken, "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("userInfo:", *userInfo)
+	xlog.Debug("userInfo:", *userInfo)
 }
 
 func DecryptWeChatOpenDataToStruct() {
@@ -125,13 +125,13 @@ func DecryptWeChatOpenDataToStruct() {
 	//    beanPtr:需要解析到的结构体指针
 	err := wechat.DecryptOpenDataToStruct(data, iv, session, phone)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("PhoneNumber:", phone.PhoneNumber)
-	fmt.Println("PurePhoneNumber:", phone.PurePhoneNumber)
-	fmt.Println("CountryCode:", phone.CountryCode)
-	fmt.Println("Watermark:", phone.Watermark)
+	xlog.Debug("PhoneNumber:", phone.PhoneNumber)
+	xlog.Debug("PurePhoneNumber:", phone.PurePhoneNumber)
+	xlog.Debug("CountryCode:", phone.CountryCode)
+	xlog.Debug("Watermark:", phone.Watermark)
 
 	sessionKey := "tiihtNczf5v6AKRyjwEUhQ=="
 	encryptedData := "CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZMQmRzooG2xrDcvSnxIMXFufNstNGTyaGS9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+3hVbJSRgv+4lGOETKUQz6OYStslQ142dNCuabNPGBzlooOmB231qMM85d2/fV6ChevvXvQP8Hkue1poOFtnEtpyxVLW1zAo6/1Xx1COxFvrc2d7UL/lmHInNlxuacJXwu0fjpXfz/YqYzBIBzD6WUfTIF9GRHpOn/Hz7saL8xz+W//FRAUid1OksQaQx4CMs8LOddcQhULW4ucetDf96JcR3g0gfRK4PC7E/r7Z6xNrXd2UIeorGj5Ef7b1pJAYB6Y5anaHqZ9J6nKEBvB4DnNLIVWSgARns/8wR2SiRS7MNACwTyrGvt9ts8p12PKFdlqYTopNHR1Vf7XjfhQlVsAJdNiKdYmYVoKlaRv85IfVunYzO0IKXsyl7JCUjCpoG20f0a04COwfneQAGGwd5oa+T8yO5hzuyDb/XcxxmK01EpqOyuxINew=="
@@ -142,18 +142,18 @@ func DecryptWeChatOpenDataToStruct() {
 
 	err = wechat.DecryptOpenDataToStruct(encryptedData, iv2, sessionKey, userInfo)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("NickName:", userInfo.NickName)
-	fmt.Println("AvatarUrl:", userInfo.AvatarUrl)
-	fmt.Println("Country:", userInfo.Country)
-	fmt.Println("Province:", userInfo.Province)
-	fmt.Println("City:", userInfo.City)
-	fmt.Println("Gender:", userInfo.Gender)
-	fmt.Println("OpenId:", userInfo.OpenId)
-	fmt.Println("UnionId:", userInfo.UnionId)
-	fmt.Println("Watermark:", userInfo.Watermark)
+	xlog.Debug("NickName:", userInfo.NickName)
+	xlog.Debug("AvatarUrl:", userInfo.AvatarUrl)
+	xlog.Debug("Country:", userInfo.Country)
+	xlog.Debug("Province:", userInfo.Province)
+	xlog.Debug("City:", userInfo.City)
+	xlog.Debug("Gender:", userInfo.Gender)
+	xlog.Debug("OpenId:", userInfo.OpenId)
+	xlog.Debug("UnionId:", userInfo.UnionId)
+	xlog.Debug("Watermark:", userInfo.Watermark)
 }
 
 func DecryptWeChatOpenDataToBodyMap() {
@@ -167,10 +167,10 @@ func DecryptWeChatOpenDataToBodyMap() {
 	//    sessionKey:会话密钥
 	bm, err := wechat.DecryptOpenDataToBodyMap(data, iv, session)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("WeChatUserPhone:", bm)
+	xlog.Debug("WeChatUserPhone:", bm)
 }
 
 func GetOpenIdByAuthCode() {
@@ -182,17 +182,17 @@ func GetOpenIdByAuthCode() {
 	//    nonceStr:随即字符串
 	openIdRsp, err := wechat.GetOpenIdByAuthCode("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", "135127679952609396", gotil.GetRandomString(32))
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("ReturnCode:", openIdRsp.ReturnCode)
-	fmt.Println("ReturnMsg:", openIdRsp.ReturnMsg)
-	fmt.Println("ResultCode:", openIdRsp.ResultCode)
-	fmt.Println("Appid:", openIdRsp.Appid)
-	fmt.Println("MchId:", openIdRsp.MchId)
-	fmt.Println("NonceStr:", openIdRsp.NonceStr)
-	fmt.Println("err_code:", openIdRsp.ErrCode)
-	fmt.Println("Openid:", openIdRsp.Openid)
+	xlog.Debug("ReturnCode:", openIdRsp.ReturnCode)
+	xlog.Debug("ReturnMsg:", openIdRsp.ReturnMsg)
+	xlog.Debug("ResultCode:", openIdRsp.ResultCode)
+	xlog.Debug("Appid:", openIdRsp.Appid)
+	xlog.Debug("MchId:", openIdRsp.MchId)
+	xlog.Debug("NonceStr:", openIdRsp.NonceStr)
+	xlog.Debug("err_code:", openIdRsp.ErrCode)
+	xlog.Debug("Openid:", openIdRsp.Openid)
 }
 
 // 解析notify参数、验签、返回数据到微信
@@ -202,15 +202,15 @@ func ParseWeChatNotifyAndVerifyWeChatSign(req *http.Request) string {
 	// 解析参数
 	bodyMap, err := wechat.ParseNotifyToBodyMap(req)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Debug("err:", err)
 	}
-	fmt.Println("bodyMap:", bodyMap)
+	xlog.Debug("bodyMap:", bodyMap)
 
 	ok, err := wechat.VerifySign("GFDS8j98rewnmgl45wHTt980jg543abc", wechat.SignType_MD5, bodyMap)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Debug("err:", err)
 	}
-	fmt.Println("微信验签是否通过:", ok)
+	xlog.Debug("微信验签是否通过:", ok)
 
 	rsp.ReturnCode = gopay.SUCCESS
 	rsp.ReturnMsg = "OK"
@@ -223,32 +223,32 @@ func ParseWeChatRefundNotify(req *http.Request) string {
 	// 解析参数
 	notifyReq, err := wechat.ParseRefundNotify(req)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Debug("err:", err)
 	}
-	fmt.Println("notifyReq:", *notifyReq)
+	xlog.Debug("notifyReq:", *notifyReq)
 	// 退款通知无sign，不用验签
 
 	// 解密退款异步通知的加密数据
 	refundNotify, err := wechat.DecryptRefundNotifyReqInfo(notifyReq.ReqInfo, "GFDS8j98rewnmgl45wHTt980jg543abc")
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Debug("err:", err)
 	}
-	fmt.Println("refundNotify:", *refundNotify)
+	xlog.Debug("refundNotify:", *refundNotify)
 
 	// 或者
 
 	bodyMap, err := wechat.ParseNotifyToBodyMap(req)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Debug("err:", err)
 	}
-	fmt.Println("bodyMap:", bodyMap)
+	xlog.Debug("bodyMap:", bodyMap)
 
 	// 解密退款异步通知的加密数据
 	refundNotify2, err := wechat.DecryptRefundNotifyReqInfo(bodyMap.Get("req_info"), "GFDS8j98rewnmgl45wHTt980jg543abc")
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Debug("err:", err)
 	}
-	fmt.Println("refundNotify:", *refundNotify2)
+	xlog.Debug("refundNotify:", *refundNotify2)
 
 	// 返回微信
 	rsp.ReturnCode = gopay.SUCCESS

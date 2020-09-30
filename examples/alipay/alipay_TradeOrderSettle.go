@@ -1,10 +1,9 @@
 package alipay
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func TradeOrderSettle() {
@@ -28,13 +27,13 @@ func TradeOrderSettle() {
 	listParams = append(listParams, alipay.OpenApiRoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
 
 	body.Set("royalty_parameters", listParams)
-	fmt.Println("listParams:", body.Get("royalty_parameters"))
+	xlog.Debug("listParams:", body.Get("royalty_parameters"))
 
 	//发起交易结算接口
 	aliRsp, err := client.TradeOrderSettle(body)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }

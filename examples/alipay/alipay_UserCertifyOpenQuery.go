@@ -1,10 +1,9 @@
 package alipay
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func UserCertifyOpenQuery() {
@@ -28,9 +27,9 @@ func UserCertifyOpenQuery() {
 	//发起请求
 	aliRsp, err := client.UserCertifyOpenQuery(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
-	fmt.Println("aliRsp.Response.Passed:", aliRsp.Response.Passed)
+	xlog.Debug("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp.Response.Passed:", aliRsp.Response.Passed)
 }

@@ -1,10 +1,9 @@
 package alipay
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func TradePrecreate() {
@@ -28,10 +27,10 @@ func TradePrecreate() {
 	//创建订单
 	aliRsp, err := client.TradePrecreate(body)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
-	fmt.Println("aliRsp.QrCode:", aliRsp.Response.QrCode)
-	fmt.Println("aliRsp.OutTradeNo:", aliRsp.Response.OutTradeNo)
+	xlog.Debug("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp.QrCode:", aliRsp.Response.QrCode)
+	xlog.Debug("aliRsp.OutTradeNo:", aliRsp.Response.OutTradeNo)
 }

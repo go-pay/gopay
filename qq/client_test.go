@@ -22,6 +22,9 @@ func TestMain(m *testing.M) {
 	//    apiKey：API秘钥值
 	client = NewClient(mchId, apiKey)
 
+	// 打开Debug开关，输出日志
+	client.DebugSwitch = gopay.DebugOn
+
 	//err := client.AddCertFilePath(nil, nil, nil)
 	//if err != nil {
 	//	panic(err)

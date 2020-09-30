@@ -669,7 +669,6 @@ func MonitorHeartbeatSyn(appId string, t PKCSType, privateKey, signType, bizCont
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
-	fmt.Println("bsbsbs:", string(bs))
 	rsp = new(MonitorHeartbeatSynResponse)
 	if err = json.Unmarshal(bs, rsp); err != nil {
 		return nil, err

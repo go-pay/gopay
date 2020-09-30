@@ -27,7 +27,7 @@ import (
 )
 
 func main() {
-    fmt.Println("GoPay Version: ", gopay.Version)
+    xlog.Debug("GoPay Version: ", gopay.Version)
 }
 ```
 
@@ -209,6 +209,9 @@ import (
 //    isProd：是否是正式环境
 client := wechat.NewClient("wxdaa2ab9ef87b5497", mchId, apiKey, false)
 
+// 打开Debug开关，输出日志，默认关闭
+client.DebugSwitch = gopay.DebugOn
+
 // 设置国家：不设置默认 中国国内
 //    wechat.China：中国国内
 //    wechat.China2：中国国内备用
@@ -243,6 +246,9 @@ import (
 //    privateKey：应用私钥，支持PKCS1和PKCS8
 //    isProd：是否是正式环境
 client := alipay.NewClient("2016091200494382", privateKey, false)
+
+// 打开Debug开关，输出日志，默认关闭
+client.DebugSwitch = gopay.DebugOn
 
 // 设置支付宝请求 公共参数
 //    注意：具体设置哪些参数，根据不同的方法而不同，此处列举出所有设置参数
@@ -558,7 +564,7 @@ phone := new(wechat.UserPhone)
 //    sessionKey：会话密钥，通过 wechat.Code2Session() 方法获取到
 //    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
 err := wechat.DecryptOpenDataToStruct(data, iv, session, phone)
-fmt.Println(*phone)
+xlog.Debug(*phone)
 // 获取微信小程序用户信息
 sessionKey := "tiihtNczf5v6AKRyjwEUhQ=="
 encryptedData := "CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZMQmRzooG2xrDcvSnxIMXFufNstNGTyaGS9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+3hVbJSRgv+4lGOETKUQz6OYStslQ142dNCuabNPGBzlooOmB231qMM85d2/fV6ChevvXvQP8Hkue1poOFtnEtpyxVLW1zAo6/1Xx1COxFvrc2d7UL/lmHInNlxuacJXwu0fjpXfz/YqYzBIBzD6WUfTIF9GRHpOn/Hz7saL8xz+W//FRAUid1OksQaQx4CMs8LOddcQhULW4ucetDf96JcR3g0gfRK4PC7E/r7Z6xNrXd2UIeorGj5Ef7b1pJAYB6Y5anaHqZ9J6nKEBvB4DnNLIVWSgARns/8wR2SiRS7MNACwTyrGvt9ts8p12PKFdlqYTopNHR1Vf7XjfhQlVsAJdNiKdYmYVoKlaRv85IfVunYzO0IKXsyl7JCUjCpoG20f0a04COwfneQAGGwd5oa+T8yO5hzuyDb/XcxxmK01EpqOyuxINew=="
@@ -567,7 +573,7 @@ iv2 := "r7BXXKkLb8qrSNn05n0qiA=="
 // 微信小程序 用户信息
 userInfo := new(wechat.AppletUserInfo)
 err = wechat.DecryptOpenDataToStruct(encryptedData, iv2, sessionKey, userInfo)
-fmt.Println(*userInfo)
+xlog.Debug(*userInfo)
 
 data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
 iv := "Cds8j3VYoGvnTp1BrjXdJg=="
@@ -579,10 +585,10 @@ session := "lyY4HPQbaOYzZdG+JcYK9w=="
 //    sessionKey:会话密钥
 bm, err := wechat.DecryptOpenDataToBodyMap(data, iv, session)
 if err != nil {
-     fmt.Println("err:", err)
+     xlog.Debug("err:", err)
      return
 }
-fmt.Println("WeChatUserPhone:", bm)
+xlog.Debug("WeChatUserPhone:", bm)
 ```
 
 * #### 支付宝 公共API
@@ -612,7 +618,7 @@ phone := new(alipay.UserPhone)
 //    secretKey:AES密钥，支付宝管理平台配置
 //    beanPtr:需要解析到的结构体指针
 err := alipay.DecryptOpenDataToStruct(encryptedData, secretKey, phone)
-fmt.Println(*phone)
+xlog.Debug(*phone)
 ```
 
 ## 开源不易，讲究的朋友可以给个赞赏
