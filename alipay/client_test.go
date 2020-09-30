@@ -535,7 +535,8 @@ func TestVerifySignWithCert(t *testing.T) {
 	}
 	xlog.Debug("OK:", ok)
 }
-func ExampleGetCertSN() {
+
+func TestExampleGetCertSN(t *testing.T) {
 	sn, err := GetCertSN("cert/alipayCertPublicKey_RSA2.crt")
 	if err != nil {
 		xlog.Errorf("GetCertSN(),error:%+v", err)
