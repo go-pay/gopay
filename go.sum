@@ -130,8 +130,8 @@ github.com/hashicorp/mdns v1.0.0/go.mod h1:tL+uN++7HEJ6SQLQ2/p+z2pH24WQKWjBPkE0m
 github.com/hashicorp/memberlist v0.1.3/go.mod h1:ajVTdAv/9Im8oMAAj5G31PhhMCZJV2pPBoIllUwCN7I=
 github.com/hashicorp/serf v0.8.2/go.mod h1:6hOLApaqBFA1NXqRQAsxw9QxuDEvNxSQRwA/JwenrHc=
 github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=
-github.com/iGoogle-ink/gotil v1.0.8-0.20200930090030-aa0afe7c6c1d h1:m1hghEj92tEIRgipfRGsS4tP6QDX8orTGu0zwjJoia4=
-github.com/iGoogle-ink/gotil v1.0.8-0.20200930090030-aa0afe7c6c1d/go.mod h1:9/WzeMfYRZaeBMItHX0oRzZkUn87Z0Tj9fLaWrfzRtA=
+github.com/iGoogle-ink/gotil v1.0.8-0.20200930171421-152bfb39873b h1:k1HAJf5qeCwaYL5rAgHGdqTZ7RqKZ6vIMFoY7VENxbE=
+github.com/iGoogle-ink/gotil v1.0.8-0.20200930171421-152bfb39873b/go.mod h1:9/WzeMfYRZaeBMItHX0oRzZkUn87Z0Tj9fLaWrfzRtA=
 github.com/jinzhu/gorm v1.9.16/go.mod h1:G3LB3wezTOWM2ITLzPxEXgSkOXAntiLHS7UdBefADcs=
 github.com/jinzhu/inflection v1.0.0/go.mod h1:h+uFLlag+Qp1Va5pdKtLDYj+kHp5pxUVkryuEj+Srlc=
 github.com/jinzhu/now v1.0.1/go.mod h1:d3SSVoowX0Lcu0IBviAWJpolVfI5UJVZZ7cO71lE/z8=
