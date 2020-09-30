@@ -1,10 +1,9 @@
 package alipay
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func TradeAppPay() {
@@ -29,8 +28,8 @@ func TradeAppPay() {
 	//手机APP支付参数请求
 	payParam, err := client.TradeAppPay(body)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("payParam:", payParam)
+	xlog.Debug("payParam:", payParam)
 }

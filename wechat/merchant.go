@@ -2,6 +2,7 @@ package wechat
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gotil"
 	"github.com/iGoogle-ink/gotil/xhttp"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 // 企业付款（企业向微信用户个人付款）
@@ -39,13 +41,23 @@ func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fil
 		url = w.BaseURL + transfers
 		w.mu.RUnlock()
 	}
-	wxRsp = new(TransfersResponse)
-	res, errs := httpClient.Post(url).SendString(generateXml(bm)).EndStruct(wxRsp)
+	if w.DebugSwitch == gopay.DebugOn {
+		req, _ := json.Marshal(bm)
+		xlog.Debugf("Wechat_Request: %s", req)
+	}
+	res, bs, errs := httpClient.Post(url).SendString(generateXml(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
+	if w.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	wxRsp = new(TransfersResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return wxRsp, nil
 }
@@ -78,13 +90,23 @@ func (w *Client) GetTransferInfo(bm gopay.BodyMap, certFilePath, keyFilePath, pk
 		url = w.BaseURL + getTransferInfo
 		w.mu.RUnlock()
 	}
-	wxRsp = new(TransfersInfoResponse)
-	res, errs := httpClient.Post(url).SendString(generateXml(bm)).EndStruct(wxRsp)
+	if w.DebugSwitch == gopay.DebugOn {
+		req, _ := json.Marshal(bm)
+		xlog.Debugf("Wechat_Request: %s", req)
+	}
+	res, bs, errs := httpClient.Post(url).SendString(generateXml(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
+	if w.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	wxRsp = new(TransfersInfoResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return wxRsp, nil
 }
@@ -119,13 +141,23 @@ func (w *Client) PayBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 		url = w.BaseURL + payBank
 		w.mu.RUnlock()
 	}
-	wxRsp = new(PayBankResponse)
-	res, errs := httpClient.Post(url).SendString(generateXml(bm)).EndStruct(wxRsp)
+	if w.DebugSwitch == gopay.DebugOn {
+		req, _ := json.Marshal(bm)
+		xlog.Debugf("Wechat_Request: %s", req)
+	}
+	res, bs, errs := httpClient.Post(url).SendString(generateXml(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
+	if w.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	wxRsp = new(PayBankResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return wxRsp, nil
 }
@@ -157,13 +189,23 @@ func (w *Client) QueryBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fi
 		url = w.BaseURL + queryBank
 		w.mu.RUnlock()
 	}
-	wxRsp = new(QueryBankResponse)
-	res, errs := httpClient.Post(url).SendString(generateXml(bm)).EndStruct(wxRsp)
+	if w.DebugSwitch == gopay.DebugOn {
+		req, _ := json.Marshal(bm)
+		xlog.Debugf("Wechat_Request: %s", req)
+	}
+	res, bs, errs := httpClient.Post(url).SendString(generateXml(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
+	if w.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	wxRsp = new(QueryBankResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return wxRsp, nil
 }
@@ -190,13 +232,23 @@ func (w *Client) GetRSAPublicKey(bm gopay.BodyMap, certFilePath, keyFilePath, pk
 	bm.Set("sign", getReleaseSign(w.ApiKey, bm.Get("sign_type"), bm))
 
 	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
-	wxRsp = new(RSAPublicKeyResponse)
-	res, errs := httpClient.Post(url).SendString(generateXml(bm)).EndStruct(wxRsp)
+	if w.DebugSwitch == gopay.DebugOn {
+		req, _ := json.Marshal(bm)
+		xlog.Debugf("Wechat_Request: %s", req)
+	}
+	res, bs, errs := httpClient.Post(url).SendString(generateXml(bm)).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
+	if w.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	wxRsp = new(RSAPublicKeyResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return wxRsp, nil
 }

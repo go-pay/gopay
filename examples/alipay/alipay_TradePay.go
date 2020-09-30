@@ -1,10 +1,9 @@
 package alipay
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func TradePay() {
@@ -33,15 +32,15 @@ func TradePay() {
 	//条码支付
 	aliRsp, err := client.TradePay(body)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 	// 同步返回验签
 	alipayPublicKey := "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp8gueNlkbiDidz6FBQEBpqoRgH8h7JtsPtYW0nzAqy1MME4mFnDSMfSKlreUomS3a55gmBopL1eF4/Km/dEnaL5tCY9+24SKn1D4iyls+lvz/ZjvUjVwxoUYBh8kkcxMZSDeDz8//o+9qZTrICVP2a4sBB8T0XmU4gxfw8FsmtoomBH1nLk3AO7wgRN2a3+SRSAmxrhIGDmF1lljSlhY32eJpJ2TZQKaWNW+7yDBU/0Wt3kQVY84vr14yYagnSCiIfqyVFqePayRtmVJDr5qvSXr51tdqs2zKZCu+26X7JAF4BSsaq4gmY5DmDTm4TohCnBduI1+bPGD+igVmtl05wIDAQAB"
 	ok, err := alipay.VerifySyncSign(alipayPublicKey, aliRsp.SignData, aliRsp.Sign)
 	if err != nil {
-		fmt.Println("err:::", err)
+		xlog.Debug("err:::", err)
 	}
-	fmt.Println("同步返回验签：", ok)
+	xlog.Debug("同步返回验签：", ok)
 }

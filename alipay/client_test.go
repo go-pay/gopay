@@ -1,7 +1,6 @@
 package alipay
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -25,6 +24,10 @@ func TestMain(m *testing.M) {
 	//    privateKey：应用私钥，支持PKCS1和PKCS8
 	//    isProd：是否是正式环境
 	client = NewClient(appid, privateKey, false)
+
+	// 打开Debug开关，输出日志
+	client.DebugSwitch = gopay.DebugOn
+
 	// 配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType(RSA2)
@@ -33,7 +36,7 @@ func TestMain(m *testing.M) {
 
 	// err := client.SetCertSnByPath("cert/appCertPublicKey.crt", "cert/alipayRootCert.crt", "cert/alipayCertPublicKey_RSA2.crt")
 	// if err != nil {
-	//	fmt.Println("SetCertSnByPath:", err)
+	//	xlog.Debug("SetCertSnByPath:", err)
 	//	return
 	// }
 
@@ -269,7 +272,7 @@ func TestClient_TradeOrderSettle(t *testing.T) {
 	listParams = append(listParams, OpenApiRoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
 
 	bm.Set("royalty_parameters", listParams)
-	// fmt.Println("listParams:", bm.Get("royalty_parameters"))
+	// xlog.Debug("listParams:", bm.Get("royalty_parameters"))
 
 	// 发起交易结算接口
 	aliRsp, err := client.TradeOrderSettle(bm)
@@ -532,41 +535,42 @@ func TestVerifySignWithCert(t *testing.T) {
 	}
 	xlog.Debug("OK:", ok)
 }
-func ExampleGetCertSN() {
+
+func TestExampleGetCertSN(t *testing.T) {
 	sn, err := GetCertSN("cert/alipayCertPublicKey_RSA2.crt")
 	if err != nil {
 		xlog.Errorf("GetCertSN(),error:%+v", err)
 		return
 	}
-	fmt.Println(sn)
+	xlog.Debug(sn)
 	pubKeyPath := "cert/appCertPublicKey.crt"
 	sn, err = GetCertSN(pubKeyPath)
 	if err != nil {
 		xlog.Errorf("GetCertSN(),error:%+v", err)
 		return
 	}
-	fmt.Println(sn)
+	xlog.Debug(sn)
 	bts, _ := ioutil.ReadFile(pubKeyPath)
 	sn, err = GetCertSN(bts)
 	if err != nil {
 		xlog.Errorf("GetCertSN(),error:%+v", err)
 		return
 	}
-	fmt.Println(sn)
+	xlog.Debug(sn)
 	rootCrtPath := "cert/alipayRootCert.crt"
 	sn, err = GetRootCertSN(rootCrtPath)
 	if err != nil {
 		xlog.Errorf("GetCertSN(),error:%+v", err)
 		return
 	}
-	fmt.Println(sn)
+	xlog.Debug(sn)
 	bts, _ = ioutil.ReadFile(rootCrtPath)
 	sn, err = GetRootCertSN(bts)
 	if err != nil {
 		xlog.Errorf("GetCertSN(),error:%+v", err)
 		return
 	}
-	fmt.Println(sn)
+	xlog.Debug(sn)
 	// Output:
 	// 04afd423ea5bd6f5c5482854ed73278c
 	// 4498aaa8ab0c8986c15c41b36186db7d

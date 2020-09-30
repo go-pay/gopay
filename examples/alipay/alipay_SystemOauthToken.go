@@ -1,10 +1,9 @@
 package alipay
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func SystemOauthToken() {
@@ -28,12 +27,12 @@ func SystemOauthToken() {
 	//发起请求
 	aliRsp, err := client.SystemOauthToken(body)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
-	fmt.Println("aliRsp:", aliRsp.Response.AccessToken)
-	fmt.Println("aliRsp:", aliRsp.SignData)
+	xlog.Debug("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", aliRsp.Response.AccessToken)
+	xlog.Debug("aliRsp:", aliRsp.SignData)
 
 	//支付宝小程序创建订单
 	body2 := make(gopay.BodyMap)
@@ -44,9 +43,9 @@ func SystemOauthToken() {
 
 	rsp, err := client.TradeCreate(body2)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("rsp:", *rsp)
-	fmt.Println("TradeNo:", rsp.Response.TradeNo)
+	xlog.Debug("rsp:", *rsp)
+	xlog.Debug("TradeNo:", rsp.Response.TradeNo)
 }

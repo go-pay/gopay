@@ -1,3 +1,11 @@
+版本号：Release 1.5.20
+发布时间：2020/09/30 23:58
+修改记录：
+   (1) 微信：client 添加 DebugSwitch 开关，默认关闭，不输出 请求参数和返回参数，通过 client.DebugSwitch = gopay.DebugOn 打开
+   (2) 支付宝：client 添加 DebugSwitch 开关，默认关闭，不输出 请求参数和返回参数，通过 client.DebugSwitch = gopay.DebugOn 打开
+   (3) QQ：client 添加 DebugSwitch 开关，默认关闭，不输出 请求参数和返回参数，通过 client.DebugSwitch = gopay.DebugOn 打开
+   (4) 更新 Gotil
+
 版本号：Release 1.5.19
 发布时间：2020/09/20 23:58
 修改记录：

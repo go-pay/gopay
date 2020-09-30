@@ -1,10 +1,9 @@
 package alipay
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func UserCertifyOpenCertify() {
@@ -28,9 +27,9 @@ func UserCertifyOpenCertify() {
 	//发起请求
 	certifyUrl, err := client.UserCertifyOpenCertify(bm)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("certifyUrl:", certifyUrl)
+	xlog.Debug("certifyUrl:", certifyUrl)
 
 }

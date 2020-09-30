@@ -28,6 +28,9 @@ func TestMain(m *testing.M) {
 	//    isProd：是否是正式环境
 	client = NewClient(appId, mchId, apiKey, false)
 
+	// 打开Debug开关，输出日志
+	client.DebugSwitch = gopay.DebugOn
+
 	// 设置国家，不设置默认就是 China
 	client.SetCountry(China)
 

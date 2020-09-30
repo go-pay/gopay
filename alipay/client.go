@@ -11,6 +11,7 @@ import (
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gotil"
 	"github.com/iGoogle-ink/gotil/xhttp"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 type Client struct {
@@ -28,6 +29,7 @@ type Client struct {
 	AppAuthToken       string
 	AuthToken          string
 	IsProd             bool
+	DebugSwitch        gopay.DebugSwitch
 	location           *time.Location
 	mu                 sync.RWMutex
 }
@@ -39,9 +41,10 @@ type Client struct {
 //	isProd：是否是正式环境
 func NewClient(appId, privateKey string, isProd bool) (client *Client) {
 	return &Client{
-		AppId:      appId,
-		PrivateKey: privateKey,
-		IsProd:     isProd,
+		AppId:       appId,
+		PrivateKey:  privateKey,
+		IsProd:      isProd,
+		DebugSwitch: gopay.DebugOff,
 	}
 }
 
@@ -741,8 +744,11 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 		return nil, fmt.Errorf("GetRsaSign Error: %v", err)
 	}
 	pubBody.Set("sign", sign)
+	if a.DebugSwitch == gopay.DebugOn {
+		req, _ := json.Marshal(pubBody)
+		xlog.Debugf("Alipay_Request: %s", req)
+	}
 	param := FormatURLParam(pubBody)
-
 	switch method {
 	case "alipay.trade.app.pay":
 		return []byte(param), nil
@@ -761,6 +767,9 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 		res, bs, errs := httpClient.Type(xhttp.TypeForm).Post(url).SendString(param).EndBytes()
 		if len(errs) > 0 {
 			return nil, errs[0]
+		}
+		if a.DebugSwitch == gopay.DebugOn {
+			xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
 		}
 		if res.StatusCode != 200 {
 			return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)

@@ -1,9 +1,8 @@
 package alipay
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func UserInfoShare() {
@@ -23,15 +22,15 @@ func UserInfoShare() {
 	// 发起请求
 	aliRsp, err := client.UserInfoShare()
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 	// 同步返回验签
 	ok, err := alipay.VerifySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
 	if err != nil {
-		fmt.Println("VerifySign-err:", err)
+		xlog.Debug("VerifySign-err:", err)
 		return
 	}
-	fmt.Println("ok:", ok)
+	xlog.Debug("ok:", ok)
 }

@@ -1,11 +1,10 @@
 package alipay
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
 	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func FundTransToaccountTransfer() {
@@ -33,8 +32,8 @@ func FundTransToaccountTransfer() {
 	//转账
 	aliRsp, err := client.FundTransToaccountTransfer(body)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }

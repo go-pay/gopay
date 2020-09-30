@@ -1,10 +1,9 @@
 package alipay
 
 import (
-	"fmt"
-
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func TradeQuery() {
@@ -28,8 +27,8 @@ func TradeQuery() {
 	//查询订单
 	aliRsp, err := client.TradeQuery(body)
 	if err != nil {
-		fmt.Println("err:", err)
+		xlog.Error("err:", err)
 		return
 	}
-	fmt.Println("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", *aliRsp)
 }
