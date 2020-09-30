@@ -1,7 +1,6 @@
 package alipay
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
