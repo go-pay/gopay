@@ -100,7 +100,7 @@ func (w *Client) SendGroupCashRed(bm gopay.BodyMap, certFilePath, keyFilePath, p
 }
 
 // SendAppletRed 发放小程序红包
-//	注意：此处参数中的 wxappid 需要单独传参，不复用 NewClient 时的 appid，total_num = 1
+//	注意：此处参数中的 wxappid 需要单独传参，不复用 NewClient 时的 appid，total_num = 1，notify_way = MINI_PROGRAM_JSAPI
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=18_2&index=3
 func (w *Client) SendAppletRed(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *SendAppletRedResponse, err error) {
 	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
