@@ -522,7 +522,7 @@ notifyReq, err = alipay.ParseNotifyByURLValues()
 // 验签操作
 ok, err = alipay.VerifySign(aliPayPublicKey, notifyReq)
 // 证书验签操作
-ok, err = alipay.VerifySignWithCert("alipayCertPublicKey_RSA2.crt", aliPayPublicKey, notifyReq)
+ok, err = alipay.VerifySignWithCert("alipayCertPublicKey_RSA2.crt", notifyReq)
 
 // ==异步通知，返回支付宝平台的信息==
 //    文档：https://opendocs.alipay.com/open/203/105286
