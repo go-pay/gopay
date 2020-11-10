@@ -12,7 +12,7 @@ platform:
 steps:
   - name: helloworld
     pull: if-not-exists
-    image: helloworld
+    image: hello-world
 
   - name: ci_1.13
     pull: if-not-exists
