@@ -1,5 +1,5 @@
 module github.com/iGoogle-ink/gopay
 
-go 1.14
+go 1.13
 
-require github.com/iGoogle-ink/gotil v1.0.9
+require github.com/iGoogle-ink/gotil v1.0.10

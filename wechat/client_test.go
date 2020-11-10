@@ -432,12 +432,12 @@ func TestClient_PayBank(t *testing.T) {
 	bm.Set("bank_code", "1001") // 招商银行，https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_4&index=5
 	bm.Set("amount", 1)
 
-	encryptBank, err := xrsa.RsaEncryptData("621400000000567", "publicKey.pem")
+	encryptBank, err := xrsa.RsaEncryptDataV2(xrsa.PKCS1, []byte("621400000000567"), "publicKey.pem")
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
-	encryptName, err := xrsa.RsaEncryptData("Jerry", "publicKey.pem")
+	encryptName, err := xrsa.RsaEncryptDataV2(xrsa.PKCS1, []byte("Jerry"), "publicKey.pem")
 	if err != nil {
 		xlog.Error(err)
 		return
