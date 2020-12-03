@@ -16,8 +16,20 @@ var mu sync.RWMutex
 
 // 设置参数
 func (bm BodyMap) Set(key string, value interface{}) {
+
+	var res interface{}
+	switch value.(type) {
+	case func(bm BodyMap):
+		_bm:=make(BodyMap)
+		value.(func(bm BodyMap))(_bm)
+		res=_bm
+		break
+	default:
+		res=value
+	}
+
 	mu.Lock()
-	bm[key] = value
+	bm[key] = res
 	mu.Unlock()
 }
 
