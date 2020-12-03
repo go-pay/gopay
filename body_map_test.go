@@ -7,29 +7,32 @@ Copyright 2020 RS4
 package gopay
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
-func TestBodyMap_Set(t *testing.T) {
-	var b = make(BodyMap)
-	b.Set("test",func(b BodyMap){
-		b.Set("sub", func(b BodyMap) {
-			b.Set("sub-sub","value")
+func TestBodyMapSetBodyMap(t *testing.T) {
+	bm := make(BodyMap)
+	sceneInfo := make(map[string]map[string]string)
+	h5Info := make(map[string]string)
+	h5Info["type"] = "Wap"
+	h5Info["wap_url"] = "http://www.gopay.ink"
+	h5Info["wap_name"] = "H5测试支付"
+	sceneInfo["h5_info"] = h5Info
+	bm.Set("scene_info", sceneInfo)
+	xlog.Debug(bm) // map[scene_info:map[h5_info:map[type:Wap wap_name:H5测试支付 wap_url:http://www.gopay.ink]]]
+
+	bm.Reset()
+	xlog.Debug(bm) // []
+
+	bm.SetBodyMap("scene_info", func(bm BodyMap) {
+		bm.SetBodyMap("h5_info", func(bm BodyMap) {
+			bm.Set("type", "Wap").
+				Set("wap_url", "http://www.gopay.ink").
+				Set("wap_name", "H5测试支付")
 		})
-	})
-
-	assert.Equal(t, BodyMap{
-		"test": BodyMap{
-			"sub":BodyMap{
-				"sub-sub":"value",
-			},
-		},
-	}, b)
-
-	var b2=make(BodyMap)
-	b2.Set("test","value")
-	assert.Equal(t, BodyMap{
-		"test": "value",
-	}, b2)
+	}).Set("额外", "哇").
+		Set("sada", "qedfs")
+	xlog.Debug(bm) // map[scene_info:map[h5_info:map[type:Wap wap_name:H5测试支付 wap_url:http://www.gopay.ink]]]
 }

@@ -181,11 +181,11 @@ func TestClient_TradeQuery(t *testing.T) {
 func TestClient_TradeWapPay(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
-	bm.Set("subject", "手机网站测试支付")
-	bm.Set("out_trade_no", "GZ201909081743431443")
-	bm.Set("quit_url", "https://www.gopay.ink")
-	bm.Set("total_amount", "100.00")
-	bm.Set("product_code", "QUICK_WAP_WAY")
+	bm.Set("subject", "手机网站测试支付").
+		Set("out_trade_no", "GZ201909081743431443").
+		Set("quit_url", "https://www.gopay.ink").
+		Set("total_amount", "100.00").
+		Set("product_code", "QUICK_WAP_WAY")
 
 	// 手机网站支付请求
 	payUrl, err := client.TradeWapPay(bm)

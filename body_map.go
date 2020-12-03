@@ -15,22 +15,21 @@ type BodyMap map[string]interface{}
 var mu sync.RWMutex
 
 // 设置参数
-func (bm BodyMap) Set(key string, value interface{}) {
+func (bm BodyMap) Set(key string, value interface{}) BodyMap {
+	mu.Lock()
+	bm[key] = value
+	mu.Unlock()
+	return bm
+}
 
-	var res interface{}
-	switch value.(type) {
-	case func(bm BodyMap):
-		_bm:=make(BodyMap)
-		value.(func(bm BodyMap))(_bm)
-		res=_bm
-		break
-	default:
-		res=value
-	}
+func (bm BodyMap) SetBodyMap(key string, value func(bm BodyMap)) BodyMap {
+	_bm := make(BodyMap)
+	value(_bm)
 
 	mu.Lock()
-	bm[key] = res
+	bm[key] = _bm
 	mu.Unlock()
+	return bm
 }
 
 // 获取参数
@@ -49,6 +48,13 @@ func (bm BodyMap) Get(key string) string {
 		return convertToString(value)
 	}
 	return v
+}
+
+// 置空BodyMap
+func (bm BodyMap) Reset() {
+	for k := range bm {
+		delete(bm, k)
+	}
 }
 
 // GetArrayMap 获取获取的key对应的值，并尝试转换为 []BodyMap

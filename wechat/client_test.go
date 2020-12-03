@@ -47,25 +47,22 @@ func TestClient_UnifiedOrder(t *testing.T) {
 	xlog.Info("out_trade_no:", number)
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("body", "H5支付")
-	bm.Set("out_trade_no", number)
-	bm.Set("total_fee", 1)
-	bm.Set("spbill_create_ip", "127.0.0.1")
-	bm.Set("notify_url", "http://www.gopay.ink")
-	bm.Set("trade_type", TradeType_H5)
-	bm.Set("device_info", "WEB")
-	bm.Set("sign_type", SignType_MD5)
-
-	sceneInfo := make(map[string]map[string]string)
-	h5Info := make(map[string]string)
-	h5Info["type"] = "Wap"
-	h5Info["wap_url"] = "http://www.gopay.ink"
-	h5Info["wap_name"] = "H5测试支付"
-	sceneInfo["h5_info"] = h5Info
-	bm.Set("scene_info", sceneInfo)
-
-	//bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
+	bm.Set("nonce_str", gotil.GetRandomString(32)).
+		Set("body", "H5支付").
+		Set("out_trade_no", number).
+		Set("total_fee", 1).
+		Set("spbill_create_ip", "127.0.0.1").
+		Set("notify_url", "http://www.gopay.ink").
+		Set("trade_type", TradeType_H5).
+		Set("device_info", "WEB").
+		Set("sign_type", SignType_MD5).
+		SetBodyMap("scene_info", func(bm gopay.BodyMap) {
+			bm.SetBodyMap("h5_info", func(bm gopay.BodyMap) {
+				bm.Set("type", "Wap")
+				bm.Set("wap_url", "http://www.gopay.ink")
+				bm.Set("wap_name", "H5测试支付")
+			})
+		}) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
 
 	// 正式
 	//sign := gopay.GetWeChatParamSign("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", body)
@@ -102,9 +99,9 @@ func TestClient_UnifiedOrder(t *testing.T) {
 func TestClient_QueryOrder(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ")
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("sign_type", SignType_MD5)
+	bm.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ").
+		Set("nonce_str", gotil.GetRandomString(32)).
+		Set("sign_type", SignType_MD5)
 
 	// 请求订单查询，成功后得到结果
 	wxRsp, resBm, err := client.QueryOrder(bm)
@@ -119,9 +116,9 @@ func TestClient_QueryOrder(t *testing.T) {
 func TestClient_CloseOrder(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ")
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("sign_type", SignType_MD5)
+	bm.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ").
+		Set("nonce_str", gotil.GetRandomString(32)).
+		Set("sign_type", SignType_MD5)
 
 	// 请求关闭订单，成功后得到结果
 	wxRsp, err := client.CloseOrder(bm)
@@ -137,13 +134,13 @@ func TestClient_Micropay(t *testing.T) {
 	xlog.Info("out_trade_no:", number)
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("body", "扫用户付款码支付")
-	bm.Set("out_trade_no", number)
-	bm.Set("total_fee", 1)
-	bm.Set("spbill_create_ip", "127.0.0.1")
-	bm.Set("auth_code", "134622817080551492")
-	bm.Set("sign_type", SignType_MD5)
+	bm.Set("nonce_str", gotil.GetRandomString(32)).
+		Set("body", "扫用户付款码支付").
+		Set("out_trade_no", number).
+		Set("total_fee", 1).
+		Set("spbill_create_ip", "127.0.0.1").
+		Set("auth_code", "134622817080551492").
+		Set("sign_type", SignType_MD5)
 
 	// 请求支付，成功后得到结果
 	wxRsp, err := client.Micropay(bm)
@@ -162,8 +159,8 @@ func TestClient_Micropay(t *testing.T) {
 func TestClient_AuthCodeToOpenId(t *testing.T) {
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("auth_code", "134753997737645794")
+	bm.Set("nonce_str", gotil.GetRandomString(32)).
+		Set("auth_code", "134753997737645794")
 
 	wxRsp, err := client.AuthCodeToOpenId(bm)
 	if err != nil {
@@ -175,16 +172,16 @@ func TestClient_AuthCodeToOpenId(t *testing.T) {
 
 func TestClient_Refund(t *testing.T) {
 	// 初始化参数结构体
-	bm := make(gopay.BodyMap)
-	bm.Set("out_trade_no", "QRcTBTbJLoDrWSW9FtpSFlgWhft2QbaY")
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("sign_type", SignType_MD5)
 	s := gotil.GetRandomString(64)
 	xlog.Info("out_refund_no:", s)
-	bm.Set("out_refund_no", s)
-	bm.Set("total_fee", 101)
-	bm.Set("refund_fee", 101)
-	bm.Set("notify_url", "https://www.gopay.ink")
+	bm := make(gopay.BodyMap)
+	bm.Set("out_trade_no", "QRcTBTbJLoDrWSW9FtpSFlgWhft2QbaY").
+		Set("nonce_str", gotil.GetRandomString(32)).
+		Set("sign_type", SignType_MD5).
+		Set("out_refund_no", s).
+		Set("total_fee", 101).
+		Set("refund_fee", 101).
+		Set("notify_url", "https://www.gopay.ink")
 
 	// 请求申请退款（沙箱环境下，证书路径参数可传空）
 	//    body：参数Body
@@ -203,12 +200,12 @@ func TestClient_Refund(t *testing.T) {
 func TestClient_QueryRefund(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("out_trade_no", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")
-	//bm.Set("out_refund_no", "vk4264I1UQ3Hm3E4AKsavK8npylGSgQA092f9ckUxp8A2gXmnsLEdsupURVTcaC7")
-	//bm.Set("transaction_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")
-	//bm.Set("refund_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("sign_type", SignType_MD5)
+	bm.Set("out_trade_no", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk").
+		Set("nonce_str", gotil.GetRandomString(32)).
+		Set("sign_type", SignType_MD5) /*.
+		Set("transaction_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk").
+		Set("out_refund_no", "vk4264I1UQ3Hm3E4AKsavK8npylGSgQA092f9ckUxp8A2gXmnsLEdsupURVTcaC7").
+		Set("refund_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")*/
 
 	// 请求申请退款
 	wxRsp, resBm, err := client.QueryRefund(bm)
@@ -223,9 +220,9 @@ func TestClient_QueryRefund(t *testing.T) {
 func TestClient_Reverse(t *testing.T) {
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B")
-	bm.Set("sign_type", SignType_MD5)
+	bm.Set("nonce_str", gotil.GetRandomString(32)).
+		Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B").
+		Set("sign_type", SignType_MD5)
 
 	// 请求撤销订单，成功后得到结果，沙箱环境下，证书路径参数可传nil
 	wxRsp, err := client.Reverse(bm, nil, nil, nil)
@@ -239,14 +236,14 @@ func TestClient_Reverse(t *testing.T) {
 func TestClient_Transfer(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("partner_trade_no", gotil.GetRandomString(32))
-	bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
-	bm.Set("check_name", "FORCE_CHECK") // NO_CHECK：不校验真实姓名 , FORCE_CHECK：强校验真实姓名
-	bm.Set("re_user_name", "付明明")       // 收款用户真实姓名。 如果check_name设置为FORCE_CHECK，则必填用户真实姓名
-	bm.Set("amount", 30)                // 企业付款金额，单位为分
-	bm.Set("desc", "测试转账")              // 企业付款备注，必填。注意：备注中的敏感词会被转成字符*
-	bm.Set("spbill_create_ip", "127.0.0.1")
+	bm.Set("nonce_str", gotil.GetRandomString(32)).
+		Set("partner_trade_no", gotil.GetRandomString(32)).
+		Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8").
+		Set("check_name", "FORCE_CHECK"). // NO_CHECK：不校验真实姓名 , FORCE_CHECK：强校验真实姓名
+		Set("re_user_name", "付明明").       // 收款用户真实姓名。 如果check_name设置为FORCE_CHECK，则必填用户真实姓名
+		Set("amount", 30).                // 企业付款金额，单位为分
+		Set("desc", "测试转账").              // 企业付款备注，必填。注意：备注中的敏感词会被转成字符*
+		Set("spbill_create_ip", "127.0.0.1")
 
 	// 企业向微信用户个人付款（不支持沙箱环境）
 	//    body：参数Body
@@ -264,8 +261,8 @@ func TestClient_Transfer(t *testing.T) {
 func TestClient_GetTransferInfo(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("partner_trade_no", gotil.GetRandomString(32))
+	bm.Set("nonce_str", gotil.GetRandomString(32)).
+		Set("partner_trade_no", gotil.GetRandomString(32))
 
 	// 查询企业付款
 	//    body：参数Body
@@ -283,10 +280,10 @@ func TestClient_GetTransferInfo(t *testing.T) {
 func TestClient_DownloadBill(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("sign_type", SignType_MD5)
-	bm.Set("bill_date", "20190722")
-	bm.Set("bill_type", "ALL")
+	bm.Set("nonce_str", gotil.GetRandomString(32)).
+		Set("sign_type", SignType_MD5).
+		Set("bill_date", "20190722").
+		Set("bill_type", "ALL")
 
 	// 请求下载对账单，成功后得到结果（string类型字符串）
 	wxRsp, err := client.DownloadBill(bm)
@@ -300,10 +297,10 @@ func TestClient_DownloadBill(t *testing.T) {
 func TestClient_DownloadFundFlow(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("sign_type", SignType_HMAC_SHA256)
-	bm.Set("bill_date", "20190122")
-	bm.Set("account_type", "Basic")
+	bm.Set("nonce_str", gotil.GetRandomString(32)).
+		Set("sign_type", SignType_HMAC_SHA256).
+		Set("bill_date", "20190122").
+		Set("account_type", "Basic")
 
 	// 请求下载资金账单，成功后得到结果，沙箱环境下，证书路径参数可传nil
 	wxRsp, err := client.DownloadFundFlow(bm, nil, nil, nil)
@@ -317,11 +314,11 @@ func TestClient_DownloadFundFlow(t *testing.T) {
 func TestClient_BatchQueryComment(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("sign_type", SignType_HMAC_SHA256)
-	bm.Set("begin_time", "20190120000000")
-	bm.Set("end_time", "20190122174000")
-	bm.Set("offset", "0")
+	bm.Set("nonce_str", gotil.GetRandomString(32)).
+		Set("sign_type", SignType_HMAC_SHA256).
+		Set("begin_time", "20190120000000").
+		Set("end_time", "20190122174000").
+		Set("offset", "0")
 
 	// 请求拉取订单评价数据，成功后得到结果，沙箱环境下，证书路径参数可传nil
 	wxRsp, err := client.BatchQueryComment(bm, nil, nil, nil)
@@ -335,13 +332,13 @@ func TestClient_BatchQueryComment(t *testing.T) {
 func TestClient_EntrustPublic(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("plan_id", "12535")
-	bm.Set("contract_code", "100000")
-	bm.Set("request_serial", "1000")
-	bm.Set("contract_display_account", "微信代扣")
-	bm.Set("notify_url", "https://www.igoogle.ink")
-	bm.Set("version", "1.0")
-	bm.Set("timestamp", time.Now().Unix())
+	bm.Set("plan_id", "12535").
+		Set("contract_code", "100000").
+		Set("request_serial", "1000").
+		Set("contract_display_account", "微信代扣").
+		Set("notify_url", "https://www.igoogle.ink").
+		Set("version", "1.0").
+		Set("timestamp", time.Now().Unix())
 
 	// 公众号纯签约
 	wxRsp, err := client.EntrustPublic(bm)
@@ -355,13 +352,13 @@ func TestClient_EntrustPublic(t *testing.T) {
 func TestClient_EntrustAppPre(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("plan_id", "12535")
-	bm.Set("contract_code", "100000")
-	bm.Set("request_serial", "1000")
-	bm.Set("contract_display_account", "微信代扣")
-	bm.Set("notify_url", "https://www.igoogle.ink")
-	bm.Set("version", "1.0")
-	bm.Set("timestamp", time.Now().Unix())
+	bm.Set("plan_id", "12535").
+		Set("contract_code", "100000").
+		Set("request_serial", "1000").
+		Set("contract_display_account", "微信代扣").
+		Set("notify_url", "https://www.igoogle.ink").
+		Set("version", "1.0").
+		Set("timestamp", time.Now().Unix())
 
 	// APP纯签约
 	wxRsp, err := client.EntrustAppPre(bm)
@@ -375,14 +372,14 @@ func TestClient_EntrustAppPre(t *testing.T) {
 func TestClient_EntrustH5(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("plan_id", "12535")
-	bm.Set("contract_code", "100000")
-	bm.Set("request_serial", "1000")
-	bm.Set("contract_display_account", "微信代扣")
-	bm.Set("notify_url", "https://www.igoogle.ink")
-	bm.Set("version", "1.0")
-	bm.Set("timestamp", time.Now().Unix())
-	bm.Set("clientip", "127.0.0.1")
+	bm.Set("plan_id", "12535").
+		Set("contract_code", "100000").
+		Set("request_serial", "1000").
+		Set("contract_display_account", "微信代扣").
+		Set("notify_url", "https://www.igoogle.ink").
+		Set("version", "1.0").
+		Set("timestamp", time.Now().Unix()).
+		Set("clientip", "127.0.0.1")
 
 	// H5纯签约
 	wxRsp, err := client.EntrustH5(bm)
@@ -398,20 +395,20 @@ func TestClient_EntrustPaying(t *testing.T) {
 	xlog.Info("out_trade_no:", number)
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("contract_mchid", mchId)
-	bm.Set("contract_appid", appId)
-	bm.Set("out_trade_no", number)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("body", "测试签约")
-	bm.Set("total_fee", 1)
-	bm.Set("spbill_create_ip", "127.0.0.1")
-	bm.Set("trade_type", TradeType_App)
-	bm.Set("plan_id", "12535")
-	bm.Set("contract_code", "100000")
-	bm.Set("request_serial", "1000")
-	bm.Set("contract_display_account", "微信代扣")
-	bm.Set("notify_url", "https://www.igoogle.ink")
-	bm.Set("contract_notify_url", "https://www.igoogle.ink")
+	bm.Set("contract_mchid", mchId).
+		Set("contract_appid", appId).
+		Set("out_trade_no", number).
+		Set("nonce_str", gotil.GetRandomString(32)).
+		Set("body", "测试签约").
+		Set("total_fee", 1).
+		Set("spbill_create_ip", "127.0.0.1").
+		Set("trade_type", TradeType_App).
+		Set("plan_id", "12535").
+		Set("contract_code", "100000").
+		Set("request_serial", "1000").
+		Set("contract_display_account", "微信代扣").
+		Set("notify_url", "https://www.igoogle.ink").
+		Set("contract_notify_url", "https://www.igoogle.ink")
 
 	//bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 
@@ -427,10 +424,10 @@ func TestClient_EntrustPaying(t *testing.T) {
 func TestClient_PayBank(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("partner_trade_no", mchId)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
-	bm.Set("bank_code", "1001") // 招商银行，https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_4&index=5
-	bm.Set("amount", 1)
+	bm.Set("partner_trade_no", mchId).
+		Set("nonce_str", gotil.GetRandomString(32)).
+		Set("bank_code", "1001"). // 招商银行，https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_4&index=5
+		Set("amount", 1)
 
 	encryptBank, err := xrsa.RsaEncryptDataV2(xrsa.PKCS1, []byte("621400000000567"), "publicKey.pem")
 	if err != nil {
@@ -442,8 +439,8 @@ func TestClient_PayBank(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	bm.Set("enc_bank_no", encryptBank)
-	bm.Set("enc_true_name", encryptName)
+	bm.Set("enc_bank_no", encryptBank).
+		Set("enc_true_name", encryptName)
 
 	// 企业付款到银行卡API
 	wxRsp, err := client.PayBank(bm, "certFilePath", "keyFilePath", "pkcs12FilePath")
