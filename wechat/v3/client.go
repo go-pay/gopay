@@ -35,7 +35,7 @@ func NewClient(key *rsa.PrivateKey, mechID, serialNo string) *ClientV3 {
 }
 
 // 微信 v3 鉴权请求头 Authorization: xxx 获取
-func (c *ClientV3) authorization(method, url, timestamp, randomStr, body string) (string, error) {
+func (c *ClientV3) Authorization(method, url, timestamp, randomStr, body string) (string, error) {
 	c.rwlock.RLock()
 	defer c.rwlock.RUnlock()
 	_str := method + "\n" + url + "\n" + timestamp + "\n" + randomStr + "\n" + body + "\n"
