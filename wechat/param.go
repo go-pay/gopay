@@ -42,36 +42,22 @@ func (w *Client) SetCountry(country Country) (client *Client) {
 	return w
 }
 
-// 添加微信证书 Path 路径
-//	certFilePath：apiclient_cert.pem 路径
-//	keyFilePath：apiclient_key.pem 路径
-//	pkcs12FilePath：apiclient_cert.p12 路径
+// 添加微信证书 Path 路径或内容
+//	certFilePath：apiclient_cert.pem 路径或内容
+//	keyFilePath：apiclient_key.pem 路径或内容
+//	pkcs12FilePath：apiclient_cert.p12 路径或内容
 //	返回err
 func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) (err error) {
 	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return err
 	}
-	cert, err := ioutil.ReadFile(certFilePath.(string))
-	if err != nil {
-		return fmt.Errorf("ioutil.ReadFile：%w", err)
+	var config *tls.Config
+	if config, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		return err
 	}
-	key, err := ioutil.ReadFile(keyFilePath.(string))
-	if err != nil {
-		return fmt.Errorf("ioutil.ReadFile：%w", err)
-	}
-	pkcs, err := ioutil.ReadFile(pkcs12FilePath.(string))
-	if err != nil {
-		return fmt.Errorf("ioutil.ReadFile：%w", err)
-	}
-	certificate, err := tls.X509KeyPair(cert, key)
-	if err != nil {
-		return fmt.Errorf("tls.LoadX509KeyPair：%w", err)
-	}
-	pkcsPool := x509.NewCertPool()
-	pkcsPool.AppendCertsFromPEM(pkcs)
 	w.mu.Lock()
-	w.certificate = certificate
-	w.certPool = pkcsPool
+	w.certificate = config.Certificates[0]
+	w.certPool = config.RootCAs
 	w.mu.Unlock()
 	return nil
 }
@@ -91,28 +77,38 @@ func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath interfa
 	}
 
 	if certFilePath != nil && keyFilePath != nil && pkcs12FilePath != nil {
-		cert, err := ioutil.ReadFile(certFilePath.(string))
-		if err != nil {
-			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
+		var (
+			cert, key, pkcs []byte
+			certificate     tls.Certificate
+		)
+		if _, ok := certFilePath.([]byte); ok {
+			cert = certFilePath.([]byte)
+		} else {
+			cert, err = ioutil.ReadFile(certFilePath.(string))
 		}
-		key, err := ioutil.ReadFile(keyFilePath.(string))
-		if err != nil {
-			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
+		if _, ok := keyFilePath.([]byte); ok {
+			key = keyFilePath.([]byte)
+		} else {
+			key, err = ioutil.ReadFile(keyFilePath.(string))
 		}
-		pkcs, err := ioutil.ReadFile(pkcs12FilePath.(string))
+		if _, ok := pkcs12FilePath.([]byte); ok {
+			pkcs = pkcs12FilePath.([]byte)
+		} else {
+			pkcs, err = ioutil.ReadFile(pkcs12FilePath.(string))
+		}
 		if err != nil {
 			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
 		}
 		pkcsPool := x509.NewCertPool()
 		pkcsPool.AppendCertsFromPEM(pkcs)
-		certificate, err := tls.X509KeyPair(cert, key)
-		if err != nil {
+		if certificate, err = tls.X509KeyPair(cert, key); err != nil {
 			return nil, fmt.Errorf("tls.LoadX509KeyPair：%w", err)
 		}
 		tlsConfig = &tls.Config{
 			Certificates:       []tls.Certificate{certificate},
 			RootCAs:            pkcsPool,
-			InsecureSkipVerify: true}
+			InsecureSkipVerify: true,
+		}
 		return tlsConfig, nil
 	}
 	return nil, errors.New("cert paths must all nil or all not nil")
@@ -120,14 +116,24 @@ func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath interfa
 
 func checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) error {
 	if certFilePath != nil && keyFilePath != nil && pkcs12FilePath != nil {
-		if v, ok := certFilePath.(string); !ok || v == gotil.NULL {
-			return errors.New("certFilePath not string type or is null string")
+		files := map[string]interface{}{
+			"certFilePath":   certFilePath,
+			"keyFilePath":    keyFilePath,
+			"pkcs12FilePath": pkcs12FilePath,
 		}
-		if v, ok := keyFilePath.(string); !ok || v == gotil.NULL {
-			return errors.New("keyFilePath not string type or is null string")
-		}
-		if v, ok := pkcs12FilePath.(string); !ok || v == gotil.NULL {
-			return errors.New("pkcs12FilePath not string type or is null string")
+		for varName, v := range files {
+			switch v.(type) {
+			case string:
+				if v.(string) == gotil.NULL {
+					return fmt.Errorf("%s is empty", varName)
+				}
+			case []byte:
+				if len(v.([]byte)) == 0 {
+					return fmt.Errorf("%s is empty", varName)
+				}
+			default:
+				return fmt.Errorf("%s type error", varName)
+			}
 		}
 		return nil
 	}
