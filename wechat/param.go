@@ -42,24 +42,44 @@ func (w *Client) SetCountry(country Country) (client *Client) {
 	return w
 }
 
-// 添加微信证书 Path 路径或内容
-//	certFilePath：apiclient_cert.pem 路径或内容
-//	keyFilePath：apiclient_key.pem 路径或内容
-//	pkcs12FilePath：apiclient_cert.p12 路径或内容
+// 添加微信证书 Path 路径
+//	certFilePath：apiclient_cert.pem 路径
+//	keyFilePath：apiclient_key.pem 路径
+//	pkcs12FilePath：apiclient_cert.p12 路径
 //	返回err
 func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) (err error) {
 	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return err
+		return
 	}
 	var config *tls.Config
 	if config, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return err
+		return
 	}
 	w.mu.Lock()
 	w.certificate = config.Certificates[0]
 	w.certPool = config.RootCAs
 	w.mu.Unlock()
-	return nil
+	return
+}
+
+// 添加微信证书内容
+//	certFileContent：apiclient_cert.pem 内容
+//	keyFileContent：apiclient_key.pem 内容
+//	pkcs12FileContent：apiclient_cert.p12 内容
+//	返回err
+func (w *Client) AddCertFileContent(certFileContent, keyFileContent, pkcs12FileContent []byte) (err error) {
+	if err = checkCertFilePath(certFileContent, keyFileContent, pkcs12FileContent); err != nil {
+		return
+	}
+	var config *tls.Config
+	if config, err = w.addCertConfig(certFileContent, keyFileContent, pkcs12FileContent); err != nil {
+		return
+	}
+	w.mu.Lock()
+	w.certificate = config.Certificates[0]
+	w.certPool = config.RootCAs
+	w.mu.Unlock()
+	return
 }
 
 func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath interface{}) (tlsConfig *tls.Config, err error) {
@@ -175,7 +195,7 @@ func getSanBoxKey(mchId, nonceStr, apiKey, signType string) (key string, err err
 	bm := make(gopay.BodyMap)
 	bm.Set("mch_id", mchId)
 	bm.Set("nonce_str", nonceStr)
-	//沙箱环境：获取沙箱环境ApiKey
+	// 沙箱环境：获取沙箱环境ApiKey
 	if key, err = getSanBoxSignKey(mchId, nonceStr, getReleaseSign(apiKey, signType, bm)); err != nil {
 		return
 	}
