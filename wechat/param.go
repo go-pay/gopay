@@ -82,8 +82,8 @@ func (w *Client) AddCertFileContent(certFileContent, keyFileContent, pkcs12FileC
 	return
 }
 
-func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath interface{}) (tlsConfig *tls.Config, err error) {
-	if certFilePath == nil && keyFilePath == nil && pkcs12FilePath == nil {
+func (w *Client) addCertConfig(certFile, keyFile, pkcs12File interface{}) (tlsConfig *tls.Config, err error) {
+	if certFile == nil && keyFile == nil && pkcs12File == nil {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
 		if w.certPool != nil {
@@ -96,25 +96,25 @@ func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath interfa
 		}
 	}
 
-	if certFilePath != nil && keyFilePath != nil && pkcs12FilePath != nil {
+	if certFile != nil && keyFile != nil && pkcs12File != nil {
 		var (
 			cert, key, pkcs []byte
 			certificate     tls.Certificate
 		)
-		if _, ok := certFilePath.([]byte); ok {
-			cert = certFilePath.([]byte)
+		if _, ok := certFile.([]byte); ok {
+			cert = certFile.([]byte)
 		} else {
-			cert, err = ioutil.ReadFile(certFilePath.(string))
+			cert, err = ioutil.ReadFile(certFile.(string))
 		}
-		if _, ok := keyFilePath.([]byte); ok {
-			key = keyFilePath.([]byte)
+		if _, ok := keyFile.([]byte); ok {
+			key = keyFile.([]byte)
 		} else {
-			key, err = ioutil.ReadFile(keyFilePath.(string))
+			key, err = ioutil.ReadFile(keyFile.(string))
 		}
-		if _, ok := pkcs12FilePath.([]byte); ok {
-			pkcs = pkcs12FilePath.([]byte)
+		if _, ok := pkcs12File.([]byte); ok {
+			pkcs = pkcs12File.([]byte)
 		} else {
-			pkcs, err = ioutil.ReadFile(pkcs12FilePath.(string))
+			pkcs, err = ioutil.ReadFile(pkcs12File.(string))
 		}
 		if err != nil {
 			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
@@ -131,7 +131,7 @@ func (w *Client) addCertConfig(certFilePath, keyFilePath, pkcs12FilePath interfa
 		}
 		return tlsConfig, nil
 	}
-	return nil, errors.New("cert paths must all nil or all not nil")
+	return nil, errors.New("cert files must all nil or all not nil")
 }
 
 func checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) error {
