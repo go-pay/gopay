@@ -2,7 +2,6 @@ package wechat
 
 import (
 	"crypto/tls"
-	"crypto/x509"
 	"encoding/json"
 	"encoding/xml"
 	"errors"
@@ -23,8 +22,7 @@ type Client struct {
 	BaseURL     string
 	IsProd      bool
 	DebugSwitch gopay.DebugSwitch
-	certificate tls.Certificate
-	certPool    *x509.CertPool
+	certificate *tls.Certificate
 	mu          sync.RWMutex
 }
 
