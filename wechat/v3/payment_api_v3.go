@@ -1,4 +1,4 @@
-package wechat
+package wecaht
 
 // GetAppPaySignV3 APP调起支付，所需要的的paySign获取
 //	官方文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter3_7.shtml

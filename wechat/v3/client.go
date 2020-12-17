@@ -1,4 +1,4 @@
-package v3
+package wecaht
 
 import (
 	"crypto"
@@ -8,6 +8,9 @@ import (
 	"encoding/base64"
 	"errors"
 	"sync"
+
+	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 const (
@@ -20,6 +23,20 @@ type ClientV3 struct {
 	mchID      string
 	serialNo   string
 	rwlock     sync.RWMutex
+}
+
+// 初始化微信客户端 V3
+//	appId：应用ID
+//	mchId：商户ID
+//	ApiKey：API秘钥值
+//	IsProd：是否是正式环境
+func NewClientV3(appId, mchId, apiKey string) (client *wechat.Client) {
+	return &wechat.Client{
+		AppId:       appId,
+		MchId:       mchId,
+		ApiKey:      apiKey,
+		DebugSwitch: gopay.DebugOff,
+	}
 }
 
 // NewClient 微信支付 V3

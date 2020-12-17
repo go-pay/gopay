@@ -1,4 +1,4 @@
-package wechat
+package wecaht
 
 const (
 	Authorization = "WECHATPAY2-SHA256-RSA2048"
