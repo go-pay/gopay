@@ -10,7 +10,6 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"golang.org/x/crypto/pkcs12"
 	"hash"
 	"io/ioutil"
 	"strings"
@@ -18,6 +17,7 @@ import (
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gotil"
 	"github.com/iGoogle-ink/gotil/xhttp"
+	"golang.org/x/crypto/pkcs12"
 )
 
 type Country int
@@ -92,6 +92,7 @@ func (w *Client) addCertConfig(certFile, keyFile, pkcs12File interface{}) (tlsCo
 			}
 			return tlsConfig, nil
 		}
+		return nil, errors.New("cert parse failed")
 	}
 
 	var (
