@@ -279,27 +279,22 @@ import (
 
 // 初始化 BodyMap
 bm := make(gopay.BodyMap)
-bm.Set("nonce_str", gotil.GetRandomString(32))
-bm.Set("body", "小程序测试支付")
-bm.Set("out_trade_no", number)
-bm.Set("total_fee", 1)
-bm.Set("spbill_create_ip", "127.0.0.1")
-bm.Set("notify_url", "http://www.gopay.ink")
-bm.Set("trade_type", wechat.TradeType_Mini)
-bm.Set("device_info", "WEB")
-bm.Set("sign_type", wechat.SignType_MD5)
-bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
-
-// 嵌套json格式数据（例如：H5支付的 scene_info 参数）
-h5Info := make(map[string]string)
-h5Info["type"] = "Wap"
-h5Info["wap_url"] = "http://www.gopay.ink"
-h5Info["wap_name"] = "H5测试支付"
-
-sceneInfo := make(map[string]map[string]string)
-sceneInfo["h5_info"] = h5Info
-
-bm.Set("scene_info", sceneInfo)
+bm.Set("nonce_str", gotil.GetRandomString(32)).
+    Set("body", "H5支付").
+    Set("out_trade_no", number).
+    Set("total_fee", 1).
+    Set("spbill_create_ip", "127.0.0.1").
+    Set("notify_url", "http://www.gopay.ink").
+    Set("trade_type", TradeType_H5).
+    Set("device_info", "WEB").
+    Set("sign_type", SignType_MD5).
+    SetBodyMap("scene_info", func(bm gopay.BodyMap) {
+        bm.SetBodyMap("h5_info", func(bm gopay.BodyMap) {
+            bm.Set("type", "Wap")
+            bm.Set("wap_url", "http://www.gopay.ink")
+            bm.Set("wap_name", "H5测试支付")
+        })
+    }) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
 
 // 参数 sign ，可单独生成赋值到BodyMap中；也可不传sign参数，client内部会自动获取
 // 如需单独赋值 sign 参数，需通过下面方法，最后获取sign值并在最后赋值此参数
@@ -314,11 +309,11 @@ bm.Set("sign", sign)
 ```go
 // 初始化 BodyMap
 bm := make(gopay.BodyMap)
-bm.Set("subject", "手机网站测试支付")
-bm.Set("out_trade_no", "GZ201901301040355703")
-bm.Set("quit_url", "https://www.gopay.ink")
-bm.Set("total_amount", "100.00")
-bm.Set("product_code", "QUICK_WAP_WAY")
+bm.Set("subject", "手机网站测试支付").
+    Set("out_trade_no", "GZ201909081743431443").
+    Set("quit_url", "https://www.gopay.ink").
+    Set("total_amount", "100.00").
+    Set("product_code", "QUICK_WAP_WAY")
 ```
 
 ## 3、client 方法调用
@@ -621,7 +616,7 @@ err := alipay.DecryptOpenDataToStruct(encryptedData, secretKey, phone)
 xlog.Debug(*phone)
 ```
 
-## 开源不易，讲究的朋友可以给个赞赏
+## 讲究的朋友可以给个赞赏
 <font color='#0088ff'>微信：</font>
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/main/zanshang_wx.png"/>
 <font color='#0088ff'>支付宝：</font>
