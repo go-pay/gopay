@@ -1,3 +1,8 @@
+版本号：Release 1.5.24
+发布时间：2020/12/21 18:58
+修改记录：
+   (1) 微信：证书支持二选一，只传 apiclient_cert.pem 和 apiclient_key.pem 或者只传 apiclient_cert.p12
+
 版本号：Release 1.5.23
 发布时间：2020/12/15 17:58
 修改记录：

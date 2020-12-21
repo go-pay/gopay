@@ -18,7 +18,7 @@ import (
 //	注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
 func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *TransfersResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	if err = bm.CheckEmptyError("nonce_str", "partner_trade_no", "openid", "check_name", "amount", "desc", "spbill_create_ip"); err != nil {
@@ -67,7 +67,7 @@ func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fil
 //	注意：此方法未支持沙箱环境，默认正式环境
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_3
 func (w *Client) GetTransferInfo(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *TransfersInfoResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	if err = bm.CheckEmptyError("nonce_str", "partner_trade_no"); err != nil {
@@ -119,7 +119,7 @@ func (w *Client) GetTransferInfo(bm gopay.BodyMap, certFilePath, keyFilePath, pk
 //	RSA加密文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_7
 //	银行编码查看地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_4&index=5
 func (w *Client) PayBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *PayBankResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	if err = bm.CheckEmptyError("partner_trade_no", "nonce_str", "enc_bank_no", "enc_true_name", "bank_code", "amount"); err != nil {
@@ -167,7 +167,7 @@ func (w *Client) PayBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 //	注意：此方法未支持沙箱环境，默认正式环境
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_3
 func (w *Client) QueryBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *QueryBankResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	if err = bm.CheckEmptyError("nonce_str", "partner_trade_no"); err != nil {
@@ -215,7 +215,7 @@ func (w *Client) QueryBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fi
 //	注意：此方法未支持沙箱环境，默认正式环境
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_7&index=4
 func (w *Client) GetRSAPublicKey(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *RSAPublicKeyResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	if err = bm.CheckEmptyError("nonce_str", "sign_type"); err != nil {
@@ -275,7 +275,7 @@ func (w *Client) MultiProfitSharing(bm gopay.BodyMap, certFilePath, keyFilePath,
 }
 
 func (w *Client) profitSharing(bm gopay.BodyMap, uri string, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "transaction_id", "out_order_no", "receivers")
@@ -414,7 +414,7 @@ func (w *Client) ProfitSharingRemoveReceiver(bm gopay.BodyMap) (wxRsp *ProfitSha
 //	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_5&index=6
 func (w *Client) ProfitSharingFinish(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "transaction_id", "out_order_no", "description")
@@ -446,7 +446,7 @@ func (w *Client) ProfitSharingFinish(bm gopay.BodyMap, certFilePath, keyFilePath
 //	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_7&index=7
 func (w *Client) ProfitSharingReturn(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingReturnResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "out_return_no", "return_account_type", "return_account", "return_amount", "description")

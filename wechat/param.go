@@ -49,7 +49,7 @@ func (w *Client) SetCountry(country Country) (client *Client) {
 //	pkcs12FilePath：apiclient_cert.p12 路径
 //	返回err
 func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) (err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return
 	}
 	var config *tls.Config
@@ -144,12 +144,12 @@ func (w *Client) addCertConfig(certFile, keyFile, pkcs12File interface{}) (tlsCo
 	return nil, errors.New("cert files must all nil or all not nil")
 }
 
-func checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) error {
-	if certFilePath == nil && keyFilePath == nil && pkcs12FilePath == nil {
+func checkCertFilePathOrContent(certFile, keyFile, pkcs12File interface{}) error {
+	if certFile == nil && keyFile == nil && pkcs12File == nil {
 		return nil
 	}
-	if certFilePath != nil && keyFilePath != nil {
-		files := map[string]interface{}{"certFilePath": certFilePath, "keyFilePath": keyFilePath}
+	if certFile != nil && keyFile != nil {
+		files := map[string]interface{}{"certFile": certFile, "keyFile": keyFile}
 		for varName, v := range files {
 			switch v.(type) {
 			case string:
@@ -165,22 +165,22 @@ func checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) er
 			}
 		}
 		return nil
-	} else if pkcs12FilePath != nil {
-		switch pkcs12FilePath.(type) {
+	} else if pkcs12File != nil {
+		switch pkcs12File.(type) {
 		case string:
-			if pkcs12FilePath.(string) == gotil.NULL {
-				return errors.New("pkcs12FilePath is empty")
+			if pkcs12File.(string) == gotil.NULL {
+				return errors.New("pkcs12File is empty")
 			}
 		case []byte:
-			if len(pkcs12FilePath.([]byte)) == 0 {
-				return errors.New("pkcs12FilePath is empty")
+			if len(pkcs12File.([]byte)) == 0 {
+				return errors.New("pkcs12File is empty")
 			}
 		default:
-			return errors.New("pkcs12FilePath type error")
+			return errors.New("pkcs12File type error")
 		}
 		return nil
 	} else {
-		return errors.New("certFilePath keyFilePath must all nil or all not nil")
+		return errors.New("certFile keyFile must all nil or all not nil")
 	}
 }
 

@@ -197,6 +197,8 @@ QQ群：
 
 > 注意：微信支付下单等操作可用沙箱环境测试是否成功，但真正支付时，请使用正式环境 isProd = true，不然会报错。
 
+> 微信证书现已支持二选一：只传 apiclient_cert.pem 和 apiclient_key.pem 或者只传 apiclient_cert.p12
+
 ```go
 import (
 	"github.com/iGoogle-ink/gopay/wechat"
@@ -226,6 +228,12 @@ client.SetCountry(wechat.China)
 //    返回err
 client.AddCertFilePath()
 
+// 添加微信证书内容 Content
+//	certFileContent：apiclient_cert.pem 内容
+//	keyFileContent：apiclient_key.pem 内容
+//	pkcs12FileContent：apiclient_cert.p12 内容
+//	返回err
+client.AddCertFileContent()
 ```
 
 * #### 支付宝
