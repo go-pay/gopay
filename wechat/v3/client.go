@@ -10,64 +10,47 @@ import (
 	"sync"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gopay/wechat"
-)
-
-const (
-	AUTH_MSG = "WECHATPAY2-SHA256-RSA2048"
 )
 
 // ClientV3 微信支付 V3
 type ClientV3 struct {
-	privateKey *rsa.PrivateKey
-	mchID      string
-	serialNo   string
-	rwlock     sync.RWMutex
+	MchId       string
+	SerialNo    string
+	privateKey  *rsa.PrivateKey
+	DebugSwitch gopay.DebugSwitch
+	rwlock      sync.RWMutex
 }
 
-// 初始化微信客户端 V3
-//	appId：应用ID
+// NewClientV3 初始化微信客户端 V3
 //	mchId：商户ID
-//	ApiKey：API秘钥值
-//	IsProd：是否是正式环境
-func NewClientV3(appId, mchId, apiKey string) (client *wechat.Client) {
-	return &wechat.Client{
-		AppId:       appId,
+// 	serialNo 商户证书的证书序列号
+//	certContent：私钥 apiclient_key.pem 内容
+func NewClientV3(mchId, serialNo string, privateKey *rsa.PrivateKey) (client *ClientV3) {
+	return &ClientV3{
 		MchId:       mchId,
-		ApiKey:      apiKey,
+		SerialNo:    serialNo,
+		privateKey:  privateKey,
 		DebugSwitch: gopay.DebugOff,
 	}
 }
 
-// NewClient 微信支付 V3
-// privateKey 私钥 apiclient_key.pem
-// mechID 商户号
-// serialNo 商户证书的证书序列号
-func NewClient(key *rsa.PrivateKey, mechID, serialNo string) *ClientV3 {
-	return &ClientV3{
-		privateKey: key,
-		mchID:      mechID,
-		serialNo:   serialNo,
-	}
-}
-
 // 微信 v3 鉴权请求头 Authorization: xxx 获取
-func (c *ClientV3) Authorization(method, url, timestamp, randomStr, body string) (string, error) {
+func (c *ClientV3) Authorization(method, path, timestamp, nonceStr, body string) (string, error) {
 	c.rwlock.RLock()
 	defer c.rwlock.RUnlock()
-	_str := method + "\n" + url + "\n" + timestamp + "\n" + randomStr + "\n" + body + "\n"
+	_str := method + "\n" + path + "\n" + timestamp + "\n" + nonceStr + "\n" + body + "\n"
 	sign, err := c.rsa2(_str)
 	if err != nil {
 		return "", err
 	}
-	return AUTH_MSG + ` mchid="` + c.mchID + `",nonce_str="` + randomStr + `",timestamp="` + timestamp + `",serial_no="` + c.serialNo + `",signature="` + sign + `"`, nil
+	return Authorization + ` mchid="` + c.MchId + `",nonce_str="` + nonceStr + `",timestamp="` + timestamp + `",serial_no="` + c.SerialNo + `",signature="` + sign + `"`, nil
 }
 
 func (c *ClientV3) rsa2(str string) (string, error) {
 	c.rwlock.RLock()
 	defer c.rwlock.RUnlock()
 	if c.privateKey == nil {
-		return "", errors.New("privateKey cant be nil")
+		return "", errors.New("privateKey can't be nil")
 	}
 	h := sha256.New()
 	h.Write([]byte(str))

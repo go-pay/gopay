@@ -14,10 +14,12 @@ func TestClientRSA2(t *testing.T) {
 		t.Fatal(err)
 		os.Exit(1)
 	}
-	c := NewClient(key, "", "")
+	c := NewClientV3("", "", key)
+
 	if str, _ := c.rsa2("test"); str != "cX2ta9egtLPv9SRaWNNpNgRVNAEgfQG5KLNox9dtE7K2FnbPC4ajCF+LXeo+KyVG+d6cpJy+qZzYk1I0cvtN5mS/zyEfw4VnESjaOi6SZS3sCsEak6oDAtgGp3O63/W+JJkAzaV7MGbSgi9MuhZhjzlnTrTtkjJXZJ2j4DVY5iPYFf6keCU+VYMtsfbjPLRDA90et1K5nN7rbRwycmgGlMW+ijExQLmKgSoTCU4/0Pp1g9pajuN9ugGBfhRvdIb2Q5JI4tJ0GBzejv9aNqVqztJKzHUK7B6CqKkvN+O7ZWDmiAK7MG7qFjo64IahO5fCUuMwqp0hDNy7K8ioM8kROw==" {
 		t.Fatal("test rsa2 fail")
 	}
+
 	str, err := c.Authorization("GET", "/test", "1606205766", "HJGKBT(&", "")
 	if str != `WECHATPAY2-SHA256-RSA2048 mchid="",nonce_str="HJGKBT(&",timestamp="1606205766",serial_no="",signature="soHh+jRyPNq9NAujXm8T4E+6uzwx6usyLhVwAaZs1JqDe0+dLMlWipVJW5qm1qf7ioVHMjBOo+gtx/7Pba7YfHTWsqsV+afJRd1sBIESerJGe04Zw1ywVsAuHg8T2w46zPya+Ir7+M2i3649u54bIGcYm0jZ15uauXWWm0mCmfaLufI/duI76CJ9C9oggQO+sWPcVmEbmuT/X7ZEffM5+PGwem3/Spds0B6L00VoMIFKUZrzJxj9qpX/kMkxGz17vmiNqDAD1V4VcI6R1kz5vLwBC4mitUYjzGbUEtx8LKOsdNSJI5FWUJFIJEUa066EaUCVgdRnpXfCZv/vjlDC7A=="` {
 		t.Fatal("get authorization header error")
