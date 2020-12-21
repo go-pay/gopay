@@ -16,7 +16,7 @@ var (
 	client *Client
 	appId  = "wxdaa2ab9ef87b5497"
 	mchId  = "1368139502"
-	apiKey = "GFDS8j98rewnmgl45wHTt980jg543abc"
+	apiKey = "GFDS8j98rewnmgl45wHTt980jg543wmg"
 )
 
 func TestMain(m *testing.M) {
@@ -34,6 +34,13 @@ func TestMain(m *testing.M) {
 	// 设置国家，不设置默认就是 China
 	client.SetCountry(China)
 
+	// 添加证书n内容
+	//err := client.AddCertFileContent(nil, nil, nil)
+	//if err != nil {
+	//	panic(err)
+	//}
+
+	// 添加证书路径
 	//err := client.AddCertFilePath(nil, nil, nil)
 	//if err != nil {
 	//	panic(err)
