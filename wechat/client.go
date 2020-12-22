@@ -173,7 +173,7 @@ func (w *Client) CloseOrder(bm gopay.BodyMap) (wxRsp *CloseOrderResponse, err er
 //	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3
 func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ReverseResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "out_trade_no")
@@ -206,7 +206,7 @@ func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 //	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
 func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *RefundResponse, resBm gopay.BodyMap, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, nil, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "out_refund_no", "total_fee", "refund_fee")
@@ -300,7 +300,7 @@ func (w *Client) DownloadBill(bm gopay.BodyMap) (wxRsp string, err error) {
 //	貌似不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7
 func (w *Client) DownloadFundFlow(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp string, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return gotil.NULL, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "account_type")
@@ -357,7 +357,7 @@ func (w *Client) Report(bm gopay.BodyMap) (wxRsp *ReportResponse, err error) {
 //	貌似不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_17&index=11
 func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp string, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return gotil.NULL, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "begin_time", "end_time", "offset")

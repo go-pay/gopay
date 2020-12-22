@@ -17,7 +17,7 @@ import (
 //	注意：此处参数中的 wxappid 需要单独传参，不复用 NewClient 时的 appid，total_num = 1
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_4&index=3
 func (w *Client) SendCashRed(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *SendCashRedResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "mch_billno", "wxappid", "send_name", "re_openid", "total_amount", "total_num", "wishing", "client_ip", "act_name", "remark")
@@ -60,7 +60,7 @@ func (w *Client) SendCashRed(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12
 //	注意：此处参数中的 wxappid 需要单独传参，不复用 NewClient 时的 appid，amt_type = ALL_RAND
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_5&index=4
 func (w *Client) SendGroupCashRed(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *SendCashRedResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "mch_billno", "wxappid", "send_name", "re_openid", "total_amount", "total_num", "amt_type", "wishing", "act_name", "remark")
@@ -103,7 +103,7 @@ func (w *Client) SendGroupCashRed(bm gopay.BodyMap, certFilePath, keyFilePath, p
 //	注意：此处参数中的 wxappid 需要单独传参，不复用 NewClient 时的 appid，total_num = 1，notify_way = MINI_PROGRAM_JSAPI
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=18_2&index=3
 func (w *Client) SendAppletRed(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *SendAppletRedResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "mch_billno", "wxappid", "send_name", "re_openid", "total_amount", "total_num", "wishing", "act_name", "remark", "notify_way")
@@ -146,7 +146,7 @@ func (w *Client) SendAppletRed(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs
 //	注意：此处参数中的 appid 需要单独传参，不复用 NewClient 时的 appid，bill_type = MCHT
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_6&index=5
 func (w *Client) QueryRedRecord(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *QueryRedRecordResponse, err error) {
-	if err = checkCertFilePath(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "mch_billno", "appid", "bill_type")
