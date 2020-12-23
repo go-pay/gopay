@@ -1,9 +1,6 @@
 package wecaht
 
 import (
-	"crypto/rsa"
-	"crypto/x509"
-	"encoding/pem"
 	"os"
 	"testing"
 	"time"
@@ -22,31 +19,17 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	block, _ := pem.Decode([]byte(certKeyContent))
-	pk8, err := x509.ParsePKCS8PrivateKey(block.Bytes)
-	if err != nil {
-		xlog.Error(err)
-		os.Exit(1)
-	}
-	key, ok := pk8.(*rsa.PrivateKey)
-	if !ok {
-		xlog.Error("parse PKCS8 key error")
-		return
-	}
 	// NewClientV3 初始化微信客户端 V3
 	//	appid：appid
 	//	mchid：商户ID
 	// 	serialNo 商户证书的证书序列号
-	//	certContent：私钥 apiclient_key.pem 解析后的私钥key
-	client = NewClientV3(appid, mchid, serialNo, key)
-
+	//	pkContent：私钥 apiclient_key.pem 读取后的内容
+	client, err := NewClientV3(appid, mchid, serialNo, []byte(certKeyContent))
+	if err != nil {
+		panic(err)
+	}
 	// 打开Debug开关，输出日志
 	client.DebugSwitch = gopay.DebugOff
-
-	//err := client.AddCertFilePath(nil, nil, nil)
-	//if err != nil {
-	//	panic(err)
-	//}
 
 	os.Exit(m.Run())
 }

@@ -5,8 +5,10 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
+	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
+	"encoding/pem"
 	"errors"
 	"fmt"
 	"strings"
@@ -32,15 +34,35 @@ type ClientV3 struct {
 //	appid：appid
 //	mchid：商户ID
 // 	serialNo 商户证书的证书序列号
-//	certContent：私钥 apiclient_key.pem 解析后的私钥key
-func NewClientV3(appid, mchid, serialNo string, privateKey *rsa.PrivateKey) (client *ClientV3) {
-	return &ClientV3{
+//	pkContent：私钥 apiclient_key.pem 读取后的内容
+func NewClientV3(appid, mchid, serialNo string, pkContent []byte) (client *ClientV3, err error) {
+	var (
+		pk *rsa.PrivateKey
+		ok bool
+	)
+	block, _ := pem.Decode(pkContent)
+	pk8, err := x509.ParsePKCS8PrivateKey(block.Bytes)
+	if err != nil {
+		pk, err = x509.ParsePKCS1PrivateKey(block.Bytes)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if pk == nil {
+		pk, ok = pk8.(*rsa.PrivateKey)
+		if !ok {
+			return nil, errors.New("parse PKCS8 key error")
+		}
+	}
+
+	client = &ClientV3{
 		Appid:       appid,
 		Mchid:       mchid,
 		SerialNo:    serialNo,
-		privateKey:  privateKey,
+		privateKey:  pk,
 		DebugSwitch: gopay.DebugOff,
 	}
+	return client, nil
 }
 
 // 微信 v3 鉴权请求Header
