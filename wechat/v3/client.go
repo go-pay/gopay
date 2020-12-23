@@ -54,7 +54,6 @@ func NewClientV3(appid, mchid, serialNo string, pkContent []byte) (client *Clien
 			return nil, errors.New("parse PKCS8 key error")
 		}
 	}
-
 	client = &ClientV3{
 		Appid:       appid,
 		Mchid:       mchid,

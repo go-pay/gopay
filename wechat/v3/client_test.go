@@ -12,7 +12,8 @@ import (
 
 var (
 	client         *ClientV3
-	appid          = ""
+	err            error
+	appid          = "wx7c801a1a9ab77065"
 	mchid          = ""
 	serialNo       = ""
 	certKeyContent = ``
@@ -24,9 +25,10 @@ func TestMain(m *testing.M) {
 	//	mchid：商户ID
 	// 	serialNo 商户证书的证书序列号
 	//	pkContent：私钥 apiclient_key.pem 读取后的内容
-	client, err := NewClientV3(appid, mchid, serialNo, []byte(certKeyContent))
+	client, err = NewClientV3(appid, mchid, serialNo, []byte(certKeyContent))
 	if err != nil {
-		panic(err)
+		xlog.Error(err)
+		os.Exit(1)
 	}
 	// 打开Debug开关，输出日志
 	client.DebugSwitch = gopay.DebugOff
