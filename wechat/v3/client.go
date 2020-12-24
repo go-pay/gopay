@@ -40,6 +40,9 @@ func NewClientV3(appid, mchid, serialNo string, pkContent []byte) (client *Clien
 		ok bool
 	)
 	block, _ := pem.Decode(pkContent)
+	if block == nil {
+		return nil, fmt.Errorf("pem.Decode(%v),error", string(pkContent))
+	}
 	pk8, err := x509.ParsePKCS8PrivateKey(block.Bytes)
 	if err != nil {
 		pk, err = x509.ParsePKCS1PrivateKey(block.Bytes)
