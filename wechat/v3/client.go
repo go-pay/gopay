@@ -11,7 +11,6 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"strings"
 	"sync"
 
 	"github.com/iGoogle-ink/gopay"
@@ -66,17 +65,18 @@ func NewClientV3(appid, mchid, serialNo string, pkContent []byte) (client *Clien
 
 // 微信 v3 鉴权请求Header
 func (c *ClientV3) Authorization(method, path, nonceStr string, timestamp int64, bm gopay.BodyMap) (string, error) {
-	func() {
-		c.rwlock.RLock()
-		defer c.rwlock.RUnlock()
+	var (
+		jb = ""
+	)
+	if bm != nil {
 		if bm.Get("appid") == gotil.NULL {
 			bm.Set("appid", c.Appid)
 		}
 		if bm.Get("mchid") == gotil.NULL {
 			bm.Set("mchid", c.Mchid)
 		}
-	}()
-	jb := bm.JsonBody()
+		jb = bm.JsonBody()
+	}
 	ts := gotil.Int642String(timestamp)
 	_str := method + "\n" + path + "\n" + ts + "\n" + nonceStr + "\n" + jb + "\n"
 	sign, err := c.rsaSign(_str)
@@ -87,8 +87,6 @@ func (c *ClientV3) Authorization(method, path, nonceStr string, timestamp int64,
 }
 
 func (c *ClientV3) rsaSign(str string) (string, error) {
-	c.rwlock.RLock()
-	defer c.rwlock.RUnlock()
 	if c.privateKey == nil {
 		return "", errors.New("privateKey can't be nil")
 	}
@@ -120,10 +118,30 @@ func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (bs 
 		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
 	}
 	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
+		return nil, fmt.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
 	}
-	if strings.Contains(string(bs), "HTML") || strings.Contains(string(bs), "html") {
-		return nil, errors.New(string(bs))
+	return bs, nil
+}
+
+func (c *ClientV3) doProdGet(uri, authorization string) (bs []byte, err error) {
+	var url = v3BaseUrlCh + uri
+
+	httpClient := xhttp.NewClient()
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_V3_Url: %s", url)
+		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
+	}
+	httpClient.Header.Add(HeaderAuthorization, authorization)
+	httpClient.Header.Add("Accept", "*/*")
+	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes()
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+	}
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
 	}
 	return bs, nil
 }
