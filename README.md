@@ -33,7 +33,7 @@ func main() {
 
 ---
 
-### 微信支付API
+### 微信支付API（现已支持部分V3接口，使用方法参考下面介绍）
 
 * 统一下单：client.UnifiedOrder()
     * JSAPI - JSAPI支付（或小程序支付）
@@ -191,7 +191,32 @@ QQ群：
 
 ## 1、初始化GoPay客户端并做配置（HTTP请求均默认设置tls.Config{InsecureSkipVerify: true}）
 
-* #### 微信
+* #### 微信V3
+
+> 注意：V3 版本接口持续增加中，并未做沙箱支付，测试请用1分钱测试法
+
+> 具体使用介绍，请参考 `gopay/wechat/v3/client_test.go`
+
+```go
+import (
+	"github.com/iGoogle-ink/gopay/wechat"
+)
+
+// NewClientV3 初始化微信客户端 V3
+//	appid：appid
+//	mchid：商户ID
+// 	serialNo 商户证书的证书序列号
+//	pkContent：私钥 apiclient_key.pem 读取后的内容
+client, err = NewClientV3(appid, mchid, serialNo, []byte(certKeyContent))
+if err != nil {
+    xlog.Error(err)
+    return
+}
+// 打开Debug开关，输出请求日志，默认关闭
+client.DebugSwitch = gopay.DebugOn
+```
+
+* #### 微信V2
 
 微信官方文档：[官方文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 
@@ -211,7 +236,7 @@ import (
 //    isProd：是否是正式环境
 client := wechat.NewClient("wxdaa2ab9ef87b5497", mchId, apiKey, false)
 
-// 打开Debug开关，输出日志，默认关闭
+// 打开Debug开关，输出请求日志，默认关闭
 client.DebugSwitch = gopay.DebugOn
 
 // 设置国家：不设置默认 中国国内
