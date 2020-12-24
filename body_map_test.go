@@ -1,9 +1,3 @@
-/*
-Copyright 2020 RS4
-@Author: Weny Xu
-@Date: 2020/12/02 20:20
-*/
-
 package gopay
 
 import (
@@ -55,5 +49,26 @@ func TestBodyMapSetBodyMap(t *testing.T) {
 	}).Set("7key", "7value").
 		Set("8key", "8value")
 	xlog.Debug("高级用法：", bm) // map[scene_info:map[h5_info:map[type:Wap wap_name:H5测试支付 wap_url:http://www.gopay.ink]]]
+}
 
+func TestBodyMapMarshal(t *testing.T) {
+	bm := make(BodyMap)
+	bm.Set("4key", "4value").
+		Set("6key", "6value").
+		Set("5key", "5value")
+	jb := bm.JsonBody()
+	xlog.Debug("jb:", jb)
+
+	bm.Reset()
+
+	bm.SetBodyMap("scene_info", func(bm BodyMap) {
+		bm.SetBodyMap("h5_info", func(bm BodyMap) {
+			bm.Set("type", "Wap").
+				Set("wap_url", "http://www.gopay.ink").
+				Set("wap_name", "H5测试支付")
+		})
+	}).Set("7key", "7value").
+		Set("8key", "8value")
+	jb2 := bm.JsonBody()
+	xlog.Debug("jb2:", jb2)
 }

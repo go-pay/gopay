@@ -95,6 +95,15 @@ func (bm BodyMap) GetBodyMap(key string) (b BodyMap, err error) {
 	return
 }
 
+func (bm BodyMap) JsonBody() (jb string) {
+	bs, err := json.Marshal(bm)
+	if err != nil {
+		return ""
+	}
+	jb = string(bs)
+	return jb
+}
+
 func convertToString(v interface{}) (str string) {
 	if v == nil {
 		return NULL

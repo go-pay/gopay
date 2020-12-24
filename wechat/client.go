@@ -26,7 +26,7 @@ type Client struct {
 	mu          sync.RWMutex
 }
 
-// 初始化微信客户端
+// 初始化微信客户端 V2
 //	appId：应用ID
 //	mchId：商户ID
 //	ApiKey：API秘钥值
