@@ -1,4 +1,4 @@
-package wecaht
+package wechat
 
 import (
 	"crypto"
@@ -69,7 +69,7 @@ func NewClientV3(appid, mchid, serialNo string, pkContent []byte) (client *Clien
 // 微信 v3 鉴权请求Header
 func (c *ClientV3) Authorization(method, path, nonceStr string, timestamp int64, bm gopay.BodyMap) (string, error) {
 	var (
-		jb = ""
+		jb = "{}"
 	)
 	if bm != nil {
 		if bm.Get("appid") == gotil.NULL {
@@ -102,7 +102,7 @@ func (c *ClientV3) rsaSign(str string) (string, error) {
 	return base64.StdEncoding.EncodeToString(result), nil
 }
 
-func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (bs []byte, err error) {
+func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (statusCode int, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 
 	httpClient := xhttp.NewClient()
@@ -115,18 +115,18 @@ func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (bs 
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
-		return nil, errs[0]
+		return 0, nil, errs[0]
 	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
 	}
-	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
-	}
-	return bs, nil
+	//if res.StatusCode != http.StatusOK {
+	//	return nil, fmt.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
+	//}
+	return res.StatusCode, bs, nil
 }
 
-func (c *ClientV3) doProdGet(uri, authorization string) (bs []byte, err error) {
+func (c *ClientV3) doProdGet(uri, authorization string) (statusCode int, bs []byte, err error) {
 	var url = v3BaseUrlCh + uri
 
 	httpClient := xhttp.NewClient()
@@ -138,13 +138,16 @@ func (c *ClientV3) doProdGet(uri, authorization string) (bs []byte, err error) {
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes()
 	if len(errs) > 0 {
-		return nil, errs[0]
+		return 0, nil, errs[0]
 	}
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		xlog.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
 	}
-	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
-	}
-	return bs, nil
+	//if res.StatusCode != http.StatusOK {
+	//	xlog.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
+	//}
+	//if res.StatusCode != 200 {
+	//	return nil, fmt.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
+	//}
+	return res.StatusCode, bs, nil
 }

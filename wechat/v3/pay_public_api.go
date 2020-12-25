@@ -1,9 +1,10 @@
-package wecaht
+package wechat
 
 import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/iGoogle-ink/gopay"
@@ -19,12 +20,17 @@ func (c *ClientV3) V3TransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err err
 	if err != nil {
 		return nil, err
 	}
-	bs, err := c.doProdPost(bm, v3ApiPayApp, authorization)
+	sc, bs, err := c.doProdPost(bm, v3ApiPayApp, authorization)
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = new(PrepayRsp)
-	if err = json.Unmarshal(bs, wxRsp); err != nil {
+	wxRsp = &PrepayRsp{StatusCode: sc}
+	if sc != http.StatusOK {
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	wxRsp.Response = new(Prepay)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return wxRsp, nil
@@ -39,12 +45,17 @@ func (c *ClientV3) V3TransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err e
 	if err != nil {
 		return nil, err
 	}
-	bs, err := c.doProdPost(bm, v3ApiJsapi, authorization)
+	sc, bs, err := c.doProdPost(bm, v3ApiJsapi, authorization)
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = new(PrepayRsp)
-	if err = json.Unmarshal(bs, wxRsp); err != nil {
+	wxRsp = &PrepayRsp{StatusCode: sc}
+	if sc != http.StatusOK {
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	wxRsp.Response = new(Prepay)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return wxRsp, nil
@@ -59,12 +70,17 @@ func (c *ClientV3) V3TransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err 
 	if err != nil {
 		return nil, err
 	}
-	bs, err := c.doProdPost(bm, v3ApiNative, authorization)
+	sc, bs, err := c.doProdPost(bm, v3ApiNative, authorization)
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = new(NativeRsp)
-	if err = json.Unmarshal(bs, wxRsp); err != nil {
+	wxRsp = &NativeRsp{StatusCode: sc}
+	if sc != http.StatusOK {
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	wxRsp.Response = new(Native)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return wxRsp, nil
@@ -79,12 +95,17 @@ func (c *ClientV3) V3TransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
 	if err != nil {
 		return nil, err
 	}
-	bs, err := c.doProdPost(bm, v3ApiH5, authorization)
+	sc, bs, err := c.doProdPost(bm, v3ApiH5, authorization)
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = new(H5Rsp)
-	if err = json.Unmarshal(bs, wxRsp); err != nil {
+	wxRsp = &H5Rsp{StatusCode: sc}
+	if sc != http.StatusOK {
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	wxRsp.Response = new(H5Url)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return wxRsp, nil
@@ -112,12 +133,17 @@ func (c *ClientV3) V3TransactionQueryOrder(orderNoType OrderNoType, orderNo stri
 	if err != nil {
 		return nil, err
 	}
-	bs, err := c.doProdGet(uri, authorization)
+	sc, bs, err := c.doProdGet(uri, authorization)
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = new(QueryOrderRsp)
-	if err = json.Unmarshal(bs, wxRsp); err != nil {
+	wxRsp = &QueryOrderRsp{StatusCode: sc}
+	if sc != http.StatusOK {
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	wxRsp.Response = new(QueryOrder)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return wxRsp, nil
