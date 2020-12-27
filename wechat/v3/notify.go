@@ -46,6 +46,11 @@ type V3DecryptResult struct {
 	SceneInfo       *SceneInfo         `json:"scene_info"`
 }
 
+type V3NotifyRsp struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
 // V3ParseNotify 解析微信回调请求的参数到 V3NotifyReq 结构体
 func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
