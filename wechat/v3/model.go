@@ -24,35 +24,11 @@ const (
 	OutTradeNo    OrderNoType = 2
 )
 
-//type Detail struct {
-//	Detail *struct {
-//		Issue string `json:"issue,omitempty"`
-//	} `json:"detail,omitempty"`
-//	Field           string `json:"field,omitempty"`
-//	Location        string `json:"location,omitempty"`
-//	SignInformation *struct {
-//		Method               string `json:"method,omitempty"`
-//		SignMessageLength    int    `json:"sign_message_length,omitempty"`
-//		TruncatedSignMessage string `json:"truncated_sign_message,omitempty"`
-//		Url                  string `json:"url,omitempty"`
-//	} `json:"sign_information,omitempty"`
-//}
-//
-//type ErrorResponse struct {
-//	Code    string  `json:"code"`             // 详细错误码
-//	Message string  `json:"message"`          // 错误描述，使用易理解的文字表示错误的原因
-//	Detail  *Detail `json:"detail,omitempty"` // 详情
-//}
-
-//type PrepayRsp struct {
-//ErrorResponse *ErrorResponse `json:"error_response,omitempty"`
-//	Prepay        *Prepay        `json:"prepay,omitempty"`
-//}
-
 type Prepay struct {
 	PrepayId string `json:"prepay_id"` // 预支付交易会话标识。用于后续接口调用中使用，该值有效期为2小时
 }
 
+// Prepay 支付Rsp
 type PrepayRsp struct {
 	StatusCode int     `json:"-"`
 	Response   *Prepay `json:"response,omitempty"`
@@ -63,6 +39,7 @@ type Native struct {
 	CodeUrl string `json:"code_url"` // 此URL用于生成支付二维码，然后提供给用户扫码支付
 }
 
+// Native 支付Rsp
 type NativeRsp struct {
 	StatusCode int     `json:"-"`
 	Response   *Native `json:"response,omitempty"`
@@ -73,6 +50,7 @@ type H5Url struct {
 	H5Url string `json:"h5_url"` // h5_url为拉起微信支付收银台的中间页面，可通过访问该url来拉起微信客户端，完成支付，h5_url的有效期为5分钟
 }
 
+// H5 支付Rsp
 type H5Rsp struct {
 	StatusCode int    `json:"-"`
 	Response   *H5Url `json:"response,omitempty"`
@@ -133,6 +111,7 @@ type QueryOrder struct {
 	PromotionDetail []*PromotionDetail `json:"promotion_detail,omitempty"` // 优惠功能，享受优惠时返回该字段
 }
 
+// 查询订单 Rsp
 type QueryOrderRsp struct {
 	StatusCode int         `json:"-"`
 	Response   *QueryOrder `json:"response,omitempty"`
