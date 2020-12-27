@@ -30,18 +30,20 @@ type Resource struct {
 }
 
 type V3DecryptResult struct {
-	Amount         *Amount `json:"amount"`
-	Appid          string  `json:"appid"`
-	Attach         string  `json:"attach"`
-	BankType       string  `json:"bank_type"`
-	Mchid          string  `json:"mchid"`
-	OutTradeNo     string  `json:"out_trade_no"`
-	Payer          *Payer  `json:"payer"`
-	SuccessTime    string  `json:"success_time"`
-	TradeState     string  `json:"trade_state"`
-	TradeStateDesc string  `json:"trade_state_desc"`
-	TradeType      string  `json:"trade_type"`
-	TransactionID  string  `json:"transaction_id"`
+	Amount          *Amount            `json:"amount"`
+	Appid           string             `json:"appid"`
+	Attach          string             `json:"attach"`
+	BankType        string             `json:"bank_type"`
+	Mchid           string             `json:"mchid"`
+	OutTradeNo      string             `json:"out_trade_no"`
+	Payer           *Payer             `json:"payer"`
+	SuccessTime     string             `json:"success_time"`
+	TradeState      string             `json:"trade_state"`
+	TradeStateDesc  string             `json:"trade_state_desc"`
+	TradeType       string             `json:"trade_type"`
+	TransactionId   string             `json:"transaction_id"`
+	PromotionDetail []*PromotionDetail `json:"promotion_detail"`
+	SceneInfo       *SceneInfo         `json:"scene_info"`
 }
 
 // V3ParseNotify 解析微信回调请求的参数到 V3NotifyReq 结构体

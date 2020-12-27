@@ -73,11 +73,11 @@ type SceneInfo struct {
 }
 
 type PromotionDetail struct {
+	Amount              int            `json:"amount"`                         // 优惠券面额
 	CouponId            string         `json:"coupon_id"`                      // 券ID
 	Name                string         `json:"name,omitempty"`                 // 优惠名称
 	Scope               string         `json:"scope,omitempty"`                // 优惠范围：GLOBAL：全场代金券, SINGLE：单品优惠
 	Type                string         `json:"type,omitempty"`                 // 优惠类型：CASH：充值, NOCASH：预充值
-	Amount              int            `json:"amount"`                         // 优惠券面额
 	StockId             string         `json:"stock_id,omitempty"`             // 活动ID
 	WechatpayContribute int            `json:"wechatpay_contribute,omitempty"` // 微信出资，单位为分
 	MerchantContribute  int            `json:"merchant_contribute,omitempty"`  // 商户出资，单位为分
