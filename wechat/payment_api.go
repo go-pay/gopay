@@ -87,6 +87,7 @@ func GetSanBoxParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign str
 //	返回参数err：错误信息
 func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
+	defer req.Body.Close()
 	if err != nil {
 		return nil, fmt.Errorf("ioutil.ReadAll：%w", err)
 	}
@@ -101,7 +102,9 @@ func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 // 推荐使用 ParseNotifyToBodyMap
 func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 	notifyReq = new(NotifyRequest)
-	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
+	err = xml.NewDecoder(req.Body).Decode(notifyReq)
+	defer req.Body.Close()
+	if err != nil {
 		return nil, fmt.Errorf("xml.NewDecoder.Decode：%w", err)
 	}
 	return
@@ -113,7 +116,9 @@ func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 //	返回参数err：错误信息
 func ParseRefundNotify(req *http.Request) (notifyReq *RefundNotifyRequest, err error) {
 	notifyReq = new(RefundNotifyRequest)
-	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
+	err = xml.NewDecoder(req.Body).Decode(notifyReq)
+	defer req.Body.Close()
+	if err != nil {
 		return nil, fmt.Errorf("xml.NewDecoder.Decode：%w", err)
 	}
 	return
