@@ -6,6 +6,7 @@ const (
 	MethodPost          = "POST"
 	MethodGet           = "GET"
 	HeaderAuthorization = "Authorization"
+	HeaderSign          = "Wechatpay-Signature"
 
 	Authorization = "WECHATPAY2-SHA256-RSA2048"
 
@@ -22,6 +23,15 @@ const (
 	// 订单号类型，1-微信订单号，2-商户订单号
 	TransactionId OrderNoType = 1
 	OutTradeNo    OrderNoType = 2
+
+	// v3 异步通知订单状态
+	TradeStateSuccess  = "SUCCESS"    // 支付成功
+	TradeStateRefund   = "REFUND"     // 转入退款
+	TradeStateNoPay    = "NOTPAY"     // 未支付
+	TradeStateClosed   = "CLOSED"     // 已关闭
+	TradeStateRevoked  = "REVOKED"    // 已撤销（付款码支付）
+	TradeStatePaying   = "USERPAYING" // 用户支付中（付款码支付）
+	TradeStatePayError = "PAYERROR"   // 支付失败(其他原因，如银行返回失败)
 )
 
 type Prepay struct {

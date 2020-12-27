@@ -19,6 +19,7 @@ type V3NotifyReq struct {
 	EventType    string    `json:"event_type"`
 	Summary      string    `json:"summary"`
 	Resource     *Resource `json:"resource"`
+	Sign         string    `json:"sign,omitempty"`
 }
 
 type Resource struct {
@@ -59,14 +60,33 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 		xlog.Error("err:", err)
 		return
 	}
-	notifyReq = &V3NotifyReq{}
+	notifyReq = &V3NotifyReq{Sign: req.Header.Get(HeaderSign)}
 	if err = json.Unmarshal(bs, notifyReq); err != nil {
 		return nil, errors.Errorf("json.Unmarshal(%s,%#v)：%+v", string(bs), notifyReq, err)
 	}
 	return
 }
 
+// 异步通知验签，不验签可不做
+func (v *V3NotifyReq) VerifySign() {
+	// todo: 研究完善
+}
+
+// DecryptCipherText 解密回调中的加密订单信息
+func (v *V3NotifyReq) DecryptCipherText(apiV3Key string) (result *V3DecryptResult, err error) {
+	if v.Resource != nil {
+		result, err = V3DecryptNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
+		if err != nil {
+			bytes, _ := json.Marshal(v)
+			return nil, errors.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
+		}
+		return
+	}
+	return nil, errors.New("notify data Resource is nil")
+}
+
 // V3ParseNotifyToBodyMap 解析微信回调请求的参数到 gopay.BodyMap
+//	暂时不推荐此方法，除非用户仅需要解析微信回调参数
 func V3ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
 	defer req.Body.Close()
@@ -81,13 +101,7 @@ func V3ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	return
 }
 
-func (v *V3NotifyReq) DecryptCipherText(apiV3Key string) (result *V3DecryptResult, err error) {
-	if v.Resource != nil {
-		return V3DecryptNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
-	}
-	return nil, errors.New("notify data Resource is nil")
-}
-
+// V3DecryptNotifyCipherText 解密回调中的加密订单信息
 func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptResult, err error) {
 	decrypt, err := aes.GCMDecrypt([]byte(ciphertext), []byte(nonce), []byte(additional), []byte(apiV3Key))
 	if err != nil {
@@ -98,4 +112,8 @@ func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (
 		return nil, errors.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
 	}
 	return result, nil
+}
+
+func V3VerifySign() {
+
 }
