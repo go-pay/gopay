@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"io"
 	"io/ioutil"
@@ -57,8 +58,7 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
 	defer req.Body.Close()
 	if err != nil {
-		xlog.Error("err:", err)
-		return
+		return nil, errors.Errorf("read request body error:%+v", err)
 	}
 	notifyReq = &V3NotifyReq{Sign: req.Header.Get(HeaderSign)}
 	if err = json.Unmarshal(bs, notifyReq); err != nil {
@@ -75,12 +75,13 @@ func (v *V3NotifyReq) VerifySign() {
 // DecryptCipherText 解密回调中的加密订单信息
 func (v *V3NotifyReq) DecryptCipherText(apiV3Key string) (result *V3DecryptResult, err error) {
 	if v.Resource != nil {
-		result, err = V3DecryptNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
+		cipherBytes, _ := base64.StdEncoding.DecodeString(v.Resource.Ciphertext)
+		result, err = V3DecryptNotifyCipherText(cipherBytes, []byte(v.Resource.Nonce), []byte(v.Resource.AssociatedData), []byte(apiV3Key))
 		if err != nil {
 			bytes, _ := json.Marshal(v)
 			return nil, errors.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
 		}
-		return
+		return result, nil
 	}
 	return nil, errors.New("notify data Resource is nil")
 }
@@ -102,8 +103,8 @@ func V3ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 }
 
 // V3DecryptNotifyCipherText 解密回调中的加密订单信息
-func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptResult, err error) {
-	decrypt, err := aes.GCMDecrypt([]byte(ciphertext), []byte(nonce), []byte(additional), []byte(apiV3Key))
+func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key []byte) (result *V3DecryptResult, err error) {
+	decrypt, err := aes.GCMDecrypt(ciphertext, nonce, additional, apiV3Key)
 	if err != nil {
 		return nil, errors.Errorf("aes.GCMDecrypt, err:%+v", err)
 	}
