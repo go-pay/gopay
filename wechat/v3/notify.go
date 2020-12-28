@@ -20,7 +20,7 @@ type V3NotifyReq struct {
 	EventType    string    `json:"event_type"`
 	Summary      string    `json:"summary"`
 	Resource     *Resource `json:"resource"`
-	Sign         string    `json:"sign,omitempty"`
+	Headers      *Headers  `json:"-"`
 }
 
 type Resource struct {
@@ -60,7 +60,13 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 	if err != nil {
 		return nil, errors.Errorf("read request body error:%+v", err)
 	}
-	notifyReq = &V3NotifyReq{Sign: req.Header.Get(HeaderSign)}
+	hs := &Headers{
+		HeaderTimestamp: req.Header.Get(HeaderTimestamp),
+		HeaderNonce:     req.Header.Get(HeaderNonce),
+		HeaderSignature: req.Header.Get(HeaderSignature),
+		HeaderSerial:    req.Header.Get(HeaderSerial),
+	}
+	notifyReq = &V3NotifyReq{Headers: hs}
 	if err = json.Unmarshal(bs, notifyReq); err != nil {
 		return nil, errors.Errorf("json.Unmarshal(%s,%#v)：%+v", string(bs), notifyReq, err)
 	}

@@ -6,12 +6,17 @@ const (
 	MethodPost          = "POST"
 	MethodGet           = "GET"
 	HeaderAuthorization = "Authorization"
-	HeaderSign          = "Wechatpay-Signature"
+
+	HeaderTimestamp = "Wechatpay-Timestamp"
+	HeaderNonce     = "Wechatpay-Nonce"
+	HeaderSignature = "Wechatpay-Signature"
+	HeaderSerial    = "Wechatpay-Serial"
 
 	Authorization = "WECHATPAY2-SHA256-RSA2048"
 
 	v3BaseUrlCh = "https://api.mch.weixin.qq.com" // 中国国内
 
+	v3GetCerts                   = "/v3/certificates"
 	v3ApiPayApp                  = "/v3/pay/transactions/app"
 	v3ApiJsapi                   = "/v3/pay/transactions/jsapi"
 	v3ApiNative                  = "/v3/pay/transactions/native"
@@ -34,15 +39,73 @@ const (
 	TradeStatePayError = "PAYERROR"   // 支付失败(其他原因，如银行返回失败)
 )
 
-type Prepay struct {
-	PrepayId string `json:"prepay_id"` // 预支付交易会话标识。用于后续接口调用中使用，该值有效期为2小时
+type PlatformCertRsp struct {
+	StatusCode int                 `json:"-"`
+	Headers    *Headers            `json:"-"`
+	Certs      []*PlatformCertItem `json:"certs"`
+	Error      string              `json:"-"`
 }
 
 // Prepay 支付Rsp
 type PrepayRsp struct {
-	StatusCode int     `json:"-"`
-	Response   *Prepay `json:"response,omitempty"`
-	Error      string  `json:"-"`
+	StatusCode int      `json:"-"`
+	Headers    *Headers `json:"-"`
+	Response   *Prepay  `json:"response,omitempty"`
+	Error      string   `json:"-"`
+}
+
+// H5 支付Rsp
+type H5Rsp struct {
+	StatusCode int      `json:"-"`
+	Headers    *Headers `json:"-"`
+	Response   *H5Url   `json:"response,omitempty"`
+	Error      string   `json:"-"`
+}
+
+// 查询订单 Rsp
+type QueryOrderRsp struct {
+	StatusCode int         `json:"-"`
+	Headers    *Headers    `json:"-"`
+	Response   *QueryOrder `json:"response,omitempty"`
+	Error      string      `json:"-"`
+}
+
+// ==================================分割==================================
+
+type Headers struct {
+	HeaderTimestamp string `json:"Wechatpay-Timestamp"`
+	HeaderNonce     string `json:"Wechatpay-Nonce"`
+	HeaderSignature string `json:"Wechatpay-Signature"`
+	HeaderSerial    string `json:"Wechatpay-Serial"`
+}
+
+type PlatformCertItem struct {
+	EffectiveTime string `json:"effective_time"`
+	ExpireTime    string `json:"expire_time"`
+	PublicKey     string `json:"public_key"`
+	SerialNo      string `json:"serial_no"`
+}
+
+type PlatformCert struct {
+	Data []*certData `json:"data"`
+}
+
+type certData struct {
+	EffectiveTime      string       `json:"effective_time"`
+	EncryptCertificate *encryptCert `json:"encrypt_certificate"`
+	ExpireTime         string       `json:"expire_time"`
+	SerialNo           string       `json:"serial_no"`
+}
+
+type encryptCert struct {
+	Algorithm      string `json:"algorithm"`
+	AssociatedData string `json:"associated_data"`
+	Ciphertext     string `json:"ciphertext"`
+	Nonce          string `json:"nonce"`
+}
+
+type Prepay struct {
+	PrepayId string `json:"prepay_id"` // 预支付交易会话标识。用于后续接口调用中使用，该值有效期为2小时
 }
 
 type Native struct {
@@ -51,20 +114,14 @@ type Native struct {
 
 // Native 支付Rsp
 type NativeRsp struct {
-	StatusCode int     `json:"-"`
-	Response   *Native `json:"response,omitempty"`
-	Error      string  `json:"-"`
+	StatusCode int      `json:"-"`
+	Headers    *Headers `json:"-"`
+	Response   *Native  `json:"response,omitempty"`
+	Error      string   `json:"-"`
 }
 
 type H5Url struct {
 	H5Url string `json:"h5_url"` // h5_url为拉起微信支付收银台的中间页面，可通过访问该url来拉起微信客户端，完成支付，h5_url的有效期为5分钟
-}
-
-// H5 支付Rsp
-type H5Rsp struct {
-	StatusCode int    `json:"-"`
-	Response   *H5Url `json:"response,omitempty"`
-	Error      string `json:"-"`
 }
 
 type Payer struct {
@@ -119,11 +176,4 @@ type QueryOrder struct {
 	Amount          *Amount            `json:"amount,omitempty"`           // 订单金额信息，当支付成功时返回该字段
 	SceneInfo       *SceneInfo         `json:"scene_info,omitempty"`       // 支付场景描述
 	PromotionDetail []*PromotionDetail `json:"promotion_detail,omitempty"` // 优惠功能，享受优惠时返回该字段
-}
-
-// 查询订单 Rsp
-type QueryOrderRsp struct {
-	StatusCode int         `json:"-"`
-	Response   *QueryOrder `json:"response,omitempty"`
-	Error      string      `json:"-"`
 }

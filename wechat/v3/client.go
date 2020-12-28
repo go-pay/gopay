@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
@@ -9,14 +10,17 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"encoding/pem"
-	"errors"
-	"fmt"
+	"net/http"
 	"sync"
+	"time"
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/aes"
+	"github.com/iGoogle-ink/gotil/errgroup"
 	"github.com/iGoogle-ink/gotil/xhttp"
 	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/pkg/errors"
 )
 
 // ClientV3 微信支付 V3
@@ -41,7 +45,7 @@ func NewClientV3(appid, mchid, serialNo string, pkContent []byte) (client *Clien
 	)
 	block, _ := pem.Decode(pkContent)
 	if block == nil {
-		return nil, fmt.Errorf("pem.Decode(%v),error", string(pkContent))
+		return nil, errors.Errorf("pem.Decode(%s),error", string(pkContent))
 	}
 	pk8, err := x509.ParsePKCS8PrivateKey(block.Bytes)
 	if err != nil {
@@ -66,10 +70,74 @@ func NewClientV3(appid, mchid, serialNo string, pkContent []byte) (client *Clien
 	return client, nil
 }
 
-// 微信 v3 鉴权请求Header
+// 获取微信平台证书
+func (c *ClientV3) GetPlatformCerts(apiV3Key string) (certs *PlatformCertRsp, err error) {
+	var (
+		ts       = time.Now().Unix()
+		nonceStr = gotil.GetRandomString(32)
+		eg       = new(errgroup.Group)
+		mu       sync.Mutex
+	)
+
+	authorization, err := c.Authorization(MethodGet, v3GetCerts, nonceStr, ts, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res, hs, bs, err := c.doProdGet(v3GetCerts, authorization)
+	if err != nil {
+		return nil, err
+	}
+	certs = &PlatformCertRsp{StatusCode: res.StatusCode, Headers: hs}
+	if res.StatusCode != http.StatusOK {
+		certs.Error = string(bs)
+		return certs, nil
+	}
+	certRsp := new(PlatformCert)
+	if err = json.Unmarshal(bs, certRsp); err != nil {
+		return nil, errors.Errorf("json.Unmarshal(%s)：%+v", string(bs), err)
+	}
+	for _, v := range certRsp.Data {
+		cert := v
+		if cert.EncryptCertificate != nil {
+			ec := cert.EncryptCertificate
+			eg.Go(func(ctx context.Context) error {
+				pubKey, err := c.DecryptCerts(ec.Ciphertext, ec.Nonce, ec.AssociatedData, apiV3Key)
+				if err != nil {
+					return err
+				}
+				pci := &PlatformCertItem{
+					EffectiveTime: cert.EffectiveTime,
+					ExpireTime:    cert.ExpireTime,
+					PublicKey:     pubKey,
+					SerialNo:      cert.SerialNo,
+				}
+				mu.Lock()
+				certs.Certs = append(certs.Certs, pci)
+				mu.Unlock()
+				return nil
+			})
+		}
+	}
+	if err = eg.Wait(); err != nil {
+		return nil, err
+	}
+	return certs, nil
+}
+
+func (c *ClientV3) DecryptCerts(ciphertext, nonce, additional, apiV3Key string) (wxCerts string, err error) {
+	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
+	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
+	if err != nil {
+		return "", errors.Errorf("aes.GCMDecrypt, err:%+v", err)
+	}
+	return string(decrypt), nil
+}
+
+// v3 鉴权请求Header
 func (c *ClientV3) Authorization(method, path, nonceStr string, timestamp int64, bm gopay.BodyMap) (string, error) {
 	var (
-		jb = "{}"
+		jb = ""
 	)
 	if bm != nil {
 		if bm.Get("appid") == gotil.NULL {
@@ -97,12 +165,12 @@ func (c *ClientV3) rsaSign(str string) (string, error) {
 	h.Write([]byte(str))
 	result, err := rsa.SignPKCS1v15(rand.Reader, c.privateKey, crypto.SHA256, h.Sum(nil))
 	if err != nil {
-		return "", err
+		return "", errors.Errorf("rsa.SignPKCS1v15(),err:%+v", err)
 	}
 	return base64.StdEncoding.EncodeToString(result), nil
 }
 
-func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (statusCode int, bs []byte, err error) {
+func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res *http.Response, hs *Headers, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 
 	httpClient := xhttp.NewClient()
@@ -115,18 +183,22 @@ func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (sta
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
-		return 0, nil, errs[0]
+		return nil, nil, nil, errs[0]
 	}
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		xlog.Debugf("Wechat_Response: %d > %s", res.StatusCode, string(bs))
+		xlog.Debugf("Wechat_Headers: %s", res.Header)
 	}
-	//if res.StatusCode != http.StatusOK {
-	//	return nil, fmt.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
-	//}
-	return res.StatusCode, bs, nil
+	hs = &Headers{
+		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
+		HeaderNonce:     res.Header.Get(HeaderNonce),
+		HeaderSignature: res.Header.Get(HeaderSignature),
+		HeaderSerial:    res.Header.Get(HeaderSerial),
+	}
+	return res, hs, bs, nil
 }
 
-func (c *ClientV3) doProdGet(uri, authorization string) (statusCode int, bs []byte, err error) {
+func (c *ClientV3) doProdGet(uri, authorization string) (res *http.Response, hs *Headers, bs []byte, err error) {
 	var url = v3BaseUrlCh + uri
 
 	httpClient := xhttp.NewClient()
@@ -138,16 +210,17 @@ func (c *ClientV3) doProdGet(uri, authorization string) (statusCode int, bs []by
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes()
 	if len(errs) > 0 {
-		return 0, nil, errs[0]
+		return nil, nil, nil, errs[0]
 	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
+		xlog.Debugf("Wechat_Headers: %s", res.Header)
 	}
-	//if res.StatusCode != http.StatusOK {
-	//	xlog.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
-	//}
-	//if res.StatusCode != 200 {
-	//	return nil, fmt.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
-	//}
-	return res.StatusCode, bs, nil
+	hs = &Headers{
+		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
+		HeaderNonce:     res.Header.Get(HeaderNonce),
+		HeaderSignature: res.Header.Get(HeaderSignature),
+		HeaderSerial:    res.Header.Get(HeaderSerial),
+	}
+	return res, hs, bs, nil
 }
