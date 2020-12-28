@@ -1,23 +1,14 @@
 package wechat
 
 import (
-	"context"
-	"crypto"
-	"crypto/rand"
 	"crypto/rsa"
-	"crypto/sha256"
 	"crypto/x509"
-	"encoding/base64"
 	"encoding/json"
 	"encoding/pem"
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/aes"
-	"github.com/iGoogle-ink/gotil/errgroup"
 	"github.com/iGoogle-ink/gotil/xhttp"
 	"github.com/iGoogle-ink/gotil/xlog"
 	"github.com/pkg/errors"
@@ -28,6 +19,9 @@ type ClientV3 struct {
 	Appid       string
 	Mchid       string
 	SerialNo    string
+	apiV3Key    string
+	wxPkContent []byte
+	autoSign    bool
 	privateKey  *rsa.PrivateKey
 	DebugSwitch gopay.DebugSwitch
 	rwlock      sync.RWMutex
@@ -36,9 +30,10 @@ type ClientV3 struct {
 // NewClientV3 初始化微信客户端 V3
 //	appid：appid
 //	mchid：商户ID
-// 	serialNo 商户证书的证书序列号
+// 	serialNo：商户证书的证书序列号
+//	apiV3Key：apiV3Key，商户平台获取
 //	pkContent：私钥 apiclient_key.pem 读取后的内容
-func NewClientV3(appid, mchid, serialNo string, pkContent []byte) (client *ClientV3, err error) {
+func NewClientV3(appid, mchid, serialNo, apiV3Key string, pkContent []byte) (client *ClientV3, err error) {
 	var (
 		pk *rsa.PrivateKey
 		ok bool
@@ -64,113 +59,23 @@ func NewClientV3(appid, mchid, serialNo string, pkContent []byte) (client *Clien
 		Appid:       appid,
 		Mchid:       mchid,
 		SerialNo:    serialNo,
+		apiV3Key:    apiV3Key,
 		privateKey:  pk,
 		DebugSwitch: gopay.DebugOff,
 	}
 	return client, nil
 }
 
-// 获取微信平台证书
-func (c *ClientV3) GetPlatformCerts(apiV3Key string) (certs *PlatformCertRsp, err error) {
-	var (
-		ts       = time.Now().Unix()
-		nonceStr = gotil.GetRandomString(32)
-		eg       = new(errgroup.Group)
-		mu       sync.Mutex
-	)
-
-	authorization, err := c.Authorization(MethodGet, v3GetCerts, nonceStr, ts, nil)
-	if err != nil {
-		return nil, err
+// AutoVerifySign 开启请求完自动验签功能（默认不开启，推荐开启）
+//	注意：未获取到微信平台公钥时，不要开启，请调用 client.GetPlatformCerts() 获取微信平台公钥
+func (c *ClientV3) AutoVerifySign(wxPkContent string) {
+	if wxPkContent != "" {
+		c.wxPkContent = []byte(wxPkContent)
+		c.autoSign = true
 	}
-
-	res, hs, bs, err := c.doProdGet(v3GetCerts, authorization)
-	if err != nil {
-		return nil, err
-	}
-	certs = &PlatformCertRsp{StatusCode: res.StatusCode, Headers: hs}
-	if res.StatusCode != http.StatusOK {
-		certs.Error = string(bs)
-		return certs, nil
-	}
-	certRsp := new(PlatformCert)
-	if err = json.Unmarshal(bs, certRsp); err != nil {
-		return nil, errors.Errorf("json.Unmarshal(%s)：%+v", string(bs), err)
-	}
-	for _, v := range certRsp.Data {
-		cert := v
-		if cert.EncryptCertificate != nil {
-			ec := cert.EncryptCertificate
-			eg.Go(func(ctx context.Context) error {
-				pubKey, err := c.DecryptCerts(ec.Ciphertext, ec.Nonce, ec.AssociatedData, apiV3Key)
-				if err != nil {
-					return err
-				}
-				pci := &PlatformCertItem{
-					EffectiveTime: cert.EffectiveTime,
-					ExpireTime:    cert.ExpireTime,
-					PublicKey:     pubKey,
-					SerialNo:      cert.SerialNo,
-				}
-				mu.Lock()
-				certs.Certs = append(certs.Certs, pci)
-				mu.Unlock()
-				return nil
-			})
-		}
-	}
-	if err = eg.Wait(); err != nil {
-		return nil, err
-	}
-	return certs, nil
 }
 
-func (c *ClientV3) DecryptCerts(ciphertext, nonce, additional, apiV3Key string) (wxCerts string, err error) {
-	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
-	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
-	if err != nil {
-		return "", errors.Errorf("aes.GCMDecrypt, err:%+v", err)
-	}
-	return string(decrypt), nil
-}
-
-// v3 鉴权请求Header
-func (c *ClientV3) Authorization(method, path, nonceStr string, timestamp int64, bm gopay.BodyMap) (string, error) {
-	var (
-		jb = ""
-	)
-	if bm != nil {
-		if bm.Get("appid") == gotil.NULL {
-			bm.Set("appid", c.Appid)
-		}
-		if bm.Get("mchid") == gotil.NULL {
-			bm.Set("mchid", c.Mchid)
-		}
-		jb = bm.JsonBody()
-	}
-	ts := gotil.Int642String(timestamp)
-	_str := method + "\n" + path + "\n" + ts + "\n" + nonceStr + "\n" + jb + "\n"
-	sign, err := c.rsaSign(_str)
-	if err != nil {
-		return "", err
-	}
-	return Authorization + ` mchid="` + c.Mchid + `",nonce_str="` + nonceStr + `",timestamp="` + ts + `",serial_no="` + c.SerialNo + `",signature="` + sign + `"`, nil
-}
-
-func (c *ClientV3) rsaSign(str string) (string, error) {
-	if c.privateKey == nil {
-		return "", errors.New("privateKey can't be nil")
-	}
-	h := sha256.New()
-	h.Write([]byte(str))
-	result, err := rsa.SignPKCS1v15(rand.Reader, c.privateKey, crypto.SHA256, h.Sum(nil))
-	if err != nil {
-		return "", errors.Errorf("rsa.SignPKCS1v15(),err:%+v", err)
-	}
-	return base64.StdEncoding.EncodeToString(result), nil
-}
-
-func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res *http.Response, hs *Headers, bs []byte, err error) {
+func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 
 	httpClient := xhttp.NewClient()
@@ -189,16 +94,17 @@ func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res
 		xlog.Debugf("Wechat_Response: %d > %s", res.StatusCode, string(bs))
 		xlog.Debugf("Wechat_Headers: %s", res.Header)
 	}
-	hs = &Headers{
+	si = &SignInfo{
 		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
 		HeaderNonce:     res.Header.Get(HeaderNonce),
 		HeaderSignature: res.Header.Get(HeaderSignature),
 		HeaderSerial:    res.Header.Get(HeaderSerial),
+		SignBody:        string(bs),
 	}
-	return res, hs, bs, nil
+	return res, si, bs, nil
 }
 
-func (c *ClientV3) doProdGet(uri, authorization string) (res *http.Response, hs *Headers, bs []byte, err error) {
+func (c *ClientV3) doProdGet(uri, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + uri
 
 	httpClient := xhttp.NewClient()
@@ -216,11 +122,12 @@ func (c *ClientV3) doProdGet(uri, authorization string) (res *http.Response, hs 
 		xlog.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
 		xlog.Debugf("Wechat_Headers: %s", res.Header)
 	}
-	hs = &Headers{
+	si = &SignInfo{
 		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
 		HeaderNonce:     res.Header.Get(HeaderNonce),
 		HeaderSignature: res.Header.Get(HeaderSignature),
 		HeaderSerial:    res.Header.Get(HeaderSerial),
+		SignBody:        string(bs),
 	}
-	return res, hs, bs, nil
+	return res, si, bs, nil
 }

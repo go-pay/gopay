@@ -20,7 +20,7 @@ type V3NotifyReq struct {
 	EventType    string    `json:"event_type"`
 	Summary      string    `json:"summary"`
 	Resource     *Resource `json:"resource"`
-	Headers      *Headers  `json:"-"`
+	Headers      *SignInfo `json:"-"`
 }
 
 type Resource struct {
@@ -60,22 +60,18 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 	if err != nil {
 		return nil, errors.Errorf("read request body error:%+v", err)
 	}
-	hs := &Headers{
+	hs := &SignInfo{
 		HeaderTimestamp: req.Header.Get(HeaderTimestamp),
 		HeaderNonce:     req.Header.Get(HeaderNonce),
 		HeaderSignature: req.Header.Get(HeaderSignature),
 		HeaderSerial:    req.Header.Get(HeaderSerial),
+		SignBody:        string(bs),
 	}
 	notifyReq = &V3NotifyReq{Headers: hs}
 	if err = json.Unmarshal(bs, notifyReq); err != nil {
 		return nil, errors.Errorf("json.Unmarshal(%s,%#v)：%+v", string(bs), notifyReq, err)
 	}
 	return
-}
-
-// 异步通知验签，不验签可不做
-func (v *V3NotifyReq) VerifySign() {
-	// todo: 研究完善
 }
 
 // DecryptCipherText 解密回调中的加密订单信息
@@ -92,8 +88,14 @@ func (v *V3NotifyReq) DecryptCipherText(apiV3Key string) (result *V3DecryptResul
 	return nil, errors.New("notify data Resource is nil")
 }
 
+// VerifySign 异步通知验签
+func (v *V3NotifyReq) VerifySign() {
+	// todo: 待完成
+}
+
+// Deprecated
 // V3ParseNotifyToBodyMap 解析微信回调请求的参数到 gopay.BodyMap
-//	暂时不推荐此方法，除非用户仅需要解析微信回调参数
+//	暂时不推荐此方法，请使用 wechat.V3ParseNotify()
 func V3ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
 	defer req.Body.Close()
@@ -119,8 +121,4 @@ func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key []byte) (
 		return nil, errors.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
 	}
 	return result, nil
-}
-
-func V3VerifySign() {
-
 }

@@ -1,6 +1,11 @@
 package wechat
 
 import (
+	"crypto"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/base64"
+	"encoding/pem"
 	"os"
 	"testing"
 	"time"
@@ -13,24 +18,80 @@ import (
 var (
 	client    *ClientV3
 	err       error
-	Appid     = ""
-	MchId     = ""
-	ApiV3Key  = ""
-	SerialNo  = ""
-	PKContent = ``
+	Appid     = "wx52a25f196830f677"
+	MchId     = "1604896569"
+	ApiV3Key  = "j7XthyAeqmeKPNjECOEd60YVG1Knwr3Y"
+	SerialNo  = "298A5BA7E00AF6E71579E81D9CB1AC7037A51471"
+	PKContent = `-----BEGIN PRIVATE KEY-----
+MIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQDV523KVXZaaZI3
+WxQiaz0J8o8nxAYsxBjrfcaKPnLo+r5uFME7GPV+4UHEZWG6ZogJ87yBt8L4IV8q
+/2n0MPKV5qNtS0htG7G0Mtyw7lPmdXUXsA0ionbL2mzz0kgJ1S6FJwyZRRZNJ08Q
+/GQE3TWqErbxL/2ITuzTeHrdTNL0i9oNxtB92EWFZ0gSL677zEiz41EVog24SyOd
+TFqxjGFd9DR0CeRNU/oQPplFnM9YFseRuhEZ/jLATEvubH/U1qGqTlW0UHvIn14j
+NqRxyAjDI/HfXl3Bo7Fx0QCJkVkqb+5ou8KFRchbcixRU0khbrxTy7dDJj60vSmr
+PySqqZLFAgMBAAECggEBAKHPN9ZfX/B0/A6z7z86MCpeOryyJJmondFGi/H326Uy
+SOus959k+hDJBZ8zsgH3neEpZ+gYwnxBgmRcYiI/BMMwfWAoGtmuoXbXIusU3pLv
+N2x72PPiQktjKBgpciU+BrrjFzy6bmxe2AjZZC/pxrapAYrh6sA6NBykfwz5GHu0
+DQmjHYqSlghDDljCzVR3Gcs/KicCMw6eQ0JlWDqtDEDoENlBkfn4spHwocV7HtSq
+0bnUrQqqMtpZjbMJzZxJc39qkyNNDosuNy5GXYLQE7lr9RuRqLxEfg6KfGUS5bAZ
+eJ5pizql7+c0viUtiXG17PYp8QR4c5G+54RlQd1pPuECgYEA9UBi5rFJzK0/n4aO
+lsrp6BvUOSherp57SNYvpsRuBPU0odyH2/McLNphisKTxfSm0/hADaTmnzAnOUVg
+cduc/5/5tVaaqyLL3SemxJhwqVsL3tE/KAN7HUBhhQrqD+H8r39TAoIkyfjCOHzS
+74rygZ35x0kXNMavXQFB0RE2fEcCgYEA30dWaLddGmTvUXwhyTWcsiDfrsKbw8+n
+MhAlSCXE42v9Uo3ULqD3/rpUQlMhoqaZb3cSyOyQwJvv0tp/g3hM7Q4usLxkdysc
+KA9HmmZ4Q2P2838cqvNr/Dz1UAnfdDryMEnbiv1MUKYqFFTVX6oR0iH544JgDFCG
+YLQA2M+3GpMCgYEAh+ax51v+pSirxN5vTSgMDc69/x5buS+g6W+m4CahQKYQEFGA
+B2XkCwbIXngMIvm7KGK8O9NQ6I1qbtX+55jmmtAvM0lWU9boWRiL1Q0UAQSuwz34
+XVfwdPkkEPFHWp3DxAwuF4m+kR0DowGocYzxbNn5e3EJJvmiW0tDCXMcWikCgYEA
+tyNxWcUFBdBCh+i0YbCqzWSvdE3Fq8/YSPT7T3lDTHLYPu18W57Gq1Y0JI7BaQMT
+mVzmuI1pkcKV7LIxoyl6l3ppi6eLFD/1AVq/FYL1I/mLpl/dqM6vBR8O686dTV3I
+Jxl9jTyEayZQH4sR1TzPDze1GwpmM9Oc1RbwFuYRPycCgYEAzYaRKh6EQ+s37HDv
+e/ZGMs3PI+CoA/x6lx4Owa7amRsWRKys45NV6gcC8pkbN4IeFaYXVHmJ1Yaef3xn
+0VxHAzWI4BF+1pUwXzS2rAMBZR/VKS0XA856NauAC3mKHipoOWVVs+uFP3VMUQ79
+hSImAa7UBzss6b6ie7AYxXtZBjY=
+-----END PRIVATE KEY-----`
+
+	WxPkContent = `-----BEGIN CERTIFICATE-----
+MIID3DCCAsSgAwIBAgIUYKhisY/p+Gv3B1OD8JyAknBKK00wDQYJKoZIhvcNAQEL
+BQAwXjELMAkGA1UEBhMCQ04xEzARBgNVBAoTClRlbnBheS5jb20xHTAbBgNVBAsT
+FFRlbnBheS5jb20gQ0EgQ2VudGVyMRswGQYDVQQDExJUZW5wYXkuY29tIFJvb3Qg
+Q0EwHhcNMjAxMjE3MDkzNjM3WhcNMjUxMjE2MDkzNjM3WjBuMRgwFgYDVQQDDA9U
+ZW5wYXkuY29tIHNpZ24xEzARBgNVBAoMClRlbnBheS5jb20xHTAbBgNVBAsMFFRl
+bnBheS5jb20gQ0EgQ2VudGVyMQswCQYDVQQGDAJDTjERMA8GA1UEBwwIU2hlblpo
+ZW4wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC3kgThR8l6z60QgzJq
+AnlES5wiQAdjQNig2beUJz5MMzia2+TsGsyK5FqhcLTPAZxluCJ6o8jhvYgg76NN
+NQB+5HHNP+SYrCmYVpuq/0UNMM0tcWRV6OhBWkbQ13BY4aryC2seuky27aVvSP6z
+jtioYOSiaMDlpx7KHWFNC2RTegoKV+Q+oxa8e0hq4t7tYeNss5/WVijCIkPg7Rgb
+hzrqw/g7W6As1HZs37WOpPZ25DD55ztHqsNFMgo/jz79ob57yLhJAhGqzNaGC1mr
+tvh0H3Aq8AIIuuEoNXYWAXzQg6MtfeBmVOklOC3jaZEZCVevGK1kNZCV3JURS1pd
+8PklAgMBAAGjgYEwfzAJBgNVHRMEAjAAMAsGA1UdDwQEAwIE8DBlBgNVHR8EXjBc
+MFqgWKBWhlRodHRwOi8vZXZjYS5pdHJ1cy5jb20uY24vcHVibGljL2l0cnVzY3Js
+P0NBPTFCRDQyMjBFNTBEQkMwNEIwNkFEMzk3NTQ5ODQ2QzAxQzNFOEVCRDIwDQYJ
+KoZIhvcNAQELBQADggEBAJum+aqHwh8usDfLp3tX/W2O+9WAXNfZucdeYTgAnhDh
+0qjNN4pQCCHkiP/zUQGp0gbSsI/c+CDjHZ4zRnHV3leDystQZiIxeJ005pQz/SY4
+mUOgeMFQC8DeGq0WUCtMYJCdKLz43XennMOSJzFYisp6c9vUZ/7CXl2qEbVfJ0Um
+v4/yw6Y6o08eMk8jHAlTJCUsKefjS3OsIXWTTlQv4N6tvui7rWOjux2oQ37pJIT5
+HrSIbzvplW2BjfPptspK+eQNSK+WAatSmfxU2vi8fS2BK1SeK/S1bvXqzcpohHtw
+sUg2x/kdyA1Vas1TDLJHueVfNIZQF8sLFiAP/q33Jvo=
+-----END CERTIFICATE-----`
 )
 
 func TestMain(m *testing.M) {
 	// NewClientV3 初始化微信客户端 V3
 	//	appid：appid
 	//	mchid：商户ID
-	// 	serialNo 商户证书的证书序列号
+	// 	serialNo：商户证书的证书序列号
+	//	apiV3Key：apiV3Key，商户平台获取
 	//	pkContent：私钥 apiclient_key.pem 读取后的内容
-	client, err = NewClientV3(Appid, MchId, SerialNo, []byte(PKContent))
+	client, err = NewClientV3(Appid, MchId, SerialNo, ApiV3Key, []byte(PKContent))
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
+	// 自动验签
+	// 注意：未获取到微信平台公钥时，不要开启，请调用 client.GetPlatformCerts() 获取微信平台公钥
+	//client.AutoVerifySign("微信平台公钥")
+
 	// 打开Debug开关，输出日志
 	client.DebugSwitch = gopay.DebugOff
 
@@ -38,24 +99,62 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetPlatformCerts(t *testing.T) {
-	certs, err := client.GetPlatformCerts(ApiV3Key)
+	certs, err := client.GetPlatformCerts()
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
 	xlog.Debug("certs.StatusCode", certs.StatusCode)
-	xlog.Debug("certs.Headers", certs.Headers)
+	xlog.Debug("certs.SignInfo", certs.SignInfo)
 
 	for _, v := range certs.Certs {
 		xlog.Debug("cert:", v)
 	}
 }
 
-func TestClientV3_DecryptCerts(t *testing.T) {
-	ciphertext := "XboO6jC96vrZVQRZRCGPb5i93fPyrKTY1bf9jVi1eRVRLmG97LlZYPxSTJJWMREi/VwoiDZroT+gUt03k1yCXMN3x8YnPXAjg7KDrA6E/vXFrX9ZqmVtd/fhNFYcydVdw+EPkl6HVPH8cIWQrG9xVEL535MybANzO15FhGWeHDGbr1r7fYsldvxQwLAlAVcTfJ8M04UmnZtQu9rfTbAa7kq73g2mK9LIV94TE2F8+//ZWCIaYHmwBi5J+Ftg5LpTJ6UmID+c1eFPn6YqrX0cW/EtHulIvolZKHyqApehoH/Y+gprKTltp2CejX3PJWYIIRl5yzSCxBcxFzdMBTUEvOJH52OrkjnsSiAldu9zotAuRkLA0RvqW2gp1V/Gid0SNNOP9f5QsnnvrINS36AagV+YdxJMh3LRuF/tmTqic2+cxQLRDMlhbCroK3hwDl5b4Vt563NKkuVYmwPgp83Y2oeqbS77DCTONsQkvCQ1YwxKLqn1apkD/8bomeCnfNDh/ZJmvEaGjnUxSmAR6EiHMSjxVgksWvvRnTEclTN2/S6bZ0gJH3CzC8OB0VI41A3u9VJQcb21MyWpDFNxadLgo5GyYr16dR/Db7+mp+/Tp2Ev4p3bjdhqUxOpPm6YAmEhwsk4xeBbDWKz04vfQKYvkobIUsqnddnco1H+NgoYmbmRMdQ/mRnSXnWOzhigGpriyCrgBJ5NGhhHr7NMgs4DpIqF5OefJGRn+hq0gbKqNCGnZydM5RhcWVUTtF/K/iC+BffX3Fo+FJNrmSbSDjgN57LfFSaqNNpdUmPS55/17AZEQKvhs6nN5j65eU5iu7opMslYv+/26zlbFoLXjduHd9kRh60EO6gH7nXfa6Zo8LckwAgaO6nmiaw0vG1HStjCAmePC6LDY1bGn/DLCvte834d8NVJ7uSFz4U80OoVm9kAb9sWpPXXqpDCQKYDQCoAlHrPT788KCVTUdup9M1H7U1d5WOqTyZIyjsnI4JO7uddSsOS3o+WZYzFfnOZjO1sr2++ipwbGFHtxrUTMWrBsjP+XgDwoGYIsANmbaRK4KFaRVX0cjofQ0Qforz2Wtrr6ydIVA80/bwWBgxSN4OTPyf1nCXMoVS6klvvhhqZjb0lWM2mymHtV8kcrQTyTyirD7Ufe3gCPXlx5s4BravzEcklfO4maQYpBcfaDgfFolWUnuD6Fph/hLkgN9tH3VpfWd3wtLbps7zXPFd+DA1SARRsrf1imTJAaJNnX4nWutneqq6+Y3EdW3nJogbZfC6AZtvRnGa9gJCKnP79S57ql0TCtbRC7cwReWukeYw8PCxhRAYQstbN0bH7fq7K5PyEW9CSBeU88pgaLAlbt+IWtjiC2JxVg22LxlyugSzHXqQGmDWwp06Q9GimNXdfOzx+IQM9W8XuH5G5CTVeicgw1zQCBsHUfbtj1G+TtpfZgsbvaABXzOixK4eicEDdlH9xFQLgPT34wv04Ab0QxeHjkbdhf/UOUEElkF56LKE989YGEpTEBwxsdqKU0ADrty2nbrPKbRInt/RJfp4NNsCXgOiEEEZfnVTuAOGvepJMm4o1lw/LV2zq0ptJN9zisYLA1s39LN/PcaB+sC2VJ4yC0TMIwe1Gpw/nqJvRZAb4QaXrZAmKNi8Ro2x1sKou+TpFsXa2jV54d/xEwPAERpbxaUz95UOu0sdRaPdRTWV6vA8aV/Q6rU8rzrh2XonAMHUbfBVo+gdlKOdPqpxWgr4ETzcVV5HJ4JXhxzwWtfBCFxvws0UCUbjV25RORkY5Q2MpWSH3YenCjPYBjMKC4FzR2AljmfDZQz841EoeOGKl2fYGGxLiUvwc2wFCKjInLQFSJBRm3dhaJ3xX/M3cPnM8gSFMbqzHUg=="
-	add := "certificate"
-	nonce := "d393d2a609f1"
-	client.DecryptCerts(ciphertext, nonce, add, ApiV3Key)
+func TestV3VerifySign(t *testing.T) {
+	//应答时间戳\n
+	//应答随机串\n
+	//应答报文主体\n
+
+	ts := "1609149813"
+	nonce := "c4682f0902e4c7fd5cfb7568a2a45e1b"
+	signBody := `{"code_url":"weixin://wxpay/bizpayurl?pr=5zPMHa4zz"}`
+	sign := "D/nRx+h1To/ybCJkJYTXptoSp6+UVPsKNlJ2AsHMf76rXq2qAYDSnoOTB4HRc8ZlPNck5JfeZ19lDXAJ/N9gyvWEwE3n01HNhaKqxOjW0C1KROCtxAj1Wd2qtMyiCzh/Azuk15eIHjht03teGQFDmowoOBSlMg9qOBaK8MNfwFcXvV3J12AMbFFR7s4cXbqzuk2qBeMAz6VrKDAwDHxZOWFqME59mg4bPWwBTNyYeCQVR2sqPflLvY1zttEGMN3s/CDvgLQ/SXZrAsHlS2lkDVHEc/sP9q0x9oU8lFL6DhD6eDU2mVP3pt7CPD/5QAnGnINaHIcZVj6Vb4l3PKzeog=="
+	//serialNo := "60A862B18FE9F86BF7075383F09C8092704A2B4D"
+
+	_str := ts + "\n" + nonce + "\n" + signBody + "\n"
+	var (
+		block     *pem.Block
+		pubKey    *x509.Certificate
+		publicKey *rsa.PublicKey
+		ok        bool
+	)
+
+	signBytes, _ := base64.StdEncoding.DecodeString(sign)
+
+	if block, _ = pem.Decode([]byte(WxPkContent)); block == nil {
+		xlog.Error("解析微信平台公钥失败")
+		return
+	}
+	if pubKey, err = x509.ParseCertificate(block.Bytes); err != nil {
+		xlog.Errorf("x509.ParseCertificate：%+v", err)
+		return
+	}
+	if publicKey, ok = pubKey.PublicKey.(*rsa.PublicKey); !ok {
+		xlog.Error("微信平台公钥转换错误")
+		return
+	}
+	hashs := crypto.SHA256
+	h := hashs.New()
+	h.Write([]byte(_str))
+
+	err = rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
+	if err != nil {
+		xlog.Debug(" sign error:", err)
+		return
+	}
+	xlog.Debug("sign ok")
 }
 
 func TestV3Jsapi(t *testing.T) {
@@ -93,8 +192,8 @@ func TestV3Native(t *testing.T) {
 	bm.Set("description", "测试Native支付商品").
 		Set("out_trade_no", tradeNo).
 		Set("time_expire", expire).
-		Set("notify_url", "https://api2.fangyiyun.com/api/v1/wechat/callback").
-		//Set("notify_url", "https://www.gopay.ink").
+		//Set("notify_url", "https://api2.fangyiyun.com/api/v1/wechat/callback").
+		Set("notify_url", "https://www.gopay.ink").
 		SetBodyMap("amount", func(bm gopay.BodyMap) {
 			bm.Set("total", 1).
 				Set("currency", "CNY")
@@ -106,8 +205,8 @@ func TestV3Native(t *testing.T) {
 		return
 	}
 	xlog.Debug("wxRsp.StatusCode:", wxRsp.StatusCode)
-	xlog.Debug("wxRsp.Headers:", wxRsp.Headers)
-	xlog.Debug("wxRsp.Response:", wxRsp.Response)
+	xlog.Debugf("wxRsp.SignInfo:%#v", wxRsp.SignInfo)
+	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
 }
 
 func TestV3QueryOrder(t *testing.T) {

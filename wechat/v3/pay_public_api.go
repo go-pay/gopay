@@ -16,15 +16,15 @@ import (
 func (c *ClientV3) V3TransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	ts := time.Now().Unix()
 	nonceStr := gotil.GetRandomString(32)
-	authorization, err := c.Authorization(MethodPost, v3ApiPayApp, nonceStr, ts, bm)
+	authorization, err := c.authorization(MethodPost, v3ApiPayApp, nonceStr, ts, bm)
 	if err != nil {
 		return nil, err
 	}
-	res, hs, bs, err := c.doProdPost(bm, v3ApiPayApp, authorization)
+	res, si, bs, err := c.doProdPost(bm, v3ApiPayApp, authorization)
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &PrepayRsp{StatusCode: res.StatusCode, Headers: hs}
+	wxRsp = &PrepayRsp{StatusCode: res.StatusCode, SignInfo: si}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Error = string(bs)
 		return wxRsp, nil
@@ -33,7 +33,7 @@ func (c *ClientV3) V3TransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err err
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, c.verifySyncSign(si)
 }
 
 // JSAPI/小程序下单API
@@ -41,15 +41,15 @@ func (c *ClientV3) V3TransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err err
 func (c *ClientV3) V3TransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	ts := time.Now().Unix()
 	nonceStr := gotil.GetRandomString(32)
-	authorization, err := c.Authorization(MethodPost, v3ApiJsapi, nonceStr, ts, bm)
+	authorization, err := c.authorization(MethodPost, v3ApiJsapi, nonceStr, ts, bm)
 	if err != nil {
 		return nil, err
 	}
-	res, hs, bs, err := c.doProdPost(bm, v3ApiJsapi, authorization)
+	res, si, bs, err := c.doProdPost(bm, v3ApiJsapi, authorization)
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &PrepayRsp{StatusCode: res.StatusCode, Headers: hs}
+	wxRsp = &PrepayRsp{StatusCode: res.StatusCode, SignInfo: si}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Error = string(bs)
 		return wxRsp, nil
@@ -58,7 +58,7 @@ func (c *ClientV3) V3TransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err e
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, c.verifySyncSign(si)
 }
 
 // Native下单API
@@ -66,15 +66,15 @@ func (c *ClientV3) V3TransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err e
 func (c *ClientV3) V3TransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
 	ts := time.Now().Unix()
 	nonceStr := gotil.GetRandomString(32)
-	authorization, err := c.Authorization(MethodPost, v3ApiNative, nonceStr, ts, bm)
+	authorization, err := c.authorization(MethodPost, v3ApiNative, nonceStr, ts, bm)
 	if err != nil {
 		return nil, err
 	}
-	res, hs, bs, err := c.doProdPost(bm, v3ApiNative, authorization)
+	res, si, bs, err := c.doProdPost(bm, v3ApiNative, authorization)
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &NativeRsp{StatusCode: res.StatusCode, Headers: hs}
+	wxRsp = &NativeRsp{StatusCode: res.StatusCode, SignInfo: si}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Error = string(bs)
 		return wxRsp, nil
@@ -83,7 +83,7 @@ func (c *ClientV3) V3TransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err 
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, c.verifySyncSign(si)
 }
 
 // H5下单API
@@ -91,15 +91,15 @@ func (c *ClientV3) V3TransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err 
 func (c *ClientV3) V3TransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
 	ts := time.Now().Unix()
 	nonceStr := gotil.GetRandomString(32)
-	authorization, err := c.Authorization(MethodPost, v3ApiH5, nonceStr, ts, bm)
+	authorization, err := c.authorization(MethodPost, v3ApiH5, nonceStr, ts, bm)
 	if err != nil {
 		return nil, err
 	}
-	res, hs, bs, err := c.doProdPost(bm, v3ApiH5, authorization)
+	res, si, bs, err := c.doProdPost(bm, v3ApiH5, authorization)
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &H5Rsp{StatusCode: res.StatusCode, Headers: hs}
+	wxRsp = &H5Rsp{StatusCode: res.StatusCode, SignInfo: si}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Error = string(bs)
 		return wxRsp, nil
@@ -108,7 +108,7 @@ func (c *ClientV3) V3TransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, c.verifySyncSign(si)
 }
 
 // 查询订单API
@@ -119,7 +119,6 @@ func (c *ClientV3) V3TransactionQueryOrder(orderNoType OrderNoType, orderNo stri
 		nonceStr = gotil.GetRandomString(32)
 		uri      string
 	)
-
 	switch orderNoType {
 	case TransactionId:
 		uri = fmt.Sprintf(v3ApiQueryOrderTransactionId, orderNo) + "?mchid=" + c.Mchid
@@ -128,16 +127,16 @@ func (c *ClientV3) V3TransactionQueryOrder(orderNoType OrderNoType, orderNo stri
 	default:
 		return nil, errors.New("unsupported order number type")
 	}
-	authorization, err := c.Authorization(MethodGet, uri, nonceStr, ts, nil)
+	authorization, err := c.authorization(MethodGet, uri, nonceStr, ts, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, hs, bs, err := c.doProdGet(uri, authorization)
+	res, si, bs, err := c.doProdGet(uri, authorization)
 	if err != nil {
 		return nil, err
 	}
 
-	wxRsp = &QueryOrderRsp{StatusCode: res.StatusCode, Headers: hs}
+	wxRsp = &QueryOrderRsp{StatusCode: res.StatusCode, SignInfo: si}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Error = string(bs)
 		return wxRsp, nil
@@ -146,5 +145,5 @@ func (c *ClientV3) V3TransactionQueryOrder(orderNoType OrderNoType, orderNo stri
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, c.verifySyncSign(si)
 }

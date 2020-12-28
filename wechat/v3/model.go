@@ -41,42 +41,51 @@ const (
 
 type PlatformCertRsp struct {
 	StatusCode int                 `json:"-"`
-	Headers    *Headers            `json:"-"`
+	SignInfo   *SignInfo           `json:"-"`
 	Certs      []*PlatformCertItem `json:"certs"`
 	Error      string              `json:"-"`
 }
 
 // Prepay 支付Rsp
 type PrepayRsp struct {
-	StatusCode int      `json:"-"`
-	Headers    *Headers `json:"-"`
-	Response   *Prepay  `json:"response,omitempty"`
-	Error      string   `json:"-"`
+	StatusCode int       `json:"-"`
+	SignInfo   *SignInfo `json:"-"`
+	Response   *Prepay   `json:"response,omitempty"`
+	Error      string    `json:"-"`
 }
 
 // H5 支付Rsp
 type H5Rsp struct {
-	StatusCode int      `json:"-"`
-	Headers    *Headers `json:"-"`
-	Response   *H5Url   `json:"response,omitempty"`
-	Error      string   `json:"-"`
+	StatusCode int       `json:"-"`
+	SignInfo   *SignInfo `json:"-"`
+	Response   *H5Url    `json:"response,omitempty"`
+	Error      string    `json:"-"`
+}
+
+// Native 支付Rsp
+type NativeRsp struct {
+	StatusCode int       `json:"-"`
+	SignInfo   *SignInfo `json:"-"`
+	Response   *Native   `json:"response,omitempty"`
+	Error      string    `json:"-"`
 }
 
 // 查询订单 Rsp
 type QueryOrderRsp struct {
 	StatusCode int         `json:"-"`
-	Headers    *Headers    `json:"-"`
+	SignInfo   *SignInfo   `json:"-"`
 	Response   *QueryOrder `json:"response,omitempty"`
 	Error      string      `json:"-"`
 }
 
 // ==================================分割==================================
 
-type Headers struct {
+type SignInfo struct {
 	HeaderTimestamp string `json:"Wechatpay-Timestamp"`
 	HeaderNonce     string `json:"Wechatpay-Nonce"`
 	HeaderSignature string `json:"Wechatpay-Signature"`
 	HeaderSerial    string `json:"Wechatpay-Serial"`
+	SignBody        string `json:"sign_body"`
 }
 
 type PlatformCertItem struct {
@@ -110,14 +119,6 @@ type Prepay struct {
 
 type Native struct {
 	CodeUrl string `json:"code_url"` // 此URL用于生成支付二维码，然后提供给用户扫码支付
-}
-
-// Native 支付Rsp
-type NativeRsp struct {
-	StatusCode int      `json:"-"`
-	Headers    *Headers `json:"-"`
-	Response   *Native  `json:"response,omitempty"`
-	Error      string   `json:"-"`
 }
 
 type H5Url struct {
