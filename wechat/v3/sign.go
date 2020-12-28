@@ -14,6 +14,34 @@ import (
 	"github.com/pkg/errors"
 )
 
+// V3VerifySign 微信V3 版本验签
+func V3VerifySign(timestamp, nonce, signBody, sign, wxPkContent string) (err error) {
+	var (
+		block     *pem.Block
+		pubKey    *x509.Certificate
+		publicKey *rsa.PublicKey
+		ok        bool
+	)
+	str := timestamp + "\n" + nonce + "\n" + signBody + "\n"
+	signBytes, _ := base64.StdEncoding.DecodeString(sign)
+
+	if block, _ = pem.Decode([]byte(wxPkContent)); block == nil {
+		return errors.New("parse wechat platform public key error")
+	}
+	if pubKey, err = x509.ParseCertificate(block.Bytes); err != nil {
+		return errors.Errorf("x509.ParseCertificate：%+v", err)
+	}
+	if publicKey, ok = pubKey.PublicKey.(*rsa.PublicKey); !ok {
+		return errors.New("convert wechat platform public to rsa.PublicKey error")
+	}
+	h := sha256.New()
+	h.Write([]byte(str))
+	if err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
+		return errors.Errorf("verify sign failed: %+v", err)
+	}
+	return nil
+}
+
 // v3 鉴权请求Header
 func (c *ClientV3) authorization(method, path, nonceStr string, timestamp int64, bm gopay.BodyMap) (string, error) {
 	var (

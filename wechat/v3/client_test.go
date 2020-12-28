@@ -1,11 +1,6 @@
 package wechat
 
 import (
-	"crypto"
-	"crypto/rsa"
-	"crypto/x509"
-	"encoding/base64"
-	"encoding/pem"
 	"os"
 	"testing"
 	"time"
@@ -63,45 +58,14 @@ func TestGetPlatformCerts(t *testing.T) {
 }
 
 func TestV3VerifySign(t *testing.T) {
-	//应答时间戳\n
-	//应答随机串\n
-	//应答报文主体\n
-
 	ts := "1609149813"
 	nonce := "c4682f0902e4c7fd5cfb7568a2a45e1b"
 	signBody := `{"code_url":"weixin://wxpay/bizpayurl?pr=5zPMHa4zz"}`
 	sign := "D/nRx+h1To/ybCJkJYTXptoSp6+UVPsKNlJ2AsHMf76rXq2qAYDSnoOTB4HRc8ZlPNck5JfeZ19lDXAJ/N9gyvWEwE3n01HNhaKqxOjW0C1KROCtxAj1Wd2qtMyiCzh/Azuk15eIHjht03teGQFDmowoOBSlMg9qOBaK8MNfwFcXvV3J12AMbFFR7s4cXbqzuk2qBeMAz6VrKDAwDHxZOWFqME59mg4bPWwBTNyYeCQVR2sqPflLvY1zttEGMN3s/CDvgLQ/SXZrAsHlS2lkDVHEc/sP9q0x9oU8lFL6DhD6eDU2mVP3pt7CPD/5QAnGnINaHIcZVj6Vb4l3PKzeog=="
-	//serialNo := "60A862B18FE9F86BF7075383F09C8092704A2B4D"
 
-	_str := ts + "\n" + nonce + "\n" + signBody + "\n"
-	var (
-		block     *pem.Block
-		pubKey    *x509.Certificate
-		publicKey *rsa.PublicKey
-		ok        bool
-	)
-
-	signBytes, _ := base64.StdEncoding.DecodeString(sign)
-
-	if block, _ = pem.Decode([]byte(WxPkContent)); block == nil {
-		xlog.Error("解析微信平台公钥失败")
-		return
-	}
-	if pubKey, err = x509.ParseCertificate(block.Bytes); err != nil {
-		xlog.Errorf("x509.ParseCertificate：%+v", err)
-		return
-	}
-	if publicKey, ok = pubKey.PublicKey.(*rsa.PublicKey); !ok {
-		xlog.Error("微信平台公钥转换错误")
-		return
-	}
-	hashs := crypto.SHA256
-	h := hashs.New()
-	h.Write([]byte(_str))
-
-	err = rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
+	err = V3VerifySign(ts, nonce, signBody, sign, WxPkContent)
 	if err != nil {
-		xlog.Debug(" sign error:", err)
+		xlog.Error(err)
 		return
 	}
 	xlog.Debug("sign ok")
