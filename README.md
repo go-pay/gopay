@@ -199,21 +199,27 @@ QQ群：
 
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/iGoogle-ink/gopay/wechat/v3"
 )
 
 // NewClientV3 初始化微信客户端 V3
 //	appid：appid
 //	mchid：商户ID
-// 	serialNo 商户证书的证书序列号
+// 	serialNo：商户证书的证书序列号
+//	apiV3Key：apiV3Key，商户平台获取
 //	pkContent：私钥 apiclient_key.pem 读取后的内容
-client, err = NewClientV3(appid, mchid, serialNo, []byte(certKeyContent))
+client, err = NewClientV3(Appid, MchId, SerialNo, ApiV3Key, []byte(PKContent))
 if err != nil {
     xlog.Error(err)
     return
 }
-// 打开Debug开关，输出请求日志，默认关闭
-client.DebugSwitch = gopay.DebugOn
+
+// 自动验签
+// 注意：未获取到微信平台公钥时，不要开启，请调用 client.GetPlatformCerts() 获取微信平台公钥
+//client.AutoVerifySign("微信平台公钥")
+
+// 打开Debug开关，输出日志
+client.DebugSwitch = gopay.DebugOff
 ```
 
 * #### 微信V2
