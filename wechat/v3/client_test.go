@@ -28,7 +28,7 @@ func TestMain(m *testing.M) {
 	// 	serialNo：商户证书的证书序列号
 	//	apiV3Key：apiV3Key，商户平台获取
 	//	pkContent：私钥 apiclient_key.pem 读取后的内容
-	client, err = NewClientV3(Appid, MchId, SerialNo, ApiV3Key, []byte(PKContent))
+	client, err = NewClientV3(Appid, MchId, SerialNo, ApiV3Key, PKContent)
 	if err != nil {
 		xlog.Error(err)
 		return

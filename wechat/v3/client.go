@@ -33,12 +33,12 @@ type ClientV3 struct {
 // 	serialNo：商户证书的证书序列号
 //	apiV3Key：apiV3Key，商户平台获取
 //	pkContent：私钥 apiclient_key.pem 读取后的内容
-func NewClientV3(appid, mchid, serialNo, apiV3Key string, pkContent []byte) (client *ClientV3, err error) {
+func NewClientV3(appid, mchid, serialNo, apiV3Key, pkContent string) (client *ClientV3, err error) {
 	var (
 		pk *rsa.PrivateKey
 		ok bool
 	)
-	block, _ := pem.Decode(pkContent)
+	block, _ := pem.Decode([]byte(pkContent))
 	if block == nil {
 		return nil, errors.Errorf("pem.Decode(%s),error", string(pkContent))
 	}
