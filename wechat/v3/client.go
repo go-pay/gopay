@@ -90,16 +90,17 @@ func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res
 	if len(errs) > 0 {
 		return nil, nil, nil, errs[0]
 	}
-	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %d > %s", res.StatusCode, string(bs))
-		xlog.Debugf("Wechat_Headers: %s", res.Header)
-	}
 	si = &SignInfo{
 		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
 		HeaderNonce:     res.Header.Get(HeaderNonce),
 		HeaderSignature: res.Header.Get(HeaderSignature),
 		HeaderSerial:    res.Header.Get(HeaderSerial),
 		SignBody:        string(bs),
+	}
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_Response: %d > %s", res.StatusCode, string(bs))
+		xlog.Debugf("Wechat_Headers: %#v", res.Header)
+		xlog.Debugf("Wechat_SignInfo: %#v", si)
 	}
 	return res, si, bs, nil
 }
@@ -118,16 +119,17 @@ func (c *ClientV3) doProdGet(uri, authorization string) (res *http.Response, si 
 	if len(errs) > 0 {
 		return nil, nil, nil, errs[0]
 	}
-	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Errorf("StatusCode = %d, ResponseBody = %s", res.StatusCode, string(bs))
-		xlog.Debugf("Wechat_Headers: %s", res.Header)
-	}
 	si = &SignInfo{
 		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
 		HeaderNonce:     res.Header.Get(HeaderNonce),
 		HeaderSignature: res.Header.Get(HeaderSignature),
 		HeaderSerial:    res.Header.Get(HeaderSerial),
 		SignBody:        string(bs),
+	}
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_Response: %d > %s", res.StatusCode, string(bs))
+		xlog.Debugf("Wechat_Headers: %#v", res.Header)
+		xlog.Debugf("Wechat_SignInfo: %#v", si)
 	}
 	return res, si, bs, nil
 }

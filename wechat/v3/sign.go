@@ -105,6 +105,7 @@ func (c *ClientV3) verifySyncSign(si *SignInfo) (err error) {
 			if err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
 				return errors.Errorf("verify sign failed: %+v", err)
 			}
+			return nil
 		}
 		return errors.New("auto verify sign, bug SignInfo is nil")
 	}
