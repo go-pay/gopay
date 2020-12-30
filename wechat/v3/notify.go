@@ -13,16 +13,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-type V3NotifyReq struct {
-	Id           string    `json:"id"`
-	CreateTime   string    `json:"create_time"`
-	ResourceType string    `json:"resource_type"`
-	EventType    string    `json:"event_type"`
-	Summary      string    `json:"summary"`
-	Resource     *Resource `json:"resource"`
-	Headers      *SignInfo `json:"-"`
-}
-
 type Resource struct {
 	OriginalType   string `json:"original_type"`
 	Algorithm      string `json:"algorithm"`
@@ -48,6 +38,16 @@ type V3DecryptResult struct {
 	SceneInfo       *SceneInfo         `json:"scene_info"`
 }
 
+type V3NotifyReq struct {
+	Id           string    `json:"id"`
+	CreateTime   string    `json:"create_time"`
+	ResourceType string    `json:"resource_type"`
+	EventType    string    `json:"event_type"`
+	Summary      string    `json:"summary"`
+	Resource     *Resource `json:"resource"`
+	SignInfo     *SignInfo `json:"-"`
+}
+
 type V3NotifyRsp struct {
 	Code    string `json:"code"`
 	Message string `json:"message"`
@@ -60,25 +60,32 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 	if err != nil {
 		return nil, errors.Errorf("read request body error:%+v", err)
 	}
-	hs := &SignInfo{
+	si := &SignInfo{
 		HeaderTimestamp: req.Header.Get(HeaderTimestamp),
 		HeaderNonce:     req.Header.Get(HeaderNonce),
 		HeaderSignature: req.Header.Get(HeaderSignature),
 		HeaderSerial:    req.Header.Get(HeaderSerial),
 		SignBody:        string(bs),
 	}
-	notifyReq = &V3NotifyReq{Headers: hs}
+	notifyReq = &V3NotifyReq{SignInfo: si}
 	if err = json.Unmarshal(bs, notifyReq); err != nil {
 		return nil, errors.Errorf("json.Unmarshal(%s,%#v)：%+v", string(bs), notifyReq, err)
 	}
-	return
+	return notifyReq, nil
+}
+
+// VerifySign 异步通知验签
+func (v *V3NotifyReq) VerifySign(wxPkContent string) (err error) {
+	if v.SignInfo != nil {
+		return V3VerifySign(v.SignInfo.HeaderTimestamp, v.SignInfo.HeaderNonce, v.SignInfo.SignBody, v.SignInfo.HeaderSignature, wxPkContent)
+	}
+	return errors.New("verify notify sign, bug SignInfo is nil")
 }
 
 // DecryptCipherText 解密回调中的加密订单信息
 func (v *V3NotifyReq) DecryptCipherText(apiV3Key string) (result *V3DecryptResult, err error) {
 	if v.Resource != nil {
-		cipherBytes, _ := base64.StdEncoding.DecodeString(v.Resource.Ciphertext)
-		result, err = V3DecryptNotifyCipherText(cipherBytes, []byte(v.Resource.Nonce), []byte(v.Resource.AssociatedData), []byte(apiV3Key))
+		result, err = V3DecryptNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
 			return nil, errors.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
@@ -86,11 +93,6 @@ func (v *V3NotifyReq) DecryptCipherText(apiV3Key string) (result *V3DecryptResul
 		return result, nil
 	}
 	return nil, errors.New("notify data Resource is nil")
-}
-
-// VerifySign 异步通知验签
-func (v *V3NotifyReq) VerifySign() {
-	// todo: 待完成
 }
 
 // Deprecated
@@ -107,12 +109,13 @@ func V3ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	if err = json.Unmarshal(bs, &bm); err != nil {
 		return nil, errors.Errorf("json.Unmarshal(%s)：%+v", string(bs), err)
 	}
-	return
+	return bm, nil
 }
 
 // V3DecryptNotifyCipherText 解密回调中的加密订单信息
-func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key []byte) (result *V3DecryptResult, err error) {
-	decrypt, err := aes.GCMDecrypt(ciphertext, nonce, additional, apiV3Key)
+func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptResult, err error) {
+	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
+	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
 	if err != nil {
 		return nil, errors.Errorf("aes.GCMDecrypt, err:%+v", err)
 	}
