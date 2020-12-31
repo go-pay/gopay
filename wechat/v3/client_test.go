@@ -49,12 +49,13 @@ func TestGetPlatformCerts(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debug("certs.StatusCode", certs.StatusCode)
-	xlog.Debug("certs.SignInfo", certs.SignInfo)
-
-	for _, v := range certs.Certs {
-		xlog.Debug("cert:", v)
+	if certs.Code == Success {
+		for _, v := range certs.Certs {
+			xlog.Debug("cert:", v)
+		}
+		return
 	}
+	xlog.Errorf("certs:%s", certs.Error)
 }
 
 func TestV3VerifySign(t *testing.T) {
@@ -94,7 +95,11 @@ func TestV3Jsapi(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debug("wxRsp:", wxRsp)
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp:%#v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
 }
 
 func TestV3Native(t *testing.T) {
@@ -118,9 +123,11 @@ func TestV3Native(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debug("wxRsp.StatusCode:", wxRsp.StatusCode)
-	xlog.Debugf("wxRsp.SignInfo:%#v", wxRsp.SignInfo)
-	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp:%#v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
 }
 
 func TestV3QueryOrder(t *testing.T) {
@@ -130,8 +137,73 @@ func TestV3QueryOrder(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	if wxRsp.StatusCode == 200 {
+	if wxRsp.Code == Success {
 		xlog.Debugf("wxRsp:%#v", wxRsp.Response)
+		return
 	}
-	xlog.Debugf("wxRsp:%s", wxRsp.Error)
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
+}
+
+func TestV3CloseOrder(t *testing.T) {
+	wxRsp, err := client.V3TransactionCloseOrder("FY160932049419637602")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	if wxRsp.Code == Success {
+		xlog.Error("success")
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
+}
+
+func TestV3BillTradeBill(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("bill_date", "2020-12-30").
+		Set("tar_type", "GZIP")
+
+	wxRsp, err := client.V3BillTradeBill(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp:%#v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
+}
+
+func TestV3BillFundFlowBill(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("bill_date", "2020-12-30").
+		Set("tar_type", "GZIP")
+
+	wxRsp, err := client.V3BillFundFlowBill(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp:%#v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
+}
+
+func TestV3BillDownLoadBill(t *testing.T) {
+	url := "https://api.mch.weixin.qq.com/v3/billdownload/file?token=4MWpG4bWfL3smAe2AeB8scfp1MN0LYORxW691-jI-wL9J9fA6F0qG0q66y44xrur&tartype=gzip"
+	fileBytes, err := client.V3BillDownLoadBill(url)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("fileBytes:%v", fileBytes)
+
+	// 申请账单时采用 GZIP 压缩，返回 bytes 为压缩文件
+	//err = ioutil.WriteFile("bill.zip", fileBytes, 0666)
+	//if err != nil {
+	//	xlog.Error("ioutil.WriteFile:", err)
+	//	return
+	//}
 }

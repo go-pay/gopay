@@ -218,6 +218,7 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 	return buf.String()[:buf.Len()-1]
 }
 
+// ("bar=baz&foo=quux")
 func (bm BodyMap) EncodeGetParams() string {
 	var (
 		buf strings.Builder

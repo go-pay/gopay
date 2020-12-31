@@ -3,6 +3,9 @@ package wechat
 type OrderNoType uint8
 
 const (
+	Success     = 0
+	SignTypeRSA = "RSA"
+
 	MethodPost          = "POST"
 	MethodGet           = "GET"
 	HeaderAuthorization = "Authorization"
@@ -16,14 +19,26 @@ const (
 
 	v3BaseUrlCh = "https://api.mch.weixin.qq.com" // 中国国内
 
+	// 基础H支付
 	v3GetCerts                   = "/v3/certificates"
-	v3ApiPayApp                  = "/v3/pay/transactions/app"
-	v3ApiJsapi                   = "/v3/pay/transactions/jsapi"
-	v3ApiNative                  = "/v3/pay/transactions/native"
-	v3ApiH5                      = "/v3/pay/transactions/h5"
-	v3ApiQueryOrderTransactionId = "/v3/pay/transactions/id/%s"                 // transaction_id
-	v3ApiQueryOrderOutTradeNo    = "/v3/pay/transactions/out-trade-no/%s"       // out_trade_no
-	v3ApiCloseOrder              = "/v3/pay/transactions/out-trade-no/%s/close" // out_trade_no
+	v3ApiPayApp                  = "/v3/pay/transactions/app"                   // APP 下单
+	v3ApiJsapi                   = "/v3/pay/transactions/jsapi"                 // JSAPI 下单
+	v3ApiNative                  = "/v3/pay/transactions/native"                // Native 下单
+	v3ApiH5                      = "/v3/pay/transactions/h5"                    // H5 下单
+	v3ApiQueryOrderTransactionId = "/v3/pay/transactions/id/%s"                 // transaction_id 查询订单
+	v3ApiQueryOrderOutTradeNo    = "/v3/pay/transactions/out-trade-no/%s"       // out_trade_no 查询订单
+	v3ApiCloseOrder              = "/v3/pay/transactions/out-trade-no/%s/close" // out_trade_no 关闭订单
+	v3ApiTradeBill               = "/v3/bill/tradebill"                         // 申请交易账单
+	v3ApiFundFlowBill            = "/v3/bill/fundflowbill"                      // 申请资金账单
+	v3ApiLevel2FundFlowBill      = "/v3/ecommerce/bill/fundflowbill"            // 申请二级商户资金账单
+
+	// 合单支付
+	v3CombinePayApp   = "/v3/combine-transactions/app"
+	v3CombinePayH5    = "/v3/combine-transactions/h5"
+	v3CombinePayJsapi = "/v3/combine-transactions/jsapi"
+	v3CombineNative   = "/v3/combine-transactions/native"
+	v3CombineQuery    = "/v3/combine-transactions/out-trade-no/%s"
+	v3CombineClose    = "/v3/combine-transactions/out-trade-no/%s/close"
 
 	// 订单号类型，1-微信订单号，2-商户订单号
 	TransactionId OrderNoType = 1
@@ -40,42 +55,95 @@ const (
 )
 
 type PlatformCertRsp struct {
-	StatusCode int                 `json:"-"`
-	SignInfo   *SignInfo           `json:"-"`
-	Certs      []*PlatformCertItem `json:"certs"`
-	Error      string              `json:"-"`
+	Code     int                 `json:"-"`
+	SignInfo *SignInfo           `json:"-"`
+	Certs    []*PlatformCertItem `json:"certs"`
+	Error    string              `json:"-"`
 }
 
 // Prepay 支付Rsp
 type PrepayRsp struct {
-	StatusCode int       `json:"-"`
-	SignInfo   *SignInfo `json:"-"`
-	Response   *Prepay   `json:"response,omitempty"`
-	Error      string    `json:"-"`
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Response *Prepay   `json:"response,omitempty"`
+	Error    string    `json:"-"`
 }
 
 // H5 支付Rsp
 type H5Rsp struct {
-	StatusCode int       `json:"-"`
-	SignInfo   *SignInfo `json:"-"`
-	Response   *H5Url    `json:"response,omitempty"`
-	Error      string    `json:"-"`
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Response *H5Url    `json:"response,omitempty"`
+	Error    string    `json:"-"`
 }
 
 // Native 支付Rsp
 type NativeRsp struct {
-	StatusCode int       `json:"-"`
-	SignInfo   *SignInfo `json:"-"`
-	Response   *Native   `json:"response,omitempty"`
-	Error      string    `json:"-"`
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Response *Native   `json:"response,omitempty"`
+	Error    string    `json:"-"`
 }
 
 // 查询订单 Rsp
 type QueryOrderRsp struct {
-	StatusCode int         `json:"-"`
-	SignInfo   *SignInfo   `json:"-"`
-	Response   *QueryOrder `json:"response,omitempty"`
-	Error      string      `json:"-"`
+	Code     int         `json:"-"`
+	SignInfo *SignInfo   `json:"-"`
+	Response *QueryOrder `json:"response,omitempty"`
+	Error    string      `json:"-"`
+}
+
+// 关闭订单 Rsp
+type CloseOrderRsp struct {
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Error    string    `json:"-"`
+}
+
+// 交易、资金账单 Rsp
+type BillRsp struct {
+	Code     int        `json:"-"`
+	SignInfo *SignInfo  `json:"-"`
+	Response *TradeBill `json:"response,omitempty"`
+	Error    string     `json:"-"`
+}
+
+// 二级商户资金账单 Rsp
+type Level2FundFlowBillRsp struct {
+	Code     int           `json:"-"`
+	SignInfo *SignInfo     `json:"-"`
+	Response *DownloadBill `json:"response,omitempty"`
+	Error    string        `json:"-"`
+}
+
+// ==================================分割==================================
+
+type JSAPIPayParams struct {
+	AppId     string `json:"appId"`
+	TimeStamp string `json:"timeStamp"`
+	NonceStr  string `json:"nonceStr"`
+	Package   string `json:"package"`
+	SignType  string `json:"signType"`
+	PaySign   string `json:"paySign"`
+}
+
+type AppPayParams struct {
+	Appid     string `json:"appid"`
+	Partnerid string `json:"partnerid"`
+	Prepayid  string `json:"prepayid"`
+	Package   string `json:"package"`
+	Noncestr  string `json:"noncestr"`
+	Timestamp string `json:"timestamp"`
+	PaySign   string `json:"paySign"`
+}
+
+type AppletParams struct {
+	AppId     string `json:"appId"`
+	TimeStamp string `json:"timeStamp"`
+	NonceStr  string `json:"nonceStr"`
+	Package   string `json:"package"`
+	SignType  string `json:"signType"`
+	PaySign   string `json:"paySign"`
 }
 
 // ==================================分割==================================
@@ -177,4 +245,24 @@ type QueryOrder struct {
 	Amount          *Amount            `json:"amount,omitempty"`           // 订单金额信息，当支付成功时返回该字段
 	SceneInfo       *SceneInfo         `json:"scene_info,omitempty"`       // 支付场景描述
 	PromotionDetail []*PromotionDetail `json:"promotion_detail,omitempty"` // 优惠功能，享受优惠时返回该字段
+}
+
+type TradeBill struct {
+	HashType    string `json:"hash_type"`
+	HashValue   string `json:"hash_value"`
+	DownloadUrl string `json:"download_url"`
+}
+
+type BillDetail struct {
+	BillSequence int    `json:"bill_sequence"` // 商户将多个文件按账单文件序号的顺序合并为完整的资金账单文件，起始值为1
+	HashType     string `json:"hash_type"`
+	HashValue    string `json:"hash_value"`
+	DownloadUrl  string `json:"download_url"`
+	EncryptKey   string `json:"encrypt_key"` // 加密账单文件使用的加密密钥。密钥用商户证书的公钥进行加密，然后进行Base64编码
+	Nonce        string `json:"nonce"`       // 加密账单文件使用的随机字符串
+}
+
+type DownloadBill struct {
+	DownloadBillCount int           `json:"download_bill_count"`
+	DownloadBillList  []*BillDetail `json:"download_bill_list"`
 }

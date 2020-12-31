@@ -32,7 +32,7 @@ func (c *ClientV3) GetPlatformCerts() (certs *PlatformCertRsp, err error) {
 	if err != nil {
 		return nil, err
 	}
-	certs = &PlatformCertRsp{StatusCode: res.StatusCode, SignInfo: si}
+	certs = &PlatformCertRsp{Code: res.StatusCode, SignInfo: si}
 	if res.StatusCode != http.StatusOK {
 		certs.Error = string(bs)
 		return certs, nil

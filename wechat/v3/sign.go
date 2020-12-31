@@ -8,6 +8,7 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/pem"
+	"time"
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gotil"
@@ -42,18 +43,82 @@ func V3VerifySign(timestamp, nonce, signBody, sign, wxPkContent string) (err err
 	return nil
 }
 
+// PaySignOfJSAPI 获取 JSAPI paySign
+func (c *ClientV3) PaySignOfJSAPI(prepayid string) (jsapi *JSAPIPayParams, err error) {
+	ts := gotil.Int642String(time.Now().Unix())
+	nonceStr := gotil.GetRandomString(32)
+	prepayId := "prepay_id=" + prepayid
+
+	_str := c.Appid + "\n" + ts + "\n" + nonceStr + "\n" + prepayId + "\n"
+	sign, err := c.rsaSign(_str)
+	if err != nil {
+		return nil, err
+	}
+
+	jsapi = &JSAPIPayParams{
+		AppId:     c.Appid,
+		TimeStamp: ts,
+		NonceStr:  nonceStr,
+		Package:   prepayId,
+		SignType:  SignTypeRSA,
+		PaySign:   sign,
+	}
+	return jsapi, nil
+}
+
+// PaySignOfApp 获取 App paySign
+func (c *ClientV3) PaySignOfApp(prepayid string) (app *AppPayParams, err error) {
+	ts := gotil.Int642String(time.Now().Unix())
+	nonceStr := gotil.GetRandomString(32)
+	prepayId := "prepay_id=" + prepayid
+
+	_str := c.Appid + "\n" + ts + "\n" + nonceStr + "\n" + prepayId + "\n"
+	sign, err := c.rsaSign(_str)
+	if err != nil {
+		return nil, err
+	}
+
+	app = &AppPayParams{
+		Appid:     c.Appid,
+		Partnerid: c.Mchid,
+		Prepayid:  prepayid,
+		Package:   "Sign=WXPay",
+		Noncestr:  nonceStr,
+		Timestamp: ts,
+		PaySign:   sign,
+	}
+	return app, nil
+}
+
+// PaySignOfApp 获取 App paySign
+func (c *ClientV3) PaySignOfApplet(prepayid string) (applet *AppletParams, err error) {
+	ts := gotil.Int642String(time.Now().Unix())
+	nonceStr := gotil.GetRandomString(32)
+	prepayId := "prepay_id=" + prepayid
+
+	_str := c.Appid + "\n" + ts + "\n" + nonceStr + "\n" + prepayId + "\n"
+	sign, err := c.rsaSign(_str)
+	if err != nil {
+		return nil, err
+	}
+
+	applet = &AppletParams{
+		AppId:     c.Appid,
+		TimeStamp: ts,
+		NonceStr:  nonceStr,
+		Package:   prepayId,
+		SignType:  SignTypeRSA,
+		PaySign:   sign,
+	}
+	return applet, nil
+}
+
 // v3 鉴权请求Header
 func (c *ClientV3) authorization(method, path, nonceStr string, timestamp int64, bm gopay.BodyMap) (string, error) {
 	var (
 		jb = ""
 	)
 	if bm != nil {
-		if bm.Get("appid") == gotil.NULL {
-			bm.Set("appid", c.Appid)
-		}
-		if bm.Get("mchid") == gotil.NULL {
-			bm.Set("mchid", c.Mchid)
-		}
 		jb = bm.JsonBody()
 	}
 	ts := gotil.Int642String(timestamp)
