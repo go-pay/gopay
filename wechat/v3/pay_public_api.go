@@ -375,3 +375,208 @@ func (c *ClientV3) V3BillDownLoadBill(downloadUrl string) (fileBytes []byte, err
 	}
 	return bs, nil
 }
+
+// 合单APP下单API
+//	Code = 0 is success
+//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_1.shtml
+func (c *ClientV3) V3CombineTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
+	ts := time.Now().Unix()
+	nonceStr := gotil.GetRandomString(32)
+	if bm != nil {
+		if bm.Get("combine_appid") == gotil.NULL {
+			bm.Set("combine_appid", c.Appid)
+		}
+		if bm.Get("combine_mchid") == gotil.NULL {
+			bm.Set("combine_mchid", c.Mchid)
+		}
+	}
+	authorization, err := c.authorization(MethodPost, v3CombinePayApp, nonceStr, ts, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(bm, v3CombinePayApp, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &PrepayRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(Prepay)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 合单H5下单API
+//	Code = 0 is success
+//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_2.shtml
+func (c *ClientV3) V3CombineTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
+	ts := time.Now().Unix()
+	nonceStr := gotil.GetRandomString(32)
+	if bm != nil {
+		if bm.Get("combine_appid") == gotil.NULL {
+			bm.Set("combine_appid", c.Appid)
+		}
+		if bm.Get("combine_mchid") == gotil.NULL {
+			bm.Set("combine_mchid", c.Mchid)
+		}
+	}
+	authorization, err := c.authorization(MethodPost, v3CombinePayH5, nonceStr, ts, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(bm, v3CombinePayH5, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &H5Rsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(H5Url)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 合单JSAPI/小程序下单API
+//	Code = 0 is success
+//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_3.shtml
+//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_4.shtml
+func (c *ClientV3) V3CombineTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
+	ts := time.Now().Unix()
+	nonceStr := gotil.GetRandomString(32)
+	if bm != nil {
+		if bm.Get("combine_appid") == gotil.NULL {
+			bm.Set("combine_appid", c.Appid)
+		}
+		if bm.Get("combine_mchid") == gotil.NULL {
+			bm.Set("combine_mchid", c.Mchid)
+		}
+	}
+	authorization, err := c.authorization(MethodPost, v3CombinePayJsapi, nonceStr, ts, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(bm, v3CombinePayJsapi, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &PrepayRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(Prepay)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 合单Native下单API
+//	Code = 0 is success
+//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_5.shtml
+func (c *ClientV3) V3CombineTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
+	ts := time.Now().Unix()
+	nonceStr := gotil.GetRandomString(32)
+	if bm != nil {
+		if bm.Get("combine_appid") == gotil.NULL {
+			bm.Set("combine_appid", c.Appid)
+		}
+		if bm.Get("combine_mchid") == gotil.NULL {
+			bm.Set("combine_mchid", c.Mchid)
+		}
+	}
+	authorization, err := c.authorization(MethodPost, v3CombineNative, nonceStr, ts, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(bm, v3CombineNative, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &NativeRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(Native)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 合单查询订单API
+//	Code = 0 is success
+//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_11.shtml
+func (c *ClientV3) V3CombineTransactionQueryOrder(traderNo string) (wxRsp *CombineQueryOrderRsp, err error) {
+	var (
+		ts       = time.Now().Unix()
+		nonceStr = gotil.GetRandomString(32)
+		uri      string
+	)
+	uri = fmt.Sprintf(v3CombineQuery, traderNo)
+	authorization, err := c.authorization(MethodGet, uri, nonceStr, ts, nil)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdGet(uri, authorization)
+	if err != nil {
+		return nil, err
+	}
+
+	wxRsp = &CombineQueryOrderRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(CombineQueryOrder)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 合单关闭订单API
+//	Code = 0 is success
+//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_12.shtml
+func (c *ClientV3) V3CombineTransactionCloseOrder(tradeNo string, bm gopay.BodyMap) (wxRsp *CloseOrderRsp, err error) {
+	var (
+		ts       = time.Now().Unix()
+		nonceStr = gotil.GetRandomString(32)
+		url      = fmt.Sprintf(v3CombineClose, tradeNo)
+	)
+	if bm != nil {
+		if bm.Get("combine_appid") == gotil.NULL {
+			bm.Set("combine_appid", c.Appid)
+		}
+	}
+	authorization, err := c.authorization(MethodPost, url, nonceStr, ts, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(bm, url, authorization)
+	if err != nil {
+		return nil, err
+	}
+
+	wxRsp = &CloseOrderRsp{Code: Success, SignInfo: si}
+	if res.StatusCode != http.StatusNoContent {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
