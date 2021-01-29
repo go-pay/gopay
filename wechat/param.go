@@ -231,7 +231,7 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 	reqs.Set("sign", sign)
 
 	keyResponse := new(getSignKeyResponse)
-	_, errs := xhttp.NewClient().Type(xhttp.TypeXML).Post(sandboxGetSignKey).SendString(generateXml(reqs)).EndStruct(keyResponse)
+	_, errs := xhttp.NewClient().Type(xhttp.TypeXML).Post(sandboxGetSignKey).SendString(GenerateXml(reqs)).EndStruct(keyResponse)
 	if len(errs) > 0 {
 		return gotil.NULL, errs[0]
 	}
@@ -242,7 +242,7 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 }
 
 // 生成请求XML的Body体
-func generateXml(bm gopay.BodyMap) (reqXml string) {
+func GenerateXml(bm gopay.BodyMap) (reqXml string) {
 	bs, err := xml.Marshal(bm)
 	if err != nil {
 		return gotil.NULL

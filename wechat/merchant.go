@@ -2,7 +2,6 @@ package wechat
 
 import (
 	"crypto/tls"
-	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -41,11 +40,11 @@ func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fil
 		url = w.BaseURL + transfers
 		w.mu.RUnlock()
 	}
+	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		req, _ := json.Marshal(bm)
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, errs := httpClient.Post(url).SendString(generateXml(bm)).EndBytes()
+	res, bs, errs := httpClient.Post(url).SendString(req).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -90,11 +89,11 @@ func (w *Client) GetTransferInfo(bm gopay.BodyMap, certFilePath, keyFilePath, pk
 		url = w.BaseURL + getTransferInfo
 		w.mu.RUnlock()
 	}
+	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		req, _ := json.Marshal(bm)
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, errs := httpClient.Post(url).SendString(generateXml(bm)).EndBytes()
+	res, bs, errs := httpClient.Post(url).SendString(req).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -141,11 +140,11 @@ func (w *Client) PayBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 		url = w.BaseURL + payBank
 		w.mu.RUnlock()
 	}
+	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		req, _ := json.Marshal(bm)
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, errs := httpClient.Post(url).SendString(generateXml(bm)).EndBytes()
+	res, bs, errs := httpClient.Post(url).SendString(req).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -189,11 +188,11 @@ func (w *Client) QueryBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fi
 		url = w.BaseURL + queryBank
 		w.mu.RUnlock()
 	}
+	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		req, _ := json.Marshal(bm)
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, errs := httpClient.Post(url).SendString(generateXml(bm)).EndBytes()
+	res, bs, errs := httpClient.Post(url).SendString(req).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -232,11 +231,11 @@ func (w *Client) GetRSAPublicKey(bm gopay.BodyMap, certFilePath, keyFilePath, pk
 	bm.Set("sign", getReleaseSign(w.ApiKey, bm.Get("sign_type"), bm))
 
 	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
+	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		req, _ := json.Marshal(bm)
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, errs := httpClient.Post(url).SendString(generateXml(bm)).EndBytes()
+	res, bs, errs := httpClient.Post(url).SendString(req).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -283,20 +282,6 @@ func (w *Client) profitSharing(bm gopay.BodyMap, uri string, certFilePath, keyFi
 		return nil, err
 	}
 
-	arr, err := bm.GetArrayBodyMap("receivers")
-	if err != nil {
-		return nil, err
-	}
-	if len(arr) == 0 {
-		return nil, errors.New("receivers is empty")
-	}
-	// 检查每个分账接收者的必传属性
-	for _, r := range arr {
-		err = r.CheckEmptyError("type", "account", "amount", "description")
-		if err != nil {
-			return nil, err
-		}
-	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	tlsConfig, err := w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
@@ -354,15 +339,6 @@ func (w *Client) ProfitSharingAddReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharin
 	if err != nil {
 		return nil, err
 	}
-	// 输入参数 接收方
-	r, err := bm.GetBodyMap("receiver")
-	if err != nil {
-		return nil, err
-	}
-	err = r.CheckEmptyError("type", "account", "relation_type")
-	if err != nil {
-		return nil, err
-	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bs, err := w.doProdPost(bm, profitSharingAddReceiver, nil)
@@ -382,15 +358,6 @@ func (w *Client) ProfitSharingAddReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharin
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_4&index=5
 func (w *Client) ProfitSharingRemoveReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharingAddReceiverResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "receiver")
-	if err != nil {
-		return nil, err
-	}
-	// 输入参数 接收方
-	r, err := bm.GetBodyMap("receiver")
-	if err != nil {
-		return nil, err
-	}
-	err = r.CheckEmptyError("type", "account")
 	if err != nil {
 		return nil, err
 	}
