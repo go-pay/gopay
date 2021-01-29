@@ -1,4 +1,3 @@
-
 <div align=center><img width="220" height="220" alt="Logo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/main/logo.png"/></div>
 
 # GoPay
@@ -57,7 +56,7 @@ func main() {
 * APP纯签约-预签约接口-获取预签约ID（正式）：client.EntrustAppPre()
 * H5纯签约（正式）：client.EntrustH5()
 * 支付中签约（正式）：client.EntrustPaying()
-* 请求单次分账（正式）：client.ProfitSharing() 
+* 请求单次分账（正式）：client.ProfitSharing()
 * 请求多次分账（正式）：client.MultiProfitSharing()
 * 查询分账结果（正式）：client.ProfitSharingQuery()
 * 添加分账接收方（正式）：client.ProfitSharingAddReceiver()
@@ -126,7 +125,9 @@ func main() {
 ---
 
 ### 支付宝支付API
+
 > #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用client.PostAliPayAPISelf()方法实现！
+
 * 支付宝接口自行实现方法：client.PostAliPayAPISelf()
 * 手机网站支付接口2.0（手机网站支付）：client.TradeWapPay()
 * 统一收单下单并支付页面接口（电脑网站支付）：client.TradePagePay()
@@ -277,7 +278,7 @@ client.AddCertFileContent()
 
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/alipay"
+"github.com/iGoogle-ink/gopay/alipay"
 )
 
 // 初始化支付宝客户端
@@ -309,8 +310,10 @@ err := client.SetCertSnByPath("appCertPublicKey.crt", "alipayRootCert.crt", "ali
 ## 2、初始化并赋值BodyMap（client的方法所需的入参）
 
 * #### 微信请求参数
+* #### 微信接口通用参数（mch_id、appid、sign）无需传入，client 请求时会默认处理
 
 具体参数请根据不同接口查看：[微信支付接口文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
+
 ```go
 import (
 	"github.com/iGoogle-ink/gopay/wechat"
@@ -345,6 +348,7 @@ bm.Set("sign", sign)
 * #### 支付宝请求参数
 
 具体参数请根据不同接口查看：[支付宝支付API接口文档](https://opendocs.alipay.com/apis/api_1/alipay.trade.wap.pay)
+
 ```go
 // 初始化 BodyMap
 bm := make(gopay.BodyMap)
@@ -357,7 +361,8 @@ bm.Set("subject", "手机网站测试支付").
 
 ## 3、client 方法调用
 
-* #### 微信 client 
+* #### 微信 client
+
 ```go
 wxRsp, err := client.UnifiedOrder(bm)
 wxRsp, err := client.Micropay(bm)
@@ -373,6 +378,7 @@ wxRsp, err := client.Transfer(bm, "apiclient_cert.pem", "apiclient_key.pem", "ap
 ```
 
 * #### 支付宝 client
+
 ```go
 // 手机网站支付是通过服务端获取支付URL后，然后返回给客户端，请求URL地址即可打开支付页面
 payUrl, err := client.TradeWapPay(bm)
@@ -412,11 +418,13 @@ aliRsp, err := client.UserCertifyOpenQuery(bm)
 ## 4、微信统一下单后，获取微信小程序支付、APP支付、微信内H5支付所需要的 paySign
 
 * #### 微信（只有微信需要此操作）
+
 微信小程序支付官方文档：[微信小程序支付API](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html)
 
 APP支付官方文档：[APP端调起支付的参数列表文档](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12)
 
 微信内H5支付官方文档：[微信内H5支付文档](https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6)
+
 ```go
 import (
 	"github.com/iGoogle-ink/gopay/wechat"
@@ -471,6 +479,7 @@ paySign := wechat.GetH5PaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_
 异步通知处理完后，需回复平台固定数据
 
 * #### 微信
+
 ```go
 import (
 	"github.com/iGoogle-ink/gopay"
@@ -528,6 +537,7 @@ c.String(http.StatusOK, "%s", rsp.ToXmlString())    // 此写法是 gin 框架�
 注意：APP支付、手机网站支付、电脑网站支付 暂不支持同步返回验签
 
 支付宝支付后的同步/异步通知验签文档：[支付结果通知](https://opendocs.alipay.com/open/200/106120)
+
 ```go
 import (
 	"github.com/iGoogle-ink/gopay/alipay"
@@ -574,6 +584,7 @@ c.String(http.StatusOK, "%s", "success")    // 此写法是 gin 框架返回支�
 button按钮获取手机号码：[button组件文档](https://developers.weixin.qq.com/miniprogram/dev/component/button.html)
 
 微信解密算法文档：[解密算法文档](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html)
+
 ```go
 import (
 	"github.com/iGoogle-ink/gopay/wechat"
@@ -656,12 +667,14 @@ xlog.Debug(*phone)
 ```
 
 ## 讲究的朋友可以给个赞赏
+
 <font color='#0088ff'>微信：</font>
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/main/zanshang_wx.png"/>
 <font color='#0088ff'>支付宝：</font>
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/main/zanshang_zfb.png"/>
 
 ## License
+
 ```
 Copyright 2019 Jerry
 

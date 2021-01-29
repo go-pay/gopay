@@ -57,44 +57,6 @@ func (bm BodyMap) Reset() {
 	}
 }
 
-// GetArrayMap 获取获取的key对应的值，并尝试转换为 []BodyMap
-// 在请求单次分账接口输入参数有用到 https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_1&index=1
-func (bm BodyMap) GetArrayBodyMap(key string) (array []BodyMap, err error) {
-	if bm == nil {
-		return nil, errors.New("param is nil")
-	}
-	mu.RLock()
-	defer mu.RUnlock()
-	value, ok := bm[key]
-	if !ok {
-		return nil, errors.New("param is not exist")
-	}
-	array, ok = value.([]BodyMap)
-	if !ok {
-		return nil, errors.New("can not transfer " + key + " to []BodyMap")
-	}
-	return
-}
-
-// GetBodyMap  获取获取的key对应的值，并尝试转换为 BodyMap
-// 在添加分账接收方会用到 https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_3&index=4
-func (bm BodyMap) GetBodyMap(key string) (b BodyMap, err error) {
-	if bm == nil {
-		return nil, errors.New("param is nil")
-	}
-	mu.RLock()
-	defer mu.RUnlock()
-	value, ok := bm[key]
-	if !ok {
-		return nil, errors.New("param is not exist")
-	}
-	b, ok = value.(BodyMap)
-	if !ok {
-		return nil, errors.New("can not transfer " + key + " to BodyMap")
-	}
-	return
-}
-
 func (bm BodyMap) JsonBody() (jb string) {
 	bs, err := json.Marshal(bm)
 	if err != nil {

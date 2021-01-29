@@ -1,8 +1,11 @@
 package gopay
 
 import (
+	"encoding/json"
+	"encoding/xml"
 	"testing"
 
+	"github.com/iGoogle-ink/gotil"
 	"github.com/iGoogle-ink/gotil/xlog"
 )
 
@@ -71,4 +74,43 @@ func TestBodyMapMarshal(t *testing.T) {
 		Set("8key", "8value")
 	jb2 := bm.JsonBody()
 	xlog.Debug("jb2:", jb2)
+}
+
+func TestBodyMapMarshalSlice(t *testing.T) {
+	type Receiver struct {
+		Type        string `json:"type"`
+		Account     string `json:"account"`
+		Amount      int    `json:"amount"`
+		Description string `json:"description"`
+	}
+	var rs []*Receiver
+	item := &Receiver{
+		Type:        "MERCHANT_ID",
+		Account:     "190001001",
+		Amount:      100,
+		Description: "分到商户",
+	}
+	rs = append(rs, item)
+	item2 := &Receiver{
+		Type:        "PERSONAL_OPENID",
+		Account:     "86693952",
+		Amount:      888,
+		Description: "分到个人",
+	}
+	rs = append(rs, item2)
+	bs, _ := json.Marshal(rs)
+
+	bm := make(BodyMap)
+	bm.Set("nonce_str", gotil.GetRandomString(32)).
+		Set("transaction_id", "4208450740201411110007820472").
+		Set("out_order_no", "P20150806125346")
+
+	bm.Set("receivers", string(bs))
+
+	//receiver := make(BodyMap)
+	//receiver.Set("receiver", string(bs))
+	//
+	//body := receiver.JsonBody()
+	bss, _ := xml.Marshal(bm)
+	xlog.Debug("body:", string(bss))
 }
