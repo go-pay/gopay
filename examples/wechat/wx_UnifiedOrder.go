@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 	"github.com/iGoogle-ink/gopay/wechat"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func UnifiedOrder() {
@@ -21,12 +21,12 @@ func UnifiedOrder() {
 	//设置国家
 	client.SetCountry(wechat.China)
 
-	number := gotil.GetRandomString(32)
+	number := util.GetRandomString(32)
 	xlog.Debug("out_trade_no:", number)
 
 	//初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
+	bm.Set("nonce_str", util.GetRandomString(32))
 	bm.Set("body", "H5支付")
 	bm.Set("out_trade_no", number)
 	bm.Set("total_fee", 1)

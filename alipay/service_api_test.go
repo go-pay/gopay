@@ -3,7 +3,7 @@ package alipay
 import (
 	"testing"
 
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
 func TestMonitorHeartbeatSyn(t *testing.T) {

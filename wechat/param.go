@@ -15,8 +15,8 @@ import (
 	"strings"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/xhttp"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xhttp"
 	"golang.org/x/crypto/pkcs12"
 )
 
@@ -153,7 +153,7 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File interface{}) error
 		for varName, v := range files {
 			switch v.(type) {
 			case string:
-				if v.(string) == gotil.NULL {
+				if v.(string) == util.NULL {
 					return fmt.Errorf("%s is empty", varName)
 				}
 			case []byte:
@@ -168,7 +168,7 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File interface{}) error
 	} else if pkcs12File != nil {
 		switch pkcs12File.(type) {
 		case string:
-			if pkcs12File.(string) == gotil.NULL {
+			if pkcs12File.(string) == util.NULL {
 				return errors.New("pkcs12File is empty")
 			}
 		case []byte:
@@ -202,7 +202,7 @@ func getSignBoxSign(mchId, apiKey string, bm gopay.BodyMap) (sign string, err er
 		sandBoxApiKey string
 		h             hash.Hash
 	)
-	if sandBoxApiKey, err = getSanBoxKey(mchId, gotil.GetRandomString(32), apiKey, SignType_MD5); err != nil {
+	if sandBoxApiKey, err = getSanBoxKey(mchId, util.GetRandomString(32), apiKey, SignType_MD5); err != nil {
 		return
 	}
 	h = md5.New()
@@ -233,10 +233,10 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 	keyResponse := new(getSignKeyResponse)
 	_, errs := xhttp.NewClient().Type(xhttp.TypeXML).Post(sandboxGetSignKey).SendString(GenerateXml(reqs)).EndStruct(keyResponse)
 	if len(errs) > 0 {
-		return gotil.NULL, errs[0]
+		return util.NULL, errs[0]
 	}
 	if keyResponse.ReturnCode == "FAIL" {
-		return gotil.NULL, errors.New(keyResponse.ReturnMsg)
+		return util.NULL, errors.New(keyResponse.ReturnMsg)
 	}
 	return keyResponse.SandboxSignkey, nil
 }
@@ -245,7 +245,7 @@ func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
 func GenerateXml(bm gopay.BodyMap) (reqXml string) {
 	bs, err := xml.Marshal(bm)
 	if err != nil {
-		return gotil.NULL
+		return util.NULL
 	}
 	return string(bs)
 }

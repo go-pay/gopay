@@ -8,17 +8,17 @@ import (
 	"sync"
 	"time"
 
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/aes"
-	"github.com/iGoogle-ink/gotil/errgroup"
-	"github.com/pkg/errors"
+	"errors"
+	"github.com/iGoogle-ink/gopay/pkg/aes"
+	"github.com/iGoogle-ink/gopay/pkg/errgroup"
+	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
 // GetPlatformCerts 获取微信平台证书
 func (c *ClientV3) GetPlatformCerts() (certs *PlatformCertRsp, err error) {
 	var (
 		ts       = time.Now().Unix()
-		nonceStr = gotil.GetRandomString(32)
+		nonceStr = util.GetRandomString(32)
 		eg       = new(errgroup.Group)
 		mu       sync.Mutex
 	)

@@ -7,9 +7,9 @@ import (
 	"fmt"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/xhttp"
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xhttp"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
 // 企业付款（企业向微信用户个人付款）
@@ -35,7 +35,7 @@ func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fil
 	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
 
 	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
-	if w.BaseURL != gotil.NULL {
+	if w.BaseURL != util.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + transfers
 		w.mu.RUnlock()
@@ -84,7 +84,7 @@ func (w *Client) GetTransferInfo(bm gopay.BodyMap, certFilePath, keyFilePath, pk
 	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
 
 	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
-	if w.BaseURL != gotil.NULL {
+	if w.BaseURL != util.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + getTransferInfo
 		w.mu.RUnlock()
@@ -135,7 +135,7 @@ func (w *Client) PayBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
 
 	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
-	if w.BaseURL != gotil.NULL {
+	if w.BaseURL != util.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + payBank
 		w.mu.RUnlock()
@@ -183,7 +183,7 @@ func (w *Client) QueryBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fi
 	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
 
 	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
-	if w.BaseURL != gotil.NULL {
+	if w.BaseURL != util.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + queryBank
 		w.mu.RUnlock()
@@ -314,7 +314,7 @@ func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQuery
 		w.mu.RLock()
 		defer w.mu.RUnlock()
 		bm.Set("mch_id", w.MchId)
-		if bm.Get("sign") == gotil.NULL {
+		if bm.Get("sign") == util.NULL {
 			sign := getReleaseSign(w.ApiKey, bm.Get("sign_type"), bm)
 			bm.Set("sign", sign)
 		}
@@ -421,7 +421,7 @@ func (w *Client) ProfitSharingReturn(bm gopay.BodyMap, certFilePath, keyFilePath
 		return nil, err
 	}
 
-	if (bm.Get("order_id") == gotil.NULL) && (bm.Get("out_order_no") == gotil.NULL) {
+	if (bm.Get("order_id") == util.NULL) && (bm.Get("out_order_no") == util.NULL) {
 		return nil, errors.New("param order_id and out_order_no can not be null at the same time")
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
@@ -452,7 +452,7 @@ func (w *Client) ProfitSharingReturnQuery(bm gopay.BodyMap) (wxRsp *ProfitSharin
 		return nil, err
 	}
 
-	if (bm.Get("order_id") == gotil.NULL) && (bm.Get("out_order_no") == gotil.NULL) {
+	if (bm.Get("order_id") == util.NULL) && (bm.Get("out_order_no") == util.NULL) {
 		return nil, errors.New("param order_id and out_order_no can not be null at the same time")
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256

@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
 var (
@@ -34,7 +34,7 @@ func TestMain(m *testing.M) {
 
 func TestClient_MicroPay(t *testing.T) {
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
+	bm.Set("nonce_str", util.GetRandomString(32))
 
 	qqRsp, err := client.MicroPay(bm)
 	if err != nil {

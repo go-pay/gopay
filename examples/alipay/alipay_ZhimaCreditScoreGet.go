@@ -3,8 +3,8 @@ package alipay
 import (
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
 func ZhimaCreditScoreGet() {
@@ -22,7 +22,7 @@ func ZhimaCreditScoreGet() {
 
 	//请求参数
 	body := make(gopay.BodyMap)
-	transaction_id := gotil.GetRandomString(48)
+	transaction_id := util.GetRandomString(48)
 	body.Set("transaction_id", transaction_id)
 	body.Set("product_code", "w1010100100000000001")
 

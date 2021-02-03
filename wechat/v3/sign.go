@@ -10,9 +10,9 @@ import (
 	"encoding/pem"
 	"time"
 
+	"errors"
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/pkg/errors"
+	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
 // V3VerifySign 微信V3 版本验签
@@ -45,8 +45,8 @@ func V3VerifySign(timestamp, nonce, signBody, sign, wxPkContent string) (err err
 
 // PaySignOfJSAPI 获取 JSAPI paySign
 func (c *ClientV3) PaySignOfJSAPI(prepayid string) (jsapi *JSAPIPayParams, err error) {
-	ts := gotil.Int642String(time.Now().Unix())
-	nonceStr := gotil.GetRandomString(32)
+	ts := util.Int642String(time.Now().Unix())
+	nonceStr := util.GetRandomString(32)
 	prepayId := "prepay_id=" + prepayid
 
 	_str := c.Appid + "\n" + ts + "\n" + nonceStr + "\n" + prepayId + "\n"
@@ -68,8 +68,8 @@ func (c *ClientV3) PaySignOfJSAPI(prepayid string) (jsapi *JSAPIPayParams, err e
 
 // PaySignOfApp 获取 App paySign
 func (c *ClientV3) PaySignOfApp(prepayid string) (app *AppPayParams, err error) {
-	ts := gotil.Int642String(time.Now().Unix())
-	nonceStr := gotil.GetRandomString(32)
+	ts := util.Int642String(time.Now().Unix())
+	nonceStr := util.GetRandomString(32)
 	prepayId := "prepay_id=" + prepayid
 
 	_str := c.Appid + "\n" + ts + "\n" + nonceStr + "\n" + prepayId + "\n"
@@ -92,8 +92,8 @@ func (c *ClientV3) PaySignOfApp(prepayid string) (app *AppPayParams, err error) 
 
 // PaySignOfApp 获取 App paySign
 func (c *ClientV3) PaySignOfApplet(prepayid string) (applet *AppletParams, err error) {
-	ts := gotil.Int642String(time.Now().Unix())
-	nonceStr := gotil.GetRandomString(32)
+	ts := util.Int642String(time.Now().Unix())
+	nonceStr := util.GetRandomString(32)
 	prepayId := "prepay_id=" + prepayid
 
 	_str := c.Appid + "\n" + ts + "\n" + nonceStr + "\n" + prepayId + "\n"
@@ -121,7 +121,7 @@ func (c *ClientV3) authorization(method, path, nonceStr string, timestamp int64,
 	if bm != nil {
 		jb = bm.JsonBody()
 	}
-	ts := gotil.Int642String(timestamp)
+	ts := util.Int642String(timestamp)
 	_str := method + "\n" + path + "\n" + ts + "\n" + nonceStr + "\n" + jb + "\n"
 	sign, err := c.rsaSign(_str)
 	if err != nil {

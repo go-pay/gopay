@@ -14,9 +14,9 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/iGoogle-ink/gotil"
-	xaes "github.com/iGoogle-ink/gotil/aes"
-	"github.com/iGoogle-ink/gotil/xhttp"
+	xaes "github.com/iGoogle-ink/gopay/pkg/aes"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xhttp"
 )
 
 // Code2Session 获取微信小程序用户的OpenId、SessionKey、UnionId
@@ -55,7 +55,7 @@ func GetAppletAccessToken(appId, appSecret string) (accessToken *AccessToken, er
 //	beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr interface{}) (err error) {
-	if encryptedData == gotil.NULL || iv == gotil.NULL || sessionKey == gotil.NULL {
+	if encryptedData == util.NULL || iv == util.NULL || sessionKey == util.NULL {
 		return errors.New("input params can not null")
 	}
 	var (

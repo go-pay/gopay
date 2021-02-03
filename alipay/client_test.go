@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
 var (
@@ -46,7 +46,7 @@ func TestMain(m *testing.M) {
 func TestClient_PostAliPayAPISelf(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("subject", "预创建创建订单")
-	bm.Set("out_trade_no", gotil.GetRandomString(32))
+	bm.Set("out_trade_no", util.GetRandomString(32))
 	bm.Set("total_amount", "100")
 
 	aliPsp := new(TradePrecreateResponse)
@@ -62,7 +62,7 @@ func TestClient_TradePrecreate(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("subject", "预创建创建订单")
-	bm.Set("out_trade_no", gotil.GetRandomString(32))
+	bm.Set("out_trade_no", util.GetRandomString(32))
 	bm.Set("total_amount", "100")
 
 	// 创建订单
@@ -234,7 +234,7 @@ func TestClient_TradePageRefund(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "GZ201909081743431443")
 	bm.Set("refund_amount", "5")
-	bm.Set("out_request_no", gotil.GetRandomString(32))
+	bm.Set("out_request_no", util.GetRandomString(32))
 
 	// 发起退款请求
 	aliRsp, err := client.TradePageRefund(bm)
@@ -316,7 +316,7 @@ func TestClient_TradeFastPayRefundQuery(t *testing.T) {
 func TestClient_FundTransToaccountTransfer(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
-	bm.Set("out_biz_no", gotil.GetRandomString(32))
+	bm.Set("out_biz_no", util.GetRandomString(32))
 	bm.Set("payee_type", "ALIPAY_LOGONID")
 	bm.Set("payee_account", "otmdfd2378@sandbox.com")
 	bm.Set("amount", "1000")
@@ -428,7 +428,7 @@ func TestClient_UserInfoShare(t *testing.T) {
 func TestClient_ZhimaCreditScoreGet(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
-	bm.Set("transaction_id", gotil.GetRandomString(48))
+	bm.Set("transaction_id", util.GetRandomString(48))
 	bm.Set("product_code", "w1010100100000000001")
 
 	// 芝麻分

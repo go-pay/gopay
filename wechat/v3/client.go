@@ -8,10 +8,10 @@ import (
 	"net/http"
 	"sync"
 
+	"errors"
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil/xhttp"
-	"github.com/iGoogle-ink/gotil/xlog"
-	"github.com/pkg/errors"
+	"github.com/iGoogle-ink/gopay/pkg/xhttp"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
 // ClientV3 微信支付 V3

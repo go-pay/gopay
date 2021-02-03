@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 	"github.com/iGoogle-ink/gopay/wechat"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func Code2Session() {
@@ -180,7 +180,7 @@ func GetOpenIdByAuthCode() {
 	//    apiKey:ApiKey
 	//    authCode:用户授权码
 	//    nonceStr:随即字符串
-	openIdRsp, err := wechat.GetOpenIdByAuthCode("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", "135127679952609396", gotil.GetRandomString(32))
+	openIdRsp, err := wechat.GetOpenIdByAuthCode("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", "135127679952609396", util.GetRandomString(32))
 	if err != nil {
 		xlog.Error("err:", err)
 		return

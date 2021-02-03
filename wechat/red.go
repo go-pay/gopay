@@ -10,7 +10,7 @@ import (
 	"fmt"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
 // SendCashRed 发放现金红包
@@ -28,13 +28,13 @@ func (w *Client) SendCashRed(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12
 	func() {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if bm.Get("wxappid") == gotil.NULL {
+		if bm.Get("wxappid") == util.NULL {
 			bm.Set("wxappid", w.AppId)
 		}
-		if bm.Get("mch_id") == gotil.NULL {
+		if bm.Get("mch_id") == util.NULL {
 			bm.Set("mch_id", w.MchId)
 		}
-		if bm.Get("sign") == gotil.NULL {
+		if bm.Get("sign") == util.NULL {
 			sign := getReleaseSign(w.ApiKey, SignType_MD5, bm)
 			bm.Set("sign", sign)
 		}
@@ -71,13 +71,13 @@ func (w *Client) SendGroupCashRed(bm gopay.BodyMap, certFilePath, keyFilePath, p
 	func() {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if bm.Get("wxappid") == gotil.NULL {
+		if bm.Get("wxappid") == util.NULL {
 			bm.Set("wxappid", w.AppId)
 		}
-		if bm.Get("mch_id") == gotil.NULL {
+		if bm.Get("mch_id") == util.NULL {
 			bm.Set("mch_id", w.MchId)
 		}
-		if bm.Get("sign") == gotil.NULL {
+		if bm.Get("sign") == util.NULL {
 			sign := getReleaseSign(w.ApiKey, SignType_MD5, bm)
 			bm.Set("sign", sign)
 		}
@@ -114,13 +114,13 @@ func (w *Client) SendAppletRed(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs
 	func() {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if bm.Get("wxappid") == gotil.NULL {
+		if bm.Get("wxappid") == util.NULL {
 			bm.Set("wxappid", w.AppId)
 		}
-		if bm.Get("mch_id") == gotil.NULL {
+		if bm.Get("mch_id") == util.NULL {
 			bm.Set("mch_id", w.MchId)
 		}
-		if bm.Get("sign") == gotil.NULL {
+		if bm.Get("sign") == util.NULL {
 			sign := getReleaseSign(w.ApiKey, SignType_MD5, bm)
 			bm.Set("sign", sign)
 		}
@@ -157,13 +157,13 @@ func (w *Client) QueryRedRecord(bm gopay.BodyMap, certFilePath, keyFilePath, pkc
 	func() {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if bm.Get("appid") == gotil.NULL {
+		if bm.Get("appid") == util.NULL {
 			bm.Set("appid", w.AppId)
 		}
-		if bm.Get("mch_id") == gotil.NULL {
+		if bm.Get("mch_id") == util.NULL {
 			bm.Set("mch_id", w.MchId)
 		}
-		if bm.Get("sign") == gotil.NULL {
+		if bm.Get("sign") == util.NULL {
 			sign := getReleaseSign(w.ApiKey, SignType_MD5, bm)
 			bm.Set("sign", sign)
 		}

@@ -7,7 +7,7 @@
 
 package wechat
 
-import "github.com/iGoogle-ink/gotil/xhttp"
+import "github.com/iGoogle-ink/gopay/pkg/xhttp"
 
 // GetOauth2AccessToken 微信第三方登录，code 换取 access_token
 //	appId：应用唯一标识，在微信开放平台提交应用审核通过后获得

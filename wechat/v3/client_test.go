@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
 var (
@@ -73,7 +73,7 @@ func TestV3VerifySign(t *testing.T) {
 }
 
 func TestV3Jsapi(t *testing.T) {
-	tradeNo := gotil.GetRandomString(32)
+	tradeNo := util.GetRandomString(32)
 	xlog.Debug("tradeNo:", tradeNo)
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
@@ -103,7 +103,7 @@ func TestV3Jsapi(t *testing.T) {
 }
 
 func TestV3Native(t *testing.T) {
-	tradeNo := gotil.GetRandomString(32)
+	tradeNo := util.GetRandomString(32)
 	xlog.Debug("tradeNo:", tradeNo)
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 

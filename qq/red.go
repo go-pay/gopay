@@ -10,7 +10,7 @@ import (
 	"fmt"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
 // SendCashRed 创建现金红包
@@ -50,7 +50,7 @@ func (q *Client) DownloadRedListFile(bm gopay.BodyMap) (qqRsp string, err error)
 	}
 	bs, err := q.doQQGet(bm, redFileDown, SignType_MD5)
 	if err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	return string(bs), nil
 }

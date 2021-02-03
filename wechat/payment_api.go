@@ -25,9 +25,9 @@ import (
 	"strings"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
-	xaes "github.com/iGoogle-ink/gotil/aes"
-	"github.com/iGoogle-ink/gotil/xhttp"
+	xaes "github.com/iGoogle-ink/gopay/pkg/aes"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xhttp"
 )
 
 // GetParamSign 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
@@ -44,7 +44,7 @@ func GetParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string) {
 		h        hash.Hash
 	)
 	signType = bm.Get("sign_type")
-	if signType == gotil.NULL {
+	if signType == util.NULL {
 		bm.Set("sign_type", SignType_MD5)
 	}
 	if signType == SignType_HMAC_SHA256 {
@@ -72,7 +72,7 @@ func GetSanBoxParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign str
 		sandBoxApiKey string
 		hashMd5       hash.Hash
 	)
-	if sandBoxApiKey, err = getSanBoxKey(mchId, gotil.GetRandomString(32), apiKey, SignType_MD5); err != nil {
+	if sandBoxApiKey, err = getSanBoxKey(mchId, util.GetRandomString(32), apiKey, SignType_MD5); err != nil {
 		return
 	}
 	hashMd5 = md5.New()
@@ -131,7 +131,7 @@ func ParseRefundNotify(req *http.Request) (notifyReq *RefundNotifyRequest, err e
 //	返回参数err：错误信息
 //	文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_16&index=10
 func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNotify, err error) {
-	if reqInfo == gotil.NULL || apiKey == gotil.NULL {
+	if reqInfo == util.NULL || apiKey == util.NULL {
 		return nil, errors.New("reqInfo or apiKey is null")
 	}
 	var (
@@ -341,7 +341,7 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 //	sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
 func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.BodyMap, err error) {
-	if encryptedData == gotil.NULL || iv == gotil.NULL || sessionKey == gotil.NULL {
+	if encryptedData == util.NULL || iv == util.NULL || sessionKey == util.NULL {
 		return nil, errors.New("input params can not null")
 	}
 	var (

@@ -3,7 +3,7 @@ package alipay
 import (
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/alipay"
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
 func TradeCancel() {

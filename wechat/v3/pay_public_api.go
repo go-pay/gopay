@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
+	"errors"
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/pkg/errors"
+	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
 // APP下单API
@@ -17,12 +17,12 @@ import (
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter3_1.shtml
 func (c *ClientV3) V3TransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	ts := time.Now().Unix()
-	nonceStr := gotil.GetRandomString(32)
+	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("appid") == gotil.NULL {
+		if bm.Get("appid") == util.NULL {
 			bm.Set("appid", c.Appid)
 		}
-		if bm.Get("mchid") == gotil.NULL {
+		if bm.Get("mchid") == util.NULL {
 			bm.Set("mchid", c.Mchid)
 		}
 	}
@@ -52,12 +52,12 @@ func (c *ClientV3) V3TransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err err
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter3_2.shtml
 func (c *ClientV3) V3TransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	ts := time.Now().Unix()
-	nonceStr := gotil.GetRandomString(32)
+	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("appid") == gotil.NULL {
+		if bm.Get("appid") == util.NULL {
 			bm.Set("appid", c.Appid)
 		}
-		if bm.Get("mchid") == gotil.NULL {
+		if bm.Get("mchid") == util.NULL {
 			bm.Set("mchid", c.Mchid)
 		}
 	}
@@ -87,12 +87,12 @@ func (c *ClientV3) V3TransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err e
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter3_3.shtml
 func (c *ClientV3) V3TransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
 	ts := time.Now().Unix()
-	nonceStr := gotil.GetRandomString(32)
+	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("appid") == gotil.NULL {
+		if bm.Get("appid") == util.NULL {
 			bm.Set("appid", c.Appid)
 		}
-		if bm.Get("mchid") == gotil.NULL {
+		if bm.Get("mchid") == util.NULL {
 			bm.Set("mchid", c.Mchid)
 		}
 	}
@@ -122,12 +122,12 @@ func (c *ClientV3) V3TransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err 
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter3_4.shtml
 func (c *ClientV3) V3TransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
 	ts := time.Now().Unix()
-	nonceStr := gotil.GetRandomString(32)
+	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("appid") == gotil.NULL {
+		if bm.Get("appid") == util.NULL {
 			bm.Set("appid", c.Appid)
 		}
-		if bm.Get("mchid") == gotil.NULL {
+		if bm.Get("mchid") == util.NULL {
 			bm.Set("mchid", c.Mchid)
 		}
 	}
@@ -158,7 +158,7 @@ func (c *ClientV3) V3TransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
 func (c *ClientV3) V3TransactionQueryOrder(orderNoType OrderNoType, orderNo string) (wxRsp *QueryOrderRsp, err error) {
 	var (
 		ts       = time.Now().Unix()
-		nonceStr = gotil.GetRandomString(32)
+		nonceStr = util.GetRandomString(32)
 		uri      string
 	)
 	switch orderNoType {
@@ -197,7 +197,7 @@ func (c *ClientV3) V3TransactionQueryOrder(orderNoType OrderNoType, orderNo stri
 func (c *ClientV3) V3TransactionCloseOrder(tradeNo string) (wxRsp *CloseOrderRsp, err error) {
 	var (
 		ts       = time.Now().Unix()
-		nonceStr = gotil.GetRandomString(32)
+		nonceStr = util.GetRandomString(32)
 		url      = fmt.Sprintf(v3ApiCloseOrder, tradeNo)
 	)
 	bm := make(gopay.BodyMap)
@@ -227,13 +227,13 @@ func (c *ClientV3) V3TransactionCloseOrder(tradeNo string) (wxRsp *CloseOrderRsp
 func (c *ClientV3) V3BillTradeBill(bm gopay.BodyMap) (wxRsp *BillRsp, err error) {
 	var (
 		ts       = time.Now().Unix()
-		nonceStr = gotil.GetRandomString(32)
+		nonceStr = util.GetRandomString(32)
 		uri      string
 	)
 	if bm != nil {
-		if bm.Get("bill_date") == gotil.NULL {
+		if bm.Get("bill_date") == util.NULL {
 			now := time.Now()
-			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(gotil.DateLayout)
+			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(util.DateLayout)
 			bm.Set("bill_date", yesterday)
 		}
 	}
@@ -267,13 +267,13 @@ func (c *ClientV3) V3BillTradeBill(bm gopay.BodyMap) (wxRsp *BillRsp, err error)
 func (c *ClientV3) V3BillFundFlowBill(bm gopay.BodyMap) (wxRsp *BillRsp, err error) {
 	var (
 		ts       = time.Now().Unix()
-		nonceStr = gotil.GetRandomString(32)
+		nonceStr = util.GetRandomString(32)
 		uri      string
 	)
 	if bm != nil {
-		if bm.Get("bill_date") == gotil.NULL {
+		if bm.Get("bill_date") == util.NULL {
 			now := time.Now()
-			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(gotil.DateLayout)
+			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(util.DateLayout)
 			bm.Set("bill_date", yesterday)
 		}
 	}
@@ -307,19 +307,19 @@ func (c *ClientV3) V3BillFundFlowBill(bm gopay.BodyMap) (wxRsp *BillRsp, err err
 func (c *ClientV3) V3BillLevel2FundFlowBill(bm gopay.BodyMap) (wxRsp *Level2FundFlowBillRsp, err error) {
 	var (
 		ts       = time.Now().Unix()
-		nonceStr = gotil.GetRandomString(32)
+		nonceStr = util.GetRandomString(32)
 		uri      string
 	)
 	if bm != nil {
-		if bm.Get("bill_date") == gotil.NULL {
+		if bm.Get("bill_date") == util.NULL {
 			now := time.Now()
-			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(gotil.DateLayout)
+			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(util.DateLayout)
 			bm.Set("bill_date", yesterday)
 		}
-		if bm.Get("account_type") == gotil.NULL {
+		if bm.Get("account_type") == util.NULL {
 			bm.Set("account_type", "ALL")
 		}
-		if bm.Get("algorithm") == gotil.NULL {
+		if bm.Get("algorithm") == util.NULL {
 			bm.Set("algorithm", "AEAD_AES_256_GCM")
 		}
 
@@ -356,7 +356,7 @@ func (c *ClientV3) V3BillDownLoadBill(downloadUrl string) (fileBytes []byte, err
 	}
 	var (
 		ts       = time.Now().Unix()
-		nonceStr = gotil.GetRandomString(32)
+		nonceStr = util.GetRandomString(32)
 	)
 	split := strings.Split(downloadUrl, ".com")
 	if len(split) != 2 {
@@ -381,12 +381,12 @@ func (c *ClientV3) V3BillDownLoadBill(downloadUrl string) (fileBytes []byte, err
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_1.shtml
 func (c *ClientV3) V3CombineTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	ts := time.Now().Unix()
-	nonceStr := gotil.GetRandomString(32)
+	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("combine_appid") == gotil.NULL {
+		if bm.Get("combine_appid") == util.NULL {
 			bm.Set("combine_appid", c.Appid)
 		}
-		if bm.Get("combine_mchid") == gotil.NULL {
+		if bm.Get("combine_mchid") == util.NULL {
 			bm.Set("combine_mchid", c.Mchid)
 		}
 	}
@@ -416,12 +416,12 @@ func (c *ClientV3) V3CombineTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, 
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_2.shtml
 func (c *ClientV3) V3CombineTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
 	ts := time.Now().Unix()
-	nonceStr := gotil.GetRandomString(32)
+	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("combine_appid") == gotil.NULL {
+		if bm.Get("combine_appid") == util.NULL {
 			bm.Set("combine_appid", c.Appid)
 		}
-		if bm.Get("combine_mchid") == gotil.NULL {
+		if bm.Get("combine_mchid") == util.NULL {
 			bm.Set("combine_mchid", c.Mchid)
 		}
 	}
@@ -452,12 +452,12 @@ func (c *ClientV3) V3CombineTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err e
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_4.shtml
 func (c *ClientV3) V3CombineTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	ts := time.Now().Unix()
-	nonceStr := gotil.GetRandomString(32)
+	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("combine_appid") == gotil.NULL {
+		if bm.Get("combine_appid") == util.NULL {
 			bm.Set("combine_appid", c.Appid)
 		}
-		if bm.Get("combine_mchid") == gotil.NULL {
+		if bm.Get("combine_mchid") == util.NULL {
 			bm.Set("combine_mchid", c.Mchid)
 		}
 	}
@@ -487,12 +487,12 @@ func (c *ClientV3) V3CombineTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_5.shtml
 func (c *ClientV3) V3CombineTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
 	ts := time.Now().Unix()
-	nonceStr := gotil.GetRandomString(32)
+	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("combine_appid") == gotil.NULL {
+		if bm.Get("combine_appid") == util.NULL {
 			bm.Set("combine_appid", c.Appid)
 		}
-		if bm.Get("combine_mchid") == gotil.NULL {
+		if bm.Get("combine_mchid") == util.NULL {
 			bm.Set("combine_mchid", c.Mchid)
 		}
 	}
@@ -523,7 +523,7 @@ func (c *ClientV3) V3CombineTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRs
 func (c *ClientV3) V3CombineTransactionQueryOrder(traderNo string) (wxRsp *CombineQueryOrderRsp, err error) {
 	var (
 		ts       = time.Now().Unix()
-		nonceStr = gotil.GetRandomString(32)
+		nonceStr = util.GetRandomString(32)
 		uri      string
 	)
 	uri = fmt.Sprintf(v3CombineQuery, traderNo)
@@ -555,11 +555,11 @@ func (c *ClientV3) V3CombineTransactionQueryOrder(traderNo string) (wxRsp *Combi
 func (c *ClientV3) V3CombineTransactionCloseOrder(tradeNo string, bm gopay.BodyMap) (wxRsp *CloseOrderRsp, err error) {
 	var (
 		ts       = time.Now().Unix()
-		nonceStr = gotil.GetRandomString(32)
+		nonceStr = util.GetRandomString(32)
 		url      = fmt.Sprintf(v3CombineClose, tradeNo)
 	)
 	if bm != nil {
-		if bm.Get("combine_appid") == gotil.NULL {
+		if bm.Get("combine_appid") == util.NULL {
 			bm.Set("combine_appid", c.Appid)
 		}
 	}

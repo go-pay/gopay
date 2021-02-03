@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
 // 统一下单
@@ -65,7 +65,7 @@ func (w *Client) QueryOrder(bm gopay.BodyMap) (wxRsp *QueryOrderResponse, resBm 
 	if err != nil {
 		return nil, nil, err
 	}
-	if bm.Get("out_trade_no") == gotil.NULL && bm.Get("transaction_id") == gotil.NULL {
+	if bm.Get("out_trade_no") == util.NULL && bm.Get("transaction_id") == util.NULL {
 		return nil, nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
 	}
 	var bs []byte
@@ -122,7 +122,7 @@ func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 	if err != nil {
 		return nil, nil, err
 	}
-	if bm.Get("out_trade_no") == gotil.NULL && bm.Get("transaction_id") == gotil.NULL {
+	if bm.Get("out_trade_no") == util.NULL && bm.Get("transaction_id") == util.NULL {
 		return nil, nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
 	}
 	var (
@@ -158,7 +158,7 @@ func (w *Client) QueryRefund(bm gopay.BodyMap) (wxRsp *QueryRefundResponse, resB
 	if err != nil {
 		return nil, nil, err
 	}
-	if bm.Get("refund_id") == gotil.NULL && bm.Get("out_refund_no") == gotil.NULL && bm.Get("transaction_id") == gotil.NULL && bm.Get("out_trade_no") == gotil.NULL {
+	if bm.Get("refund_id") == util.NULL && bm.Get("out_refund_no") == util.NULL && bm.Get("transaction_id") == util.NULL && bm.Get("out_trade_no") == util.NULL {
 		return nil, nil, errors.New("refund_id, out_refund_no, out_trade_no, transaction_id are not allowed to be null at the same time")
 	}
 	var bs []byte

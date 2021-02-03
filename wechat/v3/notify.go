@@ -7,10 +7,10 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"errors"
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil/aes"
-	"github.com/iGoogle-ink/gotil/xlog"
-	"github.com/pkg/errors"
+	"github.com/iGoogle-ink/gopay/pkg/aes"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
 type Resource struct {

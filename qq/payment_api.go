@@ -17,7 +17,7 @@ import (
 	"strings"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
 // ParseNotifyToBodyMap 解析QQ支付异步通知的结果到BodyMap
@@ -53,7 +53,7 @@ func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 //	返回参数ok：是否验签通过
 //	返回参数err：其他错误信息，不要根据 error 是否为空来判断验签正确与否，需再单独判断返回的 ok
 func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) {
-	if apiKey == gotil.NULL || signType == gotil.NULL {
+	if apiKey == util.NULL || signType == util.NULL {
 		return false, errors.New("apiKey or signType can not null")
 	}
 	if bean == nil {
@@ -91,7 +91,7 @@ func (w *NotifyResponse) ToXmlString() (xmlStr string) {
 	buffer.WriteString("<xml><return_code>")
 	buffer.WriteString(w.ReturnCode)
 	buffer.WriteString("</return_code>")
-	if w.ReturnMsg != gotil.NULL {
+	if w.ReturnMsg != util.NULL {
 		buffer.WriteString("<return_msg>")
 		buffer.WriteString(w.ReturnMsg)
 		buffer.WriteString("</return_msg>")

@@ -5,7 +5,7 @@
 
 package wechat
 
-import "github.com/iGoogle-ink/gotil/xhttp"
+import "github.com/iGoogle-ink/gopay/pkg/xhttp"
 
 // GetPublicUserInfo 获取用户基本信息（微信公众号）
 //	accessToken：接口调用凭据

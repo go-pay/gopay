@@ -10,9 +10,9 @@ import (
 	"sync"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/xhttp"
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xhttp"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
 type Client struct {
@@ -73,11 +73,11 @@ func (w *Client) AuthCodeToOpenId(bm gopay.BodyMap) (wxRsp *AuthCodeToOpenIdResp
 func (w *Client) DownloadBill(bm gopay.BodyMap) (wxRsp string, err error) {
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "bill_type")
 	if err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	billType := bm.Get("bill_type")
 	if billType != "ALL" && billType != "SUCCESS" && billType != "REFUND" && billType != "RECHARGE_REFUND" {
-		return gotil.NULL, errors.New("bill_type error, please reference: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_6")
+		return util.NULL, errors.New("bill_type error, please reference: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_6")
 	}
 	var bs []byte
 	if w.IsProd {
@@ -86,7 +86,7 @@ func (w *Client) DownloadBill(bm gopay.BodyMap) (wxRsp string, err error) {
 		bs, err = w.doSanBoxPost(bm, sandboxDownloadBill)
 	}
 	if err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	return string(bs), nil
 }
@@ -97,24 +97,24 @@ func (w *Client) DownloadBill(bm gopay.BodyMap) (wxRsp string, err error) {
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_7.shtml
 func (w *Client) DownloadFundFlow(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp string, err error) {
 	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "account_type")
 	if err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	accountType := bm.Get("account_type")
 	if accountType != "Basic" && accountType != "Operation" && accountType != "Fees" {
-		return gotil.NULL, errors.New("account_type error, please reference: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7")
+		return util.NULL, errors.New("account_type error, please reference: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7")
 	}
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	tlsConfig, err := w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
 	if err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	bs, err := w.doProdPost(bm, downloadFundFlow, tlsConfig)
 	if err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	wxRsp = string(bs)
 	return
@@ -154,20 +154,20 @@ func (w *Client) Report(bm gopay.BodyMap) (wxRsp *ReportResponse, err error) {
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_11.shtml
 func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp string, err error) {
 	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	err = bm.CheckEmptyError("nonce_str", "begin_time", "end_time", "offset")
 	if err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	tlsConfig, err := w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
 	if err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	bs, err := w.doProdPost(bm, batchQueryComment, tlsConfig)
 	if err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	return string(bs), nil
 }
@@ -180,7 +180,7 @@ func (w *Client) doSanBoxPost(bm gopay.BodyMap, path string) (bs []byte, err err
 	bm.Set("appid", w.AppId)
 	bm.Set("mch_id", w.MchId)
 
-	if bm.Get("sign") == gotil.NULL {
+	if bm.Get("sign") == util.NULL {
 		bm.Set("sign_type", SignType_MD5)
 		sign, err := getSignBoxSign(w.MchId, w.ApiKey, bm)
 		if err != nil {
@@ -189,7 +189,7 @@ func (w *Client) doSanBoxPost(bm gopay.BodyMap, path string) (bs []byte, err err
 		bm.Set("sign", sign)
 	}
 
-	if w.BaseURL != gotil.NULL {
+	if w.BaseURL != util.NULL {
 		url = w.BaseURL + path
 	}
 	req := GenerateXml(bm)
@@ -218,13 +218,13 @@ func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config
 	func() {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if bm.Get("appid") == gotil.NULL {
+		if bm.Get("appid") == util.NULL {
 			bm.Set("appid", w.AppId)
 		}
-		if bm.Get("mch_id") == gotil.NULL {
+		if bm.Get("mch_id") == util.NULL {
 			bm.Set("mch_id", w.MchId)
 		}
-		if bm.Get("sign") == gotil.NULL {
+		if bm.Get("sign") == util.NULL {
 			sign := getReleaseSign(w.ApiKey, bm.Get("sign_type"), bm)
 			bm.Set("sign", sign)
 		}
@@ -233,7 +233,7 @@ func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
-	if w.BaseURL != gotil.NULL {
+	if w.BaseURL != util.NULL {
 		url = w.BaseURL + path
 	}
 	req := GenerateXml(bm)
@@ -262,7 +262,7 @@ func (w *Client) doProdPostPure(bm gopay.BodyMap, path string, tlsConfig *tls.Co
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
-	if w.BaseURL != gotil.NULL {
+	if w.BaseURL != util.NULL {
 		url = w.BaseURL + path
 	}
 	req := GenerateXml(bm)
@@ -291,16 +291,16 @@ func (w *Client) doProdGet(bm gopay.BodyMap, path, signType string) (bs []byte, 
 	func() {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if bm.Get("appid") == gotil.NULL {
+		if bm.Get("appid") == util.NULL {
 			bm.Set("appid", w.AppId)
 		}
-		if bm.Get("mch_id") == gotil.NULL {
+		if bm.Get("mch_id") == util.NULL {
 			bm.Set("mch_id", w.MchId)
 		}
 		bm.Remove("sign")
 		sign := getReleaseSign(w.ApiKey, signType, bm)
 		bm.Set("sign", sign)
-		if w.BaseURL != gotil.NULL {
+		if w.BaseURL != util.NULL {
 			url = w.BaseURL + path
 		}
 	}()

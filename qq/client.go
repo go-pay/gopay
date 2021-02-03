@@ -11,9 +11,9 @@ import (
 	"sync"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/xhttp"
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xhttp"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
 type Client struct {
@@ -107,7 +107,7 @@ func (q *Client) OrderQuery(bm gopay.BodyMap) (qqRsp *OrderQueryResponse, err er
 	if err != nil {
 		return nil, err
 	}
-	if bm.Get("out_trade_no") == gotil.NULL && bm.Get("transaction_id") == gotil.NULL {
+	if bm.Get("out_trade_no") == util.NULL && bm.Get("transaction_id") == util.NULL {
 		return nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
 	}
 	bs, err := q.doQQ(bm, orderQuery, nil)
@@ -150,7 +150,7 @@ func (q *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 	if err != nil {
 		return nil, err
 	}
-	if bm.Get("out_trade_no") == gotil.NULL && bm.Get("transaction_id") == gotil.NULL {
+	if bm.Get("out_trade_no") == util.NULL && bm.Get("transaction_id") == util.NULL {
 		return nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
 	}
 	tlsConfig, err := q.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
@@ -175,7 +175,7 @@ func (q *Client) RefundQuery(bm gopay.BodyMap) (qqRsp *RefundQueryResponse, err 
 	if err != nil {
 		return nil, err
 	}
-	if bm.Get("refund_id") == gotil.NULL && bm.Get("out_refund_no") == gotil.NULL && bm.Get("transaction_id") == gotil.NULL && bm.Get("out_trade_no") == gotil.NULL {
+	if bm.Get("refund_id") == util.NULL && bm.Get("out_refund_no") == util.NULL && bm.Get("transaction_id") == util.NULL && bm.Get("out_trade_no") == util.NULL {
 		return nil, errors.New("refund_id, out_refund_no, out_trade_no, transaction_id are not allowed to be null at the same time")
 	}
 	bs, err := q.doQQ(bm, refundQuery, nil)
@@ -194,15 +194,15 @@ func (q *Client) RefundQuery(bm gopay.BodyMap) (qqRsp *RefundQueryResponse, err 
 func (q *Client) StatementDown(bm gopay.BodyMap) (qqRsp string, err error) {
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "bill_type")
 	if err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	billType := bm.Get("bill_type")
 	if billType != "ALL" && billType != "SUCCESS" && billType != "REFUND" && billType != "RECHAR" {
-		return gotil.NULL, errors.New("bill_type error, please reference: https://qpay.qq.com/buss/wiki/38/1209")
+		return util.NULL, errors.New("bill_type error, please reference: https://qpay.qq.com/buss/wiki/38/1209")
 	}
 	bs, err := q.doQQ(bm, statementDown, nil)
 	if err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	return string(bs), nil
 }
@@ -212,15 +212,15 @@ func (q *Client) StatementDown(bm gopay.BodyMap) (qqRsp string, err error) {
 func (q *Client) AccRoll(bm gopay.BodyMap) (qqRsp string, err error) {
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "acc_type")
 	if err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	accType := bm.Get("acc_type")
 	if accType != "CASH" && accType != "MARKETING" {
-		return gotil.NULL, errors.New("acc_type error, please reference: https://qpay.qq.com/buss/wiki/38/3089")
+		return util.NULL, errors.New("acc_type error, please reference: https://qpay.qq.com/buss/wiki/38/3089")
 	}
 	bs, err := q.doQQ(bm, accRoll, nil)
 	if err != nil {
-		return gotil.NULL, err
+		return util.NULL, err
 	}
 	return string(bs), nil
 }
@@ -232,14 +232,14 @@ func (q *Client) doQQ(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs [
 		q.mu.RLock()
 		defer q.mu.RUnlock()
 
-		if bm.Get("mch_id") == gotil.NULL {
+		if bm.Get("mch_id") == util.NULL {
 			bm.Set("mch_id", q.MchId)
 		}
-		if bm.Get("fee_type") == gotil.NULL {
+		if bm.Get("fee_type") == util.NULL {
 			bm.Set("fee_type", "CNY")
 		}
 
-		if bm.Get("sign") == gotil.NULL {
+		if bm.Get("sign") == util.NULL {
 			sign := getReleaseSign(q.ApiKey, bm.Get("sign_type"), bm)
 			bm.Set("sign", sign)
 		}
@@ -274,7 +274,7 @@ func (q *Client) doQQGet(bm gopay.BodyMap, url, signType string) (bs []byte, err
 	func() {
 		q.mu.RLock()
 		defer q.mu.RUnlock()
-		if bm.Get("mch_id") == gotil.NULL {
+		if bm.Get("mch_id") == util.NULL {
 			bm.Set("mch_id", q.MchId)
 		}
 		bm.Remove("sign")
@@ -309,10 +309,10 @@ func (q *Client) doQQRed(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (b
 		q.mu.RLock()
 		defer q.mu.RUnlock()
 
-		if bm.Get("mch_id") == gotil.NULL {
+		if bm.Get("mch_id") == util.NULL {
 			bm.Set("mch_id", q.MchId)
 		}
-		if bm.Get("sign") == gotil.NULL {
+		if bm.Get("sign") == util.NULL {
 			sign := getReleaseSign(q.ApiKey, SignType_MD5, bm)
 			bm.Set("sign", sign)
 		}

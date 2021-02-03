@@ -2,9 +2,9 @@ package wechat
 
 import (
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 	"github.com/iGoogle-ink/gopay/wechat"
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func Reverse() {
@@ -17,7 +17,7 @@ func Reverse() {
 
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", gotil.GetRandomString(32))
+	bm.Set("nonce_str", util.GetRandomString(32))
 	bm.Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B")
 	bm.Set("sign_type", wechat.SignType_MD5)
 

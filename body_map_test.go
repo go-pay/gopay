@@ -5,8 +5,8 @@ import (
 	"encoding/xml"
 	"testing"
 
-	"github.com/iGoogle-ink/gotil"
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
 func TestBodyMapSetBodyMap(t *testing.T) {
@@ -101,7 +101,7 @@ func TestBodyMapMarshalSlice(t *testing.T) {
 	bs, _ := json.Marshal(rs)
 
 	bm := make(BodyMap)
-	bm.Set("nonce_str", gotil.GetRandomString(32)).
+	bm.Set("nonce_str", util.GetRandomString(32)).
 		Set("transaction_id", "4208450740201411110007820472").
 		Set("out_order_no", "P20150806125346")
 
