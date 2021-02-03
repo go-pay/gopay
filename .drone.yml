@@ -10,10 +10,6 @@ platform:
   arch: amd64
 
 steps:
-  - name: helloworld
-    pull: if-not-exists
-    image: hello-world
-
   - name: ci_1.13
     pull: if-not-exists
     image: golang:1.13
