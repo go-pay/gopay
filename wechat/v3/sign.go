@@ -8,9 +8,10 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/pem"
+	"errors"
+	"fmt"
 	"time"
 
-	"errors"
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/pkg/util"
 )
@@ -30,7 +31,7 @@ func V3VerifySign(timestamp, nonce, signBody, sign, wxPkContent string) (err err
 		return errors.New("parse wechat platform public key error")
 	}
 	if pubKey, err = x509.ParseCertificate(block.Bytes); err != nil {
-		return errors.Errorf("x509.ParseCertificate：%+v", err)
+		return fmt.Errorf("x509.ParseCertificate：%+v", err)
 	}
 	if publicKey, ok = pubKey.PublicKey.(*rsa.PublicKey); !ok {
 		return errors.New("convert wechat platform public to rsa.PublicKey error")
@@ -38,7 +39,7 @@ func V3VerifySign(timestamp, nonce, signBody, sign, wxPkContent string) (err err
 	h := sha256.New()
 	h.Write([]byte(str))
 	if err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
-		return errors.Errorf("verify sign failed: %+v", err)
+		return fmt.Errorf("verify sign failed: %+v", err)
 	}
 	return nil
 }
@@ -138,7 +139,7 @@ func (c *ClientV3) rsaSign(str string) (string, error) {
 	h.Write([]byte(str))
 	result, err := rsa.SignPKCS1v15(rand.Reader, c.privateKey, crypto.SHA256, h.Sum(nil))
 	if err != nil {
-		return "", errors.Errorf("rsa.SignPKCS1v15(),err:%+v", err)
+		return "", fmt.Errorf("rsa.SignPKCS1v15(),err:%+v", err)
 	}
 	return base64.StdEncoding.EncodeToString(result), nil
 }
@@ -160,7 +161,7 @@ func (c *ClientV3) verifySyncSign(si *SignInfo) (err error) {
 				return errors.New("parse wechat platform public key error")
 			}
 			if pubKey, err = x509.ParseCertificate(block.Bytes); err != nil {
-				return errors.Errorf("x509.ParseCertificate：%+v", err)
+				return fmt.Errorf("x509.ParseCertificate：%+v", err)
 			}
 			if publicKey, ok = pubKey.PublicKey.(*rsa.PublicKey); !ok {
 				return errors.New("convert wechat platform public to rsa.PublicKey error")
@@ -168,7 +169,7 @@ func (c *ClientV3) verifySyncSign(si *SignInfo) (err error) {
 			h := sha256.New()
 			h.Write([]byte(str))
 			if err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
-				return errors.Errorf("verify sign failed: %+v", err)
+				return fmt.Errorf("verify sign failed: %+v", err)
 			}
 			return nil
 		}

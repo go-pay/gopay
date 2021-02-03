@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"sync"
 	"time"
 
-	"errors"
 	"github.com/iGoogle-ink/gopay/pkg/aes"
 	"github.com/iGoogle-ink/gopay/pkg/errgroup"
 	"github.com/iGoogle-ink/gopay/pkg/util"
@@ -39,7 +39,7 @@ func (c *ClientV3) GetPlatformCerts() (certs *PlatformCertRsp, err error) {
 	}
 	certRsp := new(PlatformCert)
 	if err = json.Unmarshal(bs, certRsp); err != nil {
-		return nil, errors.Errorf("json.Unmarshal(%s)：%+v", string(bs), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%+v", string(bs), err)
 	}
 	for _, v := range certRsp.Data {
 		cert := v
@@ -74,7 +74,7 @@ func (c *ClientV3) DecryptCerts(ciphertext, nonce, additional string) (wxCerts s
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(c.apiV3Key))
 	if err != nil {
-		return "", errors.Errorf("aes.GCMDecrypt, err:%+v", err)
+		return "", fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
 	}
 	return string(decrypt), nil
 }

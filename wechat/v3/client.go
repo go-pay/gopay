@@ -5,10 +5,11 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"encoding/pem"
+	"errors"
+	"fmt"
 	"net/http"
 	"sync"
 
-	"errors"
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/pkg/xhttp"
 	"github.com/iGoogle-ink/gopay/pkg/xlog"
@@ -40,7 +41,7 @@ func NewClientV3(appid, mchid, serialNo, apiV3Key, pkContent string) (client *Cl
 	)
 	block, _ := pem.Decode([]byte(pkContent))
 	if block == nil {
-		return nil, errors.Errorf("pem.Decode(%s),error", string(pkContent))
+		return nil, errors.New(fmt.Sprintf("pem.Decode(%s),error", pkContent))
 	}
 	pk8, err := x509.ParsePKCS8PrivateKey(block.Bytes)
 	if err != nil {
