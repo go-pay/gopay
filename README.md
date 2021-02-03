@@ -316,12 +316,13 @@ err := client.SetCertSnByPath("appCertPublicKey.crt", "alipayRootCert.crt", "ali
 
 ```go
 import (
+    "github.com/iGoogle-ink/gopay/pkg/util"
 	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 // 初始化 BodyMap
 bm := make(gopay.BodyMap)
-bm.Set("nonce_str", gotil.GetRandomString(32)).
+bm.Set("nonce_str", util.GetRandomString(32)).
     Set("body", "H5支付").
     Set("out_trade_no", number).
     Set("total_fee", 1).
