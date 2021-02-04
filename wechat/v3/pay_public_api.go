@@ -590,11 +590,6 @@ func (c *ClientV3) V3Refund(bm gopay.BodyMap) (wxRsp *RefundRsp, err error) {
 		nonceStr = util.GetRandomString(32)
 		url      = v3Refund
 	)
-	if bm != nil {
-		if bm.Get("combine_appid") == util.NULL {
-			bm.Set("combine_appid", c.Appid)
-		}
-	}
 	authorization, err := c.authorization(MethodPost, url, nonceStr, ts, bm)
 	if err != nil {
 		return nil, err
