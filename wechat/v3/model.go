@@ -39,6 +39,7 @@ const (
 	v3CombineNative   = "/v3/combine-transactions/native"
 	v3CombineQuery    = "/v3/combine-transactions/out-trade-no/%s"
 	v3CombineClose    = "/v3/combine-transactions/out-trade-no/%s/close"
+	v3Refund          = "/v3/refund/domestic/refunds"
 
 	// 微信支付分
 	v3ScorePermission                       = "/v3/payscore/permissions"                                 // 商户预授权 POST
@@ -131,6 +132,14 @@ type CloseOrderRsp struct {
 	Code     int       `json:"-"`
 	SignInfo *SignInfo `json:"-"`
 	Error    string    `json:"-"`
+}
+
+// 退款 Rsp
+type RefundRsp struct {
+	Code     int                  `json:"-"`
+	SignInfo *SignInfo            `json:"-"`
+	Response *RefundOrderResponse `json:"response,omitempty"`
+	Error    string               `json:"-"`
 }
 
 // 交易、资金账单 Rsp
@@ -243,6 +252,7 @@ type Amount struct {
 	PayerTotal    int    `json:"payer_total,omitempty"`    // 用户支付金额，单位为分
 	Currency      string `json:"currency,omitempty"`       // CNY：人民币，境内商户号仅支持人民币
 	PayerCurrency string `json:"payer_currency,omitempty"` // 用户支付币种
+	Refund        int    `json:"refund,omitempty"`         // 退款金额，币种的最小单位，只能为整数，不能超过原订单支付金额。
 }
 
 type CombineAmount struct {
@@ -271,11 +281,12 @@ type PromotionDetail struct {
 }
 
 type GoodsDetail struct {
-	GoodsId        string `json:"goods_id"`               // 商品编码
-	Quantity       int    `json:"quantity"`               // 用户购买的数量
-	UnitPrice      int    `json:"unit_price"`             // 商品单价，单位为分
-	DiscountAmount int    `json:"discount_amount"`        // 商品优惠金额
-	GoodsRemark    string `json:"goods_remark,omitempty"` // 商品备注信息
+	GoodsId         string `json:"goods_id"`                    // 商品编码
+	Quantity        int    `json:"quantity"`                    // 用户购买的数量
+	UnitPrice       int    `json:"unit_price"`                  // 商品单价，单位为分
+	DiscountAmount  int    `json:"discount_amount"`             // 商品优惠金额
+	GoodsRemark     string `json:"goods_remark,omitempty"`      // 商品备注信息
+	MerchantGoodsID string `json:"merchant_goods_id,omitempty"` // 商户侧商品编码
 }
 
 type QueryOrder struct {
@@ -336,4 +347,19 @@ type BillDetail struct {
 type DownloadBill struct {
 	DownloadBillCount int           `json:"download_bill_count"`
 	DownloadBillList  []*BillDetail `json:"download_bill_list"`
+}
+
+type RefundOrderResponse struct {
+	RefundID            string             `json:"refund_id" valid:"Required"`             // 微信支付退款号
+	OutRefundNo         string             `json:"out_refund_no" valid:"Required"`         // 商户退款单号
+	TransactionID       string             `json:"transaction_id" valid:"Required"`        // 微信支付系统生成的订单号
+	OutTradeNo          string             `json:"out_trade_no" valid:"Required"`          // 商户系统内部订单号，只能是数字、大小写字母_-*且在同一个商户号下唯一
+	Channel             string             `json:"channel" valid:"Required"`               // 退款渠道
+	UserReceivedAccount string             `json:"user_received_account" valid:"Required"` // 退款入账账户
+	SuccessTime         string             `json:"success_time"`                           // 退款成功时间
+	CreateTime          string             `json:"create_time" valid:"Required"`           // 退款创建时间
+	Status              string             `json:"status" valid:"Required"`                // 退款状态
+	FundsAccount        string             `json:"funds_account"`                          // 资金账户
+	Amount              *Amount            `json:"amount" valid:"Required"`                // 金额信息
+	PromotionDetail     []*PromotionDetail `json:"promotion_detail"`                       // 优惠退款信息
 }
