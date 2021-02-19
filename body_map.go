@@ -12,7 +12,17 @@ import (
 
 type BodyMap map[string]interface{}
 
-var mu sync.RWMutex
+type xmlMapMarshal struct {
+	XMLName xml.Name
+	Value   interface{} `xml:",cdata"`
+}
+
+type xmlMapUnmarshal struct {
+	XMLName xml.Name
+	Value   string `xml:",cdata"`
+}
+
+var mu = new(sync.RWMutex)
 
 // 设置参数
 func (bm BodyMap) Set(key string, value interface{}) BodyMap {
@@ -50,37 +60,6 @@ func (bm BodyMap) Get(key string) string {
 	return v
 }
 
-// 置空BodyMap
-func (bm BodyMap) Reset() {
-	for k := range bm {
-		delete(bm, k)
-	}
-}
-
-func (bm BodyMap) JsonBody() (jb string) {
-	bs, err := json.Marshal(bm)
-	if err != nil {
-		return ""
-	}
-	jb = string(bs)
-	return jb
-}
-
-func convertToString(v interface{}) (str string) {
-	if v == nil {
-		return NULL
-	}
-	var (
-		bs  []byte
-		err error
-	)
-	if bs, err = json.Marshal(v); err != nil {
-		return NULL
-	}
-	str = string(bs)
-	return
-}
-
 // 删除参数
 func (bm BodyMap) Remove(key string) {
 	mu.Lock()
@@ -88,14 +67,24 @@ func (bm BodyMap) Remove(key string) {
 	mu.Unlock()
 }
 
-type xmlMapMarshal struct {
-	XMLName xml.Name
-	Value   interface{} `xml:",cdata"`
+// 置空BodyMap
+func (bm BodyMap) Reset() {
+	mu.Lock()
+	for k := range bm {
+		delete(bm, k)
+	}
+	mu.Unlock()
 }
 
-type xmlMapUnmarshal struct {
-	XMLName xml.Name
-	Value   string `xml:",cdata"`
+func (bm BodyMap) JsonBody() (jb string) {
+	mu.Lock()
+	defer mu.Unlock()
+	bs, err := json.Marshal(bm)
+	if err != nil {
+		return ""
+	}
+	jb = string(bs)
+	return jb
 }
 
 func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error) {
@@ -210,4 +199,19 @@ func (bm BodyMap) CheckEmptyError(keys ...string) error {
 		return errors.New(strings.Join(emptyKeys, ", ") + " : cannot be empty")
 	}
 	return nil
+}
+
+func convertToString(v interface{}) (str string) {
+	if v == nil {
+		return NULL
+	}
+	var (
+		bs  []byte
+		err error
+	)
+	if bs, err = json.Marshal(v); err != nil {
+		return NULL
+	}
+	str = string(bs)
+	return
 }

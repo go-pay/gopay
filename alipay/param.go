@@ -1,22 +1,10 @@
 package alipay
 
 import (
-	"crypto"
-	"crypto/rand"
-	"crypto/rsa"
-	"crypto/sha1"
-	"crypto/sha256"
-	"crypto/x509"
-	"encoding/base64"
-	"encoding/pem"
-	"errors"
 	"fmt"
-	"hash"
 	"log"
-	"net/url"
 	"time"
 
-	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
@@ -91,7 +79,7 @@ func (a *Client) SetAliPayRootCertSN(aliPayRootCertSN string) (client *Client) {
 	return a
 }
 
-// 设置 app_cert_sn、alipay_root_cert_sn、alipay_cert_sn 通过应用公钥证书路径
+// 通过应用公钥证书路径设置 app_cert_sn、alipay_root_cert_sn、alipay_cert_sn
 //	appCertPath：应用公钥证书路径
 //	aliPayRootCertPath：支付宝根证书文件路径
 //	aliPayPublicCertPath：支付宝公钥证书文件路径
@@ -105,6 +93,31 @@ func (a *Client) SetCertSnByPath(appCertPath, aliPayRootCertPath, aliPayPublicCe
 		return fmt.Errorf("get alipay_root_cert_sn return err, but alse return alipay client. err: %w", err)
 	}
 	publicCertSn, err := GetCertSN(aliPayPublicCertPath)
+	if err != nil {
+		return fmt.Errorf("get alipay_cert_sn return err, but alse return alipay client. err: %w", err)
+	}
+	a.mu.Lock()
+	a.AppCertSN = appCertSn
+	a.AliPayRootCertSN = rootCertSn
+	a.AliPayPublicCertSN = publicCertSn
+	a.mu.Unlock()
+	return nil
+}
+
+// 通过应用公钥证书内容设置 app_cert_sn、alipay_root_cert_sn、alipay_cert_sn
+//	appCertContent：应用公钥证书文件内容
+//	aliPayRootCertContent：支付宝根证书文件内容
+//	aliPayPublicCertContent：支付宝公钥证书文件内容
+func (a *Client) SetCertSnByContent(appCertContent, aliPayRootCertContent, aliPayPublicCertContent []byte) (err error) {
+	appCertSn, err := GetCertSN(appCertContent)
+	if err != nil {
+		return fmt.Errorf("get app_cert_sn return err, but alse return alipay client. err: %w", err)
+	}
+	rootCertSn, err := GetRootCertSN(aliPayRootCertContent)
+	if err != nil {
+		return fmt.Errorf("get alipay_root_cert_sn return err, but alse return alipay client. err: %w", err)
+	}
+	publicCertSn, err := GetCertSN(aliPayPublicCertContent)
 	if err != nil {
 		return fmt.Errorf("get alipay_cert_sn return err, but alse return alipay client. err: %w", err)
 	}
@@ -170,74 +183,4 @@ func (a *Client) SetAuthToken(authToken string) (client *Client) {
 	a.AuthToken = authToken
 	a.mu.Unlock()
 	return a
-}
-
-// 获取支付宝参数签名
-//	bm：签名参数
-//	signType：签名类型，alipay.RSA 或 alipay.RSA2
-//	t：私钥类型，alipay.PKCS1 或 alipay.PKCS1，默认 PKCS1
-//	privateKey：应用私钥，支持PKCS1和PKCS8
-func GetRsaSign(bm gopay.BodyMap, signType string, t PKCSType, privateKey string) (sign string, err error) {
-	var (
-		block          *pem.Block
-		h              hash.Hash
-		key            *rsa.PrivateKey
-		hashs          crypto.Hash
-		encryptedBytes []byte
-	)
-	pk := FormatPrivateKey(privateKey)
-
-	if block, _ = pem.Decode([]byte(pk)); block == nil {
-		return util.NULL, errors.New("pem.Decode：privateKey decode error")
-	}
-
-	switch t {
-	case PKCS1:
-		if key, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil {
-			return util.NULL, err
-		}
-	case PKCS8:
-		pkcs8Key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
-		if err != nil {
-			return util.NULL, err
-		}
-		pk8, ok := pkcs8Key.(*rsa.PrivateKey)
-		if !ok {
-			return util.NULL, errors.New("parse PKCS8 key error")
-		}
-		key = pk8
-	default:
-		if key, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil {
-			return util.NULL, err
-		}
-	}
-
-	switch signType {
-	case RSA:
-		h = sha1.New()
-		hashs = crypto.SHA1
-	case RSA2:
-		h = sha256.New()
-		hashs = crypto.SHA256
-	default:
-		h = sha256.New()
-		hashs = crypto.SHA256
-	}
-	if _, err = h.Write([]byte(bm.EncodeAliPaySignParams())); err != nil {
-		return
-	}
-	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, key, hashs, h.Sum(nil)); err != nil {
-		return
-	}
-	sign = base64.StdEncoding.EncodeToString(encryptedBytes)
-	return
-}
-
-// 格式化请求URL参数
-func FormatURLParam(body gopay.BodyMap) (urlParam string) {
-	v := url.Values{}
-	for key, value := range body {
-		v.Add(key, value.(string))
-	}
-	return v.Encode()
 }

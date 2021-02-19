@@ -304,7 +304,10 @@ client.SetLocation().                       // 设置时区，不设置或出错
     SetAppAuthToken().                      // 设置第三方应用授权
     SetAuthToken()                          // 设置个人信息授权
 
+// 证书路径
 err := client.SetCertSnByPath("appCertPublicKey.crt", "alipayRootCert.crt", "alipayCertPublicKey_RSA2.crt")
+// 证书内容
+err := client.SetCertSnByContent("appCertPublicKey bytes", "alipayRootCert bytes", "alipayCertPublicKey_RSA2 bytes")
 ```
 
 ## 2、初始化并赋值BodyMap（client的方法所需的入参）
@@ -548,12 +551,15 @@ import (
 aliRsp, err := client.TradePay(bm)
 // 支付宝同步返回验签
 //    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
-//    aliPayPublicKey：支付宝公钥
+//    aliPayPublicKey：支付宝平台获取的支付宝公钥
 //    signData：待验签参数，aliRsp.SignData
 //    sign：待验签sign，aliRsp.Sign
 //    返回参数ok：是否验签通过
 //    返回参数err：错误信息
 ok, err := alipay.VerifySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
+//    aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayCertPublicKey_RSA2.crt 或文件内容[]byte
+ok, err := alipay.VerifySyncSignWithCert(aliPayPublicKeyCert, aliRsp.SignData, aliRsp.Sign)
+
 
 // ====异步通知参数解析和验签Sign====
 // 解析异步通知的参数
