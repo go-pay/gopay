@@ -306,7 +306,7 @@ func GetH5PaySign(appId, nonceStr, packages, signType, timeStamp, apiKey string)
 //	signType：此处签名方式，务必与统一下单时用的签名方式一致
 //	timeStamp：时间
 //	ApiKey：API秘钥值
-//	APP支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12
+//	APP支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12&index=2
 func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, apiKey string) (paySign string) {
 	var (
 		buffer strings.Builder

@@ -34,11 +34,11 @@ func TestMain(m *testing.M) {
 	// SetReturnUrl("https://www.gopay.ink").
 	// SetNotifyUrl("https://www.gopay.ink")
 
-	// err := client.SetCertSnByPath("cert/appCertPublicKey.crt", "cert/alipayRootCert.crt", "cert/alipayCertPublicKey_RSA2.crt")
-	// if err != nil {
-	//	xlog.Debug("SetCertSnByPath:", err)
-	//	return
-	// }
+	err := client.SetCertSnByPath("cert/appCertPublicKey.crt", "cert/alipayRootCert.crt", "cert/alipayCertPublicKey_RSA2.crt")
+	if err != nil {
+		xlog.Debug("SetCertSnByPath:", err)
+		return
+	}
 
 	os.Exit(m.Run())
 }
@@ -308,26 +308,6 @@ func TestClient_TradeFastPayRefundQuery(t *testing.T) {
 	aliRsp, err := client.TradeFastPayRefundQuery(bm)
 	if err != nil {
 		xlog.Errorf("client.TradeFastPayRefundQuery(%+v),error:%+v", bm, err)
-		return
-	}
-	xlog.Debug("aliRsp:", *aliRsp)
-}
-
-func TestClient_FundTransToaccountTransfer(t *testing.T) {
-	// 请求参数
-	bm := make(gopay.BodyMap)
-	bm.Set("out_biz_no", util.GetRandomString(32))
-	bm.Set("payee_type", "ALIPAY_LOGONID")
-	bm.Set("payee_account", "otmdfd2378@sandbox.com")
-	bm.Set("amount", "1000")
-	bm.Set("payer_show_name", "发钱人名字")
-	bm.Set("payee_real_name", "沙箱环境")
-	bm.Set("remark", "转账测试")
-
-	// 转账
-	aliRsp, err := client.FundTransToaccountTransfer(bm)
-	if err != nil {
-		xlog.Errorf("client.FundTransToaccountTransfer(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)

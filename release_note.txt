@@ -1,3 +1,12 @@
+版本号：Release 1.5.28
+发布时间：2021/02/19 18:48
+修改记录：
+   (1) QQ：新增 client.AddCertFileContent()，解决无证书文件，只有证书内容的问题
+   (2) 支付宝：新增 alipay.VerifySyncSignWithCert()，同步证书验签
+   (3) 支付宝：新增 client.SetCertSnByContent()，通过应用公钥证书内容设置 app_cert_sn、alipay_root_cert_sn、alipay_cert_sn
+   (4) 支付宝：删除废弃接口 client.FundTransToaccountTransfer()
+   (5) fix BodyMap 的部分方法
+
 版本号：Release 1.5.27
 发布时间：2021/02/03 18:50
 修改记录：
