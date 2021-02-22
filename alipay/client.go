@@ -125,33 +125,24 @@ func (a *Client) doAliPaySelf(bm gopay.BodyMap, method string) (bs []byte, err e
 		xlog.Debugf("Alipay_Request: %s", req)
 	}
 	param := FormatURLParam(pubBody)
-	switch method {
-	case "alipay.trade.app.pay":
-		return []byte(param), nil
-	case "alipay.trade.wap.pay", "alipay.trade.page.pay", "alipay.user.certify.open.certify":
-		if !a.IsProd {
-			return []byte(sandboxBaseUrl + "?" + param), nil
-		}
-		return []byte(baseUrl + "?" + param), nil
-	default:
-		httpClient := xhttp.NewClient()
-		if a.IsProd {
-			url = baseUrlUtf8
-		} else {
-			url = sandboxBaseUrlUtf8
-		}
-		res, bs, errs := httpClient.Type(xhttp.TypeForm).Post(url).SendString(param).EndBytes()
-		if len(errs) > 0 {
-			return nil, errs[0]
-		}
-		if a.DebugSwitch == gopay.DebugOn {
-			xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
-		}
-		if res.StatusCode != 200 {
-			return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
-		}
-		return bs, nil
+
+	httpClient := xhttp.NewClient()
+	if a.IsProd {
+		url = baseUrlUtf8
+	} else {
+		url = sandboxBaseUrlUtf8
 	}
+	res, bs, errs := httpClient.Type(xhttp.TypeForm).Post(url).SendString(param).EndBytes()
+	if len(errs) > 0 {
+		return nil, errs[0]
+	}
+	if a.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+	}
+	if res.StatusCode != 200 {
+		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	return bs, nil
 }
 
 // 向支付宝发送请求
