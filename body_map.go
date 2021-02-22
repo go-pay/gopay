@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
+	"fmt"
 	"io"
+	"os"
 	"sort"
 	"strings"
 	"sync"
@@ -40,6 +42,31 @@ func (bm BodyMap) SetBodyMap(key string, value func(bm BodyMap)) BodyMap {
 	bm[key] = _bm
 	mu.Unlock()
 	return bm
+}
+
+// 设置 FormFile
+func (bm BodyMap) SetFormFile(fieldName string, filePath string) (err error) {
+	_FileBm := make(BodyMap)
+	file, err := os.Open(filePath)
+	if err != nil {
+		return fmt.Errorf("bm.SetFormFile(%s, %s),err:%w", fieldName, filePath, err)
+	}
+	defer file.Close()
+	stat, err := file.Stat()
+	if err != nil {
+		return fmt.Errorf("bm.SetFormFile(%s, %s),err:%w", fieldName, filePath, err)
+	}
+	fileContent := make([]byte, stat.Size())
+	_, err = file.Read(fileContent)
+	if err != nil {
+		return fmt.Errorf("bm.SetFormFile(%s, %s),err:%w", fieldName, filePath, err)
+	}
+	_FileBm[stat.Name()] = fileContent
+
+	mu.Lock()
+	bm[fieldName] = _FileBm
+	mu.Unlock()
+	return nil
 }
 
 // 获取参数

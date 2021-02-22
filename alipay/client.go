@@ -136,10 +136,10 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 		return []byte(baseUrl + "?" + param), nil
 	default:
 		httpClient := xhttp.NewClient()
-		if !a.IsProd {
-			url = sandboxBaseUrlUtf8
-		} else {
+		if a.IsProd {
 			url = baseUrlUtf8
+		} else {
+			url = sandboxBaseUrlUtf8
 		}
 		res, bs, errs := httpClient.Type(xhttp.TypeForm).Post(url).SendString(param).EndBytes()
 		if len(errs) > 0 {
