@@ -356,7 +356,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 						continue
 					}
 					// text 参数
-					if val := c.multipartBodyMap.Get(k); val != gopay.NULL {
+					if val := c.multipartBodyMap.GetString(k); val != gopay.NULL {
 						w.WriteField(k, val)
 					}
 				}

@@ -28,13 +28,13 @@ func (w *Client) SendCashRed(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12
 	func() {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if bm.Get("wxappid") == util.NULL {
+		if bm.GetString("wxappid") == util.NULL {
 			bm.Set("wxappid", w.AppId)
 		}
-		if bm.Get("mch_id") == util.NULL {
+		if bm.GetString("mch_id") == util.NULL {
 			bm.Set("mch_id", w.MchId)
 		}
-		if bm.Get("sign") == util.NULL {
+		if bm.GetString("sign") == util.NULL {
 			sign := getReleaseSign(w.ApiKey, SignType_MD5, bm)
 			bm.Set("sign", sign)
 		}
@@ -71,13 +71,13 @@ func (w *Client) SendGroupCashRed(bm gopay.BodyMap, certFilePath, keyFilePath, p
 	func() {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if bm.Get("wxappid") == util.NULL {
+		if bm.GetString("wxappid") == util.NULL {
 			bm.Set("wxappid", w.AppId)
 		}
-		if bm.Get("mch_id") == util.NULL {
+		if bm.GetString("mch_id") == util.NULL {
 			bm.Set("mch_id", w.MchId)
 		}
-		if bm.Get("sign") == util.NULL {
+		if bm.GetString("sign") == util.NULL {
 			sign := getReleaseSign(w.ApiKey, SignType_MD5, bm)
 			bm.Set("sign", sign)
 		}
@@ -114,13 +114,13 @@ func (w *Client) SendAppletRed(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs
 	func() {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if bm.Get("wxappid") == util.NULL {
+		if bm.GetString("wxappid") == util.NULL {
 			bm.Set("wxappid", w.AppId)
 		}
-		if bm.Get("mch_id") == util.NULL {
+		if bm.GetString("mch_id") == util.NULL {
 			bm.Set("mch_id", w.MchId)
 		}
-		if bm.Get("sign") == util.NULL {
+		if bm.GetString("sign") == util.NULL {
 			sign := getReleaseSign(w.ApiKey, SignType_MD5, bm)
 			bm.Set("sign", sign)
 		}
@@ -157,13 +157,13 @@ func (w *Client) QueryRedRecord(bm gopay.BodyMap, certFilePath, keyFilePath, pkc
 	func() {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if bm.Get("appid") == util.NULL {
+		if bm.GetString("appid") == util.NULL {
 			bm.Set("appid", w.AppId)
 		}
-		if bm.Get("mch_id") == util.NULL {
+		if bm.GetString("mch_id") == util.NULL {
 			bm.Set("mch_id", w.MchId)
 		}
-		if bm.Get("sign") == util.NULL {
+		if bm.GetString("sign") == util.NULL {
 			sign := getReleaseSign(w.ApiKey, SignType_MD5, bm)
 			bm.Set("sign", sign)
 		}

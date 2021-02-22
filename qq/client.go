@@ -105,7 +105,7 @@ func (q *Client) OrderQuery(bm gopay.BodyMap) (qqRsp *OrderQueryResponse, err er
 	if err != nil {
 		return nil, err
 	}
-	if bm.Get("out_trade_no") == util.NULL && bm.Get("transaction_id") == util.NULL {
+	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("transaction_id") == util.NULL {
 		return nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
 	}
 	bs, err := q.doQQ(bm, orderQuery, nil)
@@ -148,7 +148,7 @@ func (q *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 	if err != nil {
 		return nil, err
 	}
-	if bm.Get("out_trade_no") == util.NULL && bm.Get("transaction_id") == util.NULL {
+	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("transaction_id") == util.NULL {
 		return nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
 	}
 	tlsConfig, err := q.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
@@ -173,7 +173,7 @@ func (q *Client) RefundQuery(bm gopay.BodyMap) (qqRsp *RefundQueryResponse, err 
 	if err != nil {
 		return nil, err
 	}
-	if bm.Get("refund_id") == util.NULL && bm.Get("out_refund_no") == util.NULL && bm.Get("transaction_id") == util.NULL && bm.Get("out_trade_no") == util.NULL {
+	if bm.GetString("refund_id") == util.NULL && bm.GetString("out_refund_no") == util.NULL && bm.GetString("transaction_id") == util.NULL && bm.GetString("out_trade_no") == util.NULL {
 		return nil, errors.New("refund_id, out_refund_no, out_trade_no, transaction_id are not allowed to be null at the same time")
 	}
 	bs, err := q.doQQ(bm, refundQuery, nil)
@@ -194,7 +194,7 @@ func (q *Client) StatementDown(bm gopay.BodyMap) (qqRsp string, err error) {
 	if err != nil {
 		return util.NULL, err
 	}
-	billType := bm.Get("bill_type")
+	billType := bm.GetString("bill_type")
 	if billType != "ALL" && billType != "SUCCESS" && billType != "REFUND" && billType != "RECHAR" {
 		return util.NULL, errors.New("bill_type error, please reference: https://qpay.qq.com/buss/wiki/38/1209")
 	}
@@ -212,7 +212,7 @@ func (q *Client) AccRoll(bm gopay.BodyMap) (qqRsp string, err error) {
 	if err != nil {
 		return util.NULL, err
 	}
-	accType := bm.Get("acc_type")
+	accType := bm.GetString("acc_type")
 	if accType != "CASH" && accType != "MARKETING" {
 		return util.NULL, errors.New("acc_type error, please reference: https://qpay.qq.com/buss/wiki/38/3089")
 	}
@@ -226,15 +226,15 @@ func (q *Client) AccRoll(bm gopay.BodyMap) (qqRsp string, err error) {
 // 向QQ发送请求
 func (q *Client) doQQ(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs []byte, err error) {
 
-	if bm.Get("mch_id") == util.NULL {
+	if bm.GetString("mch_id") == util.NULL {
 		bm.Set("mch_id", q.MchId)
 	}
-	if bm.Get("fee_type") == util.NULL {
+	if bm.GetString("fee_type") == util.NULL {
 		bm.Set("fee_type", "CNY")
 	}
 
-	if bm.Get("sign") == util.NULL {
-		sign := getReleaseSign(q.ApiKey, bm.Get("sign_type"), bm)
+	if bm.GetString("sign") == util.NULL {
+		sign := getReleaseSign(q.ApiKey, bm.GetString("sign_type"), bm)
 		bm.Set("sign", sign)
 	}
 
@@ -267,7 +267,7 @@ func (q *Client) doQQGet(bm gopay.BodyMap, url, signType string) (bs []byte, err
 	func() {
 		q.mu.RLock()
 		defer q.mu.RUnlock()
-		if bm.Get("mch_id") == util.NULL {
+		if bm.GetString("mch_id") == util.NULL {
 			bm.Set("mch_id", q.MchId)
 		}
 		bm.Remove("sign")
@@ -302,10 +302,10 @@ func (q *Client) doQQRed(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (b
 		q.mu.RLock()
 		defer q.mu.RUnlock()
 
-		if bm.Get("mch_id") == util.NULL {
+		if bm.GetString("mch_id") == util.NULL {
 			bm.Set("mch_id", q.MchId)
 		}
-		if bm.Get("sign") == util.NULL {
+		if bm.GetString("sign") == util.NULL {
 			sign := getReleaseSign(q.ApiKey, SignType_MD5, bm)
 			bm.Set("sign", sign)
 		}

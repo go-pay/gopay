@@ -43,7 +43,7 @@ func GetParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string) {
 		signType string
 		h        hash.Hash
 	)
-	signType = bm.Get("sign_type")
+	signType = bm.GetString("sign_type")
 	if signType == util.NULL {
 		bm.Set("sign_type", SignType_MD5)
 	}
@@ -192,7 +192,7 @@ func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) 
 	kind := reflect.ValueOf(bean).Kind()
 	if kind == reflect.Map {
 		bm := bean.(gopay.BodyMap)
-		bodySign := bm.Get("sign")
+		bodySign := bm.GetString("sign")
 		bm.Remove("sign")
 		return getReleaseSign(apiKey, signType, bm) == bodySign, nil
 	}
@@ -205,7 +205,7 @@ func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) 
 	if err = json.Unmarshal(bs, &bm); err != nil {
 		return false, fmt.Errorf("json.Marshal(%s)：%w", string(bs), err)
 	}
-	bodySign := bm.Get("sign")
+	bodySign := bm.GetString("sign")
 	bm.Remove("sign")
 	return getReleaseSign(apiKey, signType, bm) == bodySign, nil
 }

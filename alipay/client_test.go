@@ -1,6 +1,7 @@
 package alipay
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -49,8 +50,16 @@ func TestClient_PostAliPayAPISelf(t *testing.T) {
 	bm.Set("out_trade_no", util.GetRandomString(32))
 	bm.Set("total_amount", "100")
 
+	bodyBs, err := json.Marshal(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	// 如果需要biz_content，最后 Set
+	bm.Set("biz_content", string(bodyBs))
+
 	aliPsp := new(TradePrecreateResponse)
-	err := client.PostAliPayAPISelf(bm, "alipay.trade.precreate", aliPsp)
+	err = client.PostAliPayAPISelf(bm, "alipay.trade.precreate", aliPsp)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -272,7 +281,7 @@ func TestClient_TradeOrderSettle(t *testing.T) {
 	listParams = append(listParams, OpenApiRoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
 
 	bm.Set("royalty_parameters", listParams)
-	// xlog.Debug("listParams:", bm.Get("royalty_parameters"))
+	// xlog.Debug("listParams:", bm.GetString("royalty_parameters"))
 
 	// 发起交易结算接口
 	aliRsp, err := client.TradeOrderSettle(bm)

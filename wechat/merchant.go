@@ -228,7 +228,7 @@ func (w *Client) GetRSAPublicKey(bm gopay.BodyMap, certFilePath, keyFilePath, pk
 	if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
-	bm.Set("sign", getReleaseSign(w.ApiKey, bm.Get("sign_type"), bm))
+	bm.Set("sign", getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm))
 
 	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
 	req := GenerateXml(bm)
@@ -314,8 +314,8 @@ func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQuery
 		w.mu.RLock()
 		defer w.mu.RUnlock()
 		bm.Set("mch_id", w.MchId)
-		if bm.Get("sign") == util.NULL {
-			sign := getReleaseSign(w.ApiKey, bm.Get("sign_type"), bm)
+		if bm.GetString("sign") == util.NULL {
+			sign := getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
 			bm.Set("sign", sign)
 		}
 	}()
@@ -421,7 +421,7 @@ func (w *Client) ProfitSharingReturn(bm gopay.BodyMap, certFilePath, keyFilePath
 		return nil, err
 	}
 
-	if (bm.Get("order_id") == util.NULL) && (bm.Get("out_order_no") == util.NULL) {
+	if (bm.GetString("order_id") == util.NULL) && (bm.GetString("out_order_no") == util.NULL) {
 		return nil, errors.New("param order_id and out_order_no can not be null at the same time")
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
@@ -452,7 +452,7 @@ func (w *Client) ProfitSharingReturnQuery(bm gopay.BodyMap) (wxRsp *ProfitSharin
 		return nil, err
 	}
 
-	if (bm.Get("order_id") == util.NULL) && (bm.Get("out_order_no") == util.NULL) {
+	if (bm.GetString("order_id") == util.NULL) && (bm.GetString("out_order_no") == util.NULL) {
 		return nil, errors.New("param order_id and out_order_no can not be null at the same time")
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256

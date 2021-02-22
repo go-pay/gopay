@@ -69,8 +69,18 @@ func (bm BodyMap) SetFormFile(fieldName string, filePath string) (err error) {
 	return nil
 }
 
-// 获取参数
-func (bm BodyMap) Get(key string) string {
+// 获取原始参数
+func (bm BodyMap) Get(key string) interface{} {
+	if bm == nil {
+		return nil
+	}
+	mu.RLock()
+	defer mu.RUnlock()
+	return bm[key]
+}
+
+// 获取参数转换string
+func (bm BodyMap) GetString(key string) string {
 	if bm == nil {
 		return NULL
 	}
@@ -123,7 +133,7 @@ func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error)
 		return
 	}
 	for k := range bm {
-		if v := bm.Get(k); v != NULL {
+		if v := bm.GetString(k); v != NULL {
 			e.Encode(xmlMapMarshal{XMLName: xml.Name{Local: k}, Value: v})
 		}
 	}
@@ -157,7 +167,7 @@ func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
 	sort.Strings(keyList)
 	mu.RUnlock()
 	for _, k := range keyList {
-		if v := bm.Get(k); v != NULL {
+		if v := bm.GetString(k); v != NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
 			buf.WriteString(v)
@@ -183,7 +193,7 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 	sort.Strings(keyList)
 	mu.RUnlock()
 	for _, k := range keyList {
-		if v := bm.Get(k); v != NULL {
+		if v := bm.GetString(k); v != NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
 			buf.WriteString(v)
@@ -202,7 +212,7 @@ func (bm BodyMap) EncodeGetParams() string {
 		buf strings.Builder
 	)
 	for k, _ := range bm {
-		if v := bm.Get(k); v != NULL {
+		if v := bm.GetString(k); v != NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
 			buf.WriteString(v)
@@ -218,7 +228,7 @@ func (bm BodyMap) EncodeGetParams() string {
 func (bm BodyMap) CheckEmptyError(keys ...string) error {
 	var emptyKeys []string
 	for _, k := range keys {
-		if v := bm.Get(k); v == NULL {
+		if v := bm.GetString(k); v == NULL {
 			emptyKeys = append(emptyKeys, k)
 		}
 	}

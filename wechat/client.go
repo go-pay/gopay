@@ -75,7 +75,7 @@ func (w *Client) DownloadBill(bm gopay.BodyMap) (wxRsp string, err error) {
 	if err != nil {
 		return util.NULL, err
 	}
-	billType := bm.Get("bill_type")
+	billType := bm.GetString("bill_type")
 	if billType != "ALL" && billType != "SUCCESS" && billType != "REFUND" && billType != "RECHARGE_REFUND" {
 		return util.NULL, errors.New("bill_type error, please reference: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_6")
 	}
@@ -103,7 +103,7 @@ func (w *Client) DownloadFundFlow(bm gopay.BodyMap, certFilePath, keyFilePath, p
 	if err != nil {
 		return util.NULL, err
 	}
-	accountType := bm.Get("account_type")
+	accountType := bm.GetString("account_type")
 	if accountType != "Basic" && accountType != "Operation" && accountType != "Fees" {
 		return util.NULL, errors.New("account_type error, please reference: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7")
 	}
@@ -180,7 +180,7 @@ func (w *Client) doSanBoxPost(bm gopay.BodyMap, path string) (bs []byte, err err
 	bm.Set("appid", w.AppId)
 	bm.Set("mch_id", w.MchId)
 
-	if bm.Get("sign") == util.NULL {
+	if bm.GetString("sign") == util.NULL {
 		bm.Set("sign_type", SignType_MD5)
 		sign, err := getSignBoxSign(w.MchId, w.ApiKey, bm)
 		if err != nil {
@@ -218,14 +218,14 @@ func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config
 	func() {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if bm.Get("appid") == util.NULL {
+		if bm.GetString("appid") == util.NULL {
 			bm.Set("appid", w.AppId)
 		}
-		if bm.Get("mch_id") == util.NULL {
+		if bm.GetString("mch_id") == util.NULL {
 			bm.Set("mch_id", w.MchId)
 		}
-		if bm.Get("sign") == util.NULL {
-			sign := getReleaseSign(w.ApiKey, bm.Get("sign_type"), bm)
+		if bm.GetString("sign") == util.NULL {
+			sign := getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
 			bm.Set("sign", sign)
 		}
 	}()
@@ -291,10 +291,10 @@ func (w *Client) doProdGet(bm gopay.BodyMap, path, signType string) (bs []byte, 
 	func() {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if bm.Get("appid") == util.NULL {
+		if bm.GetString("appid") == util.NULL {
 			bm.Set("appid", w.AppId)
 		}
-		if bm.Get("mch_id") == util.NULL {
+		if bm.GetString("mch_id") == util.NULL {
 			bm.Set("mch_id", w.MchId)
 		}
 		bm.Remove("sign")
