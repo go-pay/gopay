@@ -264,16 +264,13 @@ func (q *Client) doQQ(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs [
 
 // Get请求、正式
 func (q *Client) doQQGet(bm gopay.BodyMap, url, signType string) (bs []byte, err error) {
-	func() {
-		q.mu.RLock()
-		defer q.mu.RUnlock()
-		if bm.GetString("mch_id") == util.NULL {
-			bm.Set("mch_id", q.MchId)
-		}
-		bm.Remove("sign")
-		sign := getReleaseSign(q.ApiKey, signType, bm)
-		bm.Set("sign", sign)
-	}()
+	if bm.GetString("mch_id") == util.NULL {
+		bm.Set("mch_id", q.MchId)
+	}
+	bm.Remove("sign")
+	sign := getReleaseSign(q.ApiKey, signType, bm)
+	bm.Set("sign", sign)
+
 	if q.DebugSwitch == gopay.DebugOn {
 		req, _ := json.Marshal(bm)
 		xlog.Debugf("QQ_Request: %s", req)
@@ -298,18 +295,13 @@ func (q *Client) doQQGet(bm gopay.BodyMap, url, signType string) (bs []byte, err
 
 func (q *Client) doQQRed(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs []byte, err error) {
 
-	func() {
-		q.mu.RLock()
-		defer q.mu.RUnlock()
-
-		if bm.GetString("mch_id") == util.NULL {
-			bm.Set("mch_id", q.MchId)
-		}
-		if bm.GetString("sign") == util.NULL {
-			sign := getReleaseSign(q.ApiKey, SignType_MD5, bm)
-			bm.Set("sign", sign)
-		}
-	}()
+	if bm.GetString("mch_id") == util.NULL {
+		bm.Set("mch_id", q.MchId)
+	}
+	if bm.GetString("sign") == util.NULL {
+		sign := getReleaseSign(q.ApiKey, SignType_MD5, bm)
+		bm.Set("sign", sign)
+	}
 
 	httpClient := xhttp.NewClient()
 	if tlsConfig != nil {

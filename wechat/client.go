@@ -175,8 +175,6 @@ func (w *Client) BatchQueryComment(bm gopay.BodyMap, certFilePath, keyFilePath, 
 // doSanBoxPost sanbox环境post请求
 func (w *Client) doSanBoxPost(bm gopay.BodyMap, path string) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	w.mu.RLock()
-	defer w.mu.RUnlock()
 	bm.Set("appid", w.AppId)
 	bm.Set("mch_id", w.MchId)
 
@@ -215,20 +213,17 @@ func (w *Client) doSanBoxPost(bm gopay.BodyMap, path string) (bs []byte, err err
 // Post请求、正式
 func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	func() {
-		w.mu.RLock()
-		defer w.mu.RUnlock()
-		if bm.GetString("appid") == util.NULL {
-			bm.Set("appid", w.AppId)
-		}
-		if bm.GetString("mch_id") == util.NULL {
-			bm.Set("mch_id", w.MchId)
-		}
-		if bm.GetString("sign") == util.NULL {
-			sign := getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
-			bm.Set("sign", sign)
-		}
-	}()
+	if bm.GetString("appid") == util.NULL {
+		bm.Set("appid", w.AppId)
+	}
+	if bm.GetString("mch_id") == util.NULL {
+		bm.Set("mch_id", w.MchId)
+	}
+	if bm.GetString("sign") == util.NULL {
+		sign := getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
+		bm.Set("sign", sign)
+	}
+
 	httpClient := xhttp.NewClient()
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
@@ -288,22 +283,19 @@ func (w *Client) doProdPostPure(bm gopay.BodyMap, path string, tlsConfig *tls.Co
 // Get请求、正式
 func (w *Client) doProdGet(bm gopay.BodyMap, path, signType string) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	func() {
-		w.mu.RLock()
-		defer w.mu.RUnlock()
-		if bm.GetString("appid") == util.NULL {
-			bm.Set("appid", w.AppId)
-		}
-		if bm.GetString("mch_id") == util.NULL {
-			bm.Set("mch_id", w.MchId)
-		}
-		bm.Remove("sign")
-		sign := getReleaseSign(w.ApiKey, signType, bm)
-		bm.Set("sign", sign)
-		if w.BaseURL != util.NULL {
-			url = w.BaseURL + path
-		}
-	}()
+	if bm.GetString("appid") == util.NULL {
+		bm.Set("appid", w.AppId)
+	}
+	if bm.GetString("mch_id") == util.NULL {
+		bm.Set("mch_id", w.MchId)
+	}
+	bm.Remove("sign")
+	sign := getReleaseSign(w.ApiKey, signType, bm)
+	bm.Set("sign", sign)
+	if w.BaseURL != util.NULL {
+		url = w.BaseURL + path
+	}
+
 	if w.DebugSwitch == gopay.DebugOn {
 		req, _ := json.Marshal(bm)
 		xlog.Debugf("Wechat_Request: %s", req)

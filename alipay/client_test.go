@@ -1,7 +1,6 @@
 package alipay
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -46,20 +45,21 @@ func TestMain(m *testing.M) {
 
 func TestClient_PostAliPayAPISelf(t *testing.T) {
 	bm := make(gopay.BodyMap)
-	bm.Set("subject", "预创建创建订单")
-	bm.Set("out_trade_no", util.GetRandomString(32))
-	bm.Set("total_amount", "100")
 
-	bodyBs, err := json.Marshal(bm)
-	if err != nil {
-		xlog.Error(err)
-		return
-	}
-	// 如果需要biz_content，最后 Set
-	bm.Set("biz_content", string(bodyBs))
+	// 自定义公共参数（根据自己需求，需要独立设置的自行设置，不需要单独设置的，共享client的配置）
+	bm.Set("app_id", "appid")
+	bm.Set("app_auth_token", "app_auth_token")
+	bm.Set("auth_token", "auth_token")
+
+	// biz_content
+	bm.SetBodyMap("biz_content", func(bz gopay.BodyMap) {
+		bz.Set("subject", "预创建创建订单")
+		bz.Set("out_trade_no", util.GetRandomString(32))
+		bz.Set("total_amount", "100")
+	})
 
 	aliPsp := new(TradePrecreateResponse)
-	err = client.PostAliPayAPISelf(bm, "alipay.trade.precreate", aliPsp)
+	err := client.PostAliPayAPISelf(bm, "alipay.trade.precreate", aliPsp)
 	if err != nil {
 		xlog.Error(err)
 		return

@@ -1,3 +1,9 @@
+版本号：Release 1.5.29
+发布时间：2021/02/23 21:32
+修改记录：
+   (1) 支付宝：重构 client.PostAliPayAPISelf()，具体参考 client_test.go 内的 TestClient_PostAliPayAPISelf() 方法
+   (2) BodyMap：新增 bm.SetFormFile() 的部分方法，修改 bm.Get() 方法，新增bm.GetString() 方法
+
 版本号：Release 1.5.28
 发布时间：2021/02/19 18:48
 修改记录：

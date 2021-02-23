@@ -310,15 +310,11 @@ func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQuery
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
-	func() {
-		w.mu.RLock()
-		defer w.mu.RUnlock()
-		bm.Set("mch_id", w.MchId)
-		if bm.GetString("sign") == util.NULL {
-			sign := getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
-			bm.Set("sign", sign)
-		}
-	}()
+	bm.Set("mch_id", w.MchId)
+	if bm.GetString("sign") == util.NULL {
+		sign := getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
+		bm.Set("sign", sign)
+	}
 	bs, err := w.doProdPostPure(bm, profitSharingQuery, nil)
 	if err != nil {
 		return nil, err
