@@ -2,12 +2,12 @@ package wechat
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
 	"time"
 
-	"errors"
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/pkg/util"
 )

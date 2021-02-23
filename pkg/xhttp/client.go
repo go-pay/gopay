@@ -15,7 +15,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
@@ -117,7 +116,7 @@ type Client struct {
 	unmarshalType string
 
 	// types            map[string]string
-	multipartBodyMap gopay.BodyMap
+	multipartBodyMap map[string]interface{}
 
 	jsonByte []byte
 
@@ -227,7 +226,8 @@ func (c *Client) SendBodyMap(v interface{}) (client *Client) {
 	return c
 }
 
-func (c *Client) SendMultipartBodyMap(bm gopay.BodyMap) (client *Client) {
+// 参数可直接传 gopay.BodyMap
+func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client) {
 	bs, err := json.Marshal(bm)
 	if err != nil {
 		c.Errors = append(c.Errors, err)
@@ -341,7 +341,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 			case TypeMultipartFormData:
 				for k, v := range c.multipartBodyMap {
 					// file 参数
-					if bm, ok := v.(gopay.BodyMap); ok {
+					if bm, ok := v.(map[string]interface{}); ok {
 						for fileName, fileContent := range bm {
 							// 遍历，如果fileContent是 []byte数组，说明是文件
 							fb, ok2 := fileContent.([]byte)
@@ -356,8 +356,13 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 						continue
 					}
 					// text 参数
-					if val := c.multipartBodyMap.GetString(k); val != gopay.NULL {
-						w.WriteField(k, val)
+					if val, ok := c.multipartBodyMap[k]; ok {
+						vs, ok2 := val.(string)
+						if ok2 {
+							w.WriteField(k, vs)
+						} else if ss := util.ConvertToString(val); ss != "" {
+							w.WriteField(k, ss)
+						}
 					}
 				}
 				c.ContentType = w.FormDataContentType()
