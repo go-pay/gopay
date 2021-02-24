@@ -270,7 +270,7 @@ func GetMiniPaySign(appId, nonceStr, packages, signType, timeStamp, apiKey strin
 //	signType：签名类型
 //	timeStamp：时间
 //	ApiKey：API秘钥值
-//	微信内H5支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6
+//	微信内H5支付官方文档：https://pay.weixin.qq.com/wiki/doc/api/wxpay/ch/pay/OfficialPayMent/chapter5_5.shtml
 func GetH5PaySign(appId, nonceStr, packages, signType, timeStamp, apiKey string) (paySign string) {
 	var (
 		buffer strings.Builder
