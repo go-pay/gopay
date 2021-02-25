@@ -21,13 +21,13 @@ $ go get github.com/iGoogle-ink/gopay
 
 ```go
 import (
-"fmt"
+    "fmt"
 
-"github.com/iGoogle-ink/gopay"
+    "github.com/iGoogle-ink/gopay"
 )
 
 func main() {
-xlog.Debug("GoPay Version: ", gopay.Version)
+    xlog.Debug("GoPay Version: ", gopay.Version)
 }
 ```
 
@@ -201,7 +201,7 @@ QQ群：
 
 ```go
 import (
-"github.com/iGoogle-ink/gopay/wechat/v3"
+	"github.com/iGoogle-ink/gopay/wechat/v3"
 )
 
 // NewClientV3 初始化微信客户端 V3
@@ -212,8 +212,8 @@ import (
 //	pkContent：私钥 apiclient_key.pem 读取后的内容
 client, err = NewClientV3(Appid, MchId, SerialNo, ApiV3Key, PKContent)
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 
 // 自动验签
@@ -234,7 +234,7 @@ client.DebugSwitch = gopay.DebugOff
 
 ```go
 import (
-"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 // 初始化微信客户端
@@ -293,17 +293,17 @@ client.DebugSwitch = gopay.DebugOn
 
 // 设置支付宝请求 公共参数
 //    注意：具体设置哪些参数，根据不同的方法而不同，此处列举出所有设置参数
-client.SetLocation(). // 设置时区，不设置或出错均为默认服务器时间
-SetPrivateKeyType().  // 设置 支付宝 私钥类型，alipay.PKCS1 或 alipay.PKCS8，默认 PKCS1
-SetAliPayRootCertSN().                  // 设置支付宝根证书SN，通过 alipay.GetRootCertSN() 获取
-SetAppCertSN().                         // 设置应用公钥证书SN，通过 alipay.GetCertSN() 获取
-SetAliPayPublicCertSN().                // 设置支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
-SetCharset("utf-8"). // 设置字符编码，不设置默认 utf-8
-SetSignType(alipay.RSA2).               // 设置签名类型，不设置默认 RSA2
-SetReturnUrl("https://www.gopay.ink").  // 设置返回URL
-SetNotifyUrl("https://www.gopay.ink").  // 设置异步通知URL
-SetAppAuthToken().                      // 设置第三方应用授权
-SetAuthToken()                          // 设置个人信息授权
+client.SetLocation().                       // 设置时区，不设置或出错均为默认服务器时间
+    SetPrivateKeyType().                    // 设置 支付宝 私钥类型，alipay.PKCS1 或 alipay.PKCS8，默认 PKCS1
+    SetAliPayRootCertSN().                  // 设置支付宝根证书SN，通过 alipay.GetRootCertSN() 获取
+    SetAppCertSN().                         // 设置应用公钥证书SN，通过 alipay.GetCertSN() 获取
+    SetAliPayPublicCertSN().                // 设置支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
+    SetCharset("utf-8").                    // 设置字符编码，不设置默认 utf-8
+    SetSignType(alipay.RSA2).               // 设置签名类型，不设置默认 RSA2
+    SetReturnUrl("https://www.gopay.ink").  // 设置返回URL
+    SetNotifyUrl("https://www.gopay.ink").  // 设置异步通知URL
+    SetAppAuthToken().                      // 设置第三方应用授权
+    SetAuthToken()                          // 设置个人信息授权
 
 // 证书路径
 err := client.SetCertSnByPath("appCertPublicKey.crt", "alipayRootCert.crt", "alipayCertPublicKey_RSA2.crt")
@@ -320,28 +320,28 @@ err := client.SetCertSnByContent("appCertPublicKey bytes", "alipayRootCert bytes
 
 ```go
 import (
-"github.com/iGoogle-ink/gopay/pkg/util"
-"github.com/iGoogle-ink/gopay/wechat"
+    "github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 // 初始化 BodyMap
 bm := make(gopay.BodyMap)
 bm.Set("nonce_str", util.GetRandomString(32)).
-Set("body", "H5支付").
-Set("out_trade_no", number).
-Set("total_fee", 1).
-Set("spbill_create_ip", "127.0.0.1").
-Set("notify_url", "http://www.gopay.ink").
-Set("trade_type", TradeType_H5).
-Set("device_info", "WEB").
-Set("sign_type", SignType_MD5).
-SetBodyMap("scene_info", func (bm gopay.BodyMap) {
-bm.SetBodyMap("h5_info", func (bm gopay.BodyMap) {
-bm.Set("type", "Wap")
-bm.Set("wap_url", "http://www.gopay.ink")
-bm.Set("wap_name", "H5测试支付")
-})
-}) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
+    Set("body", "H5支付").
+    Set("out_trade_no", number).
+    Set("total_fee", 1).
+    Set("spbill_create_ip", "127.0.0.1").
+    Set("notify_url", "http://www.gopay.ink").
+    Set("trade_type", TradeType_H5).
+    Set("device_info", "WEB").
+    Set("sign_type", SignType_MD5).
+    SetBodyMap("scene_info", func(bm gopay.BodyMap) {
+        bm.SetBodyMap("h5_info", func(bm gopay.BodyMap) {
+            bm.Set("type", "Wap")
+            bm.Set("wap_url", "http://www.gopay.ink")
+            bm.Set("wap_name", "H5测试支付")
+        })
+    }) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
 
 // 参数 sign ，可单独生成赋值到BodyMap中；也可不传sign参数，client内部会自动获取
 // 如需单独赋值 sign 参数，需通过下面方法，最后获取sign值并在最后赋值此参数
@@ -358,10 +358,10 @@ bm.Set("sign", sign)
 // 初始化 BodyMap
 bm := make(gopay.BodyMap)
 bm.Set("subject", "手机网站测试支付").
-Set("out_trade_no", "GZ201909081743431443").
-Set("quit_url", "https://www.gopay.ink").
-Set("total_amount", "100.00").
-Set("product_code", "QUICK_WAP_WAY")
+    Set("out_trade_no", "GZ201909081743431443").
+    Set("quit_url", "https://www.gopay.ink").
+    Set("total_amount", "100.00").
+    Set("product_code", "QUICK_WAP_WAY")
 ```
 
 ## 3、client 方法调用
@@ -432,12 +432,12 @@ APP支付官方文档：[APP端调起支付的参数列表文档](https://pay.we
 
 ```go
 import (
-"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 // ====微信小程序 paySign====
 timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
-packages := "prepay_id=" + wxRsp.PrepayId // 此处的 wxRsp.PrepayId ,统一下单成功后得到
+packages := "prepay_id=" + wxRsp.PrepayId   // 此处的 wxRsp.PrepayId ,统一下单成功后得到
 // 获取微信小程序支付的 paySign
 //    appId：AppID
 //    nonceStr：随机字符串
@@ -462,7 +462,7 @@ paySign := wechat.GetAppPaySign(appid, partnerid, wxRsp.NonceStr, wxRsp.PrepayId
 
 // ====微信内H5支付 paySign====
 timeStamp := strconv.FormatInt(time.Now().Unix(), 10)
-packages := "prepay_id=" + wxRsp.PrepayId // 此处的 wxRsp.PrepayId ,统一下单成功后得到
+packages := "prepay_id=" + wxRsp.PrepayId   // 此处的 wxRsp.PrepayId ,统一下单成功后得到
 // 获取微信内H5支付 paySign
 //    appId：AppID
 //    nonceStr：随机字符串
@@ -487,8 +487,8 @@ paySign := wechat.GetH5PaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_
 
 ```go
 import (
-"github.com/iGoogle-ink/gopay"
-"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 // ====同步返回参数验签Sign====
@@ -522,7 +522,7 @@ ok, err := wechat.VerifySign(apiKey, wechat.SignType_MD5, notifyReq)
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
 notifyReq, err := wechat.ParseNotifyToBodyMap(c.Request)
-或
+ 或
 notifyReq, err := wechat.ParseRefundNotify(c.Request)
 
 // ==解密退款异步通知的加密参数 req_info ==
@@ -533,8 +533,8 @@ rsp := new(wechat.NotifyResponse) // 回复微信的数据
 rsp.ReturnCode = gopay.SUCCESS
 rsp.ReturnMsg = gopay.OK
 
-return c.String(http.StatusOK, rsp.ToXmlString()) // 此写法是 echo 框架返回微信的写法
-c.String(http.StatusOK, "%s", rsp.ToXmlString()) // 此写法是 gin 框架返回微信的写法
+return c.String(http.StatusOK, rsp.ToXmlString())   // 此写法是 echo 框架返回微信的写法
+c.String(http.StatusOK, "%s", rsp.ToXmlString())    // 此写法是 gin 框架返回微信的写法
 ```
 
 * #### 支付宝
@@ -545,7 +545,7 @@ c.String(http.StatusOK, "%s", rsp.ToXmlString()) // 此写法是 gin 框架返�
 
 ```go
 import (
-"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gopay/alipay"
 )
 
 // ====同步返回参数验签Sign====
@@ -566,8 +566,8 @@ ok, err := alipay.VerifySyncSignWithCert(aliPayPublicKeyCert, aliRsp.SignData, a
 //    req：*http.Request
 //    返回参数 notifyReq：通知的参数
 //    返回参数 err：错误信息
-notifyReq, err = alipay.ParseNotifyToBodyMap(c.Request()) // c.Request()是 echo 框架的获取
-或
+notifyReq, err = alipay.ParseNotifyToBodyMap(c.Request())     // c.Request()是 echo 框架的获取
+ 或
 notifyReq, err = alipay.ParseNotifyByURLValues()
 
 // 验签操作
@@ -578,8 +578,8 @@ ok, err = alipay.VerifySignWithCert("alipayCertPublicKey_RSA2.crt", notifyReq)
 // ==异步通知，返回支付宝平台的信息==
 //    文档：https://opendocs.alipay.com/open/203/105286
 //    程序执行完后必须打印输出“success”（不包含引号）。如果商户反馈给支付宝的字符不是success这7个字符，支付宝服务器会不断重发通知，直到超过24小时22分钟。一般情况下，25小时以内完成8次通知（通知的间隔频率一般是：4m,10m,10m,1h,2h,6h,15h）
-return c.String(http.StatusOK, "success") // 此写法是 echo 框架返回支付宝的写法
-c.String(http.StatusOK, "%s", "success") // 此写法是 gin 框架返回支付宝的写法
+return c.String(http.StatusOK, "success")   // 此写法是 echo 框架返回支付宝的写法
+c.String(http.StatusOK, "%s", "success")    // 此写法是 gin 框架返回支付宝的写法
 ```
 
 ## 6、微信、支付宝 公共API（仅部分说明）
@@ -594,7 +594,7 @@ button按钮获取手机号码：[button组件文档](https://developers.weixin.
 
 ```go
 import (
-"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/iGoogle-ink/gopay/wechat"
 )
 
 // 获取微信小程序用户的OpenId、SessionKey、UnionId
@@ -630,15 +630,15 @@ xlog.Debug(*userInfo)
 data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
 iv := "Cds8j3VYoGvnTp1BrjXdJg=="
 session := "lyY4HPQbaOYzZdG+JcYK9w=="
-
+    
 // 解密开放数据到 BodyMap
 //    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 //    iv:加密算法的初始向量
 //    sessionKey:会话密钥
 bm, err := wechat.DecryptOpenDataToBodyMap(data, iv, session)
 if err != nil {
-xlog.Debug("err:", err)
-return
+     xlog.Debug("err:", err)
+     return
 }
 xlog.Debug("WeChatUserPhone:", bm)
 ```
@@ -649,12 +649,10 @@ xlog.Debug("WeChatUserPhone:", bm)
 
 获取用户手机号文档：[获取用户手机号](https://opendocs.alipay.com/mini/api/getphonenumber)
 
-支付宝加解密文档：[AES配置文档](https://opendocs.alipay.com/mini/introduce/aes)
-，[AES加解密文档](https://opendocs.alipay.com/open/common/104567)
-
+支付宝加解密文档：[AES配置文档](https://opendocs.alipay.com/mini/introduce/aes) ，[AES加解密文档](https://opendocs.alipay.com/open/common/104567)
 ```go
 import (
-"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/iGoogle-ink/gopay/alipay"
 )
 
 // 换取授权访问令牌（默认使用utf-8，RSA2）
