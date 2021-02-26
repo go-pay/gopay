@@ -13,7 +13,7 @@ var (
 )
 
 func TestAesCBCEncryptDecrypt(t *testing.T) {
-	originData := "www.gopay.ink"
+	originData := "https://www.fumm.cc"
 	xlog.Debug("originData:", originData)
 	encryptData, err := CBCEncryptData([]byte(originData), []byte(secretKey))
 	if err != nil {
@@ -30,7 +30,7 @@ func TestAesCBCEncryptDecrypt(t *testing.T) {
 }
 
 func TestAesCBCEncryptDecryptIv(t *testing.T) {
-	originData := "www.gopay.ink"
+	originData := "https://www.fumm.cc"
 	xlog.Debug("originData:", originData)
 	encryptData, err := CBCEncryptIvData([]byte(originData), []byte(secretKey), []byte(iv))
 	if err != nil {

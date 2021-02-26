@@ -17,7 +17,7 @@ func TradePrecreate() {
 	client.SetCharset("utf-8").
 		SetSignType(alipay.RSA2).
 		SetPrivateKeyType(alipay.PKCS1).
-		SetNotifyUrl("https://www.gopay.ink")
+		SetNotifyUrl("https://www.fumm.cc")
 
 	//请求参数
 	body := make(gopay.BodyMap)

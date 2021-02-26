@@ -31,8 +31,8 @@ func TestMain(m *testing.M) {
 	// 配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType(RSA2)
-	// SetReturnUrl("https://www.gopay.ink").
-	// SetNotifyUrl("https://www.gopay.ink")
+	// SetReturnUrl("https://www.fumm.cc").
+	// SetNotifyUrl("https://www.fumm.cc")
 
 	err := client.SetCertSnByPath("cert/appCertPublicKey.crt", "cert/alipayRootCert.crt", "cert/alipayCertPublicKey_RSA2.crt")
 	if err != nil {
@@ -43,7 +43,7 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func TestClient_PostAliPayAPISelf(t *testing.T) {
+func TestClient_PostAliPayAPISelfV2(t *testing.T) {
 	bm := make(gopay.BodyMap)
 
 	// 自定义公共参数（根据自己需求，需要独立设置的自行设置，不需要单独设置的，共享client的配置）
@@ -57,6 +57,21 @@ func TestClient_PostAliPayAPISelf(t *testing.T) {
 		bz.Set("out_trade_no", util.GetRandomString(32))
 		bz.Set("total_amount", "100")
 	})
+
+	aliPsp := new(TradePrecreateResponse)
+	err := client.PostAliPayAPISelfV2(bm, "alipay.trade.precreate", aliPsp)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug(aliPsp.Response)
+}
+
+func TestClient_PostAliPayAPISelf(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "预创建创建订单")
+	bm.Set("out_trade_no", util.GetRandomString(32))
+	bm.Set("total_amount", "100")
 
 	aliPsp := new(TradePrecreateResponse)
 	err := client.PostAliPayAPISelf(bm, "alipay.trade.precreate", aliPsp)
@@ -192,7 +207,7 @@ func TestClient_TradeWapPay(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("subject", "手机网站测试支付").
 		Set("out_trade_no", "GZ201909081743431443").
-		Set("quit_url", "https://www.gopay.ink").
+		Set("quit_url", "https://www.fumm.cc").
 		Set("total_amount", "100.00").
 		Set("product_code", "QUICK_WAP_WAY")
 
@@ -337,7 +352,7 @@ func TestClient_UserCertifyOpenInit(t *testing.T) {
 	bm.Set("identity_param", identity)
 	// 商户个性化配置，格式为json
 	merchant := make(map[string]string)
-	merchant["return_url"] = "https://www.gopay.ink"
+	merchant["return_url"] = "https://www.fumm.cc"
 	bm.Set("merchant_config", merchant)
 
 	// 发起请求

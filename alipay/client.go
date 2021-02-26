@@ -47,10 +47,24 @@ func NewClient(appId, privateKey string, isProd bool) (client *Client) {
 	}
 }
 
-// PostAliPayAPISelf 支付宝接口自行实现方法
-//	注意：需要自行通过bm.SetBodyMap()设置，不设置则没有此参数
+// Deprecated
+//	推荐使用 PostAliPayAPISelfV2()
 //	示例：请参考 client_test.go 的 TestClient_PostAliPayAPISelf() 方法
 func (a *Client) PostAliPayAPISelf(bm gopay.BodyMap, method string, aliRsp interface{}) (err error) {
+	var bs []byte
+	if bs, err = a.doAliPay(bm, method); err != nil {
+		return err
+	}
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return err
+	}
+	return nil
+}
+
+// PostAliPayAPISelfV2 支付宝接口自行实现方法
+//	注意：需要自行通过bm.SetBodyMap()设置，不设置则没有此参数
+//	示例：请参考 client_test.go 的 TestClient_PostAliPayAPISelf() 方法
+func (a *Client) PostAliPayAPISelfV2(bm gopay.BodyMap, method string, aliRsp interface{}) (err error) {
 	var (
 		bs, bodyBs []byte
 	)
@@ -126,6 +140,8 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 	if bm != nil {
 		aat = bm.GetString("app_auth_token")
 		at = bm.GetString("auth_token")
+		bm.Remove("app_auth_token")
+		bm.Remove("auth_token")
 		if bodyBs, err = json.Marshal(bm); err != nil {
 			return nil, fmt.Errorf("json.Marshal：%w", err)
 		}

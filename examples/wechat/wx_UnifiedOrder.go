@@ -31,7 +31,7 @@ func UnifiedOrder() {
 	bm.Set("out_trade_no", number)
 	bm.Set("total_fee", 1)
 	bm.Set("spbill_create_ip", "127.0.0.1")
-	bm.Set("notify_url", "http://www.gopay.ink")
+	bm.Set("notify_url", "https://www.fumm.cc")
 	bm.Set("trade_type", wechat.TradeType_H5)
 	bm.Set("device_info", "WEB")
 	bm.Set("sign_type", wechat.SignType_MD5)
@@ -39,7 +39,7 @@ func UnifiedOrder() {
 	sceneInfo := make(map[string]map[string]string)
 	h5Info := make(map[string]string)
 	h5Info["type"] = "Wap"
-	h5Info["wap_url"] = "http://www.gopay.ink"
+	h5Info["wap_url"] = "https://www.fumm.cc"
 	h5Info["wap_name"] = "H5测试支付"
 	sceneInfo["h5_info"] = h5Info
 	bm.Set("scene_info", sceneInfo)

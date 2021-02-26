@@ -127,9 +127,9 @@ func main() {
 
 ### 支付宝支付API
 
-> #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用client.PostAliPayAPISelf()方法实现！请参考 client_test.go 内的 TestClient_PostAliPayAPISelf() 方法
+> #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用client.PostAliPayAPISelfV2()方法实现！请参考 client_test.go 内的 TestClient_PostAliPayAPISelfV2() 方法
 
-* 支付宝接口自行实现方法：client.PostAliPayAPISelf()
+* 支付宝接口自行实现方法：client.PostAliPayAPISelfV2()
 * 手机网站支付接口2.0（手机网站支付）：client.TradeWapPay()
 * 统一收单下单并支付页面接口（电脑网站支付）：client.TradePagePay()
 * APP支付接口2.0（APP支付）：client.TradeAppPay()
@@ -300,8 +300,8 @@ client.SetLocation().                       // 设置时区，不设置或出错
     SetAliPayPublicCertSN().                // 设置支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
     SetCharset("utf-8").                    // 设置字符编码，不设置默认 utf-8
     SetSignType(alipay.RSA2).               // 设置签名类型，不设置默认 RSA2
-    SetReturnUrl("https://www.gopay.ink").  // 设置返回URL
-    SetNotifyUrl("https://www.gopay.ink").  // 设置异步通知URL
+    SetReturnUrl("https://www.fumm.cc").  // 设置返回URL
+    SetNotifyUrl("https://www.fumm.cc").  // 设置异步通知URL
     SetAppAuthToken().                      // 设置第三方应用授权
     SetAuthToken()                          // 设置个人信息授权
 
@@ -331,14 +331,14 @@ bm.Set("nonce_str", util.GetRandomString(32)).
     Set("out_trade_no", number).
     Set("total_fee", 1).
     Set("spbill_create_ip", "127.0.0.1").
-    Set("notify_url", "http://www.gopay.ink").
+    Set("notify_url", "https://www.fumm.cc").
     Set("trade_type", TradeType_H5).
     Set("device_info", "WEB").
     Set("sign_type", SignType_MD5).
     SetBodyMap("scene_info", func(bm gopay.BodyMap) {
         bm.SetBodyMap("h5_info", func(bm gopay.BodyMap) {
             bm.Set("type", "Wap")
-            bm.Set("wap_url", "http://www.gopay.ink")
+            bm.Set("wap_url", "https://www.fumm.cc")
             bm.Set("wap_name", "H5测试支付")
         })
     }) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
@@ -359,7 +359,7 @@ bm.Set("sign", sign)
 bm := make(gopay.BodyMap)
 bm.Set("subject", "手机网站测试支付").
     Set("out_trade_no", "GZ201909081743431443").
-    Set("quit_url", "https://www.gopay.ink").
+    Set("quit_url", "https://www.fumm.cc").
     Set("total_amount", "100.00").
     Set("product_code", "QUICK_WAP_WAY")
 ```
