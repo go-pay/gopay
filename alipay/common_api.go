@@ -216,7 +216,7 @@ func systemOauthToken(appId string, t PKCSType, privateKey string, bm gopay.Body
 		sign    string
 		baseUrl = baseUrlUtf8
 	)
-	if sign, err = GetRsaSign(bm, bm.Get("sign_type"), t, privateKey); err != nil {
+	if sign, err = GetRsaSign(bm, bm.GetString("sign_type"), t, privateKey); err != nil {
 		return nil, err
 	}
 	bm.Set("sign", sign)
@@ -252,7 +252,7 @@ func MonitorHeartbeatSyn(appId string, t PKCSType, privateKey, signType, bizCont
 	bm.Set("timestamp", time.Now().Format(util.TimeLayout))
 	bm.Set("version", "1.0")
 
-	sign, err := GetRsaSign(bm, bm.Get("sign_type"), t, privateKey)
+	sign, err := GetRsaSign(bm, bm.GetString("sign_type"), t, privateKey)
 	if err != nil {
 		return nil, err
 	}

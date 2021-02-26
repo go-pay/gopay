@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
+	"fmt"
 	"io"
+	"os"
 	"sort"
 	"strings"
 	"sync"
@@ -42,8 +44,43 @@ func (bm BodyMap) SetBodyMap(key string, value func(bm BodyMap)) BodyMap {
 	return bm
 }
 
-// 获取参数
-func (bm BodyMap) Get(key string) string {
+// 设置 FormFile
+func (bm BodyMap) SetFormFile(fieldName string, filePath string) (err error) {
+	_FileBm := make(BodyMap)
+	file, err := os.Open(filePath)
+	if err != nil {
+		return fmt.Errorf("bm.SetFormFile(%s, %s),err:%w", fieldName, filePath, err)
+	}
+	defer file.Close()
+	stat, err := file.Stat()
+	if err != nil {
+		return fmt.Errorf("bm.SetFormFile(%s, %s),err:%w", fieldName, filePath, err)
+	}
+	fileContent := make([]byte, stat.Size())
+	_, err = file.Read(fileContent)
+	if err != nil {
+		return fmt.Errorf("bm.SetFormFile(%s, %s),err:%w", fieldName, filePath, err)
+	}
+	_FileBm[stat.Name()] = fileContent
+
+	mu.Lock()
+	bm[fieldName] = _FileBm
+	mu.Unlock()
+	return nil
+}
+
+// 获取原始参数
+func (bm BodyMap) Get(key string) interface{} {
+	if bm == nil {
+		return nil
+	}
+	mu.RLock()
+	defer mu.RUnlock()
+	return bm[key]
+}
+
+// 获取参数转换string
+func (bm BodyMap) GetString(key string) string {
 	if bm == nil {
 		return NULL
 	}
@@ -96,7 +133,7 @@ func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error)
 		return
 	}
 	for k := range bm {
-		if v := bm.Get(k); v != NULL {
+		if v := bm.GetString(k); v != NULL {
 			e.Encode(xmlMapMarshal{XMLName: xml.Name{Local: k}, Value: v})
 		}
 	}
@@ -130,7 +167,7 @@ func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
 	sort.Strings(keyList)
 	mu.RUnlock()
 	for _, k := range keyList {
-		if v := bm.Get(k); v != NULL {
+		if v := bm.GetString(k); v != NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
 			buf.WriteString(v)
@@ -156,7 +193,7 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 	sort.Strings(keyList)
 	mu.RUnlock()
 	for _, k := range keyList {
-		if v := bm.Get(k); v != NULL {
+		if v := bm.GetString(k); v != NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
 			buf.WriteString(v)
@@ -175,7 +212,7 @@ func (bm BodyMap) EncodeGetParams() string {
 		buf strings.Builder
 	)
 	for k, _ := range bm {
-		if v := bm.Get(k); v != NULL {
+		if v := bm.GetString(k); v != NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
 			buf.WriteString(v)
@@ -191,7 +228,7 @@ func (bm BodyMap) EncodeGetParams() string {
 func (bm BodyMap) CheckEmptyError(keys ...string) error {
 	var emptyKeys []string
 	for _, k := range keys {
-		if v := bm.Get(k); v == NULL {
+		if v := bm.GetString(k); v == NULL {
 			emptyKeys = append(emptyKeys, k)
 		}
 	}

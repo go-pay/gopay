@@ -18,6 +18,7 @@ $ go get github.com/iGoogle-ink/gopay
 
 * #### 查看 GoPay 版本
     * [版本更新记录](https://github.com/iGoogle-ink/gopay/blob/main/release_note.txt)
+
 ```go
 import (
     "fmt"
@@ -126,7 +127,7 @@ func main() {
 
 ### 支付宝支付API
 
-> #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用client.PostAliPayAPISelf()方法实现！
+> #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用client.PostAliPayAPISelf()方法实现！请参考 client_test.go 内的 TestClient_PostAliPayAPISelf() 方法
 
 * 支付宝接口自行实现方法：client.PostAliPayAPISelf()
 * 手机网站支付接口2.0（手机网站支付）：client.TradeWapPay()
@@ -559,7 +560,6 @@ aliRsp, err := client.TradePay(bm)
 ok, err := alipay.VerifySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
 //    aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayCertPublicKey_RSA2.crt 或文件内容[]byte
 ok, err := alipay.VerifySyncSignWithCert(aliPayPublicKeyCert, aliRsp.SignData, aliRsp.Sign)
-
 
 // ====异步通知参数解析和验签Sign====
 // 解析异步通知的参数

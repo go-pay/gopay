@@ -244,7 +244,7 @@ func ParseWeChatRefundNotify(req *http.Request) string {
 	xlog.Debug("bodyMap:", bodyMap)
 
 	// 解密退款异步通知的加密数据
-	refundNotify2, err := wechat.DecryptRefundNotifyReqInfo(bodyMap.Get("req_info"), "GFDS8j98rewnmgl45wHTt980jg543abc")
+	refundNotify2, err := wechat.DecryptRefundNotifyReqInfo(bodyMap.GetString("req_info"), "GFDS8j98rewnmgl45wHTt980jg543abc")
 	if err != nil {
 		xlog.Debug("err:", err)
 	}

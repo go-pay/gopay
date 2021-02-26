@@ -45,9 +45,18 @@ func TestMain(m *testing.M) {
 
 func TestClient_PostAliPayAPISelf(t *testing.T) {
 	bm := make(gopay.BodyMap)
-	bm.Set("subject", "预创建创建订单")
-	bm.Set("out_trade_no", util.GetRandomString(32))
-	bm.Set("total_amount", "100")
+
+	// 自定义公共参数（根据自己需求，需要独立设置的自行设置，不需要单独设置的，共享client的配置）
+	bm.Set("app_id", "appid")
+	bm.Set("app_auth_token", "app_auth_token")
+	bm.Set("auth_token", "auth_token")
+
+	// biz_content
+	bm.SetBodyMap("biz_content", func(bz gopay.BodyMap) {
+		bz.Set("subject", "预创建创建订单")
+		bz.Set("out_trade_no", util.GetRandomString(32))
+		bz.Set("total_amount", "100")
+	})
 
 	aliPsp := new(TradePrecreateResponse)
 	err := client.PostAliPayAPISelf(bm, "alipay.trade.precreate", aliPsp)
@@ -272,7 +281,7 @@ func TestClient_TradeOrderSettle(t *testing.T) {
 	listParams = append(listParams, OpenApiRoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
 
 	bm.Set("royalty_parameters", listParams)
-	// xlog.Debug("listParams:", bm.Get("royalty_parameters"))
+	// xlog.Debug("listParams:", bm.GetString("royalty_parameters"))
 
 	// 发起交易结算接口
 	aliRsp, err := client.TradeOrderSettle(bm)

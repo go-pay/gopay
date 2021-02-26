@@ -40,7 +40,7 @@ func (a *Client) UserInfoAuth(bm gopay.BodyMap) (aliRsp *UserInfoAuthResponse, e
 // alipay.system.oauth.token(换取授权访问令牌)
 //	文档地址：https://opendocs.alipay.com/apis/api_9/alipay.system.oauth.token
 func (a *Client) SystemOauthToken(bm gopay.BodyMap) (aliRsp *SystemOauthTokenResponse, err error) {
-	if bm.Get("code") == util.NULL && bm.Get("refresh_token") == util.NULL {
+	if bm.GetString("code") == util.NULL && bm.GetString("refresh_token") == util.NULL {
 		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
 	}
 	err = bm.CheckEmptyError("grant_type")
@@ -78,7 +78,7 @@ func (a *Client) SystemOauthToken(bm gopay.BodyMap) (aliRsp *SystemOauthTokenRes
 // alipay.open.auth.token.app(换取应用授权令牌)
 //	文档地址：https://opendocs.alipay.com/apis/api_9/alipay.open.auth.token.app
 func (a *Client) OpenAuthTokenApp(bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppResponse, err error) {
-	if bm.Get("code") == util.NULL && bm.Get("refresh_token") == util.NULL {
+	if bm.GetString("code") == util.NULL && bm.GetString("refresh_token") == util.NULL {
 		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
 	}
 	err = bm.CheckEmptyError("grant_type")

@@ -27,7 +27,7 @@ func TradeOrderSettle() {
 	listParams = append(listParams, alipay.OpenApiRoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
 
 	body.Set("royalty_parameters", listParams)
-	xlog.Debug("listParams:", body.Get("royalty_parameters"))
+	xlog.Debug("listParams:", body.GetString("royalty_parameters"))
 
 	//发起交易结算接口
 	aliRsp, err := client.TradeOrderSettle(body)

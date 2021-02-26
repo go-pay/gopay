@@ -2,12 +2,12 @@ package wechat
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
 	"time"
 
-	"errors"
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/pkg/util"
 )
@@ -19,10 +19,10 @@ func (c *ClientV3) V3TransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err err
 	ts := time.Now().Unix()
 	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("appid") == util.NULL {
+		if bm.GetString("appid") == util.NULL {
 			bm.Set("appid", c.Appid)
 		}
-		if bm.Get("mchid") == util.NULL {
+		if bm.GetString("mchid") == util.NULL {
 			bm.Set("mchid", c.Mchid)
 		}
 	}
@@ -54,10 +54,10 @@ func (c *ClientV3) V3TransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err e
 	ts := time.Now().Unix()
 	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("appid") == util.NULL {
+		if bm.GetString("appid") == util.NULL {
 			bm.Set("appid", c.Appid)
 		}
-		if bm.Get("mchid") == util.NULL {
+		if bm.GetString("mchid") == util.NULL {
 			bm.Set("mchid", c.Mchid)
 		}
 	}
@@ -89,10 +89,10 @@ func (c *ClientV3) V3TransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err 
 	ts := time.Now().Unix()
 	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("appid") == util.NULL {
+		if bm.GetString("appid") == util.NULL {
 			bm.Set("appid", c.Appid)
 		}
-		if bm.Get("mchid") == util.NULL {
+		if bm.GetString("mchid") == util.NULL {
 			bm.Set("mchid", c.Mchid)
 		}
 	}
@@ -124,10 +124,10 @@ func (c *ClientV3) V3TransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
 	ts := time.Now().Unix()
 	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("appid") == util.NULL {
+		if bm.GetString("appid") == util.NULL {
 			bm.Set("appid", c.Appid)
 		}
-		if bm.Get("mchid") == util.NULL {
+		if bm.GetString("mchid") == util.NULL {
 			bm.Set("mchid", c.Mchid)
 		}
 	}
@@ -231,7 +231,7 @@ func (c *ClientV3) V3BillTradeBill(bm gopay.BodyMap) (wxRsp *BillRsp, err error)
 		uri      string
 	)
 	if bm != nil {
-		if bm.Get("bill_date") == util.NULL {
+		if bm.GetString("bill_date") == util.NULL {
 			now := time.Now()
 			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(util.DateLayout)
 			bm.Set("bill_date", yesterday)
@@ -271,7 +271,7 @@ func (c *ClientV3) V3BillFundFlowBill(bm gopay.BodyMap) (wxRsp *BillRsp, err err
 		uri      string
 	)
 	if bm != nil {
-		if bm.Get("bill_date") == util.NULL {
+		if bm.GetString("bill_date") == util.NULL {
 			now := time.Now()
 			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(util.DateLayout)
 			bm.Set("bill_date", yesterday)
@@ -311,15 +311,15 @@ func (c *ClientV3) V3BillLevel2FundFlowBill(bm gopay.BodyMap) (wxRsp *Level2Fund
 		uri      string
 	)
 	if bm != nil {
-		if bm.Get("bill_date") == util.NULL {
+		if bm.GetString("bill_date") == util.NULL {
 			now := time.Now()
 			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(util.DateLayout)
 			bm.Set("bill_date", yesterday)
 		}
-		if bm.Get("account_type") == util.NULL {
+		if bm.GetString("account_type") == util.NULL {
 			bm.Set("account_type", "ALL")
 		}
-		if bm.Get("algorithm") == util.NULL {
+		if bm.GetString("algorithm") == util.NULL {
 			bm.Set("algorithm", "AEAD_AES_256_GCM")
 		}
 
@@ -383,10 +383,10 @@ func (c *ClientV3) V3CombineTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, 
 	ts := time.Now().Unix()
 	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("combine_appid") == util.NULL {
+		if bm.GetString("combine_appid") == util.NULL {
 			bm.Set("combine_appid", c.Appid)
 		}
-		if bm.Get("combine_mchid") == util.NULL {
+		if bm.GetString("combine_mchid") == util.NULL {
 			bm.Set("combine_mchid", c.Mchid)
 		}
 	}
@@ -418,10 +418,10 @@ func (c *ClientV3) V3CombineTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err e
 	ts := time.Now().Unix()
 	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("combine_appid") == util.NULL {
+		if bm.GetString("combine_appid") == util.NULL {
 			bm.Set("combine_appid", c.Appid)
 		}
-		if bm.Get("combine_mchid") == util.NULL {
+		if bm.GetString("combine_mchid") == util.NULL {
 			bm.Set("combine_mchid", c.Mchid)
 		}
 	}
@@ -454,10 +454,10 @@ func (c *ClientV3) V3CombineTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp
 	ts := time.Now().Unix()
 	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("combine_appid") == util.NULL {
+		if bm.GetString("combine_appid") == util.NULL {
 			bm.Set("combine_appid", c.Appid)
 		}
-		if bm.Get("combine_mchid") == util.NULL {
+		if bm.GetString("combine_mchid") == util.NULL {
 			bm.Set("combine_mchid", c.Mchid)
 		}
 	}
@@ -489,10 +489,10 @@ func (c *ClientV3) V3CombineTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRs
 	ts := time.Now().Unix()
 	nonceStr := util.GetRandomString(32)
 	if bm != nil {
-		if bm.Get("combine_appid") == util.NULL {
+		if bm.GetString("combine_appid") == util.NULL {
 			bm.Set("combine_appid", c.Appid)
 		}
-		if bm.Get("combine_mchid") == util.NULL {
+		if bm.GetString("combine_mchid") == util.NULL {
 			bm.Set("combine_mchid", c.Mchid)
 		}
 	}
@@ -559,7 +559,7 @@ func (c *ClientV3) V3CombineTransactionCloseOrder(tradeNo string, bm gopay.BodyM
 		url      = fmt.Sprintf(v3CombineClose, tradeNo)
 	)
 	if bm != nil {
-		if bm.Get("combine_appid") == util.NULL {
+		if bm.GetString("combine_appid") == util.NULL {
 			bm.Set("combine_appid", c.Appid)
 		}
 	}

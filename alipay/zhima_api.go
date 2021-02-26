@@ -11,7 +11,7 @@ import (
 // zhima.credit.score.get(查询芝麻用户的芝麻分)
 //	文档地址：https://opendocs.alipay.com/apis/api_8/zhima.credit.score.get
 func (a *Client) ZhimaCreditScoreGet(bm gopay.BodyMap) (aliRsp *ZhimaCreditScoreGetResponse, err error) {
-	if bm.Get("product_code") == util.NULL {
+	if bm.GetString("product_code") == util.NULL {
 		bm.Set("product_code", "w1010100100000000001")
 	}
 	err = bm.CheckEmptyError("transaction_id")

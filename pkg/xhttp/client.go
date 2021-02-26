@@ -1,6 +1,7 @@
 package xhttp
 
 import (
+	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"encoding/xml"
@@ -8,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 	"strings"
 	"sync"
@@ -113,7 +115,8 @@ type Client struct {
 	// unmarshalType json or xml
 	unmarshalType string
 
-	types map[string]string
+	// types            map[string]string
+	multipartBodyMap map[string]interface{}
 
 	jsonByte []byte
 
@@ -223,6 +226,26 @@ func (c *Client) SendBodyMap(v interface{}) (client *Client) {
 	return c
 }
 
+// 参数可直接传 gopay.BodyMap
+func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client) {
+	bs, err := json.Marshal(bm)
+	if err != nil {
+		c.Errors = append(c.Errors, err)
+		return c
+	}
+	c.mu.Lock()
+	switch c.requestType {
+	case TypeJSON:
+		c.jsonByte = bs
+	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
+		c.FormString = string(bs)
+	case TypeMultipartFormData:
+		c.multipartBodyMap = bm
+	}
+	c.mu.Unlock()
+	return c
+}
+
 // encodeStr: url.Values.Encode() or jsonBody
 func (c *Client) SendString(encodeStr string) (client *Client) {
 	c.mu.Lock()
@@ -274,12 +297,22 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 	if len(c.Errors) > 0 {
 		return nil, nil, c.Errors
 	}
-	var reader = strings.NewReader(util.NULL)
+	var (
+		body io.Reader = strings.NewReader(util.NULL)
+		w    *multipart.Writer
+	)
+	// multipart-form-data
+	if c.requestType == TypeMultipartFormData {
+		body = &bytes.Buffer{}
+		w = multipart.NewWriter(body.(io.Writer))
+	}
 
 	req, err := func() (*http.Request, error) {
 		c.mu.RLock()
 		defer c.mu.RUnlock()
-
+		if c.requestType == TypeMultipartFormData {
+			defer w.Close()
+		}
 		switch c.method {
 		case GET:
 			switch c.requestType {
@@ -287,6 +320,8 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 				c.ContentType = types[TypeJSON]
 			case TypeForm, TypeFormData, TypeUrlencoded:
 				c.ContentType = types[TypeForm]
+			case TypeMultipartFormData:
+				c.ContentType = w.FormDataContentType()
 			case TypeXML:
 				c.ContentType = types[TypeXML]
 				c.unmarshalType = string(TypeXML)
@@ -297,14 +332,42 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 			switch c.requestType {
 			case TypeJSON:
 				if c.jsonByte != nil {
-					reader = strings.NewReader(string(c.jsonByte))
+					body = strings.NewReader(string(c.jsonByte))
 				}
 				c.ContentType = types[TypeJSON]
 			case TypeForm, TypeFormData, TypeUrlencoded:
-				reader = strings.NewReader(c.FormString)
+				body = strings.NewReader(c.FormString)
 				c.ContentType = types[TypeForm]
+			case TypeMultipartFormData:
+				for k, v := range c.multipartBodyMap {
+					// file 参数
+					if bm, ok := v.(map[string]interface{}); ok {
+						for fileName, fileContent := range bm {
+							// 遍历，如果fileContent是 []byte数组，说明是文件
+							fb, ok2 := fileContent.([]byte)
+							if ok2 {
+								file, err := w.CreateFormFile(k, fileName)
+								if err != nil {
+									return nil, err
+								}
+								file.Write(fb)
+							}
+						}
+						continue
+					}
+					// text 参数
+					if val, ok := c.multipartBodyMap[k]; ok {
+						vs, ok2 := val.(string)
+						if ok2 {
+							w.WriteField(k, vs)
+						} else if ss := util.ConvertToString(val); ss != "" {
+							w.WriteField(k, ss)
+						}
+					}
+				}
+				c.ContentType = w.FormDataContentType()
 			case TypeXML:
-				reader = strings.NewReader(c.FormString)
+				body = strings.NewReader(c.FormString)
 				c.ContentType = types[TypeXML]
 				c.unmarshalType = string(TypeXML)
 			default:
@@ -314,7 +377,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 			return nil, errors.New("Only support Get and Post ")
 		}
 
-		req, err := http.NewRequest(c.method, c.url, reader)
+		req, err := http.NewRequest(c.method, c.url, body)
 		if err != nil {
 			return nil, err
 		}
@@ -327,6 +390,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 		c.Errors = append(c.Errors, err)
 		return nil, nil, c.Errors
 	}
+
 	if c.Timeout != time.Duration(0) {
 		c.HttpClient.Timeout = c.Timeout
 	}
@@ -339,7 +403,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 		return nil, nil, c.Errors
 	}
 	defer res.Body.Close()
-	bs, err = ioutil.ReadAll(io.LimitReader(res.Body, int64(3<<20))) // default 3MB change the size you want
+	bs, err = ioutil.ReadAll(io.LimitReader(res.Body, int64(5<<20))) // default 5MB change the size you want
 	if err != nil {
 		c.Errors = append(c.Errors, err)
 		return nil, nil, c.Errors
