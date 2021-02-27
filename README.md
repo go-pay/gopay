@@ -35,6 +35,8 @@ func main() {
 
 ### 微信支付API（现已支持部分V3接口，使用方法参考下面介绍）
 
+> #### 希望有时间的伙伴儿Fork完后，积极提Pull Request，一起完善微信各个类别下的接口到相应的go文件中
+
 * 统一下单：client.UnifiedOrder()
     * JSAPI - JSAPI支付（或小程序支付）
     * NATIVE - Native支付
@@ -128,6 +130,8 @@ func main() {
 ### 支付宝支付API
 
 > #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用client.PostAliPayAPISelfV2()方法实现！请参考 client_test.go 内的 TestClient_PostAliPayAPISelfV2() 方法
+
+> #### 希望有时间的伙伴儿Fork完后，积极提Pull Request，一起完善支付宝各个类别下的接口到相应的go文件中
 
 * 支付宝接口自行实现方法：client.PostAliPayAPISelfV2()
 * 手机网站支付接口2.0（手机网站支付）：client.TradeWapPay()
@@ -673,7 +677,7 @@ err := alipay.DecryptOpenDataToStruct(encryptedData, secretKey, phone)
 xlog.Debug(*phone)
 ```
 
-## 讲究的朋友可以给个赞赏
+## 赞赏多少是您的心意，感谢！
 
 <font color='#0088ff'>微信：</font>
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/main/zanshang_wx.png"/>
