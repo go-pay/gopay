@@ -1,9 +1,10 @@
 版本号：Release 1.5.29
-发布时间：2021/02/23 21:32
+发布时间：2021/02/27 22:49
 修改记录：
    (1) 支付宝：新增 client.PostAliPayAPISelfV2()，比非V2版本更灵活化，具体参考 client_test.go 内的 TestClient_PostAliPayAPISelfV2() 方法
    (2) BodyMap：新增 bm.SetFormFile() 的部分方法，修改 bm.Get() 方法，新增bm.GetString() 方法
    (3) xHttp：更新 httpClient， httpClient.Type() 支持 TypeMultipartFormData 类型
+   (4) go mod 版本改为 1.14
 
 版本号：Release 1.5.28
 发布时间：2021/02/19 18:48

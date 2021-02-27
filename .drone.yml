@@ -14,23 +14,6 @@ steps:
     pull: if-not-exists
     image: hello-world
 
-  - name: ci_1.13
-    pull: if-not-exists
-    image: golang:1.13
-    environment:
-      GO111MODULE: "on"
-      GOPROXY: "https://goproxy.cn,direct"
-      GOSUMDB: "off"
-      CGO_ENABLED: "0"
-      GOOS: "linux"
-    depends_on:
-      - helloworld
-    commands:
-      - go version
-      - go env
-      - go mod tidy
-      - go test ./...
-
   - name: ci_1.14
     pull: if-not-exists
     image: golang:1.14
