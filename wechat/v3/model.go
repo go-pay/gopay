@@ -40,6 +40,7 @@ const (
 	v3CombineQuery    = "/v3/combine-transactions/out-trade-no/%s"
 	v3CombineClose    = "/v3/combine-transactions/out-trade-no/%s/close"
 	v3Refund          = "/v3/refund/domestic/refunds"
+	v3RefundQuery     = "/v3/refund/domestic/refunds/%s"
 
 	// 微信支付分
 	v3ScorePermission                       = "/v3/payscore/permissions"                                 // 商户预授权 POST
@@ -139,6 +140,14 @@ type RefundRsp struct {
 	Code     int                  `json:"-"`
 	SignInfo *SignInfo            `json:"-"`
 	Response *RefundOrderResponse `json:"response,omitempty"`
+	Error    string               `json:"-"`
+}
+
+// 退款查询 Rsp
+type RefundQueryRsp struct {
+	Code     int                  `json:"-"`
+	SignInfo *SignInfo            `json:"-"`
+	Response *RefundQueryResponse `json:"response,omitempty"`
 	Error    string               `json:"-"`
 }
 
@@ -362,4 +371,47 @@ type RefundOrderResponse struct {
 	FundsAccount        string             `json:"funds_account"`                          // 资金账户
 	Amount              *Amount            `json:"amount" valid:"Required"`                // 金额信息
 	PromotionDetail     []*PromotionDetail `json:"promotion_detail"`                       // 优惠退款信息
+}
+
+type RefundQueryResponse struct {
+	RefundID            string                        `json:"refund_id" valid:"Required"`             // 微信支付退款号
+	OutRefundNo         string                        `json:"out_refund_no" valid:"Required"`         // 商户退款单号
+	TransactionID       string                        `json:"transaction_id" valid:"Required"`        // 微信支付系统生成的订单号
+	OutTradeNo          string                        `json:"out_trade_no" valid:"Required"`          // 商户系统内部订单号，只能是数字、大小写字母_-*且在同一个商户号下唯一
+	Channel             string                        `json:"channel" valid:"Required"`               // 退款渠道
+	UserReceivedAccount string                        `json:"user_received_account" valid:"Required"` // 退款入账账户
+	SuccessTime         string                        `json:"success_time"`                           // 退款成功时间
+	CreateTime          string                        `json:"create_time" valid:"Required"`           // 退款创建时间
+	Status              string                        `json:"status" valid:"Required"`                // 退款状态
+	FundsAccount        string                        `json:"funds_account"`                          // 资金账户
+	Amount              *RefundQueryAmount            `json:"amount"`                                 // 金额信息
+	PromotionDetail     []*RefundQueryPromotionDetail `json:"promotion_detail"`                       // 优惠退款信息
+}
+
+type RefundQueryAmount struct {
+	Total            int    `json:"total"`             // 订单总金额，单位为分
+	Refund           int    `json:"refund"`            // 退款金额，币种的最小单位，只能为整数，不能超过原订单支付金额。
+	PayerTotal       int    `json:"payer_total"`       // 用户支付金额，单位为分
+	PayerRefund      int    `json:"payer_refund"`      // 用户退款金额，不包含所有优惠券金额
+	SettlementRefund int    `json:"settlement_refund"` // 应结退款金额，去掉非充值代金券退款金额后的退款金额，单位为分
+	DiscountRefund   int    `json:"discount_refund"`   // 优惠退款金额
+	Currency         string `json:"currency"`          // CNY：人民币，境内商户号仅支持人民币
+}
+
+type RefundQueryPromotionDetail struct {
+	PromotionID  string                    `json:"promotion_id"`           // 券ID，券或立减金额
+	Scope        string                    `json:"scope"`                  // 优惠范围，GLOBAL：全场代金券，SINGLE：单品优惠
+	Type         string                    `json:"type"`                   // 优惠类型，COUPON：代金券，DISCOUNT：优惠券
+	Amount       int                       `json:"amount"`                 // 优惠券面额，用户享受优惠的金额（优惠券面额=微信出资金额+商家出资金额+其他出资方金额），单位为分
+	RefundAmount int                       `json:"refund_amount"`          // 优惠退款金额，单位为分
+	GoodsDetail  []*RefundQueryGoodsDetail `json:"goods_detail,omitempty"` // 商品列表，优惠商品发送退款时返回商品信息
+}
+
+type RefundQueryGoodsDetail struct {
+	MerchantGoodsID  string `json:"merchant_goods_id"`            // 商户侧商品编码
+	WechatpayGoodsID string `json:"wechatpay_goods_id,omitempty"` // 微信侧商品编码
+	GoodsName        string `json:"goods_name,omitempty"`         // 商品名称
+	UnitPrice        int    `json:"unit_price"`                   // 商品单价金额
+	RefundAmount     int    `json:"refund_amount"`                // 商品退款金额
+	RefundQuantity   int    `json:"refund_quantity"`              // 商品退货数量
 }
