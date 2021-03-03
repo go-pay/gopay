@@ -69,14 +69,9 @@ func (bm BodyMap) SetFormFile(fieldName string, filePath string) (err error) {
 	return nil
 }
 
-// 获取原始参数
-func (bm BodyMap) Get(key string) interface{} {
-	if bm == nil {
-		return nil
-	}
-	mu.RLock()
-	defer mu.RUnlock()
-	return bm[key]
+// 获取参数，同 GetString()
+func (bm BodyMap) Get(key string) string {
+	return bm.GetString(key)
 }
 
 // 获取参数转换string
@@ -95,6 +90,16 @@ func (bm BodyMap) GetString(key string) string {
 		return convertToString(value)
 	}
 	return v
+}
+
+// 获取原始参数
+func (bm BodyMap) GetInterface(key string) interface{} {
+	if bm == nil {
+		return nil
+	}
+	mu.RLock()
+	defer mu.RUnlock()
+	return bm[key]
 }
 
 // 删除参数

@@ -69,7 +69,7 @@ func (a *Client) PostAliPayAPISelfV2(bm gopay.BodyMap, method string, aliRsp int
 		bs, bodyBs []byte
 	)
 	// check if there is biz_content
-	bz := bm.Get("biz_content")
+	bz := bm.GetInterface("biz_content")
 	if bzBody, ok := bz.(gopay.BodyMap); ok {
 		if bodyBs, err = json.Marshal(bzBody); err != nil {
 			return fmt.Errorf("json.Marshal(%v)：%w", bzBody, err)
