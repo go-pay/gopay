@@ -1,3 +1,7 @@
+版本号：Release 1.5.31
+修改记录：
+   (1) 微信：新增服务商支付接口
+
 版本号：Release 1.5.30
 修改记录：
    (1) BodyMap：恢复 bm.Get() 方法获取的是string类型，增加 bm.GetInterface()

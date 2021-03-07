@@ -2,93 +2,6 @@ package wechat
 
 type OrderNoType uint8
 
-const (
-	Success     = 0
-	SignTypeRSA = "RSA"
-
-	MethodPost          = "POST"
-	MethodGet           = "GET"
-	HeaderAuthorization = "Authorization"
-
-	HeaderTimestamp = "Wechatpay-Timestamp"
-	HeaderNonce     = "Wechatpay-Nonce"
-	HeaderSignature = "Wechatpay-Signature"
-	HeaderSerial    = "Wechatpay-Serial"
-
-	Authorization = "WECHATPAY2-SHA256-RSA2048"
-
-	v3BaseUrlCh = "https://api.mch.weixin.qq.com" // 中国国内
-
-	// 基础H支付
-	v3GetCerts                   = "/v3/certificates"
-	v3ApiPayApp                  = "/v3/pay/transactions/app"                   // APP 下单
-	v3ApiJsapi                   = "/v3/pay/transactions/jsapi"                 // JSAPI 下单
-	v3ApiNative                  = "/v3/pay/transactions/native"                // Native 下单
-	v3ApiH5                      = "/v3/pay/transactions/h5"                    // H5 下单
-	v3ApiQueryOrderTransactionId = "/v3/pay/transactions/id/%s"                 // transaction_id 查询订单
-	v3ApiQueryOrderOutTradeNo    = "/v3/pay/transactions/out-trade-no/%s"       // out_trade_no 查询订单
-	v3ApiCloseOrder              = "/v3/pay/transactions/out-trade-no/%s/close" // out_trade_no 关闭订单
-	v3ApiTradeBill               = "/v3/bill/tradebill"                         // 申请交易账单
-	v3ApiFundFlowBill            = "/v3/bill/fundflowbill"                      // 申请资金账单
-	v3ApiLevel2FundFlowBill      = "/v3/ecommerce/bill/fundflowbill"            // 申请二级商户资金账单
-
-	// 合单支付
-	v3CombinePayApp   = "/v3/combine-transactions/app"
-	v3CombinePayH5    = "/v3/combine-transactions/h5"
-	v3CombinePayJsapi = "/v3/combine-transactions/jsapi"
-	v3CombineNative   = "/v3/combine-transactions/native"
-	v3CombineQuery    = "/v3/combine-transactions/out-trade-no/%s"
-	v3CombineClose    = "/v3/combine-transactions/out-trade-no/%s/close"
-	v3Refund          = "/v3/refund/domestic/refunds"
-	v3RefundQuery     = "/v3/refund/domestic/refunds/%s"
-
-	// 微信支付分
-	v3ScorePermission                       = "/v3/payscore/permissions"                                 // 商户预授权 POST
-	v3ScorePermissionAuthorizationQuery     = "/v3/payscore/permissions/authorization-code/%s"           // authorization_code 查询用户授权记录（授权协议号） GET
-	v3ScorePermissionAuthorizationTerminate = "/v3/payscore/permissions/authorization-code/%s/terminate" // authorization_code 解除用户授权关系（授权协议号） POST
-	v3ScorePermissionOpenidQuery            = "/v3/payscore/permissions/openid/%s"                       // openid 查询用户授权记录（openid） GET
-	v3ScorePermissionOpenidTerminate        = "/v3/payscore/permissions/openid/%s/terminate"             // openid 解除用户授权记录（openid） POST
-	v3ScoreOrderDirectComplete              = "/payscore/serviceorder/direct-complete"                   // 创单结单合并 POST
-	v3ScoreOrder                            = "/v3/payscore/serviceorder"                                // 创建支付分订单 POST
-	v3ScoreOrderQuery                       = "/v3/payscore/serviceorder"                                // 查询支付分订单 GET
-	v3ScoreOrderCancel                      = "/v3/payscore/serviceorder/%s/cancel"                      // out_trade_no 取消支付分订单 POST
-	v3ScoreOrderModify                      = "/v3/payscore/serviceorder/%s/modify"                      // out_trade_no 修改订单金额 POST
-	v3ScoreOrderComplete                    = "/v3/payscore/serviceorder/%s/complete"                    // out_trade_no 完结支付分订单 POST
-	v3ScoreOrderPay                         = "/v3/payscore/serviceorder/%s/pay"                         // out_trade_no 商户发起催收扣款 POST
-	v3ScoreOrderSync                        = "/v3/payscore/serviceorder/%s/sync"                        // out_trade_no 同步服务订单信息 POST
-
-	// 微信先享卡
-	v3CardPre     = "/v3/discount-card/cards"                     // 预受理领卡请求 POST
-	v3CardAddUser = "/v3/discount-card/cards/%s/add-user-records" // out_card_code 增加用户记录 POST
-	v3CardQuery   = "/v3/discount-card/cards/%s"                  // out_card_code 查询先享卡订单 GET
-
-	// 支付即服务
-	v3GuideRegister = "/v3/smartguide/guides"           // 服务人员注册 POST
-	v3GuideAssign   = "/v3/smartguide/guides/%s/assign" // guide_id 服务人员分配 POST
-	v3GuideQuery    = "/v3/smartguide/guides"           // 服务人员查询 GET
-	v3GuideUpdate   = "/v3/smartguide/guides/%s"        // guide_id 服务人员信息更新 PATCH
-
-	// 点金计划
-	v3GoldPlanManage       = "/v3/goldplan/merchants/changegoldplanstatus"            // 点金计划管理 POST
-	v3GoldPlanBillManage   = "/v3/goldplan/merchants/changecustompagestatus"          // 商家小票管理 POST
-	v3GoldPlanFilterManage = "/v3/goldplan/merchants/set-advertising-industry-filter" // 同业过滤标签管理 POST
-	v3GoldPlanOpenAdShow   = "/v3/goldplan/merchants/open-advertising-show"           // 开通广告展示 PATCH
-	v3GoldPlanCloseAdShow  = "/v3/goldplan/merchants/close-advertising-show"          // 关闭广告展示 PATCH
-
-	// 订单号类型，1-微信订单号，2-商户订单号
-	TransactionId OrderNoType = 1
-	OutTradeNo    OrderNoType = 2
-
-	// v3 异步通知订单状态
-	TradeStateSuccess  = "SUCCESS"    // 支付成功
-	TradeStateRefund   = "REFUND"     // 转入退款
-	TradeStateNoPay    = "NOTPAY"     // 未支付
-	TradeStateClosed   = "CLOSED"     // 已关闭
-	TradeStateRevoked  = "REVOKED"    // 已撤销（付款码支付）
-	TradeStatePaying   = "USERPAYING" // 用户支付中（付款码支付）
-	TradeStatePayError = "PAYERROR"   // 支付失败(其他原因，如银行返回失败)
-)
-
 type PlatformCertRsp struct {
 	Code     int                 `json:"-"`
 	SignInfo *SignInfo           `json:"-"`
@@ -167,11 +80,19 @@ type Level2FundFlowBillRsp struct {
 	Error    string        `json:"-"`
 }
 
-// 查询订单 Rsp
+// 合单查询订单 Rsp
 type CombineQueryOrderRsp struct {
 	Code     int                `json:"-"`
 	SignInfo *SignInfo          `json:"-"`
 	Response *CombineQueryOrder `json:"response,omitempty"`
+	Error    string             `json:"-"`
+}
+
+// 服务商查询订单 Rsp
+type PartnerQueryOrderRsp struct {
+	Code     int                `json:"-"`
+	SignInfo *SignInfo          `json:"-"`
+	Response *PartnerQueryOrder `json:"response,omitempty"`
 	Error    string             `json:"-"`
 }
 
@@ -261,7 +182,7 @@ type Amount struct {
 	PayerTotal    int    `json:"payer_total,omitempty"`    // 用户支付金额，单位为分
 	Currency      string `json:"currency,omitempty"`       // CNY：人民币，境内商户号仅支持人民币
 	PayerCurrency string `json:"payer_currency,omitempty"` // 用户支付币种
-	Refund        int    `json:"refund,omitempty"`         // 退款金额，币种的最小单位，只能为整数，不能超过原订单支付金额。
+	Refund        int    `json:"refund,omitempty"`         // 退款金额，币种的最小单位，只能为整数，不能超过原订单支付金额。服务商模式下无此字段
 }
 
 type CombineAmount struct {
@@ -295,7 +216,7 @@ type GoodsDetail struct {
 	UnitPrice       int    `json:"unit_price"`                  // 商品单价，单位为分
 	DiscountAmount  int    `json:"discount_amount"`             // 商品优惠金额
 	GoodsRemark     string `json:"goods_remark,omitempty"`      // 商品备注信息
-	MerchantGoodsID string `json:"merchant_goods_id,omitempty"` // 商户侧商品编码
+	MerchantGoodsID string `json:"merchant_goods_id,omitempty"` // 商户侧商品编码，服务商模式下无此字段
 }
 
 type QueryOrder struct {
@@ -414,4 +335,28 @@ type RefundQueryGoodsDetail struct {
 	UnitPrice        int    `json:"unit_price"`                   // 商品单价金额
 	RefundAmount     int    `json:"refund_amount"`                // 商品退款金额
 	RefundQuantity   int    `json:"refund_quantity"`              // 商品退货数量
+}
+
+type PartnerQueryOrder struct {
+	SpAppid         string             `json:"sp_appid"`                   // 服务商申请的公众号或移动应用appid。
+	SpMchid         string             `json:"sp_mchid"`                   // 服务商户号，由微信支付生成并下发
+	SubAppid        string             `json:"sub_appid"`                  // 子商户申请的公众号或移动应用appid。如果返回sub_appid，那么sub_openid一定会返回。
+	SubMchid        string             `json:"sub_mchid"`                  // 子商户的商户号，有微信支付生成并下发。
+	OutTradeNo      string             `json:"out_trade_no"`               // 商户系统内部订单号，只能是数字、大小写字母_-*且在同一个商户号下唯一
+	TransactionId   string             `json:"transaction_id"`             // 微信支付系统生成的订单号
+	TradeType       string             `json:"trade_type"`                 // 交易类型，枚举值：JSAPI：公众号支付, NATIVE：扫码支付, APP：APP支付, MICROPAY：付款码支付, MWEB：H5支付, FACEPAY：刷脸支付
+	TradeState      string             `json:"trade_state"`                // 交易状态，枚举值：SUCCESS：支付成功, REFUND：转入退款, NOTPAY：未支付, CLOSED：已关闭, REVOKED：已撤销（付款码支付）, USERPAYING：用户支付中（付款码支付）, PAYERROR：支付失败(其他原因，如银行返回失败)
+	TradeStateDesc  string             `json:"trade_state_desc"`           // 交易状态描述
+	BankType        string             `json:"bank_type,omitempty"`        // 银行类型，采用字符串类型的银行标识
+	Attach          string             `json:"attach"`                     // 附加数据，在查询API和支付通知中原样返回，可作为自定义参数使用
+	SuccessTime     string             `json:"success_time,omitempty"`     // 支付完成时间，遵循rfc3339标准格式，格式为YYYY-MM-DDTHH:mm:ss+TIMEZONE，YYYY-MM-DD表示年月日，T出现在字符串中，表示time元素的开头，HH:mm:ss表示时分秒，TIMEZONE表示时区（+08:00表示东八区时间，领先UTC 8小时，即北京时间）。例如：2015-05-20T13:29:35+08:00表示，北京时间2015年5月20日 13点29分35秒
+	Payer           *PartnerPayer      `json:"payer"`                      // 支付者信息
+	Amount          *Amount            `json:"amount,omitempty"`           // 订单金额信息，当支付成功时返回该字段
+	SceneInfo       *SceneInfo         `json:"scene_info,omitempty"`       // 支付场景描述
+	PromotionDetail []*PromotionDetail `json:"promotion_detail,omitempty"` // 优惠功能，享受优惠时返回该字段
+}
+
+type PartnerPayer struct {
+	SpOpenid  string `json:"sp_openid"`  // 用户在服务商appid下的唯一标识。
+	SubOpenid string `json:"sub_openid"` // 用户在子商户appid下的唯一标识。 如果返回sub_appid，那么sub_openid一定会返回。
 }

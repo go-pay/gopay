@@ -29,8 +29,8 @@ type ClientV3 struct {
 }
 
 // NewClientV3 初始化微信客户端 V3
-//	appid：appid
-//	mchid：商户ID
+//	appid：appid 或者服务商模式的 sp_appid
+//	mchid：商户ID 或者服务商模式的 sp_mchid
 // 	serialNo：商户证书的证书序列号
 //	apiV3Key：apiV3Key，商户平台获取
 //	pkContent：私钥 apiclient_key.pem 读取后的内容
