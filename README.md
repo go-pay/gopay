@@ -10,6 +10,12 @@
 [![GitHub Release](https://img.shields.io/github/v/release/iGoogle-ink/gopay)](https://github.com/iGoogle-ink/gopay/releases)
 [![License](https://img.shields.io/github/license/iGoogle-ink/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
 
+## 招聘广告：
+有意向的请直接加我微信（文档说明处有我的微信二维码）
+- 公司：上海商米科技集团股份有限公司
+- 要求：3-5年后端工程师（Golang）
+- 地点：上海市杨浦区五角场
+
 # 一、安装
 
 ```bash
