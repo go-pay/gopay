@@ -33,7 +33,7 @@ func main() {
 
 ---
 
-### 微信支付API（现已支持部分V3接口，使用方法参考下面介绍）
+### 微信支付API（现已支持部分V3接口，使用方法参考下面介绍或源码）
 
 > #### 希望有时间的伙伴儿Fork完后，积极提Pull Request，一起完善微信各个类别下的接口到相应的go文件中
 
@@ -209,8 +209,8 @@ import (
 )
 
 // NewClientV3 初始化微信客户端 V3
-//	appid：appid
-//	mchid：商户ID
+//	appid：appid 或者服务商模式的 sp_appid
+//	mchid：商户ID 或者服务商模式的 sp_mchid
 // 	serialNo：商户证书的证书序列号
 //	apiV3Key：apiV3Key，商户平台获取
 //	pkContent：私钥 apiclient_key.pem 读取后的内容
@@ -221,7 +221,7 @@ if err != nil {
 }
 
 // 自动验签
-// 注意：未获取到微信平台公钥时，不要开启，请调用 client.GetPlatformCerts() 获取微信平台公钥
+// 注意：未获取到微信平台公钥时，不要开启，请调用 client.GetPlatformCerts() 获取微信平台公钥（此接口只需调用一次，获取到微信平台公钥后自行保存）
 //client.AutoVerifySign("微信平台公钥")
 
 // 打开Debug开关，输出日志
