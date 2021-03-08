@@ -56,7 +56,7 @@ func TestClient_UnifiedOrder(t *testing.T) {
 
 	// 获取H5支付需要的paySign
 	pac := "prepay_id=" + wxRsp.PrepayId
-	paySign := GetH5PaySign(appId, wxRsp.NonceStr, pac, SignType_MD5, timeStamp, apiKey)
+	paySign := GetJsapiPaySign(appId, wxRsp.NonceStr, pac, SignType_MD5, timeStamp, apiKey)
 	xlog.Debug("paySign:", paySign)
 
 	// 获取小程序需要的paySign

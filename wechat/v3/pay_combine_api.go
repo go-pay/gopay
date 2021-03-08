@@ -146,7 +146,7 @@ func (c *ClientV3) V3CombineTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err e
 // 合单查询订单API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_11.shtml
-func (c *ClientV3) V3CombineTransactionQueryOrder(traderNo string) (wxRsp *CombineQueryOrderRsp, err error) {
+func (c *ClientV3) V3CombineQueryOrder(traderNo string) (wxRsp *CombineQueryOrderRsp, err error) {
 	var (
 		ts       = time.Now().Unix()
 		nonceStr = util.GetRandomString(32)
@@ -178,7 +178,7 @@ func (c *ClientV3) V3CombineTransactionQueryOrder(traderNo string) (wxRsp *Combi
 // 合单关闭订单API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_12.shtml
-func (c *ClientV3) V3CombineTransactionCloseOrder(tradeNo string, bm gopay.BodyMap) (wxRsp *CloseOrderRsp, err error) {
+func (c *ClientV3) V3CombineCloseOrder(tradeNo string, bm gopay.BodyMap) (wxRsp *CloseOrderRsp, err error) {
 	var (
 		ts       = time.Now().Unix()
 		nonceStr = util.GetRandomString(32)

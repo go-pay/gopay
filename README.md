@@ -41,7 +41,7 @@ func main() {
 
 ---
 
-### 微信支付API（现已支持部分V3接口，使用方法参考下面介绍或源码）
+### 微信支付V2 API（现已支持V3接口，推荐使用V3接口，使用方法参考下面介绍或源码）
 
 > #### 希望有时间的伙伴儿Fork完后，积极提Pull Request，一起完善微信各个类别下的接口到相应的go文件中
 
@@ -84,7 +84,7 @@ func main() {
 * 查询红包记录：client.QueryRedRecord()
 * 自定义方法请求微信API接口：client.PostWeChatAPISelf()
 
-### 微信公共API
+### 微信公共V2 API
 
 * wechat.GetParamSign() => 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
 * wechat.GetSanBoxParamSign() => 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
@@ -205,7 +205,7 @@ QQ群：
 
 ## 1、初始化GoPay客户端并做配置（HTTP请求均默认设置tls.Config{InsecureSkipVerify: true}）
 
-* #### 微信V3
+* #### 微信V3（推荐）
 
 > 注意：V3 版本接口持续增加中，并未做沙箱支付，测试请用1分钱测试法
 
@@ -378,7 +378,35 @@ bm.Set("subject", "手机网站测试支付").
 
 ## 3、client 方法调用
 
-* #### 微信 client
+* #### 微信V3 client（推荐）
+
+```go
+// 直连商户
+wxRsp, err := client.V3TransactionApp(bm)
+wxRsp, err := client.V3TransactionJsapi(bm)
+wxRsp, err := client.V3TransactionNative(bm)
+wxRsp, err := client.V3TransactionH5(bm)
+wxRsp, err := client.V3TransactionQueryOrder(bm)
+wxRsp, err := client.V3TransactionCloseOrder(bm)
+
+// 服务商
+wxRsp, err := client.V3PartnerTransactionApp(bm)
+wxRsp, err := client.V3PartnerTransactionJsapi(bm)
+wxRsp, err := client.V3PartnerTransactionNative(bm)
+wxRsp, err := client.V3PartnerTransactionH5(bm)
+wxRsp, err := client.V3PartnerQueryOrder(bm)
+wxRsp, err := client.V3PartnerCloseOrder(bm)
+
+// 合单
+wxRsp, err := client.V3CombineTransactionApp(bm)
+wxRsp, err := client.V3CombineTransactionJsapi(bm)
+wxRsp, err := client.V3CombineTransactionNative(bm)
+wxRsp, err := client.V3CombineTransactionH5(bm)
+wxRsp, err := client.V3CombineQueryOrder(bm)
+wxRsp, err := client.V3CombineCloseOrder(bm)
+```
+
+* #### 微信V2 client
 
 ```go
 wxRsp, err := client.UnifiedOrder(bm)
@@ -434,13 +462,32 @@ aliRsp, err := client.UserCertifyOpenQuery(bm)
 
 ## 4、微信统一下单后，获取微信小程序支付、APP支付、微信内H5支付所需要的 paySign
 
-* #### 微信（只有微信需要此操作）
+* #### 微信V3（推荐）
+
+小程序调起支付API：[小程序调起支付API](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_4.shtml)
+
+APP调起支付API：[APP调起支付API](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_4.shtml)
+
+JSAPI调起支付API：[JSAPI调起支付API](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_4.shtml)
+
+H5调起支付API：[H5调起支付API](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_3_4.shtml)
+
+```go
+// jsapi
+jsapi, err := client.PaySignOfJSAPI("prepayid")
+// app
+app, err := client.PaySignOfApp("prepayid")
+// 小程序
+applet, err := client.PaySignOfApplet("prepayid")
+```
+
+* #### 微信V2
 
 微信小程序支付官方文档：[微信小程序支付API](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html)
 
 APP支付官方文档：[APP端调起支付的参数列表文档](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12)
 
-微信内H5支付官方文档：[微信内H5支付文档](https://pay.weixin.qq.com/wiki/doc/api/external/jsapi.php?chapter=7_7&index=6)
+微信内H5支付官方文档：[微信内H5支付文档](https://pay.weixin.qq.com/wiki/doc/api/wxpay/ch/pay/OfficialPayMent/chapter5_5.shtml)
 
 ```go
 import (
@@ -495,7 +542,7 @@ paySign := wechat.GetH5PaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_
 
 异步通知处理完后，需回复平台固定数据
 
-* #### 微信V3
+* #### 微信V3（推荐）
 
 ```go
 import (
@@ -618,7 +665,7 @@ c.String(http.StatusOK, "%s", "success")    // 此写法是 gin 框架返回支�
 
 ## 6、微信、支付宝 公共API（仅部分说明）
 
-* #### 微信 公共API
+* #### 微信V2 公共API
 
 官方文档：[code2Session](https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html)
 
