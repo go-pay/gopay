@@ -135,7 +135,7 @@ func NewClient() (client *Client) {
 				DisableKeepAlives: true,
 			},
 		},
-		Transport:     &http.Transport{},
+		Transport:     nil,
 		Header:        make(http.Header),
 		requestType:   TypeUrlencoded,
 		unmarshalType: string(TypeJSON),
@@ -146,7 +146,7 @@ func NewClient() (client *Client) {
 
 func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
 	c.mu.Lock()
-	c.Transport.TLSClientConfig = tlsCfg
+	c.Transport = &http.Transport{TLSClientConfig: tlsCfg, DisableKeepAlives: true}
 	c.mu.Unlock()
 	return c
 }
@@ -383,7 +383,9 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 		}
 		req.Header = c.Header
 		req.Header.Set("Content-Type", c.ContentType)
-		c.HttpClient.Transport = c.Transport
+		if c.Transport != nil {
+			c.HttpClient.Transport = c.Transport
+		}
 		return req, nil
 	}()
 	if err != nil {

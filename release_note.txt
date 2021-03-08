@@ -1,3 +1,7 @@
+版本号：Release 1.5.32
+修改记录：
+   (1) xhttp：Fix bug about Transport
+
 版本号：Release 1.5.31
 修改记录：
    (1) 微信：新增服务商支付接口
