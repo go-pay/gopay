@@ -1,7 +1,9 @@
-版本号：Release 1.5.33
+版本号：Release 1.5.34
 修改记录：
    (1) 微信V3：修复 client.GetPlatformCerts() 的返回值 code 问题
    (2) ReadMe：补充 README.md 说明
+   (3) 微信V3：修复 PaySignOfApp() 签名出错的问题
+   (4) 微信V2：部分文件调整
 
 版本号：Release 1.5.32
 修改记录：
