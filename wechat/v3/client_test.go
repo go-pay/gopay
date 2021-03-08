@@ -59,12 +59,19 @@ func TestGetPlatformCerts(t *testing.T) {
 }
 
 func TestV3VerifySign(t *testing.T) {
-	ts := "1609149813"
+	// type SignInfo struct {
+	//	HeaderTimestamp string `json:"Wechatpay-Timestamp"`
+	//	HeaderNonce     string `json:"Wechatpay-Nonce"`
+	//	HeaderSignature string `json:"Wechatpay-Signature"`
+	//	HeaderSerial    string `json:"Wechatpay-Serial"`
+	//	SignBody        string `json:"sign_body"`
+	//}
+	timestamp := "1609149813"
 	nonce := "c4682f0902e4c7fd5cfb7568a2a45e1b"
 	signBody := `{"code_url":"weixin://wxpay/bizpayurl?pr=5zPMHa4zz"}`
-	sign := "D/nRx+h1To/ybCJkJYTXptoSp6+UVPsKNlJ2AsHMf76rXq2qAYDSnoOTB4HRc8ZlPNck5JfeZ19lDXAJ/N9gyvWEwE3n01HNhaKqxOjW0C1KROCtxAj1Wd2qtMyiCzh/Azuk15eIHjht03teGQFDmowoOBSlMg9qOBaK8MNfwFcXvV3J12AMbFFR7s4cXbqzuk2qBeMAz6VrKDAwDHxZOWFqME59mg4bPWwBTNyYeCQVR2sqPflLvY1zttEGMN3s/CDvgLQ/SXZrAsHlS2lkDVHEc/sP9q0x9oU8lFL6DhD6eDU2mVP3pt7CPD/5QAnGnINaHIcZVj6Vb4l3PKzeog=="
+	signature := "D/nRx+h1To/ybCJkJYTXptoSp6+UVPsKNlJ2AsHMf76rXq2qAYDSnoOTB4HRc8ZlPNck5JfeZ19lDXAJ/N9gyvWEwE3n01HNhaKqxOjW0C1KROCtxAj1Wd2qtMyiCzh/Azuk15eIHjht03teGQFDmowoOBSlMg9qOBaK8MNfwFcXvV3J12AMbFFR7s4cXbqzuk2qBeMAz6VrKDAwDHxZOWFqME59mg4bPWwBTNyYeCQVR2sqPflLvY1zttEGMN3s/CDvgLQ/SXZrAsHlS2lkDVHEc/sP9q0x9oU8lFL6DhD6eDU2mVP3pt7CPD/5QAnGnINaHIcZVj6Vb4l3PKzeog=="
 
-	err = V3VerifySign(ts, nonce, signBody, sign, WxPkContent)
+	err = V3VerifySign(timestamp, nonce, signBody, signature, WxPkContent)
 	if err != nil {
 		xlog.Error(err)
 		return

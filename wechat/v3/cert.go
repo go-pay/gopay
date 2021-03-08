@@ -14,7 +14,7 @@ import (
 	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
-// GetPlatformCerts 获取微信平台证书
+// GetPlatformCerts 获取微信平台证书（获取一次，之后自行保存使用）
 func (c *ClientV3) GetPlatformCerts() (certs *PlatformCertRsp, err error) {
 	var (
 		ts       = time.Now().Unix()
@@ -34,6 +34,7 @@ func (c *ClientV3) GetPlatformCerts() (certs *PlatformCertRsp, err error) {
 	}
 	certs = &PlatformCertRsp{Code: Success, SignInfo: si}
 	if res.StatusCode != http.StatusOK {
+		certs.Code = res.StatusCode
 		certs.Error = string(bs)
 		return certs, nil
 	}

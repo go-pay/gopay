@@ -1,3 +1,8 @@
+版本号：Release 1.5.33
+修改记录：
+   (1) 微信V3：修复 client.GetPlatformCerts() 的返回值 code 问题
+   (2) ReadMe：补充 README.md 说明
+
 版本号：Release 1.5.32
 修改记录：
    (1) xhttp：Fix bug about Transport

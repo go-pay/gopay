@@ -495,7 +495,29 @@ paySign := wechat.GetH5PaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_
 
 异步通知处理完后，需回复平台固定数据
 
-* #### 微信
+* #### 微信V3
+
+```go
+import (
+	"github.com/iGoogle-ink/gopay/wechat"
+    "github.com/iGoogle-ink/gopay/pkg/xlog"
+)
+
+// 微信V3验签
+wxRsp, err := client.V3TransactionJsapi(bm)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+
+err = wechat.V3VerifySign(wxRsp.SignInfo.HeaderTimestamp, wxRsp.SignInfo.HeaderNonce, wxRsp.SignInfo.SignBody, wxRsp.SignInfo.HeaderSignature, WxPkContent)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+```
+
+* #### 微信V2
 
 ```go
 import (
