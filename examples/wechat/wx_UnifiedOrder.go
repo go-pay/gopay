@@ -11,7 +11,8 @@ import (
 )
 
 func UnifiedOrder() {
-	//初始化微信客户端
+	// client只需要初始化一个，此处为了演示，每个方法都做了初始化
+	// 初始化微信客户端
 	//    appId：应用ID
 	//    mchId：商户ID
 	//    apiKey：API秘钥值
@@ -26,33 +27,22 @@ func UnifiedOrder() {
 
 	//初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32))
-	bm.Set("body", "H5支付")
-	bm.Set("out_trade_no", number)
-	bm.Set("total_fee", 1)
-	bm.Set("spbill_create_ip", "127.0.0.1")
-	bm.Set("notify_url", "https://www.fumm.cc")
-	bm.Set("trade_type", wechat.TradeType_H5)
-	bm.Set("device_info", "WEB")
-	bm.Set("sign_type", wechat.SignType_MD5)
-
-	sceneInfo := make(map[string]map[string]string)
-	h5Info := make(map[string]string)
-	h5Info["type"] = "Wap"
-	h5Info["wap_url"] = "https://www.fumm.cc"
-	h5Info["wap_name"] = "H5测试支付"
-	sceneInfo["h5_info"] = h5Info
-	bm.Set("scene_info", sceneInfo)
-
-	//bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
-
-	// 正式
-	//sign := wechat.GetParamSign("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", body)
-	// 沙箱
-	//sign, _ := wechat.GetSanBoxParamSign("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", body)
-
-	// Set Sign 可以忽略不设置，内部已经自动计算sign并赋值到请求参数中了
-	//bm.Set("sign", sign)
+	bm.Set("nonce_str", util.GetRandomString(32)).
+		Set("body", "H5支付").
+		Set("out_trade_no", number).
+		Set("total_fee", 1).
+		Set("spbill_create_ip", "127.0.0.1").
+		Set("notify_url", "https://www.fumm.cc").
+		Set("trade_type", wechat.TradeType_H5).
+		Set("device_info", "WEB").
+		Set("sign_type", wechat.SignType_MD5).
+		SetBodyMap("scene_info", func(bm gopay.BodyMap) {
+			bm.SetBodyMap("h5_info", func(bm gopay.BodyMap) {
+				bm.Set("type", "Wap")
+				bm.Set("wap_url", "https://www.fumm.cc")
+				bm.Set("wap_name", "H5测试支付")
+			})
+		}) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
 
 	//请求支付下单，成功后得到结果
 	wxRsp, err := client.UnifiedOrder(bm)
@@ -70,12 +60,12 @@ func UnifiedOrder() {
 	//paySign := wechat.GetMiniPaySign("wxdaa2ab9ef87b5497", wxRsp.NonceStr, pac, wechat.SignType_MD5, timeStamp, "GFDS8j98rewnmgl45wHTt980jg543abc")
 	//xlog.Debug("paySign:", paySign)
 
-	//获取H5支付需要的paySign
+	//获取Jsapi支付需要的paySign
 	pac := "prepay_id=" + wxRsp.PrepayId
-	paySign := wechat.GetH5PaySign("wxdaa2ab9ef87b5497", wxRsp.NonceStr, pac, wechat.SignType_MD5, timeStamp, "GFDS8j98rewnmgl45wHTt980jg543abc")
+	paySign := wechat.GetJsapiPaySign("wxdaa2ab9ef87b5497", wxRsp.NonceStr, pac, wechat.SignType_MD5, timeStamp, "GFDS8j98rewnmgl45wHTt980jg543abc")
 	xlog.Debug("paySign:", paySign)
 
-	//获取小程序需要的paySign
+	//获取App支付需要的paySign
 	//paySign := wechat.GetAppPaySign("wxdaa2ab9ef87b5497","", wxRsp.NonceStr, wxRsp.PrepayId, wechat.SignType_MD5, timeStamp, "GFDS8j98rewnmgl45wHTt980jg543abc")
 	//xlog.Debug("paySign:", paySign)
 }

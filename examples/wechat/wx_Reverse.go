@@ -8,7 +8,8 @@ import (
 )
 
 func Reverse() {
-	//初始化微信客户端
+	// client只需要初始化一个，此处为了演示，每个方法都做了初始化
+	// 初始化微信客户端
 	//    appId：应用ID
 	//    MchID：商户ID
 	//    ApiKey：Key值
@@ -17,9 +18,9 @@ func Reverse() {
 
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32))
-	bm.Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B")
-	bm.Set("sign_type", wechat.SignType_MD5)
+	bm.Set("nonce_str", util.GetRandomString(32)).
+		Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B").
+		Set("sign_type", wechat.SignType_MD5)
 
 	//请求撤销订单，成功后得到结果，沙箱环境下，证书路径参数可传空
 	wxRsp, err := client.Reverse(bm, nil, nil, nil)

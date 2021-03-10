@@ -160,6 +160,7 @@ func GetAppPaySign(appid, partnerid, noncestr, prepayid, signType, timestamp, ap
 	return
 }
 
+// Deprecated
 // GetParamSign 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
 //	注意：BodyMap中如无 sign_type 参数，默认赋值 sign_type 为 MD5
 //	appId：应用ID
@@ -187,6 +188,7 @@ func GetParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string) {
 	return
 }
 
+// Deprecated
 // GetSanBoxParamSign 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
 //	注意：沙箱环境默认 sign_type 为 MD5
 //	appId：应用ID

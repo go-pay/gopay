@@ -8,7 +8,8 @@ import (
 )
 
 func DownloadFundFlow() {
-	//初始化微信客户端
+	// client只需要初始化一个，此处为了演示，每个方法都做了初始化
+	// 初始化微信客户端
 	//    appId：应用ID
 	//    MchID：商户ID
 	//    ApiKey：Key值
@@ -18,10 +19,10 @@ func DownloadFundFlow() {
 
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32))
-	bm.Set("sign_type", wechat.SignType_HMAC_SHA256)
-	bm.Set("bill_date", "20190122")
-	bm.Set("account_type", "Basic")
+	bm.Set("nonce_str", util.GetRandomString(32)).
+		Set("sign_type", wechat.SignType_HMAC_SHA256).
+		Set("bill_date", "20190122").
+		Set("account_type", "Basic")
 
 	// 请求下载资金账单，成功后得到结果，沙箱环境下，证书路径参数可传空
 	wxRsp, err := client.DownloadFundFlow(bm, nil, nil, nil)

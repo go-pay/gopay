@@ -32,12 +32,6 @@ func TestClient_UnifiedOrder(t *testing.T) {
 			})
 		}) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
 
-	// 正式
-	//sign := gopay.GetWeChatParamSign("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", body)
-	// 沙箱
-	//sign, _ := gopay.GetWeChatSanBoxParamSign("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", body)
-	//body.Set("sign", sign)
-
 	// 请求支付下单，成功后得到结果
 	wxRsp, err := client.UnifiedOrder(bm)
 	if err != nil {
