@@ -593,3 +593,17 @@ func TestDecryptOpenDataToBodyMap(t *testing.T) {
 	}
 	xlog.Info("bm:", bm)
 }
+
+func TestFundTransOrderQuery(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("out_biz_no", 201806300011232301)
+
+	aliRsp, err := client.FundTransOrderQuery(bm)
+	if err != nil {
+		xlog.Errorf("client.TradePrecreate(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp.QrCode:", aliRsp.Response.Status)
+	xlog.Debug("aliRsp.PayDate:", aliRsp.Response.PayDate)
+}

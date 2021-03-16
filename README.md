@@ -156,6 +156,7 @@ func main() {
 * 统一收单交易结算接口：client.TradeOrderSettle()
 * 统一收单线下交易预创建（用户扫商品收款码）：client.TradePrecreate()
 * 单笔转账接口：client.FundTransUniTransfer()
+* 查询转账订单接口: client.FundTransOrderQuery()
 * 转账业务单据查询接口：client.FundTransCommonQuery()
 * 支付宝资金账户资产查询接口：client.FundAccountQuery()
 * 换取授权访问令牌（获取access_token，user_id等信息）：client.SystemOauthToken()
