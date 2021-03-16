@@ -550,18 +550,45 @@ import (
     "github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
-// 微信V3验签
+// ========同步微信V3支付验签========
 wxRsp, err := client.V3TransactionJsapi(bm)
 if err != nil {
     xlog.Error(err)
     return
 }
-
 err = wechat.V3VerifySign(wxRsp.SignInfo.HeaderTimestamp, wxRsp.SignInfo.HeaderNonce, wxRsp.SignInfo.SignBody, wxRsp.SignInfo.HeaderSignature, WxPkContent)
 if err != nil {
     xlog.Error(err)
     return
 }
+
+// ========异步通知验签========
+notifyReq, err := wechat.V3ParseNotify()
+if err != nil {
+    xlog.Error(err)
+    return
+}
+err = notifyReq.VerifySign(WxPkContent)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+// ========异步通知解密========
+// 普通支付通知解密
+result, err := notifyReq.DecryptCipherText(apiV3Key)
+// 合单支付通知解密
+result, err := notifyReq.DecryptCombineCipherText(apiV3Key)
+// 退款通知解密
+result, err := notifyReq.DecryptRefundCipherText(apiV3Key)
+
+// ========异步通知应答========
+// 退款通知http应答码为200且返回状态码为SUCCESS才会当做商户接收成功，否则会重试。
+// 注意：重试过多会导致微信支付端积压过多通知而堵塞，影响其他正常通知。
+
+// 此写法是 gin 框架返回微信的写法
+c.JSON(http.StatusOK, &wechat.V3NotifyRsp{Code: gopay.SUCCESS, Message: "成功"})
+// 此写法是 echo 框架返回微信的写法
+return c.JSON(http.StatusOK, &wechat.V3NotifyRsp{Code: gopay.SUCCESS, Message: "成功"})
 ```
 
 * #### 微信V2
@@ -614,8 +641,10 @@ rsp := new(wechat.NotifyResponse) // 回复微信的数据
 rsp.ReturnCode = gopay.SUCCESS
 rsp.ReturnMsg = gopay.OK
 
-return c.String(http.StatusOK, rsp.ToXmlString())   // 此写法是 echo 框架返回微信的写法
-c.String(http.StatusOK, "%s", rsp.ToXmlString())    // 此写法是 gin 框架返回微信的写法
+// 此写法是 gin 框架返回微信的写法
+c.String(http.StatusOK, "%s", rsp.ToXmlString())
+// 此写法是 echo 框架返回微信的写法
+return c.String(http.StatusOK, rsp.ToXmlString())
 ```
 
 * #### 支付宝
