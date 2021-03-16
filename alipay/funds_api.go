@@ -71,3 +71,31 @@ func (a *Client) FundTransCommonQuery(bm gopay.BodyMap) (aliRsp *FundTransCommon
 	aliRsp.SignData = getSignData(bs)
 	return aliRsp, nil
 }
+
+// alipay.fund.trans.order.query(查询转账订单接口)
+// 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.order.query
+func (a *Client) FundTransOrderQuery(bm gopay.BodyMap) (aliRsp *FundTransOrderQueryResponse, err error) {
+	// 两个请求参数不能同时为空
+	err1 := bm.CheckEmptyError("out_biz_no")
+	err2 := bm.CheckEmptyError("order_id")
+	if err1 != nil && err2 != nil {
+		return nil, fmt.Errorf("out_biz_no,order_id : Both cannot be empty at some time")
+	}
+
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.fund.trans.order.query"); err != nil {
+		return nil, err
+	}
+
+	aliRsp = new(FundTransOrderQueryResponse)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	aliRsp.SignData = getSignData(bs)
+	return aliRsp, nil
+
+}
