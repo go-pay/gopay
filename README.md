@@ -10,13 +10,13 @@
 [![GitHub Release](https://img.shields.io/github/v/release/iGoogle-ink/gopay)](https://github.com/iGoogle-ink/gopay/releases)
 [![License](https://img.shields.io/github/license/iGoogle-ink/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
 
---- 
+---
 ## ★招聘广告★：
 有意向的请直接加我微信（文档说明处有我的微信二维码）
 - 公司：上海商米科技集团股份有限公司
 - 要求：3-5年后端工程师（Golang）
 - 地点：上海市杨浦区五角场
---- 
+---
 
 # 一、安装
 
@@ -156,6 +156,7 @@ func main() {
 * 统一收单交易结算接口：client.TradeOrderSettle()
 * 统一收单线下交易预创建（用户扫商品收款码）：client.TradePrecreate()
 * 单笔转账接口：client.FundTransUniTransfer()
+* 查询转账订单接口: client.FundTransOrderQuery()
 * 转账业务单据查询接口：client.FundTransCommonQuery()
 * 支付宝资金账户资产查询接口：client.FundAccountQuery()
 * 换取授权访问令牌（获取access_token，user_id等信息）：client.SystemOauthToken()
@@ -595,7 +596,7 @@ notifyReq, err := wechat.ParseNotifyToBodyMap(ctx.Request)
 ok, err := wechat.VerifySign(apiKey, wechat.SignType_MD5, notifyReq)
 
 // ====退款异步通知参数解析，退款通知无sign，不用验签====
-// 
+//
 // 解析退款异步通知的参数，解析出来的 req_info 是加密数据，需解密
 //    req：*http.Request
 //    ctx.Request   是 gin 框架的获取 *http.Request
@@ -711,7 +712,7 @@ xlog.Debug(*userInfo)
 data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
 iv := "Cds8j3VYoGvnTp1BrjXdJg=="
 session := "lyY4HPQbaOYzZdG+JcYK9w=="
-    
+
 // 解密开放数据到 BodyMap
 //    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 //    iv:加密算法的初始向量
