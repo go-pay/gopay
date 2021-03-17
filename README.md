@@ -160,6 +160,7 @@ func main() {
 * 支付宝资金账户资产查询接口：client.FundAccountQuery()
 * 转账业务单据查询接口：client.FundTransCommonQuery()
 * 资金退回接口: client.FundTransRefund()
+* 现金红包无线支付接口: client.FundTransAppPay()
 * 换取授权访问令牌（获取access_token，user_id等信息）：client.SystemOauthToken()
 * 支付宝会员授权信息查询接口（App支付宝登录）：client.UserInfoShare()
 * 换取应用授权令牌（获取app_auth_token，auth_app_id，user_id等信息）：client.OpenAuthTokenApp()

@@ -121,3 +121,26 @@ func (a *Client) FundTransRefund(bm gopay.BodyMap) (aliRsp *FundTransRefundRespo
 	aliRsp.SignData = getSignData(bs)
 	return aliRsp, nil
 }
+
+// alipay.fund.trans.app.pay(现金红包无线支付接口)
+// 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.app.pay
+func (a *Client) FundTransAppPay(bm gopay.BodyMap) (aliRsp *FundTransAppPayResponse, err error) {
+	err = bm.CheckEmptyError("out_biz_no", "trans_amount", "product_code", "biz_scene")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.fund.trans.app.pay"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(FundTransAppPayResponse)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	aliRsp.SignData = getSignData(bs)
+	return aliRsp, nil
+}
