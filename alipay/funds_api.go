@@ -122,6 +122,29 @@ func (a *Client) FundTransRefund(bm gopay.BodyMap) (aliRsp *FundTransRefundRespo
 	return aliRsp, nil
 }
 
+// alipay.fund.auth.order.freeze(资金授权冻结接口)
+// 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.auth.order.freeze
+func (a *Client) FundAuthOrderFreeze(bm gopay.BodyMap) (aliRsp *FundAuthOrderFreezeResponse, err error) {
+	err = bm.CheckEmptyError("auth_code", "auth_code_type", "out_order_no", "out_request_no", "order_title", "amount")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.fund.auth.order.freeze"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(FundAuthOrderFreezeResponse)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	aliRsp.SignData = getSignData(bs)
+	return aliRsp, nil
+}
+
 // alipay.fund.trans.app.pay(现金红包无线支付接口)
 // 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.app.pay
 func (a *Client) FundTransAppPay(bm gopay.BodyMap) (aliRsp *FundTransAppPayResponse, err error) {
