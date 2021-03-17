@@ -507,6 +507,30 @@ type fundTransCommonQueryResponse struct {
 }
 
 // ===================================================
+
+type FundTransOrderQueryResponse struct {
+	Response     *fundTransOrderQueryResponse `json:"alipay_fund_trans_order_query_response,omitempty"`
+	AlipayCertSn string                       `json:"alipay_cert_sn,omitempty"`
+	SignData     string                       `json:"-"`
+	Sign         string                       `json:"sign"`
+}
+
+type fundTransOrderQueryResponse struct {
+	Code           string `json:"code,omitempty"`
+	Msg            string `json:"msg,omitempty"`
+	SubCode        string `json:"sub_code,omitempty"`
+	SubMsg         string `json:"sub_msg,omitempty"`
+	OrderId        string `json:"order_id,omitempty"`
+	Status         string `json:"status,omitempty"`
+	PayDate        string `json:"pay_date,omitempty"`
+	ArrivalTimeEnd string `json:"arrival_time_end,omitempty"`
+	OrderFee       string `json:"order_fee,omitempty"`
+	FailReason     string `json:"fail_reason,omitempty"`
+	OutBizNo       string `json:"out_biz_no,omitempty"`
+	ErrorCode      string `json:"error_code,omitempty"`
+}
+
+// ===================================================
 type FundAccountQueryResponse struct {
 	Response     *fundAccountQueryResponse `json:"alipay_fund_account_query_response,omitempty"`
 	AlipayCertSn string                    `json:"alipay_cert_sn,omitempty"`
