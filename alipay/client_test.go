@@ -600,7 +600,7 @@ func TestFundTransOrderQuery(t *testing.T) {
 
 	aliRsp, err := client.FundTransOrderQuery(bm)
 	if err != nil {
-		xlog.Errorf("client.TradePrecreate(%+v),error:%+v", bm, err)
+		xlog.Errorf("client.FundTransOrderQuery(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
