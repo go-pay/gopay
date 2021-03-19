@@ -148,7 +148,7 @@ func (a *Client) FundAuthOrderFreeze(bm gopay.BodyMap) (aliRsp *FundAuthOrderFre
 // alipay.fund.auth.order.voucher.create(资金授权发码接口)
 // 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.auth.order.voucher.create
 func (a *Client) FundAuthOrderVoucherCreate(bm gopay.BodyMap) (aliRsp *FundAuthOrderVoucherCreateResponse, err error) {
-	err = bm.CheckEmptyError("o,ut_order_no", "out_request_no", "order_title", "amount", "product_code")
+	err = bm.CheckEmptyError("out_order_no", "out_request_no", "order_title", "amount", "product_code")
 	if err != nil {
 		return nil, err
 	}
@@ -157,6 +157,52 @@ func (a *Client) FundAuthOrderVoucherCreate(bm gopay.BodyMap) (aliRsp *FundAuthO
 		return nil, err
 	}
 	aliRsp = new(FundAuthOrderVoucherCreateResponse)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	aliRsp.SignData = getSignData(bs)
+	return aliRsp, nil
+}
+
+// alipay.fund.auth.order.app.freeze(线上资金授权冻结接口)
+// 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.auth.order.app.freeze
+func (a *Client) FundAuthOrderAppFreeze(bm gopay.BodyMap) (aliRsp *FundAuthOrderAppFreezeResponse, err error) {
+	err = bm.CheckEmptyError("out_order_no", "out_request_no", "order_title", "amount", "product_code")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.fund.auth.order.app.freeze"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(FundAuthOrderAppFreezeResponse)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	aliRsp.SignData = getSignData(bs)
+	return aliRsp, nil
+}
+
+// alipay.fund.auth.order.unfreeze(资金授权解冻接口)
+// 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.auth.order.unfreeze
+func (a *Client) FundAuthOrderUnfreeze(bm gopay.BodyMap) (aliRsp *FundAuthOrderUnfreezeResponse, err error) {
+	err = bm.CheckEmptyError("auth_no", "out_request_no", "amount", "remark")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.fund.auth.order.unfreeze"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(FundAuthOrderUnfreezeResponse)
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
