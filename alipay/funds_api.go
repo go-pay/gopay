@@ -233,6 +233,29 @@ func (a *Client) FundAuthOperationDetailQuery(bm gopay.BodyMap) (aliRsp *FundAut
 	return aliRsp, nil
 }
 
+// alipay.fund.auth.operation.cancel(资金授权撤销接口)
+// 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.auth.operation.cancel
+func (a *Client) FundAuthOperationCancel(bm gopay.BodyMap) (aliRsp *FundAuthOperationCancelResponse, err error) {
+	err = bm.CheckEmptyError("remark")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.fund.auth.operation.cancel"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(FundAuthOperationCancelResponse)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	aliRsp.SignData = getSignData(bs)
+	return aliRsp, nil
+}
+
 // alipay.fund.trans.app.pay(现金红包无线支付接口)
 // 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.app.pay
 func (a *Client) FundTransAppPay(bm gopay.BodyMap) (aliRsp *FundTransAppPayResponse, err error) {

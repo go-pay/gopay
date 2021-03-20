@@ -689,6 +689,26 @@ type fundAuthOperationDetailQueryResponse struct {
 }
 
 // ===================================================
+type FundAuthOperationCancelResponse struct {
+	Response     *fundAuthOperationCancelResponse `json:"alipay_fund_auth_operation_cancel_response,omitempty"`
+	AlipayCertSn string                           `json:"alipay_cert_sn,omitempty"`
+	SignData     string                           `json:"-"`
+	Sign         string                           `json:"sign"`
+}
+
+type fundAuthOperationCancelResponse struct {
+	Code         string `json:"code,omitempty"`
+	Msg          string `json:"msg,omitempty"`
+	SubCode      string `json:"sub_code,omitempty"`
+	SubMsg       string `json:"sub_msg,omitempty"`
+	AuthNo       string `json:"auth_no,omitempty"`
+	OutOrderNo   string `json:"out_order_no,omitempty"`
+	OperationId  string `json:"operation_id,omitempty"`
+	OutRequestNo string `json:"out_request_no,omitempty"`
+	Action       string `json:"action,omitempty"`
+}
+
+// ===================================================
 type FundTransAppPayResponse struct {
 	Response     *fundTransAppPayResponse `json:"alipay_fund_trans_app_pay_response,omitempty"`
 	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`
