@@ -647,6 +647,48 @@ type fundAuthOrderUnfreezeResponse struct {
 }
 
 // ===================================================
+type FundAuthOperationDetailQueryResponse struct {
+	Response     *fundAuthOperationDetailQueryResponse `json:"alipay_fund_auth_operation_detail_query_response,omitempty"`
+	AlipayCertSn string                                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                                `json:"-"`
+	Sign         string                                `json:"sign"`
+}
+
+type fundAuthOperationDetailQueryResponse struct {
+	Code                    string `json:"code,omitempty"`
+	Msg                     string `json:"msg,omitempty"`
+	SubCode                 string `json:"sub_code,omitempty"`
+	SubMsg                  string `json:"sub_msg,omitempty"`
+	AuthNo                  string `json:"auth_no,omitempty"`
+	OutOrderNo              string `json:"out_order_no,omitempty"`
+	TotalFreezeAmount       string `json:"total_freeze_amount,omitempty"`
+	RestAmount              string `json:"rest_amount,omitempty"`
+	TotalPayAmount          string `json:"total_pay_amount,omitempty"`
+	OrderTitle              string `json:"order_title,omitempty"`
+	PayerLogonId            string `json:"payer_logon_id,omitempty"`
+	PayerUserId             string `json:"payer_user_id,omitempty"`
+	ExtraParam              string `json:"extra_param,omitempty"`
+	OperationId             string `json:"operation_id,omitempty"`
+	OutRequestNo            string `json:"out_request_no,omitempty"`
+	Amount                  string `json:"amount,omitempty"`
+	OperationType           string `json:"operation_type,omitempty"`
+	Status                  string `json:"status,omitempty"`
+	Remark                  string `json:"remark,omitempty"`
+	GmtCreate               string `json:"gmt_create,omitempty"`
+	GmtTrans                string `json:"gmt_trans,omitempty"`
+	PreAuthType             string `json:"pre_auth_type,omitempty"`
+	TransCurrency           string `json:"trans_currency,omitempty"`
+	TotalFreezeCreditAmount string `json:"total_freeze_credit_amount,omitempty"`
+	TotalFreezeFundAmount   string `json:"total_freeze_fund_amount,omitempty"`
+	TotalPayCreditAmount    string `json:"total_pay_credit_amount,omitempty"`
+	TotalPayFundAmount      string `json:"total_pay_fund_amount,omitempty"`
+	RestCreditAmount        string `json:"rest_credit_amount,omitempty"`
+	RestFundAmount          string `json:"rest_fund_amount,omitempty"`
+	CreditAmount            string `json:"credit_amount,omitempty"`
+	FundAmount              string `json:"fund_amount,omitempty"`
+}
+
+// ===================================================
 type FundTransAppPayResponse struct {
 	Response     *fundTransAppPayResponse `json:"alipay_fund_trans_app_pay_response,omitempty"`
 	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`
