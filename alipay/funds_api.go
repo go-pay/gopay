@@ -256,6 +256,29 @@ func (a *Client) FundAuthOperationCancel(bm gopay.BodyMap) (aliRsp *FundAuthOper
 	return aliRsp, nil
 }
 
+// alipay.fund.batch.create(批次下单接口)
+// 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.batch.create
+func (a *Client) FundBatchCreate(bm gopay.BodyMap) (aliRsp *FundBatchCreateResponse, err error) {
+	err = bm.CheckEmptyError("out_batch_no", "product_code", "biz_scene", "order_title", "total_trans_amount", "total_count", "trans_order_list")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.fund.batch.create"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(FundBatchCreateResponse)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	aliRsp.SignData = getSignData(bs)
+	return aliRsp, nil
+}
+
 // alipay.fund.trans.app.pay(现金红包无线支付接口)
 // 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.app.pay
 func (a *Client) FundTransAppPay(bm gopay.BodyMap) (aliRsp *FundTransAppPayResponse, err error) {
