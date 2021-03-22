@@ -8,6 +8,7 @@ import (
 	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
+// Deprecated
 // zhima.credit.score.get(查询芝麻用户的芝麻分)
 //	文档地址：https://opendocs.alipay.com/apis/api_8/zhima.credit.score.get
 func (a *Client) ZhimaCreditScoreGet(bm gopay.BodyMap) (aliRsp *ZhimaCreditScoreGetResponse, err error) {
