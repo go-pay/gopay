@@ -488,22 +488,20 @@ type FundTransCommonQueryResponse struct {
 }
 
 type fundTransCommonQueryResponse struct {
-	Code             string `json:"code,omitempty"`
-	Msg              string `json:"msg,omitempty"`
-	SubCode          string `json:"sub_code,omitempty"`
-	SubMsg           string `json:"sub_msg,omitempty"`
-	OrderId          string `json:"order_id,omitempty"`
-	PayFundOrderId   string `json:"pay_fund_order_id,omitempty"`
-	OutBizNo         string `json:"out_biz_no,omitempty"`
-	TransAmount      string `json:"trans_amount,omitempty"`
-	Status           string `json:"status,omitempty"`
-	PayDate          string `json:"pay_date,omitempty"`
-	ArrivalTimeEnd   string `json:"arrival_time_end,omitempty"`
-	OrderFee         string `json:"order_fee,omitempty"`
-	ErrorCode        string `json:"error_code,omitempty"`
-	FailReason       string `json:"fail_reason,omitempty"`
-	DeductBillInfo   string `json:"deduct_bill_info,omitempty"`
-	TransferBillInfo string `json:"transfer_bill_info,omitempty"`
+	Code           string `json:"code,omitempty"`
+	Msg            string `json:"msg,omitempty"`
+	SubCode        string `json:"sub_code,omitempty"`
+	SubMsg         string `json:"sub_msg,omitempty"`
+	OrderId        string `json:"order_id,omitempty"`
+	PayFundOrderId string `json:"pay_fund_order_id,omitempty"`
+	OutBizNo       string `json:"out_biz_no,omitempty"`
+	TransAmount    string `json:"trans_amount,omitempty"`
+	Status         string `json:"status,omitempty"`
+	PayDate        string `json:"pay_date,omitempty"`
+	ArrivalTimeEnd string `json:"arrival_time_end,omitempty"`
+	OrderFee       string `json:"order_fee,omitempty"`
+	ErrorCode      string `json:"error_code,omitempty"`
+	FailReason     string `json:"fail_reason,omitempty"`
 }
 
 // ===================================================
