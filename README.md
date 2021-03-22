@@ -211,6 +211,7 @@ func main() {
   * 资金授权撤销接口: client.FundAuthOperationCancel()
   * 批次下单接口: client.FundBatchCreate()
   * 批量转账关单接口: client.FundBatchClose()
+  * 批量转账明细查询接口: client.FundBatchDetailquery()
   * 现金红包无线支付接口: client.FundTransAppPay()
 * 网页&移动应用 - <font color='#027AFF' size='4'>会员API</font>
   * 支付宝会员授权信息查询接口（App支付宝登录）：client.UserInfoShare()
