@@ -11,11 +11,15 @@
 [![License](https://img.shields.io/github/license/iGoogle-ink/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
 
 --- 
+
 ## ★招聘广告★：
+
 有意向的请直接加我微信（文档说明处有我的微信二维码）
+
 - 公司：上海商米科技集团股份有限公司
 - 要求：3-5年后端工程师（Golang）
 - 地点：上海市杨浦区五角场
+
 --- 
 
 # 一、安装
@@ -41,15 +45,52 @@ func main() {
 
 ---
 
-### 微信支付V2 API（现已支持V3接口，推荐使用V3接口，使用方法参考下面介绍或源码）
+### 微信支付V3 API
 
-> #### 希望有时间的伙伴儿Fork完后，积极提Pull Request，一起完善微信各个类别下的接口到相应的go文件中
+> #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口，欢迎参与完善V3接口。
+
+* <font color='#07C160' size='4'>基础支付（直连模式）</font>
+  * APP下单：client.V3TransactionApp()
+  * JSAPI/小程序下单：client.V3TransactionJsapi()
+  * Native下单：client.V3TransactionNative()
+  * H5下单：client.V3TransactionH5()
+  * 查询订单：client.V3TransactionQueryOrder()
+  * 关闭订单：client.V3TransactionCloseOrder()
+* <font color='#07C160' size='4'>基础支付（服务商模式）</font>
+  * APP下单：client.V3PartnerTransactionApp()
+  * JSAPI/小程序下单：client.V3PartnerTransactionJsapi()
+  * Native下单：client.V3PartnerTransactionNative()
+  * H5下单：client.V3PartnerTransactionH5()
+  * 查询订单：client.V3PartnerQueryOrder()
+  * 关闭订单：client.V3PartnerCloseOrder()
+* <font color='#07C160' size='4'>合单支付</font>
+  * 合单APP下单：client.V3CombineTransactionApp()
+  * 合单JSAPI/小程序下单：client.V3CombineTransactionJsapi()
+  * 合单Native下单：client.V3CombineTransactionNative()
+  * 合单H5下单：client.V3CombineTransactionH5()
+  * 合单查询订单：client.V3CombineQueryOrder()
+  * 合单关闭订单：client.V3CombineCloseOrder()
+* <font color='#07C160' size='4'>退款</font>
+  * 申请退款：client.V3Refund()
+  * 查询单笔退款：client.V3RefundQuery()
+* <font color='#07C160' size='4'>账单</font>
+  * 申请交易账单：client.V3BillTradeBill()
+  * 申请资金账单：client.V3BillFundFlowBill()
+  * 申请二级商户资金账单：client.V3BillLevel2FundFlowBill()
+  * 下载账单：client.V3BillDownLoadBill()
+* <font color='#07C160' size='4'>微信支付分</font>
+  * 待实现
+
+  
+### 微信支付V2 API
+
+> #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口。
 
 * 统一下单：client.UnifiedOrder()
-    * JSAPI - JSAPI支付（或小程序支付）
-    * NATIVE - Native支付
-    * APP - app支付
-    * MWEB - H5支付
+  * JSAPI - JSAPI支付（或小程序支付）
+  * NATIVE - Native支付
+  * APP - app支付
+  * MWEB - H5支付
 * 提交付款码支付：client.Micropay()
 * 查询订单：client.QueryOrder()
 * 关闭订单：client.CloseOrder()
@@ -142,7 +183,7 @@ func main() {
 > #### 希望有时间的伙伴儿Fork完后，积极提Pull Request，一起完善支付宝各个类别下的接口到相应的go文件中
 
 * 支付宝接口自行实现方法：client.PostAliPayAPISelfV2()
-* 网页&移动应用 - 支付API  
+* 网页&移动应用 - <font color='#027AFF' size='4'>支付API</font>
   * 统一收单交易支付接口（商家扫用户付款码）：client.TradePay()
   * 统一收单线下交易预创建（用户扫商品收款码）：client.TradePrecreate()
   * APP支付接口2.0（APP支付）：client.TradeAppPay()
@@ -156,7 +197,7 @@ func main() {
   * 统一收单退款页面接口：client.TradePageRefund()
   * 统一收单交易退款查询：client.TradeFastPayRefundQuery()
   * 统一收单交易结算接口：client.TradeOrderSettle()
-* 网页&移动应用 - 资金API
+* 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
   * 单笔转账接口：client.FundTransUniTransfer()
   * 查询转账订单接口: client.FundTransOrderQuery()
   * 支付宝资金账户资产查询接口：client.FundAccountQuery()
@@ -171,18 +212,18 @@ func main() {
   * 批次下单接口: client.FundBatchCreate()
   * 批量转账关单接口: client.FundBatchClose()
   * 现金红包无线支付接口: client.FundTransAppPay()
-* 网页&移动应用 - 会员API
+* 网页&移动应用 - <font color='#027AFF' size='4'>会员API</font>
   * 支付宝会员授权信息查询接口（App支付宝登录）：client.UserInfoShare()
   * 身份认证初始化服务：client.UserCertifyOpenInit()
   * 身份认证开始认证（获取认证链接）：client.UserCertifyOpenCertify()
   * 身份认证记录查询：client.UserCertifyOpenQuery()
-* 网页&移动应用 - 工具类API
+* 网页&移动应用 - <font color='#027AFF' size='4'>工具类API</font>
   * 用户登陆授权：client.UserInfoAuth()
   * 换取授权访问令牌（获取access_token，user_id等信息）：client.SystemOauthToken()
   * 换取应用授权令牌（获取app_auth_token，auth_app_id，user_id等信息）：client.OpenAuthTokenApp()
-* 网页&移动应用 - 芝麻信用API
+* 网页&移动应用 - <font color='#027AFF' size='4'>芝麻信用API</font>
   * 获取芝麻信用分：client.ZhimaCreditScoreGet()（失效）
-* 网页&移动应用 - 财务API
+* 网页&移动应用 - <font color='#027AFF' size='4'>财务API</font>
   * 支付宝商家账户当前余额查询：client.DataBillBalanceQuery()（失效）
   * 查询对账单下载地址：client.DataBillDownloadUrlQuery()
 
@@ -308,7 +349,7 @@ client.AddCertFileContent()
 
 ```go
 import (
-"github.com/iGoogle-ink/gopay/alipay"
+    "github.com/iGoogle-ink/gopay/alipay"
 )
 
 // 初始化支付宝客户端
@@ -805,9 +846,9 @@ xlog.Debug(*phone)
 
 ## 赞赏多少是您的心意，感谢！
 
-<font color='#0088ff'>微信：</font>
+<font color='#07C160' size='4'>微信：</font>
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/main/zanshang_wx.png"/>
-<font color='#0088ff'>支付宝：</font>
+<font color='#027AFF' size='4'>支付宝：</font>
 <img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/main/zanshang_zfb.png"/>
 
 ## License
