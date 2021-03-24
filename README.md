@@ -50,47 +50,47 @@ func main() {
 > #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口，欢迎参与完善V3接口。
 
 * <font color='#07C160' size='4'>基础支付（直连模式）</font>
-  * APP下单：client.V3TransactionApp()
-  * JSAPI/小程序下单：client.V3TransactionJsapi()
-  * Native下单：client.V3TransactionNative()
-  * H5下单：client.V3TransactionH5()
-  * 查询订单：client.V3TransactionQueryOrder()
-  * 关闭订单：client.V3TransactionCloseOrder()
+    * APP下单：client.V3TransactionApp()
+    * JSAPI/小程序下单：client.V3TransactionJsapi()
+    * Native下单：client.V3TransactionNative()
+    * H5下单：client.V3TransactionH5()
+    * 查询订单：client.V3TransactionQueryOrder()
+    * 关闭订单：client.V3TransactionCloseOrder()
 * <font color='#07C160' size='4'>基础支付（服务商模式）</font>
-  * APP下单：client.V3PartnerTransactionApp()
-  * JSAPI/小程序下单：client.V3PartnerTransactionJsapi()
-  * Native下单：client.V3PartnerTransactionNative()
-  * H5下单：client.V3PartnerTransactionH5()
-  * 查询订单：client.V3PartnerQueryOrder()
-  * 关闭订单：client.V3PartnerCloseOrder()
+    * APP下单：client.V3PartnerTransactionApp()
+    * JSAPI/小程序下单：client.V3PartnerTransactionJsapi()
+    * Native下单：client.V3PartnerTransactionNative()
+    * H5下单：client.V3PartnerTransactionH5()
+    * 查询订单：client.V3PartnerQueryOrder()
+    * 关闭订单：client.V3PartnerCloseOrder()
 * <font color='#07C160' size='4'>合单支付</font>
-  * 合单APP下单：client.V3CombineTransactionApp()
-  * 合单JSAPI/小程序下单：client.V3CombineTransactionJsapi()
-  * 合单Native下单：client.V3CombineTransactionNative()
-  * 合单H5下单：client.V3CombineTransactionH5()
-  * 合单查询订单：client.V3CombineQueryOrder()
-  * 合单关闭订单：client.V3CombineCloseOrder()
+    * 合单APP下单：client.V3CombineTransactionApp()
+    * 合单JSAPI/小程序下单：client.V3CombineTransactionJsapi()
+    * 合单Native下单：client.V3CombineTransactionNative()
+    * 合单H5下单：client.V3CombineTransactionH5()
+    * 合单查询订单：client.V3CombineQueryOrder()
+    * 合单关闭订单：client.V3CombineCloseOrder()
 * <font color='#07C160' size='4'>退款</font>
-  * 申请退款：client.V3Refund()
-  * 查询单笔退款：client.V3RefundQuery()
+    * 申请退款：client.V3Refund()
+    * 查询单笔退款：client.V3RefundQuery()
 * <font color='#07C160' size='4'>账单</font>
-  * 申请交易账单：client.V3BillTradeBill()
-  * 申请资金账单：client.V3BillFundFlowBill()
-  * 申请二级商户资金账单：client.V3BillLevel2FundFlowBill()
-  * 下载账单：client.V3BillDownLoadBill()
+    * 申请交易账单：client.V3BillTradeBill()
+    * 申请资金账单：client.V3BillFundFlowBill()
+    * 申请二级商户资金账单：client.V3BillLevel2FundFlowBill()
+    * 下载账单：client.V3BillDownLoadBill()
 * <font color='#07C160' size='4'>微信支付分</font>
-  * 待实现
+    * 待实现
 
-  
+
 ### 微信支付V2 API
 
 > #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口。
 
 * 统一下单：client.UnifiedOrder()
-  * JSAPI - JSAPI支付（或小程序支付）
-  * NATIVE - Native支付
-  * APP - app支付
-  * MWEB - H5支付
+    * JSAPI - JSAPI支付（或小程序支付）
+    * NATIVE - Native支付
+    * APP - app支付
+    * MWEB - H5支付
 * 提交付款码支付：client.Micropay()
 * 查询订单：client.QueryOrder()
 * 关闭订单：client.CloseOrder()
@@ -184,48 +184,48 @@ func main() {
 
 * 支付宝接口自行实现方法：client.PostAliPayAPISelfV2()
 * 网页&移动应用 - <font color='#027AFF' size='4'>支付API</font>
-  * 统一收单交易支付接口（商家扫用户付款码）：client.TradePay()
-  * 统一收单线下交易预创建（用户扫商品收款码）：client.TradePrecreate()
-  * APP支付接口2.0（APP支付）：client.TradeAppPay()
-  * 手机网站支付接口2.0（手机网站支付）：client.TradeWapPay()
-  * 统一收单下单并支付页面接口（电脑网站支付）：client.TradePagePay()
-  * 统一收单交易创建接口（小程序支付）：client.TradeCreate()
-  * 统一收单线下交易查询：client.TradeQuery()
-  * 统一收单交易撤销接口：client.TradeCancel()
-  * 统一收单交易关闭接口：client.TradeClose()
-  * 统一收单交易退款接口：client.TradeRefund()
-  * 统一收单退款页面接口：client.TradePageRefund()
-  * 统一收单交易退款查询：client.TradeFastPayRefundQuery()
-  * 统一收单交易结算接口：client.TradeOrderSettle()
+    * 统一收单交易支付接口（商家扫用户付款码）：client.TradePay()
+    * 统一收单线下交易预创建（用户扫商品收款码）：client.TradePrecreate()
+    * APP支付接口2.0（APP支付）：client.TradeAppPay()
+    * 手机网站支付接口2.0（手机网站支付）：client.TradeWapPay()
+    * 统一收单下单并支付页面接口（电脑网站支付）：client.TradePagePay()
+    * 统一收单交易创建接口（小程序支付）：client.TradeCreate()
+    * 统一收单线下交易查询：client.TradeQuery()
+    * 统一收单交易撤销接口：client.TradeCancel()
+    * 统一收单交易关闭接口：client.TradeClose()
+    * 统一收单交易退款接口：client.TradeRefund()
+    * 统一收单退款页面接口：client.TradePageRefund()
+    * 统一收单交易退款查询：client.TradeFastPayRefundQuery()
+    * 统一收单交易结算接口：client.TradeOrderSettle()
 * 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
-  * 单笔转账接口：client.FundTransUniTransfer()
-  * 查询转账订单接口: client.FundTransOrderQuery()
-  * 支付宝资金账户资产查询接口：client.FundAccountQuery()
-  * 转账业务单据查询接口：client.FundTransCommonQuery()
-  * 资金退回接口: client.FundTransRefund()
-  * 资金授权冻结接口: client.FundAuthOrderFreeze()
-  * 资金授权发码接口: client.FundAuthOrderVoucherCreate()
-  * 线上资金授权冻结接口: client:FundAuthOrderAppFreeze()
-  * 资金授权解冻接口: client.FundAuthOrderUnfreeze()
-  * 资金授权操作查询接口: client.FundAuthOperationDetailQuery()
-  * 资金授权撤销接口: client.FundAuthOperationCancel()
-  * 批次下单接口: client.FundBatchCreate()
-  * 批量转账关单接口: client.FundBatchClose()
-  * 现金红包无线支付接口: client.FundTransAppPay()
+    * 单笔转账接口：client.FundTransUniTransfer()
+    * 查询转账订单接口: client.FundTransOrderQuery()
+    * 支付宝资金账户资产查询接口：client.FundAccountQuery()
+    * 转账业务单据查询接口：client.FundTransCommonQuery()
+    * 资金退回接口: client.FundTransRefund()
+    * 资金授权冻结接口: client.FundAuthOrderFreeze()
+    * 资金授权发码接口: client.FundAuthOrderVoucherCreate()
+    * 线上资金授权冻结接口: client:FundAuthOrderAppFreeze()
+    * 资金授权解冻接口: client.FundAuthOrderUnfreeze()
+    * 资金授权操作查询接口: client.FundAuthOperationDetailQuery()
+    * 资金授权撤销接口: client.FundAuthOperationCancel()
+    * 批次下单接口: client.FundBatchCreate()
+    * 批量转账关单接口: client.FundBatchClose()
+    * 现金红包无线支付接口: client.FundTransAppPay()
 * 网页&移动应用 - <font color='#027AFF' size='4'>会员API</font>
-  * 支付宝会员授权信息查询接口（App支付宝登录）：client.UserInfoShare()
-  * 身份认证初始化服务：client.UserCertifyOpenInit()
-  * 身份认证开始认证（获取认证链接）：client.UserCertifyOpenCertify()
-  * 身份认证记录查询：client.UserCertifyOpenQuery()
+    * 支付宝会员授权信息查询接口（App支付宝登录）：client.UserInfoShare()
+    * 身份认证初始化服务：client.UserCertifyOpenInit()
+    * 身份认证开始认证（获取认证链接）：client.UserCertifyOpenCertify()
+    * 身份认证记录查询：client.UserCertifyOpenQuery()
 * 网页&移动应用 - <font color='#027AFF' size='4'>工具类API</font>
-  * 用户登陆授权：client.UserInfoAuth()
-  * 换取授权访问令牌（获取access_token，user_id等信息）：client.SystemOauthToken()
-  * 换取应用授权令牌（获取app_auth_token，auth_app_id，user_id等信息）：client.OpenAuthTokenApp()
+    * 用户登陆授权：client.UserInfoAuth()
+    * 换取授权访问令牌（获取access_token，user_id等信息）：client.SystemOauthToken()
+    * 换取应用授权令牌（获取app_auth_token，auth_app_id，user_id等信息）：client.OpenAuthTokenApp()
 * 网页&移动应用 - <font color='#027AFF' size='4'>芝麻信用API</font>
-  * 获取芝麻信用分：client.ZhimaCreditScoreGet()（失效）
+    * 获取芝麻信用分：client.ZhimaCreditScoreGet()（失效）
 * 网页&移动应用 - <font color='#027AFF' size='4'>财务API</font>
-  * 支付宝商家账户当前余额查询：client.DataBillBalanceQuery()（失效）
-  * 查询对账单下载地址：client.DataBillDownloadUrlQuery()
+    * 支付宝商家账户当前余额查询：client.DataBillBalanceQuery()（失效）
+    * 查询对账单下载地址：client.DataBillDownloadUrlQuery()
 
 ### 支付宝公共API
 
@@ -801,7 +801,7 @@ xlog.Debug(*userInfo)
 data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
 iv := "Cds8j3VYoGvnTp1BrjXdJg=="
 session := "lyY4HPQbaOYzZdG+JcYK9w=="
-    
+
 // 解密开放数据到 BodyMap
 //    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 //    iv:加密算法的初始向量
