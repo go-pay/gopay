@@ -742,14 +742,14 @@ type fundBatchCloseResponse struct {
 }
 
 // ===================================================
-type FundBatchDetailqueryResponse struct {
-	Response     *fundBatchDetailqueryResponse `json:"alipay_fund_batch_detail_query_response,omitempty"`
+type FundBatchDetailQueryResponse struct {
+	Response     *fundBatchDetailQueryResponse `json:"alipay_fund_batch_detail_query_response,omitempty"`
 	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
 	SignData     string                        `json:"-"`
 	Sign         string                        `json:"sign"`
 }
 
-type fundBatchDetailqueryResponse struct {
+type fundBatchDetailQueryResponse struct {
 	Code            string `json:"code,omitempty"`
 	Msg             string `json:"msg,omitempty"`
 	SubCode         string `json:"sub_code,omitempty"`

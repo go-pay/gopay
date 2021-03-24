@@ -304,7 +304,7 @@ func (a *Client) FundBatchClose(bm gopay.BodyMap) (aliRsp *FundBatchCloseRespons
 
 // alipay.fund.batch.detail.query(批量转账明细查询接口)
 // 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.batch.detail.query
-func (a *Client) FundBatchDetailquery(bm gopay.BodyMap) (aliRsp *FundBatchDetailqueryResponse, err error) {
+func (a *Client) FundBatchDetailQuery(bm gopay.BodyMap) (aliRsp *FundBatchDetailQueryResponse, err error) {
 	err = bm.CheckEmptyError("biz_scene")
 	if err != nil {
 		return nil, err
@@ -313,7 +313,7 @@ func (a *Client) FundBatchDetailquery(bm gopay.BodyMap) (aliRsp *FundBatchDetail
 	if bs, err = a.doAliPay(bm, "alipay.fund.batch.detail.query"); err != nil {
 		return nil, err
 	}
-	aliRsp = new(FundBatchDetailqueryResponse)
+	aliRsp = new(FundBatchDetailQueryResponse)
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
