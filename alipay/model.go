@@ -742,6 +742,80 @@ type fundBatchCloseResponse struct {
 }
 
 // ===================================================
+type FundBatchDetailQueryResponse struct {
+	Response     *fundBatchDetailQueryResponse `json:"alipay_fund_batch_detail_query_response,omitempty"`
+	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
+	SignData     string                        `json:"-"`
+	Sign         string                        `json:"sign"`
+}
+
+type fundBatchDetailQueryResponse struct {
+	Code            string `json:"code,omitempty"`
+	Msg             string `json:"msg,omitempty"`
+	SubCode         string `json:"sub_code,omitempty"`
+	SubMsg          string `json:"sub_msg,omitempty"`
+	BatchTransId    string `json:"batch_trans_id,omitempty"`
+	BatchNo         string `json:"batch_no,omitempty"`
+	BizCode         string `json:"biz_code,omitempty"`
+	BizScene        string `json:"biz_scene,omitempty"`
+	BatchStatus     string `json:"batch_status,omitempty"`
+	ApprovalStatus  string `json:"approval_status,omitempty"`
+	ErrorCode       string `json:"error_code,omitempty"`
+	FailReason      string `json:"fail_reason,omitempty"`
+	SignPrincipal   string `json:"sign_principal,omitempty"`
+	PaymentAmount   string `json:"payment_amount,omitempty"`
+	PaymentCurrency string `json:"payment_currency,omitempty"`
+	PageSize        string `json:"page_size,omitempty"`
+	PageNum         string `json:"page_num,omitempty"`
+	ProductCode     string `json:"product_code,omitempty"`
+	TotalPageCount  string `json:"total_page_count,omitempty"`
+	OutBatchNo      string `json:"out_batch_no,omitempty"`
+	GmtFinish       string `json:"gmt_finish,omitempty"`
+	TotalAmount     string `json:"total_amount,omitempty"`
+	GmtPayFinish    string `json:"gmt_pay_finish,omitempty"`
+	PayerId         string `json:"payer_id,omitempty"`
+	SuccessAmount   string `json:"success_amount,omitempty"`
+	FailAmount      string `json:"fail_amount,omitempty"`
+	FailCount       string `json:"fail_count,omitempty"`
+	SuccessCount    string `json:"success_count,omitempty"`
+	TotalItemCount  string `json:"total_item_count,omitempty"`
+	AccDetailList   []*struct {
+		DetailNo           string `json:"detail_no,omitempty"`
+		PaymentAmount      string `json:"payment_amount,omitempty"`
+		PaymentCurrency    string `json:"payment_currency,omitempty"`
+		TransAmount        string `json:"trans_amount,omitempty"`
+		TransCurrency      string `json:"trans_currency,omitempty"`
+		SettlementAmount   string `json:"settlement_amount,omitempty"`
+		SettlementCurrency string `json:"settlement_currency,omitempty"`
+		PayeeInfo          *struct {
+			PayeeAccount string `json:"payee_account,omitempty"`
+			PayeeType    string `json:"payee_type,omitempty"`
+			PayeeName    string `json:"payee_name,omitempty"`
+		} `json:"payee_info,omitempty"`
+		CertInfo *struct {
+			CertNo   string `json:"cert_no,omitempty"`
+			CertType string `json:"cert_type,omitempty"`
+		} `json:"cert_info,omitempty"`
+		Remark       string `json:"remark,omitempty"`
+		Status       string `json:"status,omitempty"`
+		ExchangeRate *struct {
+			Rate             string `json:"rate,omitempty"`
+			BaseCurrency     string `json:"base_currency,omitempty"`
+			ExchangeCurrency string `json:"exchange_currency,omitempty"`
+		} `json:"exchange_rate,omitempty"`
+		NeedRetry     string `json:"need_retry,omitempty"`
+		AlipayOrderNo string `json:"alipay_order_no,omitempty"`
+		OutBizNo      string `json:"out_biz_no,omitempty"`
+		DetailId      string `json:"detail_id,omitempty"`
+		ErrorCode     string `json:"error_code,omitempty"`
+		ErrorMsg      string `json:"error_msg,omitempty"`
+		GmtCreate     string `json:"gmt_create,omitempty"`
+		GmtFinish     string `json:"gmt_finish,omitempty"`
+		SubStatus     string `json:"sub_status,omitempty"`
+	} `json:"acc_detail_list,omitempty"`
+}
+
+// ===================================================
 type FundTransAppPayResponse struct {
 	Response     *fundTransAppPayResponse `json:"alipay_fund_trans_app_pay_response,omitempty"`
 	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`

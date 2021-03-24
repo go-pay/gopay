@@ -211,6 +211,7 @@ func main() {
     * 资金授权撤销接口: client.FundAuthOperationCancel()
     * 批次下单接口: client.FundBatchCreate()
     * 批量转账关单接口: client.FundBatchClose()
+    * 批量转账明细查询接口: client.FundBatchDetailQuery()
     * 现金红包无线支付接口: client.FundTransAppPay()
 * 网页&移动应用 - <font color='#027AFF' size='4'>会员API</font>
     * 支付宝会员授权信息查询接口（App支付宝登录）：client.UserInfoShare()
@@ -801,7 +802,7 @@ xlog.Debug(*userInfo)
 data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
 iv := "Cds8j3VYoGvnTp1BrjXdJg=="
 session := "lyY4HPQbaOYzZdG+JcYK9w=="
-
+    
 // 解密开放数据到 BodyMap
 //    encryptedData:包括敏感数据在内的完整用户信息的加密数据
 //    iv:加密算法的初始向量
