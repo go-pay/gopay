@@ -8,43 +8,37 @@ import (
 	"errors"
 	"fmt"
 	"hash"
-	"io/ioutil"
 )
 
-// Deprecated
 // 推荐使用：RsaEncryptDataV2()
 // RSA加密数据
 // 	originData：原始字符串
 // 	publicKeyFilePath：公钥证书文件路径
-func RsaEncryptData(originData string, publicKeyFilePath string) (cipherData string, err error) {
-	fileBytes, err := ioutil.ReadFile(publicKeyFilePath)
-	if err != nil {
-		return "", fmt.Errorf("publicKeyFile read fail: %w", err)
-	}
-	block, _ := pem.Decode(fileBytes)
-	if block == nil {
-		return "", errors.New("publicKey decode error")
-	}
-	pubKey, err := x509.ParsePKIXPublicKey(block.Bytes)
-	if err != nil {
-		return "", fmt.Errorf("x509.ParsePKIXPublicKey：%w", err)
-	}
-	publicKey, ok := pubKey.(*rsa.PublicKey)
-	if !ok {
-		return "", errors.New("publicKey parse error")
-	}
-	cipherBytes, err := rsa.EncryptPKCS1v15(rand.Reader, publicKey, []byte(originData))
-	if err != nil {
-		return "", fmt.Errorf("xrsa.EncryptPKCS1v15：%w", err)
-	}
-	return string(cipherBytes), nil
-}
+//func RsaEncryptData(originData string, publicKeyFilePath string) (cipherData string, err error) {
+//	fileBytes, err := ioutil.ReadFile(publicKeyFilePath)
+//	if err != nil {
+//		return "", fmt.Errorf("publicKeyFile read fail: %w", err)
+//	}
+//	block, _ := pem.Decode(fileBytes)
+//	if block == nil {
+//		return "", errors.New("publicKey decode error")
+//	}
+//	pubKey, err := x509.ParsePKCS1PublicKey(block.Bytes)
+//	if err != nil {
+//		return "", fmt.Errorf("x509.ParsePKIXPublicKey：%w", err)
+//	}
+//	cipherBytes, err := rsa.EncryptPKCS1v15(rand.Reader, pubKey, []byte(originData))
+//	if err != nil {
+//		return "", fmt.Errorf("xrsa.EncryptPKCS1v15：%w", err)
+//	}
+//	return string(cipherBytes), nil
+//}
 
 // RSA加密数据
 //	t：PKCS1 或 PKCS8
 //	originData：原始字符串byte数组
 //	publicKey：公钥
-func RsaEncryptDataV2(t PKCSType, originData []byte, publicKey string) (cipherData []byte, err error) {
+func RsaEncryptData(t PKCSType, originData []byte, publicKey string) (cipherData []byte, err error) {
 	var (
 		key *rsa.PublicKey
 	)
@@ -56,15 +50,11 @@ func RsaEncryptDataV2(t PKCSType, originData []byte, publicKey string) (cipherDa
 
 	switch t {
 	case PKCS1:
-		pkcs1Key, err := x509.ParsePKIXPublicKey(block.Bytes)
+		pkcs1Key, err := x509.ParsePKCS1PublicKey(block.Bytes)
 		if err != nil {
 			return nil, err
 		}
-		pk1, ok := pkcs1Key.(*rsa.PublicKey)
-		if !ok {
-			return nil, errors.New("publicKey parse error")
-		}
-		key = pk1
+		key = pkcs1Key
 	case PKCS8:
 		pkcs8Key, err := x509.ParsePKIXPublicKey(block.Bytes)
 		if err != nil {
@@ -76,15 +66,11 @@ func RsaEncryptDataV2(t PKCSType, originData []byte, publicKey string) (cipherDa
 		}
 		key = pk8
 	default:
-		pkcs1Key, err := x509.ParsePKIXPublicKey(block.Bytes)
+		pkcs1Key, err := x509.ParsePKCS1PublicKey(block.Bytes)
 		if err != nil {
 			return nil, err
 		}
-		pk1, ok := pkcs1Key.(*rsa.PublicKey)
-		if !ok {
-			return nil, errors.New("publicKey parse error")
-		}
-		key = pk1
+		key = pkcs1Key
 	}
 
 	cipherBytes, err := rsa.EncryptPKCS1v15(rand.Reader, key, originData)
@@ -110,15 +96,11 @@ func RsaEncryptOAEPData(h hash.Hash, t PKCSType, publicKey string, originData, l
 
 	switch t {
 	case PKCS1:
-		pkcs1Key, err := x509.ParsePKIXPublicKey(block.Bytes)
+		pkcs1Key, err := x509.ParsePKCS1PublicKey(block.Bytes)
 		if err != nil {
 			return nil, err
 		}
-		pk1, ok := pkcs1Key.(*rsa.PublicKey)
-		if !ok {
-			return nil, errors.New("publicKey parse error")
-		}
-		key = pk1
+		key = pkcs1Key
 	case PKCS8:
 		pkcs8Key, err := x509.ParsePKIXPublicKey(block.Bytes)
 		if err != nil {
@@ -130,15 +112,11 @@ func RsaEncryptOAEPData(h hash.Hash, t PKCSType, publicKey string, originData, l
 		}
 		key = pk8
 	default:
-		pkcs1Key, err := x509.ParsePKIXPublicKey(block.Bytes)
+		pkcs1Key, err := x509.ParsePKCS1PublicKey(block.Bytes)
 		if err != nil {
 			return nil, err
 		}
-		pk1, ok := pkcs1Key.(*rsa.PublicKey)
-		if !ok {
-			return nil, errors.New("publicKey parse error")
-		}
-		key = pk1
+		key = pkcs1Key
 	}
 
 	cipherBytes, err := rsa.EncryptOAEP(h, rand.Reader, key, originData, label)

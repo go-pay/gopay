@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"crypto/sha256"
 	"encoding/json"
 	"testing"
 
@@ -116,6 +117,18 @@ func Test_ProfitSharingRemoveReceiver(t *testing.T) {
 	xlog.Debug("wxRsp:", wxRsp)
 }
 
+func TestClient_GetRSAPublicKey(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("nonce_str", util.GetRandomString(32)).
+		Set("sign_type", SignType_MD5)
+	publicKey, err := client.GetRSAPublicKey(bm, nil, nil, nil)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("publicKey:%#v", publicKey)
+}
+
 func TestClient_PayBank(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
@@ -124,12 +137,12 @@ func TestClient_PayBank(t *testing.T) {
 		Set("bank_code", "1001"). // 招商银行，https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_4&index=5
 		Set("amount", 1)
 
-	encryptBank, err := xrsa.RsaEncryptDataV2(xrsa.PKCS1, []byte("621400000000567"), "publicKey.pem")
+	encryptBank, err := xrsa.RsaEncryptOAEPData(sha256.New(), xrsa.PKCS1, "publicKey.pem", []byte("621400000000567"), nil)
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
-	encryptName, err := xrsa.RsaEncryptDataV2(xrsa.PKCS1, []byte("Jerry"), "publicKey.pem")
+	encryptName, err := xrsa.RsaEncryptOAEPData(sha256.New(), xrsa.PKCS1, "publicKey.pem", []byte("Jerry"), nil)
 	if err != nil {
 		xlog.Error(err)
 		return
