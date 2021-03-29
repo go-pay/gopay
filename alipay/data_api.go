@@ -8,6 +8,7 @@ import (
 )
 
 // Deprecated
+// 支付宝已不再支持
 // alipay.data.bill.balance.query(支付宝商家账户当前余额查询)
 //	文档地址：https://opendocs.alipay.com/apis/api_15/alipay.data.bill.balance.query
 func (a *Client) DataBillBalanceQuery(bm gopay.BodyMap) (aliRsp *DataBillBalanceQueryResponse, err error) {
