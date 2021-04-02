@@ -236,7 +236,7 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 	}
 	param := FormatURLParam(pubBody)
 	switch method {
-	case "alipay.trade.app.pay":
+	case "alipay.trade.app.pay", "alipay.fund.auth.order.app.freeze":
 		return []byte(param), nil
 	case "alipay.trade.wap.pay", "alipay.trade.page.pay", "alipay.user.certify.open.certify":
 		if !a.IsProd {
