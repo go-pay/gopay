@@ -12,7 +12,7 @@ import (
 // alipay.trade.pay(统一收单交易支付接口)
 //	文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.pay
 func (a *Client) TradePay(bm gopay.BodyMap) (aliRsp *TradePayResponse, err error) {
-	err = bm.CheckEmptyError("out_trade_no", "scene", "auth_code", "subject")
+	err = bm.CheckEmptyError("out_trade_no", "scene", "subject")
 	if err != nil {
 		return nil, err
 	}
