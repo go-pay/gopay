@@ -61,9 +61,9 @@ func (a *Client) PostAliPayAPISelf(bm gopay.BodyMap, method string, aliRsp inter
 	return nil
 }
 
-// AliPaySignSelf 支付宝接口签名
+// GetRequestSignParam 获取支付宝请求参数包含签名
 //	注意：需要自行通过bm.SetBodyMap()设置，不设置则没有此参数
-func (a *Client) AliPaySignSelf(bm gopay.BodyMap, method string) (string, error) {
+func (a *Client) GetRequestSignParam(bm gopay.BodyMap, method string) (string, error) {
 	var (
 		bodyBs []byte
 		err    error
