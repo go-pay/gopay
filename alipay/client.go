@@ -61,7 +61,7 @@ func (a *Client) PostAliPayAPISelf(bm gopay.BodyMap, method string, aliRsp inter
 	return nil
 }
 
-// GetRequestSignParam 获取支付宝请求参数包含签名
+// GetRequestSignParam 获取支付宝完整请求参数包含签名
 //	注意：biz_content 需要自行通过bm.SetBodyMap()设置，不设置则没有此参数
 func (a *Client) GetRequestSignParam(bm gopay.BodyMap, method string) (string, error) {
 	var (
