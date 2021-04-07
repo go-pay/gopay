@@ -61,8 +61,46 @@ func (a *Client) PostAliPayAPISelf(bm gopay.BodyMap, method string, aliRsp inter
 	return nil
 }
 
+// GetRequestSignParam 获取支付宝请求参数包含签名
+//	注意：biz_content 需要自行通过bm.SetBodyMap()设置，不设置则没有此参数
+func (a *Client) GetRequestSignParam(bm gopay.BodyMap, method string) (string, error) {
+	var (
+		bodyBs []byte
+		err    error
+		sign   string
+	)
+	// check if there is biz_content
+	bz := bm.GetInterface("biz_content")
+	if bzBody, ok := bz.(gopay.BodyMap); ok {
+		if bodyBs, err = json.Marshal(bzBody); err != nil {
+			return "", fmt.Errorf("json.Marshal(%v)：%w", bzBody, err)
+		}
+		bm.Set("biz_content", string(bodyBs))
+	}
+	bm.Set("method", method)
+
+	// check public parameter
+	a.checkPublicParam(bm)
+
+	// check sign
+	if bm.GetString("sign") == "" {
+		sign, err = GetRsaSign(bm, bm.GetString("sign_type"), a.PrivateKeyType, a.PrivateKey)
+		if err != nil {
+			return "", fmt.Errorf("GetRsaSign Error: %v", err)
+		}
+		bm.Set("sign", sign)
+	}
+
+	if a.DebugSwitch == gopay.DebugOn {
+		req, _ := json.Marshal(bm)
+		xlog.Debugf("Alipay_Request: %s", req)
+	}
+	param := FormatURLParam(bm)
+	return param, nil
+}
+
 // PostAliPayAPISelfV2 支付宝接口自行实现方法
-//	注意：需要自行通过bm.SetBodyMap()设置，不设置则没有此参数
+//	注意：biz_content 需要自行通过bm.SetBodyMap()设置，不设置则没有此参数
 //	示例：请参考 client_test.go 的 TestClient_PostAliPayAPISelf() 方法
 func (a *Client) PostAliPayAPISelfV2(bm gopay.BodyMap, method string, aliRsp interface{}) (err error) {
 	var (
@@ -198,7 +236,7 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 	}
 	param := FormatURLParam(pubBody)
 	switch method {
-	case "alipay.trade.app.pay":
+	case "alipay.trade.app.pay", "alipay.fund.auth.order.app.freeze":
 		return []byte(param), nil
 	case "alipay.trade.wap.pay", "alipay.trade.page.pay", "alipay.user.certify.open.certify":
 		if !a.IsProd {

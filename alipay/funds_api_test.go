@@ -80,6 +80,5 @@ func TestFundAuthOrderAppFreeze(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debug("aliRsp:", *aliRsp)
-	xlog.Debug("aliRsp.Response:", aliRsp.Response)
+	xlog.Debug("aliRsp:", aliRsp)
 }
