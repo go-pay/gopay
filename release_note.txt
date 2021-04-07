@@ -1,3 +1,10 @@
+版本号：Release 1.5.37
+修改记录：
+   (1) 支付宝：修改 client.FundAuthOrderAppFreeze() 接口返回参数
+   (2) 支付宝：新增 client.GetRequestSignParam()，获取已签名的完整请求参数
+   (3) 微信V3：增加 client.GetPlatformCerts()，获取微信平台证书公钥，增加注释说明
+   (4) 支付宝：拆分 _test.go 文件
+
 版本号：Release 1.5.36
 修改记录：
    (1) 支付宝：新增 资金API 类别 接口实现
