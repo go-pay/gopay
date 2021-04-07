@@ -17,7 +17,7 @@ import (
 )
 
 // V3VerifySign 微信V3 版本验签
-//	wxPkContent：微信平台证书内容，首次通过client.GetPlatformCerts() 获取
+//	wxPkContent：微信平台证书公钥内容，通过client.GetPlatformCerts() 获取
 func V3VerifySign(timestamp, nonce, signBody, sign, wxPkContent string) (err error) {
 	var (
 		block     *pem.Block

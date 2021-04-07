@@ -288,7 +288,7 @@ if err != nil {
 }
 
 // 自动验签
-// 注意：未获取到微信平台公钥时，不要开启，请调用 client.GetPlatformCerts() 获取微信平台公钥（此接口只需调用一次，获取到微信平台公钥后自行保存）
+// 注意：未获取到微信平台公钥时，不要开启，请调用 client.GetPlatformCerts() 获取微信平台证书公钥
 //client.AutoVerifySign("微信平台公钥")
 
 // 打开Debug开关，输出日志
