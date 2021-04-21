@@ -31,14 +31,17 @@ func TestMain(m *testing.M) {
 	// 设置国家，不设置默认就是 China
 	client.SetCountry(China)
 
-	// 添加证书n内容
-	//err := client.AddCertFileContent(nil, nil, nil)
+	// 不使用证书接口，可以不添加证书
+	// 添加pkcs12内容
+	//err = client.AddCertPkcs12FilePath("apiclient_cert.p12")
 	//if err != nil {
 	//	panic(err)
 	//}
 
-	// 添加证书路径
-	//err := client.AddCertFilePath(nil, nil, nil)
+	// 或
+
+	// 添加pem证书路径
+	//err := client.AddCertPemFilePath("apiclient_cert.pem", "apiclient_key.pem")
 	//if err != nil {
 	//	panic(err)
 	//}
@@ -71,7 +74,7 @@ func TestClient_GetTransferInfo(t *testing.T) {
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, err := client.GetTransferInfo(bm, nil, nil, nil)
+	wxRsp, err := client.GetTransferInfo(bm)
 	if err != nil {
 		xlog.Errorf("client.GetTransferInfo(%+v),error:%+v", bm, err)
 		return
@@ -105,7 +108,7 @@ func TestClient_DownloadFundFlow(t *testing.T) {
 		Set("account_type", "Basic")
 
 	// 请求下载资金账单，成功后得到结果，沙箱环境下，证书路径参数可传nil
-	wxRsp, err := client.DownloadFundFlow(bm, nil, nil, nil)
+	wxRsp, err := client.DownloadFundFlow(bm)
 	if err != nil {
 		xlog.Errorf("client.DownloadFundFlow(%+v),error:%+v", bm, err)
 		return
@@ -123,7 +126,7 @@ func TestClient_BatchQueryComment(t *testing.T) {
 		Set("offset", "0")
 
 	// 请求拉取订单评价数据，成功后得到结果，沙箱环境下，证书路径参数可传nil
-	wxRsp, err := client.BatchQueryComment(bm, nil, nil, nil)
+	wxRsp, err := client.BatchQueryComment(bm)
 	if err != nil {
 		xlog.Errorf("client.BatchQueryComment(%+v),error:%+v", bm, err)
 		return

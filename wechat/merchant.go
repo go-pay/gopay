@@ -13,13 +13,11 @@ import (
 )
 
 // 企业付款（企业向微信用户个人付款）
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则3证书Path均不可为nil（string类型）
+//	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
-func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *TransfersResponse, err error) {
-	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
+func (w *Client) Transfer(bm gopay.BodyMap) (wxRsp *TransfersResponse, err error) {
+
 	if err = bm.CheckEmptyError("nonce_str", "partner_trade_no", "openid", "check_name", "amount", "desc", "spbill_create_ip"); err != nil {
 		return nil, err
 	}
@@ -29,7 +27,7 @@ func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fil
 		tlsConfig *tls.Config
 		url       = baseUrlCh + transfers
 	)
-	if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
 		return nil, err
 	}
 	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
@@ -62,13 +60,10 @@ func (w *Client) Transfer(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fil
 }
 
 // 查询企业付款
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则3证书Path均不可为nil（string类型）
+//	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	注意：此方法未支持沙箱环境，默认正式环境
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_3
-func (w *Client) GetTransferInfo(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *TransfersInfoResponse, err error) {
-	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
+func (w *Client) GetTransferInfo(bm gopay.BodyMap) (wxRsp *TransfersInfoResponse, err error) {
 	if err = bm.CheckEmptyError("nonce_str", "partner_trade_no"); err != nil {
 		return nil, err
 	}
@@ -78,7 +73,7 @@ func (w *Client) GetTransferInfo(bm gopay.BodyMap, certFilePath, keyFilePath, pk
 		tlsConfig *tls.Config
 		url       = baseUrlCh + getTransferInfo
 	)
-	if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
 		return nil, err
 	}
 	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
@@ -110,17 +105,14 @@ func (w *Client) GetTransferInfo(bm gopay.BodyMap, certFilePath, keyFilePath, pk
 	return wxRsp, nil
 }
 
-// 企业付款到银行卡API
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则3证书Path均不可为nil（string类型）
+// 企业付款到银行卡API（正式）
+//	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
 //	注意：enc_bank_no、enc_true_name 两参数，开发者需自行获取RSA公钥，加密后再 Set 到 BodyMap，参考 client_test.go 里的 TestClient_PayBank() 方法
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_2
 //	RSA加密文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_7
 //	银行编码查看地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_4&index=5
-func (w *Client) PayBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *PayBankResponse, err error) {
-	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
+func (w *Client) PayBank(bm gopay.BodyMap) (wxRsp *PayBankResponse, err error) {
 	if err = bm.CheckEmptyError("partner_trade_no", "nonce_str", "enc_bank_no", "enc_true_name", "bank_code", "amount"); err != nil {
 		return nil, err
 	}
@@ -129,7 +121,7 @@ func (w *Client) PayBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 		tlsConfig *tls.Config
 		url       = baseUrlCh + payBank
 	)
-	if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
 		return nil, err
 	}
 	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
@@ -161,14 +153,10 @@ func (w *Client) PayBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 	return wxRsp, nil
 }
 
-// 查询企业付款到银行卡API
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则3证书Path均不可为nil（string类型）
-//	注意：此方法未支持沙箱环境，默认正式环境
+// 查询企业付款到银行卡API（正式）
+//	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_3
-func (w *Client) QueryBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *QueryBankResponse, err error) {
-	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
+func (w *Client) QueryBank(bm gopay.BodyMap) (wxRsp *QueryBankResponse, err error) {
 	if err = bm.CheckEmptyError("nonce_str", "partner_trade_no"); err != nil {
 		return nil, err
 	}
@@ -177,7 +165,7 @@ func (w *Client) QueryBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fi
 		tlsConfig *tls.Config
 		url       = baseUrlCh + queryBank
 	)
-	if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
 		return nil, err
 	}
 	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
@@ -209,14 +197,10 @@ func (w *Client) QueryBank(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12Fi
 	return wxRsp, nil
 }
 
-// 获取RSA加密公钥API
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则3证书Path均不可为nil（string类型）
-//	注意：此方法未支持沙箱环境，默认正式环境
+// 获取RSA加密公钥API（正式）
+//	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_7&index=4
-func (w *Client) GetRSAPublicKey(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *RSAPublicKeyResponse, err error) {
-	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
+func (w *Client) GetRSAPublicKey(bm gopay.BodyMap) (wxRsp *RSAPublicKeyResponse, err error) {
 	if err = bm.CheckEmptyError("nonce_str", "sign_type"); err != nil {
 		return nil, err
 	}
@@ -225,7 +209,7 @@ func (w *Client) GetRSAPublicKey(bm gopay.BodyMap, certFilePath, keyFilePath, pk
 		tlsConfig *tls.Config
 		url       = getPublicKey
 	)
-	if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
 		return nil, err
 	}
 	bm.Set("sign", getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm))
@@ -252,31 +236,28 @@ func (w *Client) GetRSAPublicKey(bm gopay.BodyMap, certFilePath, keyFilePath, pk
 	return wxRsp, nil
 }
 
-// ProfitSharing 请求单次分账
+// 请求单次分账
 //	单次分账请求按照传入的分账接收方账号和资金进行分账，
 //	同时会将订单剩余的待分账金额解冻给本商户。
 //	故操作成功后，订单不能再进行分账，也不能进行分账完结。
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
+//	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_1&index=1
-func (w *Client) ProfitSharing(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingResponse, err error) {
-	return w.profitSharing(bm, profitSharing, certFilePath, keyFilePath, pkcs12FilePath)
+func (w *Client) ProfitSharing(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, err error) {
+	return w.profitSharing(bm, profitSharing)
 }
 
-// MultiProfitSharing 请求多次分账
+// 请求多次分账
 //	微信订单支付成功后，商户发起分账请求，将结算后的钱分到分账接收方。多次分账请求仅会按照传入的分账接收方进行分账，不会对剩余的金额进行任何操作。
 //	故操作成功后，在待分账金额不等于零时，订单依旧能够再次进行分账。
 //	多次分账，可以将本商户作为分账接收方直接传入，实现释放资金给本商户的功能
 //	对同一笔订单最多能发起20次多次分账请求
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
+//	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_1&index=1
-func (w *Client) MultiProfitSharing(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingResponse, err error) {
-	return w.profitSharing(bm, multiProfitSharing, certFilePath, keyFilePath, pkcs12FilePath)
+func (w *Client) MultiProfitSharing(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, err error) {
+	return w.profitSharing(bm, multiProfitSharing)
 }
 
-func (w *Client) profitSharing(bm gopay.BodyMap, uri string, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingResponse, err error) {
-	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
+func (w *Client) profitSharing(bm gopay.BodyMap, uri string) (wxRsp *ProfitSharingResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "transaction_id", "out_order_no", "receivers")
 	if err != nil {
 		return nil, err
@@ -284,7 +265,7 @@ func (w *Client) profitSharing(bm gopay.BodyMap, uri string, certFilePath, keyFi
 
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
-	tlsConfig, err := w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
+	tlsConfig, err := w.addCertConfig(nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -299,9 +280,8 @@ func (w *Client) profitSharing(bm gopay.BodyMap, uri string, certFilePath, keyFi
 	return wxRsp, nil
 }
 
-// ProfitSharingQuery 查询分账结果
+// 查询分账结果
 //	发起分账请求后，可调用此接口查询分账结果；发起分账完结请求后，可调用此接口查询分账完结的执行结果。
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_2&index=3
 func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQueryResponse, err error) {
 	err = bm.CheckEmptyError("transaction_id", "out_order_no", "nonce_str")
@@ -326,9 +306,8 @@ func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQuery
 	return wxRsp, nil
 }
 
-// ProfitSharingAddReceiver 添加分账接收方
+// 添加分账接收方
 //	商户发起添加分账接收方请求，后续可通过发起分账请求将结算后的钱分到该分账接收方。
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_3&index=4
 func (w *Client) ProfitSharingAddReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharingAddReceiverResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "receiver")
@@ -348,9 +327,8 @@ func (w *Client) ProfitSharingAddReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharin
 	return wxRsp, nil
 }
 
-// ProfitSharingRemoveReceiver 删除分账接收方
+// 删除分账接收方
 //	商户发起删除分账接收方请求，删除后不支持将结算后的钱分到该分账接收方
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_4&index=5
 func (w *Client) ProfitSharingRemoveReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharingAddReceiverResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "receiver")
@@ -370,23 +348,20 @@ func (w *Client) ProfitSharingRemoveReceiver(bm gopay.BodyMap) (wxRsp *ProfitSha
 	return wxRsp, nil
 }
 
-// ProfitSharingFinish 完结分账
+// 完结分账
 //	1、不需要进行分账的订单，可直接调用本接口将订单的金额全部解冻给本商户
 //	2、调用多次分账接口后，需要解冻剩余资金时，调用本接口将剩余的分账金额全部解冻给特约商户
 //	3、已调用请求单次分账后，剩余待分账金额为零，不需要再调用此接口。
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
+//	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_5&index=6
-func (w *Client) ProfitSharingFinish(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingResponse, err error) {
-	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
+func (w *Client) ProfitSharingFinish(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "transaction_id", "out_order_no", "description")
 	if err != nil {
 		return nil, err
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
-	tlsConfig, err := w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
+	tlsConfig, err := w.addCertConfig(nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -401,17 +376,14 @@ func (w *Client) ProfitSharingFinish(bm gopay.BodyMap, certFilePath, keyFilePath
 	return wxRsp, nil
 }
 
-// ProfitSharingReturn 分账回退
+// 分账回退
 //	对订单进行退款时，如果订单已经分账，可以先调用此接口将指定的金额从分账接收方（仅限商户类型的分账接收方）回退给本商户，然后再退款。
 //	回退以原分账请求为依据，可以对分给分账接收方的金额进行多次回退，只要满足累计回退不超过该请求中分给接收方的金额。
 //	此接口采用同步处理模式，即在接收到商户请求后，会实时返回处理结果
 //	此功能需要接收方在商户平台-交易中心-分账-分账接收设置下，开启同意分账回退后，才能使用。
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
+//	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_7&index=7
-func (w *Client) ProfitSharingReturn(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ProfitSharingReturnResponse, err error) {
-	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
+func (w *Client) ProfitSharingReturn(bm gopay.BodyMap) (wxRsp *ProfitSharingReturnResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_return_no", "return_account_type", "return_account", "return_amount", "description")
 	if err != nil {
 		return nil, err
@@ -422,7 +394,7 @@ func (w *Client) ProfitSharingReturn(bm gopay.BodyMap, certFilePath, keyFilePath
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
-	tlsConfig, err := w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
+	tlsConfig, err := w.addCertConfig(nil, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -437,10 +409,9 @@ func (w *Client) ProfitSharingReturn(bm gopay.BodyMap, certFilePath, keyFilePath
 	return wxRsp, nil
 }
 
-// ProfitSharingReturnQuery 回退结果查询
+// 回退结果查询
 //	商户需要核实回退结果，可调用此接口查询回退结果。
 //	如果分账回退接口返回状态为处理中，可调用此接口查询回退结果
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_8&index=8
 func (w *Client) ProfitSharingReturnQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingReturnResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_return_no")

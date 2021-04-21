@@ -25,7 +25,7 @@ func DownloadFundFlow() {
 		Set("account_type", "Basic")
 
 	// 请求下载资金账单，成功后得到结果，沙箱环境下，证书路径参数可传空
-	wxRsp, err := client.DownloadFundFlow(bm, nil, nil, nil)
+	wxRsp, err := client.DownloadFundFlow(bm)
 	if err != nil {
 		xlog.Error(err)
 		return

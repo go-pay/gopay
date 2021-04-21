@@ -43,42 +43,54 @@ func (w *Client) SetCountry(country Country) (client *Client) {
 	return w
 }
 
-// 添加微信证书 Path 路径
-//	certFilePath：apiclient_cert.pem 路径
-//	keyFilePath：apiclient_key.pem 路径
-//	pkcs12FilePath：apiclient_cert.p12 路径
-//	返回err
-func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) (err error) {
-	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+// Deprecated
+// 推荐使用 AddCertPemFileContent() 或 AddCertPemFilePath() 或 AddCertPkcs12FileContent() 或 AddCertPkcs12FilePath()
+// 添加微信证书路径或内容[]byte
+//	注意：只传pem证书或只传pkcs12证书均可，无需3个证书全传
+func (w *Client) AddCertFilePath(certFileContent, keyFileContent, pkcs12FileContent interface{}) (err error) {
+	return w.addCertFileContentOrPath(certFileContent, keyFileContent, pkcs12FileContent)
+}
+
+// 添加微信pem证书文件路径
+//	certFilePath：apiclient_cert.pem 文件路径
+//	keyFilePath：apiclient_key.pem 文件路径
+func (w *Client) AddCertPemFilePath(certFilePath, keyFilePath string) (err error) {
+	return w.addCertFileContentOrPath(certFilePath, keyFilePath, nil)
+}
+
+// 添加微信pkcs12证书文件路径
+//	pkcs12FilePath：apiclient_cert.p12 文件路径
+func (w *Client) AddCertPkcs12FilePath(pkcs12FilePath string) (err error) {
+	return w.addCertFileContentOrPath(nil, nil, pkcs12FilePath)
+}
+
+// 添加微信pem证书内容[]byte
+//	certFileContent：apiclient_cert.pem 证书内容[]byte
+//	keyFileContent：apiclient_key.pem 证书内容[]byte
+func (w *Client) AddCertPemFileContent(certFileContent, keyFileContent []byte) (err error) {
+	return w.addCertFileContentOrPath(certFileContent, keyFileContent, nil)
+}
+
+// 添加微信pkcs12证书内容[]byte
+//	p12FileContent：apiclient_cert.p12 证书内容[]byte
+func (w *Client) AddCertPkcs12FileContent(p12FileContent []byte) (err error) {
+	return w.addCertFileContentOrPath(nil, nil, p12FileContent)
+}
+
+// 添加微信证书文件 Path 路径或证书内容
+//	注意：只传pem证书或只传pkcs12证书均可，无需3个证书全传
+func (w *Client) addCertFileContentOrPath(certFile, keyFile, pkcs12File interface{}) (err error) {
+	if err = checkCertFilePathOrContent(certFile, keyFile, pkcs12File); err != nil {
 		return
 	}
 	var config *tls.Config
-	if config, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	if config, err = w.addCertConfig(certFile, keyFile, pkcs12File); err != nil {
 		return
 	}
 	w.mu.Lock()
 	w.certificate = &config.Certificates[0]
 	w.mu.Unlock()
 	return
-}
-
-// 添加微信证书内容
-//	certFileContent：apiclient_cert.pem 内容
-//	keyFileContent：apiclient_key.pem 内容
-//	pkcs12FileContent：apiclient_cert.p12 内容
-//	返回err
-func (w *Client) AddCertFileContent(certFileContent, keyFileContent, pkcs12FileContent []byte) (err error) {
-	return w.AddCertFilePath(certFileContent, keyFileContent, pkcs12FileContent)
-}
-
-// 添加微信pem证书内容
-func (w *Client) AddCertPemFileContent(certFileContent, keyFileContent []byte) (err error) {
-	return w.AddCertFilePath(certFileContent, keyFileContent, nil)
-}
-
-// 添加微信pkcs12证书内容
-func (w *Client) AddCertPkcs12FileContent(pkcs12FileContent []byte) (err error) {
-	return w.AddCertFilePath(nil, nil, pkcs12FileContent)
 }
 
 func (w *Client) addCertConfig(certFile, keyFile, pkcs12File interface{}) (tlsConfig *tls.Config, err error) {
@@ -92,7 +104,7 @@ func (w *Client) addCertConfig(certFile, keyFile, pkcs12File interface{}) (tlsCo
 			}
 			return tlsConfig, nil
 		}
-		return nil, errors.New("cert parse failed")
+		return nil, errors.New("cert parse failed or nil")
 	}
 
 	var (

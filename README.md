@@ -10,17 +10,7 @@
 [![GitHub Release](https://img.shields.io/github/v/release/iGoogle-ink/gopay)](https://github.com/iGoogle-ink/gopay/releases)
 [![License](https://img.shields.io/github/license/iGoogle-ink/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
 
---- 
-
-## ★招聘广告★：
-
-有意向的请直接加我微信（文档说明处有我的微信二维码）
-
-- 公司：上海商米科技集团股份有限公司
-- 要求：3-5年后端工程师（Golang）
-- 地点：上海市杨浦区五角场
-
---- 
+---
 
 # 一、安装
 
@@ -301,7 +291,7 @@ client.DebugSwitch = gopay.DebugOff
 
 > 注意：微信支付下单等操作可用沙箱环境测试是否成功，但真正支付时，请使用正式环境 isProd = true，不然会报错。
 
-> 微信证书现已支持二选一：只传 apiclient_cert.pem 和 apiclient_key.pem 或者只传 apiclient_cert.p12
+> 微信证书二选一：只传 apiclient_cert.pem 和 apiclient_key.pem 或者只传 apiclient_cert.p12
 
 ```go
 import (
@@ -325,19 +315,13 @@ client.DebugSwitch = gopay.DebugOn
 //    wechat.Other：其他国家
 client.SetCountry(wechat.China)
 
-// 添加微信证书 Path 路径
-//    certFilePath：apiclient_cert.pem 路径
-//    keyFilePath：apiclient_key.pem 路径
-//    pkcs12FilePath：apiclient_cert.p12 路径
-//    返回err
-client.AddCertFilePath()
+// 添加微信pem证书
+client.AddCertPemFilePath()
+client.AddCertPemFileContent()
 
-// 添加微信证书内容 Content
-//	certFileContent：apiclient_cert.pem 内容
-//	keyFileContent：apiclient_key.pem 内容
-//	pkcs12FileContent：apiclient_cert.p12 内容
-//	返回err
-client.AddCertFileContent()
+// 添加微信pkcs12证书
+client.AddCertPkcs12FilePath()
+client.AddCertPkcs12FileContent()
 ```
 
 * #### 支付宝
@@ -472,13 +456,13 @@ wxRsp, err := client.UnifiedOrder(bm)
 wxRsp, err := client.Micropay(bm)
 wxRsp, err := client.QueryOrder(bm)
 wxRsp, err := client.CloseOrder(bm)
-wxRsp, err := client.Reverse(bm, "apiclient_cert.pem", "apiclient_key.pem", "apiclient_cert.p12")
-wxRsp, err := client.Refund(bm, "apiclient_cert.pem", "apiclient_key.pem", "apiclient_cert.p12")
+wxRsp, err := client.Reverse(bm)
+wxRsp, err := client.Refund(bm)
 wxRsp, err := client.QueryRefund(bm)
 wxRsp, err := client.DownloadBill(bm)
-wxRsp, err := client.DownloadFundFlow(bm, "apiclient_cert.pem", "apiclient_key.pem", "apiclient_cert.p12")
-wxRsp, err := client.BatchQueryComment(bm, "apiclient_cert.pem", "apiclient_key.pem", "apiclient_cert.p12")
-wxRsp, err := client.Transfer(bm, "apiclient_cert.pem", "apiclient_key.pem", "apiclient_cert.p12")
+wxRsp, err := client.DownloadFundFlow(bm)
+wxRsp, err := client.BatchQueryComment(bm)
+wxRsp, err := client.Transfer(bm)
 ```
 
 * #### 支付宝 client

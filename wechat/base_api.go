@@ -112,12 +112,9 @@ func (w *Client) CloseOrder(bm gopay.BodyMap) (wxRsp *CloseOrderResponse, err er
 }
 
 // 申请退款
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
+//	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_4.shtml
-func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *RefundResponse, resBm gopay.BodyMap, err error) {
-	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, nil, err
-	}
+func (w *Client) Refund(bm gopay.BodyMap) (wxRsp *RefundResponse, resBm gopay.BodyMap, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_refund_no", "total_fee", "refund_fee")
 	if err != nil {
 		return nil, nil, err
@@ -130,7 +127,7 @@ func (w *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 		tlsConfig *tls.Config
 	)
 	if w.IsProd {
-		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
 			return nil, nil, err
 		}
 		bs, err = w.doProdPost(bm, refund, tlsConfig)
@@ -182,12 +179,9 @@ func (w *Client) QueryRefund(bm gopay.BodyMap) (wxRsp *QueryRefundResponse, resB
 }
 
 // 撤销订单
-//	注意：如已使用client.AddCertFilePath()或client.AddCertFileContent()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
+//	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter4_3.shtml
-func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (wxRsp *ReverseResponse, err error) {
-	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
+func (w *Client) Reverse(bm gopay.BodyMap) (wxRsp *ReverseResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_trade_no")
 	if err != nil {
 		return nil, err
@@ -197,7 +191,7 @@ func (w *Client) Reverse(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12File
 		tlsConfig *tls.Config
 	)
 	if w.IsProd {
-		if tlsConfig, err = w.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+		if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
 			return nil, err
 		}
 		bs, err = w.doProdPost(bm, reverse, tlsConfig)
