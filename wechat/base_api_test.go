@@ -136,7 +136,7 @@ func TestClient_Refund(t *testing.T) {
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, resBm, err := client.Refund(bm, nil, nil, nil)
+	wxRsp, resBm, err := client.Refund(bm)
 	if err != nil {
 		xlog.Errorf("client.Refund(%+v),error:%+v", bm, err)
 		return
@@ -173,7 +173,7 @@ func TestClient_Reverse(t *testing.T) {
 		Set("sign_type", SignType_MD5)
 
 	// 请求撤销订单，成功后得到结果，沙箱环境下，证书路径参数可传nil
-	wxRsp, err := client.Reverse(bm, nil, nil, nil)
+	wxRsp, err := client.Reverse(bm)
 	if err != nil {
 		xlog.Errorf("client.Reverse(%+v),error:%+v", bm, err)
 		return
