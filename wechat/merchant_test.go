@@ -28,7 +28,7 @@ func TestClient_Transfer(t *testing.T) {
 	//    certFilePath：cert证书路径
 	//    keyFilePath：Key证书路径
 	//    pkcs12FilePath：p12证书路径
-	wxRsp, err := client.Transfer(bm, nil, nil, nil)
+	wxRsp, err := client.Transfer(bm)
 	if err != nil {
 		xlog.Errorf("client.Transfer(%+v),error:%+v", bm, err)
 		return
@@ -69,7 +69,7 @@ func Test_ProfitSharing(t *testing.T) {
 
 	bm.Set("receivers", string(bs))
 
-	wxRsp, err := client.ProfitSharing(bm, nil, nil, nil)
+	wxRsp, err := client.ProfitSharing(bm)
 	if err != nil {
 		xlog.Errorf("client.ProfitSharingAddReceiver(%+v),error:%+v", bm, err)
 		return
@@ -121,7 +121,7 @@ func TestClient_GetRSAPublicKey(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("nonce_str", util.GetRandomString(32)).
 		Set("sign_type", SignType_MD5)
-	publicKey, err := client.GetRSAPublicKey(bm, nil, nil, nil)
+	publicKey, err := client.GetRSAPublicKey(bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -151,7 +151,7 @@ func TestClient_PayBank(t *testing.T) {
 		Set("enc_true_name", encryptName)
 
 	// 企业付款到银行卡API
-	wxRsp, err := client.PayBank(bm, "certFilePath", "keyFilePath", "pkcs12FilePath")
+	wxRsp, err := client.PayBank(bm)
 	if err != nil {
 		xlog.Errorf("client.EntrustPaying(%+v),error:%+v", bm, err)
 		return
