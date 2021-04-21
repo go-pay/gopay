@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/pkg/util"
@@ -14,15 +13,13 @@ import (
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_1.shtml
 func (c *ClientV3) V3CombineTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
-	ts := time.Now().Unix()
-	nonceStr := util.GetRandomString(32)
 	if bm.GetString("combine_appid") == util.NULL {
 		bm.Set("combine_appid", c.Appid)
 	}
 	if bm.GetString("combine_mchid") == util.NULL {
 		bm.Set("combine_mchid", c.Mchid)
 	}
-	authorization, err := c.authorization(MethodPost, v3CombinePayApp, nonceStr, ts, bm)
+	authorization, err := c.authorization(MethodPost, v3CombinePayApp, bm)
 	if err != nil {
 		return nil, err
 	}
@@ -48,15 +45,13 @@ func (c *ClientV3) V3CombineTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, 
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_3.shtml
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_4.shtml
 func (c *ClientV3) V3CombineTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
-	ts := time.Now().Unix()
-	nonceStr := util.GetRandomString(32)
 	if bm.GetString("combine_appid") == util.NULL {
 		bm.Set("combine_appid", c.Appid)
 	}
 	if bm.GetString("combine_mchid") == util.NULL {
 		bm.Set("combine_mchid", c.Mchid)
 	}
-	authorization, err := c.authorization(MethodPost, v3CombinePayJsapi, nonceStr, ts, bm)
+	authorization, err := c.authorization(MethodPost, v3CombinePayJsapi, bm)
 	if err != nil {
 		return nil, err
 	}
@@ -81,15 +76,13 @@ func (c *ClientV3) V3CombineTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_5.shtml
 func (c *ClientV3) V3CombineTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
-	ts := time.Now().Unix()
-	nonceStr := util.GetRandomString(32)
 	if bm.GetString("combine_appid") == util.NULL {
 		bm.Set("combine_appid", c.Appid)
 	}
 	if bm.GetString("combine_mchid") == util.NULL {
 		bm.Set("combine_mchid", c.Mchid)
 	}
-	authorization, err := c.authorization(MethodPost, v3CombineNative, nonceStr, ts, bm)
+	authorization, err := c.authorization(MethodPost, v3CombineNative, bm)
 	if err != nil {
 		return nil, err
 	}
@@ -114,15 +107,13 @@ func (c *ClientV3) V3CombineTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRs
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_2.shtml
 func (c *ClientV3) V3CombineTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
-	ts := time.Now().Unix()
-	nonceStr := util.GetRandomString(32)
 	if bm.GetString("combine_appid") == util.NULL {
 		bm.Set("combine_appid", c.Appid)
 	}
 	if bm.GetString("combine_mchid") == util.NULL {
 		bm.Set("combine_mchid", c.Mchid)
 	}
-	authorization, err := c.authorization(MethodPost, v3CombinePayH5, nonceStr, ts, bm)
+	authorization, err := c.authorization(MethodPost, v3CombinePayH5, bm)
 	if err != nil {
 		return nil, err
 	}
@@ -147,13 +138,8 @@ func (c *ClientV3) V3CombineTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err e
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_11.shtml
 func (c *ClientV3) V3CombineQueryOrder(traderNo string) (wxRsp *CombineQueryOrderRsp, err error) {
-	var (
-		ts       = time.Now().Unix()
-		nonceStr = util.GetRandomString(32)
-		uri      string
-	)
-	uri = fmt.Sprintf(v3CombineQuery, traderNo)
-	authorization, err := c.authorization(MethodGet, uri, nonceStr, ts, nil)
+	uri := fmt.Sprintf(v3CombineQuery, traderNo)
+	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -179,15 +165,11 @@ func (c *ClientV3) V3CombineQueryOrder(traderNo string) (wxRsp *CombineQueryOrde
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_12.shtml
 func (c *ClientV3) V3CombineCloseOrder(tradeNo string, bm gopay.BodyMap) (wxRsp *CloseOrderRsp, err error) {
-	var (
-		ts       = time.Now().Unix()
-		nonceStr = util.GetRandomString(32)
-		url      = fmt.Sprintf(v3CombineClose, tradeNo)
-	)
+	url := fmt.Sprintf(v3CombineClose, tradeNo)
 	if bm.GetString("combine_appid") == util.NULL {
 		bm.Set("combine_appid", c.Appid)
 	}
-	authorization, err := c.authorization(MethodPost, url, nonceStr, ts, bm)
+	authorization, err := c.authorization(MethodPost, url, bm)
 	if err != nil {
 		return nil, err
 	}

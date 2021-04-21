@@ -4,26 +4,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
 // 申请退款API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_14.shtml
 func (c *ClientV3) V3Refund(bm gopay.BodyMap) (wxRsp *RefundRsp, err error) {
-	var (
-		ts       = time.Now().Unix()
-		nonceStr = util.GetRandomString(32)
-		url      = v3DomesticRefund
-	)
-	authorization, err := c.authorization(MethodPost, url, nonceStr, ts, bm)
+	authorization, err := c.authorization(MethodPost, v3DomesticRefund, bm)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, url, authorization)
+	res, si, bs, err := c.doProdPost(bm, v3DomesticRefund, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -45,12 +38,8 @@ func (c *ClientV3) V3Refund(bm gopay.BodyMap) (wxRsp *RefundRsp, err error) {
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_10.shtml
 func (c *ClientV3) V3RefundQuery(outRefundNo string) (wxRsp *RefundQueryRsp, err error) {
-	var (
-		ts       = time.Now().Unix()
-		nonceStr = util.GetRandomString(32)
-		uri      = fmt.Sprintf(v3DomesticRefundQuery, outRefundNo)
-	)
-	authorization, err := c.authorization(MethodGet, uri, nonceStr, ts, nil)
+	uri := fmt.Sprintf(v3DomesticRefundQuery, outRefundNo)
+	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}

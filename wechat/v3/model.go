@@ -96,6 +96,22 @@ type PartnerQueryOrderRsp struct {
 	Error    string             `json:"-"`
 }
 
+// 创建支付分订单 Rsp
+type ScoreOrderCreateRsp struct {
+	Code     int               `json:"-"`
+	SignInfo *SignInfo         `json:"-"`
+	Response *ScoreOrderCreate `json:"response,omitempty"`
+	Error    string            `json:"-"`
+}
+
+// 查询支付分订单 Rsp
+type ScoreOrderQueryRsp struct {
+	Code     int              `json:"-"`
+	SignInfo *SignInfo        `json:"-"`
+	Response *ScoreOrderQuery `json:"response,omitempty"`
+	Error    string           `json:"-"`
+}
+
 // ==================================分割==================================
 
 type JSAPIPayParams struct {
@@ -365,4 +381,59 @@ type PartnerQueryOrder struct {
 type PartnerPayer struct {
 	SpOpenid  string `json:"sp_openid"`  // 用户在服务商appid下的唯一标识。
 	SubOpenid string `json:"sub_openid"` // 用户在子商户appid下的唯一标识。 如果返回sub_appid，那么sub_openid一定会返回。
+}
+
+type ScoreOrderCreate struct {
+	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
+	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
+	OutTradeNo          string           `json:"out_trade_no"`                // 调用接口提交的商户服务订单号。
+	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
+	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
+	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
+	StateDescription    string           `json:"state_description,omitempty"` // 对服务订单"进行中"状态的附加说明。USER_CONFIRM：用户确认，MCH_COMPLETE：商户完结
+	PostPayments        []*PostPayments  `json:"post_payments,omitempty"`     // 后付费项目列表，最多包含100条付费项目。 如果传入，用户侧则显示此参数。
+	PostDiscounts       []*PostDiscounts `json:"post_discounts,omitempty"`    // 后付费商户优惠，最多包含30条付费项目。 如果传入，用户侧则显示此参数。
+	RiskFund            *RiskFund        `json:"risk_fund"`                   // 订单风险金信息
+	TimeRange           *TimeRange       `json:"time_range"`                  // 服务时间范围
+	Location            *Location        `json:"location,omitempty"`          // 服务位置信息
+	Attach              string           `json:"attach,omitempty"`            // 商户数据包,可存放本订单所需信息，需要先urlencode后传入，总长度不大于256字符,超出报错处理。
+	NotifyUrl           string           `json:"notify_url,omitempty"`        // 商户接收用户确认订单或扣款成功回调通知的地址。
+	OrderId             string           `json:"order_id"`                    // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
+	Package             string           `json:"package"`                     // 用户跳转到微信侧小程序订单数据，需确认模式特有API中调起支付分-确认订单传入。该数据一小时内有效。
+}
+
+type PostPayments struct {
+	Name        string `json:"name,omitempty"`        // 付费项目名称
+	Description string `json:"description,omitempty"` // 描述计费规则，不超过30个字符，超出报错处理。
+	Amount      int    `json:"amount"`                // 此付费项目总金额，大于等于0，单位为分，等于0时代表不需要扣费，只能为整数
+	Count       int    `json:"count,omitempty"`       // 付费项目的数量。
+}
+
+type PostDiscounts struct {
+	Name        string `json:"name,omitempty"`        // 优惠名称说明。
+	Description string `json:"description,omitempty"` // 优惠使用条件说明。
+	Amount      int    `json:"amount"`                // 优惠金额，只能为整数
+	Count       int    `json:"count,omitempty"`       // 优惠的数量。
+}
+
+type RiskFund struct {
+	Name        string `json:"name"`                  // 风险金名称。DEPOSIT：押金，ADVANCE：预付款，CASH_DEPOSIT：保证金，ESTIMATE_ORDER_COST：预估订单费用
+	Description string `json:"description,omitempty"` // 风险说明
+	Amount      int    `json:"amount"`                // 风险金额
+}
+
+type TimeRange struct {
+	StartTime       string `json:"start_time"`                  // 服务开始时间，20091225091010
+	StartTimeRemark string `json:"start_time_remark,omitempty"` // 服务开始时间备注
+	EndTime         string `json:"end_time,omitempty"`          // 预计服务结束时间，20091225121010
+	EndTimeRemark   string `json:"end_time_remark,omitempty"`   // 预计服务结束时间备注
+}
+
+type Location struct {
+	StartLocation string `json:"start_location,omitempty"` // 服务开始地点
+	EndLocation   string `json:"end_location,omitempty"`   // 服务结束位置
+}
+
+type ScoreOrderQuery struct {
+	// todo: finish
 }

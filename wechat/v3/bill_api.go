@@ -17,11 +17,6 @@ import (
 //	注意：账单日期不可写当天日期
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/bill/chapter3_1.shtml
 func (c *ClientV3) V3BillTradeBill(bm gopay.BodyMap) (wxRsp *BillRsp, err error) {
-	var (
-		ts       = time.Now().Unix()
-		nonceStr = util.GetRandomString(32)
-		uri      string
-	)
 	if bm != nil {
 		if bm.GetString("bill_date") == util.NULL {
 			now := time.Now()
@@ -29,8 +24,8 @@ func (c *ClientV3) V3BillTradeBill(bm gopay.BodyMap) (wxRsp *BillRsp, err error)
 			bm.Set("bill_date", yesterday)
 		}
 	}
-	uri = v3ApiTradeBill + "?" + bm.EncodeGetParams()
-	authorization, err := c.authorization(MethodGet, uri, nonceStr, ts, nil)
+	uri := v3ApiTradeBill + "?" + bm.EncodeGetParams()
+	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -57,11 +52,6 @@ func (c *ClientV3) V3BillTradeBill(bm gopay.BodyMap) (wxRsp *BillRsp, err error)
 //	注意：账单日期不可写当天日期
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/bill/chapter3_2.shtml
 func (c *ClientV3) V3BillFundFlowBill(bm gopay.BodyMap) (wxRsp *BillRsp, err error) {
-	var (
-		ts       = time.Now().Unix()
-		nonceStr = util.GetRandomString(32)
-		uri      string
-	)
 	if bm != nil {
 		if bm.GetString("bill_date") == util.NULL {
 			now := time.Now()
@@ -69,8 +59,8 @@ func (c *ClientV3) V3BillFundFlowBill(bm gopay.BodyMap) (wxRsp *BillRsp, err err
 			bm.Set("bill_date", yesterday)
 		}
 	}
-	uri = v3ApiFundFlowBill + "?" + bm.EncodeGetParams()
-	authorization, err := c.authorization(MethodGet, uri, nonceStr, ts, nil)
+	uri := v3ApiFundFlowBill + "?" + bm.EncodeGetParams()
+	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -97,11 +87,6 @@ func (c *ClientV3) V3BillFundFlowBill(bm gopay.BodyMap) (wxRsp *BillRsp, err err
 //	注意：账单日期不可写当天日期
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/bill/chapter3_2.shtml
 func (c *ClientV3) V3BillLevel2FundFlowBill(bm gopay.BodyMap) (wxRsp *Level2FundFlowBillRsp, err error) {
-	var (
-		ts       = time.Now().Unix()
-		nonceStr = util.GetRandomString(32)
-		uri      string
-	)
 	if bm != nil {
 		if bm.GetString("bill_date") == util.NULL {
 			now := time.Now()
@@ -116,8 +101,8 @@ func (c *ClientV3) V3BillLevel2FundFlowBill(bm gopay.BodyMap) (wxRsp *Level2Fund
 		}
 
 	}
-	uri = v3ApiLevel2FundFlowBill + "?" + bm.EncodeGetParams()
-	authorization, err := c.authorization(MethodGet, uri, nonceStr, ts, nil)
+	uri := v3ApiLevel2FundFlowBill + "?" + bm.EncodeGetParams()
+	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -146,15 +131,11 @@ func (c *ClientV3) V3BillDownLoadBill(downloadUrl string) (fileBytes []byte, err
 	if downloadUrl == gopay.NULL {
 		return nil, errors.New("invalid download url")
 	}
-	var (
-		ts       = time.Now().Unix()
-		nonceStr = util.GetRandomString(32)
-	)
 	split := strings.Split(downloadUrl, ".com")
 	if len(split) != 2 {
 		return nil, errors.New("invalid download url")
 	}
-	authorization, err := c.authorization(MethodGet, split[1], nonceStr, ts, nil)
+	authorization, err := c.authorization(MethodGet, split[1], nil)
 	if err != nil {
 		return nil, err
 	}

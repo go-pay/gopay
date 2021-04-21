@@ -45,8 +45,8 @@ const (
 	v3CombineClose    = "/v3/combine-transactions/out-trade-no/%s/close"
 
 	// 退款
-	v3DomesticRefund      = "/v3/refund/domestic/refunds"
-	v3DomesticRefundQuery = "/v3/refund/domestic/refunds/%s"
+	v3DomesticRefund      = "/v3/refund/domestic/refunds"    // 申请退款
+	v3DomesticRefundQuery = "/v3/refund/domestic/refunds/%s" // 查询单笔退款
 
 	// 退款（电商收付通）
 	v3CommerceRefund      = "/v3/ecommerce/refunds/apply"
@@ -64,13 +64,15 @@ const (
 	v3ScorePermissionOpenidQuery            = "/v3/payscore/permissions/openid/%s"                       // openid 查询用户授权记录（openid） GET
 	v3ScorePermissionOpenidTerminate        = "/v3/payscore/permissions/openid/%s/terminate"             // openid 解除用户授权记录（openid） POST
 	v3ScoreOrderDirectComplete              = "/payscore/serviceorder/direct-complete"                   // 创单结单合并 POST
-	v3ScoreOrder                            = "/v3/payscore/serviceorder"                                // 创建支付分订单 POST
-	v3ScoreOrderQuery                       = "/v3/payscore/serviceorder"                                // 查询支付分订单 GET
-	v3ScoreOrderCancel                      = "/v3/payscore/serviceorder/%s/cancel"                      // out_trade_no 取消支付分订单 POST
-	v3ScoreOrderModify                      = "/v3/payscore/serviceorder/%s/modify"                      // out_trade_no 修改订单金额 POST
-	v3ScoreOrderComplete                    = "/v3/payscore/serviceorder/%s/complete"                    // out_trade_no 完结支付分订单 POST
-	v3ScoreOrderPay                         = "/v3/payscore/serviceorder/%s/pay"                         // out_trade_no 商户发起催收扣款 POST
-	v3ScoreOrderSync                        = "/v3/payscore/serviceorder/%s/sync"                        // out_trade_no 同步服务订单信息 POST
+
+	// 微信支付分（公共API）
+	v3ScoreOrderCreate   = "/v3/payscore/serviceorder"             // 创建支付分订单 POST
+	v3ScoreOrderQuery    = "/v3/payscore/serviceorder"             // 查询支付分订单 GET
+	v3ScoreOrderCancel   = "/v3/payscore/serviceorder/%s/cancel"   // out_trade_no 取消支付分订单 POST
+	v3ScoreOrderModify   = "/v3/payscore/serviceorder/%s/modify"   // out_trade_no 修改订单金额 POST
+	v3ScoreOrderComplete = "/v3/payscore/serviceorder/%s/complete" // out_trade_no 完结支付分订单 POST
+	v3ScoreOrderPay      = "/v3/payscore/serviceorder/%s/pay"      // out_trade_no 商户发起催收扣款 POST
+	v3ScoreOrderSync     = "/v3/payscore/serviceorder/%s/sync"     // out_trade_no 同步服务订单信息 POST
 
 	// 微信先享卡
 	v3CardPre     = "/v3/discount-card/cards"                     // 预受理领卡请求 POST
@@ -90,9 +92,10 @@ const (
 	v3GoldPlanOpenAdShow   = "/v3/goldplan/merchants/open-advertising-show"           // 开通广告展示 PATCH
 	v3GoldPlanCloseAdShow  = "/v3/goldplan/merchants/close-advertising-show"          // 关闭广告展示 PATCH
 
-	// 订单号类型，1-微信订单号，2-商户订单号
+	// 订单号类型，1-微信订单号，2-商户订单号，3-微信侧回跳到商户前端时用于查单的单据查询id（查询支付分订单中会使用）
 	TransactionId OrderNoType = 1
 	OutTradeNo    OrderNoType = 2
+	QueryId       OrderNoType = 3
 
 	// v3 异步通知订单状态
 	TradeStateSuccess  = "SUCCESS"    // 支付成功
