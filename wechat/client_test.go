@@ -31,14 +31,16 @@ func TestMain(m *testing.M) {
 	// 设置国家，不设置默认就是 China
 	client.SetCountry(China)
 
-	// 添加证书n内容
-	//err := client.AddCertFileContent(nil, nil, nil)
+	// 注意：证书内容只添加pem或只添加pkcs12均可
+
+	// 添加pem证书内容
+	//err := client.AddCertPemFileContent(nil, nil)
 	//if err != nil {
 	//	panic(err)
 	//}
 
-	// 添加证书路径
-	//err := client.AddCertFilePath(nil, nil, nil)
+	// 或添加pkcs12内容
+	//err := client.AddCertPkcs12FileContent(nil)
 	//if err != nil {
 	//	panic(err)
 	//}

@@ -43,10 +43,11 @@ func (w *Client) SetCountry(country Country) (client *Client) {
 	return w
 }
 
-// 添加微信证书 Path 路径
-//	certFilePath：apiclient_cert.pem 路径
-//	keyFilePath：apiclient_key.pem 路径
-//	pkcs12FilePath：apiclient_cert.p12 路径
+// 添加微信证书文件 Path 路径或证书内容
+//	注意：只传pem证书或只传pkcs12证书均可，无需3个证书全传
+//	certFilePath：apiclient_cert.pem 路径或内容
+//	keyFilePath：apiclient_key.pem 路径或内容
+//	pkcs12FilePath：apiclient_cert.p12 路径或内容
 //	返回err
 func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) (err error) {
 	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
@@ -62,6 +63,8 @@ func (w *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath inter
 	return
 }
 
+// Deprecated
+// 推荐使用 AddCertPemFileContent() 或 AddCertPkcs12FileContent()
 // 添加微信证书内容
 //	certFileContent：apiclient_cert.pem 内容
 //	keyFileContent：apiclient_key.pem 内容
@@ -71,12 +74,12 @@ func (w *Client) AddCertFileContent(certFileContent, keyFileContent, pkcs12FileC
 	return w.AddCertFilePath(certFileContent, keyFileContent, pkcs12FileContent)
 }
 
-// 添加微信pem证书内容
+// 添加微信pem证书内容或证书文件Path
 func (w *Client) AddCertPemFileContent(certFileContent, keyFileContent []byte) (err error) {
 	return w.AddCertFilePath(certFileContent, keyFileContent, nil)
 }
 
-// 添加微信pkcs12证书内容
+// 添加微信pkcs12证书内容证书文件Path
 func (w *Client) AddCertPkcs12FileContent(pkcs12FileContent []byte) (err error) {
 	return w.AddCertFilePath(nil, nil, pkcs12FileContent)
 }

@@ -325,19 +325,18 @@ client.DebugSwitch = gopay.DebugOn
 //    wechat.Other：其他国家
 client.SetCountry(wechat.China)
 
-// 添加微信证书 Path 路径
-//    certFilePath：apiclient_cert.pem 路径
-//    keyFilePath：apiclient_key.pem 路径
-//    pkcs12FilePath：apiclient_cert.p12 路径
-//    返回err
+// 添加微信证书文件 Path 路径或证书内容
+//	  注意：只传pem证书或只传pkcs12证书均可，无需3个证书全传
+//	  certFilePath：apiclient_cert.pem 路径或内容
+//	  keyFilePath：apiclient_key.pem 路径或内容
+//	  pkcs12FilePath：apiclient_cert.p12 路径或内容
 client.AddCertFilePath()
 
-// 添加微信证书内容 Content
-//	certFileContent：apiclient_cert.pem 内容
-//	keyFileContent：apiclient_key.pem 内容
-//	pkcs12FileContent：apiclient_cert.p12 内容
-//	返回err
-client.AddCertFileContent()
+// 添加微信pem证书内容或证书文件Path
+client.AddCertPemFileContent()
+
+// 添加微信pkcs12证书内容证书文件Path
+client.AddCertPkcs12FileContent()
 ```
 
 * #### 支付宝
