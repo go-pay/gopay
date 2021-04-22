@@ -112,6 +112,46 @@ type ScoreOrderQueryRsp struct {
 	Error    string           `json:"-"`
 }
 
+// 取消支付分订单 Rsp
+type ScoreOrderCancelRsp struct {
+	Code     int               `json:"-"`
+	SignInfo *SignInfo         `json:"-"`
+	Response *ScoreOrderCancel `json:"response,omitempty"`
+	Error    string            `json:"-"`
+}
+
+// 修改订单金额 Rsp
+type ScoreOrderModifyRsp struct {
+	Code     int               `json:"-"`
+	SignInfo *SignInfo         `json:"-"`
+	Response *ScoreOrderModify `json:"response,omitempty"`
+	Error    string            `json:"-"`
+}
+
+// 完结支付分订单 Rsp
+type ScoreOrderCompleteRsp struct {
+	Code     int                 `json:"-"`
+	SignInfo *SignInfo           `json:"-"`
+	Response *ScoreOrderComplete `json:"response,omitempty"`
+	Error    string              `json:"-"`
+}
+
+// 商户发起催收扣款 Rsp
+type ScoreOrderPayRsp struct {
+	Code     int            `json:"-"`
+	SignInfo *SignInfo      `json:"-"`
+	Response *ScoreOrderPay `json:"response,omitempty"`
+	Error    string         `json:"-"`
+}
+
+// 同步服务订单信息 Rsp
+type ScoreOrderSyncRsp struct {
+	Code     int             `json:"-"`
+	SignInfo *SignInfo       `json:"-"`
+	Response *ScoreOrderSync `json:"response,omitempty"`
+	Error    string          `json:"-"`
+}
+
 // ==================================分割==================================
 
 type JSAPIPayParams struct {
@@ -435,5 +475,117 @@ type Location struct {
 }
 
 type ScoreOrderQuery struct {
-	// todo: finish
+	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
+	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
+	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
+	OutTradeNo          string           `json:"out_trade_no"`                // 调用接口提交的商户服务订单号。
+	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
+	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
+	StateDescription    string           `json:"state_description,omitempty"` // 对服务订单"进行中"状态的附加说明。USER_CONFIRM：用户确认，MCH_COMPLETE：商户完结
+	TotalAmount         int              `json:"total_amount,omitempty"`      // 总金额，大于等于0的数字，单位为分，只能为整数
+	PostPayments        []*PostPayments  `json:"post_payments,omitempty"`     // 后付费项目列表，最多包含100条付费项目。 如果传入，用户侧则显示此参数。
+	PostDiscounts       []*PostDiscounts `json:"post_discounts,omitempty"`    // 后付费商户优惠，最多包含30条付费项目。 如果传入，用户侧则显示此参数。
+	RiskFund            *RiskFund        `json:"risk_fund"`                   // 订单风险金信息
+	TimeRange           *TimeRange       `json:"time_range"`                  // 服务时间范围
+	Location            *Location        `json:"location,omitempty"`          // 服务位置信息
+	Attach              string           `json:"attach,omitempty"`            // 商户数据包,可存放本订单所需信息，需要先urlencode后传入，总长度不大于256字符,超出报错处理。
+	NotifyUrl           string           `json:"notify_url"`                  // 商户接收用户确认订单或扣款成功回调通知的地址。
+	OrderId             string           `json:"order_id"`                    // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
+	NeedCollection      bool             `json:"need_collection,omitempty"`   // 是否需要收款
+	Collection          *Collection      `json:"collection,omitempty"`        // 收款信息
+	Openid              string           `json:"openid,omitempty"`            // 微信用户在商户对应appid下的唯一标识
+}
+
+type Collection struct {
+	State        string     `json:"state"`                   // 收款状态，USER_PAYING：待支付，USER_PAID：已支付
+	TotalAmount  int        `json:"total_amount,omitempty"`  // 总金额，大于等于0的数字，单位为分，只能为整数
+	PayingAmount int        `json:"paying_amount,omitempty"` // 等待用户付款金额，只能为整数
+	PaidAmount   int        `json:"paid_amount,omitempty"`   // 用户已付款的金额，只能为整数
+	Details      []*Details `json:"details,omitempty"`       // 收款明细列表
+}
+
+type Details struct {
+	Seq             int                `json:"seq,omitempty"`              // 收款序号
+	Amount          int                `json:"amount,omitempty"`           // 单笔收款动作的金额，只能为整数
+	PaidType        string             `json:"paid_type,omitempty"`        // 收款成功渠道，NEWTON：微信支付分，MCH：商户渠道
+	PaidTime        string             `json:"paid_time,omitempty"`        // 支付成功时间，支持两种格式:yyyyMMddHHmmss和yyyyMMdd
+	TransactionId   string             `json:"transaction_id,omitempty"`   // 结单交易单号，等于普通支付接口中的transaction_id
+	PromotionDetail []*PromotionDetail `json:"promotion_detail,omitempty"` // 优惠功能，享受优惠时返回该字段
+}
+
+type ScoreOrderCancel struct {
+	Appid      string `json:"appid"`        // 调用接口提交的公众账号ID。
+	Mchid      string `json:"mchid"`        // 调用接口提交的商户号。
+	ServiceId  string `json:"service_id"`   // 调用该接口提交的服务ID。
+	OutTradeNo string `json:"out_trade_no"` // 调用接口提交的商户服务订单号。
+	OrderId    string `json:"order_id"`     // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
+}
+
+type ScoreOrderModify struct {
+	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
+	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
+	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
+	OutTradeNo          string           `json:"out_trade_no"`                // 调用接口提交的商户服务订单号。
+	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
+	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
+	StateDescription    string           `json:"state_description,omitempty"` // 对服务订单"进行中"状态的附加说明。USER_CONFIRM：用户确认，MCH_COMPLETE：商户完结
+	TotalAmount         int              `json:"total_amount,omitempty"`      // 总金额，大于等于0的数字，单位为分，只能为整数
+	PostPayments        []*PostPayments  `json:"post_payments,omitempty"`     // 后付费项目列表，最多包含100条付费项目。 如果传入，用户侧则显示此参数。
+	PostDiscounts       []*PostDiscounts `json:"post_discounts,omitempty"`    // 后付费商户优惠，最多包含30条付费项目。 如果传入，用户侧则显示此参数。
+	RiskFund            *RiskFund        `json:"risk_fund"`                   // 订单风险金信息
+	TimeRange           *TimeRange       `json:"time_range"`                  // 服务时间范围
+	Location            *Location        `json:"location,omitempty"`          // 服务位置信息
+	Attach              string           `json:"attach,omitempty"`            // 商户数据包,可存放本订单所需信息，需要先urlencode后传入，总长度不大于256字符,超出报错处理。
+	NotifyUrl           string           `json:"notify_url,omitempty"`        // 商户接收用户确认订单或扣款成功回调通知的地址。
+	OrderId             string           `json:"order_id"`                    // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
+	NeedCollection      bool             `json:"need_collection,omitempty"`   // 是否需要收款
+	Collection          *Collection      `json:"collection,omitempty"`        // 收款信息
+}
+
+type ScoreOrderComplete struct {
+	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
+	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
+	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
+	OutTradeNo          string           `json:"out_trade_no"`                // 调用接口提交的商户服务订单号。
+	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
+	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
+	StateDescription    string           `json:"state_description,omitempty"` // 对服务订单"进行中"状态的附加说明。USER_CONFIRM：用户确认，MCH_COMPLETE：商户完结
+	TotalAmount         int              `json:"total_amount"`                // 总金额，大于等于0的数字，单位为分，只能为整数
+	PostPayments        []*PostPayments  `json:"post_payments"`               // 后付费项目列表，最多包含100条付费项目。 如果传入，用户侧则显示此参数。
+	PostDiscounts       []*PostDiscounts `json:"post_discounts,omitempty"`    // 后付费商户优惠，最多包含30条付费项目。 如果传入，用户侧则显示此参数。
+	RiskFund            *RiskFund        `json:"risk_fund"`                   // 订单风险金信息
+	TimeRange           *TimeRange       `json:"time_range,omitempty"`        // 服务时间范围
+	Location            *Location        `json:"location,omitempty"`          // 服务位置信息
+	OrderId             string           `json:"order_id"`                    // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
+	NeedCollection      bool             `json:"need_collection,omitempty"`   // 是否需要收款
+}
+
+type ScoreOrderPay struct {
+	Appid      string `json:"appid"`        // 调用接口提交的公众账号ID。
+	Mchid      string `json:"mchid"`        // 调用接口提交的商户号。
+	ServiceId  string `json:"service_id"`   // 调用该接口提交的服务ID。
+	OutTradeNo string `json:"out_trade_no"` // 调用接口提交的商户服务订单号。
+	OrderId    string `json:"order_id"`     // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
+}
+
+type ScoreOrderSync struct {
+	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
+	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
+	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
+	OutTradeNo          string           `json:"out_trade_no"`                // 调用接口提交的商户服务订单号。
+	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
+	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
+	StateDescription    string           `json:"state_description,omitempty"` // 对服务订单"进行中"状态的附加说明。USER_CONFIRM：用户确认，MCH_COMPLETE：商户完结
+	TotalAmount         int              `json:"total_amount"`                // 总金额，大于等于0的数字，单位为分，只能为整数
+	PostPayments        []*PostPayments  `json:"post_payments,omitempty"`     // 后付费项目列表，最多包含100条付费项目。 如果传入，用户侧则显示此参数。
+	PostDiscounts       []*PostDiscounts `json:"post_discounts,omitempty"`    // 后付费商户优惠，最多包含30条付费项目。 如果传入，用户侧则显示此参数。
+	RiskFund            *RiskFund        `json:"risk_fund,omitempty"`         // 订单风险金信息
+	TimeRange           *TimeRange       `json:"time_range,omitempty"`        // 服务时间范围
+	Location            *Location        `json:"location,omitempty"`          // 服务位置信息
+	Attach              string           `json:"attach,omitempty"`            // 商户数据包,可存放本订单所需信息，需要先urlencode后传入，总长度不大于256字符,超出报错处理。
+	NotifyUrl           string           `json:"notify_url,omitempty"`        // 商户接收用户确认订单或扣款成功回调通知的地址。
+	OrderId             string           `json:"order_id"`                    // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
+	NeedCollection      bool             `json:"need_collection,omitempty"`   // 是否需要收款
+	Collection          *Collection      `json:"collection,omitempty"`        // 收款信息
+	Openid              string           `json:"openid"`                      // 微信用户在商户对应appid下的唯一标识
 }
