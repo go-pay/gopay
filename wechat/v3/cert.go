@@ -7,11 +7,9 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/iGoogle-ink/gopay/pkg/aes"
 	"github.com/iGoogle-ink/gopay/pkg/errgroup"
-	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
 // 获取微信平台证书公钥（获取后自行保存使用，如需定期刷新功能，自行实现）
@@ -23,13 +21,11 @@ import (
 //	文档说明：https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_1.shtml
 func (c *ClientV3) GetPlatformCerts() (certs *PlatformCertRsp, err error) {
 	var (
-		ts       = time.Now().Unix()
-		nonceStr = util.GetRandomString(32)
-		eg       = new(errgroup.Group)
-		mu       sync.Mutex
+		eg = new(errgroup.Group)
+		mu sync.Mutex
 	)
 
-	authorization, err := c.authorization(MethodGet, v3GetCerts, nonceStr, ts, nil)
+	authorization, err := c.authorization(MethodGet, v3GetCerts, nil)
 	if err != nil {
 		return nil, err
 	}

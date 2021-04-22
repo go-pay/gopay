@@ -68,10 +68,40 @@ func main() {
     * 申请资金账单：client.V3BillFundFlowBill()
     * 申请二级商户资金账单：client.V3BillLevel2FundFlowBill()
     * 下载账单：client.V3BillDownLoadBill()
-* <font color='#07C160' size='4'>微信支付分</font>
+* <font color='#07C160' size='4'>微信支付分（公共API）</font>
+    * 创建支付分订单：client.V3ScoreOrderCreate()
+    * 查询支付分订单：client.V3ScoreOrderQuery()
+    * 取消支付分订单：client.V3ScoreOrderCancel()
+    * 修改订单金额：client.V3ScoreOrderModify()
+    * 完结支付分订单：client.V3ScoreOrderComplete()
+    * 商户发起催收扣款：client.V3ScoreOrderPay()
+    * 同步服务订单信息：client.V3ScoreOrderSync()
+* <font color='#07C160' size='4'>微信支付分（免确认模式）</font>
     * 待实现
-
-
+* <font color='#07C160' size='4'>微信支付分（免确认预授权模式）</font>
+    * 待实现  
+* <font color='#07C160' size='4'>微信先享卡</font>
+    * 待实现
+* <font color='#07C160' size='4'>支付即服务</font>
+    * 待实现
+* <font color='#07C160' size='4'>智慧商圈</font>
+    * 待实现
+* <font color='#07C160' size='4'>代金券</font>
+    * 待实现
+* <font color='#07C160' size='4'>商家券</font>
+    * 待实现
+* <font color='#07C160' size='4'>委托营销</font>
+    * 待实现
+* <font color='#07C160' size='4'>消费卡</font>
+    * 待实现
+* <font color='#07C160' size='4'>支付有礼</font>
+    * 待实现
+* <font color='#07C160' size='4'>消费者投诉2.0</font>
+    * 待实现
+* <font color='#07C160' size='4'>其他能力</font>
+    * 图片上传（营销专用）：
+    * 图片上传：
+    * 视频上传：
 ### 微信支付V2 API
 
 > #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口。
