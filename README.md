@@ -26,6 +26,7 @@ import (
     "fmt"
 
     "github.com/iGoogle-ink/gopay"
+    "github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
 func main() {
