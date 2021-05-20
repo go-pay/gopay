@@ -35,9 +35,6 @@ func Transfer() {
 
 	// 企业向微信用户个人付款（不支持沙箱环境）
 	//    body：参数Body
-	//    certFilePath：cert证书路径
-	//    keyFilePath：Key证书路径
-	//    pkcs12FilePath：p12证书路径
 	wxRsp, err := client.Transfer(bm)
 	if err != nil {
 		xlog.Error(err)

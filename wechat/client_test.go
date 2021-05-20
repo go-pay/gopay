@@ -71,9 +71,6 @@ func TestClient_GetTransferInfo(t *testing.T) {
 
 	// 查询企业付款
 	//    body：参数Body
-	//    certFilePath：cert证书路径
-	//    keyFilePath：Key证书路径
-	//    pkcs12FilePath：p12证书路径
 	wxRsp, err := client.GetTransferInfo(bm)
 	if err != nil {
 		xlog.Errorf("client.GetTransferInfo(%+v),error:%+v", bm, err)

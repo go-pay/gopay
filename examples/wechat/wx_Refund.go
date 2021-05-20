@@ -30,9 +30,6 @@ func Refund() {
 
 	//请求申请退款（沙箱环境下，证书路径参数可传空）
 	//    body：参数Body
-	//    certFilePath：cert证书路径
-	//    keyFilePath：Key证书路径
-	//    pkcs12FilePath：p12证书路径
 	wxRsp, resBm, err := client.Refund(bm)
 	if err != nil {
 		xlog.Error(err)
