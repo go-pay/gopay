@@ -137,6 +137,35 @@ func TestV3Native(t *testing.T) {
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
 }
 
+func TestV3PartnerNative(t *testing.T) {
+	tradeNo := util.GetRandomString(32)
+	xlog.Debug("tradeNo:", tradeNo)
+	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
+
+	bm := make(gopay.BodyMap)
+	bm.Set("description", "测试Native支付商品").
+		Set("out_trade_no", tradeNo).
+		Set("time_expire", expire).
+		Set("sub_mchid", "1900000109").
+		//Set("notify_url", "https://api2.fangyiyun.com/api/v1/wechat/callback").
+		Set("notify_url", "https://www.fumm.cc").
+		SetBodyMap("amount", func(bm gopay.BodyMap) {
+			bm.Set("total", 1).
+				Set("currency", "CNY")
+		})
+
+	wxRsp, err := client.V3PartnerTransactionNative(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp:%#v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
+}
+
 func TestV3QueryOrder(t *testing.T) {
 	//wxRsp, err := client.V3TransactionQueryOrder(TransactionId, "42000008462020122402449153433")
 	wxRsp, err := client.V3TransactionQueryOrder(OutTradeNo, "22LW55HDd8tuxgZgFM445kI52BZVk847")
