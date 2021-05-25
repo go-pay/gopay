@@ -3,8 +3,10 @@
 # GoPay
 
 #### QQ、微信、支付宝的Golang版本SDK
+[![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
+[![Github](https://img.shields.io/github/forks/iGoogle-ink/gopay?label=Fork&style=social)](https://github.com/iGoogle-ink/gopay/fork)
 
-[![Golang](https://img.shields.io/badge/golang-1.14+-brightgreen.svg)](https://golang.google.cn)
+[![Golang](https://img.shields.io/badge/golang-1.16-brightgreen.svg)](https://golang.google.cn)
 [![GoDoc](https://img.shields.io/badge/doc-go.dev-informational.svg)](https://pkg.go.dev/github.com/iGoogle-ink/gopay)
 [![Drone CI](https://cloud.drone.io/api/badges/iGoogle-ink/gopay/status.svg)](https://cloud.drone.io/iGoogle-ink/gopay)
 [![GitHub Release](https://img.shields.io/github/v/release/iGoogle-ink/gopay)](https://github.com/iGoogle-ink/gopay/releases)
