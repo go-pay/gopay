@@ -3,6 +3,7 @@
 # GoPay
 
 #### QQ、微信、支付宝的Golang版本SDK
+
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
 [![Github](https://img.shields.io/github/forks/iGoogle-ink/gopay?label=Fork&style=social)](https://github.com/iGoogle-ink/gopay/fork)
 
@@ -80,9 +81,13 @@ func main() {
     * 商户发起催收扣款：client.V3ScoreOrderPay()
     * 同步服务订单信息：client.V3ScoreOrderSync()
 * <font color='#07C160' size='4'>微信支付分（免确认模式）</font>
-    * 待实现
+    * 创单结单合并：client.V3ScoreDirectComplete()
 * <font color='#07C160' size='4'>微信支付分（免确认预授权模式）</font>
-    * 待实现  
+    * 商户预授权：client.V3ScorePermission()
+    * 查询用户授权记录（授权协议号）：client.V3ScorePermissionQuery()
+    * 解除用户授权关系（授权协议号）：client.V3ScorePermissionTerminate()
+    * 查询用户授权记录（openid）：client.V3ScorePermissionOpenidQuery()
+    * 解除用户授权关系（openid）：client.V3ScorePermissionOpenidTerminate()
 * <font color='#07C160' size='4'>微信先享卡</font>
     * 待实现
 * <font color='#07C160' size='4'>支付即服务</font>
@@ -105,6 +110,7 @@ func main() {
     * 图片上传（营销专用）：
     * 图片上传：
     * 视频上传：
+
 ### 微信支付V2 API
 
 > #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口。

@@ -57,13 +57,15 @@ const (
 	v3ApiFundFlowBill       = "/v3/bill/fundflowbill"           // 申请资金账单
 	v3ApiLevel2FundFlowBill = "/v3/ecommerce/bill/fundflowbill" // 申请二级商户资金账单
 
-	// 微信支付分
-	v3ScorePermission                       = "/v3/payscore/permissions"                                 // 商户预授权 POST
-	v3ScorePermissionAuthorizationQuery     = "/v3/payscore/permissions/authorization-code/%s"           // authorization_code 查询用户授权记录（授权协议号） GET
-	v3ScorePermissionAuthorizationTerminate = "/v3/payscore/permissions/authorization-code/%s/terminate" // authorization_code 解除用户授权关系（授权协议号） POST
-	v3ScorePermissionOpenidQuery            = "/v3/payscore/permissions/openid/%s"                       // openid 查询用户授权记录（openid） GET
-	v3ScorePermissionOpenidTerminate        = "/v3/payscore/permissions/openid/%s/terminate"             // openid 解除用户授权记录（openid） POST
-	v3ScoreOrderDirectComplete              = "/payscore/serviceorder/direct-complete"                   // 创单结单合并 POST
+	// 微信支付分（免确认模式）
+	v3ScoreDirectComplete = "/payscore/serviceorder/direct-complete" // 创单结单合并 POST
+
+	// 微信支付分（免确认预授权模式）
+	v3ScorePermission                = "/v3/payscore/permissions"                                 // 商户预授权 POST
+	v3ScorePermissionQuery           = "/v3/payscore/permissions/authorization-code/%s"           // authorization_code 查询用户授权记录（授权协议号） GET
+	v3ScorePermissionTerminate       = "/v3/payscore/permissions/authorization-code/%s/terminate" // authorization_code 解除用户授权关系（授权协议号） POST
+	v3ScorePermissionOpenidQuery     = "/v3/payscore/permissions/openid/%s"                       // openid 查询用户授权记录（openid） GET
+	v3ScorePermissionOpenidTerminate = "/v3/payscore/permissions/openid/%s/terminate"             // openid 解除用户授权记录（openid） POST
 
 	// 微信支付分（公共API）
 	v3ScoreOrderCreate   = "/v3/payscore/serviceorder"             // 创建支付分订单 POST

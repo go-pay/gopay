@@ -152,6 +152,52 @@ type ScoreOrderSyncRsp struct {
 	Error    string          `json:"-"`
 }
 
+// 创单结单合并 Rsp
+type ScoreDirectCompleteRsp struct {
+	Code     int                  `json:"-"`
+	SignInfo *SignInfo            `json:"-"`
+	Response *ScoreDirectComplete `json:"response,omitempty"`
+	Error    string               `json:"-"`
+}
+
+// 创单结单合并 Rsp
+type ScorePermissionRsp struct {
+	Code     int              `json:"-"`
+	SignInfo *SignInfo        `json:"-"`
+	Response *ScorePermission `json:"response,omitempty"`
+	Error    string           `json:"-"`
+}
+
+// 查询用户授权记录（授权协议号） Rsp
+type ScorePermissionQueryRsp struct {
+	Code     int                   `json:"-"`
+	SignInfo *SignInfo             `json:"-"`
+	Response *ScorePermissionQuery `json:"response,omitempty"`
+	Error    string                `json:"-"`
+}
+
+// 解除用户授权关系（授权协议号） Rsp
+type ScorePermissionTerminateRsp struct {
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Error    string    `json:"-"`
+}
+
+// 查询用户授权记录（openid） Rsp
+type ScorePermissionOpenidQueryRsp struct {
+	Code     int                         `json:"-"`
+	SignInfo *SignInfo                   `json:"-"`
+	Response *ScorePermissionOpenidQuery `json:"response,omitempty"`
+	Error    string                      `json:"-"`
+}
+
+// 解除用户授权关系（openid） Rsp
+type ScorePermissionOpenidTerminateRsp struct {
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Error    string    `json:"-"`
+}
+
 // ==================================分割==================================
 
 type JSAPIPayParams struct {
@@ -588,4 +634,49 @@ type ScoreOrderSync struct {
 	NeedCollection      bool             `json:"need_collection,omitempty"`   // 是否需要收款
 	Collection          *Collection      `json:"collection,omitempty"`        // 收款信息
 	Openid              string           `json:"openid"`                      // 微信用户在商户对应appid下的唯一标识
+}
+
+type ScoreDirectComplete struct {
+	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
+	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
+	OutTradeNo          string           `json:"out_trade_no"`                // 调用接口提交的商户服务订单号。
+	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
+	OrderId             string           `json:"order_id"`                    // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
+	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
+	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
+	StateDescription    string           `json:"state_description,omitempty"` // 对服务订单"进行中"状态的附加说明。USER_CONFIRM：用户确认，MCH_COMPLETE：商户完结
+	PostPayments        []*PostPayments  `json:"post_payments"`               // 后付费项目列表，最多包含100条付费项目。 如果传入，用户侧则显示此参数。
+	PostDiscounts       []*PostDiscounts `json:"post_discounts,omitempty"`    // 后付费商户优惠，最多包含30条付费项目。 如果传入，用户侧则显示此参数。
+	TimeRange           *TimeRange       `json:"time_range"`                  // 服务时间范围
+	Location            *Location        `json:"location,omitempty"`          // 服务位置信息
+	Attach              string           `json:"attach,omitempty"`            // 商户数据包,可存放本订单所需信息，需要先urlencode后传入，总长度不大于256字符,超出报错处理。
+	NotifyUrl           string           `json:"notify_url,omitempty"`        // 商户接收用户确认订单或扣款成功回调通知的地址。
+	TotalAmount         int              `json:"total_amount"`                // 金额：数字，必须≥0（单位：分）
+}
+
+type ScorePermission struct {
+	ApplyPermissionsToken string `json:"apply_permissions_token"` // 用于跳转到微信侧小程序授权数据,跳转到微信侧小程序传入，时效性为1小时
+}
+
+type ScorePermissionQuery struct {
+	Appid                    string `json:"appid"`                               // 调用接口提交的公众账号ID。
+	Mchid                    string `json:"mchid"`                               // 调用接口提交的商户号。
+	ServiceId                string `json:"service_id"`                          // 调用该接口提交的服务ID。
+	Openid                   string `json:"openid,omitempty"`                    // 微信用户在商户对应appid下的唯一标识
+	AuthorizationCode        string `json:"authorization_code"`                  // 预授权成功时的授权协议号。
+	AuthorizationState       string `json:"authorization_state"`                 // 标识用户授权服务情况：UNAVAILABLE：用户未授权服务，AVAILABLE：用户已授权服务，UNBINDUSER：未绑定用户（已经预授权但未完成正式授权）
+	NotifyUrl                string `json:"notify_url,omitempty"`                // 商户接收用户确认订单或扣款成功回调通知的地址。
+	CancelAuthorizationTime  string `json:"cancel_authorization_time,omitempty"` // 最近一次解除授权时间, 示例值：2015-05-20T13:29:35.120+08:00
+	AuthorizationSuccessTime string `json:"authorization_success_time"`          // 最近一次授权成功时间, 示例值：2015-05-20T13:29:35.120+08:00
+}
+
+type ScorePermissionOpenidQuery struct {
+	Appid                    string `json:"appid"`                               // 调用接口提交的公众账号ID。
+	Mchid                    string `json:"mchid"`                               // 调用接口提交的商户号。
+	ServiceId                string `json:"service_id"`                          // 调用该接口提交的服务ID。
+	Openid                   string `json:"openid,omitempty"`                    // 微信用户在商户对应appid下的唯一标识
+	AuthorizationCode        string `json:"authorization_code"`                  // 预授权成功时的授权协议号。
+	AuthorizationState       string `json:"authorization_state"`                 // 标识用户授权服务情况：UNAVAILABLE：用户未授权服务，AVAILABLE：用户已授权服务，UNBINDUSER：未绑定用户（已经预授权但未完成正式授权）
+	CancelAuthorizationTime  string `json:"cancel_authorization_time,omitempty"` // 最近一次解除授权时间, 示例值：2015-05-20T13:29:35.120+08:00
+	AuthorizationSuccessTime string `json:"authorization_success_time"`          // 最近一次授权成功时间, 示例值：2015-05-20T13:29:35.120+08:00
 }

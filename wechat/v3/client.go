@@ -33,7 +33,7 @@ type ClientV3 struct {
 //	mchid：商户ID 或者服务商模式的 sp_mchid
 // 	serialNo：商户证书的证书序列号
 //	apiV3Key：apiV3Key，商户平台获取
-//	pkContent：私钥 apiclient_key.pem 读取后的内容
+//	pkContent：私钥 apiclient_key.pem 读取后的字符串内容
 func NewClientV3(appid, mchid, serialNo, apiV3Key, pkContent string) (client *ClientV3, err error) {
 	var (
 		pk *rsa.PrivateKey
