@@ -94,6 +94,18 @@ const (
 	v3GoldPlanOpenAdShow   = "/v3/goldplan/merchants/open-advertising-show"           // 开通广告展示 PATCH
 	v3GoldPlanCloseAdShow  = "/v3/goldplan/merchants/close-advertising-show"          // 关闭广告展示 PATCH
 
+	// 消费者投诉2.0
+	v3ComplaintList               = "/v3/merchant-service/complaints-v2"                         // 查询投诉单列表 GET
+	v3ComplaintDetail             = "/v3/merchant-service/complaints-v2/%s"                      // 查询投诉单详情 GET
+	v3ComplaintNegotiationHistory = "/v3/merchant-service/complaints-v2/%s/negotiation-historys" // 查询投诉协商历史 GET
+	v3ComplaintNotifyUrlCreate    = "/v3/merchant-service/complaint-notifications"               // 创建投诉通知回调地址 POST
+	v3ComplaintNotifyUrlQuery     = "/v3/merchant-service/complaint-notifications"               // 查询投诉通知回调地址 GET
+	v3ComplaintNotifyUrlUpdate    = "/v3/merchant-service/complaint-notifications"               // 查询投诉通知回调地址 PUT
+	v3ComplaintNotifyUrlDelete    = "/v3/merchant-service/complaint-notifications"               // 删除投诉通知回调地址 DELETE
+	v3ComplaintResponse           = "/v3/merchant-service/complaints-v2/%s/response"             // 提交回复 POST
+	v3ComplaintComplete           = "/v3/merchant-service/complaints-v2/%s/complete"             // 反馈处理完成 POST
+	v3ComplaintUploadImage        = "/v3/merchant-service/images/upload"                         // 商户上传反馈图片 POST
+
 	// 订单号类型，1-微信订单号，2-商户订单号，3-微信侧回跳到商户前端时用于查单的单据查询id（查询支付分订单中会使用）
 	TransactionId OrderNoType = 1
 	OutTradeNo    OrderNoType = 2
