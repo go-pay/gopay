@@ -41,9 +41,8 @@ steps:
       CGO_ENABLED: "0"
       GOOS: "linux"
     depends_on:
-      - mysql
+      - helloworld
     commands:
-      - sleep 15  # wait mysql server turn on
       - go version
       - go env
       - go mod tidy
