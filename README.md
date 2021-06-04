@@ -105,7 +105,16 @@ func main() {
 * <font color='#07C160' size='4'>支付有礼</font>
     * 待实现
 * <font color='#07C160' size='4'>消费者投诉2.0</font>
-    * 待实现
+    * 查询投诉单列表：client.V3ComplaintList()
+    * 查询投诉单详情：client.V3ComplaintDetail()
+    * 查询投诉协商历史：client.V3ComplaintNegotiationHistory()
+    * 创建投诉通知回调地址：client.V3ComplaintNotifyUrlCreate()
+    * 查询投诉通知回调地址：client.V3ComplaintNotifyUrlQuery()
+    * 更新投诉通知回调地址：client.V3ComplaintNotifyUrlUpdate()
+    * 删除投诉通知回调地址：client.V3ComplaintNotifyUrlDelete()
+    * 提交回复：client.V3ComplaintResponse()
+    * 反馈处理完成：client.V3ComplaintComplete()
+    * 商户上传反馈图片：client.V3ComplaintUploadImage()
 * <font color='#07C160' size='4'>其他能力</font>
     * 图片上传（营销专用）：
     * 图片上传：

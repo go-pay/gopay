@@ -9,6 +9,12 @@ type PlatformCertRsp struct {
 	Error    string              `json:"-"`
 }
 
+type EmptyRsp struct {
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Error    string    `json:"-"`
+}
+
 // Prepay 支付Rsp
 type PrepayRsp struct {
 	Code     int       `json:"-"`
@@ -176,13 +182,6 @@ type ScorePermissionQueryRsp struct {
 	Error    string                `json:"-"`
 }
 
-// 解除用户授权关系（授权协议号） Rsp
-type ScorePermissionTerminateRsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Error    string    `json:"-"`
-}
-
 // 查询用户授权记录（openid） Rsp
 type ScorePermissionOpenidQueryRsp struct {
 	Code     int                         `json:"-"`
@@ -191,11 +190,44 @@ type ScorePermissionOpenidQueryRsp struct {
 	Error    string                      `json:"-"`
 }
 
-// 解除用户授权关系（openid） Rsp
-type ScorePermissionOpenidTerminateRsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Error    string    `json:"-"`
+// 查询投诉单列表 Rsp
+type ComplaintListRsp struct {
+	Code     int            `json:"-"`
+	SignInfo *SignInfo      `json:"-"`
+	Response *ComplaintList `json:"response,omitempty"`
+	Error    string         `json:"-"`
+}
+
+// 查询投诉单详情 Rsp
+type ComplaintDetailRsp struct {
+	Code     int              `json:"-"`
+	SignInfo *SignInfo        `json:"-"`
+	Response *ComplaintDetail `json:"response,omitempty"`
+	Error    string           `json:"-"`
+}
+
+// 查询投诉单详情 Rsp
+type ComplaintNegotiationHistoryRsp struct {
+	Code     int                          `json:"-"`
+	SignInfo *SignInfo                    `json:"-"`
+	Response *ComplaintNegotiationHistory `json:"response,omitempty"`
+	Error    string                       `json:"-"`
+}
+
+// 创建、查询、更新投诉通知回调地址 Rsp
+type ComplaintNotifyUrlRsp struct {
+	Code     int                 `json:"-"`
+	SignInfo *SignInfo           `json:"-"`
+	Response *ComplaintNotifyUrl `json:"response,omitempty"`
+	Error    string              `json:"-"`
+}
+
+// 商户上传反馈图片 Rsp
+type ComplaintUploadImageRsp struct {
+	Code     int                   `json:"-"`
+	SignInfo *SignInfo             `json:"-"`
+	Response *ComplaintUploadImage `json:"response,omitempty"`
+	Error    string                `json:"-"`
 }
 
 // ==================================分割==================================
@@ -679,4 +711,68 @@ type ScorePermissionOpenidQuery struct {
 	AuthorizationState       string `json:"authorization_state"`                 // 标识用户授权服务情况：UNAVAILABLE：用户未授权服务，AVAILABLE：用户已授权服务，UNBINDUSER：未绑定用户（已经预授权但未完成正式授权）
 	CancelAuthorizationTime  string `json:"cancel_authorization_time,omitempty"` // 最近一次解除授权时间, 示例值：2015-05-20T13:29:35.120+08:00
 	AuthorizationSuccessTime string `json:"authorization_success_time"`          // 最近一次授权成功时间, 示例值：2015-05-20T13:29:35.120+08:00
+}
+
+type ComplaintList struct {
+	Data       []*ComplaintListItem `json:"data,omitempty"`        // 用户投诉信息详情
+	Limit      int                  `json:"limit"`                 // 设置该次请求返回的最大投诉条数，范围【1,50】
+	Offset     int                  `json:"offset"`                // 该次请求的分页开始位置，从0开始计数，例如offset=10，表示从第11条记录开始返回。
+	TotalCount int                  `json:"total_count,omitempty"` // 投诉总条数，当offset=0时返回
+}
+
+type ComplaintListItem struct {
+	ComplaintId           string                `json:"complaint_id"`                   // 投诉单对应的投诉单号
+	ComplaintTime         string                `json:"complaint_time"`                 // 投诉时间, 例如：2015-05-20T13:29:35.120+08:00表示北京时间2015年05月20日13点29分35秒
+	ComplaintDetail       string                `json:"complaint_detail"`               // 投诉的具体描述
+	ComplaintState        string                `json:"complaint_state"`                // 投诉单状态, PENDING：待处理, PROCESSING：处理中, PROCESSED：已处理完成
+	PayerPhone            string                `json:"payer_phone,omitempty"`          // 投诉人联系方式。该字段已做加密处理
+	ComplaintOrderInfo    []*ComplaintOrderInfo `json:"complaint_order_info,omitempty"` // 投诉单关联订单信息
+	ComplaintFullRefunded bool                  `json:"complaint_full_refunded"`        // 投诉单下所有订单是否已全部全额退款
+	IncomingUserResponse  bool                  `json:"incoming_user_response"`         // 投诉单是否有待回复的用户留言
+	UserComplaintTimes    int                   `json:"user_complaint_times"`           // 用户投诉次数
+}
+
+type ComplaintOrderInfo struct {
+	TransactionId string `json:"transaction_id"` // 投诉单关联的微信订单号
+	OutTradeNo    string `json:"out_trade_no"`   // 投诉单关联的商户订单号
+	Amount        int    `json:"amount"`         // 订单金额，单位（分）
+}
+
+type ComplaintDetail struct {
+	ComplaintId           string                `json:"complaint_id"`                   // 投诉单对应的投诉单号
+	ComplaintTime         string                `json:"complaint_time"`                 // 投诉时间, 例如：2015-05-20T13:29:35.120+08:00表示北京时间2015年05月20日13点29分35秒
+	ComplaintDetail       string                `json:"complaint_detail"`               // 投诉的具体描述
+	ComplaintedMchid      string                `json:"complainted_mchid,omitempty"`    // 投诉单对应的被诉商户号。
+	ComplaintState        string                `json:"complaint_state"`                // 投诉单状态, PENDING：待处理, PROCESSING：处理中, PROCESSED：已处理完成
+	PayerPhone            string                `json:"payer_phone,omitempty"`          // 投诉人联系方式。该字段已做加密处理
+	PayerOpenid           string                `json:"payer_openid"`                   // 投诉人在商户appid下的唯一标识
+	ComplaintOrderInfo    []*ComplaintOrderInfo `json:"complaint_order_info,omitempty"` // 投诉单关联订单信息
+	ComplaintFullRefunded bool                  `json:"complaint_full_refunded"`        // 投诉单下所有订单是否已全部全额退款
+	IncomingUserResponse  bool                  `json:"incoming_user_response"`         // 投诉单是否有待回复的用户留言
+	UserComplaintTimes    int                   `json:"user_complaint_times"`           // 用户投诉次数
+}
+
+type ComplaintNegotiationHistory struct {
+	Data       []*ComplaintNegotiationHistoryItem `json:"data,omitempty"`        // 投诉协商历史
+	Limit      int                                `json:"limit"`                 // 设置该次请求返回的最大投诉条数，范围【1,50】
+	Offset     int                                `json:"offset"`                // 该次请求的分页开始位置，从0开始计数，例如offset=10，表示从第11条记录开始返回。
+	TotalCount int                                `json:"total_count,omitempty"` // 投诉总条数，当offset=0时返回
+}
+
+type ComplaintNegotiationHistoryItem struct {
+	LogId          string   `json:"log_id"`          // 操作流水号
+	Operator       string   `json:"operator"`        // 当前投诉协商记录的操作人
+	OperateTime    string   `json:"operate_time"`    // 当前投诉协商记录的操作时间
+	OperateType    string   `json:"operate_type"`    // 当前投诉协商记录的操作类型
+	OperateDetails string   `json:"operate_details"` // 当前投诉协商记录的具体内容
+	ImageList      []string `json:"image_list"`      // 当前投诉协商记录提交的图片凭证（url格式），最多返回4张图片，url有效时间为1小时。如未查询到协商历史图片凭证，则返回空数组。
+}
+
+type ComplaintNotifyUrl struct {
+	Mchid string `json:"mchid"` // 返回创建回调地址的商户号，由微信支付生成并下发。
+	Url   string `json:"url"`   // 通知地址，仅支持https。
+}
+
+type ComplaintUploadImage struct {
+	MediaId string `json:"media_id"` // 微信返回的媒体文件标识ID。
 }

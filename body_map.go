@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
-	"fmt"
 	"io"
-	"os"
 	"sort"
 	"strings"
 	"sync"
+
+	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
 type BodyMap map[string]interface{}
@@ -45,28 +45,11 @@ func (bm BodyMap) SetBodyMap(key string, value func(bm BodyMap)) BodyMap {
 }
 
 // 设置 FormFile
-func (bm BodyMap) SetFormFile(fieldName string, filePath string) (err error) {
-	_FileBm := make(BodyMap)
-	file, err := os.Open(filePath)
-	if err != nil {
-		return fmt.Errorf("bm.SetFormFile(%s, %s),err:%w", fieldName, filePath, err)
-	}
-	defer file.Close()
-	stat, err := file.Stat()
-	if err != nil {
-		return fmt.Errorf("bm.SetFormFile(%s, %s),err:%w", fieldName, filePath, err)
-	}
-	fileContent := make([]byte, stat.Size())
-	_, err = file.Read(fileContent)
-	if err != nil {
-		return fmt.Errorf("bm.SetFormFile(%s, %s),err:%w", fieldName, filePath, err)
-	}
-	_FileBm[stat.Name()] = fileContent
-
+func (bm BodyMap) SetFormFile(key string, file *util.File) BodyMap {
 	mu.Lock()
-	bm[fieldName] = _FileBm
+	bm[key] = file
 	mu.Unlock()
-	return nil
+	return bm
 }
 
 // 获取参数，同 GetString()

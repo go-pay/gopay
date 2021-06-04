@@ -97,7 +97,7 @@ func (c *ClientV3) V3ScorePermissionQuery(authCode, serviceId string) (wxRsp *Sc
 // 解除用户授权关系（授权协议号）API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_4.shtml
-func (c *ClientV3) V3ScorePermissionTerminate(authCode, serviceId, reason string) (wxRsp *ScorePermissionTerminateRsp, err error) {
+func (c *ClientV3) V3ScorePermissionTerminate(authCode, serviceId, reason string) (wxRsp *EmptyRsp, err error) {
 	url := fmt.Sprintf(v3ScorePermissionTerminate, authCode)
 	bm := make(gopay.BodyMap)
 	bm.Set("service_id", serviceId).
@@ -110,7 +110,7 @@ func (c *ClientV3) V3ScorePermissionTerminate(authCode, serviceId, reason string
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &ScorePermissionTerminateRsp{Code: Success, SignInfo: si}
+	wxRsp = &EmptyRsp{Code: Success, SignInfo: si}
 	if res.StatusCode != http.StatusNoContent {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
@@ -149,7 +149,7 @@ func (c *ClientV3) V3ScorePermissionOpenidQuery(openId, serviceId string) (wxRsp
 // 解除用户授权关系（openid）API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_6.shtml
-func (c *ClientV3) V3ScorePermissionOpenidTerminate(openId, serviceId, reason string) (wxRsp *ScorePermissionOpenidTerminateRsp, err error) {
+func (c *ClientV3) V3ScorePermissionOpenidTerminate(openId, serviceId, reason string) (wxRsp *EmptyRsp, err error) {
 	url := fmt.Sprintf(v3ScorePermissionOpenidTerminate, openId)
 	bm := make(gopay.BodyMap)
 	bm.Set("service_id", serviceId).
@@ -163,7 +163,7 @@ func (c *ClientV3) V3ScorePermissionOpenidTerminate(openId, serviceId, reason st
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &ScorePermissionOpenidTerminateRsp{Code: Success, SignInfo: si}
+	wxRsp = &EmptyRsp{Code: Success, SignInfo: si}
 	if res.StatusCode != http.StatusNoContent {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)

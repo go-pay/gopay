@@ -14,9 +14,9 @@ steps:
     pull: if-not-exists
     image: hello-world
 
-  - name: ci_1.14
+  - name: ci_1.15
     pull: if-not-exists
-    image: golang:1.14
+    image: golang:1.15
     environment:
       GO111MODULE: "on"
       GOPROXY: "https://goproxy.cn,direct"
@@ -31,9 +31,9 @@ steps:
       - go mod tidy
       - go test ./...
 
-  - name: ci_1.15
+  - name: ci_1.16
     pull: if-not-exists
-    image: golang:1.15
+    image: golang:1.16
     environment:
       GO111MODULE: "on"
       GOPROXY: "https://goproxy.cn,direct"
