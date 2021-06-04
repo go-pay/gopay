@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/iGoogle-ink/gopay"
+	"github.com/iGoogle-ink/gopay/pkg/util"
 	"github.com/iGoogle-ink/gopay/pkg/xlog"
 )
 
@@ -47,7 +48,7 @@ func TestHttpUploadFile(t *testing.T) {
 	bm.SetBodyMap("meta", func(bm gopay.BodyMap) {
 		bm.Set("filename", "123.jpg").
 			Set("sha256", "ad4465asd4fgw5q")
-	}).SetFormFile("image", &gopay.File{Name: "logo.png", Content: fileContent})
+	}).SetFormFile("image", &util.File{Name: "logo.png", Content: fileContent})
 
 	client := NewClient()
 	client.Timeout = 10 * time.Second

@@ -14,7 +14,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
@@ -336,7 +335,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 			case TypeMultipartFormData:
 				for k, v := range c.multipartBodyMap {
 					// file 参数
-					if file, ok := v.(*gopay.File); ok {
+					if file, ok := v.(*util.File); ok {
 						fw, err := bw.CreateFormFile(k, file.Name)
 						if err != nil {
 							return nil, err

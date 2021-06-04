@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strings"
 	"sync"
+
+	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
 type BodyMap map[string]interface{}
@@ -20,11 +22,6 @@ type xmlMapMarshal struct {
 type xmlMapUnmarshal struct {
 	XMLName xml.Name
 	Value   string `xml:",cdata"`
-}
-
-type File struct {
-	Name    string `json:"name"`
-	Content []byte `json:"content"`
 }
 
 var mu = new(sync.RWMutex)
@@ -48,7 +45,7 @@ func (bm BodyMap) SetBodyMap(key string, value func(bm BodyMap)) BodyMap {
 }
 
 // 设置 FormFile
-func (bm BodyMap) SetFormFile(key string, file *File) BodyMap {
+func (bm BodyMap) SetFormFile(key string, file *util.File) BodyMap {
 	mu.Lock()
 	bm[key] = file
 	mu.Unlock()
