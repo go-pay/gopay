@@ -112,7 +112,7 @@ func (c *ClientV3) V3ComplaintNotifyUrlDelete() (wxRsp *EmptyRsp, err error) {
 // 商户上传反馈图片API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_10.shtml
-func (c *ClientV3) V3ComplaintUploadImage(fileName, fileSha256 string, img *gopay.File) (wxRsp *ComplaintUploadImageRsp, err error) {
+func (c *ClientV3) V3ComplaintUploadImage(fileName, fileSha256 string, img *util.File) (wxRsp *ComplaintUploadImageRsp, err error) {
 	bm := make(gopay.BodyMap)
 	bm.SetBodyMap("meta", func(bm gopay.BodyMap) {
 		bm.Set("filename", fileName).Set("sha256", fileSha256)
