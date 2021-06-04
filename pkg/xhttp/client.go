@@ -12,9 +12,9 @@ import (
 	"mime/multipart"
 	"net/http"
 	"strings"
-	"sync"
 	"time"
 
+	"github.com/iGoogle-ink/gopay"
 	"github.com/iGoogle-ink/gopay/pkg/util"
 )
 
@@ -122,7 +122,7 @@ type Client struct {
 
 	Errors []error
 
-	mu sync.RWMutex
+	//mu sync.RWMutex
 }
 
 // NewClient , default tls.Config{InsecureSkipVerify: true}
@@ -145,39 +145,23 @@ func NewClient() (client *Client) {
 }
 
 func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
-	c.mu.Lock()
 	c.Transport = &http.Transport{TLSClientConfig: tlsCfg, DisableKeepAlives: true}
-	c.mu.Unlock()
 	return c
 }
 
 func (c *Client) SetTimeout(timeout time.Duration) (client *Client) {
-	c.mu.Lock()
 	c.Timeout = timeout
-	c.mu.Unlock()
 	return c
 }
 
 func (c *Client) SetHost(host string) (client *Client) {
-	c.mu.Lock()
 	c.Host = host
-	c.mu.Unlock()
-	return c
-}
-
-func (c *Client) Post(url string) (client *Client) {
-	c.mu.Lock()
-	c.method = POST
-	c.url = url
-	c.mu.Unlock()
 	return c
 }
 
 func (c *Client) Type(typeStr RequestType) (client *Client) {
 	if _, ok := types[typeStr]; ok {
-		c.mu.Lock()
 		c.requestType = typeStr
-		c.mu.Unlock()
 	} else {
 		c.Errors = append(c.Errors, errors.New("Type func: incorrect type \""+string(typeStr)+"\""))
 	}
@@ -185,55 +169,76 @@ func (c *Client) Type(typeStr RequestType) (client *Client) {
 }
 
 func (c *Client) Get(url string) (client *Client) {
-	c.mu.Lock()
 	c.method = GET
 	c.url = url
-	c.mu.Unlock()
+	return c
+}
+
+func (c *Client) Post(url string) (client *Client) {
+	c.method = POST
+	c.url = url
+	return c
+}
+
+func (c *Client) Put(url string) (client *Client) {
+	c.method = PUT
+	c.url = url
+	return c
+}
+
+func (c *Client) Delete(url string) (client *Client) {
+	c.method = DELETE
+	c.url = url
 	return c
 }
 
 func (c *Client) SendStruct(v interface{}) (client *Client) {
+	if v == nil {
+		return c
+	}
 	bs, err := json.Marshal(v)
 	if err != nil {
 		c.Errors = append(c.Errors, err)
 		return c
 	}
-	c.mu.Lock()
 	switch c.requestType {
 	case TypeJSON:
 		c.jsonByte = bs
 	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
 		c.FormString = string(bs)
 	}
-	c.mu.Unlock()
-	return c
-}
-
-func (c *Client) SendBodyMap(v interface{}) (client *Client) {
-	bs, err := json.Marshal(v)
-	if err != nil {
-		c.Errors = append(c.Errors, err)
-		return c
-	}
-	c.mu.Lock()
-	switch c.requestType {
-	case TypeJSON:
-		c.jsonByte = bs
-	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
-		c.FormString = string(bs)
-	}
-	c.mu.Unlock()
 	return c
 }
 
 // 参数可直接传 gopay.BodyMap
-func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client) {
+func (c *Client) SendBodyMap(bm map[string]interface{}) (client *Client) {
+	if bm == nil {
+		return c
+	}
 	bs, err := json.Marshal(bm)
 	if err != nil {
 		c.Errors = append(c.Errors, err)
 		return c
 	}
-	c.mu.Lock()
+	switch c.requestType {
+	case TypeJSON:
+		c.jsonByte = bs
+	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
+		c.FormString = string(bs)
+	}
+	return c
+}
+
+// 参数可直接传 gopay.BodyMap
+func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client) {
+	if bm == nil {
+		return c
+	}
+	bs, err := json.Marshal(bm)
+	if err != nil {
+		c.Errors = append(c.Errors, err)
+		return c
+	}
 	switch c.requestType {
 	case TypeJSON:
 		c.jsonByte = bs
@@ -242,20 +247,17 @@ func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client
 	case TypeMultipartFormData:
 		c.multipartBodyMap = bm
 	}
-	c.mu.Unlock()
 	return c
 }
 
 // encodeStr: url.Values.Encode() or jsonBody
 func (c *Client) SendString(encodeStr string) (client *Client) {
-	c.mu.Lock()
 	switch c.requestType {
 	case TypeJSON:
 		c.jsonByte = []byte(encodeStr)
 	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
 		c.FormString = encodeStr
 	}
-	c.mu.Unlock()
 	return c
 }
 
@@ -269,8 +271,6 @@ func (c *Client) EndStruct(v interface{}) (res *http.Response, errs []error) {
 		c.Errors = append(c.Errors, errors.New(string(bs)))
 		return res, c.Errors
 	}
-	c.mu.RLock()
-	defer c.mu.RUnlock()
 
 	switch c.unmarshalType {
 	case string(TypeJSON):
@@ -298,21 +298,16 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 		return nil, nil, c.Errors
 	}
 	var (
-		body io.Reader = strings.NewReader(util.NULL)
-		w    *multipart.Writer
+		body io.Reader
+		bw   *multipart.Writer
 	)
 	// multipart-form-data
 	if c.requestType == TypeMultipartFormData {
 		body = &bytes.Buffer{}
-		w = multipart.NewWriter(body.(io.Writer))
+		bw = multipart.NewWriter(body.(io.Writer))
 	}
 
 	req, err := func() (*http.Request, error) {
-		c.mu.RLock()
-		defer c.mu.RUnlock()
-		if c.requestType == TypeMultipartFormData {
-			defer w.Close()
-		}
 		switch c.method {
 		case GET:
 			switch c.requestType {
@@ -321,14 +316,14 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 			case TypeForm, TypeFormData, TypeUrlencoded:
 				c.ContentType = types[TypeForm]
 			case TypeMultipartFormData:
-				c.ContentType = w.FormDataContentType()
+				c.ContentType = bw.FormDataContentType()
 			case TypeXML:
 				c.ContentType = types[TypeXML]
 				c.unmarshalType = string(TypeXML)
 			default:
 				return nil, errors.New("Request type Error ")
 			}
-		case POST:
+		case POST, PUT, DELETE:
 			switch c.requestType {
 			case TypeJSON:
 				if c.jsonByte != nil {
@@ -341,31 +336,24 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 			case TypeMultipartFormData:
 				for k, v := range c.multipartBodyMap {
 					// file 参数
-					if bm, ok := v.(map[string]interface{}); ok {
-						for fileName, fileContent := range bm {
-							// 遍历，如果fileContent是 []byte数组，说明是文件
-							fb, ok2 := fileContent.([]byte)
-							if ok2 {
-								file, err := w.CreateFormFile(k, fileName)
-								if err != nil {
-									return nil, err
-								}
-								file.Write(fb)
-							}
+					if file, ok := v.(*gopay.File); ok {
+						fw, err := bw.CreateFormFile(k, file.Name)
+						if err != nil {
+							return nil, err
 						}
+						fw.Write(file.Content)
 						continue
 					}
 					// text 参数
-					if val, ok := c.multipartBodyMap[k]; ok {
-						vs, ok2 := val.(string)
-						if ok2 {
-							w.WriteField(k, vs)
-						} else if ss := util.ConvertToString(val); ss != "" {
-							w.WriteField(k, ss)
-						}
+					vs, ok2 := v.(string)
+					if ok2 {
+						bw.WriteField(k, vs)
+					} else if ss := util.ConvertToString(v); ss != "" {
+						bw.WriteField(k, ss)
 					}
 				}
-				c.ContentType = w.FormDataContentType()
+				bw.Close()
+				c.ContentType = bw.FormDataContentType()
 			case TypeXML:
 				body = strings.NewReader(c.FormString)
 				c.ContentType = types[TypeXML]
@@ -374,7 +362,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 				return nil, errors.New("Request type Error ")
 			}
 		default:
-			return nil, errors.New("Only support Get and Post ")
+			return nil, errors.New("Only support GET and POST and PUT and DELETE ")
 		}
 
 		req, err := http.NewRequest(c.method, c.url, body)

@@ -3,8 +3,10 @@ package xhttp
 type RequestType string
 
 const (
-	POST                              = "POST"
 	GET                               = "GET"
+	POST                              = "POST"
+	PUT                               = "PUT"
+	DELETE                            = "DELETE"
 	TypeJSON              RequestType = "json"
 	TypeXML               RequestType = "xml"
 	TypeUrlencoded        RequestType = "urlencoded"

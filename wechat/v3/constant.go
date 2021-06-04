@@ -4,8 +4,10 @@ const (
 	Success     = 0
 	SignTypeRSA = "RSA"
 
-	MethodPost          = "POST"
 	MethodGet           = "GET"
+	MethodPost          = "POST"
+	MethodPut           = "PUT"
+	MethodDelete        = "DELETE"
 	HeaderAuthorization = "Authorization"
 
 	HeaderTimestamp = "Wechatpay-Timestamp"
