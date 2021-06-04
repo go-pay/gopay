@@ -9,6 +9,12 @@ type PlatformCertRsp struct {
 	Error    string              `json:"-"`
 }
 
+type EmptyRsp struct {
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Error    string    `json:"-"`
+}
+
 // Prepay 支付Rsp
 type PrepayRsp struct {
 	Code     int       `json:"-"`
@@ -176,26 +182,12 @@ type ScorePermissionQueryRsp struct {
 	Error    string                `json:"-"`
 }
 
-// 解除用户授权关系（授权协议号） Rsp
-type ScorePermissionTerminateRsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Error    string    `json:"-"`
-}
-
 // 查询用户授权记录（openid） Rsp
 type ScorePermissionOpenidQueryRsp struct {
 	Code     int                         `json:"-"`
 	SignInfo *SignInfo                   `json:"-"`
 	Response *ScorePermissionOpenidQuery `json:"response,omitempty"`
 	Error    string                      `json:"-"`
-}
-
-// 解除用户授权关系（openid） Rsp
-type ScorePermissionOpenidTerminateRsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Error    string    `json:"-"`
 }
 
 // 查询投诉单列表 Rsp
@@ -212,6 +204,30 @@ type ComplaintDetailRsp struct {
 	SignInfo *SignInfo        `json:"-"`
 	Response *ComplaintDetail `json:"response,omitempty"`
 	Error    string           `json:"-"`
+}
+
+// 查询投诉单详情 Rsp
+type ComplaintNegotiationHistoryRsp struct {
+	Code     int                          `json:"-"`
+	SignInfo *SignInfo                    `json:"-"`
+	Response *ComplaintNegotiationHistory `json:"response,omitempty"`
+	Error    string                       `json:"-"`
+}
+
+// 创建、查询、更新投诉通知回调地址 Rsp
+type ComplaintNotifyUrlRsp struct {
+	Code     int                 `json:"-"`
+	SignInfo *SignInfo           `json:"-"`
+	Response *ComplaintNotifyUrl `json:"response,omitempty"`
+	Error    string              `json:"-"`
+}
+
+// 商户上传反馈图片 Rsp
+type ComplaintUploadImageRsp struct {
+	Code     int                   `json:"-"`
+	SignInfo *SignInfo             `json:"-"`
+	Response *ComplaintUploadImage `json:"response,omitempty"`
+	Error    string                `json:"-"`
 }
 
 // ==================================分割==================================
@@ -734,4 +750,29 @@ type ComplaintDetail struct {
 	ComplaintFullRefunded bool                  `json:"complaint_full_refunded"`        // 投诉单下所有订单是否已全部全额退款
 	IncomingUserResponse  bool                  `json:"incoming_user_response"`         // 投诉单是否有待回复的用户留言
 	UserComplaintTimes    int                   `json:"user_complaint_times"`           // 用户投诉次数
+}
+
+type ComplaintNegotiationHistory struct {
+	Data       []*ComplaintNegotiationHistoryItem `json:"data,omitempty"`        // 投诉协商历史
+	Limit      int                                `json:"limit"`                 // 设置该次请求返回的最大投诉条数，范围【1,50】
+	Offset     int                                `json:"offset"`                // 该次请求的分页开始位置，从0开始计数，例如offset=10，表示从第11条记录开始返回。
+	TotalCount int                                `json:"total_count,omitempty"` // 投诉总条数，当offset=0时返回
+}
+
+type ComplaintNegotiationHistoryItem struct {
+	LogId          string   `json:"log_id"`          // 操作流水号
+	Operator       string   `json:"operator"`        // 当前投诉协商记录的操作人
+	OperateTime    string   `json:"operate_time"`    // 当前投诉协商记录的操作时间
+	OperateType    string   `json:"operate_type"`    // 当前投诉协商记录的操作类型
+	OperateDetails string   `json:"operate_details"` // 当前投诉协商记录的具体内容
+	ImageList      []string `json:"image_list"`      // 当前投诉协商记录提交的图片凭证（url格式），最多返回4张图片，url有效时间为1小时。如未查询到协商历史图片凭证，则返回空数组。
+}
+
+type ComplaintNotifyUrl struct {
+	Mchid string `json:"mchid"` // 返回创建回调地址的商户号，由微信支付生成并下发。
+	Url   string `json:"url"`   // 通知地址，仅支持https。
+}
+
+type ComplaintUploadImage struct {
+	MediaId string `json:"media_id"` // 微信返回的媒体文件标识ID。
 }
