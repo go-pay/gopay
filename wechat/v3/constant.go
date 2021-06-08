@@ -108,6 +108,23 @@ const (
 	v3ComplaintComplete           = "/v3/merchant-service/complaints-v2/%s/complete"             // 反馈处理完成 POST
 	v3ComplaintUploadImage        = "/v3/merchant-service/images/upload"                         // 商户上传反馈图片 POST
 
+	// 请求分账API
+	v3ProfitSharingOrders = "/v3/profitsharing/orders"
+	// 查询分账结果API
+	v3ProfitSharingQuery = "/v3/profitsharing/orders"
+
+	// v3ProfitSharingUnfreeze 解冻剩余资金API
+	v3ProfitSharingUnfreeze = "/v3/profitsharing/orders/unfreeze"
+
+	// v3ProfitSharingUnsplitAmount 查询剩余待分金额API
+	v3ProfitSharingUnsplitAmount = "/v3/profitsharing/transactions/%s/amounts"
+
+	// 添加分账接收方API
+	v3ProfitSharingAddReceiver = "/v3/profitsharing/receivers/add"
+
+	// 删除分账接收方API
+	v3ProfitSharingDeleteReceiver = "/v3/profitsharing/receivers/delete"
+
 	// 订单号类型，1-微信订单号，2-商户订单号，3-微信侧回跳到商户前端时用于查单的单据查询id（查询支付分订单中会使用）
 	TransactionId OrderNoType = 1
 	OutTradeNo    OrderNoType = 2

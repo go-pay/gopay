@@ -115,6 +115,16 @@ func main() {
     * 提交回复：client.V3ComplaintResponse()
     * 反馈处理完成：client.V3ComplaintComplete()
     * 商户上传反馈图片：client.V3ComplaintUploadImage()
+* <font color='#07C160' size='4'>资金应用-分账</font>
+    * 请求分账：client.V3ProfitShareOrder()
+    * 查询分账结果：client.V3ProfitShareOrderQuery()
+    * 请求分账回退：待实现
+    * 查询分账回退结果：待实现
+    * 解冻剩余资金：client.V3ProfitShareOrderUnfreeze()
+    * 查询剩余待分金额：client.V3ProfitShareOrderUnsplitQuery()
+    * 添加分账接收方：client.V3ProfitShareAddReceivers()
+    * 删除分账接收方：client.V3ProfitShareDeleteReceiver()
+    * 分账动账通知：待实现
 * <font color='#07C160' size='4'>其他能力</font>
     * 图片上传（营销专用）：
     * 图片上传：

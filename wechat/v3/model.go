@@ -776,3 +776,104 @@ type ComplaintNotifyUrl struct {
 type ComplaintUploadImage struct {
 	MediaId string `json:"media_id"` // 微信返回的媒体文件标识ID。
 }
+
+// 请求分账 Rsp
+type ProfitSharingOrderResponse struct {
+	Code          int       `json:"-"`
+	SignInfo      *SignInfo `json:"-"`
+	Error         string    `json:"message"`
+	TransactionId string    `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"` // 微信订单号
+	OutOrderNo    string    `xml:"out_order_no,omitempty" json:"out_order_no,omitempty"`     // 商户分账单号
+	OrderId       string    `xml:"order_id,omitempty" json:"order_id,omitempty"`             // 微信分账单号
+}
+
+// 请求分账结果 Rsp
+type ProfitSharingOrderResultResponse struct {
+	Code          int       `json:"-"`
+	SignInfo      *SignInfo `json:"-"`
+	Error         string    `json:"message"`
+	TransactionId string    `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"` // 微信订单号
+	OutOrderNo    string    `xml:"out_order_no,omitempty" json:"out_order_no,omitempty"`     // 商户分账单号
+	OrderId       string    `xml:"order_id,omitempty" json:"order_id,omitempty"`             // 微信分账单号
+
+	State string `xml:"state" json:"state"`
+
+	// Receivers 分账接收方列表
+	Receivers []ProfitSharingReceiver `xml:"receivers" json:"receivers"`
+}
+
+// 请求解冻 Rsp
+type ProfitSharingOrderUnfreezeResponse struct {
+	Code          int       `json:"-"`
+	SignInfo      *SignInfo `json:"-"`
+	Error         string    `json:"message"`
+	TransactionId string    `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"` // 微信订单号
+	OutOrderNo    string    `xml:"out_order_no,omitempty" json:"out_order_no,omitempty"`     // 商户分账单号
+	OrderId       string    `xml:"order_id,omitempty" json:"order_id,omitempty"`             // 微信分账单号
+
+	State string `xml:"state" json:"state"`
+
+	// Receivers 分账接收方列表
+	Receivers []ProfitSharingReceiver `xml:"receivers" json:"receivers"`
+}
+
+// 查询剩余待分金额 Rsp
+type ProfitSharingUnSplitAmountResponse struct {
+	Code          int       `json:"-"`
+	SignInfo      *SignInfo `json:"-"`
+	Error         string    `json:"message"`
+	TransactionId string    `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"` // 微信订单号
+	UnsplitAmount int       `xml:"unsplit_amount,omitempty" json:"unsplit_amount,omitempty"` // 订单剩余待分金额，整数，单位为分
+}
+
+// ProfitSharingReceiver 分账接收方
+type ProfitSharingReceiver struct {
+	// Type 分账接收方类型
+	Type string `xml:"type,omitempty" json:"type,omitempty"`
+	// Account 分账接收方帐号
+	Account string `xml:"account,omitempty" json:"account,omitempty"`
+	// Amount 分账金额
+	Amount int `xml:"amount,omitempty" json:"amount,omitempty"`
+	// Description 分账描述
+	Description string `xml:"description,omitempty" json:"description,omitempty"`
+
+	// Result 分账结果
+	// 	枚举值：
+	// 	PENDING：待分账
+	// 	SUCCESS：分账成功
+	// 	CLOSED：已关闭
+	Result string `xml:"result,omitempty" json:"result,omitempty"`
+
+	// FailReason 分账失败原因
+	// 	分账失败原因。包含以下枚举值：
+	// 	1、ACCOUNT_ABNORMAL : 分账接收账户异常
+	// 	2、NO_RELATION : 分账关系已解除
+	// 	3、RECEIVER_HIGH_RISK : 高风险接收方
+	// 	4、RECEIVER_REAL_NAME_NOT_VERIFIED : 接收方未实名
+	// 	5、NO_AUTH : 分账权限已解除
+	FailReason string `xml:"fail_reason,omitempty" json:"fail_reason,omitempty"`
+
+	// CreateTime 分账创建时间,遵循rfc3339标准格式，格式为YYYY-MM-DDTHH:mm:ss.sss+TIMEZONE
+	CreateTime string `xml:"create_time,omitempty" json:"create_time,omitempty"`
+
+	// FinishTime 分账完成时间，遵循rfc3339标准格式，格式为YYYY-MM-DDTHH:mm:ss.sss+TIMEZONE
+	FinishTime string `xml:"finish_time,omitempty" json:"finish_time,omitempty"`
+}
+
+// 添加分账接收方 Rsp
+type ProfitSharingAddReceiverResponse struct {
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Account  string    `xml:"account,omitempty" json:"account"`
+	Error    string    `xml:"message,omitempty" json:"message"`
+}
+
+// 删除分账接收方 Rsp
+type ProfitSharingDeleteReceiverResponse struct {
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Account  string    `xml:"account,omitempty" json:"account"`
+	Error    string    `xml:"message,omitempty" json:"message"`
+	// Type 分账接收方类型
+	Type string `xml:"type,omitempty" json:"type"`
+}

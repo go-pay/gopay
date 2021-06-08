@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"encoding/json"
 	"os"
 	"testing"
 	"time"
@@ -22,12 +23,57 @@ var (
 )
 
 func TestMain(m *testing.M) {
+
+	// Config 微信支付配置说明
+	type Config struct {
+		// AppId 由微信生成的应用ID，全局唯一。请求统一下单接口时请注意APPID的应用属性，例如公众号场景下，需使用应用属性为公众号的APPID。
+		AppId string `json:"appId"`
+
+		// MchId 直连商户的商户号，由微信支付生成并下发
+		MchId string `json:"mchId"`
+
+		// MchCertSeriaNo 商户证书的序列号 登陆商户平台【API安全】->【API证书】->【查看证书】，可查看商户API证书序列号
+		MchCertSeriaNo string `json:"serialNo"`
+
+		// MchCertPrivateKey 商户证书 api私钥， apiclient_key.pem 路径
+		MchCertPrivateKey string `json:"privateKey"`
+
+		// MchCertPrivateCert 商户证书 api私钥， apiclient_cert.pem 路径
+		MchCertPrivateCert string `json:"privateCert"`
+
+		// ApiV3Key 商户平台获取 https://pay.weixin.qq.com/index.php/core/cert/api_cert
+		ApiV3Key string `json:"apiV3Key"`
+
+		// NotifyUrl 订单支付回调地址,https，不可以加参数
+		NotifyUrl string `json:"notifyUrl"`
+
+		// RefundNotifyUrl 退款回调地址
+		RefundNotifyUrl string `json:"refundUrl"`
+	}
+
+	// 读取本地的配置文件json,格式见 Config
+	buf, err := os.ReadFile("./conf.json")
+	if err != nil {
+		panic(err)
+	}
+	var cc Config
+	err = json.Unmarshal(buf, &cc)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+
 	// NewClientV3 初始化微信客户端 V3
 	//	appid：appid
 	//	mchid：商户ID
 	// 	serialNo：商户证书的证书序列号
 	//	apiV3Key：apiV3Key，商户平台获取
 	//	pkContent：私钥 apiclient_key.pem 读取后的字符串内容
+	Appid = cc.AppId
+	MchId = cc.MchId
+	SerialNo = cc.MchCertSeriaNo
+	ApiV3Key = cc.ApiV3Key
+	PKContent = cc.MchCertPrivateKey
 	client, err = NewClientV3(Appid, MchId, SerialNo, ApiV3Key, PKContent)
 	if err != nil {
 		xlog.Error(err)
@@ -35,7 +81,14 @@ func TestMain(m *testing.M) {
 	}
 	// 自动验签
 	// 注意：未获取到微信平台公钥时，不要开启，请调用 client.GetPlatformCerts() 获取微信平台证书公钥
-	//client.AutoVerifySign(WxPkContent)
+
+	cers, err := client.GetPlatformCerts()
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+
+	client.AutoVerifySign(cers.Certs[0].PublicKey)
 
 	// 打开Debug开关，输出日志
 	client.DebugSwitch = gopay.DebugOff
@@ -43,6 +96,87 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+func TestV3ProfitSharingOrder(t *testing.T) {
+	client.autoSign = true
+	var rs []*ProfitSharingReceiver
+	item := &ProfitSharingReceiver{
+		Type:        "PERSONAL_OPENID",
+		Account:     "oOv-Z549QsPz5lytiTckMyob2KaI",
+		Amount:      10,
+		Description: "及时到账",
+	}
+	rs = append(rs, item)
+	// bs, _ := json.Marshal(rs)
+
+	bm := make(gopay.BodyMap)
+	bm.Set("transaction_id", "4200001037202106072686278117").
+		Set("out_order_no", "202106071738581337").
+		Set("unfreeze_unsplit", false).Set("receivers", rs)
+
+	wxRsp, err := client.V3ProfitShareOrder(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	t.Logf("res:%#v", wxRsp)
+}
+
+func TestV3ProfitSharingAddReceiver(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("type", "PERSONAL_OPENID").
+		Set("account", "oOv-Z549QsPz5lytiTckMyob2KaI").
+		Set("relation_type", "USER")
+
+	wxRsp, err := client.V3ProfitShareAddReceivers(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	t.Logf("res:%#v", wxRsp)
+}
+
+func TestV3ProfitSharingDeleteReceiver(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("type", "PERSONAL_OPENID").
+		Set("account", "oOv-Z549QsPz5lytiTckMyob2KaI")
+
+	wxRsp, err := client.V3ProfitShareDeleteReceiver(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	t.Logf("res:%#v", wxRsp)
+}
+
+func TestV3ProfitSharingQuery(t *testing.T) {
+	wxRsp, err := client.V3ProfitShareOrderQuery("202106071738581337", "4200001037202106072686278117")
+	if err != nil {
+		xlog.Error(err)
+		t.Fail()
+		return
+	}
+	t.Logf("res:%#v", wxRsp)
+}
+
+func TestV3ProfitSharingUnfreeze(t *testing.T) {
+	wxRsp, err := client.V3ProfitShareOrderUnfreeze("202106071738581338", "4200001037202106072686278117", "账单解冻")
+	if err != nil {
+		xlog.Error(err)
+		t.Fail()
+		return
+	}
+	t.Logf("res:%#v", wxRsp)
+}
+
+func TestV3ProfitSharingUnsplitQuery(t *testing.T) {
+	wxRsp, err := client.V3ProfitShareOrderUnsplitQuery("4200001037202106072686278117")
+	if err != nil {
+		xlog.Error(err)
+		t.Fail()
+		return
+	}
+	t.Logf("res:%#v", wxRsp)
+}
 func TestGetPlatformCerts(t *testing.T) {
 	certs, err := client.GetPlatformCerts()
 	if err != nil {

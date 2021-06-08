@@ -5,3 +5,4 @@
 settings.json
 
 vendor
+wechat/v3/*.json
