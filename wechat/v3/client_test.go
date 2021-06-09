@@ -75,7 +75,7 @@ func TestV3ProfitSharingAddReceiver(t *testing.T) {
 		Set("account", "oOv-Z573Ktz7o2WRkzX98eAxePVE").
 		Set("relation_type", "USER")
 
-	wxRsp, err := client.V3ProfitShareAddReceivers(bm)
+	wxRsp, err := client.V3ProfitShareAddReceiver(bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -119,7 +119,7 @@ func TestV3ProfitSharingUnfreeze(t *testing.T) {
 }
 
 func TestV3ProfitSharingUnsplitQuery(t *testing.T) {
-	wxRsp, err := client.V3ProfitShareOrderUnsplitQuery("4200001149202106084654939138")
+	wxRsp, err := client.V3ProfitShareUnsplitAmount("4200001149202106084654939138")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -127,6 +127,7 @@ func TestV3ProfitSharingUnsplitQuery(t *testing.T) {
 	xlog.Debugf("wxRsp:%#v", wxRsp)
 	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
 }
+
 func TestGetPlatformCerts(t *testing.T) {
 	certs, err := client.GetPlatformCerts()
 	if err != nil {
