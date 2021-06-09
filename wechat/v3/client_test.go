@@ -43,6 +43,90 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+func TestV3ProfitSharingOrder(t *testing.T) {
+	client.autoSign = true
+	var rs []*ProfitSharingReceiver
+	item := &ProfitSharingReceiver{
+		Type:        "PERSONAL_OPENID",
+		Account:     "oOv-Z573Ktz7o2WRkzX98eAxePVE",
+		Amount:      10,
+		Description: "提现实时到账",
+	}
+	rs = append(rs, item)
+	// bs, _ := json.Marshal(rs)
+
+	bm := make(gopay.BodyMap)
+	bm.Set("transaction_id", "4200001149202106084654939138").
+		Set("out_order_no", "202106071738581340").
+		Set("unfreeze_unsplit", false).Set("receivers", rs)
+
+	wxRsp, err := client.V3ProfitShareOrder(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp:%#v", wxRsp)
+	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+}
+
+func TestV3ProfitSharingAddReceiver(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("type", "PERSONAL_OPENID").
+		Set("account", "oOv-Z573Ktz7o2WRkzX98eAxePVE").
+		Set("relation_type", "USER")
+
+	wxRsp, err := client.V3ProfitShareAddReceivers(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp:%#v", wxRsp)
+	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+}
+
+func TestV3ProfitSharingDeleteReceiver(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("type", "PERSONAL_OPENID").
+		Set("account", "oOv-Z573Ktz7o2WRkzX98eAxePVE")
+
+	wxRsp, err := client.V3ProfitShareDeleteReceiver(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp:%#v", wxRsp)
+	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+}
+
+func TestV3ProfitSharingQuery(t *testing.T) {
+	wxRsp, err := client.V3ProfitShareOrderQuery("202106071738581340", "4200001149202106084654939138")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp:%#v", wxRsp)
+	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+}
+
+func TestV3ProfitSharingUnfreeze(t *testing.T) {
+	wxRsp, err := client.V3ProfitShareOrderUnfreeze("202106071738581338", "4200001037202106072686278117", "账单解冻")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp:%#v", wxRsp)
+	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+}
+
+func TestV3ProfitSharingUnsplitQuery(t *testing.T) {
+	wxRsp, err := client.V3ProfitShareOrderUnsplitQuery("4200001149202106084654939138")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp:%#v", wxRsp)
+	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+}
 func TestGetPlatformCerts(t *testing.T) {
 	certs, err := client.GetPlatformCerts()
 	if err != nil {

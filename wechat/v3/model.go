@@ -230,6 +230,46 @@ type ComplaintUploadImageRsp struct {
 	Error    string                `json:"-"`
 }
 
+// 请求分账 Rsp
+type ProfitSharingOrderRsp struct {
+	Code     int                         `json:"-"`
+	SignInfo *SignInfo                   `json:"-"`
+	Response *ProfitSharingOrderResponse `json:"response,omitempty"`
+	Error    string                      `json:"-"`
+}
+
+// 查询分账结果 Rsp
+type ProfitSharingOrderResultRsp struct {
+	Code     int                               `json:"-"`
+	SignInfo *SignInfo                         `json:"-"`
+	Response *ProfitSharingOrderResultResponse `json:"response,omitempty"`
+	Error    string                            `json:"-"`
+}
+
+// 解冻剩余资金 Rsp
+type ProfitSharingOrderUnfreezeRsp struct {
+	Code     int                                 `json:"-"`
+	SignInfo *SignInfo                           `json:"-"`
+	Response *ProfitSharingOrderUnfreezeResponse `json:"response,omitempty"`
+	Error    string                              `json:"-"`
+}
+
+// 添加分账接收方 Rsp
+type ProfitSharingAddReceiverRsp struct {
+	Code     int                               `json:"-"`
+	SignInfo *SignInfo                         `json:"-"`
+	Response *ProfitSharingAddReceiverResponse `json:"response,omitempty"`
+	Error    string                            `json:"-"`
+}
+
+// 删除分账接收方 Rsp
+type ProfitSharingDeleteReceiverRsp struct {
+	Code     int                                  `json:"-"`
+	SignInfo *SignInfo                            `json:"-"`
+	Response *ProfitSharingDeleteReceiverResponse `json:"response,omitempty"`
+	Error    string                               `json:"-"`
+}
+
 // ==================================分割==================================
 
 type JSAPIPayParams struct {
@@ -775,4 +815,66 @@ type ComplaintNotifyUrl struct {
 
 type ComplaintUploadImage struct {
 	MediaId string `json:"media_id"` // 微信返回的媒体文件标识ID。
+}
+
+type ProfitSharingOrderResponse struct {
+	TransactionId string                   `json:"transaction_id,omitempty"` // 微信订单号
+	OutOrderNo    string                   `json:"out_order_no,omitempty"`   // 商户分账单号
+	OrderId       string                   `json:"order_id,omitempty"`       // 微信分账单号
+	State         string                   `json:"state"`                    // 分账单状态（每个接收方的分账结果请查看receivers中的result字段）:PROCESSING：处理中,FINISHED：分账完成
+	Receivers     []*ProfitSharingReceiver `json:"receivers"`                // 分账接收方列表
+}
+
+type ProfitSharingOrderResultResponse struct {
+	TransactionId string                   `json:"transaction_id"` // 微信订单号
+	OutOrderNo    string                   `json:"out_order_no"`   // 商户分账单号
+	OrderId       string                   `json:"order_id"`       // 微信分账单号
+	State         string                   `json:"state"`          // 分账单状态（每个接收方的分账结果请查看receivers中的result字段）:PROCESSING：处理中,FINISHED：分账完成
+	Receivers     []*ProfitSharingReceiver `json:"receivers"`      // 分账接收方列表
+}
+
+type ProfitSharingOrderUnfreezeResponse struct {
+	TransactionId string                   `json:"transaction_id,omitempty"` // 微信支付订单号
+	OutOrderNo    string                   `json:"out_order_no,omitempty"`   // 商户系统内部的分账单号，在商户系统内部唯一，同一分账单号多次请求等同一次。只能是数字、大小写字母_-|*@
+	OrderId       string                   `json:"order_id,omitempty"`       // 微信分账单号，微信系统返回的唯一标识
+	State         string                   `json:"state"`                    // 分账单状态（每个接收方的分账结果请查看receivers中的result字段）:PROCESSING：处理中,FINISHED：分账完成
+	Receivers     []*ProfitSharingReceiver `json:"receivers"`                // 分账接收方列表
+}
+
+// 查询剩余待分金额 Rsp
+type ProfitSharingUnsplitAmountRsp struct {
+	Code     int                                 `json:"-"`
+	SignInfo *SignInfo                           `json:"-"`
+	Response *ProfitSharingUnsplitAmountResponse `json:"response,omitempty"`
+	Error    string                              `json:"-"`
+}
+
+type ProfitSharingUnsplitAmountResponse struct {
+	TransactionId string `json:"transaction_id"` // 微信支付订单号
+	UnsplitAmount int    `json:"unsplit_amount"` // 订单剩余待分金额，整数，单位为分
+}
+
+// ProfitSharingReceiver 分账接收方
+type ProfitSharingReceiver struct {
+	Amount      int    `json:"amount"`      // 分账金额
+	Description string `json:"description"` // 分账描述
+	Type        string `json:"type"`        // 分账接收方类型
+	Account     string `json:"account"`     // 分账接收方帐号
+	Result      string `json:"result"`      // 分账结果,PENDING：待分账,SUCCESS：分账成功,CLOSED：已关闭
+	FailReason  string `json:"fail_reason"` // 分账失败原因ACCOUNT_ABNORMAL : 分账接收账户异常、NO_RELATION : 分账关系已解除、RECEIVER_HIGH_RISK : 高风险接收方、RECEIVER_REAL_NAME_NOT_VERIFIED : 接收方未实名、NO_AUTH : 分账权限已解除
+	CreateTime  string `json:"create_time"` // 分账创建时间,遵循rfc3339标准格式，格式为YYYY-MM-DDTHH:mm:ss.sss+TIMEZONE
+	FinishTime  string `json:"finish_time"` // 分账完成时间，遵循rfc3339标准格式，格式为YYYY-MM-DDTHH:mm:ss.sss+TIMEZONE
+}
+
+type ProfitSharingAddReceiverResponse struct {
+	Type           string `json:"type"`            // 分账接收方类型MERCHANT_ID：商户ID,PERSONAL_OPENID：个人openid（由父商户APPID转换得到）
+	Account        string `json:"account"`         // 分账接收方帐号
+	Name           string `json:"name"`            // 分账接收方类型是MERCHANT_ID时，是商户全称（必传），当商户是小微商户或个体户时，是开户人姓名 分账接收方类型是PERSONAL_OPENID时，是个人姓名（选传，传则校验）
+	RelationType   string `json:"relation_type"`   // 商户与接收方的关系。STORE：门店STAFF：员工	STORE_OWNER：店主	PARTNER：合作伙伴	HEADQUARTER：总部	BRAND：品牌方	DISTRIBUTOR：分销商	USER：用户	SUPPLIER： 供应商	CUSTOM：自定义
+	CustomRelation string `json:"custom_relation"` // 子商户与接收方具体的关系，本字段最多10个字。当字段relation_type的值为CUSTOM时，本字段必填;当字段relation_type的值不为CUSTOM时，本字段无需填写。
+}
+
+type ProfitSharingDeleteReceiverResponse struct {
+	Type    string `json:"type"`    // 分账接收方类型MERCHANT_ID：商户ID,PERSONAL_OPENID：个人openid（由父商户APPID转换得到）
+	Account string `json:"account"` // 分账接收方帐号
 }
