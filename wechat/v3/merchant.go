@@ -17,9 +17,7 @@ func (c *ClientV3) V3ProfitShareOrder(bm gopay.BodyMap) (*ProfitSharingOrderRsp,
 	if bm.GetString("appid") == util.NULL {
 		bm.Set("appid", c.Appid)
 	}
-	if bm.GetString("mchid") == util.NULL {
-		bm.Set("mchid", c.Mchid)
-	}
+
 	authorization, err := c.authorization(MethodPost, v3ProfitSharingOrders, bm)
 	if err != nil {
 		return nil, err
@@ -139,9 +137,7 @@ func (c *ClientV3) V3ProfitShareAddReceivers(bm gopay.BodyMap) (*ProfitSharingAd
 	if bm.GetString("appid") == util.NULL {
 		bm.Set("appid", c.Appid)
 	}
-	if bm.GetString("mchid") == util.NULL {
-		bm.Set("mchid", c.Mchid)
-	}
+
 	authorization, err := c.authorization(MethodPost, v3ProfitSharingAddReceiver, bm)
 	if err != nil {
 		return nil, err
