@@ -71,8 +71,7 @@ func (c *ClientV3) V3ScorePermission(bm gopay.BodyMap) (wxRsp *ScorePermissionRs
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_3.shtml
 func (c *ClientV3) V3ScorePermissionQuery(authCode, serviceId string) (wxRsp *ScorePermissionQueryRsp, err error) {
-	url := fmt.Sprintf(v3ScorePermissionQuery, authCode)
-	uri := url + "?service_id=" + serviceId
+	uri := fmt.Sprintf(v3ScorePermissionQuery, authCode) + "?service_id=" + serviceId
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -123,8 +122,7 @@ func (c *ClientV3) V3ScorePermissionTerminate(authCode, serviceId, reason string
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_5.shtml
 func (c *ClientV3) V3ScorePermissionOpenidQuery(openId, serviceId string) (wxRsp *ScorePermissionOpenidQueryRsp, err error) {
-	url := fmt.Sprintf(v3ScorePermissionOpenidQuery, openId)
-	uri := url + "?appid=" + c.Appid + "&service_id=" + serviceId
+	uri := fmt.Sprintf(v3ScorePermissionOpenidQuery, openId) + "?appid=" + c.Appid + "&service_id=" + serviceId
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
