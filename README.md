@@ -17,6 +17,7 @@
 
 # 一、安装
 
+- v1.5.42 开始，仓库从 `github.com/iGoogle-ink/gopay` 迁移到 `github.com/go-pay/gopay`
 ```bash
 $ go get github.com/go-pay/gopay
 ```
