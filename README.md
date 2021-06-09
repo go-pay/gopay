@@ -298,7 +298,7 @@ func main() {
 
 # 二、文档说明
 
-* [GoDoc](https://godoc.org/github.com/go-pay/gopay)
+* [GoPay 文档地址](https://pkg.go.dev/github.com/go-pay/gopay)
 * QQ支付 使用方法请参考微信的
 * 所有方法，如有问题，请仔细查看 wechat/client_test.go、alipay/client_test.go 或 examples
 * 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群（微信群比较活跃）。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
