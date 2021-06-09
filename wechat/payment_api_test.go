@@ -3,7 +3,7 @@ package wechat
 import (
 	"testing"
 
-	"github.com/iGoogle-ink/gopay/pkg/xlog"
+	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 func TestDecryptOpenDataToBodyMap(t *testing.T) {

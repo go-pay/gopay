@@ -14,9 +14,9 @@ import (
 	"fmt"
 	"reflect"
 
-	xaes "github.com/iGoogle-ink/gopay/pkg/aes"
-	"github.com/iGoogle-ink/gopay/pkg/util"
-	"github.com/iGoogle-ink/gopay/pkg/xhttp"
+	xaes "github.com/go-pay/gopay/pkg/aes"
+	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/gopay/pkg/xhttp"
 )
 
 // Code2Session 获取微信小程序用户的OpenId、SessionKey、UnionId

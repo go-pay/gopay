@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/iGoogle-ink/gopay"
+	"github.com/go-pay/gopay"
 )
 
 // 申请退款API

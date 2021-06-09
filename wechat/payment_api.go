@@ -20,10 +20,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/iGoogle-ink/gopay"
-	xaes "github.com/iGoogle-ink/gopay/pkg/aes"
-	"github.com/iGoogle-ink/gopay/pkg/util"
-	"github.com/iGoogle-ink/gopay/pkg/xhttp"
+	"github.com/go-pay/gopay"
+	xaes "github.com/go-pay/gopay/pkg/aes"
+	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/gopay/pkg/xhttp"
 )
 
 // ParseNotifyToBodyMap 解析微信支付异步通知的结果到BodyMap（推荐）

@@ -1,4 +1,4 @@
-module github.com/iGoogle-ink/gopay
+module github.com/go-pay/gopay
 
 go 1.15
 

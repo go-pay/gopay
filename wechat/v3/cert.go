@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/iGoogle-ink/gopay/pkg/aes"
-	"github.com/iGoogle-ink/gopay/pkg/errgroup"
+	"github.com/go-pay/gopay/pkg/aes"
+	"github.com/go-pay/gopay/pkg/errgroup"
 )
 
 // 获取微信平台证书公钥（获取后自行保存使用，如需定期刷新功能，自行实现）

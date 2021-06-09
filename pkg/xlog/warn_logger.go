@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/iGoogle-ink/gopay/pkg/util"
+	"github.com/go-pay/gopay/pkg/util"
 )
 
 type WarnLogger struct {

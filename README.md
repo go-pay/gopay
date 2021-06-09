@@ -1,35 +1,35 @@
-<div align=center><img width="220" height="220" alt="Logo was Loading Faild!" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/main/logo.png"/></div>
+<div align=center><img width="220" height="220" alt="Logo was Loading Faild!" src="https://raw.githubusercontent.com/go-pay/gopay/main/logo.png"/></div>
 
 # GoPay
 
 #### QQ、微信、支付宝的Golang版本SDK
 
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
-[![Github](https://img.shields.io/github/forks/iGoogle-ink/gopay?label=Fork&style=social)](https://github.com/iGoogle-ink/gopay/fork)
+[![Github](https://img.shields.io/github/forks/go-pay/gopay?label=Fork&style=social)](https://github.com/go-pay/gopay/fork)
 
 [![Golang](https://img.shields.io/badge/golang-1.16-brightgreen.svg)](https://golang.google.cn)
-[![GoDoc](https://img.shields.io/badge/doc-go.dev-informational.svg)](https://pkg.go.dev/github.com/iGoogle-ink/gopay)
-[![Drone CI](https://cloud.drone.io/api/badges/iGoogle-ink/gopay/status.svg)](https://cloud.drone.io/iGoogle-ink/gopay)
-[![GitHub Release](https://img.shields.io/github/v/release/iGoogle-ink/gopay)](https://github.com/iGoogle-ink/gopay/releases)
-[![License](https://img.shields.io/github/license/iGoogle-ink/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
+[![GoDoc](https://img.shields.io/badge/doc-go.dev-informational.svg)](https://pkg.go.dev/github.com/go-pay/gopay)
+[![Drone CI](https://cloud.drone.io/api/badges/go-pay/gopay/status.svg)](https://cloud.drone.io/go-pay/gopay)
+[![GitHub Release](https://img.shields.io/github/v/release/go-pay/gopay)](https://github.com/go-pay/gopay/releases)
+[![License](https://img.shields.io/github/license/go-pay/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
 
 ---
 
 # 一、安装
 
 ```bash
-$ go get github.com/iGoogle-ink/gopay
+$ go get github.com/go-pay/gopay
 ```
 
 * #### 查看 GoPay 版本
-    * [版本更新记录](https://github.com/iGoogle-ink/gopay/blob/main/release_note.txt)
+    * [版本更新记录](https://github.com/go-pay/gopay/blob/main/release_note.txt)
 
 ```go
 import (
     "fmt"
 
-    "github.com/iGoogle-ink/gopay"
-    "github.com/iGoogle-ink/gopay/pkg/xlog"
+    "github.com/go-pay/gopay"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 func main() {
@@ -297,15 +297,15 @@ func main() {
 
 # 二、文档说明
 
-* [GoDoc](https://godoc.org/github.com/iGoogle-ink/gopay)
+* [GoDoc](https://godoc.org/github.com/go-pay/gopay)
 * QQ支付 使用方法请参考微信的
 * 所有方法，如有问题，请仔细查看 wechat/client_test.go、alipay/client_test.go 或 examples
 * 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群（微信群比较活跃）。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 
 QQ群：
-<img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/main/qq_gopay.png"/>
+<img width="226" height="300" src="https://raw.githubusercontent.com/go-pay/gopay/main/qq_gopay.png"/>
 加微信拉群：
-<img width="226" height="300" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/main/wechat_jerry.png"/>
+<img width="226" height="300" src="https://raw.githubusercontent.com/go-pay/gopay/main/wechat_jerry.png"/>
 
 ---
 
@@ -319,7 +319,7 @@ QQ群：
 
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/wechat/v3"
+	"github.com/go-pay/gopay/wechat/v3"
 )
 
 // NewClientV3 初始化微信客户端 V3
@@ -352,7 +352,7 @@ client.DebugSwitch = gopay.DebugOff
 
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/go-pay/gopay/wechat"
 )
 
 // 初始化微信客户端
@@ -391,7 +391,7 @@ client.AddCertPkcs12FileContent()
 
 ```go
 import (
-    "github.com/iGoogle-ink/gopay/alipay"
+    "github.com/go-pay/gopay/alipay"
 )
 
 // 初始化支付宝客户端
@@ -432,8 +432,8 @@ err := client.SetCertSnByContent("appCertPublicKey bytes", "alipayRootCert bytes
 
 ```go
 import (
-    "github.com/iGoogle-ink/gopay/pkg/util"
-	"github.com/iGoogle-ink/gopay/wechat"
+    "github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/gopay/wechat"
 )
 
 // 初始化 BodyMap
@@ -591,7 +591,7 @@ APP支付官方文档：[APP端调起支付的参数列表文档](https://pay.we
 
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/go-pay/gopay/wechat"
 )
 
 // ====微信小程序 paySign====
@@ -646,8 +646,8 @@ paySign := wechat.GetH5PaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_
 
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/wechat"
-    "github.com/iGoogle-ink/gopay/pkg/xlog"
+	"github.com/go-pay/gopay/wechat"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // ========同步微信V3支付验签========
@@ -695,8 +695,8 @@ return c.JSON(http.StatusOK, &wechat.V3NotifyRsp{Code: gopay.SUCCESS, Message: "
 
 ```go
 import (
-	"github.com/iGoogle-ink/gopay"
-	"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/wechat"
 )
 
 // ====同步返回参数验签Sign====
@@ -755,7 +755,7 @@ return c.String(http.StatusOK, rsp.ToXmlString())
 
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/go-pay/gopay/alipay"
 )
 
 // ====同步返回参数验签Sign====
@@ -807,7 +807,7 @@ button按钮获取手机号码：[button组件文档](https://developers.weixin.
 
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/wechat"
+	"github.com/go-pay/gopay/wechat"
 )
 
 // 获取微信小程序用户的OpenId、SessionKey、UnionId
@@ -865,7 +865,7 @@ xlog.Debug("WeChatUserPhone:", bm)
 支付宝加解密文档：[AES配置文档](https://opendocs.alipay.com/mini/introduce/aes) ，[AES加解密文档](https://opendocs.alipay.com/open/common/104567)
 ```go
 import (
-	"github.com/iGoogle-ink/gopay/alipay"
+	"github.com/go-pay/gopay/alipay"
 )
 
 // 换取授权访问令牌（默认使用utf-8，RSA2）
@@ -889,9 +889,9 @@ xlog.Debug(*phone)
 ## 赞赏多少是您的心意，感谢！
 
 <font color='#07C160' size='4'>微信：</font>
-<img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/main/zanshang_wx.png"/>
+<img width="200" height="200" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_wx.png"/>
 <font color='#027AFF' size='4'>支付宝：</font>
-<img width="200" height="200" src="https://raw.githubusercontent.com/iGoogle-ink/gopay/main/zanshang_zfb.png"/>
+<img width="200" height="200" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_zfb.png"/>
 
 ## License
 

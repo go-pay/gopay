@@ -12,10 +12,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/iGoogle-ink/gopay"
-	xaes "github.com/iGoogle-ink/gopay/pkg/aes"
-	"github.com/iGoogle-ink/gopay/pkg/util"
-	"github.com/iGoogle-ink/gopay/pkg/xhttp"
+	"github.com/go-pay/gopay"
+	xaes "github.com/go-pay/gopay/pkg/aes"
+	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/gopay/pkg/xhttp"
 )
 
 // FormatPrivateKey 格式化 普通应用秘钥
