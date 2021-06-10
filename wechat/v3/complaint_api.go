@@ -110,24 +110,27 @@ func (c *ClientV3) V3ComplaintNotifyUrlDelete() (wxRsp *EmptyRsp, err error) {
 }
 
 // 商户上传反馈图片API
+//	注意：图片不能超过2MB
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_10.shtml
-func (c *ClientV3) V3ComplaintUploadImage(fileName, fileSha256 string, img *util.File) (wxRsp *ComplaintUploadImageRsp, err error) {
-	bm := make(gopay.BodyMap)
-	bm.SetBodyMap("meta", func(bm gopay.BodyMap) {
-		bm.Set("filename", fileName).Set("sha256", fileSha256)
-	}).SetFormFile("image", img)
-
-	authorization, err := c.authorization(MethodPost, v3ComplaintUploadImage, bm)
+func (c *ClientV3) V3ComplaintUploadImage(fileName, fileSha256 string, img *util.File) (wxRsp *MediaUploadRsp, err error) {
+	bmFile := make(gopay.BodyMap)
+	bmFile.Set("filename", fileName).Set("sha256", fileSha256)
+	authorization, err := c.authorization(MethodPost, v3ComplaintUploadImage, bmFile)
 	if err != nil {
 		return nil, err
 	}
+
+	bm := make(gopay.BodyMap)
+	bm.SetBodyMap("meta", func(bm gopay.BodyMap) {
+		bm.Set("filename", fileName).Set("sha256", fileSha256)
+	}).SetFormFile("file", img)
 	res, si, bs, err := c.doProdPostFile(bm, v3ComplaintUploadImage, authorization)
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &ComplaintUploadImageRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ComplaintUploadImage)
+	wxRsp = &MediaUploadRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(MediaUpload)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
