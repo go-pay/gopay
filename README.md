@@ -126,9 +126,8 @@ func main() {
     * 反馈处理完成：client.V3ComplaintComplete()
     * 商户上传反馈图片：client.V3ComplaintUploadImage()
 * <font color='#07C160' size='4'>其他能力</font>
-    * 图片上传（营销专用）：
-    * 图片上传：
-    * 视频上传：
+    * 图片上传：client.V3MediaUploadImage()
+    * 视频上传：client.V3MediaUploadVideo()
 
 ### 微信支付V2 API
 

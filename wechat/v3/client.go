@@ -200,8 +200,7 @@ func (c *ClientV3) doProdPostFile(bm gopay.BodyMap, path, authorization string) 
 
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
-		jb, _ := json.Marshal(bm)
-		xlog.Debugf("Wechat_V3_RequestBody: %s", jb)
+		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.GetString("meta"))
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)

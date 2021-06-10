@@ -14,6 +14,7 @@ import (
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 // V3VerifySign 微信V3 版本验签
@@ -130,6 +131,9 @@ func (c *ClientV3) authorization(method, path string, bm gopay.BodyMap) (string,
 	}
 	ts := util.Int642String(timestamp)
 	_str := method + "\n" + path + "\n" + ts + "\n" + nonceStr + "\n" + jb + "\n"
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_V3_SignString:\n%s", _str)
+	}
 	sign, err := c.rsaSign(_str)
 	if err != nil {
 		return "", err
