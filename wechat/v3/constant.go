@@ -118,6 +118,10 @@ const (
 	v3ProfitShareAddReceiver    = "/v3/profitsharing/receivers/add"           // 添加分账接收方 POST
 	v3ProfitShareDeleteReceiver = "/v3/profitsharing/receivers/delete"        // 删除分账接收方 POST
 
+	// 其他能力
+	v3MediaUploadImage = "/v3/merchant/media/upload"       // 图片上传 POST
+	v3MediaUploadVideo = "/v3/merchant/media/video_upload" // 视频上传 POST
+
 	// 订单号类型，1-微信订单号，2-商户订单号，3-微信侧回跳到商户前端时用于查单的单据查询id（查询支付分订单中会使用）
 	TransactionId OrderNoType = 1
 	OutTradeNo    OrderNoType = 2

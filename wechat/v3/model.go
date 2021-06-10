@@ -223,11 +223,11 @@ type ComplaintNotifyUrlRsp struct {
 }
 
 // 商户上传反馈图片 Rsp
-type ComplaintUploadImageRsp struct {
-	Code     int                   `json:"-"`
-	SignInfo *SignInfo             `json:"-"`
-	Response *ComplaintUploadImage `json:"response,omitempty"`
-	Error    string                `json:"-"`
+type MediaUploadRsp struct {
+	Code     int          `json:"-"`
+	SignInfo *SignInfo    `json:"-"`
+	Response *MediaUpload `json:"response,omitempty"`
+	Error    string       `json:"-"`
 }
 
 // 请求分账 Rsp
@@ -837,7 +837,7 @@ type ComplaintNotifyUrl struct {
 	Url   string `json:"url"`   // 通知地址，仅支持https。
 }
 
-type ComplaintUploadImage struct {
+type MediaUpload struct {
 	MediaId string `json:"media_id"` // 微信返回的媒体文件标识ID。
 }
 

@@ -1,6 +1,9 @@
 package wechat
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"io/ioutil"
 	"os"
 	"testing"
 	"time"
@@ -11,14 +14,63 @@ import (
 )
 
 var (
-	client      *ClientV3
-	err         error
-	Appid       = ""
-	MchId       = ""
-	ApiV3Key    = ""
-	SerialNo    = ""
-	PKContent   = ``
-	WxPkContent = ``
+	client    *ClientV3
+	err       error
+	Appid     = "wx52a25f196830f677"
+	MchId     = "1604896569"
+	ApiV3Key  = "j7XthyAeqmeKPNjECOEd60YVG1Knwr3Y"
+	SerialNo  = "298A5BA7E00AF6E71579E81D9CB1AC7037A51471"
+	PKContent = `-----BEGIN PRIVATE KEY-----
+MIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQDV523KVXZaaZI3
+WxQiaz0J8o8nxAYsxBjrfcaKPnLo+r5uFME7GPV+4UHEZWG6ZogJ87yBt8L4IV8q
+/2n0MPKV5qNtS0htG7G0Mtyw7lPmdXUXsA0ionbL2mzz0kgJ1S6FJwyZRRZNJ08Q
+/GQE3TWqErbxL/2ITuzTeHrdTNL0i9oNxtB92EWFZ0gSL677zEiz41EVog24SyOd
+TFqxjGFd9DR0CeRNU/oQPplFnM9YFseRuhEZ/jLATEvubH/U1qGqTlW0UHvIn14j
+NqRxyAjDI/HfXl3Bo7Fx0QCJkVkqb+5ou8KFRchbcixRU0khbrxTy7dDJj60vSmr
+PySqqZLFAgMBAAECggEBAKHPN9ZfX/B0/A6z7z86MCpeOryyJJmondFGi/H326Uy
+SOus959k+hDJBZ8zsgH3neEpZ+gYwnxBgmRcYiI/BMMwfWAoGtmuoXbXIusU3pLv
+N2x72PPiQktjKBgpciU+BrrjFzy6bmxe2AjZZC/pxrapAYrh6sA6NBykfwz5GHu0
+DQmjHYqSlghDDljCzVR3Gcs/KicCMw6eQ0JlWDqtDEDoENlBkfn4spHwocV7HtSq
+0bnUrQqqMtpZjbMJzZxJc39qkyNNDosuNy5GXYLQE7lr9RuRqLxEfg6KfGUS5bAZ
+eJ5pizql7+c0viUtiXG17PYp8QR4c5G+54RlQd1pPuECgYEA9UBi5rFJzK0/n4aO
+lsrp6BvUOSherp57SNYvpsRuBPU0odyH2/McLNphisKTxfSm0/hADaTmnzAnOUVg
+cduc/5/5tVaaqyLL3SemxJhwqVsL3tE/KAN7HUBhhQrqD+H8r39TAoIkyfjCOHzS
+74rygZ35x0kXNMavXQFB0RE2fEcCgYEA30dWaLddGmTvUXwhyTWcsiDfrsKbw8+n
+MhAlSCXE42v9Uo3ULqD3/rpUQlMhoqaZb3cSyOyQwJvv0tp/g3hM7Q4usLxkdysc
+KA9HmmZ4Q2P2838cqvNr/Dz1UAnfdDryMEnbiv1MUKYqFFTVX6oR0iH544JgDFCG
+YLQA2M+3GpMCgYEAh+ax51v+pSirxN5vTSgMDc69/x5buS+g6W+m4CahQKYQEFGA
+B2XkCwbIXngMIvm7KGK8O9NQ6I1qbtX+55jmmtAvM0lWU9boWRiL1Q0UAQSuwz34
+XVfwdPkkEPFHWp3DxAwuF4m+kR0DowGocYzxbNn5e3EJJvmiW0tDCXMcWikCgYEA
+tyNxWcUFBdBCh+i0YbCqzWSvdE3Fq8/YSPT7T3lDTHLYPu18W57Gq1Y0JI7BaQMT
+mVzmuI1pkcKV7LIxoyl6l3ppi6eLFD/1AVq/FYL1I/mLpl/dqM6vBR8O686dTV3I
+Jxl9jTyEayZQH4sR1TzPDze1GwpmM9Oc1RbwFuYRPycCgYEAzYaRKh6EQ+s37HDv
+e/ZGMs3PI+CoA/x6lx4Owa7amRsWRKys45NV6gcC8pkbN4IeFaYXVHmJ1Yaef3xn
+0VxHAzWI4BF+1pUwXzS2rAMBZR/VKS0XA856NauAC3mKHipoOWVVs+uFP3VMUQ79
+hSImAa7UBzss6b6ie7AYxXtZBjY=
+-----END PRIVATE KEY-----`
+	WxPkContent = `-----BEGIN CERTIFICATE-----
+MIID3DCCAsSgAwIBAgIUYKhisY/p+Gv3B1OD8JyAknBKK00wDQYJKoZIhvcNAQEL
+BQAwXjELMAkGA1UEBhMCQ04xEzARBgNVBAoTClRlbnBheS5jb20xHTAbBgNVBAsT
+FFRlbnBheS5jb20gQ0EgQ2VudGVyMRswGQYDVQQDExJUZW5wYXkuY29tIFJvb3Qg
+Q0EwHhcNMjAxMjE3MDkzNjM3WhcNMjUxMjE2MDkzNjM3WjBuMRgwFgYDVQQDDA9U
+ZW5wYXkuY29tIHNpZ24xEzARBgNVBAoMClRlbnBheS5jb20xHTAbBgNVBAsMFFRl
+bnBheS5jb20gQ0EgQ2VudGVyMQswCQYDVQQGDAJDTjERMA8GA1UEBwwIU2hlblpo
+ZW4wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC3kgThR8l6z60QgzJq
+AnlES5wiQAdjQNig2beUJz5MMzia2+TsGsyK5FqhcLTPAZxluCJ6o8jhvYgg76NN
+NQB+5HHNP+SYrCmYVpuq/0UNMM0tcWRV6OhBWkbQ13BY4aryC2seuky27aVvSP6z
+jtioYOSiaMDlpx7KHWFNC2RTegoKV+Q+oxa8e0hq4t7tYeNss5/WVijCIkPg7Rgb
+hzrqw/g7W6As1HZs37WOpPZ25DD55ztHqsNFMgo/jz79ob57yLhJAhGqzNaGC1mr
+tvh0H3Aq8AIIuuEoNXYWAXzQg6MtfeBmVOklOC3jaZEZCVevGK1kNZCV3JURS1pd
+8PklAgMBAAGjgYEwfzAJBgNVHRMEAjAAMAsGA1UdDwQEAwIE8DBlBgNVHR8EXjBc
+MFqgWKBWhlRodHRwOi8vZXZjYS5pdHJ1cy5jb20uY24vcHVibGljL2l0cnVzY3Js
+P0NBPTFCRDQyMjBFNTBEQkMwNEIwNkFEMzk3NTQ5ODQ2QzAxQzNFOEVCRDIwDQYJ
+KoZIhvcNAQELBQADggEBAJum+aqHwh8usDfLp3tX/W2O+9WAXNfZucdeYTgAnhDh
+0qjNN4pQCCHkiP/zUQGp0gbSsI/c+CDjHZ4zRnHV3leDystQZiIxeJ005pQz/SY4
+mUOgeMFQC8DeGq0WUCtMYJCdKLz43XennMOSJzFYisp6c9vUZ/7CXl2qEbVfJ0Um
+v4/yw6Y6o08eMk8jHAlTJCUsKefjS3OsIXWTTlQv4N6tvui7rWOjux2oQ37pJIT5
+HrSIbzvplW2BjfPptspK+eQNSK+WAatSmfxU2vi8fS2BK1SeK/S1bvXqzcpohHtw
+sUg2x/kdyA1Vas1TDLJHueVfNIZQF8sLFiAP/q33Jvo=
+-----END CERTIFICATE-----`
 )
 
 func TestMain(m *testing.M) {
@@ -41,91 +93,6 @@ func TestMain(m *testing.M) {
 	client.DebugSwitch = gopay.DebugOff
 
 	os.Exit(m.Run())
-}
-
-func TestV3ProfitSharingOrder(t *testing.T) {
-	client.autoSign = true
-	var rs []*ProfitSharingReceiver
-	item := &ProfitSharingReceiver{
-		Type:        "PERSONAL_OPENID",
-		Account:     "oOv-Z573Ktz7o2WRkzX98eAxePVE",
-		Amount:      10,
-		Description: "提现实时到账",
-	}
-	rs = append(rs, item)
-	// bs, _ := json.Marshal(rs)
-
-	bm := make(gopay.BodyMap)
-	bm.Set("transaction_id", "4200001149202106084654939138").
-		Set("out_order_no", "202106071738581340").
-		Set("unfreeze_unsplit", false).Set("receivers", rs)
-
-	wxRsp, err := client.V3ProfitShareOrder(bm)
-	if err != nil {
-		xlog.Error(err)
-		return
-	}
-	xlog.Debugf("wxRsp:%#v", wxRsp)
-	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
-}
-
-func TestV3ProfitSharingAddReceiver(t *testing.T) {
-	bm := make(gopay.BodyMap)
-	bm.Set("type", "PERSONAL_OPENID").
-		Set("account", "oOv-Z573Ktz7o2WRkzX98eAxePVE").
-		Set("relation_type", "USER")
-
-	wxRsp, err := client.V3ProfitShareAddReceiver(bm)
-	if err != nil {
-		xlog.Error(err)
-		return
-	}
-	xlog.Debugf("wxRsp:%#v", wxRsp)
-	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
-}
-
-func TestV3ProfitSharingDeleteReceiver(t *testing.T) {
-	bm := make(gopay.BodyMap)
-	bm.Set("type", "PERSONAL_OPENID").
-		Set("account", "oOv-Z573Ktz7o2WRkzX98eAxePVE")
-
-	wxRsp, err := client.V3ProfitShareDeleteReceiver(bm)
-	if err != nil {
-		xlog.Error(err)
-		return
-	}
-	xlog.Debugf("wxRsp:%#v", wxRsp)
-	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
-}
-
-func TestV3ProfitSharingQuery(t *testing.T) {
-	wxRsp, err := client.V3ProfitShareOrderQuery("202106071738581340", "4200001149202106084654939138")
-	if err != nil {
-		xlog.Error(err)
-		return
-	}
-	xlog.Debugf("wxRsp:%#v", wxRsp)
-	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
-}
-
-func TestV3ProfitSharingUnfreeze(t *testing.T) {
-	wxRsp, err := client.V3ProfitShareOrderUnfreeze("202106071738581338", "4200001037202106072686278117", "账单解冻")
-	if err != nil {
-		xlog.Error(err)
-		return
-	}
-	xlog.Debugf("wxRsp:%#v", wxRsp)
-	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
-}
-
-func TestV3ProfitSharingUnsplitQuery(t *testing.T) {
-	wxRsp, err := client.V3ProfitShareUnsplitAmount("4200001149202106084654939138")
-	if err != nil {
-		xlog.Error(err)
-		return
-	}
-	xlog.Debugf("wxRsp:%#v", wxRsp)
-	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
 }
 
 func TestGetPlatformCerts(t *testing.T) {
@@ -188,7 +155,7 @@ func TestV3Jsapi(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp:%#v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
@@ -216,7 +183,7 @@ func TestV3Native(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp:%#v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
@@ -245,7 +212,7 @@ func TestV3PartnerNative(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp:%#v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
@@ -259,7 +226,7 @@ func TestV3QueryOrder(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp:%#v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
@@ -289,7 +256,7 @@ func TestV3BillTradeBill(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp:%#v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
@@ -306,7 +273,7 @@ func TestV3BillFundFlowBill(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp:%#v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
@@ -327,4 +294,147 @@ func TestV3BillDownLoadBill(t *testing.T) {
 	//	xlog.Error("ioutil.WriteFile:", err)
 	//	return
 	//}
+}
+
+func TestV3ProfitSharingOrder(t *testing.T) {
+	client.autoSign = true
+	var rs []*ProfitSharingReceiver
+	item := &ProfitSharingReceiver{
+		Type:        "PERSONAL_OPENID",
+		Account:     "oOv-Z573Ktz7o2WRkzX98eAxePVE",
+		Amount:      10,
+		Description: "提现实时到账",
+	}
+	rs = append(rs, item)
+	// bs, _ := json.Marshal(rs)
+
+	bm := make(gopay.BodyMap)
+	bm.Set("transaction_id", "4200001149202106084654939138").
+		Set("out_order_no", "202106071738581340").
+		Set("unfreeze_unsplit", false).Set("receivers", rs)
+
+	wxRsp, err := client.V3ProfitShareOrder(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp: %#v", wxRsp)
+	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+}
+
+func TestV3ProfitSharingAddReceiver(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("type", "PERSONAL_OPENID").
+		Set("account", "oOv-Z573Ktz7o2WRkzX98eAxePVE").
+		Set("relation_type", "USER")
+
+	wxRsp, err := client.V3ProfitShareAddReceiver(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp: %#v", wxRsp)
+	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+}
+
+func TestV3ProfitSharingDeleteReceiver(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("type", "PERSONAL_OPENID").
+		Set("account", "oOv-Z573Ktz7o2WRkzX98eAxePVE")
+
+	wxRsp, err := client.V3ProfitShareDeleteReceiver(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp: %#v", wxRsp)
+	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+}
+
+func TestV3ProfitSharingQuery(t *testing.T) {
+	wxRsp, err := client.V3ProfitShareOrderQuery("202106071738581340", "4200001149202106084654939138")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp: %#v", wxRsp)
+	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+}
+
+func TestV3ProfitSharingUnfreeze(t *testing.T) {
+	wxRsp, err := client.V3ProfitShareOrderUnfreeze("202106071738581338", "4200001037202106072686278117", "账单解冻")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp: %#v", wxRsp)
+	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+}
+
+func TestV3ProfitSharingUnsplitQuery(t *testing.T) {
+	wxRsp, err := client.V3ProfitShareUnsplitAmount("4200001149202106084654939138")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp: %#v", wxRsp)
+	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+}
+
+func TestClientV3_V3MediaUploadImage(t *testing.T) {
+	fileName := "logo.png"
+	fileContent, err := ioutil.ReadFile("../../logo.png")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	h := sha256.New()
+	h.Write(fileContent)
+	sha256Str := hex.EncodeToString(h.Sum(nil))
+	xlog.Debug("sha256：", sha256Str)
+
+	img := &util.File{
+		Name:    fileName,
+		Content: fileContent,
+	}
+
+	wxRsp, err := client.V3MediaUploadImage(fileName, sha256Str, img)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
+}
+
+func TestClientV3_V3ComplaintUploadImage(t *testing.T) {
+	fileName := "logo.png"
+	fileContent, err := ioutil.ReadFile("../../logo.png")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	h := sha256.New()
+	h.Write(fileContent)
+	sha256Str := hex.EncodeToString(h.Sum(nil))
+	xlog.Debug("sha256：", sha256Str)
+
+	img := &util.File{
+		Name:    fileName,
+		Content: fileContent,
+	}
+
+	wxRsp, err := client.V3ComplaintUploadImage(fileName, sha256Str, img)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp: %s", wxRsp.Error)
 }
