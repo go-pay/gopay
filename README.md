@@ -426,7 +426,7 @@ err := client.SetCertSnByContent("appCertPublicKey bytes", "alipayRootCert bytes
 ## 2、初始化并赋值BodyMap（client的方法所需的入参）
 
 * #### 微信请求参数
-* #### 微信接口通用参数（mch_id、appid、sign）无需传入，client 请求时会默认处理
+  * 微信V2接口通用参数（mch_id、appid、sign）无需传入，client 请求时会默认处理
 
 具体参数请根据不同接口查看：[微信支付接口文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 
