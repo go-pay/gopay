@@ -3,7 +3,6 @@ package alipay
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
 	"sync"
 	"time"
 
@@ -26,7 +25,6 @@ type Client struct {
 	Charset            string
 	SignType           string
 	AppAuthToken       string
-	AuthToken          string
 	IsProd             bool
 	aliPayPkContent    []byte // 支付宝证书公钥内容 alipayCertPublicKey_RSA2.crt
 	autoSign           bool
@@ -49,10 +47,12 @@ func NewClient(appId, privateKey string, isProd bool) (client *Client) {
 	}
 }
 
-// AutoVerifySign 开启请求完自动验签功能（默认不开启，推荐开启）
-//	aliPayPublicKeyCert：支付宝公钥证书文件内容[]byte
+// 开启请求完自动验签功能（默认不开启，推荐开启，只支持证书模式）
+//	注意：只支持证书模式
+//	aliPayPkContent：支付宝公钥证书文件内容[]byte
 func (a *Client) AutoVerifySign(aliPayPkContent []byte) {
 	if aliPayPkContent != nil {
+		a.aliPayPkContent = aliPayPkContent
 		a.autoSign = true
 	}
 }
@@ -185,17 +185,15 @@ func (a *Client) doAliPaySelf(bm gopay.BodyMap, method string) (bs []byte, err e
 }
 
 // 向支付宝发送请求
-func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error) {
+func (a *Client) doAliPay(bm gopay.BodyMap, method string, authToken ...string) (bs []byte, err error) {
 	var (
 		bodyStr, url string
 		bodyBs       []byte
-		aat, at      string
+		aat          string
 	)
 	if bm != nil {
 		aat = bm.GetString("app_auth_token")
-		at = bm.GetString("auth_token")
 		bm.Remove("app_auth_token")
-		bm.Remove("auth_token")
 		if bodyBs, err = json.Marshal(bm); err != nil {
 			return nil, fmt.Errorf("json.Marshal：%w", err)
 		}
@@ -234,8 +232,8 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 	if aat == util.NULL && a.AppAuthToken != util.NULL {
 		pubBody.Set("app_auth_token", a.AppAuthToken)
 	}
-	if at == util.NULL && a.AuthToken != util.NULL {
-		pubBody.Set("auth_token", a.AuthToken)
+	if method == "alipay.user.info.share" {
+		pubBody.Set("auth_token", authToken[0])
 	}
 
 	if bodyStr != util.NULL {
@@ -280,71 +278,6 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error
 	}
 }
 
-// todo: 记录
-// 向支付宝发送请求
-//func (a *Client) doAliPay(bm gopay.BodyMap, method string) (bs []byte, err error) {
-//	var (
-//		url, sign string
-//		bodyBs    []byte
-//	)
-//	bm.Set("method", method)
-//
-//	// check if there is biz_content
-//	bz := bm.Get("biz_content")
-//	if bzBody, ok := bz.(gopay.BodyMap); ok {
-//		if bodyBs, err = json.Marshal(bzBody); err != nil {
-//			return nil, fmt.Errorf("json.Marshal(%v)：%w", bzBody, err)
-//		}
-//		bm.Set("biz_content", string(bodyBs))
-//	}
-//
-//	// check public parameter
-//	a.checkPublicParam(bm)
-//
-//	// check sign
-//	if bm.GetString("sign") == "" {
-//		sign, err = GetRsaSign(bm, bm.GetString("sign_type"), a.PrivateKeyType, a.PrivateKey)
-//		if err != nil {
-//			return nil, fmt.Errorf("GetRsaSign Error: %v", err)
-//		}
-//		bm.Set("sign", sign)
-//	}
-//
-//	if a.DebugSwitch == gopay.DebugOn {
-//		req, _ := json.Marshal(bm)
-//		xlog.Debugf("Alipay_Request: %s", req)
-//	}
-//	param := FormatURLParam(bm)
-//
-//	switch method {
-//	case "alipay.trade.app.pay":
-//		return []byte(param), nil
-//	case "alipay.trade.wap.pay", "alipay.trade.page.pay", "alipay.user.certify.open.certify":
-//		if !a.IsProd {
-//			return []byte(sandboxBaseUrl + "?" + param), nil
-//		}
-//		return []byte(baseUrl + "?" + param), nil
-//	default:
-//		httpClient := xhttp.NewClient()
-//		if a.IsProd {
-//			url = baseUrlUtf8
-//		} else {
-//			url = sandboxBaseUrlUtf8
-//		}
-//		res, bs, errs := httpClient.Type(xhttp.TypeForm).Post(url).SendString(param).EndBytes()
-//		if len(errs) > 0 {
-//			return nil, errs[0]
-//		}
-//		if a.DebugSwitch == gopay.DebugOn {
-//			xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
-//		}
-//		if res.StatusCode != 200 {
-//			return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
-//		}
-//		return bs, nil
-//	}
-//}
-
 // 公共参数检查
 func (a *Client) checkPublicParam(bm gopay.BodyMap) {
 	bm.Set("format", "JSON")
@@ -380,15 +313,4 @@ func (a *Client) checkPublicParam(bm gopay.BodyMap) {
 	if bm.GetString("app_auth_token") == "" && a.AppAuthToken != util.NULL {
 		bm.Set("app_auth_token", a.AppAuthToken)
 	}
-	if bm.GetString("auth_token") == "" && a.AuthToken != util.NULL {
-		bm.Set("auth_token", a.AuthToken)
-	}
-}
-
-func getSignData(bs []byte) (signData string) {
-	str := string(bs)
-	indexStart := strings.Index(str, `":`)
-	indexEnd := strings.Index(str, `,"sign"`)
-	signData = str[indexStart+2 : indexEnd]
-	return
 }

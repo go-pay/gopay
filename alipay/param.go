@@ -156,9 +156,3 @@ func (a *Client) SetAppAuthToken(appAuthToken string) (client *Client) {
 	a.AppAuthToken = appAuthToken
 	return a
 }
-
-// 设置用户信息授权
-func (a *Client) SetAuthToken(authToken string) (client *Client) {
-	a.AuthToken = authToken
-	return a
-}

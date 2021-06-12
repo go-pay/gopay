@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/alipay/cert"
 	"github.com/go-pay/gopay/pkg/xlog"
 )
 
@@ -27,8 +28,8 @@ func TestClient_SystemOauthToken(t *testing.T) {
 func TestClient_OpenAuthTokenApp(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
-	bm.Set("grant_type", "authorization_code")
-	bm.Set("code", "866185490c4e40efa9f71efea6766X02")
+	bm.Set("grant_type", "authorization_code").
+		Set("code", "866185490c4e40efa9f71efea6766X02")
 
 	// 发起请求
 	aliRsp, err := client.OpenAuthTokenApp(bm)
@@ -43,8 +44,8 @@ func TestClient_UserInfoAuth(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	// 接口权限值，目前只支持auth_user和auth_base两个值。具体说明看文档介绍
-	bm.Set("scopes", []string{"auth_user"})
-	bm.Set("state", "init")
+	bm.Set("scopes", []string{"auth_user"}).
+		Set("state", "init")
 
 	// 发起请求
 	aliRsp, err := client.UserInfoAuth(bm)
@@ -57,7 +58,7 @@ func TestClient_UserInfoAuth(t *testing.T) {
 
 func TestClient_UserInfoShare(t *testing.T) {
 	// 发起请求
-	aliRsp, err := client.UserInfoShare()
+	aliRsp, err := client.UserInfoShare("auth_token")
 	if err != nil {
 		xlog.Errorf("client.UserInfoShare(),error:%+v", err)
 		return
@@ -65,10 +66,23 @@ func TestClient_UserInfoShare(t *testing.T) {
 	xlog.Debug("aliRsp:", *aliRsp)
 
 	// 同步返回验签
-	ok, err := VerifySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
+	ok, err := VerifySyncSignWithCert(cert.AlipayPublicContentRSA2, aliRsp.SignData, aliRsp.Sign)
 	if err != nil {
-		xlog.Errorf("client.VerifySyncSign(%s,%s,%s),error:%+v", aliPayPublicKey, aliRsp.SignData, aliRsp.Sign, err)
-		return
+		xlog.Error(err)
 	}
 	xlog.Debug("ok:", ok)
+}
+
+func TestClient_PublicCertDownload(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("alipay_cert_sn", "52c63ed47b57c049b4bc9bea9da02c2a")
+
+	// 发起请求
+	aliRsp, err := client.PublicCertDownload(bm)
+	if err != nil {
+		xlog.Errorf("client.UserInfoShare(),error:%+v", err)
+		return
+	}
+	xlog.Debugf("aliRsp.Response.AlipayCertContent:\n %s", aliRsp.Response.AlipayCertContent)
 }

@@ -8,8 +8,8 @@ const (
 	sandboxBaseUrlUtf8 = "https://openapi.alipaydev.com/gateway.do?charset=utf-8"
 
 	LocationShanghai          = "Asia/Shanghai"
-	PKCS1            PKCSType = 1
-	PKCS8            PKCSType = 2
+	PKCS1            PKCSType = 1 // 非Java
+	PKCS8            PKCSType = 2 // Java
 	RSA                       = "RSA"
 	RSA2                      = "RSA2"
 )
@@ -92,9 +92,10 @@ type ErrorResponse struct {
 
 // ===================================================
 type TradePayResponse struct {
-	Response *payResponse `json:"alipay_trade_pay_response,omitempty"`
-	SignData string       `json:"-"`
-	Sign     string       `json:"sign"`
+	Response     *payResponse `json:"alipay_trade_pay_response,omitempty"`
+	AlipayCertSn string       `json:"alipay_cert_sn,omitempty"`
+	SignData     string       `json:"-"`
+	Sign         string       `json:"sign"`
 }
 
 type payResponse struct {
@@ -155,9 +156,10 @@ type payResponse struct {
 
 // ===================================================
 type TradeQueryResponse struct {
-	Response *queryResponse `json:"alipay_trade_query_response,omitempty"`
-	SignData string         `json:"-"`
-	Sign     string         `json:"sign"`
+	Response     *queryResponse `json:"alipay_trade_query_response,omitempty"`
+	AlipayCertSn string         `json:"alipay_cert_sn,omitempty"`
+	SignData     string         `json:"-"`
+	Sign         string         `json:"sign"`
 }
 
 type queryResponse struct {
@@ -218,9 +220,10 @@ type queryResponse struct {
 
 // ===================================================
 type TradeCreateResponse struct {
-	Response *createResponse `json:"alipay_trade_create_response,omitempty"`
-	SignData string          `json:"-"`
-	Sign     string          `json:"sign"`
+	Response     *createResponse `json:"alipay_trade_create_response,omitempty"`
+	AlipayCertSn string          `json:"alipay_cert_sn,omitempty"`
+	SignData     string          `json:"-"`
+	Sign         string          `json:"sign"`
 }
 
 type createResponse struct {
@@ -234,9 +237,10 @@ type createResponse struct {
 
 // ===================================================
 type TradeCloseResponse struct {
-	Response *closeResponse `json:"alipay_trade_close_response,omitempty"`
-	SignData string         `json:"-"`
-	Sign     string         `json:"sign"`
+	Response     *closeResponse `json:"alipay_trade_close_response,omitempty"`
+	AlipayCertSn string         `json:"alipay_cert_sn,omitempty"`
+	SignData     string         `json:"-"`
+	Sign         string         `json:"sign"`
 }
 
 type closeResponse struct {
@@ -1012,4 +1016,17 @@ type dataBillDownloadUrlQueryResponse struct {
 	SubCode         string `json:"sub_code,omitempty"`
 	SubMsg          string `json:"sub_msg,omitempty"`
 	BillDownloadUrl string `json:"bill_download_url,omitempty"`
+}
+
+// ===================================================
+type PublicCertDownloadRsp struct {
+	Response *PublicCertDownload `json:"alipay_open_app_alipaycert_download_response,omitempty"`
+}
+
+type PublicCertDownload struct {
+	Code              string `json:"code"`
+	Msg               string `json:"msg"`
+	SubCode           string `json:"sub_code,omitempty"`
+	SubMsg            string `json:"sub_msg,omitempty"`
+	AlipayCertContent string `json:"alipay_cert_content"`
 }
