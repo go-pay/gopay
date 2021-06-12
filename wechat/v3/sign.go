@@ -17,7 +17,7 @@ import (
 	"github.com/go-pay/gopay/pkg/xlog"
 )
 
-// V3VerifySign 微信V3 版本验签
+// V3VerifySign 微信V3 版本验签（同步/异步）
 //	wxPkContent：微信平台证书公钥内容，通过client.GetPlatformCerts() 获取
 func V3VerifySign(timestamp, nonce, signBody, sign, wxPkContent string) (err error) {
 	var (
@@ -156,7 +156,7 @@ func (c *ClientV3) rsaSign(str string) (string, error) {
 
 // 自动同步请求验签
 func (c *ClientV3) verifySyncSign(si *SignInfo) (err error) {
-	if c.autoSign {
+	if c.autoSign && c.wxPkContent != nil {
 		if si != nil {
 			var (
 				block     *pem.Block

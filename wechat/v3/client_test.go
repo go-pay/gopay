@@ -36,7 +36,7 @@ func TestMain(m *testing.M) {
 		xlog.Error(err)
 		return
 	}
-	// 自动验签
+	// 自动同步返回验签
 	// 注意：未获取到微信平台公钥时，不要开启，请调用 client.GetPlatformCerts() 获取微信平台证书公钥
 	//client.AutoVerifySign(WxPkContent)
 
