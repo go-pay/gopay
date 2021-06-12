@@ -26,7 +26,7 @@ func Refund() {
 		Set("out_refund_no", s).
 		Set("total_fee", 1).
 		Set("refund_fee", 1).
-		Set("notify_url", "https://www.fumm.cc")
+		Set("notify_url", "https://www.fmm.ink")
 
 	//请求申请退款（沙箱环境下，证书路径参数可传空）
 	//    body：参数Body

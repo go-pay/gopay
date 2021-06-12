@@ -17,8 +17,7 @@ func ZhimaCreditScoreGet() {
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType(alipay.RSA2).
-		SetPrivateKeyType(alipay.PKCS1).
-		SetAuthToken("") //必须设置此参数
+		SetPrivateKeyType(alipay.PKCS1)
 
 	//请求参数
 	body := make(gopay.BodyMap)

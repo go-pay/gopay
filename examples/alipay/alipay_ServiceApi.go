@@ -82,7 +82,7 @@ func ParseNotifyAndVerifySign(req *http.Request) {
 }
 
 func ParseNotifyAndVerifySignWithCert(req *http.Request) {
-	aliPayPublicKeyPath := "/root/alipay/cert/alipayCertPublicKey_RSA2.crt"
+	aliPayPublicKeyPathOrContent := "/root/alipay/cert/alipayCertPublicKey_RSA2.crt"
 
 	// 解析请求参数
 	bm, err := alipay.ParseNotifyToBodyMap(req)
@@ -93,7 +93,7 @@ func ParseNotifyAndVerifySignWithCert(req *http.Request) {
 	xlog.Debug("notifyReq:", bm)
 
 	// 验签
-	ok, err := alipay.VerifySignWithCert(aliPayPublicKeyPath, bm)
+	ok, err := alipay.VerifySignWithCert(aliPayPublicKeyPathOrContent, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

@@ -16,11 +16,10 @@ func UserInfoShare() {
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType(alipay.RSA2).
-		SetPrivateKeyType(alipay.PKCS1).
-		SetAuthToken("authusrB3888b190f6df4aea964d66129f8a5X11")
+		SetPrivateKeyType(alipay.PKCS1)
 
 	// 发起请求
-	aliRsp, err := client.UserInfoShare()
+	aliRsp, err := client.UserInfoShare("authusrB3888b190f6df4aea964d66129f8a5X11")
 	if err != nil {
 		xlog.Error("err:", err)
 		return

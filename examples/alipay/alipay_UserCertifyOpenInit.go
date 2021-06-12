@@ -33,7 +33,7 @@ func UserCertifyOpenInit() {
 	bm.Set("identity_param", identity)
 	// 商户个性化配置，格式为json
 	merchant := make(map[string]string)
-	merchant["return_url"] = "https://www.fumm.cc"
+	merchant["return_url"] = "https://www.fmm.ink"
 	bm.Set("merchant_config", merchant)
 
 	//发起请求

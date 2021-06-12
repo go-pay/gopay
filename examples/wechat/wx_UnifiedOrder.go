@@ -32,14 +32,14 @@ func UnifiedOrder() {
 		Set("out_trade_no", number).
 		Set("total_fee", 1).
 		Set("spbill_create_ip", "127.0.0.1").
-		Set("notify_url", "https://www.fumm.cc").
+		Set("notify_url", "https://www.fmm.ink").
 		Set("trade_type", wechat.TradeType_H5).
 		Set("device_info", "WEB").
 		Set("sign_type", wechat.SignType_MD5).
 		SetBodyMap("scene_info", func(bm gopay.BodyMap) {
 			bm.SetBodyMap("h5_info", func(bm gopay.BodyMap) {
 				bm.Set("type", "Wap")
-				bm.Set("wap_url", "https://www.fumm.cc")
+				bm.Set("wap_url", "https://www.fmm.ink")
 				bm.Set("wap_name", "H5测试支付")
 			})
 		}) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
