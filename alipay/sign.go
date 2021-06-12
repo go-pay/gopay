@@ -411,3 +411,31 @@ func verifySignCert(signData, sign, signType string, aliPayPublicKeyCert interfa
 	h.Write([]byte(signData))
 	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
 }
+
+func (a *Client) verifySignByCert(signData, sign string) (err error) {
+	if a.autoSign && a.aliPayPkContent != nil {
+		var (
+			h         hash.Hash
+			block     *pem.Block
+			pubKey    *x509.Certificate
+			publicKey *rsa.PublicKey
+			ok        bool
+		)
+
+		signBytes, _ := base64.StdEncoding.DecodeString(sign)
+		if block, _ = pem.Decode(a.aliPayPkContent); block == nil {
+			return errors.New("支付宝公钥Decode错误")
+		}
+		if pubKey, err = x509.ParseCertificate(block.Bytes); err != nil {
+			return fmt.Errorf("x509.ParseCertificate：%w", err)
+		}
+		if publicKey, ok = pubKey.PublicKey.(*rsa.PublicKey); !ok {
+			return errors.New("支付宝公钥转换错误")
+		}
+		hashs := crypto.SHA256
+		h = hashs.New()
+		h.Write([]byte(signData))
+		return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
+	}
+	return nil
+}

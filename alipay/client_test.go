@@ -33,12 +33,15 @@ func TestMain(m *testing.M) {
 	// SetReturnUrl("https://www.fumm.cc").
 	// SetNotifyUrl("https://www.fumm.cc")
 
+	// 自动同步验签
+	// 传入alipayCertPublicKey_RSA2.crt 内容
+	client.AutoVerifySign(nil)
+
 	err := client.SetCertSnByPath("cert/appCertPublicKey.crt", "cert/alipayRootCert.crt", "cert/alipayCertPublicKey_RSA2.crt")
 	if err != nil {
 		xlog.Debug("SetCertSnByPath:", err)
 		return
 	}
-
 	os.Exit(m.Run())
 }
 

@@ -27,7 +27,7 @@ func (a *Client) FundTransUniTransfer(bm gopay.BodyMap) (aliRsp *FundTransUniTra
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.fund.account.query(支付宝资金账户资产查询接口)
@@ -50,7 +50,7 @@ func (a *Client) FundAccountQuery(bm gopay.BodyMap) (aliRsp *FundAccountQueryRes
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.fund.trans.common.query(转账业务单据查询接口)
@@ -69,7 +69,7 @@ func (a *Client) FundTransCommonQuery(bm gopay.BodyMap) (aliRsp *FundTransCommon
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.fund.trans.order.query(查询转账订单接口)
@@ -96,7 +96,7 @@ func (a *Client) FundTransOrderQuery(bm gopay.BodyMap) (aliRsp *FundTransOrderQu
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.fund.trans.refund(资金退回接口)
@@ -119,7 +119,7 @@ func (a *Client) FundTransRefund(bm gopay.BodyMap) (aliRsp *FundTransRefundRespo
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.fund.auth.order.freeze(资金授权冻结接口)
@@ -142,7 +142,7 @@ func (a *Client) FundAuthOrderFreeze(bm gopay.BodyMap) (aliRsp *FundAuthOrderFre
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.fund.auth.order.voucher.create(资金授权发码接口)
@@ -165,7 +165,7 @@ func (a *Client) FundAuthOrderVoucherCreate(bm gopay.BodyMap) (aliRsp *FundAuthO
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.fund.auth.order.app.freeze(线上资金授权冻结接口)
@@ -203,7 +203,7 @@ func (a *Client) FundAuthOrderUnfreeze(bm gopay.BodyMap) (aliRsp *FundAuthOrderU
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.fund.auth.operation.detail.query(资金授权操作查询接口)
@@ -222,7 +222,7 @@ func (a *Client) FundAuthOperationDetailQuery(bm gopay.BodyMap) (aliRsp *FundAut
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.fund.auth.operation.cancel(资金授权撤销接口)
@@ -245,7 +245,7 @@ func (a *Client) FundAuthOperationCancel(bm gopay.BodyMap) (aliRsp *FundAuthOper
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.fund.batch.create(批次下单接口)
@@ -268,7 +268,7 @@ func (a *Client) FundBatchCreate(bm gopay.BodyMap) (aliRsp *FundBatchCreateRespo
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.fund.batch.close(批量转账关单接口)
@@ -291,7 +291,7 @@ func (a *Client) FundBatchClose(bm gopay.BodyMap) (aliRsp *FundBatchCloseRespons
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.fund.batch.detail.query(批量转账明细查询接口)
@@ -314,7 +314,7 @@ func (a *Client) FundBatchDetailQuery(bm gopay.BodyMap) (aliRsp *FundBatchDetail
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.fund.trans.app.pay(现金红包无线支付接口)
@@ -337,5 +337,5 @@ func (a *Client) FundTransAppPay(bm gopay.BodyMap) (aliRsp *FundTransAppPayRespo
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }

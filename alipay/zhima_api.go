@@ -32,5 +32,5 @@ func (a *Client) ZhimaCreditScoreGet(bm gopay.BodyMap) (aliRsp *ZhimaCreditScore
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }

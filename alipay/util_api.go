@@ -34,7 +34,7 @@ func (a *Client) UserInfoAuth(bm gopay.BodyMap) (aliRsp *UserInfoAuthResponse, e
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.system.oauth.token(换取授权访问令牌)
@@ -68,7 +68,7 @@ func (a *Client) SystemOauthToken(bm gopay.BodyMap) (aliRsp *SystemOauthTokenRes
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }
 
 // alipay.open.auth.token.app(换取应用授权令牌)
@@ -94,5 +94,5 @@ func (a *Client) OpenAuthTokenApp(bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppRes
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	return aliRsp, a.verifySignByCert(aliRsp.SignData, aliRsp.Sign)
 }

@@ -28,6 +28,8 @@ type Client struct {
 	AppAuthToken       string
 	AuthToken          string
 	IsProd             bool
+	aliPayPkContent    []byte // 支付宝证书公钥内容 alipayCertPublicKey_RSA2.crt
+	autoSign           bool
 	DebugSwitch        gopay.DebugSwitch
 	location           *time.Location
 	mu                 sync.RWMutex
@@ -47,6 +49,14 @@ func NewClient(appId, privateKey string, isProd bool) (client *Client) {
 	}
 }
 
+// AutoVerifySign 开启请求完自动验签功能（默认不开启，推荐开启）
+//	aliPayPublicKeyCert：支付宝公钥证书文件内容[]byte
+func (a *Client) AutoVerifySign(aliPayPkContent []byte) {
+	if aliPayPkContent != nil {
+		a.autoSign = true
+	}
+}
+
 // Deprecated
 //	推荐使用 PostAliPayAPISelfV2()
 //	示例：请参考 client_test.go 的 TestClient_PostAliPayAPISelf() 方法
@@ -61,9 +71,15 @@ func (a *Client) PostAliPayAPISelf(bm gopay.BodyMap, method string, aliRsp inter
 	return nil
 }
 
-// GetRequestSignParam 获取支付宝完整请求参数包含签名
-//	注意：biz_content 需要自行通过bm.SetBodyMap()设置，不设置则没有此参数
+// Deprecated
+//	推荐使用 RequestParam()
 func (a *Client) GetRequestSignParam(bm gopay.BodyMap, method string) (string, error) {
+	return a.RequestParam(bm, method)
+}
+
+// RequestParam 获取支付宝完整请求参数包含签名
+//	注意：biz_content 需要自行通过bm.SetBodyMap()设置，不设置则没有此参数
+func (a *Client) RequestParam(bm gopay.BodyMap, method string) (string, error) {
 	var (
 		bodyBs []byte
 		err    error
