@@ -55,7 +55,7 @@ bdz/NH6klplarq02xmXk6pwxd11bfq3AvckrUdjywiRfGw6C1+bO+w==
 )
 
 func TestRsaEncryptAndDecryptData(t *testing.T) {
-	originData := "https://www.fumm.cc"
+	originData := "https://www.fmm.ink"
 	xlog.Debug("数据：", originData)
 	encryptData, err := RsaEncryptData(PKCS8, []byte(originData), FormatAlipayPublicKey(aliPubKeyPKCS8))
 	if err != nil {
@@ -71,7 +71,7 @@ func TestRsaEncryptAndDecryptData(t *testing.T) {
 }
 
 func TestRsaEncryptOAEPAndDecryptOAEPData(t *testing.T) {
-	originData := "https://www.fumm.cc"
+	originData := "https://www.fmm.ink"
 	xlog.Debug("数据：", originData)
 	encryptData, err := RsaEncryptOAEPData(sha256.New(), PKCS1, publicPKCS1, []byte(originData), []byte(label))
 	if err != nil {
@@ -94,7 +94,7 @@ func TestRsaEncryptOAEPAndDecryptOAEPData(t *testing.T) {
 }
 
 func TestRsaEncryptOAEPAndDecryptOAEPDataPKCS8(t *testing.T) {
-	originData := "https://www.fumm.cc"
+	originData := "https://www.fmm.ink"
 	xlog.Debug("数据：", originData)
 	key := FormatAlipayPublicKey(aliPubKeyPKCS8)
 	fmt.Println(key)
