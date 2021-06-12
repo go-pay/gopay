@@ -32,9 +32,7 @@ type OpenApiRoyaltyDetailInfoPojo struct {
 
 // 设置 支付宝 私钥类型，alipay.PKCS1 或 alipay.PKCS8，默认 PKCS1
 func (a *Client) SetPrivateKeyType(t PKCSType) (client *Client) {
-	a.mu.Lock()
 	a.PrivateKeyType = t
-	a.mu.Unlock()
 	return a
 }
 
@@ -45,37 +43,29 @@ func (a *Client) SetLocation(name string) (client *Client) {
 		log.Println("set Location err, default UTC")
 		return a
 	}
-	a.mu.Lock()
 	a.LocationName = name
 	a.location = location
-	a.mu.Unlock()
 	return a
 }
 
 // 设置 应用公钥证书SN
 //	appCertSN：应用公钥证书SN，通过 alipay.GetCertSN() 获取
 func (a *Client) SetAppCertSN(appCertSN string) (client *Client) {
-	a.mu.Lock()
 	a.AppCertSN = appCertSN
-	a.mu.Unlock()
 	return a
 }
 
 // 设置 支付宝公钥证书SN
 //	aliPayPublicCertSN：支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
 func (a *Client) SetAliPayPublicCertSN(aliPayPublicCertSN string) (client *Client) {
-	a.mu.Lock()
 	a.AliPayPublicCertSN = aliPayPublicCertSN
-	a.mu.Unlock()
 	return a
 }
 
 // 设置 支付宝CA根证书SN
 //	aliPayRootCertSN：支付宝CA根证书SN，通过 alipay.GetRootCertSN() 获取
 func (a *Client) SetAliPayRootCertSN(aliPayRootCertSN string) (client *Client) {
-	a.mu.Lock()
 	a.AliPayRootCertSN = aliPayRootCertSN
-	a.mu.Unlock()
 	return a
 }
 
@@ -96,11 +86,9 @@ func (a *Client) SetCertSnByPath(appCertPath, aliPayRootCertPath, aliPayPublicCe
 	if err != nil {
 		return fmt.Errorf("get alipay_cert_sn return err, but alse return alipay client. err: %w", err)
 	}
-	a.mu.Lock()
 	a.AppCertSN = appCertSn
 	a.AliPayRootCertSN = rootCertSn
 	a.AliPayPublicCertSN = publicCertSn
-	a.mu.Unlock()
 	return nil
 }
 
@@ -121,11 +109,9 @@ func (a *Client) SetCertSnByContent(appCertContent, aliPayRootCertContent, aliPa
 	if err != nil {
 		return fmt.Errorf("get alipay_cert_sn return err, but alse return alipay client. err: %w", err)
 	}
-	a.mu.Lock()
 	a.AppCertSN = appCertSn
 	a.AliPayRootCertSN = rootCertSn
 	a.AliPayPublicCertSN = publicCertSn
-	a.mu.Unlock()
 	return nil
 }
 
@@ -147,40 +133,32 @@ func (a *Client) SetNotifyUrl(url string) (client *Client) {
 
 // 设置编码格式，如utf-8,gbk,gb2312等，默认推荐使用 utf-8
 func (a *Client) SetCharset(charset string) (client *Client) {
-	a.mu.Lock()
 	if charset == util.NULL {
 		a.Charset = "utf-8"
 	} else {
 		a.Charset = charset
 	}
-	a.mu.Unlock()
 	return a
 }
 
 // 设置签名算法类型，目前支持RSA2和RSA，默认推荐使用 RSA2
 func (a *Client) SetSignType(signType string) (client *Client) {
-	a.mu.Lock()
 	if signType == util.NULL {
 		a.SignType = RSA2
 	} else {
 		a.SignType = signType
 	}
-	a.mu.Unlock()
 	return a
 }
 
 // 设置应用授权
 func (a *Client) SetAppAuthToken(appAuthToken string) (client *Client) {
-	a.mu.Lock()
 	a.AppAuthToken = appAuthToken
-	a.mu.Unlock()
 	return a
 }
 
 // 设置用户信息授权
 func (a *Client) SetAuthToken(authToken string) (client *Client) {
-	a.mu.Lock()
 	a.AuthToken = authToken
-	a.mu.Unlock()
 	return a
 }
