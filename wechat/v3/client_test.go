@@ -91,7 +91,7 @@ func TestV3Jsapi(t *testing.T) {
 	bm.Set("description", "测试Jsapi支付商品").
 		Set("out_trade_no", tradeNo).
 		Set("time_expire", expire).
-		Set("notify_url", "https://www.fumm.cc").
+		Set("notify_url", "https://www.fmm.ink").
 		SetBodyMap("amount", func(bm gopay.BodyMap) {
 			bm.Set("total", 1).
 				Set("currency", "CNY")
@@ -122,7 +122,7 @@ func TestV3Native(t *testing.T) {
 		Set("out_trade_no", tradeNo).
 		Set("time_expire", expire).
 		//Set("notify_url", "https://api2.fangyiyun.com/api/v1/wechat/callback").
-		Set("notify_url", "https://www.fumm.cc").
+		Set("notify_url", "https://www.fmm.ink").
 		SetBodyMap("amount", func(bm gopay.BodyMap) {
 			bm.Set("total", 1).
 				Set("currency", "CNY")
@@ -151,7 +151,7 @@ func TestV3PartnerNative(t *testing.T) {
 		Set("time_expire", expire).
 		Set("sub_mchid", "1900000109").
 		//Set("notify_url", "https://api2.fangyiyun.com/api/v1/wechat/callback").
-		Set("notify_url", "https://www.fumm.cc").
+		Set("notify_url", "https://www.fmm.ink").
 		SetBodyMap("amount", func(bm gopay.BodyMap) {
 			bm.Set("total", 1).
 				Set("currency", "CNY")
