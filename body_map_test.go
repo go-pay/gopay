@@ -15,11 +15,11 @@ func TestBodyMapSetBodyMap(t *testing.T) {
 	sceneInfo := make(map[string]map[string]string)
 	h5Info := make(map[string]string)
 	h5Info["type"] = "Wap"
-	h5Info["wap_url"] = "https://www.fumm.cc"
+	h5Info["wap_url"] = "https://www.fmm.ink"
 	h5Info["wap_name"] = "H5测试支付"
 	sceneInfo["h5_info"] = h5Info
 	bm.Set("scene_info", sceneInfo)
-	xlog.Debug("配合map使用：", bm) // map[scene_info:map[h5_info:map[type:Wap wap_name:H5测试支付 wap_url:https://www.fumm.cc]]]
+	xlog.Debug("配合map使用：", bm) // map[scene_info:map[h5_info:map[type:Wap wap_name:H5测试支付 wap_url:https://www.fmm.ink]]]
 
 	bm.Reset()
 	xlog.Debug(bm) // []
@@ -46,12 +46,12 @@ func TestBodyMapSetBodyMap(t *testing.T) {
 	bm.SetBodyMap("scene_info", func(bm BodyMap) {
 		bm.SetBodyMap("h5_info", func(bm BodyMap) {
 			bm.Set("type", "Wap").
-				Set("wap_url", "https://www.fumm.cc").
+				Set("wap_url", "https://www.fmm.ink").
 				Set("wap_name", "H5测试支付")
 		})
 	}).Set("7key", "7value").
 		Set("8key", "8value")
-	xlog.Debug("高级用法：", bm) // map[scene_info:map[h5_info:map[type:Wap wap_name:H5测试支付 wap_url:https://www.fumm.cc]]]
+	xlog.Debug("高级用法：", bm) // map[scene_info:map[h5_info:map[type:Wap wap_name:H5测试支付 wap_url:https://www.fmm.ink]]]
 }
 
 func TestBodyMapMarshal(t *testing.T) {
@@ -67,7 +67,7 @@ func TestBodyMapMarshal(t *testing.T) {
 	bm.SetBodyMap("scene_info", func(bm BodyMap) {
 		bm.SetBodyMap("h5_info", func(bm BodyMap) {
 			bm.Set("type", "Wap").
-				Set("wap_url", "https://www.fumm.cc").
+				Set("wap_url", "https://www.fmm.ink").
 				Set("wap_name", "H5测试支付")
 		})
 	}).Set("7key", "7value").

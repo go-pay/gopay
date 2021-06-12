@@ -267,8 +267,9 @@ func main() {
     * 身份认证记录查询：client.UserCertifyOpenQuery()
 * 网页&移动应用 - <font color='#027AFF' size='4'>工具类API</font>
     * 用户登陆授权：client.UserInfoAuth()
-    * 换取授权访问令牌（获取access_token，user_id等信息）：client.SystemOauthToken()
-    * 换取应用授权令牌（获取app_auth_token，auth_app_id，user_id等信息）：client.OpenAuthTokenApp()
+    * 换取授权访问令牌：client.SystemOauthToken()
+    * 换取应用授权令牌：client.OpenAuthTokenApp()
+    * 应用支付宝公钥证书下载：client.PublicCertDownload()
 * 网页&移动应用 - <font color='#027AFF' size='4'>芝麻信用API</font>
     * 获取芝麻信用分：client.ZhimaCreditScoreGet()（失效）
 * 网页&移动应用 - <font color='#027AFF' size='4'>财务API</font>
@@ -387,6 +388,8 @@ client.AddCertPkcs12FileContent()
 
 支付宝RSA秘钥生成文档：[生成RSA密钥](https://opendocs.alipay.com/open/291/105971) （推荐使用 RSA2）
 
+技术支持 & 案例 FAQ：[秘钥问题](https://opendocs.alipay.com/support/01rauw)
+
 沙箱环境使用说明：[文档地址](https://opendocs.alipay.com/open/200/105311)
 
 ```go
@@ -412,10 +415,13 @@ client.SetLocation().                       // 设置时区，不设置或出错
     SetAliPayPublicCertSN().                // 设置支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
     SetCharset("utf-8").                    // 设置字符编码，不设置默认 utf-8
     SetSignType(alipay.RSA2).               // 设置签名类型，不设置默认 RSA2
-    SetReturnUrl("https://www.fumm.cc").  // 设置返回URL
-    SetNotifyUrl("https://www.fumm.cc").  // 设置异步通知URL
-    SetAppAuthToken().                      // 设置第三方应用授权
-    SetAuthToken()                          // 设置个人信息授权
+    SetReturnUrl("https://www.fmm.ink").  // 设置返回URL
+    SetNotifyUrl("https://www.fmm.ink").  // 设置异步通知URL
+    SetAppAuthToken()                      // 设置第三方应用授权
+
+// 自动同步验签（只支持证书模式）
+// 传入 alipayCertPublicKey_RSA2.crt 内容
+client.AutoVerifySign("alipayCertPublicKey_RSA2 bytes")
 
 // 证书路径
 err := client.SetCertSnByPath("appCertPublicKey.crt", "alipayRootCert.crt", "alipayCertPublicKey_RSA2.crt")
@@ -443,14 +449,14 @@ bm.Set("nonce_str", util.GetRandomString(32)).
     Set("out_trade_no", number).
     Set("total_fee", 1).
     Set("spbill_create_ip", "127.0.0.1").
-    Set("notify_url", "https://www.fumm.cc").
+    Set("notify_url", "https://www.fmm.ink").
     Set("trade_type", TradeType_H5).
     Set("device_info", "WEB").
     Set("sign_type", SignType_MD5).
     SetBodyMap("scene_info", func(bm gopay.BodyMap) {
         bm.SetBodyMap("h5_info", func(bm gopay.BodyMap) {
             bm.Set("type", "Wap")
-            bm.Set("wap_url", "https://www.fumm.cc")
+            bm.Set("wap_url", "https://www.fmm.ink")
             bm.Set("wap_name", "H5测试支付")
         })
     }) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
@@ -471,7 +477,7 @@ bm.Set("sign", sign)
 bm := make(gopay.BodyMap)
 bm.Set("subject", "手机网站测试支付").
     Set("out_trade_no", "GZ201909081743431443").
-    Set("quit_url", "https://www.fumm.cc").
+    Set("quit_url", "https://www.fmm.ink").
     Set("total_amount", "100.00").
     Set("product_code", "QUICK_WAP_WAY")
 ```
@@ -538,7 +544,7 @@ payParam, err := client.TradeAppPay(bm)
 aliRsp, err := client.TradePay(bm)
 
 // 支付宝小程序支付时 buyer_id 为必传参数，需要提前获取，获取方法如下两种
-//    1、alipay.SystemOauthToken()     返回取值：rsp.SystemOauthTokenResponse.UserId
+//    1、alipay.SystemOauthToken()     返回取值：aliRsp.SystemOauthTokenResponse.UserId
 //    2、client.SystemOauthToken()    返回取值：aliRsp.SystemOauthTokenResponse.UserId
 aliRsp, err := client.TradeCreate(bm)
 aliRsp, err := client.TradeQuery(bm)
@@ -554,7 +560,6 @@ aliRsp, err := client.FundTransCommonQuery(bm)
 aliRsp, err := client.FundAccountQuery(bm)
 aliRsp, err := client.SystemOauthToken(bm)
 aliRsp, err := client.OpenAuthTokenApp(bm)
-aliRsp, err := client.ZhimaCreditScoreGet(bm)
 aliRsp, err := client.UserCertifyOpenInit(bm)
 aliRsp, err := client.UserCertifyOpenCertify(bm)
 aliRsp, err := client.UserCertifyOpenQuery(bm)
