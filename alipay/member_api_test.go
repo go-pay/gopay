@@ -28,7 +28,7 @@ func TestClient_UserCertifyOpenInit(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserCertifyOpenInit(bm)
 	if err != nil {
-		xlog.Errorf("client.UserCertifyOpenInit(%+v),error:%+v", bm, err)
+		xlog.Error(err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -43,7 +43,7 @@ func TestClient_UserCertifyOpenCertify(t *testing.T) {
 	// 发起请求
 	certifyUrl, err := client.UserCertifyOpenCertify(bm)
 	if err != nil {
-		xlog.Errorf("client.UserCertifyOpenCertify(%+v),error:%+v", bm, err)
+		xlog.Error(err)
 		return
 	}
 	xlog.Debug("certifyUrl:", certifyUrl)
@@ -58,7 +58,7 @@ func TestClient_UserCertifyOpenQuery(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserCertifyOpenQuery(bm)
 	if err != nil {
-		xlog.Errorf("client.UserCertifyOpenQuery(%+v),error:%+v", bm, err)
+		xlog.Error(err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)

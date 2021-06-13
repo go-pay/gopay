@@ -18,7 +18,6 @@ func (a *Client) UserInfoAuth(bm gopay.BodyMap) (aliRsp *UserInfoAuthResponse, e
 	if err != nil {
 		return nil, err
 	}
-
 	var bs []byte
 	if bs, err = a.doAliPay(bm, "alipay.user.info.auth"); err != nil {
 		return nil, err

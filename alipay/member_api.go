@@ -96,3 +96,67 @@ func (a *Client) UserCertifyOpenQuery(bm gopay.BodyMap) (aliRsp *UserCertifyOpen
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+// alipay.user.agreement.page.sign(支付宝个人协议页面签约接口)
+//	文档地址：https://opendocs.alipay.com/apis/api_2/alipay.user.agreement.page.sign
+func (a *Client) UserAgreementPageSign(bm gopay.BodyMap) (aliRsp *UserAgreementPageSignRsp, err error) {
+	err = bm.CheckEmptyError("personal_product_code")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.user.agreement.page.sign"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(UserAgreementPageSignRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.user.agreement.unsign(支付宝个人代扣协议解约接口)
+//	文档地址：https://opendocs.alipay.com/apis/api_2/alipay.user.agreement.page.unsign
+func (a *Client) UserAgreementPageUnSign(bm gopay.BodyMap) (aliRsp *UserAgreementPageUnSignRsp, err error) {
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.user.agreement.unsign"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(UserAgreementPageUnSignRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.user.agreement.query(支付宝个人代扣协议查询接口)
+//	文档地址：https://opendocs.alipay.com/apis/api_2/alipay.user.agreement.query
+func (a *Client) UserAgreementQuery(bm gopay.BodyMap) (aliRsp *UserAgreementQueryRsp, err error) {
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.user.agreement.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(UserAgreementQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}

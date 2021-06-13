@@ -18,40 +18,40 @@ type PKCSType uint8
 
 // Deprecated
 type NotifyRequest struct {
-	NotifyTime        string                   `json:"notify_time,omitempty"`
-	NotifyType        string                   `json:"notify_type,omitempty"`
-	NotifyId          string                   `json:"notify_id,omitempty"`
-	AppId             string                   `json:"app_id,omitempty"`
-	Charset           string                   `json:"charset,omitempty"`
-	Version           string                   `json:"version,omitempty"`
-	SignType          string                   `json:"sign_type,omitempty"`
-	Sign              string                   `json:"sign,omitempty"`
-	AuthAppId         string                   `json:"auth_app_id,omitempty"`
-	TradeNo           string                   `json:"trade_no,omitempty"`
-	OutTradeNo        string                   `json:"out_trade_no,omitempty"`
-	OutBizNo          string                   `json:"out_biz_no,omitempty"`
-	BuyerId           string                   `json:"buyer_id,omitempty"`
-	BuyerLogonId      string                   `json:"buyer_logon_id,omitempty"`
-	SellerId          string                   `json:"seller_id,omitempty"`
-	SellerEmail       string                   `json:"seller_email,omitempty"`
-	TradeStatus       string                   `json:"trade_status,omitempty"`
-	TotalAmount       string                   `json:"total_amount,omitempty"`
-	ReceiptAmount     string                   `json:"receipt_amount,omitempty"`
-	InvoiceAmount     string                   `json:"invoice_amount,omitempty"`
-	BuyerPayAmount    string                   `json:"buyer_pay_amount,omitempty"`
-	PointAmount       string                   `json:"point_amount,omitempty"`
-	RefundFee         string                   `json:"refund_fee,omitempty"`
-	Subject           string                   `json:"subject,omitempty"`
-	Body              string                   `json:"body,omitempty"`
-	GmtCreate         string                   `json:"gmt_create,omitempty"`
-	GmtPayment        string                   `json:"gmt_payment,omitempty"`
-	GmtRefund         string                   `json:"gmt_refund,omitempty"`
-	GmtClose          string                   `json:"gmt_close,omitempty"`
-	FundBillList      []*FundBillListInfo      `json:"fund_bill_list,omitempty"`
-	PassbackParams    string                   `json:"passback_params,omitempty"`
-	VoucherDetailList []*VoucherDetailListInfo `json:"voucher_detail_list,omitempty"`
-	Method            string                   `json:"method,omitempty"`    // 电脑网站支付 支付宝请求 return_url 同步返回参数
-	Timestamp         string                   `json:"timestamp,omitempty"` // 电脑网站支付 支付宝请求 return_url 同步返回参数
+	NotifyTime        string              `json:"notify_time,omitempty"`
+	NotifyType        string              `json:"notify_type,omitempty"`
+	NotifyId          string              `json:"notify_id,omitempty"`
+	AppId             string              `json:"app_id,omitempty"`
+	Charset           string              `json:"charset,omitempty"`
+	Version           string              `json:"version,omitempty"`
+	SignType          string              `json:"sign_type,omitempty"`
+	Sign              string              `json:"sign,omitempty"`
+	AuthAppId         string              `json:"auth_app_id,omitempty"`
+	TradeNo           string              `json:"trade_no,omitempty"`
+	OutTradeNo        string              `json:"out_trade_no,omitempty"`
+	OutBizNo          string              `json:"out_biz_no,omitempty"`
+	BuyerId           string              `json:"buyer_id,omitempty"`
+	BuyerLogonId      string              `json:"buyer_logon_id,omitempty"`
+	SellerId          string              `json:"seller_id,omitempty"`
+	SellerEmail       string              `json:"seller_email,omitempty"`
+	TradeStatus       string              `json:"trade_status,omitempty"`
+	TotalAmount       string              `json:"total_amount,omitempty"`
+	ReceiptAmount     string              `json:"receipt_amount,omitempty"`
+	InvoiceAmount     string              `json:"invoice_amount,omitempty"`
+	BuyerPayAmount    string              `json:"buyer_pay_amount,omitempty"`
+	PointAmount       string              `json:"point_amount,omitempty"`
+	RefundFee         string              `json:"refund_fee,omitempty"`
+	Subject           string              `json:"subject,omitempty"`
+	Body              string              `json:"body,omitempty"`
+	GmtCreate         string              `json:"gmt_create,omitempty"`
+	GmtPayment        string              `json:"gmt_payment,omitempty"`
+	GmtRefund         string              `json:"gmt_refund,omitempty"`
+	GmtClose          string              `json:"gmt_close,omitempty"`
+	FundBillList      []*FundBillListInfo `json:"fund_bill_list,omitempty"`
+	PassbackParams    string              `json:"passback_params,omitempty"`
+	VoucherDetailList []*VoucherDetail    `json:"voucher_detail_list,omitempty"`
+	Method            string              `json:"method,omitempty"`    // 电脑网站支付 支付宝请求 return_url 同步返回参数
+	Timestamp         string              `json:"timestamp,omitempty"` // 电脑网站支付 支付宝请求 return_url 同步返回参数
 }
 
 // Deprecated
@@ -60,8 +60,70 @@ type FundBillListInfo struct {
 	FundChannel string `json:"fundChannel,omitempty"` // 异步通知里是 fundChannel
 }
 
-// Deprecated
-type VoucherDetailListInfo struct {
+type UserPhone struct {
+	ErrorResponse
+	Mobile string `json:"mobile,omitempty"`
+}
+
+type ErrorResponse struct {
+	Code    string `json:"code"`
+	Msg     string `json:"msg"`
+	SubCode string `json:"sub_code,omitempty"`
+	SubMsg  string `json:"sub_msg,omitempty"`
+}
+
+// ===================================================
+type TradePayResponse struct {
+	Response     *TradePay `json:"alipay_trade_pay_response"`
+	AlipayCertSn string    `json:"alipay_cert_sn,omitempty"`
+	SignData     string    `json:"-"`
+	Sign         string    `json:"sign"`
+}
+
+type TradePay struct {
+	ErrorResponse
+	TradeNo             string           `json:"trade_no,omitempty"`
+	OutTradeNo          string           `json:"out_trade_no,omitempty"`
+	BuyerLogonId        string           `json:"buyer_logon_id,omitempty"`
+	SettleAmount        string           `json:"settle_amount,omitempty"`
+	PayCurrency         string           `json:"pay_currency,omitempty"`
+	PayAmount           string           `json:"pay_amount,omitempty"`
+	SettleTransRate     string           `json:"settle_trans_rate,omitempty"`
+	TransPayRate        string           `json:"trans_pay_rate,omitempty"`
+	TotalAmount         string           `json:"total_amount,omitempty"`
+	TransCurrency       string           `json:"trans_currency,omitempty"`
+	SettleCurrency      string           `json:"settle_currency,omitempty"`
+	ReceiptAmount       string           `json:"receipt_amount,omitempty"`
+	BuyerPayAmount      string           `json:"buyer_pay_amount,omitempty"`
+	PointAmount         string           `json:"point_amount,omitempty"`
+	InvoiceAmount       string           `json:"invoice_amount,omitempty"`
+	GmtPayment          string           `json:"gmt_payment,omitempty"`
+	FundBillList        []*FundBill      `json:"fund_bill_list"`
+	CardBalance         string           `json:"card_balance,omitempty"`
+	StoreName           string           `json:"store_name,omitempty"`
+	BuyerUserId         string           `json:"buyer_user_id,omitempty"`
+	DiscountGoodsDetail string           `json:"discount_goods_detail,omitempty"`
+	VoucherDetailList   []*VoucherDetail `json:"voucher_detail_list"`
+	AdvanceAmount       string           `json:"advance_amount,omitempty"`
+	AuthTradePayMode    string           `json:"auth_trade_pay_mode,omitempty"`
+	ChargeAmount        string           `json:"charge_amount,omitempty"`
+	ChargeFlags         string           `json:"charge_flags,omitempty"`
+	SettlementId        string           `json:"settlement_id,omitempty"`
+	BusinessParams      string           `json:"business_params,omitempty"`
+	BuyerUserType       string           `json:"buyer_user_type,omitempty"`
+	MdiscountAmount     string           `json:"mdiscount_amount,omitempty"`
+	DiscountAmount      string           `json:"discount_amount,omitempty"`
+	BuyerUserName       string           `json:"buyer_user_name,omitempty"`
+}
+
+type FundBill struct {
+	FundChannel string `json:"fund_channel,omitempty"`
+	BankCode    string `json:"bank_code,omitempty"`
+	Amount      string `json:"amount,omitempty"`
+	RealAmount  string `json:"real_amount,omitempty"`
+}
+
+type VoucherDetail struct {
 	Id                         string `json:"id,omitempty"`
 	Name                       string `json:"name,omitempty"`
 	Type                       string `json:"type,omitempty"`
@@ -75,128 +137,41 @@ type VoucherDetailListInfo struct {
 	PurchaseAntContribute      string `json:"purchase_ant_contribute,omitempty"`
 }
 
-type UserPhone struct {
-	Code    string `json:"code,omitempty"`
-	Msg     string `json:"msg,omitempty"`
-	SubCode string `json:"subCode,omitempty"`
-	SubMsg  string `json:"subMsg,omitempty"`
-	Mobile  string `json:"mobile,omitempty"`
-}
-
-type ErrorResponse struct {
-	Code    string `json:"code,omitempty"`
-	Msg     string `json:"msg,omitempty"`
-	SubCode string `json:"sub_code,omitempty"`
-	SubMsg  string `json:"sub_msg,omitempty"`
-}
-
-// ===================================================
-type TradePayResponse struct {
-	Response     *payResponse `json:"alipay_trade_pay_response,omitempty"`
-	AlipayCertSn string       `json:"alipay_cert_sn,omitempty"`
-	SignData     string       `json:"-"`
-	Sign         string       `json:"sign"`
-}
-
-type payResponse struct {
-	Code            string `json:"code,omitempty"`
-	Msg             string `json:"msg,omitempty"`
-	SubCode         string `json:"sub_code,omitempty"`
-	SubMsg          string `json:"sub_msg,omitempty"`
-	TradeNo         string `json:"trade_no,omitempty"`
-	OutTradeNo      string `json:"out_trade_no,omitempty"`
-	BuyerLogonId    string `json:"buyer_logon_id,omitempty"`
-	SettleAmount    string `json:"settle_amount,omitempty"`
-	PayCurrency     string `json:"pay_currency,omitempty"`
-	PayAmount       string `json:"pay_amount,omitempty"`
-	SettleTransRate string `json:"settle_trans_rate,omitempty"`
-	TransPayRate    string `json:"trans_pay_rate,omitempty"`
-	TotalAmount     string `json:"total_amount,omitempty"`
-	TransCurrency   string `json:"trans_currency,omitempty"`
-	SettleCurrency  string `json:"settle_currency,omitempty"`
-	ReceiptAmount   string `json:"receipt_amount,omitempty"`
-	BuyerPayAmount  string `json:"buyer_pay_amount,omitempty"`
-	PointAmount     string `json:"point_amount,omitempty"`
-	InvoiceAmount   string `json:"invoice_amount,omitempty"`
-	GmtPayment      string `json:"gmt_payment,omitempty"`
-	FundBillList    []*struct {
-		FundChannel string `json:"fund_channel,omitempty"`
-		BankCode    string `json:"bank_code,omitempty"`
-		Amount      string `json:"amount,omitempty"`
-		RealAmount  string `json:"real_amount,omitempty"`
-	} `json:"fund_bill_list"`
-	CardBalance         string `json:"card_balance,omitempty"`
-	StoreName           string `json:"store_name,omitempty"`
-	BuyerUserId         string `json:"buyer_user_id,omitempty"`
-	DiscountGoodsDetail string `json:"discount_goods_detail,omitempty"`
-	VoucherDetailList   []*struct {
-		Id                         string `json:"id,omitempty"`
-		Name                       string `json:"name,omitempty"`
-		Type                       string `json:"type,omitempty"`
-		Amount                     string `json:"amount,omitempty"`
-		MerchantContribute         string `json:"merchant_contribute,omitempty"`
-		OtherContribute            string `json:"other_contribute,omitempty"`
-		Memo                       string `json:"memo,omitempty"`
-		TemplateId                 string `json:"template_id,omitempty"`
-		PurchaseBuyerContribute    string `json:"purchase_buyer_contribute,omitempty"`
-		PurchaseMerchantContribute string `json:"purchase_merchant_contribute,omitempty"`
-		PurchaseAntContribute      string `json:"purchase_ant_contribute,omitempty"`
-	} `json:"voucher_detail_list"`
-	AdvanceAmount    string `json:"advance_amount,omitempty"`
-	AuthTradePayMode string `json:"auth_trade_pay_mode,omitempty"`
-	ChargeAmount     string `json:"charge_amount,omitempty"`
-	ChargeFlags      string `json:"charge_flags,omitempty"`
-	SettlementId     string `json:"settlement_id,omitempty"`
-	BusinessParams   string `json:"business_params,omitempty"`
-	BuyerUserType    string `json:"buyer_user_type,omitempty"`
-	MdiscountAmount  string `json:"mdiscount_amount,omitempty"`
-	DiscountAmount   string `json:"discount_amount,omitempty"`
-	BuyerUserName    string `json:"buyer_user_name,omitempty"`
-}
-
 // ===================================================
 type TradeQueryResponse struct {
-	Response     *queryResponse `json:"alipay_trade_query_response,omitempty"`
-	AlipayCertSn string         `json:"alipay_cert_sn,omitempty"`
-	SignData     string         `json:"-"`
-	Sign         string         `json:"sign"`
+	Response     *TradeQuery `json:"alipay_trade_query_response"`
+	AlipayCertSn string      `json:"alipay_cert_sn,omitempty"`
+	SignData     string      `json:"-"`
+	Sign         string      `json:"sign"`
 }
 
-type queryResponse struct {
-	Code            string `json:"code,omitempty"`
-	Msg             string `json:"msg,omitempty"`
-	SubCode         string `json:"sub_code,omitempty"`
-	SubMsg          string `json:"sub_msg,omitempty"`
-	TradeNo         string `json:"trade_no,omitempty"`
-	OutTradeNo      string `json:"out_trade_no,omitempty"`
-	BuyerLogonId    string `json:"buyer_logon_id,omitempty"`
-	TradeStatus     string `json:"trade_status,omitempty"`
-	TotalAmount     string `json:"total_amount,omitempty"`
-	TransCurrency   string `json:"trans_currency,omitempty"`
-	SettleCurrency  string `json:"settle_currency,omitempty"`
-	SettleAmount    string `json:"settle_amount,omitempty"`
-	PayCurrency     string `json:"pay_currency,omitempty"`
-	PayAmount       string `json:"pay_amount,omitempty"`
-	SettleTransRate string `json:"settle_trans_rate,omitempty"`
-	TransPayRate    string `json:"trans_pay_rate,omitempty"`
-	BuyerPayAmount  string `json:"buyer_pay_amount,omitempty"`
-	PointAmount     string `json:"point_amount,omitempty"`
-	InvoiceAmount   string `json:"invoice_amount,omitempty"`
-	SendPayDate     string `json:"send_pay_date,omitempty"`
-	ReceiptAmount   string `json:"receipt_amount,omitempty"`
-	StoreId         string `json:"store_id,omitempty"`
-	TerminalId      string `json:"terminal_id,omitempty"`
-	FundBillList    []*struct {
-		FundChannel string `json:"fund_channel,omitempty"`
-		BankCode    string `json:"bank_code,omitempty"`
-		Amount      string `json:"amount,omitempty"`
-		RealAmount  string `json:"real_amount,omitempty"`
-	} `json:"fund_bill_list"`
-	StoreName       string `json:"store_name,omitempty"`
-	BuyerUserId     string `json:"buyer_user_id,omitempty"`
-	ChargeAmount    string `json:"charge_amount,omitempty"`
-	ChargeFlags     string `json:"charge_flags,omitempty"`
-	SettlementId    string `json:"settlement_id,omitempty"`
+type TradeQuery struct {
+	ErrorResponse
+	TradeNo         string      `json:"trade_no,omitempty"`
+	OutTradeNo      string      `json:"out_trade_no,omitempty"`
+	BuyerLogonId    string      `json:"buyer_logon_id,omitempty"`
+	TradeStatus     string      `json:"trade_status,omitempty"`
+	TotalAmount     string      `json:"total_amount,omitempty"`
+	TransCurrency   string      `json:"trans_currency,omitempty"`
+	SettleCurrency  string      `json:"settle_currency,omitempty"`
+	SettleAmount    string      `json:"settle_amount,omitempty"`
+	PayCurrency     string      `json:"pay_currency,omitempty"`
+	PayAmount       string      `json:"pay_amount,omitempty"`
+	SettleTransRate string      `json:"settle_trans_rate,omitempty"`
+	TransPayRate    string      `json:"trans_pay_rate,omitempty"`
+	BuyerPayAmount  string      `json:"buyer_pay_amount,omitempty"`
+	PointAmount     string      `json:"point_amount,omitempty"`
+	InvoiceAmount   string      `json:"invoice_amount,omitempty"`
+	SendPayDate     string      `json:"send_pay_date,omitempty"`
+	ReceiptAmount   string      `json:"receipt_amount,omitempty"`
+	StoreId         string      `json:"store_id,omitempty"`
+	TerminalId      string      `json:"terminal_id,omitempty"`
+	FundBillList    []*FundBill `json:"fund_bill_list"`
+	StoreName       string      `json:"store_name,omitempty"`
+	BuyerUserId     string      `json:"buyer_user_id,omitempty"`
+	ChargeAmount    string      `json:"charge_amount,omitempty"`
+	ChargeFlags     string      `json:"charge_flags,omitempty"`
+	SettlementId    string      `json:"settlement_id,omitempty"`
 	TradeSettleInfo *struct {
 		TradeSettleDetailList []*struct {
 			OperationType     string `json:"operation_type,omitempty"`
@@ -220,51 +195,42 @@ type queryResponse struct {
 
 // ===================================================
 type TradeCreateResponse struct {
-	Response     *createResponse `json:"alipay_trade_create_response,omitempty"`
-	AlipayCertSn string          `json:"alipay_cert_sn,omitempty"`
-	SignData     string          `json:"-"`
-	Sign         string          `json:"sign"`
+	Response     *TradeCreate `json:"alipay_trade_create_response"`
+	AlipayCertSn string       `json:"alipay_cert_sn,omitempty"`
+	SignData     string       `json:"-"`
+	Sign         string       `json:"sign"`
 }
 
-type createResponse struct {
-	Code       string `json:"code,omitempty"`
-	Msg        string `json:"msg,omitempty"`
-	SubCode    string `json:"sub_code,omitempty"`
-	SubMsg     string `json:"sub_msg,omitempty"`
+type TradeCreate struct {
+	ErrorResponse
 	TradeNo    string `json:"trade_no,omitempty"`
 	OutTradeNo string `json:"out_trade_no,omitempty"`
 }
 
 // ===================================================
 type TradeCloseResponse struct {
-	Response     *closeResponse `json:"alipay_trade_close_response,omitempty"`
-	AlipayCertSn string         `json:"alipay_cert_sn,omitempty"`
-	SignData     string         `json:"-"`
-	Sign         string         `json:"sign"`
+	Response     *TradeClose `json:"alipay_trade_close_response"`
+	AlipayCertSn string      `json:"alipay_cert_sn,omitempty"`
+	SignData     string      `json:"-"`
+	Sign         string      `json:"sign"`
 }
 
-type closeResponse struct {
-	Code       string `json:"code,omitempty"`
-	Msg        string `json:"msg,omitempty"`
-	SubCode    string `json:"sub_code,omitempty"`
-	SubMsg     string `json:"sub_msg,omitempty"`
+type TradeClose struct {
+	ErrorResponse
 	TradeNo    string `json:"trade_no,omitempty"`
 	OutTradeNo string `json:"out_trade_no,omitempty"`
 }
 
 // ===================================================
 type TradeCancelResponse struct {
-	Response     *cancelResponse `json:"alipay_trade_cancel_response,omitempty"`
-	AlipayCertSn string          `json:"alipay_cert_sn,omitempty"`
-	SignData     string          `json:"-"`
-	Sign         string          `json:"sign"`
+	Response     *TradeCancel `json:"alipay_trade_cancel_response"`
+	AlipayCertSn string       `json:"alipay_cert_sn,omitempty"`
+	SignData     string       `json:"-"`
+	Sign         string       `json:"sign"`
 }
 
-type cancelResponse struct {
-	Code               string `json:"code,omitempty"`
-	Msg                string `json:"msg,omitempty"`
-	SubCode            string `json:"sub_code,omitempty"`
-	SubMsg             string `json:"sub_msg,omitempty"`
+type TradeCancel struct {
+	ErrorResponse
 	TradeNo            string `json:"trade_no,omitempty"`
 	OutTradeNo         string `json:"out_trade_no,omitempty"`
 	RetryFlag          string `json:"retry_flag,omitempty"`
@@ -275,14 +241,14 @@ type cancelResponse struct {
 
 // ===================================================
 type SystemOauthTokenResponse struct {
-	Response      *oauthTokenInfo `json:"alipay_system_oauth_token_response,omitempty"`
+	Response      *OauthTokenInfo `json:"alipay_system_oauth_token_response"`
 	ErrorResponse *ErrorResponse  `json:"error_response,omitempty"`
 	AlipayCertSn  string          `json:"alipay_cert_sn,omitempty"`
 	SignData      string          `json:"-"`
 	Sign          string          `json:"sign"`
 }
 
-type oauthTokenInfo struct {
+type OauthTokenInfo struct {
 	AccessToken  string `json:"access_token,omitempty"`
 	AlipayUserId string `json:"alipay_user_id,omitempty"`
 	ExpiresIn    int64  `json:"expires_in,omitempty"`
@@ -293,17 +259,14 @@ type oauthTokenInfo struct {
 
 // ===================================================
 type UserInfoShareResponse struct {
-	Response     *userInfoShare `json:"alipay_user_info_share_response,omitempty"`
+	Response     *UserInfoShare `json:"alipay_user_info_share_response"`
 	AlipayCertSn string         `json:"alipay_cert_sn,omitempty"`
 	SignData     string         `json:"-"`
 	Sign         string         `json:"sign"`
 }
 
-type userInfoShare struct {
-	Code               string `json:"code,omitempty"`
-	Msg                string `json:"msg,omitempty"`
-	SubCode            string `json:"sub_code,omitempty"`
-	SubMsg             string `json:"sub_msg,omitempty"`
+type UserInfoShare struct {
+	ErrorResponse
 	UserId             string `json:"user_id,omitempty"`
 	Avatar             string `json:"avatar,omitempty"`
 	Province           string `json:"province,omitempty"`
@@ -318,35 +281,29 @@ type userInfoShare struct {
 
 // ===================================================
 type TradeRefundResponse struct {
-	Response     *refundResponse `json:"alipay_trade_refund_response,omitempty"`
-	AlipayCertSn string          `json:"alipay_cert_sn,omitempty"`
-	SignData     string          `json:"-"`
-	Sign         string          `json:"sign"`
+	Response     *TradeRefund `json:"alipay_trade_refund_response"`
+	AlipayCertSn string       `json:"alipay_cert_sn,omitempty"`
+	SignData     string       `json:"-"`
+	Sign         string       `json:"sign"`
 }
 
-type refundResponse struct {
-	Code                    string           `json:"code,omitempty"`
-	Msg                     string           `json:"msg,omitempty"`
-	SubCode                 string           `json:"sub_code,omitempty"`
-	SubMsg                  string           `json:"sub_msg,omitempty"`
-	TradeNo                 string           `json:"trade_no,omitempty"`
-	OutTradeNo              string           `json:"out_trade_no,omitempty"`
-	BuyerLogonId            string           `json:"buyer_logon_id,omitempty"`
-	FundChange              string           `json:"fund_change,omitempty"`
-	RefundFee               string           `json:"refund_fee,omitempty"`
-	RefundCurrency          string           `json:"refund_currency,omitempty"`
-	GmtRefundPay            string           `json:"gmt_refund_pay,omitempty"`
-	RefundDetailItemList    []*TradeFundBill `json:"refund_detail_item_list,omitempty"`
-	StoreName               string           `json:"store_name,omitempty"`
-	BuyerUserId             string           `json:"buyer_user_id,omitempty"`
-	RefundPresetPaytoolList []*struct {
-		Amount         []string `json:"amount,omitempty"`
-		AssertTypeCode string   `json:"assert_type_code,omitempty"`
-	} `json:"refund_preset_paytool_list,omitempty"`
-	RefundSettlementId           string `json:"refund_settlement_id,omitempty"`
-	PresentRefundBuyerAmount     string `json:"present_refund_buyer_amount,omitempty"`
-	PresentRefundDiscountAmount  string `json:"present_refund_discount_amount,omitempty"`
-	PresentRefundMdiscountAmount string `json:"present_refund_mdiscount_amount,omitempty"`
+type TradeRefund struct {
+	ErrorResponse
+	TradeNo                      string                 `json:"trade_no,omitempty"`
+	OutTradeNo                   string                 `json:"out_trade_no,omitempty"`
+	BuyerLogonId                 string                 `json:"buyer_logon_id,omitempty"`
+	FundChange                   string                 `json:"fund_change,omitempty"`
+	RefundFee                    string                 `json:"refund_fee,omitempty"`
+	RefundCurrency               string                 `json:"refund_currency,omitempty"`
+	GmtRefundPay                 string                 `json:"gmt_refund_pay,omitempty"`
+	RefundDetailItemList         []*TradeFundBill       `json:"refund_detail_item_list,omitempty"`
+	StoreName                    string                 `json:"store_name,omitempty"`
+	BuyerUserId                  string                 `json:"buyer_user_id,omitempty"`
+	RefundPresetPaytoolList      []*RefundPresetPaytool `json:"refund_preset_paytool_list,omitempty"`
+	RefundSettlementId           string                 `json:"refund_settlement_id,omitempty"`
+	PresentRefundBuyerAmount     string                 `json:"present_refund_buyer_amount,omitempty"`
+	PresentRefundDiscountAmount  string                 `json:"present_refund_discount_amount,omitempty"`
+	PresentRefundMdiscountAmount string                 `json:"present_refund_mdiscount_amount,omitempty"`
 }
 
 type TradeFundBill struct {
@@ -357,34 +314,28 @@ type TradeFundBill struct {
 	FundType    string `json:"fund_type,omitempty"`
 }
 
-// ===================================================
-type TradeFastpayRefundQueryResponse struct {
-	Response     *refundQueryResponse `json:"alipay_trade_fastpay_refund_query_response,omitempty"`
-	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
-	SignData     string               `json:"-"`
-	Sign         string               `json:"sign"`
+type RefundPresetPaytool struct {
+	Amount         []string `json:"amount,omitempty"`
+	AssertTypeCode string   `json:"assert_type_code,omitempty"`
 }
 
-type refundQueryResponse struct {
-	Code           string `json:"code,omitempty"`
-	Msg            string `json:"msg,omitempty"`
-	SubCode        string `json:"sub_code,omitempty"`
-	SubMsg         string `json:"sub_msg,omitempty"`
-	TradeNo        string `json:"trade_no,omitempty"`
-	OutTradeNo     string `json:"out_trade_no,omitempty"`
-	OutRequestNo   string `json:"out_request_no,omitempty"`
-	RefundReason   string `json:"refund_reason,omitempty"`
-	TotalAmount    string `json:"total_amount,omitempty"`
-	RefundAmount   string `json:"refund_amount,omitempty"`
-	RefundRoyaltys []*struct {
-		RefundAmount  string `json:"refund_amount,omitempty"`
-		RoyaltyType   string `json:"royalty_type,omitempty"`
-		ResultCode    string `json:"result_code,omitempty"`
-		TransOut      string `json:"trans_out,omitempty"`
-		TransOutEmail string `json:"trans_out_email,omitempty"`
-		TransIn       string `json:"trans_in,omitempty"`
-		TransInEmail  string `json:"trans_in_email,omitempty"`
-	} `json:"refund_royaltys,omitempty"`
+// ===================================================
+type TradeFastpayRefundQueryResponse struct {
+	Response     *TradeRefundQuery `json:"alipay_trade_fastpay_refund_query_response"`
+	AlipayCertSn string            `json:"alipay_cert_sn,omitempty"`
+	SignData     string            `json:"-"`
+	Sign         string            `json:"sign"`
+}
+
+type TradeRefundQuery struct {
+	ErrorResponse
+	TradeNo                      string           `json:"trade_no,omitempty"`
+	OutTradeNo                   string           `json:"out_trade_no,omitempty"`
+	OutRequestNo                 string           `json:"out_request_no,omitempty"`
+	RefundReason                 string           `json:"refund_reason,omitempty"`
+	TotalAmount                  string           `json:"total_amount,omitempty"`
+	RefundAmount                 string           `json:"refund_amount,omitempty"`
+	RefundRoyaltys               []*RefundRoyalty `json:"refund_royaltys,omitempty"`
 	GmtRefundPay                 string           `json:"gmt_refund_pay,omitempty"`
 	RefundDetailItemList         []*TradeFundBill `json:"refund_detail_item_list,omitempty"`
 	SendBackFee                  string           `json:"send_back_fee,omitempty"`
@@ -394,52 +345,54 @@ type refundQueryResponse struct {
 	PresentRefundMdiscountAmount string           `json:"present_refund_mdiscount_amount,omitempty"`
 }
 
+type RefundRoyalty struct {
+	RefundAmount  string `json:"refund_amount,omitempty"`
+	RoyaltyType   string `json:"royalty_type,omitempty"`
+	ResultCode    string `json:"result_code,omitempty"`
+	TransOut      string `json:"trans_out,omitempty"`
+	TransOutEmail string `json:"trans_out_email,omitempty"`
+	TransIn       string `json:"trans_in,omitempty"`
+	TransInEmail  string `json:"trans_in_email,omitempty"`
+}
+
 // ===================================================
 type TradeOrderSettleResponse struct {
-	Response     *orderSettleResponse `json:"alipay_trade_order_settle_response,omitempty"`
-	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
-	SignData     string               `json:"-"`
-	Sign         string               `json:"sign"`
+	Response     *TradeOrderSettle `json:"alipay_trade_order_settle_response"`
+	AlipayCertSn string            `json:"alipay_cert_sn,omitempty"`
+	SignData     string            `json:"-"`
+	Sign         string            `json:"sign"`
 }
-type orderSettleResponse struct {
-	Code    string `json:"code,omitempty"`
-	Msg     string `json:"msg,omitempty"`
-	SubCode string `json:"sub_code,omitempty"`
-	SubMsg  string `json:"sub_msg,omitempty"`
+
+type TradeOrderSettle struct {
+	ErrorResponse
 	TradeNo string `json:"trade_no,omitempty"`
 }
 
 // ===================================================
 type TradePrecreateResponse struct {
-	Response     *precreateResponse `json:"alipay_trade_precreate_response,omitempty"`
-	NullResponse *ErrorResponse     `json:"null_response,omitempty"`
-	AlipayCertSn string             `json:"alipay_cert_sn,omitempty"`
-	SignData     string             `json:"-"`
-	Sign         string             `json:"sign"`
+	Response     *TradePrecreate `json:"alipay_trade_precreate_response"`
+	NullResponse *ErrorResponse  `json:"null_response,omitempty"`
+	AlipayCertSn string          `json:"alipay_cert_sn,omitempty"`
+	SignData     string          `json:"-"`
+	Sign         string          `json:"sign"`
 }
 
-type precreateResponse struct {
-	Code       string `json:"code,omitempty"`
-	Msg        string `json:"msg,omitempty"`
-	SubCode    string `json:"sub_code,omitempty"`
-	SubMsg     string `json:"sub_msg,omitempty"`
+type TradePrecreate struct {
+	ErrorResponse
 	OutTradeNo string `json:"out_trade_no,omitempty"`
 	QrCode     string `json:"qr_code,omitempty"`
 }
 
 // ===================================================
 type TradePageRefundResponse struct {
-	Response     *pageRefundResponse `json:"alipay_trade_page_refund_response,omitempty"`
-	AlipayCertSn string              `json:"alipay_cert_sn,omitempty"`
-	SignData     string              `json:"-"`
-	Sign         string              `json:"sign"`
+	Response     *TradePageRefund `json:"alipay_trade_page_refund_response"`
+	AlipayCertSn string           `json:"alipay_cert_sn,omitempty"`
+	SignData     string           `json:"-"`
+	Sign         string           `json:"sign"`
 }
 
-type pageRefundResponse struct {
-	Code         string `json:"code,omitempty"`
-	Msg          string `json:"msg,omitempty"`
-	SubCode      string `json:"sub_code,omitempty"`
-	SubMsg       string `json:"sub_msg,omitempty"`
+type TradePageRefund struct {
+	ErrorResponse
 	TradeNo      string `json:"trade_no,omitempty"`
 	OutTradeNo   string `json:"out_trade_no,omitempty"`
 	OutRequestNo string `json:"out_request_no,omitempty"`
@@ -448,34 +401,28 @@ type pageRefundResponse struct {
 
 // ===================================================
 type FundTransToaccountTransferResponse struct {
-	Response     *transToaccountTransferResponse `json:"alipay_fund_trans_toaccount_transfer_response,omitempty"`
-	AlipayCertSn string                          `json:"alipay_cert_sn,omitempty"`
-	SignData     string                          `json:"-"`
-	Sign         string                          `json:"sign"`
+	Response     *TransToaccountTransfer `json:"alipay_fund_trans_toaccount_transfer_response"`
+	AlipayCertSn string                  `json:"alipay_cert_sn,omitempty"`
+	SignData     string                  `json:"-"`
+	Sign         string                  `json:"sign"`
 }
 
-type transToaccountTransferResponse struct {
-	Code     string `json:"code,omitempty"`
-	Msg      string `json:"msg,omitempty"`
-	SubCode  string `json:"sub_code,omitempty"`
-	SubMsg   string `json:"sub_msg,omitempty"`
+type TransToaccountTransfer struct {
+	ErrorResponse
 	OutBizNo string `json:"out_biz_no,omitempty"`
 	OrderId  string `json:"order_id,omitempty"`
 	PayDate  string `json:"pay_date,omitempty"`
 }
 
 type FundTransUniTransferResponse struct {
-	Response     *transUniTransferResponse `json:"alipay_fund_trans_uni_transfer_response,omitempty"`
-	AlipayCertSn string                    `json:"alipay_cert_sn,omitempty"`
-	SignData     string                    `json:"-"`
-	Sign         string                    `json:"sign"`
+	Response     *TransUniTransfer `json:"alipay_fund_trans_uni_transfer_response"`
+	AlipayCertSn string            `json:"alipay_cert_sn,omitempty"`
+	SignData     string            `json:"-"`
+	Sign         string            `json:"sign"`
 }
 
-type transUniTransferResponse struct {
-	Code           string `json:"code,omitempty"`
-	Msg            string `json:"msg,omitempty"`
-	SubCode        string `json:"sub_code,omitempty"`
-	SubMsg         string `json:"sub_msg,omitempty"`
+type TransUniTransfer struct {
+	ErrorResponse
 	OutBizNo       string `json:"out_biz_no,omitempty"`
 	OrderId        string `json:"order_id,omitempty"`
 	PayFundOrderId string `json:"pay_fund_order_id,omitempty"`
@@ -485,17 +432,14 @@ type transUniTransferResponse struct {
 
 // ===================================================
 type FundTransCommonQueryResponse struct {
-	Response     *fundTransCommonQueryResponse `json:"alipay_fund_trans_common_query_response,omitempty"`
-	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
-	SignData     string                        `json:"-"`
-	Sign         string                        `json:"sign"`
+	Response     *FundTransCommonQuery `json:"alipay_fund_trans_common_query_response"`
+	AlipayCertSn string                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                `json:"-"`
+	Sign         string                `json:"sign"`
 }
 
-type fundTransCommonQueryResponse struct {
-	Code           string `json:"code,omitempty"`
-	Msg            string `json:"msg,omitempty"`
-	SubCode        string `json:"sub_code,omitempty"`
-	SubMsg         string `json:"sub_msg,omitempty"`
+type FundTransCommonQuery struct {
+	ErrorResponse
 	OrderId        string `json:"order_id,omitempty"`
 	PayFundOrderId string `json:"pay_fund_order_id,omitempty"`
 	OutBizNo       string `json:"out_biz_no,omitempty"`
@@ -511,17 +455,14 @@ type fundTransCommonQueryResponse struct {
 // ===================================================
 
 type FundTransOrderQueryResponse struct {
-	Response     *fundTransOrderQueryResponse `json:"alipay_fund_trans_order_query_response,omitempty"`
-	AlipayCertSn string                       `json:"alipay_cert_sn,omitempty"`
-	SignData     string                       `json:"-"`
-	Sign         string                       `json:"sign"`
+	Response     *FundTransOrderQuery `json:"alipay_fund_trans_order_query_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
 }
 
-type fundTransOrderQueryResponse struct {
-	Code           string `json:"code,omitempty"`
-	Msg            string `json:"msg,omitempty"`
-	SubCode        string `json:"sub_code,omitempty"`
-	SubMsg         string `json:"sub_msg,omitempty"`
+type FundTransOrderQuery struct {
+	ErrorResponse
 	OrderId        string `json:"order_id,omitempty"`
 	Status         string `json:"status,omitempty"`
 	PayDate        string `json:"pay_date,omitempty"`
@@ -534,38 +475,32 @@ type fundTransOrderQueryResponse struct {
 
 // ===================================================
 type FundTransRefundResponse struct {
-	Response     *fundTransRefundResponse `json:"alipay_fund_trans_refund_response,omitempty"`
-	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`
-	SignData     string                   `json:"-"`
-	Sign         string                   `json:"sign"`
+	Response     *FundTransRefund `json:"alipay_fund_trans_refund_response"`
+	AlipayCertSn string           `json:"alipay_cert_sn,omitempty"`
+	SignData     string           `json:"-"`
+	Sign         string           `json:"sign"`
 }
 
-type fundTransRefundResponse struct {
-	Code          string `json:"code,omitempty"`
-	Msg           string `json:"msg,omitempty"`
-	SubCode       string `json:"sub_code,omitempty"`
-	SubMsg        string `json:"sub_msg,omitempty"`
-	RetundOrderId string `json:"retund_order_id,omitempty"`
-	OrderId       string `json:"order_id,omitempty"`
-	OutRequestNo  string `json:"out_request_no,omitempty"`
-	Status        string `json:"status,omitempty"`
-	RefundAmount  string `json:"refund_amount,omitempty"`
-	RefundDate    string `json:"refund_date,omitempty"`
+type FundTransRefund struct {
+	ErrorResponse
+	RefundOrderId string `json:"refund_order_id"`
+	OrderId       string `json:"order_id"`
+	OutRequestNo  string `json:"out_request_no"`
+	Status        string `json:"status"`
+	RefundAmount  string `json:"refund_amount"`
+	RefundDate    string `json:"refund_date"`
 }
 
 // ===================================================
 type FundAuthOrderFreezeResponse struct {
-	Response     *fundAuthOrderFreezeResponse `json:"alipay_fund_auth_order_freeze_response,omitempty"`
-	AlipayCertSn string                       `json:"alipay_cert_sn,omitempty"`
-	SignData     string                       `json:"-"`
-	Sign         string                       `json:"sign"`
+	Response     *FundAuthOrderFreeze `json:"alipay_fund_auth_order_freeze_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
 }
 
-type fundAuthOrderFreezeResponse struct {
-	Code         string `json:"code,omitempty"`
-	Msg          string `json:"msg,omitempty"`
-	SubCode      string `json:"sub_code,omitempty"`
-	SubMsg       string `json:"sub_msg,omitempty"`
+type FundAuthOrderFreeze struct {
+	ErrorResponse
 	AuthNo       string `json:"auth_no,omitempty"`
 	OutOrderNo   string `json:"out_order_no,omitempty"`
 	OperationId  string `json:"operation_id,omitempty"`
@@ -579,17 +514,14 @@ type fundAuthOrderFreezeResponse struct {
 
 // ===================================================
 type FundAuthOrderVoucherCreateResponse struct {
-	Response     *fundAuthOrderVoucherCreateResponse `json:"alipay_fund_auth_order_voucher_create_response,omitempty"`
-	AlipayCertSn string                              `json:"alipay_cert_sn,omitempty"`
-	SignData     string                              `json:"-"`
-	Sign         string                              `json:"sign"`
+	Response     *FundAuthOrderVoucherCreate `json:"alipay_fund_auth_order_voucher_create_response"`
+	AlipayCertSn string                      `json:"alipay_cert_sn,omitempty"`
+	SignData     string                      `json:"-"`
+	Sign         string                      `json:"sign"`
 }
 
-type fundAuthOrderVoucherCreateResponse struct {
-	Code         string `json:"code,omitempty"`
-	Msg          string `json:"msg,omitempty"`
-	SubCode      string `json:"sub_code,omitempty"`
-	SubMsg       string `json:"sub_msg,omitempty"`
+type FundAuthOrderVoucherCreate struct {
+	ErrorResponse
 	OutOrderNo   string `json:"out_order_no,omitempty"`
 	OutRequestNo string `json:"out_request_no,omitempty"`
 	CodeType     string `json:"code_type,omitempty"`
@@ -599,17 +531,14 @@ type fundAuthOrderVoucherCreateResponse struct {
 
 // ===================================================
 type FundAuthOrderAppFreezeResponse struct {
-	Response     *fundAuthOrderAppFreezeResponse `json:"alipay_fund_auth_order_app_freeze_response,omitempty"`
-	AlipayCertSn string                          `json:"alipay_cert_sn,omitempty"`
-	SignData     string                          `json:"-"`
-	Sign         string                          `json:"sign"`
+	Response     *FundAuthOrderAppFreeze `json:"alipay_fund_auth_order_app_freeze_response"`
+	AlipayCertSn string                  `json:"alipay_cert_sn,omitempty"`
+	SignData     string                  `json:"-"`
+	Sign         string                  `json:"sign"`
 }
 
-type fundAuthOrderAppFreezeResponse struct {
-	Code          string `json:"code,omitempty"`
-	Msg           string `json:"msg,omitempty"`
-	SubCode       string `json:"sub_code,omitempty"`
-	SubMsg        string `json:"sub_msg,omitempty"`
+type FundAuthOrderAppFreeze struct {
+	ErrorResponse
 	AuthNo        string `json:"auth_no,omitempty"`
 	OutOrderNo    string `json:"out_order_no,omitempty"`
 	OperationId   string `json:"operation_id,omitempty"`
@@ -626,17 +555,14 @@ type fundAuthOrderAppFreezeResponse struct {
 
 // ===================================================
 type FundAuthOrderUnfreezeResponse struct {
-	Response     *fundAuthOrderUnfreezeResponse `json:"alipay_fund_auth_order_unfreeze_response,omitempty"`
-	AlipayCertSn string                         `json:"alipay_cert_sn,omitempty"`
-	SignData     string                         `json:"-"`
-	Sign         string                         `json:"sign"`
+	Response     *FundAuthOrderUnfreeze `json:"alipay_fund_auth_order_unfreeze_response"`
+	AlipayCertSn string                 `json:"alipay_cert_sn,omitempty"`
+	SignData     string                 `json:"-"`
+	Sign         string                 `json:"sign"`
 }
 
-type fundAuthOrderUnfreezeResponse struct {
-	Code         string `json:"code,omitempty"`
-	Msg          string `json:"msg,omitempty"`
-	SubCode      string `json:"sub_code,omitempty"`
-	SubMsg       string `json:"sub_msg,omitempty"`
+type FundAuthOrderUnfreeze struct {
+	ErrorResponse
 	AuthNo       string `json:"auth_no,omitempty"`
 	OutOrderNo   string `json:"out_order_no,omitempty"`
 	OperationId  string `json:"operation_id,omitempty"`
@@ -650,17 +576,14 @@ type fundAuthOrderUnfreezeResponse struct {
 
 // ===================================================
 type FundAuthOperationDetailQueryResponse struct {
-	Response     *fundAuthOperationDetailQueryResponse `json:"alipay_fund_auth_operation_detail_query_response,omitempty"`
-	AlipayCertSn string                                `json:"alipay_cert_sn,omitempty"`
-	SignData     string                                `json:"-"`
-	Sign         string                                `json:"sign"`
+	Response     *FundAuthOperationDetailQuery `json:"alipay_fund_auth_operation_detail_query_response"`
+	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
+	SignData     string                        `json:"-"`
+	Sign         string                        `json:"sign"`
 }
 
-type fundAuthOperationDetailQueryResponse struct {
-	Code                    string `json:"code,omitempty"`
-	Msg                     string `json:"msg,omitempty"`
-	SubCode                 string `json:"sub_code,omitempty"`
-	SubMsg                  string `json:"sub_msg,omitempty"`
+type FundAuthOperationDetailQuery struct {
+	ErrorResponse
 	AuthNo                  string `json:"auth_no,omitempty"`
 	OutOrderNo              string `json:"out_order_no,omitempty"`
 	TotalFreezeAmount       string `json:"total_freeze_amount,omitempty"`
@@ -692,17 +615,14 @@ type fundAuthOperationDetailQueryResponse struct {
 
 // ===================================================
 type FundAuthOperationCancelResponse struct {
-	Response     *fundAuthOperationCancelResponse `json:"alipay_fund_auth_operation_cancel_response,omitempty"`
-	AlipayCertSn string                           `json:"alipay_cert_sn,omitempty"`
-	SignData     string                           `json:"-"`
-	Sign         string                           `json:"sign"`
+	Response     *FundAuthOperationCancel `json:"alipay_fund_auth_operation_cancel_response"`
+	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`
+	SignData     string                   `json:"-"`
+	Sign         string                   `json:"sign"`
 }
 
-type fundAuthOperationCancelResponse struct {
-	Code         string `json:"code,omitempty"`
-	Msg          string `json:"msg,omitempty"`
-	SubCode      string `json:"sub_code,omitempty"`
-	SubMsg       string `json:"sub_msg,omitempty"`
+type FundAuthOperationCancel struct {
+	ErrorResponse
 	AuthNo       string `json:"auth_no,omitempty"`
 	OutOrderNo   string `json:"out_order_no,omitempty"`
 	OperationId  string `json:"operation_id,omitempty"`
@@ -712,17 +632,14 @@ type fundAuthOperationCancelResponse struct {
 
 // ===================================================
 type FundBatchCreateResponse struct {
-	Response     *fundBatchCreateResponse `json:"alipay_fund_batch_create_response,omitempty"`
-	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`
-	SignData     string                   `json:"-"`
-	Sign         string                   `json:"sign"`
+	Response     *FundBatchCreate `json:"alipay_fund_batch_create_response"`
+	AlipayCertSn string           `json:"alipay_cert_sn,omitempty"`
+	SignData     string           `json:"-"`
+	Sign         string           `json:"sign"`
 }
 
-type fundBatchCreateResponse struct {
-	Code         string `json:"code,omitempty"`
-	Msg          string `json:"msg,omitempty"`
-	SubCode      string `json:"sub_code,omitempty"`
-	SubMsg       string `json:"sub_msg,omitempty"`
+type FundBatchCreate struct {
+	ErrorResponse
 	OutBatchNo   string `json:"out_batch_no,omitempty"`
 	BatchTransId string `json:"batch_trans_id,omitempty"`
 	Status       string `json:"status,omitempty"`
@@ -730,34 +647,28 @@ type fundBatchCreateResponse struct {
 
 // ===================================================
 type FundBatchCloseResponse struct {
-	Response     *fundBatchCloseResponse `json:"alipay_fund_batch_close_response,omitempty"`
-	AlipayCertSn string                  `json:"alipay_cert_sn,omitempty"`
-	SignData     string                  `json:"-"`
-	Sign         string                  `json:"sign"`
+	Response     *FundBatchClose `json:"alipay_fund_batch_close_response"`
+	AlipayCertSn string          `json:"alipay_cert_sn,omitempty"`
+	SignData     string          `json:"-"`
+	Sign         string          `json:"sign"`
 }
 
-type fundBatchCloseResponse struct {
-	Code         string `json:"code,omitempty"`
-	Msg          string `json:"msg,omitempty"`
-	SubCode      string `json:"sub_code,omitempty"`
-	SubMsg       string `json:"sub_msg,omitempty"`
+type FundBatchClose struct {
+	ErrorResponse
 	BatchTransId string `json:"batch_trans_id,omitempty"`
 	Status       string `json:"status,omitempty"`
 }
 
 // ===================================================
 type FundBatchDetailQueryResponse struct {
-	Response     *fundBatchDetailQueryResponse `json:"alipay_fund_batch_detail_query_response,omitempty"`
-	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
-	SignData     string                        `json:"-"`
-	Sign         string                        `json:"sign"`
+	Response     *FundBatchDetailQuery `json:"alipay_fund_batch_detail_query_response"`
+	AlipayCertSn string                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                `json:"-"`
+	Sign         string                `json:"sign"`
 }
 
-type fundBatchDetailQueryResponse struct {
-	Code            string `json:"code,omitempty"`
-	Msg             string `json:"msg,omitempty"`
-	SubCode         string `json:"sub_code,omitempty"`
-	SubMsg          string `json:"sub_msg,omitempty"`
+type FundBatchDetailQuery struct {
+	ErrorResponse
 	BatchTransId    string `json:"batch_trans_id,omitempty"`
 	BatchNo         string `json:"batch_no,omitempty"`
 	BizCode         string `json:"biz_code,omitempty"`
@@ -821,137 +732,121 @@ type fundBatchDetailQueryResponse struct {
 
 // ===================================================
 type FundTransAppPayResponse struct {
-	Response     *fundTransAppPayResponse `json:"alipay_fund_trans_app_pay_response,omitempty"`
-	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`
-	SignData     string                   `json:"-"`
-	Sign         string                   `json:"sign"`
+	Response     *FundTransAppPay `json:"alipay_fund_trans_app_pay_response"`
+	AlipayCertSn string           `json:"alipay_cert_sn,omitempty"`
+	SignData     string           `json:"-"`
+	Sign         string           `json:"sign"`
 }
 
-type fundTransAppPayResponse struct {
-	Code     string `json:"code,omitempty"`
-	Msg      string `json:"msg,omitempty"`
-	SubCode  string `json:"sub_code,omitempty"`
-	SubMsg   string `json:"sub_msg,omitempty"`
+type FundTransAppPay struct {
+	ErrorResponse
 	OutBizNo string `json:"out_biz_no,omitempty"`
 	OrderId  string `json:"order_id,omitempty"`
 	Status   string `json:"status,omitempty"`
 }
 
 // ===================================================
-type FundAccountQueryResponse struct {
-	Response     *fundAccountQueryResponse `json:"alipay_fund_account_query_response,omitempty"`
-	AlipayCertSn string                    `json:"alipay_cert_sn,omitempty"`
-	SignData     string                    `json:"-"`
-	Sign         string                    `json:"sign"`
+type FundTransPayeeBindQueryRsp struct {
+	Response     *FundTransPayeeBindQuery `json:"alipay_fund_trans_payee_bind_query_response"`
+	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`
+	SignData     string                   `json:"-"`
+	Sign         string                   `json:"sign"`
 }
 
-type fundAccountQueryResponse struct {
-	Code            string `json:"code,omitempty"`
-	Msg             string `json:"msg,omitempty"`
-	SubCode         string `json:"sub_code,omitempty"`
-	SubMsg          string `json:"sub_msg,omitempty"`
-	AvailableAmount string `json:"available_amount,omitempty"`
-	ExtCardInfo     *struct {
-		CardNo       string `json:"card_no,omitempty"`
-		BankAccName  string `json:"bank_acc_name,omitempty"`
-		CardBranch   string `json:"card_branch,omitempty"`
-		CardBank     string `json:"card_bank,omitempty"`
-		CardLocation string `json:"card_location,omitempty"`
-		CardDeposit  string `json:"card_deposit,omitempty"`
-		Status       string `json:"status,omitempty"`
-	} `json:"ext_card_info,omitempty"`
+type FundTransPayeeBindQuery struct {
+	ErrorResponse
+	Bind string `json:"bind"` // 是否绑定收款账号。true：已绑定；false：未绑定
 }
 
 // ===================================================
-type ZhimaCreditScoreGetResponse struct {
-	Response     *scoreGetResponse `json:"zhima_credit_score_get_response,omitempty"`
+type FundAccountQueryResponse struct {
+	Response     *FundAccountQuery `json:"alipay_fund_account_query_response"`
 	AlipayCertSn string            `json:"alipay_cert_sn,omitempty"`
 	SignData     string            `json:"-"`
 	Sign         string            `json:"sign"`
 }
 
-type scoreGetResponse struct {
-	Code    string `json:"code,omitempty"`
-	Msg     string `json:"msg,omitempty"`
-	SubCode string `json:"sub_code,omitempty"`
-	SubMsg  string `json:"sub_msg,omitempty"`
+type FundAccountQuery struct {
+	ErrorResponse
+	AvailableAmount string       `json:"available_amount,omitempty"`
+	ExtCardInfo     *ExtCardInfo `json:"ext_card_info,omitempty"`
+}
+
+type ExtCardInfo struct {
+	CardNo       string `json:"card_no,omitempty"`
+	BankAccName  string `json:"bank_acc_name,omitempty"`
+	CardBranch   string `json:"card_branch,omitempty"`
+	CardBank     string `json:"card_bank,omitempty"`
+	CardLocation string `json:"card_location,omitempty"`
+	CardDeposit  string `json:"card_deposit,omitempty"`
+	Status       string `json:"status,omitempty"`
+}
+
+// ===================================================
+type ZhimaCreditScoreGetResponse struct {
+	Response     *ScoreGet `json:"zhima_credit_score_get_response"`
+	AlipayCertSn string    `json:"alipay_cert_sn,omitempty"`
+	SignData     string    `json:"-"`
+	Sign         string    `json:"sign"`
+}
+
+type ScoreGet struct {
+	ErrorResponse
 	BizNo   string `json:"biz_no,omitempty"`
 	ZmScore string `json:"zm_score,omitempty"`
 }
 
 // ===================================================
 type OpenAuthTokenAppResponse struct {
-	Response     *authTokenAppResponse `json:"alipay_open_auth_token_app_response,omitempty"`
+	Response     *AuthTokenApp `json:"alipay_open_auth_token_app_response"`
+	AlipayCertSn string        `json:"alipay_cert_sn,omitempty"`
+	SignData     string        `json:"-"`
+	Sign         string        `json:"sign"`
+}
+
+type AuthTokenApp struct {
+	ErrorResponse
+	UserId          string   `json:"user_id,omitempty"`
+	AuthAppId       string   `json:"auth_app_id,omitempty"`
+	AppAuthToken    string   `json:"app_auth_token,omitempty"`
+	AppRefreshToken string   `json:"app_refresh_token,omitempty"`
+	ExpiresIn       int64    `json:"expires_in,omitempty"`
+	ReExpiresIn     int64    `json:"re_expires_in,omitempty"`
+	Tokens          []*Token `json:"tokens,omitempty"`
+}
+
+type Token struct {
+	AppAuthToken    string `json:"app_auth_token,omitempty"`
+	AppRefreshToken string `json:"app_refresh_token,omitempty"`
+	AuthAppId       string `json:"auth_app_id,omitempty"`
+	ExpiresIn       int64  `json:"expires_in,omitempty"`
+	ReExpiresIn     int64  `json:"re_expires_in,omitempty"`
+	UserId          string `json:"user_id,omitempty"`
+}
+
+// ===================================================
+type UserCertifyOpenInitResponse struct {
+	Response     *UserCertifyOpenInit `json:"alipay_user_certify_open_initialize_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
+}
+
+type UserCertifyOpenInit struct {
+	ErrorResponse
+	CertifyId string `json:"certify_id,omitempty"`
+}
+
+// ===================================================
+type UserCertifyOpenQueryResponse struct {
+	Response     *UserCertifyOpenQuery `json:"alipay_user_certify_open_query_response"`
 	AlipayCertSn string                `json:"alipay_cert_sn,omitempty"`
 	SignData     string                `json:"-"`
 	Sign         string                `json:"sign"`
 }
 
-type authTokenAppResponse struct {
-	Code            string `json:"code,omitempty"`
-	Msg             string `json:"msg,omitempty"`
-	SubCode         string `json:"sub_code,omitempty"`
-	SubMsg          string `json:"sub_msg,omitempty"`
-	UserId          string `json:"user_id,omitempty"`
-	AuthAppId       string `json:"auth_app_id,omitempty"`
-	AppAuthToken    string `json:"app_auth_token,omitempty"`
-	AppRefreshToken string `json:"app_refresh_token,omitempty"`
-	ExpiresIn       int64  `json:"expires_in,omitempty"`
-	ReExpiresIn     int64  `json:"re_expires_in,omitempty"`
-	Tokens          []*struct {
-		AppAuthToken    string `json:"app_auth_token,omitempty"`
-		AppRefreshToken string `json:"app_refresh_token,omitempty"`
-		AuthAppId       string `json:"auth_app_id,omitempty"`
-		ExpiresIn       int64  `json:"expires_in,omitempty"`
-		ReExpiresIn     int64  `json:"re_expires_in,omitempty"`
-		UserId          string `json:"user_id,omitempty"`
-	} `json:"tokens,omitempty"`
-}
-
-// ===================================================
-type UserCertifyOpenInitResponse struct {
-	Response     *userCertifyOpenInitResponse `json:"alipay_user_certify_open_initialize_response,omitempty"`
-	AlipayCertSn string                       `json:"alipay_cert_sn,omitempty"`
-	SignData     string                       `json:"-"`
-	Sign         string                       `json:"sign"`
-}
-
-type userCertifyOpenInitResponse struct {
-	Code      string `json:"code,omitempty"`
-	Msg       string `json:"msg,omitempty"`
-	SubCode   string `json:"sub_code,omitempty"`
-	SubMsg    string `json:"sub_msg,omitempty"`
-	CertifyId string `json:"certify_id,omitempty"`
-}
-
-// ===================================================
-type UserCertifyOpenCertifyResponse struct {
-	Response     *userCertifyOpenCertifyResponse `json:"alipay_user_certify_open_certify_response,omitempty"`
-	AlipayCertSn string                          `json:"alipay_cert_sn,omitempty"`
-	SignData     string                          `json:"-"`
-	Sign         string                          `json:"sign"`
-}
-
-type userCertifyOpenCertifyResponse struct {
-	Code    string `json:"code,omitempty"`
-	Msg     string `json:"msg,omitempty"`
-	SubCode string `json:"sub_code,omitempty"`
-	SubMsg  string `json:"sub_msg,omitempty"`
-}
-
-// ===================================================
-type UserCertifyOpenQueryResponse struct {
-	Response     *userCertifyOpenQueryResponse `json:"alipay_user_certify_open_query_response,omitempty"`
-	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
-	SignData     string                        `json:"-"`
-	Sign         string                        `json:"sign"`
-}
-
-type userCertifyOpenQueryResponse struct {
-	Code         string `json:"code,omitempty"`
-	Msg          string `json:"msg,omitempty"`
-	SubCode      string `json:"sub_code,omitempty"`
-	SubMsg       string `json:"sub_msg,omitempty"`
+type UserCertifyOpenQuery struct {
+	ErrorResponse
 	Passed       string `json:"passed,omitempty"`
 	IdentityInfo string `json:"identity_info,omitempty"`
 	MaterialInfo string `json:"material_info,omitempty"`
@@ -959,44 +854,35 @@ type userCertifyOpenQueryResponse struct {
 
 // ===================================================
 type UserInfoAuthResponse struct {
-	Response *struct {
-		Code    string `json:"code,omitempty"`
-		Msg     string `json:"msg,omitempty"`
-		SubCode string `json:"sub_code,omitempty"`
-		SubMsg  string `json:"sub_msg,omitempty"`
-	} `json:"alipay_user_info_auth_response,omitempty"`
-	AlipayCertSn string `json:"alipay_cert_sn,omitempty"`
-	SignData     string `json:"-"`
-	Sign         string `json:"sign"`
+	Response     *ErrorResponse `json:"alipay_user_info_auth_response"`
+	AlipayCertSn string         `json:"alipay_cert_sn,omitempty"`
+	SignData     string         `json:"-"`
+	Sign         string         `json:"sign"`
 }
 
 // ===================================================
 type MonitorHeartbeatSynResponse struct {
-	Response *struct {
-		Code    string `json:"code,omitempty"`
-		Msg     string `json:"msg,omitempty"`
-		SubCode string `json:"sub_code,omitempty"`
-		SubMsg  string `json:"sub_msg,omitempty"`
-		Pid     string `json:"pid,omitempty"`
-	} `json:"monitor_heartbeat_syn_response,omitempty"`
-	AlipayCertSn string `json:"alipay_cert_sn,omitempty"`
-	SignData     string `json:"-"`
-	Sign         string `json:"sign"`
+	Response     *MonitorHeartbeatSynRes `json:"monitor_heartbeat_syn_response"`
+	AlipayCertSn string                  `json:"alipay_cert_sn,omitempty"`
+	SignData     string                  `json:"-"`
+	Sign         string                  `json:"sign"`
+}
+
+type MonitorHeartbeatSynRes struct {
+	ErrorResponse
+	Pid string `json:"pid,omitempty"`
 }
 
 // ===================================================
 type DataBillBalanceQueryResponse struct {
-	Response     *dataBillBalanceQueryResponse `json:"alipay_data_bill_balance_query_response,omitempty"`
-	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
-	SignData     string                        `json:"-"`
-	Sign         string                        `json:"sign"`
+	Response     *DataBillBalanceQuery `json:"alipay_data_bill_balance_query_response"`
+	AlipayCertSn string                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                `json:"-"`
+	Sign         string                `json:"sign"`
 }
 
-type dataBillBalanceQueryResponse struct {
-	Code            string `json:"code,omitempty"`
-	Msg             string `json:"msg,omitempty"`
-	SubCode         string `json:"sub_code,omitempty"`
-	SubMsg          string `json:"sub_msg,omitempty"`
+type DataBillBalanceQuery struct {
+	ErrorResponse
 	TotalAmount     string `json:"total_amount,omitempty"`
 	AvailableAmount string `json:"available_amount,omitempty"`
 	FreezeAmount    string `json:"freeze_amount,omitempty"`
@@ -1004,29 +890,154 @@ type dataBillBalanceQueryResponse struct {
 
 // ===================================================
 type DataBillDownloadUrlQueryResponse struct {
-	Response     *dataBillDownloadUrlQueryResponse `json:"alipay_data_dataservice_bill_downloadurl_query_response,omitempty"`
-	AlipayCertSn string                            `json:"alipay_cert_sn,omitempty"`
-	SignData     string                            `json:"-"`
-	Sign         string                            `json:"sign"`
+	Response     *DataBillDownloadUrlQuery `json:"alipay_data_dataservice_bill_downloadurl_query_response"`
+	AlipayCertSn string                    `json:"alipay_cert_sn,omitempty"`
+	SignData     string                    `json:"-"`
+	Sign         string                    `json:"sign"`
 }
 
-type dataBillDownloadUrlQueryResponse struct {
-	Code            string `json:"code,omitempty"`
-	Msg             string `json:"msg,omitempty"`
-	SubCode         string `json:"sub_code,omitempty"`
-	SubMsg          string `json:"sub_msg,omitempty"`
+type DataBillDownloadUrlQuery struct {
+	ErrorResponse
 	BillDownloadUrl string `json:"bill_download_url,omitempty"`
 }
 
 // ===================================================
 type PublicCertDownloadRsp struct {
-	Response *PublicCertDownload `json:"alipay_open_app_alipaycert_download_response,omitempty"`
+	Response *PublicCertDownload `json:"alipay_open_app_alipaycert_download_response"`
 }
 
 type PublicCertDownload struct {
-	Code              string `json:"code"`
-	Msg               string `json:"msg"`
-	SubCode           string `json:"sub_code,omitempty"`
-	SubMsg            string `json:"sub_msg,omitempty"`
+	ErrorResponse
 	AlipayCertContent string `json:"alipay_cert_content"`
+}
+
+// ===================================================
+type TradeOrderInfoSyncRsp struct {
+	Response     *TradeOrderInfoSync `json:"alipay_trade_orderinfo_sync_response"`
+	AlipayCertSn string              `json:"alipay_cert_sn,omitempty"`
+	SignData     string              `json:"-"`
+	Sign         string              `json:"sign"`
+}
+
+type TradeOrderInfoSync struct {
+	ErrorResponse
+	TradeNo     string `json:"trade_no"`
+	OutTradeNo  string `json:"out_trade_no"`
+	BuyerUserId string `json:"buyer_user_id"`
+}
+
+// ===================================================
+type TradeAdvanceConsultRsp struct {
+	Response     *TradeAdvanceConsult `json:"alipay_trade_advance_consult_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
+}
+
+type TradeAdvanceConsult struct {
+	ErrorResponse
+	ReferResult             bool                      `json:"refer_result"`
+	WaitRepaymentOrderInfos []*WaitRepaymentOrderInfo `json:"wait_repayment_order_infos,omitempty"`
+	WaitRepaymentAmount     string                    `json:"wait_repayment_amount,omitempty"`
+	WaitRepaymentOrderCount string                    `json:"wait_repayment_order_count,omitempty"`
+	RiskLevel               string                    `json:"risk_level,omitempty"`
+	ResultMessage           string                    `json:"result_message"`
+	ResultCode              string                    `json:"result_code"`
+}
+
+type WaitRepaymentOrderInfo struct {
+	AdvanceOrderId      string `json:"advance_order_id"`
+	AlipayUserId        string `json:"alipay_user_id"`
+	OrigBizOrderId      string `json:"orig_biz_order_id"`
+	BizProduct          string `json:"biz_product"`
+	WaitRepaymentAmount string `json:"wait_repayment_amount"`
+}
+
+// ===================================================
+type UserAgreementPageSignRsp struct {
+	Response     *UserAgreementPageSign `json:"alipay_user_agreement_page_sign_response"`
+	AlipayCertSn string                 `json:"alipay_cert_sn,omitempty"`
+	SignData     string                 `json:"-"`
+	Sign         string                 `json:"sign"`
+}
+
+type UserAgreementPageSign struct {
+	ErrorResponse
+	ExternalAgreementNo string `json:"external_agreement_no,omitempty"`
+	PersonalProductCode string `json:"personal_product_code"`
+	ValidTime           string `json:"valid_time"`
+	SignScene           string `json:"sign_scene"`
+	AgreementNo         string `json:"agreement_no"`
+	ZmOpenId            string `json:"zm_open_id,omitempty"`
+	InvalidTime         string `json:"invalid_time"`
+	SignTime            string `json:"sign_time"`
+	AlipayUserId        string `json:"alipay_user_id"`
+	Status              string `json:"status"`
+	ForexEligible       string `json:"forex_eligible,omitempty"`
+	ExternalLogonId     string `json:"external_logon_id,omitempty"`
+	AlipayLogonId       string `json:"alipay_logon_id"`
+	CreditAuthMode      string `json:"credit_auth_mode,omitempty"`
+}
+
+// ===================================================
+type UserAgreementPageUnSignRsp struct {
+	Response     *ErrorResponse `json:"alipay_user_agreement_unsign_response"`
+	AlipayCertSn string         `json:"alipay_cert_sn,omitempty"`
+	SignData     string         `json:"-"`
+	Sign         string         `json:"sign"`
+}
+
+// ===================================================
+type UserAgreementQueryRsp struct {
+	Response     *UserAgreementQuery `json:"alipay_user_agreement_query_response"`
+	AlipayCertSn string              `json:"alipay_cert_sn,omitempty"`
+	SignData     string              `json:"-"`
+	Sign         string              `json:"sign"`
+}
+
+type UserAgreementQuery struct {
+	ErrorResponse
+	ValidTime           string `json:"valid_time"`
+	AlipayLogonId       string `json:"alipay_logon_id"`
+	InvalidTime         string `json:"invalid_time"`
+	PricipalType        string `json:"pricipal_type"`
+	DeviceId            string `json:"device_id,omitempty"`
+	PrincipalId         string `json:"principal_id"`
+	SignScene           string `json:"sign_scene"`
+	AgreementNo         string `json:"agreement_no"`
+	ThirdPartyType      string `json:"third_party_type"`
+	Status              string `json:"status"`
+	SignTime            string `json:"sign_time"`
+	PersonalProductCode string `json:"personal_product_code"`
+	ExternalAgreementNo string `json:"external_agreement_no,omitempty"`
+	ZmOpenId            string `json:"zm_open_id,omitempty"`
+	ExternalLogonId     string `json:"external_logon_id,omitempty"`
+	CreditAuthMode      string `json:"credit_auth_mode,omitempty"`
+}
+
+// ===================================================
+type OpenAppQrcodeCreateRsp struct {
+	Response     *OpenAppQrcodeCreate `json:"alipay_open_app_qrcode_create_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
+}
+
+type OpenAppQrcodeCreate struct {
+	ErrorResponse
+	QrCodeUrl string `json:"qr_code_url"`
+}
+
+// ===================================================
+type MerchantItemFileUploadRsp struct {
+	Response     *MerchantItemFileUpload `json:"alipay_merchant_item_file_upload_response"`
+	AlipayCertSn string                  `json:"alipay_cert_sn,omitempty"`
+	SignData     string                  `json:"-"`
+	Sign         string                  `json:"sign"`
+}
+
+type MerchantItemFileUpload struct {
+	ErrorResponse
+	MaterialId  string `json:"material_id"`  // 文件在商品中心的素材标识（素材ID长期有效）
+	MaterialKey string `json:"material_key"` // 文件在商品中心的素材标示，创建/更新商品时使用
 }

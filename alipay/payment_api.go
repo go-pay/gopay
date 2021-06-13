@@ -308,6 +308,44 @@ func (a *Client) TradeOrderSettle(bm gopay.BodyMap) (aliRsp *TradeOrderSettleRes
 
 // alipay.trade.orderinfo.sync(支付宝订单信息同步接口)
 //	文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.orderinfo.sync
-func (a *Client) TradeOrderinfoSync(body gopay.BodyMap) {
-	// TODO：to finish this
+func (a *Client) TradeOrderInfoSync(bm gopay.BodyMap) (aliRsp *TradeOrderInfoSyncRsp, err error) {
+	err = bm.CheckEmptyError("out_request_no", "trade_no", "biz_type")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.trade.orderinfo.sync"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(TradeOrderInfoSyncRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.trade.advance.consult(订单咨询服务)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.advance.consult
+func (a *Client) TradeAdvanceConsult(bm gopay.BodyMap) (aliRsp *TradeAdvanceConsultRsp, err error) {
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.trade.advance.consult"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(TradeAdvanceConsultRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }

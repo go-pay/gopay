@@ -353,3 +353,27 @@ func (a *Client) FundTransAppPay(bm gopay.BodyMap) (aliRsp *FundTransAppPayRespo
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+// alipay.fund.trans.payee.bind.query(资金收款账号绑定关系查询)
+// 文档地址: https://opendocs.alipay.com/apis/020tl1
+func (a *Client) FundTransPayeeBindQuery(bm gopay.BodyMap) (aliRsp *FundTransPayeeBindQueryRsp, err error) {
+	err = bm.CheckEmptyError("identity", "identity_type")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.fund.trans.payee.bind.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(FundTransPayeeBindQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
