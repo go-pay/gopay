@@ -1,8 +1,15 @@
 版本号：Release 1.5.45
 修改记录：
-   (1) 支付宝：新增 client.PublicCertDownload()，应用支付宝公钥证书下载
+   (1) 支付宝：优化现有代码，修复公钥证书模式下，同步验签失败的问题
    (2) 支付宝：新增 client.AutoVerifySign()，自动同步验签设置（公钥证书模式）
-   (3) 支付宝：优化现有代码，修复公钥证书模式下，同步验签失败的问题
+   (3) 支付宝：新增 client.PublicCertDownload()，应用支付宝公钥证书下载
+   (4) 支付宝：新增 client.FundTransPayeeBindQuery()，资金收款账号绑定关系查询
+   (5) 支付宝：新增 client.OpenAppQrcodeCreate()，小程序生成推广二维码接口
+   (6) 支付宝：新增 client.UserAgreementPageSign()，支付宝个人协议页面签约接口
+   (7) 支付宝：新增 client.UserAgreementPageUnSign()，支付宝个人代扣协议解约接口
+   (8) 支付宝：新增 client.UserAgreementQuery()，支付宝个人代扣协议查询接口
+   (9) 支付宝：新增 client.TradeOrderInfoSync()，支付宝订单信息同步接口
+   (10) 支付宝：新增 client.TradeAdvanceConsult()，订单咨询服务
 
 版本号：Release 1.5.44
 修改记录：

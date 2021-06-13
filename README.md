@@ -244,6 +244,8 @@ func main() {
     * 统一收单退款页面接口：client.TradePageRefund()
     * 统一收单交易退款查询：client.TradeFastPayRefundQuery()
     * 统一收单交易结算接口：client.TradeOrderSettle()
+    * 支付宝订单信息同步接口：client.TradeOrderInfoSync()
+    * 订单咨询服务：client.TradeAdvanceConsult()
 * 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
     * 单笔转账接口：client.FundTransUniTransfer()
     * 查询转账订单接口: client.FundTransOrderQuery()
@@ -260,11 +262,17 @@ func main() {
     * 批量转账关单接口: client.FundBatchClose()
     * 批量转账明细查询接口: client.FundBatchDetailQuery()
     * 现金红包无线支付接口: client.FundTransAppPay()
+    * 资金收款账号绑定关系查询: client.FundTransPayeeBindQuery()
 * 网页&移动应用 - <font color='#027AFF' size='4'>会员API</font>
     * 支付宝会员授权信息查询接口（App支付宝登录）：client.UserInfoShare()
     * 身份认证初始化服务：client.UserCertifyOpenInit()
     * 身份认证开始认证（获取认证链接）：client.UserCertifyOpenCertify()
     * 身份认证记录查询：client.UserCertifyOpenQuery()
+    * 支付宝个人协议页面签约接口：client.UserAgreementPageSign()
+    * 支付宝个人代扣协议解约接口：client.UserAgreementPageUnSign()
+    * 支付宝个人代扣协议查询接口：client.UserAgreementQuery()
+* 网页&移动应用 - <font color='#027AFF' size='4'>营销API</font>
+    * 小程序生成推广二维码接口：client.OpenAppQrcodeCreate()
 * 网页&移动应用 - <font color='#027AFF' size='4'>工具类API</font>
     * 用户登陆授权：client.UserInfoAuth()
     * 换取授权访问令牌：client.SystemOauthToken()
