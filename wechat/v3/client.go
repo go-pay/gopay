@@ -69,9 +69,9 @@ func NewClientV3(appid, mchid, serialNo, apiV3Key, pkContent string) (client *Cl
 
 // AutoVerifySign 开启请求完自动验签功能（默认不开启，推荐开启）
 //	注意：未获取到微信平台公钥时，不要开启，请调用 client.GetPlatformCerts() 获取微信平台证书公钥
-func (c *ClientV3) AutoVerifySign(wxPkContent string) {
-	if wxPkContent != "" {
-		c.wxPkContent = []byte(wxPkContent)
+func (c *ClientV3) AutoVerifySign(wxPkContent []byte) {
+	if wxPkContent != nil {
+		c.wxPkContent = wxPkContent
 		c.autoSign = true
 	}
 }

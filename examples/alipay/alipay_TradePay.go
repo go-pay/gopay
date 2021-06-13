@@ -19,7 +19,7 @@ func TradePay() {
 		SetSignType(alipay.RSA2).
 		SetPrivateKeyType(alipay.PKCS1).
 		//SetAppAuthToken("201908BB03f542de8ecc42b985900f5080407abc").
-		SetNotifyUrl("https://www.fumm.cc")
+		SetNotifyUrl("https://www.fmm.ink")
 
 	//请求参数
 	body := make(gopay.BodyMap)

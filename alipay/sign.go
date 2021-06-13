@@ -21,6 +21,7 @@ import (
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 // 允许进行 sn 提取的证书签名算法
@@ -196,8 +197,35 @@ func GetRsaSign(bm gopay.BodyMap, signType string, t PKCSType, privateKey string
 	return
 }
 
+// =============================== 获取SignData ===============================
+
+// 需注意的是，公钥签名模式和公钥证书签名模式的不同之处
+//	验签文档：https://opendocs.alipay.com/open/200/106120
+func (a *Client) getSignData(bs []byte, alipayCertSN string) (signData string, err error) {
+	var (
+		str        = string(bs)
+		indexStart = strings.Index(str, `_response":`)
+		indexEnd   int
+	)
+	if alipayCertSN != "" {
+		// 公钥证书模式
+		indexEnd = strings.Index(str, `,"alipay_cert_sn":`)
+		signData = str[indexStart+11 : indexEnd]
+		if alipayCertSN != a.AliPayPublicCertSN {
+			return signData, errors.New("当前使用的支付宝公钥证书SN与网关响应报文中的SN不匹配")
+		}
+		return
+	}
+	// 普通公钥模式
+	indexEnd = strings.Index(str, `,"sign":`)
+	signData = str[indexStart+11 : indexEnd]
+	return
+}
+
+// =============================== 同步验签 ===============================
+
 // VerifySyncSign 支付宝同步返回验签
-//	注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
+//	注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 暂不支持同步返回验签
 //	aliPayPublicKey：支付宝平台获取的支付宝公钥
 //	signData：待验签参数，aliRsp.SignData
 //	sign：待验签sign，aliRsp.Sign
@@ -214,7 +242,7 @@ func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error)
 }
 
 // VerifySyncSignWithCert 支付宝同步返回验签
-//	注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
+//	注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 暂不支持同步返回验签
 //	aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayCertPublicKey_RSA2.crt 或文件内容[]byte
 //	signData：待验签参数，aliRsp.SignData
 //	sign：待验签sign，aliRsp.Sign
@@ -236,6 +264,41 @@ func VerifySyncSignWithCert(aliPayPublicKeyCert interface{}, signData, sign stri
 	}
 	return true, nil
 }
+
+func (a *Client) autoVerifySignByCert(sign, signData string, signDataErr error) (err error) {
+	if a.autoSign && a.aliPayPkContent != nil {
+		if a.DebugSwitch == gopay.DebugOn {
+			xlog.Debugf("Alipay_SyncSignData: %s, Sign=[%s]", signData, sign)
+		}
+		// 只有证书验签时，才可能出现此error
+		if signDataErr != nil {
+			return signDataErr
+		}
+		var (
+			block     *pem.Block
+			pubKey    *x509.Certificate
+			publicKey *rsa.PublicKey
+			ok        bool
+		)
+		signBytes, _ := base64.StdEncoding.DecodeString(sign)
+		if block, _ = pem.Decode(a.aliPayPkContent); block == nil {
+			return errors.New("支付宝公钥Decode错误")
+		}
+		if pubKey, err = x509.ParseCertificate(block.Bytes); err != nil {
+			return fmt.Errorf("x509.ParseCertificate：%w", err)
+		}
+		if publicKey, ok = pubKey.PublicKey.(*rsa.PublicKey); !ok {
+			return errors.New("支付宝公钥转换错误")
+		}
+		hashs := crypto.SHA256
+		h := hashs.New()
+		h.Write([]byte(signData))
+		return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
+	}
+	return nil
+}
+
+// =============================== 异步验签 ===============================
 
 // VerifySign 支付宝异步通知验签
 //	注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
@@ -336,6 +399,8 @@ func VerifySignWithCert(aliPayPublicKeyCert, notifyBean interface{}) (ok bool, e
 	}
 	return true, nil
 }
+
+// =============================== 通用底层验签方法 ===============================
 
 func verifySign(signData, sign, signType, aliPayPublicKey string) (err error) {
 	var (

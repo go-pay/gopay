@@ -24,8 +24,9 @@ func (a *Client) DataBillBalanceQuery(bm gopay.BodyMap) (aliRsp *DataBillBalance
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
-	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
 // alipay.data.dataservice.bill.downloadurl.query(查询对账单下载地址)
@@ -47,6 +48,7 @@ func (a *Client) DataBillDownloadUrlQuery(bm gopay.BodyMap) (aliRsp *DataBillDow
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
-	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }

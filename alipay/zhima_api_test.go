@@ -11,8 +11,8 @@ import (
 func TestClient_ZhimaCreditScoreGet(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
-	bm.Set("transaction_id", util.GetRandomString(48))
-	bm.Set("product_code", "w1010100100000000001")
+	bm.Set("transaction_id", util.GetRandomString(48)).
+		Set("product_code", "w1010100100000000001")
 
 	// 芝麻分
 	aliRsp, err := client.ZhimaCreditScoreGet(bm)

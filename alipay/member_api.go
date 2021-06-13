@@ -2,6 +2,7 @@ package alipay
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/go-pay/gopay"
@@ -11,9 +12,12 @@ import (
 // alipay.user.info.share(支付宝会员授权信息查询接口)
 //	body：此接口无需body参数
 //	文档地址：https://opendocs.alipay.com/apis/api_2/alipay.user.info.share
-func (a *Client) UserInfoShare() (aliRsp *UserInfoShareResponse, err error) {
+func (a *Client) UserInfoShare(authToken string) (aliRsp *UserInfoShareResponse, err error) {
+	if authToken == "" {
+		return nil, errors.New("auth_token can not be null")
+	}
 	var bs []byte
-	if bs, err = a.doAliPay(nil, "alipay.user.info.share"); err != nil {
+	if bs, err = a.doAliPay(nil, "alipay.user.info.share", authToken); err != nil {
 		return nil, err
 	}
 	aliRsp = new(UserInfoShareResponse)
@@ -24,8 +28,9 @@ func (a *Client) UserInfoShare() (aliRsp *UserInfoShareResponse, err error) {
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
-	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
 // alipay.user.certify.open.initialize(身份认证初始化服务)
@@ -47,8 +52,9 @@ func (a *Client) UserCertifyOpenInit(bm gopay.BodyMap) (aliRsp *UserCertifyOpenI
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
-	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
 // alipay.user.certify.open.certify(身份认证开始认证)
@@ -86,6 +92,7 @@ func (a *Client) UserCertifyOpenQuery(bm gopay.BodyMap) (aliRsp *UserCertifyOpen
 		info := aliRsp.Response
 		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
-	aliRsp.SignData = getSignData(bs)
-	return aliRsp, nil
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
