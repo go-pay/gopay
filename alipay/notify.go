@@ -99,7 +99,7 @@ func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) 
 
 	detailList := req.Form.Get("voucher_detail_list")
 	if detailList != util.NULL {
-		details := make([]*VoucherDetailListInfo, 0)
+		details := make([]*VoucherDetail, 0)
 		if err = json.Unmarshal([]byte(detailList), &details); err != nil {
 			return nil, fmt.Errorf(`"voucher_detail_list" xml.Unmarshal(%s)：%w`, detailList, err)
 		}
