@@ -7,6 +7,7 @@ const (
 	POST                              = "POST"
 	PUT                               = "PUT"
 	DELETE                            = "DELETE"
+	PATCH                             = "PATCH"
 	TypeJSON              RequestType = "json"
 	TypeXML               RequestType = "xml"
 	TypeUrlencoded        RequestType = "urlencoded"

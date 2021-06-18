@@ -100,7 +100,7 @@ type Client struct {
 	// domain name.
 	Host string
 
-	// method request method, now only support GET and POST
+	// method request method,
 	method string
 
 	// requestType
@@ -187,6 +187,12 @@ func (c *Client) Put(url string) (client *Client) {
 
 func (c *Client) Delete(url string) (client *Client) {
 	c.method = DELETE
+	c.url = url
+	return c
+}
+
+func (c *Client) Patch(url string) (client *Client) {
+	c.method = PATCH
 	c.url = url
 	return c
 }
@@ -322,7 +328,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 			default:
 				return nil, errors.New("Request type Error ")
 			}
-		case POST, PUT, DELETE:
+		case POST, PUT, DELETE, PATCH:
 			switch c.requestType {
 			case TypeJSON:
 				if c.jsonByte != nil {

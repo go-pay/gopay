@@ -10,30 +10,6 @@ import (
 	"hash"
 )
 
-// 推荐使用：RsaEncryptDataV2()
-// RSA加密数据
-// 	originData：原始字符串
-// 	publicKeyFilePath：公钥证书文件路径
-//func RsaEncryptData(originData string, publicKeyFilePath string) (cipherData string, err error) {
-//	fileBytes, err := ioutil.ReadFile(publicKeyFilePath)
-//	if err != nil {
-//		return "", fmt.Errorf("publicKeyFile read fail: %w", err)
-//	}
-//	block, _ := pem.Decode(fileBytes)
-//	if block == nil {
-//		return "", errors.New("publicKey decode error")
-//	}
-//	pubKey, err := x509.ParsePKCS1PublicKey(block.Bytes)
-//	if err != nil {
-//		return "", fmt.Errorf("x509.ParsePKIXPublicKey：%w", err)
-//	}
-//	cipherBytes, err := rsa.EncryptPKCS1v15(rand.Reader, pubKey, []byte(originData))
-//	if err != nil {
-//		return "", fmt.Errorf("xrsa.EncryptPKCS1v15：%w", err)
-//	}
-//	return string(cipherBytes), nil
-//}
-
 // RSA加密数据
 //	t：PKCS1 或 PKCS8
 //	originData：原始字符串byte数组
