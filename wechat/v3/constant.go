@@ -8,6 +8,7 @@ const (
 	MethodPost          = "POST"
 	MethodPut           = "PUT"
 	MethodDelete        = "DELETE"
+	MethodPATCH         = "PATCH"
 	HeaderAuthorization = "Authorization"
 
 	HeaderTimestamp = "Wechatpay-Timestamp"
@@ -84,10 +85,10 @@ const (
 	v3CardQuery   = "/v3/discount-card/cards/%s"                  // out_card_code 查询先享卡订单 GET
 
 	// 支付即服务
-	v3GuideRegister = "/v3/smartguide/guides"           // 服务人员注册 POST
-	v3GuideAssign   = "/v3/smartguide/guides/%s/assign" // guide_id 服务人员分配 POST
-	v3GuideQuery    = "/v3/smartguide/guides"           // 服务人员查询 GET
-	v3GuideUpdate   = "/v3/smartguide/guides/%s"        // guide_id 服务人员信息更新 PATCH
+	v3GuideReg    = "/v3/smartguide/guides"           // 服务人员注册 POST
+	v3GuideAssign = "/v3/smartguide/guides/%s/assign" // guide_id 服务人员分配 POST
+	v3GuideQuery  = "/v3/smartguide/guides"           // 服务人员查询 GET
+	v3GuideUpdate = "/v3/smartguide/guides/%s"        // guide_id 服务人员信息更新 PATCH
 
 	// 点金计划
 	v3GoldPlanManage       = "/v3/goldplan/merchants/changegoldplanstatus"            // 点金计划管理 POST

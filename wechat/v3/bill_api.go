@@ -99,7 +99,6 @@ func (c *ClientV3) V3BillLevel2FundFlowBill(bm gopay.BodyMap) (wxRsp *Level2Fund
 		if bm.GetString("algorithm") == util.NULL {
 			bm.Set("algorithm", "AEAD_AES_256_GCM")
 		}
-
 	}
 	uri := v3ApiLevel2FundFlowBill + "?" + bm.EncodeGetParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)

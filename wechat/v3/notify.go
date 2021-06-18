@@ -1,7 +1,6 @@
 package wechat
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -10,7 +9,6 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/aes"
 	"github.com/go-pay/gopay/pkg/xlog"
 )
 
@@ -141,48 +139,6 @@ func (v *V3NotifyReq) DecryptCombineCipherText(apiV3Key string) (result *V3Decry
 		return result, nil
 	}
 	return nil, errors.New("notify data Resource is nil")
-}
-
-// 解密普通支付回调中的加密订单信息
-func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptResult, err error) {
-	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
-	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
-	if err != nil {
-		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
-	}
-	result = &V3DecryptResult{}
-	if err = json.Unmarshal(decrypt, result); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
-	}
-	return result, nil
-}
-
-// 解密普通退款回调中的加密订单信息
-func V3DecryptRefundNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptRefundResult, err error) {
-	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
-	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
-	if err != nil {
-		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
-	}
-	result = &V3DecryptRefundResult{}
-	if err = json.Unmarshal(decrypt, result); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
-	}
-	return result, nil
-}
-
-// 解密合单支付回调中的加密订单信息
-func V3DecryptCombineNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptCombineResult, err error) {
-	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
-	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
-	if err != nil {
-		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
-	}
-	result = &V3DecryptCombineResult{}
-	if err = json.Unmarshal(decrypt, result); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
-	}
-	return result, nil
 }
 
 // Deprecated

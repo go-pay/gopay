@@ -294,6 +294,38 @@ type ProfitShareDeleteReceiverRsp struct {
 	Error    string                     `json:"-"`
 }
 
+// 预受理领卡请求 Rsp
+type DiscountCardApplyRsp struct {
+	Code     int                `json:"-"`
+	SignInfo *SignInfo          `json:"-"`
+	Response *DiscountCardApply `json:"response,omitempty"`
+	Error    string             `json:"-"`
+}
+
+// 查询先享卡订单 Rsp
+type DiscountCardQueryRsp struct {
+	Code     int                `json:"-"`
+	SignInfo *SignInfo          `json:"-"`
+	Response *DiscountCardQuery `json:"response,omitempty"`
+	Error    string             `json:"-"`
+}
+
+// 服务人员注册 Rsp
+type SmartGuideRegRsp struct {
+	Code     int            `json:"-"`
+	SignInfo *SignInfo      `json:"-"`
+	Response *SmartGuideReg `json:"response,omitempty"`
+	Error    string         `json:"-"`
+}
+
+// 服务人员查询 Rsp
+type SmartGuideQueryRsp struct {
+	Code     int              `json:"-"`
+	SignInfo *SignInfo        `json:"-"`
+	Response *SmartGuideQuery `json:"response,omitempty"`
+	Error    string           `json:"-"`
+}
+
 // ==================================分割==================================
 
 type JSAPIPayParams struct {
@@ -921,4 +953,97 @@ type ProfitShareAddReceiver struct {
 type ProfitShareDeleteReceiver struct {
 	Type    string `json:"type"`    // 分账接收方类型MERCHANT_ID：商户ID,PERSONAL_OPENID：个人openid（由父商户APPID转换得到）
 	Account string `json:"account"` // 分账接收方帐号
+}
+
+type DiscountCardApply struct {
+	PrepareCardToken string `json:"prepare_card_token"` // 预领卡请求token，在引导用户进入先享卡领卡时，需要传入prepare_card_token
+}
+
+type DiscountCardQuery struct {
+	CardId         string `json:"card_id"`          // 先享卡ID，唯一标识一个先享卡。
+	CardTemplateId string `json:"card_template_id"` // 先享卡卡模板ID，唯一定义此资源的标识。
+	Openid         string `json:"openid"`           // 微信用户在商户对应appid下的唯一标识
+	OutCardCode    string `json:"out_card_code"`    // 商户领卡号
+	Appid          string `json:"appid"`            // 公众账号ID
+	Mchid          string `json:"mchid"`            // 商户号
+	TimeRange      *struct {
+		BeginTime string `json:"begin_time"` // 约定开始时间
+		EndTime   string `json:"end_time"`   // 约定结束时间
+	} `json:"time_range"` // 用户领取先享卡之后，约定的生效时间和到期时间。
+	State            string          `json:"state"`                       // 先享卡的守约状态：ONGOING：约定进行中，SETTLING：约定到期核对中，FINISHED：已完成约定，UNFINISHED：未完成约定
+	UnfinishedReason string          `json:"unfinished_reason,omitempty"` // 用户未完成约定的原因
+	TotalAmount      int             `json:"total_amount,omitempty"`      // 享受优惠总金额
+	PayInformation   *PayInformation `json:"pay_information,omitempty"`   // 用户退回优惠的付款信息
+	CreateTime       string          `json:"create_time"`                 // 创卡时间
+	Objectives       []*Objective    `json:"objectives"`                  // 用户先享卡目标列表
+	Rewards          []*Reward       `json:"rewards"`                     // 用户先享卡优惠列表
+	SharerOpenid     string          `json:"sharer_openid,omitempty"`     // 邀请者用户标识
+}
+
+type PayInformation struct {
+	PayAmount     int    `json:"pay_amount"`               // 用户需要退回优惠而付款的金额，单位为：分
+	PayState      string `json:"pay_state"`                // 用户付款状态：PAYING：付款中，PAID：已付款
+	TransactionId string `json:"transaction_id,omitempty"` // 微信支付订单号，仅在订单成功收款时才返回
+	PayTime       string `json:"pay_time,omitempty"`       // 用户成功支付的时间，仅在订单成功收款时才返回
+}
+
+type Objective struct {
+	ObjectiveId                string                       `json:"objective_id"`                           // 由先享卡平台生成，唯一标识一个先享卡目标。商户需要记录该目标ID，进行同步用户记录
+	Name                       string                       `json:"name"`                                   // 目标的名称
+	Count                      int                          `json:"count"`                                  // 履约目标需要完成的数量，必须大于0
+	Unit                       string                       `json:"unit"`                                   // 目标的单位
+	Description                string                       `json:"description"`                            // 对先享卡目标的补充信息
+	ObjectiveCompletionRecords []*ObjectiveCompletionRecord `json:"objective_completion_records,omitempty"` // 用户完成的目标明细列表
+}
+
+type ObjectiveCompletionRecord struct {
+	ObjectiveCompletionSerialNo string `json:"objective_completion_serial_no"` // 目标完成流水号
+	ObjectiveId                 string `json:"objective_id"`                   // 微信先享卡为每个先享卡目标分配的唯一ID
+	CompletionTime              string `json:"completion_time"`                // 用户履约行为发生的时间
+	CompletionType              string `json:"completion_type"`                // 目标完成类型： INCREASE：增加数量，DECREASE：减少数量
+	Description                 string `json:"description"`                    // 用户本次履约的描述
+	CompletionCount             int    `json:"completion_count"`               // 用户本次履约的数量，必须大于0
+	Remark                      string `json:"remark,omitempty"`               // 对于用户履约情况的一些补充信息
+}
+
+type Reward struct {
+	RewardId           string               `json:"reward_id"`                      // 由先享卡平台生成，唯一标识一个先享卡目标。商户需要记录该优惠ID，进行同步用户记录
+	Name               string               `json:"name"`                           // 优惠名称
+	CountType          string               `json:"count_type"`                     // 优惠数量的类型标识：COUNT_UNLIMITED：不限数量，COUNT_LIMIT：有限数量
+	Count              int                  `json:"count"`                          // 本项优惠可使用的数量，必须大于0
+	Unit               string               `json:"unit"`                           // 优惠的单位
+	Amount             int                  `json:"amount"`                         // 优惠金额，此项优惠对应的优惠总金额，单位：分，必须大于0
+	Description        string               `json:"description,omitempty"`          // 对先享卡优惠的补充信息
+	RewardUsageRecords []*RewardUsageRecord `json:"reward_usage_records,omitempty"` // 优惠使用记录列表
+}
+
+type RewardUsageRecord struct {
+	RewardUsageSerialNo string `json:"reward_usage_serial_no"` // 优惠使用记录流水号
+	RewardId            string `json:"reward_id"`              // 微信先享卡为每个先享卡优惠分配的唯一ID
+	UsageTime           string `json:"usage_time"`             // 用户使用优惠的时间
+	UsageType           string `json:"usage_type"`             // 目标完成类型：INCREASE：增加数量，DECREASE：减少数量
+	Description         string `json:"description"`            // 用户获得奖励的描述
+	UsageCount          int    `json:"usage_count"`            // 用户本次获得的奖励数量，必须大于0
+	Amount              int    `json:"amount"`                 // 优惠金额，用户此项本次享受的优惠对应的优惠总金额，单位：分，必须大于0
+	Remark              string `json:"remark,omitempty"`       // 对于用户奖励情况的一些补充信息
+}
+
+type SmartGuideReg struct {
+	GuideId string `json:"guide_id"` // 服务人员在服务人员系统中的唯一标识
+}
+
+type SmartGuideQuery struct {
+	Data       []*SmartGuide `json:"data"`        // 服务人员列表
+	TotalCount int           `json:"total_count"` // 服务人员数量
+	Limit      int           `json:"limit"`       // 该次请求可返回的最大资源条数，不大于10
+	Offset     int           `json:"offset"`      // 该次请求资源的起始位置，默认值为0
+}
+
+type SmartGuide struct {
+	GuideId string `json:"guide_id"`          // 服务人员在服务人员系统中的唯一标识
+	StoreId int    `json:"store_id"`          // 门店在微信支付商户平台的唯一标识
+	Name    string `json:"name"`              // 服务人员姓名
+	Mobile  string `json:"mobile"`            // 员工在商户个人/企业微信通讯录上设置的手机号码（加密信息，需解密）
+	Userid  string `json:"userid,omitempty"`  // 员工在商户企业微信通讯录使用的唯一标识，使用企业微信商家时返回
+	WorkId  string `json:"work_id,omitempty"` // 服务人员通过小程序注册时填写的工号，使用个人微信商家时返回
 }
