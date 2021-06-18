@@ -90,9 +90,14 @@ func main() {
     * 查询用户授权记录（openid）：client.V3ScorePermissionOpenidQuery()
     * 解除用户授权关系（openid）：client.V3ScorePermissionOpenidTerminate()
 * <font color='#07C160' size='4'>微信先享卡</font>
-    * 待实现
+    * 预受理领卡请求：client.V3DiscountCardApply()
+    * 增加用户记录：client.V3DiscountCardAddUser()
+    * 查询先享卡订单：client.V3DiscountCardQuery()
 * <font color='#07C160' size='4'>支付即服务</font>
-    * 待实现
+    * 服务人员注册：client.V3SmartGuideReg()
+    * 服务人员分配：client.V3SmartGuideAssign()
+    * 服务人员查询：client.V3SmartGuideQuery()
+    * 服务人员信息更新：client.V3SmartGuideUpdate()
 * <font color='#07C160' size='4'>智慧商圈</font>
     * 待实现
 * <font color='#07C160' size='4'>代金券</font>
@@ -809,6 +814,25 @@ return c.String(http.StatusOK, "success")
 ```
 
 ## 6、微信、支付宝 公共API（仅部分说明）
+
+* #### 微信V3 公共API
+
+微信敏感信息加解密、回调接口敏感信息解密
+
+```go
+import (
+    "github.com/go-pay/gopay/wechat/v3"
+)
+
+// 敏感信息加密
+wechat.V3EncryptText()
+// 敏感信息解密
+wechat.V3DecryptText()
+// 回调通知敏感信息解密
+wechat.V3DecryptNotifyCipherText()
+wechat.V3DecryptRefundNotifyCipherText()
+wechat.V3DecryptCombineNotifyCipherText()
+```
 
 * #### 微信V2 公共API
 
