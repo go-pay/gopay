@@ -90,6 +90,44 @@ const (
 	v3GuideQuery  = "/v3/smartguide/guides"           // 服务人员查询 GET
 	v3GuideUpdate = "/v3/smartguide/guides/%s"        // guide_id 服务人员信息更新 PATCH
 
+	// 智慧商圈
+	v3BusinessPointsSync      = "/v3/businesscircle/points/notify"          // 商圈积分同步 POST
+	v3BusinessAuthPointsQuery = "/v3/businesscircle/user-authorizations/%s" // openid 商圈积分授权查询 GET
+
+	// 代金券
+	v3CouponBatchCreate        = "/v3/marketing/favor/coupon-stocks"         // 创建代金券批次 POST
+	v3CouponBatchStart         = "/v3/marketing/favor/stocks/%s/start"       // stock_id 激活代金券批次 POST
+	v3CouponBatchGrant         = "/v3/marketing/favor/users/%s/coupons"      // openid 发放代金券批次 POST
+	v3CouponBatchPause         = "/v3/marketing/favor/stocks/%s/pause"       // stock_id 暂停代金券批次 POST
+	v3CouponBatchRestart       = "/v3/marketing/favor/stocks/%s/restart"     // stock_id 重启代金券批次 POST
+	v3CouponBatchQuery         = "/v3/marketing/favor/stocks"                // 条件查询批次列表 GET
+	v3CouponBatchDetail        = "/v3/marketing/favor/stocks/%s"             // stock_id 查询批次详情 GET
+	v3CouponDetailQuery        = "/v3/marketing/favor/users/%s/coupons/%s"   // openid、coupon_id 查询代金券详情 GET
+	v3CouponMerchantQuery      = "/v3/marketing/favor/stocks/%s/merchants"   // stock_id 查询代金券可用商户 GET
+	v3CouponItemQuery          = "/v3/marketing/favor/stocks/%s/items"       // stock_id 查询代金券可用单品 GET
+	v3UserCouponQuery          = "/v3/marketing/favor/users/%s/coupons"      // openid 根据商户号查用户的券 GET
+	v3CouponUseFlowDownload    = "/v3/marketing/favor/stocks/%s/use-flow"    // stock_id 下载批次核销明细 GET
+	v3CouponRefundFlowDownload = "/v3/marketing/favor/stocks/%s/refund-flow" // stock_id 下载批次退款明细 GET
+	v3CouponCallbackUrlSet     = "/v3/marketing/favor/callbacks"             // 设置消息通知地址 POST
+
+	// 商家券
+	v3BusiCouponBatchCreate      = "/v3/marketing/busifavor/stocks"                        // 创建商家券 POST
+	v3BusiCouponBatchDetailQuery = "/v3/marketing/busifavor/stocks/%s"                     // stock_id 查询商家券详情 GET
+	v3BusiCouponUse              = "/v3/marketing/busifavor/coupons/use"                   // 核销用户券 POST
+	v3UserBusiCouponQuery        = "/v3/marketing/busifavor/users/%s/coupons"              // openid 根据过滤条件查询用户券 GET
+	v3UserBusiCouponDetail       = "/v3/marketing/busifavor/users/%s/coupons/%s/appids/%s" // openid、coupon_code、appid 查询用户单张券详情 GET
+	v3BusiCouponCodeUpload       = "/v3/marketing/busifavor/stocks/%s/couponcodes"         // stock_id 上传预存code POST
+	v3BusiCouponCallbackUrlSet   = "/v3/marketing/busifavor/callbacks"                     // 设置商家券事件通知地址 POST
+	v3BusiCouponCallbackUrlQuery = "/v3/marketing/busifavor/callbacks"                     // 查询商家券事件通知地址 GET
+	v3BusiCouponAssociate        = "/v3/marketing/busifavor/coupons/associate"             // 关联订单信息 POST
+	v3BusiCouponDisassociate     = "/v3/marketing/busifavor/coupons/disassociate"          // 取消关联订单信息 POST
+	v3BusiCouponBatchUpdate      = "/v3/marketing/busifavor/stocks/%s/budget"              // stock_id 修改批次预算 PATCH
+	v3BusiCouponInfoUpdate       = "/v3/marketing/busifavor/stocks/%s"                     // stock_id 修改商家券基本信息 PATCH
+	v3BusiCouponReturn           = "/v3/marketing/busifavor/coupons/return"                // 申请退券 POST
+	v3BusiCouponDeactivate       = "/v3/marketing/busifavor/coupons/deactivate"            // 使券失效 POST
+	v3MarketingSubsidy           = "/v3/marketing/busifavor/subsidy/pay-receipts"          // 营销补差付款 POST
+	v3MarketingSubsidyDetail     = "/v3/marketing/busifavor/subsidy/pay-receipts/%s"       // subsidy_receipt_id 查询营销补差付款单详情 GET
+
 	// 点金计划
 	v3GoldPlanManage       = "/v3/goldplan/merchants/changegoldplanstatus"            // 点金计划管理 POST
 	v3GoldPlanBillManage   = "/v3/goldplan/merchants/changecustompagestatus"          // 商家小票管理 POST
