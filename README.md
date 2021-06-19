@@ -99,7 +99,8 @@ func main() {
     * 服务人员查询：client.V3SmartGuideQuery()
     * 服务人员信息更新：client.V3SmartGuideUpdate()
 * <font color='#07C160' size='4'>智慧商圈</font>
-    * 待实现
+    * 商圈积分同步：client.V3BusinessPointsSync()
+    * 商圈积分授权查询：client.V3BusinessAuthPointsQuery()
 * <font color='#07C160' size='4'>代金券</font>
     * 待实现
 * <font color='#07C160' size='4'>商家券</font>
