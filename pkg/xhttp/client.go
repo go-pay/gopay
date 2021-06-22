@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -210,7 +211,11 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 	case TypeJSON:
 		c.jsonByte = bs
 	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
-		c.FormString = string(bs)
+		body := make(map[string]interface{})
+		if err := json.Unmarshal(bs, &body); err != nil {
+			return c
+		}
+		c.FormString = FormatURLParam(body)
 	}
 	return c
 }
@@ -220,16 +225,16 @@ func (c *Client) SendBodyMap(bm map[string]interface{}) (client *Client) {
 	if bm == nil {
 		return c
 	}
-	bs, err := json.Marshal(bm)
-	if err != nil {
-		c.Errors = append(c.Errors, err)
-		return c
-	}
 	switch c.requestType {
 	case TypeJSON:
+		bs, err := json.Marshal(bm)
+		if err != nil {
+			c.Errors = append(c.Errors, err)
+			return c
+		}
 		c.jsonByte = bs
 	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
-		c.FormString = string(bs)
+		c.FormString = FormatURLParam(bm)
 	}
 	return c
 }
@@ -239,16 +244,16 @@ func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client
 	if bm == nil {
 		return c
 	}
-	bs, err := json.Marshal(bm)
-	if err != nil {
-		c.Errors = append(c.Errors, err)
-		return c
-	}
 	switch c.requestType {
 	case TypeJSON:
+		bs, err := json.Marshal(bm)
+		if err != nil {
+			c.Errors = append(c.Errors, err)
+			return c
+		}
 		c.jsonByte = bs
 	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
-		c.FormString = string(bs)
+		c.FormString = FormatURLParam(bm)
 	case TypeMultipartFormData:
 		c.multipartBodyMap = bm
 	}
@@ -404,4 +409,12 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 		return nil, nil, c.Errors
 	}
 	return res, bs, nil
+}
+
+func FormatURLParam(body map[string]interface{}) (urlParam string) {
+	v := url.Values{}
+	for key, value := range body {
+		v.Add(key, value.(string))
+	}
+	return v.Encode()
 }
