@@ -666,7 +666,7 @@ paySign := wechat.GetH5PaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_
 ```go
 import (
 	"github.com/go-pay/gopay/wechat"
-    "github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 // ========同步微信V3支付验签========
