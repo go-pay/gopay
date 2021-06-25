@@ -348,7 +348,7 @@ QQ群：
 
 ```go
 import (
-	"github.com/go-pay/gopay/wechat/v3"
+    "github.com/go-pay/gopay/wechat/v3"
 )
 
 // NewClientV3 初始化微信客户端 V3
@@ -572,8 +572,8 @@ payParam, err := client.TradeAppPay(bm)
 aliRsp, err := client.TradePay(bm)
 
 // 支付宝小程序支付时 buyer_id 为必传参数，需要提前获取，获取方法如下两种
-//    1、alipay.SystemOauthToken()     返回取值：aliRsp.SystemOauthTokenResponse.UserId
-//    2、client.SystemOauthToken()    返回取值：aliRsp.SystemOauthTokenResponse.UserId
+//  1、alipay.SystemOauthToken()     返回取值：aliRsp.SystemOauthTokenResponse.UserId
+//  2、client.SystemOauthToken()     返回取值：aliRsp.SystemOauthTokenResponse.UserId
 aliRsp, err := client.TradeCreate(bm)
 aliRsp, err := client.TradeQuery(bm)
 aliRsp, err := client.TradeClose(bm)
