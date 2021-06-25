@@ -95,6 +95,7 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 }
 
 // 异步通知验签
+//	wxPkContent 是通过client.GetPlatformCerts()接口向微信获取的微信平台公钥证书内容
 func (v *V3NotifyReq) VerifySign(wxPkContent string) (err error) {
 	if v.SignInfo != nil {
 		return V3VerifySign(v.SignInfo.HeaderTimestamp, v.SignInfo.HeaderNonce, v.SignInfo.SignBody, v.SignInfo.HeaderSignature, wxPkContent)

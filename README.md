@@ -701,6 +701,7 @@ if err != nil {
     xlog.Error(err)
     return
 }
+// WxPkContent 是通过client.GetPlatformCerts()接口向微信获取的微信平台公钥证书内容
 err = notifyReq.VerifySign(WxPkContent)
 if err != nil {
     xlog.Error(err)
