@@ -134,6 +134,20 @@ func main() {
 * <font color='#07C160' size='4'>其他能力</font>
     * 图片上传：client.V3MediaUploadImage()
     * 视频上传：client.V3MediaUploadVideo()
+* <font color='#07C160' size='4'>公共API</font>
+    * 发起批量转账：client.V3Transfer()
+    * 微信批次单号查询批次单：client.V3TransferQuery()
+    * 微信明细单号查询明细单：client.V3TransferDetailQuery()
+    * 商家批次单号查询批次单：client.V3TransferMerchantQuery()
+    * 商家明细单号查询明细单：client.V3TransferMerchantDetailQuery()
+    * 转账电子回单申请受理：client.V3TransferReceipt()
+    * 查询转账电子回单：client.V3TransferReceiptQuery()
+    * 转账明细电子回单受理：client.V3TransferDetailReceipt()
+    * 查询转账明细电子回单受理结果：client.V3TransferDetailReceiptQuery()
+    * 查询账户实时余额：client.V3MerchantBalance()
+    * 查询账户日终余额：client.V3MerchantDayBalance()
+* <font color='#07C160' size='4'>来账识别API</font>
+    * 商户银行来账查询：client.V3MerchantIncomeRecord()
 
 ### 微信支付V2 API
 
@@ -367,7 +381,7 @@ client.DebugSwitch = gopay.DebugOff
 
 ```go
 import (
-	"github.com/go-pay/gopay/wechat"
+    "github.com/go-pay/gopay/wechat"
 )
 
 // 初始化微信客户端
@@ -429,9 +443,9 @@ client.SetLocation().                       // 设置时区，不设置或出错
     SetAliPayPublicCertSN().                // 设置支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
     SetCharset("utf-8").                    // 设置字符编码，不设置默认 utf-8
     SetSignType(alipay.RSA2).               // 设置签名类型，不设置默认 RSA2
-    SetReturnUrl("https://www.fmm.ink").  // 设置返回URL
-    SetNotifyUrl("https://www.fmm.ink").  // 设置异步通知URL
-    SetAppAuthToken()                      // 设置第三方应用授权
+    SetReturnUrl("https://www.fmm.ink").    // 设置返回URL
+    SetNotifyUrl("https://www.fmm.ink").    // 设置异步通知URL
+    SetAppAuthToken()                       // 设置第三方应用授权
 
 // 自动同步验签（只支持证书模式）
 // 传入 alipayCertPublicKey_RSA2.crt 内容
@@ -453,7 +467,7 @@ err := client.SetCertSnByContent("appCertPublicKey bytes", "alipayRootCert bytes
 ```go
 import (
     "github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/wechat"
+    "github.com/go-pay/gopay/wechat"
 )
 
 // 初始化 BodyMap
@@ -610,7 +624,7 @@ APP支付官方文档：[APP端调起支付的参数列表文档](https://pay.we
 
 ```go
 import (
-	"github.com/go-pay/gopay/wechat"
+    "github.com/go-pay/gopay/wechat"
 )
 
 // ====微信小程序 paySign====
@@ -665,8 +679,8 @@ paySign := wechat.GetH5PaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_
 
 ```go
 import (
-	"github.com/go-pay/gopay/wechat"
-	"github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay/wechat"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // ========同步微信V3支付验签========
@@ -714,8 +728,8 @@ return c.JSON(http.StatusOK, &wechat.V3NotifyRsp{Code: gopay.SUCCESS, Message: "
 
 ```go
 import (
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/wechat"
+    "github.com/go-pay/gopay"
+    "github.com/go-pay/gopay/wechat"
 )
 
 // ====同步返回参数验签Sign====
@@ -774,7 +788,7 @@ return c.String(http.StatusOK, rsp.ToXmlString())
 
 ```go
 import (
-	"github.com/go-pay/gopay/alipay"
+    "github.com/go-pay/gopay/alipay"
 )
 
 // ====同步返回参数验签Sign====
@@ -845,7 +859,7 @@ button按钮获取手机号码：[button组件文档](https://developers.weixin.
 
 ```go
 import (
-	"github.com/go-pay/gopay/wechat"
+    "github.com/go-pay/gopay/wechat"
 )
 
 // 获取微信小程序用户的OpenId、SessionKey、UnionId
@@ -888,8 +902,8 @@ session := "lyY4HPQbaOYzZdG+JcYK9w=="
 //    sessionKey:会话密钥
 bm, err := wechat.DecryptOpenDataToBodyMap(data, iv, session)
 if err != nil {
-     xlog.Debug("err:", err)
-     return
+    xlog.Debug("err:", err)
+    return
 }
 xlog.Debug("WeChatUserPhone:", bm)
 ```
@@ -903,7 +917,7 @@ xlog.Debug("WeChatUserPhone:", bm)
 支付宝加解密文档：[AES配置文档](https://opendocs.alipay.com/mini/introduce/aes) ，[AES加解密文档](https://opendocs.alipay.com/open/common/104567)
 ```go
 import (
-	"github.com/go-pay/gopay/alipay"
+    "github.com/go-pay/gopay/alipay"
 )
 
 // 换取授权访问令牌（默认使用utf-8，RSA2）
