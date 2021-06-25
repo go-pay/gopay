@@ -161,6 +161,24 @@ const (
 	v3MediaUploadImage = "/v3/merchant/media/upload"       // 图片上传 POST
 	v3MediaUploadVideo = "/v3/merchant/media/video_upload" // 视频上传 POST
 
+	// 公共API 转账
+	v3Transfer                    = "/v3/transfer/batches"                                          // 发起批量转账 POST
+	v3TransferQuery               = "/v3/transfer/batches/batch-id/%s"                              // batch_id 微信批次单号查询批次单 GET
+	v3TransferDetailQuery         = "/v3/transfer/batches/batch-id/%s/details/detail-id/%s"         // batch_id、detail_id 微信明细单号查询明细单 GET
+	v3TransferMerchantQuery       = "/v3/transfer/batches/out-batch-no/%s"                          // out_batch_no 商家批次单号查询批次单 GET
+	v3TransferMerchantDetailQuery = "/v3/transfer/batches/out-batch-no/%s/details/out-detail-no/%s" // out_batch_no、out_detail_no 商家明细单号查询明细单 GET
+	v3TransferReceipt             = "/v3/transfer/bill-receipt"                                     // 转账电子回单申请受理 POST
+	v3TransferReceiptQuery        = "/v3/transfer/bill-receipt/%s"                                  // out_batch_no 查询转账电子回单 GET
+	v3TransferDetailReceipt       = "/v3/transfer-detail/electronic-receipts"                       // 转账明细电子回单受理 POST
+	v3TransferDetailReceiptQuery  = "/v3/transfer-detail/electronic-receipts"                       // 查询转账明细电子回单受理结果 GET
+
+	// 商户账户
+	v3MerchantBalance    = "/v3/merchant/fund/balance/%s"       // account_type 查询账户实时余额 GET
+	v3MerchantDayBalance = "/v3/merchant/fund/dayendbalance/%s" // account_type 查询账户日终余额 GET
+
+	// 来账识别API
+	v3MerchantIncomeRecord = "/v3/merchantfund/merchant/income-records" // 商户银行来账查询 GET
+
 	// 订单号类型，1-微信订单号，2-商户订单号，3-微信侧回跳到商户前端时用于查单的单据查询id（查询支付分订单中会使用）
 	TransactionId OrderNoType = 1
 	OutTradeNo    OrderNoType = 2

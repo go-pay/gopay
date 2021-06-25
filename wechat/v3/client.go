@@ -86,6 +86,7 @@ func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
+	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
@@ -115,6 +116,7 @@ func (c *ClientV3) doProdGet(uri, authorization string) (res *http.Response, si 
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
+	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes()
 	if len(errs) > 0 {
@@ -145,6 +147,7 @@ func (c *ClientV3) doProdPut(bm gopay.BodyMap, path, authorization string) (res 
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
+	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Put(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
@@ -175,6 +178,7 @@ func (c *ClientV3) doProdDelete(bm gopay.BodyMap, path, authorization string) (r
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
+	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Delete(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
@@ -204,8 +208,8 @@ func (c *ClientV3) doProdPostFile(bm gopay.BodyMap, path, authorization string) 
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
+	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
-
 	res, bs, errs := httpClient.Type(xhttp.TypeMultipartFormData).Post(url).SendMultipartBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
 		return nil, nil, nil, errs[0]
@@ -235,6 +239,7 @@ func (c *ClientV3) doProdPatch(bm gopay.BodyMap, path, authorization string) (re
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
+	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Patch(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {

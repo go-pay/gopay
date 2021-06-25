@@ -334,6 +334,94 @@ type BusinessAuthPointsQueryRsp struct {
 	Error    string                   `json:"-"`
 }
 
+// 发起批量转账 Rsp
+type TransferRsp struct {
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Response *Transfer `json:"response,omitempty"`
+	Error    string    `json:"-"`
+}
+
+// 微信批次单号查询批次单 Rsp
+type TransferQueryRsp struct {
+	Code     int            `json:"-"`
+	SignInfo *SignInfo      `json:"-"`
+	Response *TransferQuery `json:"response,omitempty"`
+	Error    string         `json:"-"`
+}
+
+// 微信明细单号查询明细单 Rsp
+type TransferDetailQueryRsp struct {
+	Code     int                  `json:"-"`
+	SignInfo *SignInfo            `json:"-"`
+	Response *TransferDetailQuery `json:"response,omitempty"`
+	Error    string               `json:"-"`
+}
+
+// 商家批次单号查询批次单 Rsp
+type TransferMerchantQueryRsp struct {
+	Code     int                    `json:"-"`
+	SignInfo *SignInfo              `json:"-"`
+	Response *TransferMerchantQuery `json:"response,omitempty"`
+	Error    string                 `json:"-"`
+}
+
+// 商家明细单号查询明细单 Rsp
+type TransferMerchantDetailQueryRsp struct {
+	Code     int                          `json:"-"`
+	SignInfo *SignInfo                    `json:"-"`
+	Response *TransferMerchantDetailQuery `json:"response,omitempty"`
+	Error    string                       `json:"-"`
+}
+
+// 转账电子回单申请受理 Rsp
+type TransferReceiptRsp struct {
+	Code     int              `json:"-"`
+	SignInfo *SignInfo        `json:"-"`
+	Response *TransferReceipt `json:"response,omitempty"`
+	Error    string           `json:"-"`
+}
+
+// 查询转账电子回单 Rsp
+type TransferReceiptQueryRsp struct {
+	Code     int                   `json:"-"`
+	SignInfo *SignInfo             `json:"-"`
+	Response *TransferReceiptQuery `json:"response,omitempty"`
+	Error    string                `json:"-"`
+}
+
+// 转账明细电子回单受理 Rsp
+type TransferDetailReceiptRsp struct {
+	Code     int                    `json:"-"`
+	SignInfo *SignInfo              `json:"-"`
+	Response *TransferDetailReceipt `json:"response,omitempty"`
+	Error    string                 `json:"-"`
+}
+
+// 查询转账明细电子回单受理结果 Rsp
+type TransferDetailReceiptQueryRsp struct {
+	Code     int                         `json:"-"`
+	SignInfo *SignInfo                   `json:"-"`
+	Response *TransferDetailReceiptQuery `json:"response,omitempty"`
+	Error    string                      `json:"-"`
+}
+
+// 查询账户实时余额 Rsp
+type MerchantBalanceRsp struct {
+	Code     int              `json:"-"`
+	SignInfo *SignInfo        `json:"-"`
+	Response *MerchantBalance `json:"response,omitempty"`
+	Error    string           `json:"-"`
+}
+
+// 商户银行来账查询 Rsp
+type MerchantIncomeRecordRsp struct {
+	Code     int                   `json:"-"`
+	SignInfo *SignInfo             `json:"-"`
+	Response *MerchantIncomeRecord `json:"response,omitempty"`
+	Error    string                `json:"-"`
+}
+
 // ==================================分割==================================
 
 type JSAPIPayParams struct {
@@ -1061,4 +1149,156 @@ type BusinessAuthPointsQuery struct {
 	AuthorizeState  string `json:"authorize_state"`            // 顾客授权商圈积分结果：UNAUTHORIZED：未授权，AUTHORIZED：已授权，DEAUTHORIZED：已取消授权
 	AuthorizeTime   string `json:"authorize_time,omitempty"`   // 顾客成功授权商圈积分的时间
 	DeauthorizeTime string `json:"deauthorize_time,omitempty"` // 顾客关闭授权商圈积分的时间
+}
+
+type Transfer struct {
+	OutBatchNo string `json:"out_batch_no"` // 商户系统内部的商家批次单号
+	BatchId    string `json:"batch_id"`     // 微信批次单号，微信商家转账系统返回的唯一标识
+	CreateTime string `json:"create_time"`  // 批次受理成功时返回
+}
+
+type TransferQuery struct {
+	TransferBatch      *TransferBatch    `json:"transfer_batch"`                 // 转账批次单基本信息
+	TransferDetailList []*TransferDetail `json:"transfer_detail_list,omitempty"` // 当批次状态为“FINISHED”（已完成），且成功查询到转账明细单时返回
+}
+
+type TransferBatch struct {
+	Mchid         string `json:"mchid"`                    // 微信支付分配的商户号
+	OutBatchNo    string `json:"out_batch_no"`             // 商户系统内部的商家批次单号
+	BatchId       string `json:"batch_id"`                 // 微信批次单号，微信商家转账系统返回的唯一标识
+	Appid         string `json:"appid"`                    // 申请商户号的appid或商户号绑定的appid（企业号corpid即为此appid）
+	BatchStatus   string `json:"batch_status"`             // 批次状态
+	BatchType     string `json:"batch_type"`               // 批次类型
+	BatchName     string `json:"batch_name"`               // 该笔批量转账的名称
+	BatchRemark   string `json:"batch_remark"`             // 转账说明，UTF8编码，最多允许32个字符
+	CloseReason   string `json:"close_reason,omitempty"`   // 如果批次单状态为“CLOSED”（已关闭），则有关闭原因
+	TotalAmount   int    `json:"total_amount"`             // 转账金额单位为分
+	TotalNum      int    `json:"total_num"`                // 一个转账批次单最多发起三千笔转账
+	CreateTime    string `json:"create_time,omitempty"`    // 批次受理成功时返回
+	UpdateTime    string `json:"update_time,omitempty"`    // 批次最近一次状态变更的时间
+	SuccessAmount int    `json:"success_amount,omitempty"` // 转账成功的金额，单位为分
+	SuccessNum    int    `json:"success_num,omitempty"`    // 转账成功的笔数
+	FailAmount    int    `json:"fail_amount,omitempty"`    // 转账失败的金额，单位为分
+	FailNum       int    `json:"fail_num,omitempty"`       // 转账失败的笔数
+}
+
+type TransferDetail struct {
+	DetailId     string `json:"detail_id"`     // 微信明细单号
+	OutDetailNo  string `json:"out_detail_no"` // 商家明细单号
+	DetailStatus string `json:"detail_status"` // 明细状态：PROCESSING：转账中，SUCCESS：转账成功，FAIL：转账失败
+}
+
+type TransferDetailQuery struct {
+	Mchid          string `json:"mchid"`                 // 微信支付分配的商户号
+	OutBatchNo     string `json:"out_batch_no"`          // 商户系统内部的商家批次单号
+	BatchId        string `json:"batch_id"`              // 微信批次单号，微信商家转账系统返回的唯一标识
+	Appid          string `json:"appid"`                 // 申请商户号的appid或商户号绑定的appid（企业号corpid即为此appid）
+	OutDetailNo    string `json:"out_detail_no"`         // 商家明细单号
+	DetailId       string `json:"detail_id"`             // 微信明细单号
+	DetailStatus   string `json:"detail_status"`         // 明细状态：PROCESSING：转账中，SUCCESS：转账成功，FAIL：转账失败
+	TransferAmount int    `json:"transfer_amount"`       // 转账金额单位为分
+	TransferRemark string `json:"transfer_remark"`       // 单条转账备注（微信用户会收到该备注），UTF8编码，最多允许32个字符
+	FailReason     string `json:"fail_reason,omitempty"` // 如果转账失败则有失败原因
+	Openid         string `json:"openid"`                // 用户在直连商户appid下的唯一标识
+	UserName       string `json:"user_name"`             // 收款方姓名（加密）
+	InitiateTime   string `json:"initiate_time"`         // 转账发起的时间
+	UpdateTime     string `json:"update_time"`           // 明细最后一次状态变更的时间
+}
+
+type TransferMerchantQuery struct {
+	TransferBatch      *TransferBatch    `json:"transfer_batch"`                 // 转账批次单基本信息
+	TransferDetailList []*TransferDetail `json:"transfer_detail_list,omitempty"` // 当批次状态为“FINISHED”（已完成），且成功查询到转账明细单时返回
+	Offset             int               `json:"offset,omitempty"`               // 该次请求资源（转账明细单）的起始位置
+	Limit              int               `json:"limit,omitempty"`                // 该次请求可返回的最大资源（转账明细单）条数
+}
+
+type TransferMerchantDetailQuery struct {
+	OutBatchNo     string `json:"out_batch_no"`          // 商户系统内部的商家批次单号
+	BatchId        string `json:"batch_id"`              // 微信批次单号，微信商家转账系统返回的唯一标识
+	Appid          string `json:"appid"`                 // 申请商户号的appid或商户号绑定的appid（企业号corpid即为此appid）
+	OutDetailNo    string `json:"out_detail_no"`         // 商家明细单号
+	DetailId       string `json:"detail_id"`             // 微信明细单号
+	DetailStatus   string `json:"detail_status"`         // 明细状态：PROCESSING：转账中，SUCCESS：转账成功，FAIL：转账失败
+	TransferAmount int    `json:"transfer_amount"`       // 转账金额单位为分
+	TransferRemark string `json:"transfer_remark"`       // 单条转账备注（微信用户会收到该备注），UTF8编码，最多允许32个字符
+	FailReason     string `json:"fail_reason,omitempty"` // 如果转账失败则有失败原因
+	Openid         string `json:"openid"`                // 用户在直连商户appid下的唯一标识
+	UserName       string `json:"user_name"`             // 收款方姓名（加密）
+	InitiateTime   string `json:"initiate_time"`         // 转账发起的时间
+	UpdateTime     string `json:"update_time"`           // 明细最后一次状态变更的时间
+}
+
+type TransferReceipt struct {
+	OutBatchNo      string `json:"out_batch_no"`               // 商户系统内部的商家批次单号
+	SignatureNo     string `json:"signature_no"`               // 电子回单申请单号，申请单据的唯一标识
+	SignatureStatus string `json:"signature_status,omitempty"` // 电子回单状态：ACCEPTED:已受理，电子签章已受理成功，FINISHED:已完成。电子签章已处理完成
+	HashType        string `json:"hash_type,omitempty"`        // 电子回单文件的hash方法，回单状态为：FINISHED时返回。
+	HashValue       string `json:"hash_value,omitempty"`       // 电子回单文件的hash值，用于下载之后验证文件的完整、正确性，回单状态为：FINISHED时返回。
+	DownloadUrl     string `json:"download_url,omitempty"`     // 电子回单文件的下载地址，回单状态为：FINISHED时返回
+	CreateTime      string `json:"create_time,omitempty"`      // 电子签章单创建时间
+	UpdateTime      string `json:"update_time,omitempty"`      // 电子签章单最近一次状态变更的时间
+}
+
+type TransferReceiptQuery struct {
+	OutBatchNo      string `json:"out_batch_no"`               // 商户系统内部的商家批次单号
+	SignatureNo     string `json:"signature_no"`               // 电子回单申请单号，申请单据的唯一标识
+	SignatureStatus string `json:"signature_status,omitempty"` // 电子回单状态：ACCEPTED:已受理，电子签章已受理成功，FINISHED:已完成。电子签章已处理完成
+	HashType        string `json:"hash_type,omitempty"`        // 电子回单文件的hash方法，回单状态为：FINISHED时返回。
+	HashValue       string `json:"hash_value,omitempty"`       // 电子回单文件的hash值，用于下载之后验证文件的完整、正确性，回单状态为：FINISHED时返回。
+	DownloadUrl     string `json:"download_url,omitempty"`     // 电子回单文件的下载地址，回单状态为：FINISHED时返回
+	CreateTime      string `json:"create_time,omitempty"`      // 电子签章单创建时间
+	UpdateTime      string `json:"update_time,omitempty"`      // 电子签章单最近一次状态变更的时间
+}
+
+type TransferDetailReceipt struct {
+	AcceptType      string `json:"accept_type"`                // 电子回单受理类型
+	OutBatchNo      string `json:"out_batch_no,omitempty"`     // 商户系统内部的商家批次单号
+	OutDetailNo     string `json:"out_detail_no"`              // 商家明细单号
+	SignatureNo     string `json:"signature_no"`               // 电子回单申请单号，申请单据的唯一标识
+	SignatureStatus string `json:"signature_status,omitempty"` // 电子回单状态：ACCEPTED:已受理，电子签章已受理成功，FINISHED:已完成。电子签章已处理完成
+	HashType        string `json:"hash_type,omitempty"`        // 电子回单文件的hash方法，回单状态为：FINISHED时返回。
+	HashValue       string `json:"hash_value,omitempty"`       // 电子回单文件的hash值，用于下载之后验证文件的完整、正确性，回单状态为：FINISHED时返回。
+	DownloadUrl     string `json:"download_url,omitempty"`     // 电子回单文件的下载地址，回单状态为：FINISHED时返回
+}
+
+type TransferDetailReceiptQuery struct {
+	AcceptType      string `json:"accept_type"`                // 电子回单受理类型
+	OutBatchNo      string `json:"out_batch_no,omitempty"`     // 商户系统内部的商家批次单号
+	OutDetailNo     string `json:"out_detail_no"`              // 商家明细单号
+	SignatureNo     string `json:"signature_no"`               // 电子回单申请单号，申请单据的唯一标识
+	SignatureStatus string `json:"signature_status,omitempty"` // 电子回单状态：ACCEPTED:已受理，电子签章已受理成功，FINISHED:已完成。电子签章已处理完成
+	HashType        string `json:"hash_type,omitempty"`        // 电子回单文件的hash方法，回单状态为：FINISHED时返回。
+	HashValue       string `json:"hash_value,omitempty"`       // 电子回单文件的hash值，用于下载之后验证文件的完整、正确性，回单状态为：FINISHED时返回。
+	DownloadUrl     string `json:"download_url,omitempty"`     // 电子回单文件的下载地址，回单状态为：FINISHED时返回
+}
+
+type MerchantBalance struct {
+	AvailableAmount int `json:"available_amount"`         // 可用余额（单位：分），此余额可做提现操作
+	PendingAmount   int `json:"pending_amount,omitempty"` // 不可用余额（单位：分）
+}
+
+type MerchantIncomeRecord struct {
+	Data       []*IncomeData `json:"data,omitempty"` // 单次查询返回的银行来账记录列表结果数组，如果查询结果为空时，则为空数组
+	Links      *Link         `json:"links"`          // 返回前后页和当前页面的访问链接
+	Offset     int           `json:"offset"`         // 该次请求资源的起始位置，请求中包含偏移量时应答消息返回相同偏移量，否则返回默认值0
+	Limit      int           `json:"limit"`          // 经过条件筛选，本次查询到的银行来账记录条数
+	TotalCount int           `json:"total_count"`    // 经过条件筛选，查询到的银行来账记录总数
+}
+
+type IncomeData struct {
+	Mchid             string `json:"mchid"`               // 微信支付分配的商户号
+	AccountType       string `json:"account_type"`        // 需查询银行来账记录商户的账户类型：BASIC：基本账户，OPERATION：运营账户，FEES：手续费账户
+	IncomeRecordType  string `json:"income_record_type"`  // 银行来账类型
+	IncomeRecordId    string `json:"income_record_id"`    // 银行来账的微信单号
+	Amount            int    `json:"amount"`              // 银行来账金额，单位为分，只能为整数
+	SuccessTime       string `json:"success_time"`        // 银行来账完成时间
+	BankName          string `json:"bank_name"`           // 银行来账的付款方银行名称，由于部分银行的数据获取限制，该字段有可能为空
+	BankAccountName   string `json:"bank_account_name"`   // 银行来账的付款方银行账户信息，户名为全称、明文，由于部分银行的数据获取限制，该字段有可能为空
+	BankAccountNumber string `json:"bank_account_number"` // 四位掩码+付款方银行卡尾号后四位
+}
+
+type Link struct {
+	Next string `json:"next"` // 下一页链接
+	Prev string `json:"prev"` // 上一页链接
+	Self string `json:"self"` // 当前链接
 }
