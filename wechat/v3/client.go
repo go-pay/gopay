@@ -20,7 +20,8 @@ type ClientV3 struct {
 	Appid       string
 	Mchid       string
 	SerialNo    string
-	apiV3Key    string
+	apiV3Key    []byte
+	wxSerialNo  string
 	wxPkContent []byte
 	autoSign    bool
 	privateKey  *rsa.PrivateKey
@@ -31,8 +32,8 @@ type ClientV3 struct {
 // NewClientV3 初始化微信客户端 V3
 //	appid：appid 或者服务商模式的 sp_appid
 //	mchid：商户ID 或者服务商模式的 sp_mchid
-// 	serialNo：商户证书的证书序列号
-//	apiV3Key：apiV3Key，商户平台获取
+// 	serialNo：商户API证书的证书序列号
+//	apiV3Key：APIv3Key，商户平台获取
 //	pkContent：私钥 apiclient_key.pem 读取后的字符串内容
 func NewClientV3(appid, mchid, serialNo, apiV3Key, pkContent string) (client *ClientV3, err error) {
 	var (
@@ -60,7 +61,7 @@ func NewClientV3(appid, mchid, serialNo, apiV3Key, pkContent string) (client *Cl
 		Appid:       appid,
 		Mchid:       mchid,
 		SerialNo:    serialNo,
-		apiV3Key:    apiV3Key,
+		apiV3Key:    []byte(apiV3Key),
 		privateKey:  pk,
 		DebugSwitch: gopay.DebugOff,
 	}
@@ -68,10 +69,9 @@ func NewClientV3(appid, mchid, serialNo, apiV3Key, pkContent string) (client *Cl
 }
 
 // AutoVerifySign 开启请求完自动验签功能（默认不开启，推荐开启）
-//	注意：未获取到微信平台公钥时，不要开启，请调用 client.GetPlatformCerts() 获取微信平台证书公钥
-func (c *ClientV3) AutoVerifySign(wxPkContent []byte) {
-	if wxPkContent != nil {
-		c.wxPkContent = wxPkContent
+//	注意：在此方法之前，请先调用 client.SetPlatformCert() 设置微信平台证书和证书序列号，否则不生效
+func (c *ClientV3) AutoVerifySign() {
+	if c.wxPkContent != nil && c.wxSerialNo != "" {
 		c.autoSign = true
 	}
 }
@@ -86,7 +86,7 @@ func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderSerial, c.SerialNo)
+	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
@@ -116,7 +116,7 @@ func (c *ClientV3) doProdGet(uri, authorization string) (res *http.Response, si 
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderSerial, c.SerialNo)
+	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes()
 	if len(errs) > 0 {
@@ -147,7 +147,7 @@ func (c *ClientV3) doProdPut(bm gopay.BodyMap, path, authorization string) (res 
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderSerial, c.SerialNo)
+	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Put(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
@@ -178,7 +178,7 @@ func (c *ClientV3) doProdDelete(bm gopay.BodyMap, path, authorization string) (r
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderSerial, c.SerialNo)
+	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Delete(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
@@ -208,7 +208,7 @@ func (c *ClientV3) doProdPostFile(bm gopay.BodyMap, path, authorization string) 
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderSerial, c.SerialNo)
+	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeMultipartFormData).Post(url).SendMultipartBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
@@ -239,7 +239,7 @@ func (c *ClientV3) doProdPatch(bm gopay.BodyMap, path, authorization string) (re
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderSerial, c.SerialNo)
+	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Patch(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {

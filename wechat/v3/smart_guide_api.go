@@ -9,7 +9,7 @@ import (
 )
 
 // 服务人员注册API
-//	注意：入参加密字段数据加密：wechat.V3EncryptText()
+//	注意：入参加密字段数据加密：client.V3EncryptText()
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_4_1.shtml
 func (c *ClientV3) V3SmartGuideReg(bm gopay.BodyMap) (wxRsp *SmartGuideRegRsp, err error) {
@@ -59,7 +59,7 @@ func (c *ClientV3) V3SmartGuideAssign(guideId, tradeNo string) (wxRsp *EmptyRsp,
 }
 
 // 服务人员查询API
-//	注意：入参加密字段数据加密：wechat.V3EncryptText()，返回参数加密字段解密：wechat.V3DecryptText()
+//	注意：入参加密字段数据加密：client.V3EncryptText()，返回参数加密字段解密：client.V3DecryptText()
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_4_3.shtml
 func (c *ClientV3) V3SmartGuideQuery(bm gopay.BodyMap) (wxRsp *SmartGuideQueryRsp, err error) {
@@ -89,7 +89,7 @@ func (c *ClientV3) V3SmartGuideQuery(bm gopay.BodyMap) (wxRsp *SmartGuideQueryRs
 }
 
 // 服务人员信息更新API
-//	注意：入参加密字段数据加密：wechat.V3EncryptText()
+//	注意：入参加密字段数据加密：client.V3EncryptText()
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_4_4.shtml
 func (c *ClientV3) V3SmartGuideUpdate(bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {

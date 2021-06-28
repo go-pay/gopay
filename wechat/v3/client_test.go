@@ -14,14 +14,15 @@ import (
 )
 
 var (
-	client      *ClientV3
-	err         error
-	Appid       = ""
-	MchId       = ""
-	ApiV3Key    = ""
-	SerialNo    = ""
-	PKContent   = ``
-	WxPkContent = ``
+	client       *ClientV3
+	err          error
+	Appid        = ""
+	MchId        = ""
+	APIv3Key     = ""
+	SerialNo     = ""
+	PKContent    = ``
+	WxPkSerialNo = ""
+	WxPkContent  = ``
 )
 
 func TestMain(m *testing.M) {
@@ -29,16 +30,16 @@ func TestMain(m *testing.M) {
 	//	appid：appid
 	//	mchid：商户ID
 	// 	serialNo：商户证书的证书序列号
-	//	apiV3Key：apiV3Key，商户平台获取
+	//	apiV3Key：APIv3Key，商户平台获取
 	//	pkContent：私钥 apiclient_key.pem 读取后的字符串内容
-	client, err = NewClientV3(Appid, MchId, SerialNo, ApiV3Key, PKContent)
+	client, err = NewClientV3(Appid, MchId, SerialNo, APIv3Key, PKContent)
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
-	// 自动同步返回验签
-	// 注意：未获取到微信平台公钥时，不要开启，请调用 client.GetPlatformCerts() 获取微信平台证书公钥
-	//client.AutoVerifySign(WxPkContent)
+	// 设置微信平台证书和序列号，并启用自动同步返回验签
+	//	注意：请预先通过 client.GetPlatformCerts() 获取微信平台证书和证书序列号
+	client.SetPlatformCert([]byte(WxPkContent), WxPkSerialNo).AutoVerifySign()
 
 	// 打开Debug开关，输出日志
 	client.DebugSwitch = gopay.DebugOff

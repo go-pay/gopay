@@ -16,8 +16,47 @@ import (
 )
 
 // 敏感信息加密，默认 PKCS1
-func V3EncryptText(text string, rsaPublicKeyContent []byte) (cipherText string, err error) {
-	block, _ := pem.Decode(rsaPublicKeyContent)
+func (c *ClientV3) V3EncryptText(text string) (cipherText string, err error) {
+	if c.wxPkContent == nil || c.wxSerialNo == "" {
+		return util.NULL, errors.New("WxPkContent or WxSerialNo is null")
+	}
+	block, _ := pem.Decode(c.wxPkContent)
+	if block == nil {
+		return util.NULL, errors.New("pem.Decode：wxPkContent decode error")
+	}
+	pubKey, err := x509.ParsePKCS1PublicKey(block.Bytes)
+	if err != nil {
+		return "", fmt.Errorf("x509.ParsePKCS1PublicKey：%w", err)
+	}
+	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, pubKey, []byte(text), nil)
+	if err != nil {
+		return "", fmt.Errorf("rsa.EncryptOAEP：%w", err)
+	}
+	return base64.StdEncoding.EncodeToString(cipherByte), nil
+}
+
+// 敏感信息解密，默认 PKCS1
+func (c *ClientV3) V3DecryptText(cipherText string) (text string, err error) {
+	cipherByte, _ := base64.StdEncoding.DecodeString(cipherText)
+	block, _ := pem.Decode(c.apiV3Key)
+	if block == nil {
+		return util.NULL, errors.New("pem.Decode：apiV3Key decode error")
+	}
+	priKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		return "", fmt.Errorf("x509.ParsePKCS1PrivateKey：%w", err)
+	}
+	textByte, err := rsa.DecryptOAEP(sha1.New(), rand.Reader, priKey, cipherByte, nil)
+	if err != nil {
+		return "", fmt.Errorf("rsa.DecryptOAEP：%w", err)
+	}
+	return string(textByte), nil
+}
+
+// 敏感信息加密，默认 PKCS1
+//	wxPkContent：微信平台证书内容
+func V3EncryptText(text string, wxPkContent []byte) (cipherText string, err error) {
+	block, _ := pem.Decode(wxPkContent)
 	if block == nil {
 		return util.NULL, errors.New("pem.Decode：rsaPublicKey decode error")
 	}
@@ -33,9 +72,10 @@ func V3EncryptText(text string, rsaPublicKeyContent []byte) (cipherText string, 
 }
 
 // 敏感信息解密，默认 PKCS1
-func V3DecryptText(cipherText string, rsaPrivateKeyContent []byte) (text string, err error) {
+//	apiV3Key：商户API证书字符串内容，商户平台获取
+func V3DecryptText(cipherText string, apiV3Key []byte) (text string, err error) {
 	cipherByte, _ := base64.StdEncoding.DecodeString(cipherText)
-	block, _ := pem.Decode(rsaPrivateKeyContent)
+	block, _ := pem.Decode(apiV3Key)
 	if block == nil {
 		return util.NULL, errors.New("pem.Decode：rsaPrivateKey decode error")
 	}
