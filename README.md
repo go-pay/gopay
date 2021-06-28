@@ -515,6 +515,12 @@ bm.Set("subject", "手机网站测试支付").
 * #### 微信V3 client（推荐）
 
 ```go
+// 公共方法
+client.SetPlatformCert()
+client.AutoVerifySign()
+client.V3EncryptText()
+client.V3DecryptText()
+
 // 直连商户
 wxRsp, err := client.V3TransactionApp(bm)
 wxRsp, err := client.V3TransactionJsapi(bm)
@@ -840,10 +846,10 @@ import (
     "github.com/go-pay/gopay/wechat/v3"
 )
 
-// 敏感信息加密
-wechat.V3EncryptText()
-// 敏感信息解密
-wechat.V3DecryptText()
+// 请求参数 敏感信息加密
+client.V3EncryptText() 或 wechat.V3EncryptText()
+// 返回参数 敏感信息解密
+client.V3DecryptText() 或 wechat.V3DecryptText()
 // 回调通知敏感信息解密
 wechat.V3DecryptNotifyCipherText()
 wechat.V3DecryptRefundNotifyCipherText()

@@ -1,3 +1,11 @@
+版本号：Release 1.5.48
+修改记录：
+   (1) 微信V3：修复 平台证书序列号Wechatpay-Serial错误 问题
+   (2) 微信V3：新增 client.SetPlatformCert()，设置 微信支付平台证书 和 证书序列号 方法
+   (3) 微信V3：新增 client.V3EncryptText()，请求参数 敏感信息 加密方法
+   (4) 微信V3：新增 client.V3DecryptText()，返回参数 敏感信息 解密方法
+   (5) 微信V3：修改 client.AutoVerifySign() 方法无需传参，但需要提前调用 client.SetPlatformCert() 设置 微信支付平台证书 和 证书序列号
+
 版本号：Release 1.5.47
 修改记录：
    (1) 微信V3：新增 转账相关 相关接口
