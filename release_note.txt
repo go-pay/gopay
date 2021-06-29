@@ -1,6 +1,7 @@
 版本号：Release 1.5.49
 修改记录：
    (1) 微信V3：新增 wechat.GetPlatformCerts()，无需初始化V3client，直接获取微信平台证书和序列号等信息
+   (2) gopay：更新 go mod version
 
 版本号：Release 1.5.48
 修改记录：
