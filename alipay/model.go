@@ -1041,3 +1041,23 @@ type MerchantItemFileUpload struct {
 	MaterialId  string `json:"material_id"`  // 文件在商品中心的素材标识（素材ID长期有效）
 	MaterialKey string `json:"material_key"` // 文件在商品中心的素材标示，创建/更新商品时使用
 }
+
+// ===============================================================
+type TradeCustomsDeclareRsp struct {
+	Response     *TradeCustomsDeclare `json:"alipay_trade_customs_declare_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
+}
+
+type TradeCustomsDeclare struct {
+	ErrorResponse
+	TradeNo          string `json:"trade_no,omitempty"`
+	AlipayDeclareNo  string `json:"alipay_declare_no"`
+	PayCode          string `json:"pay_code,omitempty"`
+	PayTransactionId string `json:"pay_transaction_id,omitempty"`
+	TotalAmount      string `json:"total_amount,omitempty"`
+	Currency         string `json:"currency,omitempty"`
+	VerDept          string `json:"ver_dept,omitempty"`
+	IdentityCheck    string `json:"identity_check,omitempty"`
+}
