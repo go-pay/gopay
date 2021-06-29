@@ -38,13 +38,31 @@ func TestMain(m *testing.M) {
 		return
 	}
 	// 设置微信平台证书和序列号，并启用自动同步返回验签
-	//	注意：请预先通过 client.GetPlatformCerts() 获取微信平台证书和证书序列号
+	//	注意：请预先通过 wechat.GetPlatformCerts() 获取微信平台证书和证书序列号
 	client.SetPlatformCert([]byte(WxPkContent), WxPkSerialNo).AutoVerifySign()
 
 	// 打开Debug开关，输出日志
 	client.DebugSwitch = gopay.DebugOff
 
 	os.Exit(m.Run())
+}
+
+func TestGetPlatformCertsWithoutClient(t *testing.T) {
+	certs, err := GetPlatformCerts(MchId, APIv3Key, SerialNo, PKContent)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	if certs.Code == Success {
+		for _, v := range certs.Certs {
+			xlog.Infof("生效时间: %s", v.EffectiveTime)
+			xlog.Infof("到期时间: %s", v.ExpireTime)
+			xlog.Infof("WxSerialNo: %s", v.SerialNo)
+			xlog.Infof("WxContent: \n%s", v.PublicKey)
+		}
+		return
+	}
+	xlog.Errorf("certs:%s", certs.Error)
 }
 
 func TestGetPlatformCerts(t *testing.T) {
@@ -55,7 +73,10 @@ func TestGetPlatformCerts(t *testing.T) {
 	}
 	if certs.Code == Success {
 		for _, v := range certs.Certs {
-			xlog.Debug("cert:", v)
+			xlog.Infof("生效时间: %s", v.EffectiveTime)
+			xlog.Infof("到期时间: %s", v.ExpireTime)
+			xlog.Infof("WxSerialNo: %s", v.SerialNo)
+			xlog.Infof("WxContent: \n%s", v.PublicKey)
 		}
 		return
 	}
