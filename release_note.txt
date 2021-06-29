@@ -2,6 +2,12 @@
 修改记录：
    (1) 微信V3：新增 wechat.GetPlatformCerts()，无需初始化V3client，直接获取微信平台证书和序列号等信息
    (2) gopay：更新 go mod version
+   (3) 微信V2：新增 client.CustomsDeclareOrder()，订单附加信息提交（正式环境）
+   (4) 微信V2：新增 client.CustomsDeclareQuery()，订单附加信息查询（正式环境）
+   (5) 微信V2：新增 client.CustomsReDeclareOrder()，订单附加信息重推（正式环境）
+   (6) 支付宝：新增 client.TradeCustomsDeclare()，统一收单报关接口（正式环境）
+   (7) 支付宝：新增 client.AcquireCustoms()，报关接口（正式环境），未经测试
+   (8) 支付宝：新增 client.AcquireCustomsQuery()，报关查询接口（正式环境），未经测试
 
 版本号：Release 1.5.48
 修改记录：

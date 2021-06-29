@@ -190,6 +190,9 @@ func main() {
 * 发放现金裂变红包：client.SendGroupCashRed()
 * 发放小程序红包：client.SendAppletRed()
 * 查询红包记录：client.QueryRedRecord()
+* 订单附加信息提交（海关）：client.CustomsDeclareOrder()
+* 订单附加信息查询（海关）：client.CustomsDeclareQuery()
+* 订单附加信息重推（海关）：client.CustomsReDeclareOrder()
 * 自定义方法请求微信API接口：client.PostWeChatAPISelf()
 
 ### 微信公共V2 API
@@ -303,6 +306,10 @@ func main() {
 * 网页&移动应用 - <font color='#027AFF' size='4'>财务API</font>
     * 支付宝商家账户当前余额查询：client.DataBillBalanceQuery()（失效）
     * 查询对账单下载地址：client.DataBillDownloadUrlQuery()
+* 网页&移动应用 - <font color='#027AFF' size='4'>海关相关API</font>
+    * 统一收单报关接口：client.TradeCustomsDeclare()
+    * 报关接口：client.AcquireCustoms()
+    * 报关查询接口：client.AcquireCustomsQuery()
 
 ### 支付宝公共API
 
