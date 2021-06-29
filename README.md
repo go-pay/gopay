@@ -344,6 +344,8 @@ QQ群：
 
 > 注意：V3 版本接口持续增加中，并未做沙箱支付，测试请用1分钱测试法
 
+> 注意：`微信平台证书` 和 `微信平台证书序列号`，请自行通过 `wechat.GetPlatformCerts()` 方法维护
+
 > 具体使用介绍，请参考 `gopay/wechat/v3/client_test.go`
 
 ```go
@@ -357,18 +359,18 @@ import (
 // 	serialNo：商户证书的证书序列号
 //	apiV3Key：apiV3Key，商户平台获取
 //	pkContent：私钥 apiclient_key.pem 读取后的内容
-client, err = NewClientV3(Appid, MchId, SerialNo, ApiV3Key, PKContent)
+client, err = NewClientV3(Appid, MchId, SerialNo, APIv3Key, PKContent)
 if err != nil {
     xlog.Error(err)
     return
 }
 
 // 自动验签
-// 注意：未获取到微信平台公钥时，不要开启，请调用 client.GetPlatformCerts() 获取微信平台证书公钥
-//client.AutoVerifySign("微信平台公钥")
+// 注意：未获取到微信平台公钥时，不要开启，请调用 wechat.GetPlatformCerts() 获取微信平台证书公钥
+//client.SetPlatformCert([]byte(WxPkContent), WxPkSerialNo).AutoVerifySign()
 
 // 打开Debug开关，输出日志
-client.DebugSwitch = gopay.DebugOff
+client.DebugSwitch = gopay.DebugOn
 ```
 
 * #### 微信V2
@@ -707,7 +709,7 @@ if err != nil {
     xlog.Error(err)
     return
 }
-// WxPkContent 是通过client.GetPlatformCerts()接口向微信获取的微信平台公钥证书内容
+// WxPkContent 是通过 wechat.GetPlatformCerts() 接口向微信获取的微信平台公钥证书内容
 err = notifyReq.VerifySign(WxPkContent)
 if err != nil {
     xlog.Error(err)
@@ -846,10 +848,12 @@ import (
     "github.com/go-pay/gopay/wechat/v3"
 )
 
+// 获取微信平台证书和序列号信息
+wechat.GetPlatformCerts()
 // 请求参数 敏感信息加密
-client.V3EncryptText() 或 wechat.V3EncryptText()
+wechat.V3EncryptText() 或 client.V3EncryptText()
 // 返回参数 敏感信息解密
-client.V3DecryptText() 或 wechat.V3DecryptText()
+wechat.V3DecryptText() 或 client.V3DecryptText()
 // 回调通知敏感信息解密
 wechat.V3DecryptNotifyCipherText()
 wechat.V3DecryptRefundNotifyCipherText()
