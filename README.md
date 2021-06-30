@@ -366,7 +366,7 @@ import (
 // 	serialNo：商户证书的证书序列号
 //	apiV3Key：apiV3Key，商户平台获取
 //	pkContent：私钥 apiclient_key.pem 读取后的内容
-client, err = NewClientV3(Appid, MchId, SerialNo, APIv3Key, PKContent)
+client, err = wechat.NewClientV3(Appid, MchId, SerialNo, APIv3Key, PKContent)
 if err != nil {
     xlog.Error(err)
     return
@@ -553,6 +553,7 @@ wxRsp, err := client.V3CombineTransactionNative(bm)
 wxRsp, err := client.V3CombineTransactionH5(bm)
 wxRsp, err := client.V3CombineQueryOrder(bm)
 wxRsp, err := client.V3CombineCloseOrder(bm)
+...
 ```
 
 * #### 微信V2 client
@@ -569,6 +570,7 @@ wxRsp, err := client.DownloadBill(bm)
 wxRsp, err := client.DownloadFundFlow(bm)
 wxRsp, err := client.BatchQueryComment(bm)
 wxRsp, err := client.Transfer(bm)
+...
 ```
 
 * #### 支付宝 client
@@ -606,6 +608,7 @@ aliRsp, err := client.OpenAuthTokenApp(bm)
 aliRsp, err := client.UserCertifyOpenInit(bm)
 aliRsp, err := client.UserCertifyOpenCertify(bm)
 aliRsp, err := client.UserCertifyOpenQuery(bm)
+...
 ```
 
 ## 4、微信统一下单后，获取微信小程序支付、APP支付、微信内H5支付所需要的 paySign
@@ -699,6 +702,7 @@ import (
 )
 
 // ========同步微信V3支付验签========
+// 如已开启自动验签，则无需手动验签操作
 wxRsp, err := client.V3TransactionJsapi(bm)
 if err != nil {
     xlog.Error(err)
@@ -808,6 +812,7 @@ import (
 )
 
 // ====同步返回参数验签Sign====
+// 如已开启自动验签，则无需手动验签操作
 aliRsp, err := client.TradePay(bm)
 // 支付宝同步返回验签
 //    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
@@ -865,6 +870,7 @@ wechat.V3DecryptText() 或 client.V3DecryptText()
 wechat.V3DecryptNotifyCipherText()
 wechat.V3DecryptRefundNotifyCipherText()
 wechat.V3DecryptCombineNotifyCipherText()
+...
 ```
 
 * #### 微信V2 公共API
