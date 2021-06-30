@@ -372,9 +372,9 @@ if err != nil {
     return
 }
 
-// 自动验签
-// 注意：未获取到微信平台公钥时，不要开启，请调用 wechat.GetPlatformCerts() 获取微信平台证书公钥
-//client.SetPlatformCert([]byte(WxPkContent), WxPkSerialNo).AutoVerifySign()
+// 设置微信平台证书和序列号，并启用自动同步返回验签
+//	注意：请预先通过 wechat.GetPlatformCerts() 获取并维护微信平台证书和证书序列号
+client.SetPlatformCert([]byte(WxPkContent), WxPkSerialNo).AutoVerifySign()
 
 // 打开Debug开关，输出日志
 client.DebugSwitch = gopay.DebugOn
