@@ -38,7 +38,7 @@ func TestMain(m *testing.M) {
 		return
 	}
 	// 设置微信平台证书和序列号，并启用自动同步返回验签
-	//	注意：请预先通过 wechat.GetPlatformCerts() 获取微信平台证书和证书序列号
+	//	注意：请预先通过 wechat.GetPlatformCerts() 获取并维护微信平台证书和证书序列号
 	client.SetPlatformCert([]byte(WxPkContent), WxPkSerialNo).AutoVerifySign()
 
 	// 打开Debug开关，输出日志

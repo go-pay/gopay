@@ -190,6 +190,9 @@ func main() {
 * 发放现金裂变红包：client.SendGroupCashRed()
 * 发放小程序红包：client.SendAppletRed()
 * 查询红包记录：client.QueryRedRecord()
+* 订单附加信息提交（海关）：client.CustomsDeclareOrder()
+* 订单附加信息查询（海关）：client.CustomsDeclareQuery()
+* 订单附加信息重推（海关）：client.CustomsReDeclareOrder()
 * 自定义方法请求微信API接口：client.PostWeChatAPISelf()
 
 ### 微信公共V2 API
@@ -304,6 +307,10 @@ func main() {
 * 网页&移动应用 - <font color='#027AFF' size='4'>财务API</font>
     * 支付宝商家账户当前余额查询：client.DataBillBalanceQuery()（失效）
     * 查询对账单下载地址：client.DataBillDownloadUrlQuery()
+* 网页&移动应用 - <font color='#027AFF' size='4'>海关相关API</font>
+    * 统一收单报关接口：client.TradeCustomsDeclare()
+    * 报关接口：client.AcquireCustoms()
+    * 报关查询接口：client.AcquireCustomsQuery()
 
 ### 支付宝公共API
 
@@ -360,15 +367,15 @@ import (
 // 	serialNo：商户证书的证书序列号
 //	apiV3Key：apiV3Key，商户平台获取
 //	pkContent：私钥 apiclient_key.pem 读取后的内容
-client, err = NewClientV3(Appid, MchId, SerialNo, APIv3Key, PKContent)
+client, err = wechat.NewClientV3(Appid, MchId, SerialNo, APIv3Key, PKContent)
 if err != nil {
     xlog.Error(err)
     return
 }
 
-// 自动验签
-// 注意：未获取到微信平台公钥时，不要开启，请调用 wechat.GetPlatformCerts() 获取微信平台证书公钥
-//client.SetPlatformCert([]byte(WxPkContent), WxPkSerialNo).AutoVerifySign()
+// 设置微信平台证书和序列号，并启用自动同步返回验签
+//	注意：请预先通过 wechat.GetPlatformCerts() 获取并维护微信平台证书和证书序列号
+client.SetPlatformCert([]byte(WxPkContent), WxPkSerialNo).AutoVerifySign()
 
 // 打开Debug开关，输出日志
 client.DebugSwitch = gopay.DebugOn
@@ -547,6 +554,7 @@ wxRsp, err := client.V3CombineTransactionNative(bm)
 wxRsp, err := client.V3CombineTransactionH5(bm)
 wxRsp, err := client.V3CombineQueryOrder(bm)
 wxRsp, err := client.V3CombineCloseOrder(bm)
+...
 ```
 
 * #### 微信V2 client
@@ -563,6 +571,7 @@ wxRsp, err := client.DownloadBill(bm)
 wxRsp, err := client.DownloadFundFlow(bm)
 wxRsp, err := client.BatchQueryComment(bm)
 wxRsp, err := client.Transfer(bm)
+...
 ```
 
 * #### 支付宝 client
@@ -600,6 +609,7 @@ aliRsp, err := client.OpenAuthTokenApp(bm)
 aliRsp, err := client.UserCertifyOpenInit(bm)
 aliRsp, err := client.UserCertifyOpenCertify(bm)
 aliRsp, err := client.UserCertifyOpenQuery(bm)
+...
 ```
 
 ## 4、微信统一下单后，获取微信小程序支付、APP支付、微信内H5支付所需要的 paySign
@@ -693,6 +703,7 @@ import (
 )
 
 // ========同步微信V3支付验签========
+// 如已开启自动验签，则无需手动验签操作
 wxRsp, err := client.V3TransactionJsapi(bm)
 if err != nil {
     xlog.Error(err)
@@ -802,6 +813,7 @@ import (
 )
 
 // ====同步返回参数验签Sign====
+// 如已开启自动验签，则无需手动验签操作
 aliRsp, err := client.TradePay(bm)
 // 支付宝同步返回验签
 //    注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
@@ -859,6 +871,7 @@ wechat.V3DecryptText() 或 client.V3DecryptText()
 wechat.V3DecryptNotifyCipherText()
 wechat.V3DecryptRefundNotifyCipherText()
 wechat.V3DecryptCombineNotifyCipherText()
+...
 ```
 
 * #### 微信V2 公共API

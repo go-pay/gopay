@@ -52,6 +52,11 @@ const (
 	queryBank                   = "mmpaysptrans/query_bank"                           // 查询企业付款到银行卡API
 	getPublicKey                = "https://fraud.mch.weixin.qq.com/risk/getpublickey" // 获取RSA加密公钥API
 
+	// 海关自助清关
+	customsDeclareOrder   = "cgi-bin/mch/customs/customdeclareorder"        // 订单附加信息提交
+	customsDeclareQuery   = "cgi-bin/mch/customs/customdeclarequery"        // 订单附加信息查询
+	customsReDeclareOrder = "cgi-bin/mch/newcustoms/customdeclareredeclare" // 订单附加信息重推
+
 	// SanBox
 	sandboxGetSignKey   = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
 	sandboxMicroPay     = "sandboxnew/pay/micropay"
@@ -419,6 +424,7 @@ type EntrustAppPreResponse struct {
 	ReturnMsg       string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
 	ResultCode      string `xml:"result_code,omitempty" json:"result_code,omitempty"`
 	ErrCode         string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes      string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
 	Appid           string `xml:"appid,omitempty" json:"appid,omitempty"`
 	SubAppid        string `xml:"sub_appid,omitempty" json:"sub_appid,omitempty"`
 	MchId           string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
@@ -827,4 +833,98 @@ type hbinfo struct {
 	Openid  string `xml:"openid,omitempty" json:"openid,omitempty"`
 	Amount  string `xml:"amount,omitempty" json:"amount,omitempty"`
 	RcvTime string `xml:"rcv_time,omitempty" json:"rcv_time,omitempty"`
+}
+
+type CustomsDeclareOrderResponse struct {
+	ReturnCode              string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg               string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode              string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode                 string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes              string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	SignType                string `xml:"sign_type,omitempty" json:"sign_type,omitempty"`
+	Sign                    string `xml:"sign,omitempty" json:"sign,omitempty"`
+	Appid                   string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId                   string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	State                   string `xml:"state,omitempty" json:"state,omitempty"`
+	TransactionId           string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
+	OutTradeNo              string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
+	SubOrderNo              string `xml:"sub_order_no,omitempty" json:"sub_order_no,omitempty"`
+	SubOrderId              string `xml:"sub_order_id,omitempty" json:"sub_order_id,omitempty"`
+	ModifyTime              string `xml:"modify_time,omitempty" json:"modify_time,omitempty"`
+	CertCheckResult         string `xml:"cert_check_result,omitempty" json:"cert_check_result,omitempty"`
+	VerifyDepartment        string `xml:"verify_department,omitempty" json:"verify_department,omitempty"`
+	VerifyDepartmentTradeId string `xml:"verify_department_trade_id,omitempty" json:"verify_department_trade_id,omitempty"`
+}
+
+type CustomsDeclareQueryResponse struct {
+	ReturnCode              string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg               string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode              string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode                 string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes              string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	Sign                    string `xml:"sign,omitempty" json:"sign,omitempty"`
+	Appid                   string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId                   string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	TransactionId           string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
+	Count                   string `xml:"count,omitempty" json:"count,omitempty"`
+	SubOrderNo0             string `xml:"sub_order_no_0,omitempty"`
+	SubOrderNo1             string `xml:"sub_order_no_1,omitempty"`
+	SubOrderNo2             string `xml:"sub_order_no_2,omitempty"`
+	SubOrderId0             string `xml:"sub_order_id_0,omitempty"`
+	SubOrderId1             string `xml:"sub_order_id_1,omitempty"`
+	SubOrderId2             string `xml:"sub_order_id_2,omitempty"`
+	MchCustomsNo0           string `xml:"mch_customs_no_0,omitempty"`
+	MchCustomsNo1           string `xml:"mch_customs_no_1,omitempty"`
+	MchCustomsNo2           string `xml:"mch_customs_no_2,omitempty"`
+	Customs0                string `xml:"customs_0,omitempty"`
+	Customs1                string `xml:"customs_1,omitempty"`
+	Customs2                string `xml:"customs_2,omitempty"`
+	FeeType0                string `xml:"fee_type_0,omitempty"`
+	FeeType1                string `xml:"fee_type_1,omitempty"`
+	FeeType2                string `xml:"fee_type_2,omitempty"`
+	OrderFee0               string `xml:"order_fee_0,omitempty"`
+	OrderFee1               string `xml:"order_fee_1,omitempty"`
+	OrderFee2               string `xml:"order_fee_2,omitempty"`
+	Duty0                   string `xml:"duty_0,omitempty"`
+	Duty1                   string `xml:"duty_1,omitempty"`
+	Duty2                   string `xml:"duty_2,omitempty"`
+	TransportFee0           string `xml:"transport_fee_0,omitempty"`
+	TransportFee1           string `xml:"transport_fee_1,omitempty"`
+	TransportFee2           string `xml:"transport_fee_2,omitempty"`
+	ProductFee0             string `xml:"product_fee_0,omitempty"`
+	ProductFee1             string `xml:"product_fee_1,omitempty"`
+	ProductFee2             string `xml:"product_fee_2,omitempty"`
+	State0                  string `xml:"state_0,omitempty"`
+	State1                  string `xml:"state_1,omitempty"`
+	State2                  string `xml:"state_2,omitempty"`
+	Explanation0            string `xml:"explanation_0,omitempty"`
+	Explanation1            string `xml:"explanation_1,omitempty"`
+	Explanation2            string `xml:"explanation_2,omitempty"`
+	ModifyTime0             string `xml:"modify_time_0,omitempty"`
+	ModifyTime1             string `xml:"modify_time_1,omitempty"`
+	ModifyTime2             string `xml:"modify_time_2,omitempty"`
+	CertCheckResult0        string `xml:"cert_check_result_0,omitempty"`
+	CertCheckResult1        string `xml:"cert_check_result_1,omitempty"`
+	CertCheckResult2        string `xml:"cert_check_result_2,omitempty"`
+	VerifyDepartment        string `xml:"verify_department,omitempty" json:"verify_department,omitempty"`
+	VerifyDepartmentTradeId string `xml:"verify_department_trade_id,omitempty" json:"verify_department_trade_id,omitempty"`
+}
+
+type CustomsReDeclareOrderResponse struct {
+	ReturnCode    string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg     string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode    string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode       string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes    string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	SignType      string `xml:"sign_type,omitempty" json:"sign_type,omitempty"`
+	Sign          string `xml:"sign,omitempty" json:"sign,omitempty"`
+	Appid         string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId         string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	State         string `xml:"state,omitempty" json:"state,omitempty"`
+	TransactionId string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"`
+	OutTradeNo    string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
+	SubOrderNo    string `xml:"sub_order_no,omitempty" json:"sub_order_no,omitempty"`
+	SubOrderId    string `xml:"sub_order_id,omitempty" json:"sub_order_id,omitempty"`
+	ModifyTime    string `xml:"modify_time,omitempty" json:"modify_time,omitempty"`
+	Explanation   string `xml:"explanation,omitempty" json:"explanation,omitempty"`
 }
