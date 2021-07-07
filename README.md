@@ -269,7 +269,7 @@ func main() {
     * 统一收单交易结算接口：client.TradeOrderSettle()
     * 支付宝订单信息同步接口：client.TradeOrderInfoSync()
     * 订单咨询服务：client.TradeAdvanceConsult()
-    * 聚合支付订单咨询服务 client.TradeOrderAggregateConsult()
+    * 聚合支付订单咨询服务 client.TradeOrderAggregateConsult()(失效)
 * 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
     * 单笔转账接口：client.FundTransUniTransfer()
     * 查询转账订单接口: client.FundTransOrderQuery()

@@ -351,6 +351,7 @@ func (a *Client) TradeAdvanceConsult(bm gopay.BodyMap) (aliRsp *TradeAdvanceCons
 }
 
 
+// Deprecated
 // koubei.trade.order.aggregate.consult(聚合支付订单咨询服务)
 //	文档地址：https://opendocs.alipay.com/apis/api_1/koubei.trade.order.aggregate.consult
 func (a *Client) TradeOrderAggregateConsult(bm gopay.BodyMap) (aliRsp *TradeOrderAggregateConsultRsp, err error) {
