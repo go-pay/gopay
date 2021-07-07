@@ -1041,3 +1041,37 @@ type MerchantItemFileUpload struct {
 	MaterialId  string `json:"material_id"`  // 文件在商品中心的素材标识（素材ID长期有效）
 	MaterialKey string `json:"material_key"` // 文件在商品中心的素材标示，创建/更新商品时使用
 }
+
+// ===================================================
+type TradeOrderAggregateConsultRsp struct {
+	Response     *TradeOrderAggregateConsult `json:"koubei_trade_order_aggregate_consult_response"`
+	AlipayCertSn string                      `json:"alipay_cert_sn,omitempty"`
+	SignData     string                      `json:"-"`
+	Sign         string                      `json:"sign"`
+}
+
+type TradeOrderAggregateConsult struct {
+	ErrorResponse
+	OutOrderNo             string                `json:"out_order_no,omitempty"`
+	OrderNo                string                `json:"order_no,omitempty"`
+	TradeNo                string                `json:"trade_no,omitempty"`
+	BuyerId                string                `json:"buyer_id,omitempty"`
+	BuyerIdType            string                `json:"buyer_id_type,omitempty"`
+	TotalAmount            string                `json:"total_amount,omitempty"`
+	ReceiptAmount          string                `json:"receipt_amount,omitempty"`
+	BuyerPayAmount         string                `json:"buyer_pay_amount,omitempty"`
+	MerchantDiscountAmount string                `json:"merchant_discount_amount,omitempty"`
+	PlatformDiscountAmount string                `json:"platform_discount_amount,omitempty"`
+	DiscountDetailList     []*DiscountDetailInfo `json:"discount_detail_list,omitempty"`
+	OrderStatus            string                `json:"order_status,omitempty"`
+	PayChannel             string                `json:"pay_channel,omitempty"`
+	CreateTime             string                `json:"create_time"`
+	GmtPaymentTime         string                `json:"gmt_payment_time,omitempty"`
+}
+
+type DiscountDetailInfo struct {
+	Id     string `json:"id,omitempty"`
+	Name   string `json:"name,omitempty"`
+	Type   string `json:"type,omitempty"`
+	Amount string `json:"amount,omitempty"`
+}

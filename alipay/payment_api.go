@@ -349,3 +349,24 @@ func (a *Client) TradeAdvanceConsult(bm gopay.BodyMap) (aliRsp *TradeAdvanceCons
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+
+// koubei.trade.order.aggregate.consult(聚合支付订单咨询服务)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/koubei.trade.order.aggregate.consult
+func (a *Client) TradeOrderAggregateConsult(bm gopay.BodyMap) (aliRsp *TradeOrderAggregateConsultRsp, err error) {
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "koubei.trade.order.aggregate.consult"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(TradeOrderAggregateConsultRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
