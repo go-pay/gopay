@@ -1095,5 +1095,4 @@ type DiscountDetailInfo struct {
 	Name   string `json:"name,omitempty"`
 	Type   string `json:"type,omitempty"`
 	Amount string `json:"amount,omitempty"`
-
-  
+}
