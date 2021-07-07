@@ -354,6 +354,10 @@ func (a *Client) TradeAdvanceConsult(bm gopay.BodyMap) (aliRsp *TradeAdvanceCons
 // koubei.trade.order.aggregate.consult(聚合支付订单咨询服务)
 //	文档地址：https://opendocs.alipay.com/apis/api_1/koubei.trade.order.aggregate.consult
 func (a *Client) TradeOrderAggregateConsult(bm gopay.BodyMap) (aliRsp *TradeOrderAggregateConsultRsp, err error) {
+	err = bm.CheckEmptyError("shop_id", "total_amount")
+	if err != nil {
+		return nil, err
+	}
 	var bs []byte
 	if bs, err = a.doAliPay(bm, "koubei.trade.order.aggregate.consult"); err != nil {
 		return nil, err
