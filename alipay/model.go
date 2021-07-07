@@ -1060,7 +1060,6 @@ type TradeCustomsDeclare struct {
 	Currency         string `json:"currency,omitempty"`
 	VerDept          string `json:"ver_dept,omitempty"`
 	IdentityCheck    string `json:"identity_check,omitempty"`
-
 }
 
 // ===================================================
