@@ -303,6 +303,11 @@ func main() {
     * 应用支付宝公钥证书下载：client.PublicCertDownload()
 * 网页&移动应用 - <font color='#027AFF' size='4'>芝麻信用API</font>
     * 芝麻企业信用信用评估初始化 client.ZhimaCreditEpSceneRatingInitialize()
+    * 信用服务履约同步 client.ZhimaCreditEpSceneFulfillmentSync()
+    * 加入信用服务 clinet.ZhimaCreditEpSceneAgreementUse()
+    * 取消信用服务 client.ZhimaCreditEpSceneAgreementCancel()
+    * 信用服务履约同步(批量) client.ZhimaCreditEpSceneFulfillmentlistSync()
+    * 芝麻go用户数据回传 client.ZhimaCreditPeZmgoCumulationSync()
 * 网页&移动应用 - <font color='#027AFF' size='4'>财务API</font>
     * 支付宝商家账户当前余额查询：client.DataBillBalanceQuery()（失效）
     * 查询对账单下载地址：client.DataBillDownloadUrlQuery()
