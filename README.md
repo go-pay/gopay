@@ -302,7 +302,7 @@ func main() {
     * 换取应用授权令牌：client.OpenAuthTokenApp()
     * 应用支付宝公钥证书下载：client.PublicCertDownload()
 * 网页&移动应用 - <font color='#027AFF' size='4'>芝麻信用API</font>
-  
+    * 芝麻企业信用信用评估初始化 client.ZhimaCreditEpSceneRatingInitialize()
 * 网页&移动应用 - <font color='#027AFF' size='4'>财务API</font>
     * 支付宝商家账户当前余额查询：client.DataBillBalanceQuery()（失效）
     * 查询对账单下载地址：client.DataBillDownloadUrlQuery()
