@@ -1108,3 +1108,76 @@ type ZhimaCreditEpSceneRatingInitialize struct {
 	ErrorResponse
 	OrderNo string `json:"order_no"`
 }
+
+// ===================================================
+type ZhimaCreditEpSceneFulfillmentSyncRsp struct {
+	Response     *ZhimaCreditEpSceneFulfillmentSync `json:"zhima_credit_ep_scene_fulfillment_sync_response"`
+	AlipayCertSn string                             `json:"alipay_cert_sn,omitempty"`
+	SignData     string                             `json:"-"`
+	Sign         string                             `json:"sign"`
+}
+
+type ZhimaCreditEpSceneFulfillmentSync struct {
+	ErrorResponse
+	FulfillmentOrderNo string `json:"fulfillment_order_no"`
+}
+
+// ===================================================
+type ZhimaCreditEpSceneAgreementUseRsp struct {
+	Response     *ZhimaCreditEpSceneAgreementUse `json:"zhima_credit_ep_scene_agreement_use_response"`
+	AlipayCertSn string                          `json:"alipay_cert_sn,omitempty"`
+	SignData     string                          `json:"-"`
+	Sign         string                          `json:"sign"`
+}
+
+type ZhimaCreditEpSceneAgreementUse struct {
+	ErrorResponse
+	CreditOrderNo string `json:"credit_order_no"`
+}
+
+// ===================================================
+type ZhimaCreditEpSceneAgreementCancelRsp struct {
+	Response     *ZhimaCreditEpSceneAgreementCancel `json:"zhima_credit_ep_scene_agreement_cancel_response"`
+	AlipayCertSn string                             `json:"alipay_cert_sn,omitempty"`
+	SignData     string                             `json:"-"`
+	Sign         string                             `json:"sign"`
+}
+
+type ZhimaCreditEpSceneAgreementCancel struct {
+	ErrorResponse
+	CreditOrderNo string `json:"credit_order_no"`
+}
+
+// ===================================================
+type ZhimaCreditEpSceneFulfillmentlistSyncRsp struct {
+	Response     *ZhimaCreditEpSceneFulfillmentlistSync `json:"zhima_credit_ep_scene_fulfillmentlist_sync_response"`
+	AlipayCertSn string                                 `json:"alipay_cert_sn,omitempty"`
+	SignData     string                                 `json:"-"`
+	Sign         string                                 `json:"sign"`
+}
+
+type ZhimaCreditEpSceneFulfillmentlistSync struct {
+	ErrorResponse
+	FulfillmentResultList []*FulfillmentResult `json:"fulfillment_result_list"`
+}
+
+type FulfillmentResult struct {
+	FulfillmentOrderNo string `json:"fulfillment_order_no"`
+	OutOrderNo         string `json:"out_order_no"`
+}
+
+// ===================================================
+type ZhimaCreditPeZmgoCumulationSyncRsp struct {
+	Response     *ZhimaCreditPeZmgoCumulationSync `json:"zhima_credit_pe_zmgo_cumulation_sync_response"`
+	AlipayCertSn string                           `json:"alipay_cert_sn,omitempty"`
+	SignData     string                           `json:"-"`
+	Sign         string                           `json:"sign"`
+}
+
+type ZhimaCreditPeZmgoCumulationSync struct {
+	ErrorResponse
+	OutBizNo     string `json:"out_biz_no,omitempty"`
+	AagreementNo string `json:"aagreement_no,omitempty"`
+	UserId       string `json:"user_id,omitempty"`
+	FailReason   string `json:"fail_reason,omitempty"`
+}
