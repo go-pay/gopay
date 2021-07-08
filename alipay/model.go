@@ -1095,3 +1095,16 @@ type DiscountDetailInfo struct {
 	Type   string `json:"type,omitempty"`
 	Amount string `json:"amount,omitempty"`
 }
+
+// ===================================================
+type ZhimaCreditEpSceneRatingInitializeRsp struct {
+	Response     *ZhimaCreditEpSceneRatingInitialize `json:"zhima_credit_ep_scene_rating_initialize_response"`
+	AlipayCertSn string                              `json:"alipay_cert_sn,omitempty"`
+	SignData     string                              `json:"-"`
+	Sign         string                              `json:"sign"`
+}
+
+type ZhimaCreditEpSceneRatingInitialize struct {
+	ErrorResponse
+	OrderNo string `json:"order_no"`
+}
