@@ -245,3 +245,18 @@ func TestClient_TradeOrderSettle(t *testing.T) {
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
 }
+
+// 订单咨询服务测试
+func TestTradeAdvanceConsult(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("alipay_user_id", "2088302483540171").
+		Set("consult_scene", "ORDER_RISK_EVALUATION")
+
+	aliRsp, err := client.TradeAdvanceConsult(bm)
+	if err != nil {
+		xlog.Errorf("client.TradeAdvanceConsult(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
