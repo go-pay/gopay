@@ -25,7 +25,6 @@ func ZhimaCreditEpSceneRatingInitialize() {
 	body.Set("out_order_no", "201805301527674106562F0000954216")
 	body.Set("user_id", "2088302248028263")
 
-	//创建订单
 	aliRsp, err := client.ZhimaCreditEpSceneRatingInitialize(body)
 	if err != nil {
 		xlog.Error("err:", err)
