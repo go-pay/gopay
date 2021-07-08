@@ -269,7 +269,6 @@ func main() {
     * 统一收单交易结算接口：client.TradeOrderSettle()
     * 支付宝订单信息同步接口：client.TradeOrderInfoSync()
     * 订单咨询服务：client.TradeAdvanceConsult()
-    * 聚合支付订单咨询服务 client.TradeOrderAggregateConsult()(失效)
 * 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
     * 单笔转账接口：client.FundTransUniTransfer()
     * 查询转账订单接口: client.FundTransOrderQuery()
@@ -303,7 +302,7 @@ func main() {
     * 换取应用授权令牌：client.OpenAuthTokenApp()
     * 应用支付宝公钥证书下载：client.PublicCertDownload()
 * 网页&移动应用 - <font color='#027AFF' size='4'>芝麻信用API</font>
-    * 获取芝麻信用分：client.ZhimaCreditScoreGet()（失效）
+  
 * 网页&移动应用 - <font color='#027AFF' size='4'>财务API</font>
     * 支付宝商家账户当前余额查询：client.DataBillBalanceQuery()（失效）
     * 查询对账单下载地址：client.DataBillDownloadUrlQuery()
