@@ -1,13 +1,13 @@
 package xlog
 
 var (
-	debugLog xLogger = &DebugLogger{}
-	infoLog  xLogger = &InfoLogger{}
-	warnLog  xLogger = &WarnLogger{}
-	errLog   xLogger = &ErrorLogger{}
+	debugLog XLogger = &DebugLogger{}
+	infoLog  XLogger = &InfoLogger{}
+	warnLog  XLogger = &WarnLogger{}
+	errLog   XLogger = &ErrorLogger{}
 )
 
-type xLogger interface {
+type XLogger interface {
 	logOut(col *ColorType, format *string, args ...interface{})
 }
 
@@ -41,4 +41,20 @@ func Error(args ...interface{}) {
 
 func Errorf(format string, args ...interface{}) {
 	errLog.logOut(nil, &format, args...)
+}
+
+func SetDebugLog(logger XLogger) {
+	debugLog = logger
+}
+
+func SetInfoLog(logger XLogger) {
+	infoLog = logger
+}
+
+func SetWarnLog(logger XLogger) {
+	warnLog = logger
+}
+
+func SetErrLog(logger XLogger) {
+	errLog = logger
 }
