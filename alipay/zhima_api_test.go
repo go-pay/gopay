@@ -133,3 +133,139 @@ func TestZhimaCreditPeZmgoCumulationSync(t *testing.T) {
 	xlog.Debug("aliRsp:", *aliRsp)
 
 }
+
+// 商家芝麻GO累计数据回传接口测试
+func TestZhimaMerchantZmgoCumulateSync(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("agreement_id", "20195108518085620000")
+	bm.Set("user_id", "2088602002015001")
+	bm.Set("provider_pid", "2088621805983504")
+	bm.Set("out_biz_no", "2020081211223006150094012926289")
+	bm.Set("biz_time", "2019-03-08 19:51:35")
+	bm.Set("biz_action", "POSITIVE")
+	bm.Set("sub_biz_action", "ADD")
+	bm.Set("data_type", "TASK")
+	// 可选
+	bm.Set("refer_out_biz_no", "2020081211223006150094012926289")
+	bm.SetBodyMap("amount_type_sync_data", func(bm gopay.BodyMap) {
+		bm.Set("task_desc", "完成一次任务001")
+		bm.Set("task_amount", "3.57")
+		bm.Set("trade_no", "2020081722001435461000061785")
+		bm.Set("has_alipay_trade", "false")
+		bm.Set("discount_desc", "消费满减优惠001")
+		bm.Set("discount_amount", "8.75")
+	})
+	bm.SetBodyMap("times_type_sync_data", func(bm gopay.BodyMap) {
+		bm.Set("task_desc", "完成一次任务001")
+		bm.Set("task_times", "1")
+		bm.Set("task_amount", "3.57")
+		bm.Set("discount_desc", "消费满减优惠001")
+		bm.Set("discount_amount", "8.75")
+	})
+	bm.SetBodyMap("discount_type_sync_data", func(bm gopay.BodyMap) {
+		bm.Set("discount_desc", "消费满减优惠001")
+		bm.Set("discount_amount", "8.75")
+	})
+
+	aliRsp, err := client.ZhimaMerchantZmgoCumulateSync(bm)
+	if err != nil {
+		xlog.Errorf("client.ZhimaMerchantZmgoCumulateSync(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+
+}
+
+// 商家芝麻GO累计数据查询接口测试
+func TestZhimaMerchantZmgoCumulateQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("agreement_id", "20195108518085620000")
+	bm.Set("user_id", "2088602002015001")
+	bm.Set("provider_pid", "2088621805983504")
+	// 可选
+	bm.Set("need_detail", "false")
+	bm.Set("page_no", "1")
+	bm.Set("page_size", "20")
+
+	aliRsp, err := client.ZhimaMerchantZmgoCumulateQuery(bm)
+	if err != nil {
+		xlog.Errorf("client.ZhimaMerchantZmgoCumulateQuery(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+
+}
+
+// 芝麻GO签约关单测试
+func TestZhimaCreditPeZmgoBizoptClose(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("alipay_user_id", "2088302841345600")
+	bm.Set("partner_id", "2088302424614288")
+	bm.Set("out_request_no", "99202005050100930053707258")
+	bm.Set("template_id", "2021012300020903090008858258")
+
+	aliRsp, err := client.ZhimaCreditPeZmgoBizoptClose(bm)
+	if err != nil {
+		xlog.Errorf("client.ZhimaCreditPeZmgoBizoptClose(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+
+}
+
+// 芝麻GO结算退款接口测试
+func TestZhimaCreditPeZmgoSettleRefund(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("agreement_id", "ZMGO_AGR2021010510020604080000006001")
+	bm.Set("partner_id", "2088302424614288")
+	bm.Set("alipay_user_id", "2088302841345600")
+	bm.Set("refund_amount", "3.00")
+	bm.Set("out_request_no", "99202005050100930053707258")
+	// 可选
+	bm.Set("memo", "退款")
+	bm.Set("withhold_plan_no", "ZMGO_WHD2021010510020603410000006001")
+	bm.Set("refund_type", "MEMBER_FEE_REFUND")
+
+	aliRsp, err := client.ZhimaCreditPeZmgoSettleRefund(bm)
+	if err != nil {
+		xlog.Errorf("client.ZhimaCreditPeZmgoSettleRefund(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+
+}
+
+// 芝麻GO签约预创单测试
+func TestZhimaCreditPeZmgoPreorderCreate(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("partner_id", "2088437463829741")
+	bm.Set("template_id", "2020122200020903760008552025")
+	bm.Set("out_request_no", "ORDER_12345678")
+	bm.Set("biz_time", "2016-07-06 00:00:02")
+	// 可选
+	bm.Set("freeze_amount", "1.00")
+	bm.Set("timeout_express", "15m")
+	bm.Set("alipay_user_id", "2088759402857364")
+	bm.Set("partner_user_identifier", "user102934889234")
+	bm.Set("isv_pid", "2088374762857463")
+	bm.Set("sign_aisle_data", "业务方签约标识")
+	bm.Set("expire_aisle_data", "业务方签约标识")
+	bm.Set("pay_aisle_data", "业务方签约标识")
+	bm.SetBodyMap("ext_template_conf", func(bm gopay.BodyMap) {
+		bm.Set("xxhm_info_id", "687542")
+		bm.Set("buyer_id", "11212321121")
+	})
+
+	aliRsp, err := client.ZhimaCreditPeZmgoPreorderCreate(bm)
+	if err != nil {
+		xlog.Errorf("client.ZhimaCreditPeZmgoPreorderCreate(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+
+}

@@ -182,3 +182,124 @@ func (a *Client) ZhimaCreditPeZmgoCumulationSync(bm gopay.BodyMap) (aliRsp *Zhim
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+//  zhima.merchant.zmgo.cumulate.sync(商家芝麻GO累计数据回传接口)
+//	文档地址：https://opendocs.alipay.com/apis/01ol9h
+func (a *Client) ZhimaMerchantZmgoCumulateSync(bm gopay.BodyMap) (aliRsp *ZhimaMerchantZmgoCumulateSyncRsp, err error) {
+	err = bm.CheckEmptyError("agreement_id", "user_id", "provider_pid", "out_biz_no", "biz_time", "biz_action", "sub_biz_action", "data_type")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "zhima.merchant.zmgo.cumulate.sync"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaMerchantZmgoCumulateSyncRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+//  zhima.merchant.zmgo.cumulate.query(商家芝麻GO累计数据查询接口)
+//	文档地址：https://opendocs.alipay.com/apis/01ooeo
+func (a *Client) ZhimaMerchantZmgoCumulateQuery(bm gopay.BodyMap) (aliRsp *ZhimaMerchantZmgoCumulateQueryRsp, err error) {
+	err = bm.CheckEmptyError("agreement_id", "user_id", "provider_pid")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "zhima.merchant.zmgo.cumulate.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaMerchantZmgoCumulateQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+
+//  zhima.credit.pe.zmgo.bizopt.close(芝麻GO签约关单)
+//	文档地址：https://opendocs.alipay.com/apis/01qii3
+func (a *Client) ZhimaCreditPeZmgoBizoptClose(bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoBizoptCloseRsp, err error) {
+	err = bm.CheckEmptyError("alipay_user_id", "partner_id", "out_request_no", "template_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.bizopt.close"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPeZmgoBizoptCloseRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+//  zhima.credit.pe.zmgo.settle.refund(芝麻GO结算退款接口)
+//	文档地址：https://opendocs.alipay.com/apis/01rhsf
+func (a *Client) ZhimaCreditPeZmgoSettleRefund(bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoSettleRefundRsp, err error) {
+	err = bm.CheckEmptyError("agreement_id", "partner_id", "alipay_user_id", "refund_amount", "out_request_no")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.settle.refund"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPeZmgoSettleRefundRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+//  zhima.credit.pe.zmgo.preorder.create(芝麻GO签约预创单)
+//	文档地址：https://opendocs.alipay.com/apis/01rhsk
+func (a *Client) ZhimaCreditPeZmgoPreorderCreate(bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoPreorderCreateRsp, err error) {
+	err = bm.CheckEmptyError("partner_id", "template_id", "out_request_no", "biz_time")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.preorder.create"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPeZmgoPreorderCreateRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}

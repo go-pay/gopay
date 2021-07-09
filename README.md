@@ -302,12 +302,17 @@ func main() {
     * 换取应用授权令牌：client.OpenAuthTokenApp()
     * 应用支付宝公钥证书下载：client.PublicCertDownload()
 * 网页&移动应用 - <font color='#027AFF' size='4'>芝麻信用API</font>
-    * 芝麻企业信用信用评估初始化 client.ZhimaCreditEpSceneRatingInitialize()
-    * 信用服务履约同步 client.ZhimaCreditEpSceneFulfillmentSync()
-    * 加入信用服务 clinet.ZhimaCreditEpSceneAgreementUse()
-    * 取消信用服务 client.ZhimaCreditEpSceneAgreementCancel()
-    * 信用服务履约同步(批量) client.ZhimaCreditEpSceneFulfillmentlistSync()
-    * 芝麻go用户数据回传 client.ZhimaCreditPeZmgoCumulationSync()
+    * 芝麻企业信用信用评估初始化: `client.ZhimaCreditEpSceneRatingInitialize()`
+    * 信用服务履约同步: `client.ZhimaCreditEpSceneFulfillmentSync()`
+    * 加入信用服务: `clinet.ZhimaCreditEpSceneAgreementUse()`
+    * 取消信用服务: `client.ZhimaCreditEpSceneAgreementCancel()`
+    * 信用服务履约同步(批量): `client.ZhimaCreditEpSceneFulfillmentlistSync()`
+    * 芝麻go用户数据回传: `client.ZhimaCreditPeZmgoCumulationSync()`
+    * 商家芝麻GO累计数据回传接口: `client.ZhimaMerchantZmgoCumulateSync()`
+    * 商家芝麻GO累计数据查询接口: `client.ZhimaMerchantZmgoCumulateQuery()`
+    * 芝麻GO签约关单: `client.ZhimaCreditPeZmgoBizoptClose()`
+    * 芝麻GO结算退款接口: `client.ZhimaCreditPeZmgoSettleRefund()`
+    * 芝麻GO签约预创单: `client.ZhimaCreditPeZmgoPreorderCreate()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>财务API</font>
     * 支付宝商家账户当前余额查询：client.DataBillBalanceQuery()（失效）
     * 查询对账单下载地址：client.DataBillDownloadUrlQuery()

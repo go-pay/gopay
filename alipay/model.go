@@ -1181,3 +1181,100 @@ type ZhimaCreditPeZmgoCumulationSync struct {
 	UserId       string `json:"user_id,omitempty"`
 	FailReason   string `json:"fail_reason,omitempty"`
 }
+
+// ===================================================
+type ZhimaMerchantZmgoCumulateSyncRsp struct {
+	Response     *ZhimaMerchantZmgoCumulateSync `json:"zhima_merchant_zmgo_cumulate_sync_response"`
+	AlipayCertSn string                         `json:"alipay_cert_sn,omitempty"`
+	SignData     string                         `json:"-"`
+	Sign         string                         `json:"sign"`
+}
+
+type ZhimaMerchantZmgoCumulateSync struct {
+	ErrorResponse
+	AgreementId string `json:"agreement_id"`
+	OutBizNo    string `json:"out_biz_no"`
+	FailReason  string `json:"fail_reason,omitempty"`
+}
+
+// ===================================================
+type ZhimaMerchantZmgoCumulateQueryRsp struct {
+	Response     *ZhimaMerchantZmgoCumulateQuery `json:"zhima_merchant_zmgo_cumulate_query_response"`
+	AlipayCertSn string                          `json:"alipay_cert_sn,omitempty"`
+	SignData     string                          `json:"-"`
+	Sign         string                          `json:"sign"`
+}
+
+type ZhimaMerchantZmgoCumulateQuery struct {
+	ErrorResponse
+	AgreementId        string                `json:"agreement_id"`
+	AggrAmount         string                `json:"aggr_amount"`
+	AggrTimes          int64                 `json:"aggr_times"`
+	AggrDiscountAmount string                `json:"aggr_discount_amount"`
+	PageNo             int64                 `json:"page_no"`
+	PageSize           int64                 `json:"page_size"`
+	DetailList         []*CumulateDataDetail `json:"detail_list,omitempty"`
+	FailReason         string                `json:"fail_reason,omitempty"`
+}
+
+type CumulateDataDetail struct {
+	OutBizNo       string `json:"out_biz_no,omitempty"`
+	ReferOutBizNo  string `json:"refer_out_biz_no,omitempty"`
+	BizTime        string `json:"biz_time,omitempty"`
+	ActionType     string `json:"action_type,omitempty"`
+	DataType       string `json:"data_type,omitempty"`
+	SubDataType    string `json:"sub_data_type,omitempty"`
+	TaskDesc       string `json:"task_desc,omitempty"`
+	TaskAmount     string `json:"task_amount,omitempty"`
+	TaskTimes      int64  `json:"task_times,omitempty"`
+	DiscountDesc   string `json:"discount_desc,omitempty"`
+	DiscountAmount string `json:"discount_amount,omitempty"`
+}
+
+// ===================================================
+type ZhimaCreditPeZmgoBizoptCloseRsp struct {
+	Response     *ZhimaCreditPeZmgoBizoptClose `json:"zhima_credit_pe_zmgo_bizopt_close_response"`
+	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
+	SignData     string                        `json:"-"`
+	Sign         string                        `json:"sign"`
+}
+
+type ZhimaCreditPeZmgoBizoptClose struct {
+	ErrorResponse
+	UserId       string `json:"user_id"`
+	BizOptNo     string `json:"biz_opt_no,omitempty"`
+	PartnerId    string `json:"partner_id"`
+	OutRequestNo string `json:"out_request_no"`
+}
+
+// ===================================================
+type ZhimaCreditPeZmgoSettleRefundRsp struct {
+	Response     *ZhimaCreditPeZmgoSettleRefund `json:"zhima_credit_pe_zmgo_settle_refund_response"`
+	AlipayCertSn string                         `json:"alipay_cert_sn,omitempty"`
+	SignData     string                         `json:"-"`
+	Sign         string                         `json:"sign"`
+}
+
+type ZhimaCreditPeZmgoSettleRefund struct {
+	ErrorResponse
+	OutRequestNo   string `json:"out_request_no"`
+	WithholdPlanNo string `json:"withhold_plan_no"`
+	RefundAmount   string `json:"refund_amount"`
+	FailReason     string `json:"fail_reason,omitempty"`
+	Retry          bool   `json:"retry,omitempty"`
+}
+
+// ===================================================
+type ZhimaCreditPeZmgoPreorderCreateRsp struct {
+	Response     *ZhimaCreditPeZmgoPreorderCreate `json:"zhima_credit_pe_zmgo_preorder_create_response"`
+	AlipayCertSn string                           `json:"alipay_cert_sn,omitempty"`
+	SignData     string                           `json:"-"`
+	Sign         string                           `json:"sign"`
+}
+
+type ZhimaCreditPeZmgoPreorderCreate struct {
+	ErrorResponse
+	PreorderNo string `json:"preorder_no"`
+	PartnerId  string `json:"partner_id"`
+	BizType    string `json:"biz_type"`
+}
