@@ -29,7 +29,7 @@ func (a *Client) ZhimaCreditScoreGet(bm gopay.BodyMap) (aliRsp *ZhimaCreditScore
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -56,7 +56,7 @@ func (a *Client) ZhimaCreditEpSceneRatingInitialize(bm gopay.BodyMap) (aliRsp *Z
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -80,7 +80,7 @@ func (a *Client) ZhimaCreditEpSceneFulfillmentSync(bm gopay.BodyMap) (aliRsp *Zh
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -104,7 +104,7 @@ func (a *Client) ZhimaCreditEpSceneAgreementUse(bm gopay.BodyMap) (aliRsp *Zhima
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -128,7 +128,7 @@ func (a *Client) ZhimaCreditEpSceneAgreementCancel(bm gopay.BodyMap) (aliRsp *Zh
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -152,7 +152,7 @@ func (a *Client) ZhimaCreditEpSceneFulfillmentlistSync(bm gopay.BodyMap) (aliRsp
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -176,7 +176,7 @@ func (a *Client) ZhimaCreditPeZmgoCumulationSync(bm gopay.BodyMap) (aliRsp *Zhim
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -200,7 +200,7 @@ func (a *Client) ZhimaMerchantZmgoCumulateSync(bm gopay.BodyMap) (aliRsp *ZhimaM
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -224,13 +224,12 @@ func (a *Client) ZhimaMerchantZmgoCumulateQuery(bm gopay.BodyMap) (aliRsp *Zhima
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
-
 
 //  zhima.credit.pe.zmgo.bizopt.close(芝麻GO签约关单)
 //	文档地址：https://opendocs.alipay.com/apis/01qii3
@@ -249,7 +248,7 @@ func (a *Client) ZhimaCreditPeZmgoBizoptClose(bm gopay.BodyMap) (aliRsp *ZhimaCr
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -273,7 +272,7 @@ func (a *Client) ZhimaCreditPeZmgoSettleRefund(bm gopay.BodyMap) (aliRsp *ZhimaC
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -297,7 +296,7 @@ func (a *Client) ZhimaCreditPeZmgoPreorderCreate(bm gopay.BodyMap) (aliRsp *Zhim
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData

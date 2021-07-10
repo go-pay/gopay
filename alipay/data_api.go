@@ -22,7 +22,7 @@ func (a *Client) DataBillBalanceQuery(bm gopay.BodyMap) (aliRsp *DataBillBalance
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -46,7 +46,7 @@ func (a *Client) DataBillDownloadUrlQuery(bm gopay.BodyMap) (aliRsp *DataBillDow
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData

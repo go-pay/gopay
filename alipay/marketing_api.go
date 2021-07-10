@@ -24,7 +24,7 @@ func (a *Client) OpenAppQrcodeCreate(bm gopay.BodyMap) (aliRsp *OpenAppQrcodeCre
 	}
 	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
 		info := aliRsp.Response
-		return nil, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
