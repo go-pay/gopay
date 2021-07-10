@@ -349,9 +349,9 @@ func main() {
 * 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群（微信群比较活跃）。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 
 QQ群：
-<img width="226" height="300" src="https://raw.githubusercontent.com/go-pay/gopay/main/qq_gopay.png"/>
+<img width="300" height="300" src="https://raw.githubusercontent.com/go-pay/gopay/main/qq_gopay.png"/>
 加微信拉群：
-<img width="226" height="300" src="https://raw.githubusercontent.com/go-pay/gopay/main/wechat_jerry.png"/>
+<img width="300" height="300" src="https://raw.githubusercontent.com/go-pay/gopay/main/wechat_jerry.png"/>
 
 ---
 
