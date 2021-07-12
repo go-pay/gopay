@@ -313,6 +313,10 @@ func main() {
     * 芝麻GO签约关单: `client.ZhimaCreditPeZmgoBizoptClose()`
     * 芝麻GO结算退款接口: `client.ZhimaCreditPeZmgoSettleRefund()`
     * 芝麻GO签约预创单: `client.ZhimaCreditPeZmgoPreorderCreate()`
+    * 芝麻GO协议解约: `client.ZhimaCreditPeZmgoAgreementUnsign()`
+    * 芝麻Go协议查询接口: `client.ZhimaCreditPeZmgoAgreementQuery()`
+    * 芝麻Go解冻接口: `client.ZhimaCreditPeZmgoSettleUnfreeze()`
+    * 芝麻GO支付下单链路签约申请: `client.ZhimaCreditPeZmgoPaysignApply()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>财务API</font>
     * 支付宝商家账户当前余额查询：`client.DataBillBalanceQuery()`（失效）
     * 查询对账单下载地址：`client.DataBillDownloadUrlQuery()`

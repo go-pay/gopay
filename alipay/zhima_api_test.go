@@ -269,3 +269,88 @@ func TestZhimaCreditPeZmgoPreorderCreate(t *testing.T) {
 	xlog.Debug("aliRsp:", *aliRsp)
 
 }
+
+// 芝麻GO协议解约测试
+func TestZhimaCreditPeZmgoAgreementUnsign(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("agreement_id", "ZMGO_AGR2020122710020604120000000001")
+	bm.Set("partner_id", "2088302424614288")
+	// 可选
+	bm.Set("alipay_user_id", "2088302841345600")
+	bm.Set("quit_type", "SETTLE_APPLY_QUIT")
+
+	aliRsp, err := client.ZhimaCreditPeZmgoAgreementUnsign(bm)
+	if err != nil {
+		xlog.Errorf("client.ZhimaCreditPeZmgoAgreementUnsign(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+
+}
+
+// 芝麻Go协议查询接口测试
+func TestZhimaCreditPeZmgoAgreementQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("agreement_id", "20185513447859192007")
+	bm.Set("alipay_user_id", "2088101117955611")
+
+	aliRsp, err := client.ZhimaCreditPeZmgoAgreementQuery(bm)
+	if err != nil {
+		xlog.Errorf("client.ZhimaCreditPeZmgoAgreementQuery(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+
+}
+
+// 芝麻Go解冻接口测试
+func TestZhimaCreditPeZmgoSettleUnfreeze(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("agreement_id", "20185513447859192007")
+	bm.Set("out_request_no", "8077735255938032")
+	bm.Set("unfreeze_amount", "3.00")
+	bm.Set("biz_time", "2014-09-15 11:23:04")
+	bm.Set("alipay_user_id", "2088101117955611")
+	// 可选
+	bm.Set("partner_id", "2088411663864410")
+	bm.Set("order_title", "2088411663864410")
+	bm.SetBodyMap("unfreeze_extend_params", func(bm gopay.BodyMap) {
+		bm.Set("total_real_pay_amount", "3.00")
+		bm.Set("total_discount_amount", "3.00")
+		bm.Set("total_task_count", "0")
+		bm.Set("quit_type", "SETTLE_APPLY_QUIT")
+	})
+
+	aliRsp, err := client.ZhimaCreditPeZmgoSettleUnfreeze(bm)
+	if err != nil {
+		xlog.Errorf("client.ZhimaCreditPeZmgoSettleUnfreeze(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+
+}
+
+// 芝麻GO支付下单链路签约申请测试
+func TestZhimaCreditPeZmgoPaysignApply(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("alipay_user_id", "2088302841345600")
+	bm.Set("partner_id", "2088302424614288")
+	bm.Set("template_id", "2021012300020903090008858258")
+	bm.Set("merchant_app_id", "2021001118641054")
+	bm.Set("out_request_no", "99202005050100930053707258")
+	bm.Set("biz_time", "2016-07-06 00:00:02")
+	bm.Set("timeout_express", "1m")
+	// 可选
+
+	aliRsp, err := client.ZhimaCreditPeZmgoPaysignApply(bm)
+	if err != nil {
+		xlog.Errorf("client.ZhimaCreditPeZmgoPaysignApply(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+
+}

@@ -302,3 +302,99 @@ func (a *Client) ZhimaCreditPeZmgoPreorderCreate(bm gopay.BodyMap) (aliRsp *Zhim
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+//  zhima.credit.pe.zmgo.agreement.unsign(芝麻GO协议解约)
+//	文档地址：https://opendocs.alipay.com/apis/01rium
+func (a *Client) ZhimaCreditPeZmgoAgreementUnsign(bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoAgreementUnsignRsp, err error) {
+	err = bm.CheckEmptyError("partner_id", "agreement_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.agreement.unsign"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPeZmgoAgreementUnsignRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+//  zhima.credit.pe.zmgo.agreement.query(芝麻Go协议查询接口)
+//	文档地址：https://opendocs.alipay.com/apis/01rqcy
+func (a *Client) ZhimaCreditPeZmgoAgreementQuery(bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoAgreementQueryRsp, err error) {
+	err = bm.CheckEmptyError("agreement_id", "alipay_user_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.agreement.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPeZmgoAgreementQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+//  zhima.credit.pe.zmgo.settle.unfreeze(芝麻Go解冻接口)
+//	文档地址：https://opendocs.alipay.com/apis/01vx41
+func (a *Client) ZhimaCreditPeZmgoSettleUnfreeze(bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoSettleUnfreezeRsp, err error) {
+	err = bm.CheckEmptyError("agreement_id", "out_request_no", "unfreeze_amount", "biz_time", "alipay_user_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.settle.unfreeze"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPeZmgoSettleUnfreezeRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+//  zhima.credit.pe.zmgo.paysign.apply(芝麻GO支付下单链路签约申请)
+//	文档地址：https://opendocs.alipay.com/apis/01xdtu
+func (a *Client) ZhimaCreditPeZmgoPaysignApply(bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoPaysignApplyRsp, err error) {
+	err = bm.CheckEmptyError("alipay_user_id", "partner_id", "template_id", "merchant_app_id", "out_request_no", "biz_time", "timeout_express")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.paysign.apply"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPeZmgoPaysignApplyRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
