@@ -1,4 +1,4 @@
-<div align=center><img width="220" height="220" alt="Logo was Loading Faild!" src="https://raw.githubusercontent.com/go-pay/gopay/main/logo.png"/></div>
+<div align=center><img width="240" height="240" alt="Logo was Loading Faild!" src="https://raw.githubusercontent.com/go-pay/gopay/main/logo.png"/></div>
 
 # GoPay
 
@@ -19,7 +19,7 @@
 
 - v1.5.42 开始，仓库从 `github.com/iGoogle-ink/gopay` 迁移到 `github.com/go-pay/gopay`
 ```bash
-$ go get github.com/go-pay/gopay
+go get github.com/go-pay/gopay
 ```
 
 * #### 查看 GoPay 版本
@@ -45,62 +45,62 @@ func main() {
 > #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口，欢迎参与完善V3接口。
 
 * <font color='#07C160' size='4'>基础支付（直连模式）</font>
-    * APP下单：client.V3TransactionApp()
-    * JSAPI/小程序下单：client.V3TransactionJsapi()
-    * Native下单：client.V3TransactionNative()
-    * H5下单：client.V3TransactionH5()
-    * 查询订单：client.V3TransactionQueryOrder()
-    * 关闭订单：client.V3TransactionCloseOrder()
+    * APP下单：`client.V3TransactionApp()`
+    * JSAPI/小程序下单：`client.V3TransactionJsapi()`
+    * Native下单：`client.V3TransactionNative()`
+    * H5下单：`client.V3TransactionH5()`
+    * 查询订单：`client.V3TransactionQueryOrder()`
+    * 关闭订单：`client.V3TransactionCloseOrder()`
 * <font color='#07C160' size='4'>基础支付（服务商模式）</font>
-    * APP下单：client.V3PartnerTransactionApp()
-    * JSAPI/小程序下单：client.V3PartnerTransactionJsapi()
-    * Native下单：client.V3PartnerTransactionNative()
-    * H5下单：client.V3PartnerTransactionH5()
-    * 查询订单：client.V3PartnerQueryOrder()
-    * 关闭订单：client.V3PartnerCloseOrder()
+    * APP下单：`client.V3PartnerTransactionApp()`
+    * JSAPI/小程序下单：`client.V3PartnerTransactionJsapi()`
+    * Native下单：`client.V3PartnerTransactionNative()`
+    * H5下单：`client.V3PartnerTransactionH5()`
+    * 查询订单：`client.V3PartnerQueryOrder()`
+    * 关闭订单：`client.V3PartnerCloseOrder()`
 * <font color='#07C160' size='4'>合单支付</font>
-    * 合单APP下单：client.V3CombineTransactionApp()
-    * 合单JSAPI/小程序下单：client.V3CombineTransactionJsapi()
-    * 合单Native下单：client.V3CombineTransactionNative()
-    * 合单H5下单：client.V3CombineTransactionH5()
-    * 合单查询订单：client.V3CombineQueryOrder()
-    * 合单关闭订单：client.V3CombineCloseOrder()
+    * 合单APP下单：`client.V3CombineTransactionApp()`
+    * 合单JSAPI/小程序下单：`client.V3CombineTransactionJsapi()`
+    * 合单Native下单：`client.V3CombineTransactionNative()`
+    * 合单H5下单：`client.V3CombineTransactionH5()`
+    * 合单查询订单：`client.V3CombineQueryOrder()`
+    * 合单关闭订单：`client.V3CombineCloseOrder()`
 * <font color='#07C160' size='4'>退款</font>
-    * 申请退款：client.V3Refund()
-    * 查询单笔退款：client.V3RefundQuery()
+    * 申请退款：`client.V3Refund()`
+    * 查询单笔退款：`client.V3RefundQuery()`
 * <font color='#07C160' size='4'>账单</font>
-    * 申请交易账单：client.V3BillTradeBill()
-    * 申请资金账单：client.V3BillFundFlowBill()
-    * 申请二级商户资金账单：client.V3BillLevel2FundFlowBill()
-    * 下载账单：client.V3BillDownLoadBill()
+    * 申请交易账单：`client.V3BillTradeBill()`
+    * 申请资金账单：`client.V3BillFundFlowBill()`
+    * 申请二级商户资金账单：`client.V3BillLevel2FundFlowBill()`
+    * 下载账单：`client.V3BillDownLoadBill()`
 * <font color='#07C160' size='4'>微信支付分（公共API）</font>
-    * 创建支付分订单：client.V3ScoreOrderCreate()
-    * 查询支付分订单：client.V3ScoreOrderQuery()
-    * 取消支付分订单：client.V3ScoreOrderCancel()
-    * 修改订单金额：client.V3ScoreOrderModify()
-    * 完结支付分订单：client.V3ScoreOrderComplete()
-    * 商户发起催收扣款：client.V3ScoreOrderPay()
-    * 同步服务订单信息：client.V3ScoreOrderSync()
+    * 创建支付分订单：`client.V3ScoreOrderCreate()`
+    * 查询支付分订单：`client.V3ScoreOrderQuery()`
+    * 取消支付分订单：`client.V3ScoreOrderCancel()`
+    * 修改订单金额：`client.V3ScoreOrderModify()`
+    * 完结支付分订单：`client.V3ScoreOrderComplete()`
+    * 商户发起催收扣款：`client.V3ScoreOrderPay()`
+    * 同步服务订单信息：`client.V3ScoreOrderSync()`
 * <font color='#07C160' size='4'>微信支付分（免确认模式）</font>
-    * 创单结单合并：client.V3ScoreDirectComplete()
+    * 创单结单合并：`client.V3ScoreDirectComplete()`
 * <font color='#07C160' size='4'>微信支付分（免确认预授权模式）</font>
-    * 商户预授权：client.V3ScorePermission()
-    * 查询用户授权记录（授权协议号）：client.V3ScorePermissionQuery()
-    * 解除用户授权关系（授权协议号）：client.V3ScorePermissionTerminate()
-    * 查询用户授权记录（openid）：client.V3ScorePermissionOpenidQuery()
-    * 解除用户授权关系（openid）：client.V3ScorePermissionOpenidTerminate()
+    * 商户预授权：`client.V3ScorePermission()`
+    * 查询用户授权记录（授权协议号）：`client.V3ScorePermissionQuery()`
+    * 解除用户授权关系（授权协议号）：`client.V3ScorePermissionTerminate()`
+    * 查询用户授权记录（openid）：`client.V3ScorePermissionOpenidQuery()`
+    * 解除用户授权关系（openid）：`client.V3ScorePermissionOpenidTerminate()`
 * <font color='#07C160' size='4'>微信先享卡</font>
-    * 预受理领卡请求：client.V3DiscountCardApply()
-    * 增加用户记录：client.V3DiscountCardAddUser()
-    * 查询先享卡订单：client.V3DiscountCardQuery()
+    * 预受理领卡请求：`client.V3DiscountCardApply()`
+    * 增加用户记录：`client.V3DiscountCardAddUser()`
+    * 查询先享卡订单：`client.V3DiscountCardQuery()`
 * <font color='#07C160' size='4'>支付即服务</font>
-    * 服务人员注册：client.V3SmartGuideReg()
-    * 服务人员分配：client.V3SmartGuideAssign()
-    * 服务人员查询：client.V3SmartGuideQuery()
-    * 服务人员信息更新：client.V3SmartGuideUpdate()
+    * 服务人员注册：`client.V3SmartGuideReg()`
+    * 服务人员分配：`client.V3SmartGuideAssign()`
+    * 服务人员查询：`client.V3SmartGuideQuery()`
+    * 服务人员信息更新：`client.V3SmartGuideUpdate()`
 * <font color='#07C160' size='4'>智慧商圈</font>
-    * 商圈积分同步：client.V3BusinessPointsSync()
-    * 商圈积分授权查询：client.V3BusinessAuthPointsQuery()
+    * 商圈积分同步：`client.V3BusinessPointsSync()`
+    * 商圈积分授权查询：`client.V3BusinessAuthPointsQuery()`
 * <font color='#07C160' size='4'>代金券</font>
     * 待实现
 * <font color='#07C160' size='4'>商家券</font>
@@ -112,195 +112,195 @@ func main() {
 * <font color='#07C160' size='4'>支付有礼</font>
     * 待实现
 * <font color='#07C160' size='4'>分账</font>
-    * 请求分账：client.V3ProfitShareOrder()
-    * 查询分账结果：client.V3ProfitShareOrderQuery()
-    * 请求分账回退：client.V3ProfitShareReturn()
-    * 查询分账回退结果：client.V3ProfitShareReturnResult()
-    * 解冻剩余资金：client.V3ProfitShareOrderUnfreeze()
-    * 查询剩余待分金额：client.V3ProfitShareUnsplitAmount()
-    * 添加分账接收方：client.V3ProfitShareAddReceiver()
-    * 删除分账接收方：client.V3ProfitShareDeleteReceiver()
+    * 请求分账：`client.V3ProfitShareOrder()`
+    * 查询分账结果：`client.V3ProfitShareOrderQuery()`
+    * 请求分账回退：`client.V3ProfitShareReturn()`
+    * 查询分账回退结果：`client.V3ProfitShareReturnResult()`
+    * 解冻剩余资金：`client.V3ProfitShareOrderUnfreeze()`
+    * 查询剩余待分金额：`client.V3ProfitShareUnsplitAmount()`
+    * 添加分账接收方：`client.V3ProfitShareAddReceiver()`
+    * 删除分账接收方：`client.V3ProfitShareDeleteReceiver()`
 * <font color='#07C160' size='4'>消费者投诉2.0</font>
-    * 查询投诉单列表：client.V3ComplaintList()
-    * 查询投诉单详情：client.V3ComplaintDetail()
-    * 查询投诉协商历史：client.V3ComplaintNegotiationHistory()
-    * 创建投诉通知回调地址：client.V3ComplaintNotifyUrlCreate()
-    * 查询投诉通知回调地址：client.V3ComplaintNotifyUrlQuery()
-    * 更新投诉通知回调地址：client.V3ComplaintNotifyUrlUpdate()
-    * 删除投诉通知回调地址：client.V3ComplaintNotifyUrlDelete()
-    * 提交回复：client.V3ComplaintResponse()
-    * 反馈处理完成：client.V3ComplaintComplete()
-    * 商户上传反馈图片：client.V3ComplaintUploadImage()
+    * 查询投诉单列表：`client.V3ComplaintList()`
+    * 查询投诉单详情：`client.V3ComplaintDetail()`
+    * 查询投诉协商历史：`client.V3ComplaintNegotiationHistory()`
+    * 创建投诉通知回调地址：`client.V3ComplaintNotifyUrlCreate()`
+    * 查询投诉通知回调地址：`client.V3ComplaintNotifyUrlQuery()`
+    * 更新投诉通知回调地址：`client.V3ComplaintNotifyUrlUpdate()`
+    * 删除投诉通知回调地址：`client.V3ComplaintNotifyUrlDelete()`
+    * 提交回复：`client.V3ComplaintResponse()`
+    * 反馈处理完成：`client.V3ComplaintComplete()`
+    * 商户上传反馈图片：`client.V3ComplaintUploadImage()`
 * <font color='#07C160' size='4'>其他能力</font>
-    * 图片上传：client.V3MediaUploadImage()
-    * 视频上传：client.V3MediaUploadVideo()
+    * 图片上传：`client.V3MediaUploadImage()`
+    * 视频上传：`client.V3MediaUploadVideo()`
 * <font color='#07C160' size='4'>公共API</font>
-    * 发起批量转账：client.V3Transfer()
-    * 微信批次单号查询批次单：client.V3TransferQuery()
-    * 微信明细单号查询明细单：client.V3TransferDetailQuery()
-    * 商家批次单号查询批次单：client.V3TransferMerchantQuery()
-    * 商家明细单号查询明细单：client.V3TransferMerchantDetailQuery()
-    * 转账电子回单申请受理：client.V3TransferReceipt()
-    * 查询转账电子回单：client.V3TransferReceiptQuery()
-    * 转账明细电子回单受理：client.V3TransferDetailReceipt()
-    * 查询转账明细电子回单受理结果：client.V3TransferDetailReceiptQuery()
-    * 查询账户实时余额：client.V3MerchantBalance()
-    * 查询账户日终余额：client.V3MerchantDayBalance()
+    * 发起批量转账：`client.V3Transfer()`
+    * 微信批次单号查询批次单：`client.V3TransferQuery()`
+    * 微信明细单号查询明细单：`client.V3TransferDetailQuery()`
+    * 商家批次单号查询批次单：`client.V3TransferMerchantQuery()`
+    * 商家明细单号查询明细单：`client.V3TransferMerchantDetailQuery()`
+    * 转账电子回单申请受理：`client.V3TransferReceipt()`
+    * 查询转账电子回单：`client.V3TransferReceiptQuery()`
+    * 转账明细电子回单受理：`client.V3TransferDetailReceipt()`
+    * 查询转账明细电子回单受理结果：`client.V3TransferDetailReceiptQuery()`
+    * 查询账户实时余额：`client.V3MerchantBalance()`
+    * 查询账户日终余额：`client.V3MerchantDayBalance()`
 * <font color='#07C160' size='4'>来账识别API</font>
-    * 商户银行来账查询：client.V3MerchantIncomeRecord()
+    * 商户银行来账查询：`client.V3MerchantIncomeRecord()`
 
 ### 微信支付V2 API
 
 > #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口。
 
-* 统一下单：client.UnifiedOrder()
+* 统一下单：`client.UnifiedOrder()`
     * JSAPI - JSAPI支付（或小程序支付）
     * NATIVE - Native支付
     * APP - app支付
     * MWEB - H5支付
-* 提交付款码支付：client.Micropay()
-* 查询订单：client.QueryOrder()
-* 关闭订单：client.CloseOrder()
-* 撤销订单：client.Reverse()
-* 申请退款：client.Refund()
-* 查询退款：client.QueryRefund()
-* 下载对账单：client.DownloadBill()
-* 下载资金账单（正式）：client.DownloadFundFlow()
-* 交易保障：client.Report()
-* 拉取订单评价数据（正式）：client.BatchQueryComment()
-* 企业付款（正式）：client.Transfer()
-* 查询企业付款（正式）：client.GetTransferInfo()
-* 授权码查询OpenId（正式）：client.AuthCodeToOpenId()
-* 公众号纯签约（正式）：client.EntrustPublic()
-* APP纯签约-预签约接口-获取预签约ID（正式）：client.EntrustAppPre()
-* H5纯签约（正式）：client.EntrustH5()
-* 支付中签约（正式）：client.EntrustPaying()
-* 请求单次分账（正式）：client.ProfitSharing()
-* 请求多次分账（正式）：client.MultiProfitSharing()
-* 查询分账结果（正式）：client.ProfitSharingQuery()
-* 添加分账接收方（正式）：client.ProfitSharingAddReceiver()
-* 删除分账接收方（正式）：client.ProfitSharingRemoveReceiver()
-* 完结分账（正式）：client.ProfitSharingFinish()
-* 分账回退（正式）：client.ProfitSharingReturn()
-* 分账回退结果查询（正式）：client.ProfitSharingReturnQuery()
-* 企业付款到银行卡API（正式）：client.PayBank()
-* 查询企业付款到银行卡API（正式）：client.QueryBank()
-* 获取RSA加密公钥API（正式）：client.GetRSAPublicKey()
-* 发放现金红包：client.SendCashRed()
-* 发放现金裂变红包：client.SendGroupCashRed()
-* 发放小程序红包：client.SendAppletRed()
-* 查询红包记录：client.QueryRedRecord()
-* 订单附加信息提交（海关）：client.CustomsDeclareOrder()
-* 订单附加信息查询（海关）：client.CustomsDeclareQuery()
-* 订单附加信息重推（海关）：client.CustomsReDeclareOrder()
-* 自定义方法请求微信API接口：client.PostWeChatAPISelf()
+* 提交付款码支付：`client.Micropay()`
+* 查询订单：`client.QueryOrder()`
+* 关闭订单：`client.CloseOrder()`
+* 撤销订单：`client.Reverse()`
+* 申请退款：`client.Refund()`
+* 查询退款：`client.QueryRefund()`
+* 下载对账单：`client.DownloadBill()`
+* 下载资金账单（正式）：`client.DownloadFundFlow()`
+* 交易保障：`client.Report()`
+* 拉取订单评价数据（正式）：`client.BatchQueryComment()`
+* 企业付款（正式）：`client.Transfer()`
+* 查询企业付款（正式）：`client.GetTransferInfo()`
+* 授权码查询OpenId（正式）：`client.AuthCodeToOpenId()`
+* 公众号纯签约（正式）：`client.EntrustPublic()`
+* APP纯签约-预签约接口-获取预签约ID（正式）：`client.EntrustAppPre()`
+* H5纯签约（正式）：`client.EntrustH5()`
+* 支付中签约（正式）：`client.EntrustPaying()`
+* 请求单次分账（正式）：`client.ProfitSharing()`
+* 请求多次分账（正式）：`client.MultiProfitSharing()`
+* 查询分账结果（正式）：`client.ProfitSharingQuery()`
+* 添加分账接收方（正式）：`client.ProfitSharingAddReceiver()`
+* 删除分账接收方（正式）：`client.ProfitSharingRemoveReceiver()`
+* 完结分账（正式）：`client.ProfitSharingFinish()`
+* 分账回退（正式）：`client.ProfitSharingReturn()`
+* 分账回退结果查询（正式）：`client.ProfitSharingReturnQuery()`
+* 企业付款到银行卡API（正式）：`client.PayBank()`
+* 查询企业付款到银行卡API（正式）：`client.QueryBank()`
+* 获取RSA加密公钥API（正式）：`client.GetRSAPublicKey()`
+* 发放现金红包：`client.SendCashRed()`
+* 发放现金裂变红包：`client.SendGroupCashRed()`
+* 发放小程序红包：`client.SendAppletRed()`
+* 查询红包记录：`client.QueryRedRecord()`
+* 订单附加信息提交（海关）：`client.CustomsDeclareOrder()`
+* 订单附加信息查询（海关）：`client.CustomsDeclareQuery()`
+* 订单附加信息重推（海关）：`client.CustomsReDeclareOrder()`
+* 自定义方法请求微信API接口：`client.PostWeChatAPISelf()`
 
 ### 微信公共V2 API
 
-* wechat.GetParamSign() => 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
-* wechat.GetSanBoxParamSign() => 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
-* wechat.GetMiniPaySign() => 获取微信小程序支付所需要的paySign
-* wechat.GetH5PaySign() => 获取微信内H5支付所需要的paySign
-* wechat.GetAppPaySign() => 获取APP支付所需要的paySign
-* wechat.ParseNotifyToBodyMap() => 解析微信支付异步通知的参数到BodyMap
-* wechat.ParseNotify() => 解析微信支付异步通知的参数
-* wechat.ParseRefundNotify() => 解析微信退款异步通知的参数
-* wechat.VerifySign() => 微信同步返回参数验签或异步通知参数验签
-* wechat.Code2Session() => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
-* wechat.GetAppletAccessToken() => 获取微信小程序全局唯一后台接口调用凭据
-* wechat.GetAppletPaidUnionId() => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
-* wechat.GetPublicUserInfo() => 微信公众号：获取用户基本信息
-* wechat.GetPublicUserInfoBatch() => 微信公众号：批量获取用户基本信息
-* wechat.DecryptOpenDataToStruct() => 加密数据，解密到指定结构体
-* wechat.DecryptOpenDataToBodyMap() => 加密数据，解密到 BodyMap
-* wechat.GetOpenIdByAuthCode() => 授权码查询openid
-* wechat.GetOauth2AccessToken() => 微信第三方登录，code 换取 access_token
-* wechat.RefreshOauth2AccessToken() => 刷新微信第三方登录后，获取到的 access_token
-* wechat.CheckOauth2AccessToken() => 检验授权凭证（access_token）是否有效
-* wechat.GetOauth2UserInfo() => 微信开放平台：获取用户个人信息
-* wechat.DecryptRefundNotifyReqInfo() => 解密微信退款异步通知的加密数据
+* `wechat.GetParamSign()` => 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
+* `wechat.GetSanBoxParamSign()` => 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
+* `wechat.GetMiniPaySign()` => 获取微信小程序支付所需要的paySign
+* `wechat.GetH5PaySign()` => 获取微信内H5支付所需要的paySign
+* `wechat.GetAppPaySign()` => 获取APP支付所需要的paySign
+* `wechat.ParseNotifyToBodyMap()` => 解析微信支付异步通知的参数到BodyMap
+* `wechat.ParseNotify()` => 解析微信支付异步通知的参数
+* `wechat.ParseRefundNotify()` => 解析微信退款异步通知的参数
+* `wechat.VerifySign()` => 微信同步返回参数验签或异步通知参数验签
+* `wechat.Code2Session()` => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
+* `wechat.GetAppletAccessToken()` => 获取微信小程序全局唯一后台接口调用凭据
+* `wechat.GetAppletPaidUnionId()` => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
+* `wechat.GetPublicUserInfo()` => 微信公众号：获取用户基本信息
+* `wechat.GetPublicUserInfoBatch()` => 微信公众号：批量获取用户基本信息
+* `wechat.DecryptOpenDataToStruct()` => 加密数据，解密到指定结构体
+* `wechat.DecryptOpenDataToBodyMap()` => 加密数据，解密到 BodyMap
+* `wechat.GetOpenIdByAuthCode()` => 授权码查询openid
+* `wechat.GetOauth2AccessToken()` => 微信第三方登录，code 换取 access_token
+* `wechat.RefreshOauth2AccessToken()` => 刷新微信第三方登录后，获取到的 access_token
+* `wechat.CheckOauth2AccessToken()` => 检验授权凭证（access_token）是否有效
+* `wechat.GetOauth2UserInfo()` => 微信开放平台：获取用户个人信息
+* `wechat.DecryptRefundNotifyReqInfo()` => 解密微信退款异步通知的加密数据
 
 ---
 
 ### QQ支付API
 
-* 提交付款码支付：client.MicroPay()
-* 撤销订单：client.Reverse()
-* 统一下单：client.UnifiedOrder()
-* 订单查询：client.OrderQuery()
-* 关闭订单：client.CloseOrder()
-* 申请退款：client.Refund()
-* 退款查询：client.RefundQuery()
-* 交易账单：client.StatementDown()
-* 资金账单：client.AccRoll()
-* 创建现金红包（未测试可用性）：client.SendCashRed()
-* 对账单下载（未测试可用性）：client.DownloadRedListFile()
-* 查询红包详情（未测试可用性）：client.QueryRedInfo()
-* 自定义方法请求微信API接口：client.PostQQAPISelf()
+* 提交付款码支付：`client.MicroPay()`
+* 撤销订单：`client.Reverse()`
+* 统一下单：`client.UnifiedOrder()`
+* 订单查询：`client.OrderQuery()`
+* 关闭订单：`client.CloseOrder()`
+* 申请退款：`client.Refund()`
+* 退款查询：`client.RefundQuery()`
+* 交易账单：`client.StatementDown()`
+* 资金账单：`client.AccRoll()`
+* 创建现金红包（未测试可用性）：`client.SendCashRed()`
+* 对账单下载（未测试可用性）：`client.DownloadRedListFile()`
+* 查询红包详情（未测试可用性）：`client.QueryRedInfo()`
+* 自定义方法请求微信API接口：`client.PostQQAPISelf()`
 
 ### QQ公共API
 
-* qq.ParseNotifyToBodyMap() => 解析QQ支付异步通知的结果到BodyMap
-* qq.ParseNotify() => 解析QQ支付异步通知的参数
-* qq.VerifySign() => QQ同步返回参数验签或异步通知参数验签
+* `qq.ParseNotifyToBodyMap()` => 解析QQ支付异步通知的结果到BodyMap
+* `qq.ParseNotify()` => 解析QQ支付异步通知的参数
+* `qq.VerifySign()` => QQ同步返回参数验签或异步通知参数验签
 
 ---
 
 ### 支付宝支付API
 
-> #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用client.PostAliPayAPISelfV2()方法实现！请参考 client_test.go 内的 TestClient_PostAliPayAPISelfV2() 方法
+> #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用 `client.PostAliPayAPISelfV2()`方法实现！请参考 `client_test.go` 内的 `TestClient_PostAliPayAPISelfV2()` 方法
 
 > #### 希望有时间的伙伴儿Fork完后，积极提Pull Request，一起完善支付宝各个类别下的接口到相应的go文件中
 
-* 支付宝接口自行实现方法：client.PostAliPayAPISelfV2()
+* 支付宝接口自行实现方法：`client.PostAliPayAPISelfV2()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>支付API</font>
-    * 统一收单交易支付接口（商家扫用户付款码）：client.TradePay()
-    * 统一收单线下交易预创建（用户扫商品收款码）：client.TradePrecreate()
-    * APP支付接口2.0（APP支付）：client.TradeAppPay()
-    * 手机网站支付接口2.0（手机网站支付）：client.TradeWapPay()
-    * 统一收单下单并支付页面接口（电脑网站支付）：client.TradePagePay()
-    * 统一收单交易创建接口（小程序支付）：client.TradeCreate()
-    * 统一收单线下交易查询：client.TradeQuery()
-    * 统一收单交易撤销接口：client.TradeCancel()
-    * 统一收单交易关闭接口：client.TradeClose()
-    * 统一收单交易退款接口：client.TradeRefund()
-    * 统一收单退款页面接口：client.TradePageRefund()
-    * 统一收单交易退款查询：client.TradeFastPayRefundQuery()
-    * 统一收单交易结算接口：client.TradeOrderSettle()
-    * 支付宝订单信息同步接口：client.TradeOrderInfoSync()
-    * 订单咨询服务：client.TradeAdvanceConsult()
+    * 统一收单交易支付接口（商家扫用户付款码）：`client.TradePay()`
+    * 统一收单线下交易预创建（用户扫商品收款码）：`client.TradePrecreate()`
+    * APP支付接口2.0（APP支付）：`client.TradeAppPay()`
+    * 手机网站支付接口2.0（手机网站支付）：`client.TradeWapPay()`
+    * 统一收单下单并支付页面接口（电脑网站支付）：`client.TradePagePay()`
+    * 统一收单交易创建接口（小程序支付）：`client.TradeCreate()`
+    * 统一收单线下交易查询：`client.TradeQuery()`
+    * 统一收单交易撤销接口：`client.TradeCancel()`
+    * 统一收单交易关闭接口：`client.TradeClose()`
+    * 统一收单交易退款接口：`client.TradeRefund()`
+    * 统一收单退款页面接口：`client.TradePageRefund()`
+    * 统一收单交易退款查询：`client.TradeFastPayRefundQuery()`
+    * 统一收单交易结算接口：`client.TradeOrderSettle()`
+    * 支付宝订单信息同步接口：`client.TradeOrderInfoSync()`
+    * 订单咨询服务：`client.TradeAdvanceConsult()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
-    * 单笔转账接口：client.FundTransUniTransfer()
-    * 查询转账订单接口: client.FundTransOrderQuery()
-    * 支付宝资金账户资产查询接口：client.FundAccountQuery()
-    * 转账业务单据查询接口：client.FundTransCommonQuery()
-    * 资金退回接口: client.FundTransRefund()
-    * 资金授权冻结接口: client.FundAuthOrderFreeze()
-    * 资金授权发码接口: client.FundAuthOrderVoucherCreate()
-    * 线上资金授权冻结接口: client:FundAuthOrderAppFreeze()
-    * 资金授权解冻接口: client.FundAuthOrderUnfreeze()
-    * 资金授权操作查询接口: client.FundAuthOperationDetailQuery()
-    * 资金授权撤销接口: client.FundAuthOperationCancel()
-    * 批次下单接口: client.FundBatchCreate()
-    * 批量转账关单接口: client.FundBatchClose()
-    * 批量转账明细查询接口: client.FundBatchDetailQuery()
-    * 现金红包无线支付接口: client.FundTransAppPay()
-    * 资金收款账号绑定关系查询: client.FundTransPayeeBindQuery()
+    * 单笔转账接口：`client.FundTransUniTransfer()`
+    * 查询转账订单接口: `client.FundTransOrderQuery()`
+    * 支付宝资金账户资产查询接口：`client.FundAccountQuery()`
+    * 转账业务单据查询接口：`client.FundTransCommonQuery()`
+    * 资金退回接口: `client.FundTransRefund()`
+    * 资金授权冻结接口: `client.FundAuthOrderFreeze()`
+    * 资金授权发码接口: `client.FundAuthOrderVoucherCreate()`
+    * 线上资金授权冻结接口: client:FundAuthOrderAppFreeze()`
+    * 资金授权解冻接口: `client.FundAuthOrderUnfreeze()`
+    * 资金授权操作查询接口: `client.FundAuthOperationDetailQuery()`
+    * 资金授权撤销接口: `client.FundAuthOperationCancel()`
+    * 批次下单接口: `client.FundBatchCreate()`
+    * 批量转账关单接口: `client.FundBatchClose()`
+    * 批量转账明细查询接口: `client.FundBatchDetailQuery()`
+    * 现金红包无线支付接口: `client.FundTransAppPay()`
+    * 资金收款账号绑定关系查询: `client.FundTransPayeeBindQuery()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>会员API</font>
-    * 支付宝会员授权信息查询接口（App支付宝登录）：client.UserInfoShare()
-    * 身份认证初始化服务：client.UserCertifyOpenInit()
-    * 身份认证开始认证（获取认证链接）：client.UserCertifyOpenCertify()
-    * 身份认证记录查询：client.UserCertifyOpenQuery()
-    * 支付宝个人协议页面签约接口：client.UserAgreementPageSign()
-    * 支付宝个人代扣协议解约接口：client.UserAgreementPageUnSign()
-    * 支付宝个人代扣协议查询接口：client.UserAgreementQuery()
+    * 支付宝会员授权信息查询接口（App支付宝登录）：`client.UserInfoShare()`
+    * 身份认证初始化服务：`client.UserCertifyOpenInit()`
+    * 身份认证开始认证（获取认证链接）：`client.UserCertifyOpenCertify()`
+    * 身份认证记录查询：`client.UserCertifyOpenQuery()`
+    * 支付宝个人协议页面签约接口：`client.UserAgreementPageSign()`
+    * 支付宝个人代扣协议解约接口：`client.UserAgreementPageUnSign()`
+    * 支付宝个人代扣协议查询接口：`client.UserAgreementQuery()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>营销API</font>
-    * 小程序生成推广二维码接口：client.OpenAppQrcodeCreate()
+    * 小程序生成推广二维码接口：`client.OpenAppQrcodeCreate()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>工具类API</font>
-    * 用户登陆授权：client.UserInfoAuth()
-    * 换取授权访问令牌：client.SystemOauthToken()
-    * 换取应用授权令牌：client.OpenAuthTokenApp()
-    * 应用支付宝公钥证书下载：client.PublicCertDownload()
+    * 用户登陆授权：`client.UserInfoAuth()`
+    * 换取授权访问令牌：`client.SystemOauthToken()`
+    * 换取应用授权令牌：`client.OpenAuthTokenApp()`
+    * 应用支付宝公钥证书下载：`client.PublicCertDownload()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>芝麻信用API</font>
     * 芝麻企业信用信用评估初始化: `client.ZhimaCreditEpSceneRatingInitialize()`
     * 信用服务履约同步: `client.ZhimaCreditEpSceneFulfillmentSync()`
@@ -314,30 +314,30 @@ func main() {
     * 芝麻GO结算退款接口: `client.ZhimaCreditPeZmgoSettleRefund()`
     * 芝麻GO签约预创单: `client.ZhimaCreditPeZmgoPreorderCreate()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>财务API</font>
-    * 支付宝商家账户当前余额查询：client.DataBillBalanceQuery()（失效）
-    * 查询对账单下载地址：client.DataBillDownloadUrlQuery()
+    * 支付宝商家账户当前余额查询：`client.DataBillBalanceQuery()`（失效）
+    * 查询对账单下载地址：`client.DataBillDownloadUrlQuery()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>海关相关API</font>
-    * 统一收单报关接口：client.TradeCustomsDeclare()
-    * 报关接口：client.AcquireCustoms()
-    * 报关查询接口：client.AcquireCustomsQuery()
+    * 统一收单报关接口：`client.TradeCustomsDeclare()`
+    * 报关接口：`client.AcquireCustoms()`
+    * 报关查询接口：`client.AcquireCustomsQuery()`
 
 ### 支付宝公共API
 
-* alipay.GetCertSN() => 获取证书SN号（app_cert_sn、alipay_cert_sn）
-* alipay.GetRootCertSN() => 获取证书SN号（alipay_root_cert_sn）
-* alipay.GetRsaSign() => 获取支付宝参数签名（参数sign值）
-* alipay.SystemOauthToken() => 换取授权访问令牌（得到access_token，user_id等信息）
-* alipay.FormatPrivateKey() => 格式化应用私钥
-* alipay.FormatPublicKey() => 格式化支付宝公钥
-* alipay.FormatURLParam() => 格式化支付宝请求URL参数
-* alipay.ParseNotifyToBodyMap() => 解析支付宝支付异步通知的参数到BodyMap
-* alipay.ParseNotifyByURLValues() => 通过 url.Values 解析支付宝支付异步通知的参数到BodyMap
-* alipay.VerifySign() => 支付宝异步通知参数验签
-* alipay.VerifySignWithCert() => 支付宝异步通知参数验签（证书方式）
-* alipay.VerifySyncSign() => 支付宝同步返回参数验签
-* alipay.DecryptOpenDataToStruct() => 解密支付宝开放数据到 结构体
-* alipay.DecryptOpenDataToBodyMap() => 解密支付宝开放数据到 BodyMap
-* alipay.MonitorHeartbeatSyn() => 验签接口
+* `alipay.GetCertSN()` => 获取证书SN号（app_cert_sn、alipay_cert_sn）
+* `alipay.GetRootCertSN()` => 获取证书SN号（alipay_root_cert_sn）
+* `alipay.GetRsaSign()` => 获取支付宝参数签名（参数sign值）
+* `alipay.SystemOauthToken()` => 换取授权访问令牌（得到access_token，user_id等信息）
+* `alipay.FormatPrivateKey()` => 格式化应用私钥
+* `alipay.FormatPublicKey()` => 格式化支付宝公钥
+* `alipay.FormatURLParam()` => 格式化支付宝请求URL参数
+* `alipay.ParseNotifyToBodyMap()` => 解析支付宝支付异步通知的参数到BodyMap
+* `alipay.ParseNotifyByURLValues()` => 通过 url.Values 解析支付宝支付异步通知的参数到BodyMap
+* `alipay.VerifySign()` => 支付宝异步通知参数验签
+* `alipay.VerifySignWithCert()` => 支付宝异步通知参数验签（证书方式）
+* `alipay.VerifySyncSign()` => 支付宝同步返回参数验签
+* `alipay.DecryptOpenDataToStruct()` => 解密支付宝开放数据到 结构体
+* `alipay.DecryptOpenDataToBodyMap()` => 解密支付宝开放数据到 BodyMap
+* `alipay.MonitorHeartbeatSyn()` => 验签接口
 
 ---
 
@@ -349,9 +349,9 @@ func main() {
 * 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群（微信群比较活跃）。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 
 QQ群：
-<img width="226" height="300" src="https://raw.githubusercontent.com/go-pay/gopay/main/qq_gopay.png"/>
+<img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/qq_gopay.png"/>
 加微信拉群：
-<img width="226" height="300" src="https://raw.githubusercontent.com/go-pay/gopay/main/wechat_jerry.png"/>
+<img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/wechat_jerry.png"/>
 
 ---
 
@@ -394,9 +394,9 @@ client.DebugSwitch = gopay.DebugOn
 
 微信官方文档：[官方文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 
-> 注意：微信支付下单等操作可用沙箱环境测试是否成功，但真正支付时，请使用正式环境 isProd = true，不然会报错。
+> 注意：微信支付下单等操作可用沙箱环境测试是否成功，但真正支付时，请使用正式环境 `isProd = true`，不然会报错。
 
-> 微信证书二选一：只传 apiclient_cert.pem 和 apiclient_key.pem 或者只传 apiclient_cert.p12
+> 微信证书二选一：只传 `apiclient_cert.pem` 和 `apiclient_key.pem` 或者只传 `apiclient_cert.p12`
 
 ```go
 import (
