@@ -1278,3 +1278,65 @@ type ZhimaCreditPeZmgoPreorderCreate struct {
 	PartnerId  string `json:"partner_id"`
 	BizType    string `json:"biz_type"`
 }
+
+// ===================================================
+type ZhimaCreditPeZmgoAgreementUnsignRsp struct {
+	Response     *ZhimaCreditPeZmgoAgreementUnsign `json:"zhima_credit_pe_zmgo_agreement_unsign_response"`
+	AlipayCertSn string                            `json:"alipay_cert_sn,omitempty"`
+	SignData     string                            `json:"-"`
+	Sign         string                            `json:"sign"`
+}
+
+type ZhimaCreditPeZmgoAgreementUnsign struct {
+	ErrorResponse
+	AgreementId    string `json:"agreement_id"`
+	WithholdPlanNo string `json:"withhold_plan_no"`
+}
+
+// ===================================================
+type ZhimaCreditPeZmgoAgreementQueryRsp struct {
+	Response     *ZhimaCreditPeZmgoAgreementQuery `json:"zhima_credit_pe_zmgo_agreement_query_response"`
+	AlipayCertSn string                           `json:"alipay_cert_sn,omitempty"`
+	SignData     string                           `json:"-"`
+	Sign         string                           `json:"sign"`
+}
+
+type ZhimaCreditPeZmgoAgreementQuery struct {
+	ErrorResponse
+	AgreementId     string `json:"agreement_id"`
+	AgreementName   string `json:"agreement_name"`
+	AlipayUserId    string `json:"alipay_user_id"`
+	AgreementStatus string `json:"agreement_status"`
+}
+
+// ===================================================
+type ZhimaCreditPeZmgoSettleUnfreezeRsp struct {
+	Response     *ZhimaCreditPeZmgoSettleUnfreeze `json:"zhima_credit_pe_zmgo_settle_unfreeze_response"`
+	AlipayCertSn string                           `json:"alipay_cert_sn,omitempty"`
+	SignData     string                           `json:"-"`
+	Sign         string                           `json:"sign"`
+}
+
+type ZhimaCreditPeZmgoSettleUnfreeze struct {
+	ErrorResponse
+	UnfreezeStatus string `json:"unfreeze_status"`
+	FailReaseon    string `json:"fail_reaseon,omitempty"`
+	Retry          string `json:"retry,omitempty"`
+	UnfreezeAmount string `json:"unfreeze_amount,omitempty"`
+}
+
+// ===================================================
+type ZhimaCreditPeZmgoPaysignApplyRsp struct {
+	Response     *ZhimaCreditPeZmgoPaysignApply `json:"zhima_credit_pe_zmgo_paysign_apply_response"`
+	AlipayCertSn string                         `json:"alipay_cert_sn,omitempty"`
+	SignData     string                         `json:"-"`
+	Sign         string                         `json:"sign"`
+}
+
+type ZhimaCreditPeZmgoPaysignApply struct {
+	ErrorResponse
+	BizType     string `json:"biz_type"`
+	ZmgoOptNo   string `json:"zmgo_opt_no,omitempty"`
+	Idempotent  bool   `json:"idempotent,omitempty"`
+	AgreementId string `json:"agreement_id,omitempty"`
+}
