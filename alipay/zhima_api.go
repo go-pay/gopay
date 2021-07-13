@@ -443,7 +443,6 @@ func (a *Client) ZhimaCustomerJobworthAdapterQuery(bm gopay.BodyMap) (aliRsp *Zh
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
-
 //  zhima.customer.jobworth.scene.use(职得工作证外部渠道应用数据回流)
 //	文档地址：https://opendocs.alipay.com/apis/022waz
 func (a *Client) ZhimaCustomerJobworthSceneUse(bm gopay.BodyMap) (aliRsp *ZhimaCustomerJobworthSceneUseRsp, err error) {
