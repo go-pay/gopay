@@ -399,7 +399,6 @@ func (a *Client) ZhimaCreditPeZmgoPaysignApply(bm gopay.BodyMap) (aliRsp *ZhimaC
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
-
 //  zhima.credit.pe.zmgo.paysign.confirm(芝麻GO支付下单链路签约确认)
 //	文档地址：https://opendocs.alipay.com/apis/01xcif
 func (a *Client) ZhimaCreditPeZmgoPaysignConfirm(bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoPaysignConfirmRsp, err error) {
