@@ -179,6 +179,31 @@ const (
 	// 来账识别API
 	v3MerchantIncomeRecord = "/v3/merchantfund/merchant/income-records" // 商户银行来账查询 GET
 
+	// V3 特约商户进件
+	v3Applyment4SubSubmit              = "/v3/applyment4sub/applyment"                      // 提交申请单 POST
+	v3Applyment4SubQueryByBusinessCode = "/v3/applyment4sub/applyment/business_code/%s"     // 通过业务申请编号查询申请状态 GET
+	v3Applyment4SubQueryByApplymentId  = "/v3/applyment4sub/applyment/applyment_id/%d"      // 通过申请单号查询申请状态 GET
+	v3Applyment4SubModifySettlement    = "/v3/apply4sub/sub_merchants/%s/modify-settlement" // 修改结算账号 POST
+	v3Applyment4SubQuerySettlement     = "/v3/apply4sub/sub_merchants/%s/settlement"        // 查询结算账户 GET
+
+	// 特约商户进件申请单状态
+	ApplymentStateEditing       = "APPLYMENT_STATE_EDITTING"        // 编辑中
+	ApplymentStateAuditing      = "APPLYMENT_STATE_AUDITING"        // 审核中
+	ApplymentStateRejected      = "APPLYMENT_STATE_REJECTED"        // 已驳回
+	ApplymentStateToBeConfirmed = "APPLYMENT_STATE_TO_BE_CONFIRMED" // 待账户验证
+	ApplymentStateSigning       = "APPLYMENT_STATE_SIGNING"         // 开通权限中
+	ApplymentStateFinished      = "APPLYMENT_STATE_FINISHED"        // 已完成
+	ApplymentStateCanceled      = "APPLYMENT_STATE_CANCELED"        // 已作废
+
+	// 特约商户结算账号类型
+	ApplymentSettlementAccountTypeBusiness = "ACCOUNT_TYPE_BUSINESS" // 对公银行账户
+	ApplymentSettlementAccountTypePrivate  = "ACCOUNT_TYPE_PRIVATE"  // 经营者个人银行卡
+
+	// 特约商户结算账号汇款验证结果
+	ApplymentSettlementVerifying     = "VERIFYING"      // 系统汇款验证中，商户可发起提现尝试
+	ApplymentSettlementVerifySuccess = "VERIFY_SUCCESS" // 系统成功汇款，该账户可正常发起提现
+	ApplymentSettlementVerifyFail    = "VERIFY_FAIL"    // 系统汇款失败，该账户无法发起提现，请检查修改
+
 	// 订单号类型，1-微信订单号，2-商户订单号，3-微信侧回跳到商户前端时用于查单的单据查询id（查询支付分订单中会使用）
 	TransactionId OrderNoType = 1
 	OutTradeNo    OrderNoType = 2
