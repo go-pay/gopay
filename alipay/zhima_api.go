@@ -398,3 +398,68 @@ func (a *Client) ZhimaCreditPeZmgoPaysignApply(bm gopay.BodyMap) (aliRsp *ZhimaC
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+//  zhima.credit.pe.zmgo.paysign.confirm(芝麻GO支付下单链路签约确认)
+//	文档地址：https://opendocs.alipay.com/apis/01xcif
+func (a *Client) ZhimaCreditPeZmgoPaysignConfirm(bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoPaysignConfirmRsp, err error) {
+	err = bm.CheckEmptyError("alipay_user_id", "partner_id", "merchant_app_id", "zmgo_opt_no", "biz_type")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.paysign.confirm"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPeZmgoPaysignConfirmRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+//  zhima.customer.jobworth.adapter.query(职得工作证信息匹配度查询)
+//	文档地址：https://opendocs.alipay.com/apis/022mvz
+func (a *Client) ZhimaCustomerJobworthAdapterQuery(bm gopay.BodyMap) (aliRsp *ZhimaCustomerJobworthAdapterQueryRsp, err error) {
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "zhima.customer.jobworth.adapter.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCustomerJobworthAdapterQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+
+//  zhima.customer.jobworth.scene.use(职得工作证外部渠道应用数据回流)
+//	文档地址：https://opendocs.alipay.com/apis/022waz
+func (a *Client) ZhimaCustomerJobworthSceneUse(bm gopay.BodyMap) (aliRsp *ZhimaCustomerJobworthSceneUseRsp, err error) {
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "zhima.customer.jobworth.scene.use"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCustomerJobworthSceneUseRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
