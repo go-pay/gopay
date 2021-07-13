@@ -1340,3 +1340,46 @@ type ZhimaCreditPeZmgoPaysignApply struct {
 	Idempotent  bool   `json:"idempotent,omitempty"`
 	AgreementId string `json:"agreement_id,omitempty"`
 }
+
+// ===================================================
+type ZhimaCreditPeZmgoPaysignConfirmRsp struct {
+	Response     *ZhimaCreditPeZmgoPaysignConfirm `json:"zhima_credit_pe_zmgo_paysign_confirm_response"`
+	AlipayCertSn string                           `json:"alipay_cert_sn,omitempty"`
+	SignData     string                           `json:"-"`
+	Sign         string                           `json:"sign"`
+}
+
+type ZhimaCreditPeZmgoPaysignConfirm struct {
+	ErrorResponse
+	AgreementId string `json:"agreement_id,omitempty"`
+}
+
+// ===================================================
+type ZhimaCustomerJobworthAdapterQueryRsp struct {
+	Response     *ZhimaCustomerJobworthAdapterQuery `json:"zhima_customer_jobworth_adapter_query_response"`
+	AlipayCertSn string                             `json:"alipay_cert_sn,omitempty"`
+	SignData     string                             `json:"-"`
+	Sign         string                             `json:"sign"`
+}
+
+type ZhimaCustomerJobworthAdapterQuery struct {
+	ErrorResponse
+	AdapterScore string `json:"adapter_score,omitempty"`
+	SubCode      string `json:"sub_code,omitempty"`
+	SubMsg       string `json:"sub_msg,omitempty"`
+	Url          string `json:"url,omitempty"`
+}
+
+// ===================================================
+type ZhimaCustomerJobworthSceneUseRsp struct {
+	Response     *ZhimaCustomerJobworthSceneUse `json:"zhima_customer_jobworth_scene_use_response"`
+	AlipayCertSn string                         `json:"alipay_cert_sn,omitempty"`
+	SignData     string                         `json:"-"`
+	Sign         string                         `json:"sign"`
+}
+
+type ZhimaCustomerJobworthSceneUse struct {
+	ErrorResponse
+	SubCode string `json:"sub_code"`
+	SubMsg  string `json:"sub_msg"`
+}

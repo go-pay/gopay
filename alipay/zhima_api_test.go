@@ -354,3 +354,81 @@ func TestZhimaCreditPeZmgoPaysignApply(t *testing.T) {
 	xlog.Debug("aliRsp:", *aliRsp)
 
 }
+
+// 芝麻GO支付下单链路签约确认测试
+func TestZhimaCreditPeZmgoPaysignConfirm(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("alipay_user_id", "20195108518085620000")
+	bm.Set("partner_id", "2088302424614288")
+	bm.Set("merchant_app_id", "2021001118641054")
+	bm.Set("zmgo_opt_no", "ZMGO_OPT2021040110020607570001198871")
+	bm.Set("biz_type", "hongbaoqiandao")
+	// 可选
+
+	aliRsp, err := client.ZhimaCreditPeZmgoPaysignConfirm(bm)
+	if err != nil {
+		xlog.Errorf("client.ZhimaCreditPeZmgoPaysignConfirm(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+
+}
+
+// 职得工作证信息匹配度查询测试
+func TestZhimaCustomerJobworthAdapterQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	// 可选
+	bm.Set("user_id", "2088302887413828")
+	bm.Set("cert_no", "01011219900101XXXX")
+	bm.Set("user_name", "张三")
+	bm.Set("cert_type", "1")
+	bm.Set("job_name", "java开发")
+	bm.SetBodyMap("adapter", func(bm gopay.BodyMap) {
+		bm.Set("edu_level", "BACHELOR")
+		bm.Set("skill_certificate", "电工证")
+		bm.Set("age", "18.35")
+		bm.Set("gender", "男")
+		bm.Set("city", "330100")
+		bm.Set("recommend", "5")
+	})
+
+	aliRsp, err := client.ZhimaCustomerJobworthAdapterQuery(bm)
+	if err != nil {
+		xlog.Errorf("client.ZhimaCustomerJobworthAdapterQuery(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+
+}
+
+// 职得工作证外部渠道应用数据回流测试
+func TestZhimaCustomerJobworthSceneUse(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	// 可选
+	bm.Set("scene_type", "zhima_job_ext_exposure_info")
+	bm.SetBodyMap("extra_info", func(bm gopay.BodyMap) {
+		bm.Set("user_id", "2088302887413828")
+		bm.Set("cert_no", "01011219900101XXXX")
+		bm.Set("user_name", "张三")
+		bm.Set("job_name", "java开发")
+		bm.Set("job_id", "123456")
+		bm.Set("scene_time", "1624278367975")
+		bm.Set("job_category_id", "project")
+		bm.Set("company_name", "58")
+		bm.Set("company_id", "123456789")
+		bm.Set("job_category", "技术")
+		bm.Set("employer_visit", "true")
+		bm.Set("self_visit", "true")
+	})
+
+	aliRsp, err := client.ZhimaCustomerJobworthSceneUse(bm)
+	if err != nil {
+		xlog.Errorf("client.ZhimaCustomerJobworthSceneUse(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+
+}
