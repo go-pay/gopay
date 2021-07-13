@@ -422,6 +422,38 @@ type MerchantIncomeRecordRsp struct {
 	Error    string                `json:"-"`
 }
 
+// 特约商户进件提交申请单 Resp
+type Applyment4SubSubmitResp struct {
+	Code     int                  `json:"-"`
+	SignInfo *SignInfo            `json:"-"`
+	Response *Applyment4SubSubmit `json:"response,omitempty"`
+	Error    string               `json:"-"`
+}
+
+// 特约商户进件申请单查询 Resp
+type Applyment4SubQueryResp struct {
+	Code     int                 `json:"-"`
+	SignInfo *SignInfo           `json:"-"`
+	Response *Applyment4SubQuery `json:"response,omitempty"`
+	Error    string              `json:"-"`
+}
+
+// 特约商户修改结算账号 Resp
+type Applyment4SubModifySettlementResp struct {
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Response *struct{} `json:"response,omitempty"`
+	Error    string    `json:"-"`
+}
+
+// 特约商户查询结算账号 Resp
+type Applyment4SubQuerySettlementResp struct {
+	Code     int                           `json:"-"`
+	SignInfo *SignInfo                     `json:"-"`
+	Response *Applyment4SubQuerySettlement `json:"response,omitempty"`
+	Error    string                        `json:"-"`
+}
+
 // ==================================分割==================================
 
 type JSAPIPayParams struct {
@@ -1301,4 +1333,34 @@ type Link struct {
 	Next string `json:"next"` // 下一页链接
 	Prev string `json:"prev"` // 上一页链接
 	Self string `json:"self"` // 当前链接
+}
+
+type Applyment4SubSubmit struct {
+	ApplymentId uint64 `json:"applyment_id"` // 微信支付申请单号
+}
+
+type Applyment4SubQuery struct {
+	BusinessCode      string                     `json:"business_code"`       // 业务申请编号
+	ApplymentId       uint64                     `json:"applyment_id"`        // 微信支付申请单号
+	SubMchid          string                     `json:"sub_mchid"`           // 特约商户号
+	SignUrl           string                     `json:"sign_url"`            // 超级管理员签约链接
+	ApplymentState    string                     `json:"applyment_state"`     // 申请单状态
+	ApplymentStateMsg string                     `json:"applyment_state_msg"` // 申请状态描述
+	AuditDetail       []Applyment4SubAuditDetail `json:"audit_detail"`        // 驳回原因详情
+}
+
+type Applyment4SubAuditDetail struct {
+	Field        string `json:"field"`         // 字段名
+	FieldName    string `json:"field_name"`    // 字段名称
+	RejectReason string `json:"reject_reason"` // 驳回原因
+}
+
+type Applyment4SubQuerySettlement struct {
+	AccountType      string `json:"account_type"`       // 账户类型
+	AccountBank      string `json:"account_bank"`       // 开户银行
+	BankName         string `json:"bank_name"`          // 开户银行全称（含支行）
+	BankBranchId     string `json:"bank_branch_id"`     // 开户银行联行号
+	AccountNumber    string `json:"account_number"`     // 银行账号
+	VerifyResult     string `json:"verify_result"`      // 汇款验证结果
+	VerifyFailReason string `json:"verify_fail_reason"` // 汇款验证失败原因
 }
