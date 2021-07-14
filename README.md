@@ -44,14 +44,14 @@ func main() {
 
 > #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口，欢迎参与完善V3接口。
 
-* <font color='#07C160' size='4'>基础支付（直连模式）</font>
+* <font color='#07C160' size='4'>基础支付（商户平台）</font>
     * APP下单：`client.V3TransactionApp()`
     * JSAPI/小程序下单：`client.V3TransactionJsapi()`
     * Native下单：`client.V3TransactionNative()`
     * H5下单：`client.V3TransactionH5()`
     * 查询订单：`client.V3TransactionQueryOrder()`
     * 关闭订单：`client.V3TransactionCloseOrder()`
-* <font color='#07C160' size='4'>基础支付（服务商模式）</font>
+* <font color='#07C160' size='4'>基础支付（服务商平台）</font>
     * APP下单：`client.V3PartnerTransactionApp()`
     * JSAPI/小程序下单：`client.V3PartnerTransactionJsapi()`
     * Native下单：`client.V3PartnerTransactionNative()`
@@ -148,7 +148,13 @@ func main() {
     * 查询账户日终余额：`client.V3MerchantDayBalance()`
 * <font color='#07C160' size='4'>来账识别API</font>
     * 商户银行来账查询：`client.V3MerchantIncomeRecord()`
-
+* <font color='#07C160' size='4'>特约商户进件（服务商平台）</font>
+    * 提交申请单：`client.V3Apply4SubSubmit()`
+    * 查询申请单状态（BusinessCode）：`client.V3Apply4SubQueryByBusinessCode()`
+    * 查询申请单状态（ApplyId）：`client.V3Apply4SubQueryByApplyId()`
+    * 修改结算账号：`client.V3Apply4SubModifySettlement()`
+    * 查询结算账户：`client.V3Apply4SubQuerySettlement()`
+  
 ### 微信支付V2 API
 
 > #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口。
@@ -353,7 +359,7 @@ func main() {
 * [GoPay 文档地址](https://pkg.go.dev/github.com/go-pay/gopay)
 * QQ支付 使用方法请参考微信的
 * 所有方法，如有问题，请仔细查看 wechat/client_test.go、alipay/client_test.go 或 examples
-* 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群（微信群比较活跃）。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
+* 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群（微信群有两个，一个活跃群，聊的内容比较杂，一个只聊技术群，平时很少说话，加好友后说明加哪个群，默认全邀请）。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 
 QQ群：
 <img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/qq_gopay.png"/>
