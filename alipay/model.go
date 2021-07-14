@@ -1383,3 +1383,73 @@ type ZhimaCustomerJobworthSceneUse struct {
 	SubCode string `json:"sub_code"`
 	SubMsg  string `json:"sub_msg"`
 }
+
+// ===================================================
+type UserAgreementExecutionplanModifyRsp struct {
+	Response     *UserAgreementExecutionplanModify `json:"alipay_user_agreement_executionplan_modify_response"`
+	AlipayCertSn string                            `json:"alipay_cert_sn,omitempty"`
+	SignData     string                            `json:"-"`
+	Sign         string                            `json:"sign"`
+}
+
+type UserAgreementExecutionplanModify struct {
+	ErrorResponse
+	AgreementNo string `json:"agreement_no"`
+	DeductTime  string `json:"deduct_time"`
+}
+
+// ===================================================
+type UserAgreementTransferRsp struct {
+	Response     *UserAgreementTransfer `json:"alipay_user_agreement_transfer_response"`
+	AlipayCertSn string                 `json:"alipay_cert_sn,omitempty"`
+	SignData     string                 `json:"-"`
+	Sign         string                 `json:"sign"`
+}
+
+type UserAgreementTransfer struct {
+	ErrorResponse
+	ExecuteTime   string `json:"execute_time,omitempty"`
+	PeriodType    string `json:"period_type,omitempty"`
+	Amount        string `json:"amount,omitempty"`
+	TotalAmount   string `json:"total_amount,omitempty"`
+	TotalPayments string `json:"total_payments,omitempty"`
+	Period        string `json:"period,omitempty"`
+}
+
+// ===================================================
+type UserTwostageCommonUseRsp struct {
+	Response     *UserTwostageCommonUse `json:"alipay_user_twostage_common_use_response"`
+	AlipayCertSn string                 `json:"alipay_cert_sn,omitempty"`
+	SignData     string                 `json:"-"`
+	Sign         string                 `json:"sign"`
+}
+
+type UserTwostageCommonUse struct {
+	ErrorResponse
+	UserId           string                `json:"user_id,omitempty"`
+	UserIdentityInfo []*UserIdentityInfo `json:"user_identity_info,omitempty"`
+}
+
+type UserIdentityInfo struct {
+	HSchoolInfo []*HSchoolInfo `json:"h_school_info,omitempty"`
+}
+
+type HSchoolInfo struct {
+	SchoolStdCode string `json:"school_std_code"`
+	CampusNo      string `json:"campus_no"`
+}
+
+// ===================================================
+type UserAuthZhimaorgIdentityApplyRsp struct {
+	Response     *UserAuthZhimaorgIdentityApply `json:"alipay_user_auth_zhimaorg_identity_apply_response"`
+	AlipayCertSn string                         `json:"alipay_cert_sn,omitempty"`
+	SignData     string                         `json:"-"`
+	Sign         string                         `json:"sign"`
+}
+
+type UserAuthZhimaorgIdentityApply struct {
+	ErrorResponse
+	AccessToken   string `json:"access_token"`
+	AuthTokenType string `json:"auth_token_type,omitempty"`
+	RefreshToken  string `json:"refresh_token"`
+}

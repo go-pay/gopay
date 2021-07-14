@@ -64,3 +64,72 @@ func TestClient_UserCertifyOpenQuery(t *testing.T) {
 	xlog.Debug("aliRsp:", *aliRsp)
 	xlog.Debug("aliRsp.Response.Passed:", aliRsp.Response.Passed)
 }
+
+func TestUserAgreementExecutionplanModify(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("agreement_no", "20185909000458725113")
+	bm.Set("deduct_time", "2019-05-12")
+	bm.Set("memo", "用户已购买半年包，需延期扣款时间")
+
+	// 发起请求
+	aliRsp, err := client.UserAgreementExecutionplanModify(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestUserAgreementTransfer(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("agreement_no", "20170322450983769228")
+	bm.Set("target_product_code", "CYCLE_PAY_AUTH_P")
+	bm.SetBodyMap("period_rule_params", func(bm gopay.BodyMap) {
+		bm.Set("period_type", "DAY")
+		bm.Set("period", "3")
+		bm.Set("execute_time", "20190-01-23")
+		bm.Set("single_amount", "10.99")
+	})
+
+	// 发起请求
+	aliRsp, err := client.UserAgreementTransfer(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestUserTwostageCommonUse(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("dynamic_id", "286861260475412123")
+	bm.Set("sence_no", "20170718xxxxxxxx")
+	bm.Set("pay_pid", "2088702093900999")
+
+	// 发起请求
+	aliRsp, err := client.UserTwostageCommonUse(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestUserAuthZhimaorgIdentityApply(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("cert_type", "NATIONAL_LEGAL")
+	bm.Set("cert_no", "330701199901011311")
+	bm.Set("name", "中国移动有限公司")
+
+	// 发起请求
+	aliRsp, err := client.UserAuthZhimaorgIdentityApply(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
