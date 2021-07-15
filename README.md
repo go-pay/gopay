@@ -294,12 +294,16 @@ func main() {
     * 资金收款账号绑定关系查询: `client.FundTransPayeeBindQuery()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>会员API</font>
     * 支付宝会员授权信息查询接口（App支付宝登录）：`client.UserInfoShare()`
-    * 身份认证初始化服务：`client.UserCertifyOpenInit()`
-    * 身份认证开始认证（获取认证链接）：`client.UserCertifyOpenCertify()`
-    * 身份认证记录查询：`client.UserCertifyOpenQuery()`
-    * 支付宝个人协议页面签约接口：`client.UserAgreementPageSign()`
-    * 支付宝个人代扣协议解约接口：`client.UserAgreementPageUnSign()`
-    * 支付宝个人代扣协议查询接口：`client.UserAgreementQuery()`
+    * 身份认证初始化服务: `client.UserCertifyOpenInit()`
+    * 身份认证开始认证（获取认证链接）: `client.UserCertifyOpenCertify()`
+    * 身份认证记录查询: `client.UserCertifyOpenQuery()`
+    * 支付宝个人协议页面签约接口: `client.UserAgreementPageSign()`
+    * 支付宝个人代扣协议解约接口: `client.UserAgreementPageUnSign()`
+    * 支付宝个人代扣协议查询接口: `client.UserAgreementQuery()`
+    * 周期性扣款协议执行计划修改接口: `client.UserAgreementExecutionplanModify()`
+    * 协议由普通通用代扣协议产品转移到周期扣协议产品: `client.UserAgreementTransfer()`
+    * 通用当面付二阶段接口: `client.UserTwostageCommonUse()`
+    * 芝麻企业征信基于身份的协议授权: `client.UserAuthZhimaorgIdentityApply()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>营销API</font>
     * 小程序生成推广二维码接口：`client.OpenAppQrcodeCreate()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>工具类API</font>
