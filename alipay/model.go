@@ -1426,7 +1426,7 @@ type UserTwostageCommonUseRsp struct {
 
 type UserTwostageCommonUse struct {
 	ErrorResponse
-	UserId           string                `json:"user_id,omitempty"`
+	UserId           string              `json:"user_id,omitempty"`
 	UserIdentityInfo []*UserIdentityInfo `json:"user_identity_info,omitempty"`
 }
 
@@ -1452,4 +1452,75 @@ type UserAuthZhimaorgIdentityApply struct {
 	AccessToken   string `json:"access_token"`
 	AuthTokenType string `json:"auth_token_type,omitempty"`
 	RefreshToken  string `json:"refresh_token"`
+}
+
+// ===================================================
+type UserCharityRecordexistQueryRsp struct {
+	Response     *UserCharityRecordexistQuery `json:"alipay_user_charity_recordexist_query_response"`
+	AlipayCertSn string                       `json:"alipay_cert_sn,omitempty"`
+	SignData     string                       `json:"-"`
+	Sign         string                       `json:"sign"`
+}
+
+type UserCharityRecordexistQuery struct {
+	ErrorResponse
+	DonationTag string `json:"donation_tag"`
+}
+
+// ===================================================
+type UserAlipaypointSendRsp struct {
+	Response     *UserAlipaypointSend `json:"alipay_user_alipaypoint_send_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
+}
+
+type UserAlipaypointSend struct {
+	ErrorResponse
+	RecordId string `json:"record_id"`
+}
+
+// ===================================================
+type MemberDataIsvCreateRsp struct {
+	Response     *MemberDataIsvCreate `json:"koubei_member_data_isv_create_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
+}
+
+type MemberDataIsvCreate struct {
+	ErrorResponse
+}
+
+// ===================================================
+type UserFamilyArchiveQueryRsp struct {
+	Response     *UserFamilyArchiveQuery `json:"alipay_user_family_archive_query_response"`
+	AlipayCertSn string                  `json:"alipay_cert_sn,omitempty"`
+	SignData     string                  `json:"-"`
+	Sign         string                  `json:"sign"`
+}
+
+type UserFamilyArchiveQuery struct {
+	ErrorResponse
+	ArchiveList []*FamilyArchiveDetail `json:"archive_list"`
+}
+
+type FamilyArchiveDetail struct {
+	ArchiveId            string `json:"archive_id"`
+	RealName             string `json:"real_name,omitempty"`
+	CertNo               string `json:"cert_no,omitempty"`
+	CertType             string `json:"cert_type,omitempty"`
+	Mobile               string `json:"mobile,omitempty"`
+	Email                string `json:"email,omitempty"`
+	Role                 string `json:"role,omitempty"`
+	Province             string `json:"province,omitempty"`
+	City                 string `json:"city,omitempty"`
+	DesensitizedLogonId  string `json:"desensitized_logon_id,omitempty"`
+	Area                 string `json:"area,omitempty"`
+	DesensitizedRealName string `json:"desensitized_real_name,omitempty"`
+	Address              string `json:"address,omitempty"`
+	Zip                  string `json:"zip,omitempty"`
+	Birthday             string `json:"birthday,omitempty"`
+	Gender               string `json:"gender,omitempty"`
+	Profession           string `json:"profession,omitempty"`
 }

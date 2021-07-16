@@ -133,3 +133,66 @@ func TestUserAuthZhimaorgIdentityApply(t *testing.T) {
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
 }
+
+func TestUserCharityRecordexistQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("partner_id", "2088111122223333")
+	bm.Set("user_id", "2088111122223333")
+
+	// 发起请求
+	aliRsp, err := client.UserCharityRecordexistQuery(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestUserAlipaypointSend(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("budget_code", "02559A591572")
+	bm.Set("partner_biz_no", "011022222222212")
+	bm.Set("point_amount", "1")
+
+	// 发起请求
+	aliRsp, err := client.UserAlipaypointSend(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestMemberDataIsvCreate(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("member_card_id", "2014323100009")
+	bm.Set("member_source", "alipay")
+	bm.Set("member_status", "1")
+	bm.Set("gmt_merber_card_create", "2017-02-17 20:11:54")
+	bm.Set("parter_id", "2088902248579233")
+
+	// 发起请求
+	aliRsp, err := client.MemberDataIsvCreate(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestUserFamilyArchiveQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("archive_token", "2020050200286001170017000004861")
+
+	// 发起请求
+	aliRsp, err := client.UserFamilyArchiveQuery(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
