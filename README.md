@@ -304,6 +304,10 @@ func main() {
     * 协议由普通通用代扣协议产品转移到周期扣协议产品: `client.UserAgreementTransfer()`
     * 通用当面付二阶段接口: `client.UserTwostageCommonUse()`
     * 芝麻企业征信基于身份的协议授权: `client.UserAuthZhimaorgIdentityApply()`
+    * 查询是否在支付宝公益捐赠的接口: `client.UserCharityRecordexistQuery()`
+    * 集分宝发放接口: `client.UserAlipaypointSend()`
+    * isv 会员CRM数据回流: `client.MemberDataIsvCreate()`
+    * 询家人信息档案(选人授权)组件已选的家人档案信息: `client.UserFamilyArchiveQuery()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>营销API</font>
     * 小程序生成推广二维码接口：`client.OpenAppQrcodeCreate()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>工具类API</font>
