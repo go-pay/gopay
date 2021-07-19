@@ -1524,3 +1524,59 @@ type FamilyArchiveDetail struct {
 	Gender               string `json:"gender,omitempty"`
 	Profession           string `json:"profession,omitempty"`
 }
+
+// ===================================================
+type UserFamilyArchiveInitializeRsp struct {
+	Response     *UserFamilyArchiveInitialize `json:"alipay_user_family_archive_initialize_response"`
+	AlipayCertSn string                       `json:"alipay_cert_sn,omitempty"`
+	SignData     string                       `json:"-"`
+	Sign         string                       `json:"sign"`
+}
+
+type UserFamilyArchiveInitialize struct {
+	ErrorResponse
+	ArchivePluginUrl string `json:"archive_plugin_url"`
+}
+
+// ===================================================
+type UserCertdocCertverifyPreconsultRsp struct {
+	Response     *UserCertdocCertverifyPreconsult `json:"alipay_user_certdoc_certverify_preconsult_response"`
+	AlipayCertSn string                           `json:"alipay_cert_sn,omitempty"`
+	SignData     string                           `json:"-"`
+	Sign         string                           `json:"sign"`
+}
+
+type UserCertdocCertverifyPreconsult struct {
+	ErrorResponse
+	VerifyId string `json:"verify_id"`
+}
+
+// ===================================================
+type UserCertdocCertverifyConsultRsp struct {
+	Response     *UserCertdocCertverifyConsult `json:"alipay_user_certdoc_certverify_consult_response"`
+	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
+	SignData     string                        `json:"-"`
+	Sign         string                        `json:"sign"`
+}
+
+type UserCertdocCertverifyConsult struct {
+	ErrorResponse
+	Passed     string `json:"passed"`
+	FailReason string `json:"fail_reason,omitempty"`
+	FailParams string `json:"fail_params,omitempty"`
+}
+
+// ===================================================
+type UserFamilyShareZmgoInitializeRsp struct {
+	Response     *UserFamilyShareZmgoInitialize `json:"alipay_user_family_share_zmgo_initialize_response"`
+	AlipayCertSn string                         `json:"alipay_cert_sn,omitempty"`
+	SignData     string                         `json:"-"`
+	Sign         string                         `json:"sign"`
+}
+
+type UserFamilyShareZmgoInitialize struct {
+	ErrorResponse
+	Shareable         bool   `json:"shareable"`
+	HasSharing        bool   `json:"has_sharing"`
+	FamilySharingLink string `json:"family_sharing_link"`
+}
