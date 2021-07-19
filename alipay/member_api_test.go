@@ -196,3 +196,64 @@ func TestUserFamilyArchiveQuery(t *testing.T) {
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
 }
+
+func TestUserFamilyArchiveInitialize(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("out_biz_no", "d0f003fdf57b4983bae5a0d1af2e7744")
+	bm.Set("template_id", "2020050200286001170017000004861")
+	bm.Set("redirect_uri", "https://www.alipay.com")
+
+	// 发起请求
+	aliRsp, err := client.UserFamilyArchiveInitialize(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestUserCertdocCertverifyPreconsult(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("user_name", "张三")
+	bm.Set("cert_type", "IDENTITY_CARD")
+	bm.Set("cert_no", "230100199901010001")
+
+	// 发起请求
+	aliRsp, err := client.UserCertdocCertverifyPreconsult(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestUserCertdocCertverifyConsult(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("verify_id", "671ffcda5447bc87e9ed2f669eb143d4")
+	// 发起请求
+	aliRsp, err := client.UserCertdocCertverifyConsult(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestUserFamilyShareZmgoInitialize(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("user_id", "2088161820676973")
+	bm.Set("scene_id", "family_health_card")
+	bm.Set("template_id", "2019112500020903940000454087")
+	bm.Set("out_request_no", "d0f003fdf57b4983bae5a0d1af2e7744")
+	// 发起请求
+	aliRsp, err := client.UserFamilyShareZmgoInitialize(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
