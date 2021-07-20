@@ -257,3 +257,31 @@ func TestUserFamilyShareZmgoInitialize(t *testing.T) {
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
 }
+
+func TestUserDtbankQrcodedataQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("data_date", "20210106")
+	bm.Set("qrcode_id", "QRC884QRC00014990")
+	bm.Set("qrcode_out_id", "18448-000006")
+	// 发起请求
+	aliRsp, err := client.UserDtbankQrcodedataQuery(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestUserAlipaypointBudgetlibQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("budget_code", "20201107050844")
+	// 发起请求
+	aliRsp, err := client.UserAlipaypointBudgetlibQuery(bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}

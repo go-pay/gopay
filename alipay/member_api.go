@@ -444,3 +444,51 @@ func (a *Client) UserFamilyShareZmgoInitialize(bm gopay.BodyMap) (aliRsp *UserFa
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+// alipay.user.dtbank.qrcodedata.query(数字分行银行码明细数据查询)
+//	文档地址：https://opendocs.alipay.com/apis/01ozks
+func (a *Client) UserDtbankQrcodedataQuery(bm gopay.BodyMap) (aliRsp *UserDtbankQrcodedataQueryRsp, err error) {
+	err = bm.CheckEmptyError("data_date", "qrcode_id", "qrcode_out_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.user.dtbank.qrcodedata.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(UserDtbankQrcodedataQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.user.alipaypoint.budgetlib.query(查询集分宝预算库详情)
+//	文档地址：https://opendocs.alipay.com/apis/01zrby
+func (a *Client) UserAlipaypointBudgetlibQuery(bm gopay.BodyMap) (aliRsp *UserAlipaypointBudgetlibQueryRsp, err error) {
+	err = bm.CheckEmptyError("budget_code")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.user.alipaypoint.budgetlib.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(UserAlipaypointBudgetlibQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
