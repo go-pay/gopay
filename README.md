@@ -312,6 +312,8 @@ func main() {
     * 实名证件信息比对验证预咨询: `client.UserCertdocCertverifyPreconsult()`
     * 实名证件信息比对验证咨询: `client.UserCertdocCertverifyConsult()`
     * 初始化家庭芝麻GO共享组件: `client.UserFamilyShareZmgoInitialize()`
+    * 数字分行银行码明细数据查询: `client.UserDtbankQrcodedataQuery()`
+    * 查询集分宝预算库详情: `client.UserAlipaypointBudgetlibQuery()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>营销API</font>
     * 小程序生成推广二维码接口：`client.OpenAppQrcodeCreate()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>工具类API</font>

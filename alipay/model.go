@@ -1580,3 +1580,43 @@ type UserFamilyShareZmgoInitialize struct {
 	HasSharing        bool   `json:"has_sharing"`
 	FamilySharingLink string `json:"family_sharing_link"`
 }
+
+// ===================================================
+type UserDtbankQrcodedataQueryRsp struct {
+	Response     *UserDtbankQrcodedataQuery `json:"alipay_user_dtbank_qrcodedata_query_response"`
+	AlipayCertSn string                     `json:"alipay_cert_sn,omitempty"`
+	SignData     string                     `json:"-"`
+	Sign         string                     `json:"sign"`
+}
+
+type UserDtbankQrcodedataQuery struct {
+	ErrorResponse
+	DataDate           string `json:"data_date,omitempty"`
+	QrcodeId           string `json:"qrcode_id,omitempty"`
+	QrcodeOutId        string `json:"qrcode_out_id,omitempty"`
+	BindCard           string `json:"bind_card,omitempty"`
+	SendVoucherCnt     string `json:"send_voucher_cnt,omitempty"`
+	SendVoucherAmt     string `json:"send_voucher_amt,omitempty"`
+	WriteOffVoucherCnt string `json:"write_off_voucher_cnt,omitempty"`
+	WriteOffVoucherAmt string `json:"write_off_voucher_amt,omitempty"`
+	LeadToFollow       string `json:"lead_to_follow,omitempty"`
+}
+
+// ===================================================
+type UserAlipaypointBudgetlibQueryRsp struct {
+	Response     *UserAlipaypointBudgetlibQuery `json:"alipay_user_alipaypoint_budgetlib_query_response"`
+	AlipayCertSn string                         `json:"alipay_cert_sn,omitempty"`
+	SignData     string                         `json:"-"`
+	Sign         string                         `json:"sign"`
+}
+
+type UserAlipaypointBudgetlibQuery struct {
+	ErrorResponse
+	BudgetCode       string `json:"budget_code"`
+	BudgetDesc       string `json:"budget_desc"`
+	Enabled          bool   `json:"enabled"`
+	CumulativeAmount int64  `json:"cumulative_amount"`
+	RemainAmount     int64  `json:"remain_amount"`
+	StartTime        string `json:"start_time"`
+	EndTime          string `json:"end_time"`
+}
