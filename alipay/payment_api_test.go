@@ -260,3 +260,104 @@ func TestTradeAdvanceConsult(t *testing.T) {
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
 }
+
+func TestPcreditHuabeiAuthSettleApply(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("agreement_no", "20170502000610755993")
+	bm.Set("pay_amount", "3.00")
+	bm.Set("out_request_no", "8077735255938032")
+	bm.Set("alipay_user_id", "2088101117955611")
+
+	aliRsp, err := client.PcreditHuabeiAuthSettleApply(bm)
+	if err != nil {
+		xlog.Errorf("client.PcreditHuabeiAuthSettleApply(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestCommerceTransportNfccardSend(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("issue_org_no", "12345678")
+	bm.Set("card_no", "12345678")
+	bm.Set("card_status", "CANCEL")
+
+	aliRsp, err := client.CommerceTransportNfccardSend(bm)
+	if err != nil {
+		xlog.Errorf("client.CommerceTransportNfccardSend(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestDataDataserviceAdDataQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("query_type", "ALL_SUM")
+	bm.Set("biz_token", "e09d869511189c24ce13fe3294f2bd6e")
+	bm.Set("ad_level", "CREATIVE")
+	bm.Set("start_date", "20180820")
+	bm.Set("end_date", "20180820")
+	bm.Set("outer_id_list", "10760000471-2")
+
+	aliRsp, err := client.DataDataserviceAdDataQuery(bm)
+	if err != nil {
+		xlog.Errorf("client.DataDataserviceAdDataQuery(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestCommerceAirCallcenterTradeApply(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("scene_code", "flight_ticket_order")
+	bm.Set("op_code", "order_acquire_proxy")
+	bm.Set("channel", "hangsiair")
+	bm.Set("target_id", "2088102122001010")
+	bm.Set("target_id_type", "ALIPAY_USER_ID")
+	bm.SetBodyMap("trade_apply_params", func(bm gopay.BodyMap) {
+		bm.Set("buyer_name", "张三")
+		bm.Set("subject", "北京---上海 单程")
+		bm.Set("expire_time", "2017-03-30 18:30:00")
+		bm.Set("out_trade_no", "2387238273827387")
+		bm.Set("total_amount", "1000.00")
+		bm.Set("currency", "CNY")
+
+	})
+
+	aliRsp, err := client.CommerceAirCallcenterTradeApply(bm)
+	if err != nil {
+		xlog.Errorf("client.CommerceAirCallcenterTradeApply(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestPaymentTradeOrderCreate(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("partner_id", "202210000000000001278")
+	bm.Set("out_trade_no", "20150320010101001")
+	bm.Set("recon_related_no", "20150320010101001")
+	bm.Set("pd_code", "01050200000000000009")
+	bm.Set("ev_code", "12050001")
+	bm.Set("total_amount", "10000")
+	bm.Set("currency_code", "156")
+	bm.Set("seller_id", "2088102146225135")
+	bm.Set("pay_type", "pay")
+	bm.Set("pay_date", "2014-07-24 03:07:50")
+	bm.SetBodyMap("goods_info", func(bm gopay.BodyMap) {
+		bm.Set("goods_name", "ipad")
+		bm.Set("goods_price", "2000.00")
+	})
+
+	aliRsp, err := client.PaymentTradeOrderCreate(bm)
+	if err != nil {
+		xlog.Errorf("client.PaymentTradeOrderCreate(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}

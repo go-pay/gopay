@@ -374,3 +374,123 @@ func (a *Client) TradeOrderAggregateConsult(bm gopay.BodyMap) (aliRsp *TradeOrde
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+// alipay.pcredit.huabei.auth.settle.apply(花芝轻会员结算申请)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/alipay.pcredit.huabei.auth.settle.apply
+func (a *Client) PcreditHuabeiAuthSettleApply(bm gopay.BodyMap) (aliRsp *PcreditHuabeiAuthSettleApplyRsp, err error) {
+	err = bm.CheckEmptyError("agreement_no", "pay_amount", "out_request_no", "alipay_user_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.pcredit.huabei.auth.settle.apply"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(PcreditHuabeiAuthSettleApplyRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.commerce.transport.nfccard.send(NFC用户卡信息同步)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/alipay.commerce.transport.nfccard.send
+func (a *Client) CommerceTransportNfccardSend(bm gopay.BodyMap) (aliRsp *CommerceTransportNfccardSendRsp, err error) {
+	err = bm.CheckEmptyError("issue_org_no", "card_no", "card_status")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.commerce.transport.nfccard.send"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(CommerceTransportNfccardSendRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.data.dataservice.ad.data.query(广告投放数据查询)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/alipay.data.dataservice.ad.data.query
+func (a *Client) DataDataserviceAdDataQuery(bm gopay.BodyMap) (aliRsp *DataDataserviceAdDataQueryRsp, err error) {
+	err = bm.CheckEmptyError("query_type", "biz_token", "ad_level", "start_date", "end_date", "outer_id_list")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.data.dataservice.ad.data.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(DataDataserviceAdDataQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.commerce.air.callcenter.trade.apply(航司电话订票待申请接口)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/alipay.commerce.air.callcenter.trade.apply
+func (a *Client) CommerceAirCallcenterTradeApply(bm gopay.BodyMap) (aliRsp *CommerceAirCallcenterTradeApplyRsp, err error) {
+	err = bm.CheckEmptyError("scene_code", "op_code", "channel", "target_id", "target_id_type", "trade_apply_params")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "alipay.commerce.air.callcenter.trade.apply"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(CommerceAirCallcenterTradeApplyRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// mybank.payment.trade.order.create(网商银行全渠道收单业务订单创建)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/mybank.payment.trade.order.create
+func (a *Client) PaymentTradeOrderCreate(bm gopay.BodyMap) (aliRsp *PaymentTradeOrderCreateRsp, err error) {
+	err = bm.CheckEmptyError("partner_id", "out_trade_no", "recon_related_no", "pd_code", "ev_code", "total_amount", "currency_code", "goods_info", "seller_id", "pay_type", "pay_date")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "mybank.payment.trade.order.create"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(PaymentTradeOrderCreateRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
