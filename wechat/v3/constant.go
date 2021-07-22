@@ -180,7 +180,7 @@ const (
 	v3MerchantIncomeRecord = "/v3/merchantfund/merchant/income-records" // 商户银行来账查询 GET
 
 	// 服务商-特约商户进件
-	v3Apply4SubSubmit              = "/v3/applyment4sub/applyment"                      // 提交申请单 POST
+	v3Apply4SubSubmit              = "/v3/applyment4sub/applyment/"                     // 提交申请单 POST
 	v3Apply4SubQueryByBusinessCode = "/v3/applyment4sub/applyment/business_code/%s"     // business_code 通过业务申请编号查询申请状态 GET
 	v3Apply4SubQueryByApplyId      = "/v3/applyment4sub/applyment/applyment_id/%s"      // applyment_id 通过申请单号查询申请状态 GET
 	v3Apply4SubModifySettlement    = "/v3/apply4sub/sub_merchants/%s/modify-settlement" // sub_mchid 修改结算账号 POST
