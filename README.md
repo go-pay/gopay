@@ -266,15 +266,20 @@ func main() {
     * 手机网站支付接口2.0（手机网站支付）：`client.TradeWapPay()`
     * 统一收单下单并支付页面接口（电脑网站支付）：`client.TradePagePay()`
     * 统一收单交易创建接口（小程序支付）：`client.TradeCreate()`
-    * 统一收单线下交易查询：`client.TradeQuery()`
-    * 统一收单交易撤销接口：`client.TradeCancel()`
-    * 统一收单交易关闭接口：`client.TradeClose()`
-    * 统一收单交易退款接口：`client.TradeRefund()`
-    * 统一收单退款页面接口：`client.TradePageRefund()`
-    * 统一收单交易退款查询：`client.TradeFastPayRefundQuery()`
-    * 统一收单交易结算接口：`client.TradeOrderSettle()`
-    * 支付宝订单信息同步接口：`client.TradeOrderInfoSync()`
-    * 订单咨询服务：`client.TradeAdvanceConsult()`
+    * 统一收单线下交易查询: `client.TradeQuery()`
+    * 统一收单交易撤销接口: `client.TradeCancel()`
+    * 统一收单交易关闭接口: `client.TradeClose()`
+    * 统一收单交易退款接口: `client.TradeRefund()`
+    * 统一收单退款页面接口: `client.TradePageRefund()`
+    * 统一收单交易退款查询: `client.TradeFastPayRefundQuery()`
+    * 统一收单交易结算接口: `client.TradeOrderSettle()`
+    * 支付宝订单信息同步接口: `client.TradeOrderInfoSync()`
+    * ~~聚合支付订单咨询服务: `client.TradeAdvanceConsult()`(失效)~~
+    * 花芝轻会员结算申请: `client.PcreditHuabeiAuthSettleApply()`
+    * NFC用户卡信息同步: `client.CommerceTransportNfccardSend()`
+    * 广告投放数据查询: `client.DataDataserviceAdDataQuery()`
+    * 航司电话订票待申请接口: `client.CommerceAirCallcenterTradeApply()`
+    * 网商银行全渠道收单业务订单创建: `client.PaymentTradeOrderCreate()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
     * 单笔转账接口：`client.FundTransUniTransfer()`
     * 查询转账订单接口: `client.FundTransOrderQuery()`
@@ -341,7 +346,7 @@ func main() {
     * 职得工作证信息匹配度查询: `client.ZhimaCustomerJobworthAdapterQuery()`
     * 职得工作证外部渠道应用数据回流: `client.ZhimaCustomerJobworthSceneUse()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>财务API</font>
-    * 支付宝商家账户当前余额查询：`client.DataBillBalanceQuery()`（失效）
+    * ~~支付宝商家账户当前余额查询：`client.DataBillBalanceQuery()`（失效）~~
     * 查询对账单下载地址：`client.DataBillDownloadUrlQuery()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>海关相关API</font>
     * 统一收单报关接口：`client.TradeCustomsDeclare()`

@@ -1620,3 +1620,80 @@ type UserAlipaypointBudgetlibQuery struct {
 	StartTime        string `json:"start_time"`
 	EndTime          string `json:"end_time"`
 }
+
+// ===================================================
+type PcreditHuabeiAuthSettleApplyRsp struct {
+	Response     *PcreditHuabeiAuthSettleApply `json:"alipay_pcredit_huabei_auth_settle_apply_response"`
+	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
+	SignData     string                        `json:"-"`
+	Sign         string                        `json:"sign"`
+}
+
+type PcreditHuabeiAuthSettleApply struct {
+	ErrorResponse
+	OutRequestNo string `json:"out_request_no"`
+	FailReason   string `json:"fail_reason,omitempty"`
+}
+
+// ===================================================
+type CommerceTransportNfccardSendRsp struct {
+	Response     *CommerceTransportNfccardSend `json:"alipay_commerce_transport_nfccard_send_response"`
+	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
+	SignData     string                        `json:"-"`
+	Sign         string                        `json:"sign"`
+}
+
+type CommerceTransportNfccardSend struct {
+	ErrorResponse
+}
+
+// ===================================================
+type DataDataserviceAdDataQueryRsp struct {
+	Response     *DataDataserviceAdDataQuery `json:"alipay_data_dataservice_ad_data_query_response"`
+	AlipayCertSn string                      `json:"alipay_cert_sn,omitempty"`
+	SignData     string                      `json:"-"`
+	Sign         string                      `json:"sign"`
+}
+
+type DataDataserviceAdDataQuery struct {
+	ErrorResponse
+	DataList []*DataDetail `json:"data_list,omitempty"`
+}
+
+type DataDetail struct {
+	OuterId            string                  `json:"outer_id,omitempty"`
+	Impression         int64                   `json:"impression,omitempty"`
+	Click              int64                   `json:"click,omitempty"`
+	Cost               int64                   `json:"cost,omitempty"`
+	ConversionDataList []*ConversionDataDetail `json:"conversion_data_list,omitempty"`
+	BizDate            string                  `json:"biz_date,omitempty"`
+}
+
+type ConversionDataDetail struct {
+	ConversionId     string `json:"conversion_id,omitempty"`
+	ConversionResult string `json:"conversion_result,omitempty"`
+}
+
+// ===================================================
+type CommerceAirCallcenterTradeApplyRsp struct {
+	Response     *CommerceAirCallcenterTradeApply `json:"alipay_commerce_air_callcenter_trade_apply_response"`
+	AlipayCertSn string                           `json:"alipay_cert_sn,omitempty"`
+	SignData     string                           `json:"-"`
+	Sign         string                           `json:"sign"`
+}
+
+type CommerceAirCallcenterTradeApply struct {
+	ErrorResponse
+}
+
+// ===================================================
+type PaymentTradeOrderCreateRsp struct {
+	Response     *PaymentTradeOrderCreate `json:"mybank_payment_trade_order_create_response"`
+	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`
+	SignData     string                   `json:"-"`
+	Sign         string                   `json:"sign"`
+}
+
+type PaymentTradeOrderCreate struct {
+	ErrorResponse
+}
