@@ -335,7 +335,7 @@ func TestV3ProfitSharingQuery(t *testing.T) {
 }
 
 func TestV3ProfitSharingUnfreeze(t *testing.T) {
-	wxRsp, err := client.V3ProfitShareOrderUnfreeze("202106071738581338", "4200001037202106072686278117", "账单解冻")
+	wxRsp, err := client.V3ProfitShareOrderUnfreeze("1900000109", "202106071738581338", "4200001037202106072686278117", "账单解冻")
 	if err != nil {
 		xlog.Error(err)
 		return
