@@ -123,9 +123,13 @@ func (c *ClientV3) V3ProfitShareReturnResult(returnNo, orderNo string) (*ProfitS
 // 解冻剩余资金API
 //	Code = 0 is success
 // 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_5.shtml
-func (c *ClientV3) V3ProfitShareOrderUnfreeze(tradeNo, transId, description string) (*ProfitShareOrderUnfreezeRsp, error) {
+func (c *ClientV3) V3ProfitShareOrderUnfreeze(subMchId, tradeNo, transId, description string) (*ProfitShareOrderUnfreezeRsp, error) {
 	bm := make(gopay.BodyMap)
-	bm.Set("transaction_id", transId).Set("out_order_no", tradeNo).Set("description", description)
+	bm.
+		Set("sub_mchid", subMchId).
+		Set("transaction_id", transId).
+		Set("out_order_no", tradeNo).
+		Set("description", description)
 
 	authorization, err := c.authorization(MethodPost, v3ProfitShareUnfreeze, bm)
 	if err != nil {
