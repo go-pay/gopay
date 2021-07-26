@@ -16,24 +16,44 @@ import (
 )
 
 // 敏感信息加密，默认 PKCS1
-func (c *ClientV3) V3EncryptText(text string) (cipherText string, err error) {
-	if c.wxPkContent == nil || c.wxSerialNo == "" {
-		return util.NULL, errors.New("WxPkContent or WxSerialNo is null")
-	}
-	block, _ := pem.Decode(c.wxPkContent)
+func (c *ClientV3) V3EncryptText(publicKeyStr, text string) (cipherText string, err error) {
+
+	block, _ := pem.Decode([]byte(publicKeyStr))
 	if block == nil {
-		return util.NULL, errors.New("pem.Decode：wxPkContent decode error")
+		return util.NULL, errors.New("decode public key error")
 	}
-	pubKey, err := x509.ParsePKCS1PublicKey(block.Bytes)
-	if err != nil {
-		return "", fmt.Errorf("x509.ParsePKCS1PublicKey：%w", err)
+
+	var pubKey   *rsa.PublicKey
+	switch block.Type {
+	case "PUBLIC KEY":
+		pub, err := x509.ParsePKIXPublicKey(block.Bytes)
+		if err != nil {
+			return util.NULL, fmt.Errorf("ParsePKIXPublicKey err:%s", err.Error())
+		}
+		pKIXPublicKey, ok := pub.(*rsa.PublicKey)
+		if !ok {
+			return util.NULL, fmt.Errorf("断言ParsePKIXPublicKey异常 publicKeyStr:%s", publicKeyStr)
+		}
+		pubKey = pKIXPublicKey
+	case "CERTIFICATE":
+		pub, err := x509.ParseCertificate(block.Bytes)
+		if err != nil {
+			return util.NULL, fmt.Errorf("ParseCertificate err:%s", err.Error())
+		}
+		certificatePubKey, ok := pub.PublicKey.(*rsa.PublicKey)
+		if !ok {
+			return util.NULL, fmt.Errorf("断言ParseCertificate异常 publicKeyStr:%s", publicKeyStr)
+		}
+		pubKey = certificatePubKey
 	}
+
 	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, pubKey, []byte(text), nil)
 	if err != nil {
 		return "", fmt.Errorf("rsa.EncryptOAEP：%w", err)
 	}
 	return base64.StdEncoding.EncodeToString(cipherByte), nil
 }
+
 
 // 敏感信息解密，默认 PKCS1
 func (c *ClientV3) V3DecryptText(cipherText string) (text string, err error) {
