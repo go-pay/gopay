@@ -280,6 +280,8 @@ func main() {
     * 广告投放数据查询: `client.DataDataserviceAdDataQuery()`
     * 航司电话订票待申请接口: `client.CommerceAirCallcenterTradeApply()`
     * 网商银行全渠道收单业务订单创建: `client.PaymentTradeOrderCreate()`
+    * 口碑订单预下单: `client.TradeOrderPrecreate()`
+    * 口碑商品交易购买接口: `client.TradeItemorderBuy()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
     * 单笔转账接口：`client.FundTransUniTransfer()`
     * 查询转账订单接口: `client.FundTransOrderQuery()`

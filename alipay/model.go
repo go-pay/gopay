@@ -1697,3 +1697,32 @@ type PaymentTradeOrderCreateRsp struct {
 type PaymentTradeOrderCreate struct {
 	ErrorResponse
 }
+
+// ===================================================
+type TradeOrderPrecreateRsp struct {
+	Response     *TradeOrderPrecreate `json:"koubei_trade_order_precreate_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
+}
+
+type TradeOrderPrecreate struct {
+	ErrorResponse
+	OrderNo string `json:"order_no"`
+	QrCode  string `json:"qr_code,omitempty"`
+}
+
+// ===================================================
+type TradeItemorderBuyRsp struct {
+	Response     *TradeOrderPrecreate `json:"koubei_trade_itemorder_buy_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
+}
+
+type TradeItemorderBuy struct {
+	ErrorResponse
+	OrderNo        string `json:"order_no"`
+	TradeNo        string `json:"trade_no"`
+	CashierOrderId string `json:"cashier_order_id,omitempty"`
+}
