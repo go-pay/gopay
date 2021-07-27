@@ -274,14 +274,14 @@ func main() {
     * 统一收单交易退款查询: `client.TradeFastPayRefundQuery()`
     * 统一收单交易结算接口: `client.TradeOrderSettle()`
     * 支付宝订单信息同步接口: `client.TradeOrderInfoSync()`
-    * ~~聚合支付订单咨询服务: `client.TradeAdvanceConsult()`(失效)~~
     * 花芝轻会员结算申请: `client.PcreditHuabeiAuthSettleApply()`
     * NFC用户卡信息同步: `client.CommerceTransportNfccardSend()`
     * 广告投放数据查询: `client.DataDataserviceAdDataQuery()`
     * 航司电话订票待申请接口: `client.CommerceAirCallcenterTradeApply()`
     * 网商银行全渠道收单业务订单创建: `client.PaymentTradeOrderCreate()`
-    * 口碑订单预下单: `client.TradeOrderPrecreate()`
-    * 口碑商品交易购买接口: `client.TradeItemorderBuy()`
+    * 聚合支付订单咨询服务: `client.KoubeiTradeOrderAggregateConsult()`
+    * 口碑订单预下单: `client.KoubeiTradeOrderPrecreate()`
+    * 口碑商品交易购买接口: `client.KoubeiTradeItemorderBuy()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
     * 单笔转账接口：`client.FundTransUniTransfer()`
     * 查询转账订单接口: `client.FundTransOrderQuery()`
