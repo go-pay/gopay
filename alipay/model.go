@@ -1063,14 +1063,14 @@ type TradeCustomsDeclare struct {
 }
 
 // ===================================================
-type TradeOrderAggregateConsultRsp struct {
-	Response     *TradeOrderAggregateConsult `json:"koubei_trade_order_aggregate_consult_response"`
-	AlipayCertSn string                      `json:"alipay_cert_sn,omitempty"`
-	SignData     string                      `json:"-"`
-	Sign         string                      `json:"sign"`
+type KoubeiTradeOrderAggregateConsultRsp struct {
+	Response     *KoubeiTradeOrderAggregateConsult `json:"koubei_trade_order_aggregate_consult_response"`
+	AlipayCertSn string                            `json:"alipay_cert_sn,omitempty"`
+	SignData     string                            `json:"-"`
+	Sign         string                            `json:"sign"`
 }
 
-type TradeOrderAggregateConsult struct {
+type KoubeiTradeOrderAggregateConsult struct {
 	ErrorResponse
 	OutOrderNo             string                `json:"out_order_no,omitempty"`
 	OrderNo                string                `json:"order_no,omitempty"`
@@ -1699,25 +1699,25 @@ type PaymentTradeOrderCreate struct {
 }
 
 // ===================================================
-type TradeOrderPrecreateRsp struct {
-	Response     *TradeOrderPrecreate `json:"koubei_trade_order_precreate_response"`
-	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
-	SignData     string               `json:"-"`
-	Sign         string               `json:"sign"`
+type KoubeiTradeOrderPrecreateRsp struct {
+	Response     *KoubeiTradeOrderPrecreate `json:"koubei_trade_order_precreate_response"`
+	AlipayCertSn string                     `json:"alipay_cert_sn,omitempty"`
+	SignData     string                     `json:"-"`
+	Sign         string                     `json:"sign"`
 }
 
-type TradeOrderPrecreate struct {
+type KoubeiTradeOrderPrecreate struct {
 	ErrorResponse
 	OrderNo string `json:"order_no"`
 	QrCode  string `json:"qr_code,omitempty"`
 }
 
 // ===================================================
-type TradeItemorderBuyRsp struct {
-	Response     *TradeOrderPrecreate `json:"koubei_trade_itemorder_buy_response"`
-	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
-	SignData     string               `json:"-"`
-	Sign         string               `json:"sign"`
+type KoubeiTradeItemorderBuyRsp struct {
+	Response     *KoubeiTradeOrderPrecreate `json:"koubei_trade_itemorder_buy_response"`
+	AlipayCertSn string                     `json:"alipay_cert_sn,omitempty"`
+	SignData     string                     `json:"-"`
+	Sign         string                     `json:"sign"`
 }
 
 type TradeItemorderBuy struct {
