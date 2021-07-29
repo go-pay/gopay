@@ -282,6 +282,9 @@ func main() {
     * 聚合支付订单咨询服务: `client.KoubeiTradeOrderAggregateConsult()`
     * 口碑订单预下单: `client.KoubeiTradeOrderPrecreate()`
     * 口碑商品交易购买接口: `client.KoubeiTradeItemorderBuy()`
+    * 口碑订单预咨询: `client.KoubeiTradeOrderConsult()`
+    * 口碑商品交易退货接口: `client.KoubeiTradeItemorderRefund()`
+    * 口碑商品交易查询接口: `client.KoubeiTradeItemorderQuery()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
     * 单笔转账接口：`client.FundTransUniTransfer()`
     * 查询转账订单接口: `client.FundTransOrderQuery()`

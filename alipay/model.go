@@ -1726,3 +1726,83 @@ type TradeItemorderBuy struct {
 	TradeNo        string `json:"trade_no"`
 	CashierOrderId string `json:"cashier_order_id,omitempty"`
 }
+
+// ===================================================
+type KoubeiTradeOrderConsultRsp struct {
+	Response     *KoubeiTradeOrderConsult `json:"koubei_trade_order_consult_response"`
+	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`
+	SignData     string                   `json:"-"`
+	Sign         string                   `json:"sign"`
+}
+
+type KoubeiTradeOrderConsult struct {
+	ErrorResponse
+	BuyerPayAmount string `json:"buyer_pay_amount"`
+	RequestId      string `json:"request_id,omitempty"`
+	MCardDetail    *struct {
+		Name            string `json:"name"`
+		AvailableAmount string `json:"available_amount"`
+		PayAmount       string `json:"pay_amount"`
+	} `json:"m_card_detail,omitempty"`
+	DiscountDetail *struct {
+		Id             string   `json:"id"`
+		DiscountDesc   []string `json:"discount_desc,omitempty"`
+		DiscountType   string   `json:"discount_type"`
+		IsHit          string   `json:"is_hit"`
+		IsPurchased    string   `json:"is_purchased"`
+		Name           string   `json:"name"`
+		DiscountAmount string   `json:"discount_amount,omitempty"`
+	} `json:"discount_detail,omitempty"`
+}
+
+// ===================================================
+type KoubeiTradeItemorderRefundRsp struct {
+	Response     *KoubeiTradeItemorderRefund `json:"koubei_trade_itemorder_refund_response"`
+	AlipayCertSn string                      `json:"alipay_cert_sn,omitempty"`
+	SignData     string                      `json:"-"`
+	Sign         string                      `json:"sign"`
+}
+
+type KoubeiTradeItemorderRefund struct {
+	ErrorResponse
+	OrderNo          string `json:"order_no"`
+	OutRequestNo     string `json:"out_request_no"`
+	RealRefundAmount string `json:"real_refund_amount"`
+}
+
+// ===================================================
+type KoubeiTradeItemorderQueryRsp struct {
+	Response     *KoubeiTradeItemorderQuery `json:"koubei_trade_itemorder_query_response"`
+	AlipayCertSn string                     `json:"alipay_cert_sn,omitempty"`
+	SignData     string                     `json:"-"`
+	Sign         string                     `json:"sign"`
+}
+
+type KoubeiTradeItemorderQuery struct {
+	ErrorResponse
+	OrderNo                 string `json:"order_no"`
+	OutOrderNo              string `json:"out_order_no"`
+	PartnerID               string `json:"partner_id"`
+	TradeNo                 string `json:"trade_no"`
+	Status                  string `json:"status"`
+	BuyerID                 string `json:"buyer_id"`
+	BizProduct              string `json:"biz_product"`
+	GmtCreate               string `json:"gmt_create"`
+	SellerID                string `json:"seller_id,omitempty"`
+	GmtPayment              string `json:"gmt_payment,omitempty"`
+	GmtModified             string `json:"gmt_modified"`
+	TotalAmount             string `json:"total_amount"`
+	RealPayAmount           string `json:"real_pay_amount"`
+	DiscountAmount          string `json:"discount_amount,omitempty"`
+	DeliverSellerRealAmount string `json:"deliver_seller_real_amount"`
+	ItemOrderVo             []*struct {
+		ItemOrderNo  string `json:"item_order_no"`
+		SkuID        string `json:"sku_id"`
+		Quantity     int    `json:"quantity"`
+		Price        string `json:"price"`
+		Status       string `json:"status"`
+		MerchantFund string `json:"merchant_fund,omitempty"`
+		PlatformFund string `json:"platform_fund,omitempty"`
+		ExtInfo      string `json:"ext_info,omitempty"`
+	} `json:"item_order_vo"`
+}

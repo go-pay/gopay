@@ -78,3 +78,75 @@ func (a *Client) KoubeiTradeItemorderBuy(bm gopay.BodyMap) (aliRsp *KoubeiTradeI
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+// koubei.trade.order.consult(口碑订单预咨询)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/koubei.trade.order.consult
+func (a *Client) KoubeiTradeOrderConsult(bm gopay.BodyMap) (aliRsp *KoubeiTradeOrderConsultRsp, err error) {
+	err = bm.CheckEmptyError("request_id", "user_id", "total_amount", "shop_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "koubei.trade.order.consult"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(KoubeiTradeOrderConsultRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// koubei.trade.itemorder.refund(口碑商品交易退货接口)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/koubei.trade.itemorder.refund
+func (a *Client) KoubeiTradeItemorderRefund(bm gopay.BodyMap) (aliRsp *KoubeiTradeItemorderRefundRsp, err error) {
+	err = bm.CheckEmptyError("order_no", "out_request_no", "refund_infos")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "koubei.trade.itemorder.refund"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(KoubeiTradeItemorderRefundRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// koubei.trade.itemorder.query(口碑商品交易查询接口)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/koubei.trade.itemorder.query
+func (a *Client) KoubeiTradeItemorderQuery(bm gopay.BodyMap) (aliRsp *KoubeiTradeItemorderQueryRsp, err error) {
+	err = bm.CheckEmptyError("order_no")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "koubei.trade.itemorder.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(KoubeiTradeItemorderQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
