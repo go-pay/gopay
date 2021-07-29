@@ -1,6 +1,7 @@
 版本号：Release 1.5.52
 修改记录：
    (1) 支付宝：补充 支付API 相关接口
+   (2) pkg：xhttp.Client 的 Transport 默认配置：Proxy: http.ProxyFromEnvironment
 
 版本号：Release 1.5.51
 修改记录：
