@@ -464,7 +464,7 @@ type AppPayParams struct {
 	Package   string `json:"package"`
 	Noncestr  string `json:"noncestr"`
 	Timestamp string `json:"timestamp"`
-	PaySign   string `json:"paySign"`
+	Sign      string `json:"sign"`
 }
 
 type AppletParams struct {
@@ -720,7 +720,7 @@ type PartnerPayer struct {
 type ScoreOrderCreate struct {
 	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
 	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
-	OutTradeNo          string           `json:"out_trade_no"`                // 调用接口提交的商户服务订单号。
+	OutOrderNo          string           `json:"out_order_no"`                // 调用接口提交的商户服务订单号。
 	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
 	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
 	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
@@ -737,17 +737,17 @@ type ScoreOrderCreate struct {
 }
 
 type PostPayments struct {
-	Name        string `json:"name,omitempty"`        // 付费项目名称
-	Description string `json:"description,omitempty"` // 描述计费规则，不超过30个字符，超出报错处理。
-	Amount      int    `json:"amount"`                // 此付费项目总金额，大于等于0，单位为分，等于0时代表不需要扣费，只能为整数
-	Count       int    `json:"count,omitempty"`       // 付费项目的数量。
+	Name        string `json:"name"`        // 付费项目名称
+	Amount      int    `json:"amount"`      // 此付费项目总金额，大于等于0，单位为分，等于0时代表不需要扣费，只能为整数
+	Description string `json:"description"` // 描述计费规则，不超过30个字符，超出报错处理。
+	Count       int    `json:"count"`       // 付费项目的数量。
 }
 
 type PostDiscounts struct {
-	Name        string `json:"name,omitempty"`        // 优惠名称说明。
-	Description string `json:"description,omitempty"` // 优惠使用条件说明。
-	Amount      int    `json:"amount"`                // 优惠金额，只能为整数
-	Count       int    `json:"count,omitempty"`       // 优惠的数量。
+	Name        string `json:"name"`        // 优惠名称说明。
+	Description string `json:"description"` // 优惠使用条件说明。
+	Amount      int    `json:"amount"`      // 优惠金额，只能为整数
+	Count       int    `json:"count"`       // 优惠的数量。
 }
 
 type RiskFund struct {
@@ -772,7 +772,7 @@ type ScoreOrderQuery struct {
 	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
 	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
 	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
-	OutTradeNo          string           `json:"out_trade_no"`                // 调用接口提交的商户服务订单号。
+	OutOrderNo          string           `json:"out_order_no"`                // 调用接口提交的商户服务订单号。
 	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
 	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
 	StateDescription    string           `json:"state_description,omitempty"` // 对服务订单"进行中"状态的附加说明。USER_CONFIRM：用户确认，MCH_COMPLETE：商户完结
@@ -811,7 +811,7 @@ type ScoreOrderCancel struct {
 	Appid      string `json:"appid"`        // 调用接口提交的公众账号ID。
 	Mchid      string `json:"mchid"`        // 调用接口提交的商户号。
 	ServiceId  string `json:"service_id"`   // 调用该接口提交的服务ID。
-	OutTradeNo string `json:"out_trade_no"` // 调用接口提交的商户服务订单号。
+	OutOrderNo string `json:"out_order_no"` // 调用接口提交的商户服务订单号。
 	OrderId    string `json:"order_id"`     // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
 }
 
@@ -819,7 +819,7 @@ type ScoreOrderModify struct {
 	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
 	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
 	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
-	OutTradeNo          string           `json:"out_trade_no"`                // 调用接口提交的商户服务订单号。
+	OutOrderNo          string           `json:"out_order_no"`                // 调用接口提交的商户服务订单号。
 	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
 	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
 	StateDescription    string           `json:"state_description,omitempty"` // 对服务订单"进行中"状态的附加说明。USER_CONFIRM：用户确认，MCH_COMPLETE：商户完结
@@ -840,7 +840,7 @@ type ScoreOrderComplete struct {
 	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
 	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
 	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
-	OutTradeNo          string           `json:"out_trade_no"`                // 调用接口提交的商户服务订单号。
+	OutOrderNo          string           `json:"out_order_no"`                // 调用接口提交的商户服务订单号。
 	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
 	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
 	StateDescription    string           `json:"state_description,omitempty"` // 对服务订单"进行中"状态的附加说明。USER_CONFIRM：用户确认，MCH_COMPLETE：商户完结
@@ -858,7 +858,7 @@ type ScoreOrderPay struct {
 	Appid      string `json:"appid"`        // 调用接口提交的公众账号ID。
 	Mchid      string `json:"mchid"`        // 调用接口提交的商户号。
 	ServiceId  string `json:"service_id"`   // 调用该接口提交的服务ID。
-	OutTradeNo string `json:"out_trade_no"` // 调用接口提交的商户服务订单号。
+	OutOrderNo string `json:"out_order_no"` // 调用接口提交的商户服务订单号。
 	OrderId    string `json:"order_id"`     // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
 }
 
@@ -866,7 +866,7 @@ type ScoreOrderSync struct {
 	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
 	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
 	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
-	OutTradeNo          string           `json:"out_trade_no"`                // 调用接口提交的商户服务订单号。
+	OutOrderNo          string           `json:"out_order_no"`                // 调用接口提交的商户服务订单号。
 	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
 	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
 	StateDescription    string           `json:"state_description,omitempty"` // 对服务订单"进行中"状态的附加说明。USER_CONFIRM：用户确认，MCH_COMPLETE：商户完结
@@ -887,7 +887,7 @@ type ScoreOrderSync struct {
 type ScoreDirectComplete struct {
 	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
 	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
-	OutTradeNo          string           `json:"out_trade_no"`                // 调用接口提交的商户服务订单号。
+	OutOrderNo          string           `json:"out_order_no"`                // 调用接口提交的商户服务订单号。
 	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
 	OrderId             string           `json:"order_id"`                    // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
 	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
