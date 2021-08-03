@@ -61,7 +61,7 @@ type V3DecryptCombineResult struct {
 type V3DecryptScoreResult struct {
 	Appid               string           `json:"appid"`
 	Mchid               string           `json:"mchid"`
-	OutTradeNo          string           `json:"out_trade_no"`
+	OutOrderNo          string           `json:"out_order_no"`
 	ServiceId           string           `json:"service_id"`
 	Openid              string           `json:"openid"`
 	State               string           `json:"state"`
