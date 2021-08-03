@@ -148,14 +148,15 @@ const (
 	v3ComplaintUploadImage        = "/v3/merchant-service/images/upload"                         // 商户上传反馈图片 POST
 
 	// 分账
-	v3ProfitShareOrder          = "/v3/profitsharing/orders"                  // 请求分账 POST
-	v3ProfitShareQuery          = "/v3/profitsharing/orders/%s"               // 查询分账结果 GET
-	v3ProfitShareReturn         = "/v3/profitsharing/return-orders"           // 请求分账回退 POST
-	v3ProfitShareReturnResult   = "/v3/profitsharing/return-orders/%s"        // 查询分账回退结果 GET
-	v3ProfitShareUnfreeze       = "/v3/profitsharing/orders/unfreeze"         // 解冻剩余资金 POST
-	v3ProfitShareUnsplitAmount  = "/v3/profitsharing/transactions/%s/amounts" // 查询剩余待分金额 GET
-	v3ProfitShareAddReceiver    = "/v3/profitsharing/receivers/add"           // 添加分账接收方 POST
-	v3ProfitShareDeleteReceiver = "/v3/profitsharing/receivers/delete"        // 删除分账接收方 POST
+	v3ProfitShareOrder           = "/v3/profitsharing/orders"                  // 请求分账 POST
+	v3ProfitShareQuery           = "/v3/profitsharing/orders/%s"               // 查询分账结果 GET
+	v3ProfitShareReturn          = "/v3/profitsharing/return-orders"           // 请求分账回退 POST
+	v3ProfitShareReturnResult    = "/v3/profitsharing/return-orders/%s"        // 查询分账回退结果 GET
+	v3ProfitShareUnfreeze        = "/v3/profitsharing/orders/unfreeze"         // 解冻剩余资金 POST
+	v3ProfitShareUnsplitAmount   = "/v3/profitsharing/transactions/%s/amounts" // 查询剩余待分金额 GET
+	v3ProfitShareAddReceiver     = "/v3/profitsharing/receivers/add"           // 添加分账接收方 POST
+	v3ProfitShareDeleteReceiver  = "/v3/profitsharing/receivers/delete"        // 删除分账接收方 POST
+	v3ProfitShareMerchantConfigs = "/v3/profitsharing/merchant-configs/%s"     // 查询最大分账比例API GET
 
 	// 其他能力
 	v3MediaUploadImage = "/v3/merchant/media/upload"       // 图片上传 POST

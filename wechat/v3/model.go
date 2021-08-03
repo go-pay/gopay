@@ -294,6 +294,13 @@ type ProfitShareDeleteReceiverRsp struct {
 	Error    string                     `json:"-"`
 }
 
+type ProfitShareMerchantConfigsResp struct {
+	Code     int                         `json:"-"`
+	SignInfo *SignInfo                   `json:"-"`
+	Response *ProfitShareMerchantConfigs `json:"response,omitempty"`
+	Error    string                      `json:"-"`
+}
+
 // 预受理领卡请求 Rsp
 type DiscountCardApplyRsp struct {
 	Code     int                `json:"-"`
@@ -1073,6 +1080,11 @@ type ProfitShareAddReceiver struct {
 type ProfitShareDeleteReceiver struct {
 	Type    string `json:"type"`    // 分账接收方类型MERCHANT_ID：商户ID,PERSONAL_OPENID：个人openid（由父商户APPID转换得到）
 	Account string `json:"account"` // 分账接收方帐号
+}
+
+type ProfitShareMerchantConfigs struct {
+	SubMchId string `json:"sub_mchid"` // 子商户号
+	MaxRatio int    `json:"max_ratio"` // 最大分账比例 (单位万分比，比如2000表示20%)
 }
 
 type DiscountCardApply struct {
