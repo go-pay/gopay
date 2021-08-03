@@ -294,7 +294,7 @@ type ProfitShareDeleteReceiverRsp struct {
 	Error    string                     `json:"-"`
 }
 
-type ProfitShareMerchantConfigsResp struct {
+type ProfitShareMerchantConfigsRsp struct {
 	Code     int                         `json:"-"`
 	SignInfo *SignInfo                   `json:"-"`
 	Response *ProfitShareMerchantConfigs `json:"response,omitempty"`
