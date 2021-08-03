@@ -58,6 +58,28 @@ type V3DecryptCombineResult struct {
 	CombinePayerInfo  *Payer       `json:"combine_payer_info"` // 支付者信息
 }
 
+type V3DecryptScoreResult struct {
+	Appid               string           `json:"appid"`
+	Mchid               string           `json:"mchid"`
+	OutTradeNo          string           `json:"out_trade_no"`
+	ServiceId           string           `json:"service_id"`
+	Openid              string           `json:"openid"`
+	State               string           `json:"state"`
+	StateDescription    string           `json:"state_description"`
+	TotalAmount         int              `json:"total_amount"`
+	ServiceIntroduction string           `json:"service_introduction"`
+	PostPayments        []*PostPayments  `json:"post_payments"`
+	PostDiscounts       []*PostDiscounts `json:"post_discounts"`
+	RiskFund            *RiskFund        `json:"risk_fund"`
+	TimeRange           *TimeRange       `json:"time_range"`
+	Location            *Location        `json:"location"`
+	Attach              string           `json:"attach"`
+	NotifyUrl           string           `json:"notify_url"`
+	OrderId             string           `json:"order_id"`
+	NeedCollection      bool             `json:"need_collection"`
+	Collection          *Collection      `json:"collection"`
+}
+
 type V3NotifyReq struct {
 	Id           string    `json:"id"`
 	CreateTime   string    `json:"create_time"`
@@ -103,7 +125,7 @@ func (v *V3NotifyReq) VerifySign(wxPkContent string) (err error) {
 	return errors.New("verify notify sign, bug SignInfo is nil")
 }
 
-// 解密普通支付回调中的加密订单信息
+// 解密 普通支付 回调中的加密信息
 func (v *V3NotifyReq) DecryptCipherText(apiV3Key string) (result *V3DecryptResult, err error) {
 	if v.Resource != nil {
 		result, err = V3DecryptNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
@@ -116,7 +138,7 @@ func (v *V3NotifyReq) DecryptCipherText(apiV3Key string) (result *V3DecryptResul
 	return nil, errors.New("notify data Resource is nil")
 }
 
-// 解密普通退款回调中的加密订单信息
+// 解密 普通退款 回调中的加密信息
 func (v *V3NotifyReq) DecryptRefundCipherText(apiV3Key string) (result *V3DecryptRefundResult, err error) {
 	if v.Resource != nil {
 		result, err = V3DecryptRefundNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
@@ -129,10 +151,23 @@ func (v *V3NotifyReq) DecryptRefundCipherText(apiV3Key string) (result *V3Decryp
 	return nil, errors.New("notify data Resource is nil")
 }
 
-// 解密合单支付回调中的加密订单信息
+// 解密 合单支付 回调中的加密信息
 func (v *V3NotifyReq) DecryptCombineCipherText(apiV3Key string) (result *V3DecryptCombineResult, err error) {
 	if v.Resource != nil {
 		result, err = V3DecryptCombineNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
+		if err != nil {
+			bytes, _ := json.Marshal(v)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
+		}
+		return result, nil
+	}
+	return nil, errors.New("notify data Resource is nil")
+}
+
+// 解密 支付分 回调中的加密信息
+func (v *V3NotifyReq) DecryptScoreCipherText(apiV3Key string) (result *V3DecryptScoreResult, err error) {
+	if v.Resource != nil {
+		result, err = V3DecryptScoreNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
 			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)

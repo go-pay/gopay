@@ -53,7 +53,7 @@ func (c *ClientV3) V3DecryptText(cipherText string) (text string, err error) {
 	return string(textByte), nil
 }
 
-// 敏感信息加密，默认 PKCS1
+// 敏感参数信息加密，默认 PKCS1
 //	wxPkContent：微信平台证书内容
 func V3EncryptText(text string, wxPkContent []byte) (cipherText string, err error) {
 	block, _ := pem.Decode(wxPkContent)
@@ -71,7 +71,7 @@ func V3EncryptText(text string, wxPkContent []byte) (cipherText string, err erro
 	return base64.StdEncoding.EncodeToString(cipherByte), nil
 }
 
-// 敏感信息解密，默认 PKCS1
+// 敏感参数信息解密，默认 PKCS1
 //	apiV3Key：商户API证书字符串内容，商户平台获取
 func V3DecryptText(cipherText string, apiV3Key []byte) (text string, err error) {
 	cipherByte, _ := base64.StdEncoding.DecodeString(cipherText)
@@ -90,7 +90,7 @@ func V3DecryptText(cipherText string, apiV3Key []byte) (text string, err error) 
 	return string(textByte), nil
 }
 
-// 解密普通支付回调中的加密订单信息
+// 解密 普通支付 回调中的加密信息
 func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptResult, err error) {
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
@@ -104,7 +104,7 @@ func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (
 	return result, nil
 }
 
-// 解密普通退款回调中的加密订单信息
+// 解密 普通退款 回调中的加密信息
 func V3DecryptRefundNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptRefundResult, err error) {
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
@@ -118,7 +118,7 @@ func V3DecryptRefundNotifyCipherText(ciphertext, nonce, additional, apiV3Key str
 	return result, nil
 }
 
-// 解密合单支付回调中的加密订单信息
+// 解密 合单支付 回调中的加密信息
 func V3DecryptCombineNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptCombineResult, err error) {
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
@@ -126,6 +126,20 @@ func V3DecryptCombineNotifyCipherText(ciphertext, nonce, additional, apiV3Key st
 		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
 	}
 	result = &V3DecryptCombineResult{}
+	if err = json.Unmarshal(decrypt, result); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
+	}
+	return result, nil
+}
+
+// 解密 支付分 回调中的加密信息
+func V3DecryptScoreNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptScoreResult, err error) {
+	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
+	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
+	if err != nil {
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
+	}
+	result = &V3DecryptScoreResult{}
 	if err = json.Unmarshal(decrypt, result); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
 	}
