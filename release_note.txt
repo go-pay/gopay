@@ -1,3 +1,9 @@
+版本号：Release 1.5.54
+修改记录：
+   (1) 微信V3：新增微信支付分回调参数解密方法 notifyReq.DecryptScoreCipherText()
+   (2) 微信V3：新增分账接口 client.V3ProfitShareMerchantConfigs()
+   (3) Readme：更新Readme
+
 版本号：Release 1.5.53
 修改记录：
    (1) 支付宝：补充接口

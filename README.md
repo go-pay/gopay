@@ -154,6 +154,21 @@ func main() {
     * 修改结算账号：`client.V3Apply4SubModifySettlement()`
     * 查询结算账户：`client.V3Apply4SubQuerySettlement()`
 
+### 微信V3公共API
+
+* `wechat.GetPlatformCerts()` => 获取微信平台证书公钥
+* `wechat.V3VerifySign()` => 微信V3 版本验签（同步/异步）
+* `wechat.V3ParseNotify()` => 解析微信回调请求的参数到 V3NotifyReq 结构体
+* `wechat.V3EncryptText()` => 敏感参数信息加密
+* `wechat.V3DecryptText()` =>  敏感参数信息解密
+* `wechat.V3DecryptNotifyCipherText()` => 解密 普通支付 回调中的加密信息
+* `wechat.V3DecryptRefundNotifyCipherText()` => 解密 普通退款 回调中的加密信息
+* `wechat.V3DecryptCombineNotifyCipherText()` => 解密 合单支付 回调中的加密信息
+* `wechat.V3DecryptScoreNotifyCipherText()` => 解密 支付分 回调中的加密信息
+* `client.PaySignOfJSAPI()` => 获取 JSAPI 支付 paySign
+* `client.PaySignOfApp()` => 获取 APP 支付 paySign
+* `client.PaySignOfApplet()` => 获取 小程序 支付 paySign
+
 ---
 
 ### QQ支付API
