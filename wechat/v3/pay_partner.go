@@ -15,9 +15,6 @@ import (
 //	注意：sub_appid、sub_mchid 需作为参数自己传入BodyMap
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter5_1.shtml
 func (c *ClientV3) V3PartnerTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
-	if bm.GetString("sp_appid") == util.NULL {
-		bm.Set("sp_appid", c.Appid)
-	}
 	if bm.GetString("sp_mchid") == util.NULL {
 		bm.Set("sp_mchid", c.Mchid)
 	}
@@ -47,9 +44,6 @@ func (c *ClientV3) V3PartnerTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, 
 //	注意：sub_appid、sub_mchid 需作为参数自己传入BodyMap
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter5_2.shtml
 func (c *ClientV3) V3PartnerTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
-	if bm.GetString("sp_appid") == util.NULL {
-		bm.Set("sp_appid", c.Appid)
-	}
 	if bm.GetString("sp_mchid") == util.NULL {
 		bm.Set("sp_mchid", c.Mchid)
 	}
@@ -79,9 +73,6 @@ func (c *ClientV3) V3PartnerTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp
 //	注意：sub_appid、sub_mchid 需作为参数自己传入BodyMap
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter5_3.shtml
 func (c *ClientV3) V3PartnerTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
-	if bm.GetString("sp_appid") == util.NULL {
-		bm.Set("sp_appid", c.Appid)
-	}
 	if bm.GetString("sp_mchid") == util.NULL {
 		bm.Set("sp_mchid", c.Mchid)
 	}
@@ -111,9 +102,6 @@ func (c *ClientV3) V3PartnerTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRs
 //	注意：sub_appid、sub_mchid 需作为参数自己传入BodyMap
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter5_4.shtml
 func (c *ClientV3) V3PartnerTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
-	if bm.GetString("sp_appid") == util.NULL {
-		bm.Set("sp_appid", c.Appid)
-	}
 	if bm.GetString("sp_mchid") == util.NULL {
 		bm.Set("sp_mchid", c.Mchid)
 	}
@@ -144,7 +132,6 @@ func (c *ClientV3) V3PartnerTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err e
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter5_5.shtml
 func (c *ClientV3) V3PartnerQueryOrder(orderNoType OrderNoType, subMchid, orderNo string) (wxRsp *PartnerQueryOrderRsp, err error) {
 	var uri string
-
 	switch orderNoType {
 	case TransactionId:
 		uri = fmt.Sprintf(v3ApiPartnerQueryOrderTransactionId, orderNo) + "?sp_mchid=" + c.Mchid + "&sub_mchid=" + subMchid

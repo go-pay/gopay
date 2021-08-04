@@ -13,9 +13,6 @@ import (
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_1.shtml
 func (c *ClientV3) V3CombineTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
-	if bm.GetString("combine_appid") == util.NULL {
-		bm.Set("combine_appid", c.Appid)
-	}
 	if bm.GetString("combine_mchid") == util.NULL {
 		bm.Set("combine_mchid", c.Mchid)
 	}
@@ -45,9 +42,6 @@ func (c *ClientV3) V3CombineTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, 
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_3.shtml
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_4.shtml
 func (c *ClientV3) V3CombineTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
-	if bm.GetString("combine_appid") == util.NULL {
-		bm.Set("combine_appid", c.Appid)
-	}
 	if bm.GetString("combine_mchid") == util.NULL {
 		bm.Set("combine_mchid", c.Mchid)
 	}
@@ -76,9 +70,6 @@ func (c *ClientV3) V3CombineTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_5.shtml
 func (c *ClientV3) V3CombineTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
-	if bm.GetString("combine_appid") == util.NULL {
-		bm.Set("combine_appid", c.Appid)
-	}
 	if bm.GetString("combine_mchid") == util.NULL {
 		bm.Set("combine_mchid", c.Mchid)
 	}
@@ -107,9 +98,6 @@ func (c *ClientV3) V3CombineTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRs
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_2.shtml
 func (c *ClientV3) V3CombineTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
-	if bm.GetString("combine_appid") == util.NULL {
-		bm.Set("combine_appid", c.Appid)
-	}
 	if bm.GetString("combine_mchid") == util.NULL {
 		bm.Set("combine_mchid", c.Mchid)
 	}
@@ -166,9 +154,6 @@ func (c *ClientV3) V3CombineQueryOrder(traderNo string) (wxRsp *CombineQueryOrde
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_12.shtml
 func (c *ClientV3) V3CombineCloseOrder(tradeNo string, bm gopay.BodyMap) (wxRsp *CloseOrderRsp, err error) {
 	url := fmt.Sprintf(v3CombineClose, tradeNo)
-	if bm.GetString("combine_appid") == util.NULL {
-		bm.Set("combine_appid", c.Appid)
-	}
 	authorization, err := c.authorization(MethodPost, url, bm)
 	if err != nil {
 		return nil, err

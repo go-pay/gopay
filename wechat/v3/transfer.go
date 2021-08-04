@@ -6,17 +6,12 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // 发起批量转账API
 //	Code = 0 is success
 // 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer/chapter3_1.shtml
 func (c *ClientV3) V3Transfer(bm gopay.BodyMap) (*TransferRsp, error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
-
 	authorization, err := c.authorization(MethodPost, v3Transfer, bm)
 	if err != nil {
 		return nil, err
