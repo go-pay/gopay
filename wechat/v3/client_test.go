@@ -324,7 +324,7 @@ func TestV3ProfitSharingDeleteReceiver(t *testing.T) {
 
 func TestV3ProfitSharingQuery(t *testing.T) {
 	bm := make(gopay.BodyMap)
-	bm.Set("transaction_id", 4200001149202106084654939138)
+	bm.Set("transaction_id", "4200001149202106084654939138")
 	wxRsp, err := client.V3ProfitShareOrderQuery("P20150806125346", bm)
 	if err != nil {
 		xlog.Error(err)
