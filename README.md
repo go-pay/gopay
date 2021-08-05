@@ -116,7 +116,22 @@ func main() {
     * 下载批次退款明细：`client.V3FavorRefundFlowDownload()`
     * 设置消息通知地址：`client.V3FavorCallbackUrlSet()`
 * <font color='#07C160' size='4'>商家券</font>
-    * 待实现
+    * 创建商家券：`client.V3BusiFavorBatchCreate()`
+    * 查询商家券详情：`client.V3BusiFavorBatchDetail()`
+    * 核销用户券：`client.V3BusiFavorUse()`
+    * 根据过滤条件查询用户券：`client.V3BusiFavorUserCoupons()`
+    * 查询用户单张券详情：`client.V3BusiFavorUserCouponDetail()`
+    * 上传预存code：`client.V3BusiFavorCodeUpload()`
+    * 设置商家券事件通知地址：`client.V3BusiFavorCallbackUrlSet()`
+    * 查询商家券事件通知地址：`client.V3BusiFavorCallbackUrl()`
+    * 关联订单信息：`client.V3BusiFavorAssociate()`
+    * 取消关联订单信息：`client.V3BusiFavorDisassociate()`
+    * 修改批次预算：`client.V3BusiFavorBatchUpdate()`
+    * 修改商家券基本信息：`client.V3BusiFavorInfoUpdate()`
+    * 申请退券：`client.V3BusiFavorReturn()`
+    * 使券失效：`client.V3BusiFavorDeactivate()`
+    * 营销补差付款：`client.V3BusiFavorSubsidyPay()`
+    * 查询营销补差付款单详情：`client.V3BusiFavorSubsidyPayDetail()`
 * <font color='#07C160' size='4'>委托营销</font>
     * 待实现
 * <font color='#07C160' size='4'>消费卡</font>
