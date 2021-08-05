@@ -101,7 +101,20 @@ func main() {
     * 商圈积分同步：`client.V3BusinessPointsSync()`
     * 商圈积分授权查询：`client.V3BusinessAuthPointsQuery()`
 * <font color='#07C160' size='4'>代金券</font>
-    * 待实现
+    * 创建代金券批次：`client.V3FavorBatchCreate()`
+    * 激活代金券批次：`client.V3FavorBatchStart()`
+    * 发放代金券批次：`client.V3FavorBatchGrant()`
+    * 暂停代金券批次：`client.V3FavorBatchPause()`
+    * 重启代金券批次：`client.V3FavorBatchRestart()`
+    * 条件查询批次列表：`client.V3FavorBatchList()`
+    * 查询批次详情：`client.V3FavorBatchDetail()`
+    * 查询代金券详情：`client.V3FavorDetail()`
+    * 查询代金券可用商户：`client.V3FavorMerchant()`
+    * 查询代金券可用单品：`client.V3FavorItems()`
+    * 根据商户号查用户的券：`client.V3FavorUserCoupons()`
+    * 下载批次核销明细：`client.V3FavorUseFlowDownload()`
+    * 下载批次退款明细：`client.V3FavorRefundFlowDownload()`
+    * 设置消息通知地址：`client.V3FavorCallbackUrlSet()`
 * <font color='#07C160' size='4'>商家券</font>
     * 待实现
 * <font color='#07C160' size='4'>委托营销</font>
@@ -352,12 +365,11 @@ import (
 )
 
 // NewClientV3 初始化微信客户端 V3
-//	appid：appid 或者服务商模式的 sp_appid
 //	mchid：商户ID 或者服务商模式的 sp_mchid
 // 	serialNo：商户证书的证书序列号
 //	apiV3Key：apiV3Key，商户平台获取
 //	pkContent：私钥 apiclient_key.pem 读取后的内容
-client, err = wechat.NewClientV3(Appid, MchId, SerialNo, APIv3Key, PKContent)
+client, err = wechat.NewClientV3(MchId, SerialNo, APIv3Key, PKContent)
 if err != nil {
     xlog.Error(err)
     return

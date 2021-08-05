@@ -6,16 +6,12 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // 预受理领卡请求API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_3_1.shtml
 func (c *ClientV3) V3DiscountCardApply(bm gopay.BodyMap) (wxRsp *DiscountCardApplyRsp, err error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
 	authorization, err := c.authorization(MethodPost, v3CardPre, bm)
 	if err != nil {
 		return nil, err

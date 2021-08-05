@@ -7,7 +7,7 @@ import (
 )
 
 func TestPaySignOfJSAPIp(t *testing.T) {
-	jsapi, err := client.PaySignOfJSAPI("prepayid")
+	jsapi, err := client.PaySignOfJSAPI("appid", "prepayid")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -16,7 +16,7 @@ func TestPaySignOfJSAPIp(t *testing.T) {
 }
 
 func TestPaySignOfApp(t *testing.T) {
-	app, err := client.PaySignOfApp("prepayid")
+	app, err := client.PaySignOfApp("appid", "prepayid")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -25,7 +25,7 @@ func TestPaySignOfApp(t *testing.T) {
 }
 
 func TestPaySignOfApplet(t *testing.T) {
-	applet, err := client.PaySignOfApplet("prepayid")
+	applet, err := client.PaySignOfApplet("appid", "prepayid")
 	if err != nil {
 		xlog.Error(err)
 		return

@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // 请求分账API
@@ -14,10 +13,6 @@ import (
 //	Code = 0 is success
 // 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_1.shtml
 func (c *ClientV3) V3ProfitShareOrder(bm gopay.BodyMap) (*ProfitShareOrderRsp, error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
-
 	authorization, err := c.authorization(MethodPost, v3ProfitShareOrder, bm)
 	if err != nil {
 		return nil, err
@@ -180,10 +175,6 @@ func (c *ClientV3) V3ProfitShareUnsplitAmount(transId string) (*ProfitShareUnspl
 //	Code = 0 is success
 // 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_8.shtml
 func (c *ClientV3) V3ProfitShareAddReceiver(bm gopay.BodyMap) (*ProfitShareAddReceiverRsp, error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
-
 	authorization, err := c.authorization(MethodPost, v3ProfitShareAddReceiver, bm)
 	if err != nil {
 		return nil, err
@@ -210,10 +201,6 @@ func (c *ClientV3) V3ProfitShareAddReceiver(bm gopay.BodyMap) (*ProfitShareAddRe
 //	Code = 0 is success
 // 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_9.shtml
 func (c *ClientV3) V3ProfitShareDeleteReceiver(bm gopay.BodyMap) (*ProfitShareDeleteReceiverRsp, error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
-
 	authorization, err := c.authorization(MethodPost, v3ProfitShareDeleteReceiver, bm)
 	if err != nil {
 		return nil, err

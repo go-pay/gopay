@@ -35,9 +35,6 @@ func (c *ClientV3) V3BusinessPointsSync(url string) (wxRsp *EmptyRsp, err error)
 //	Code = 0 is success
 // 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_6_4.shtml
 func (c *ClientV3) V3BusinessAuthPointsQuery(appid, openid string) (*BusinessAuthPointsQueryRsp, error) {
-	if appid == "" {
-		appid = c.Appid
-	}
 	uri := fmt.Sprintf(v3BusinessAuthPointsQuery, openid) + "?appid=" + appid
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {

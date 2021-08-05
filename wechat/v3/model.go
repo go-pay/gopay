@@ -453,6 +453,118 @@ type Apply4SubQuerySettlementRsp struct {
 	Error    string                    `json:"-"`
 }
 
+// 创建代金券批次 Rsp
+type FavorBatchCreateRsp struct {
+	Code     int               `json:"-"`
+	SignInfo *SignInfo         `json:"-"`
+	Response *FavorBatchCreate `json:"response,omitempty"`
+	Error    string            `json:"-"`
+}
+
+// 发放代金券批次 Rsp
+type FavorBatchGrantRsp struct {
+	Code     int              `json:"-"`
+	SignInfo *SignInfo        `json:"-"`
+	Response *FavorBatchGrant `json:"response,omitempty"`
+	Error    string           `json:"-"`
+}
+
+// 激活代金券批次 Rsp
+type FavorBatchStartRsp struct {
+	Code     int              `json:"-"`
+	SignInfo *SignInfo        `json:"-"`
+	Response *FavorBatchStart `json:"response,omitempty"`
+	Error    string           `json:"-"`
+}
+
+// 条件查询批次列表 Rsp
+type FavorBatchListRsp struct {
+	Code     int             `json:"-"`
+	SignInfo *SignInfo       `json:"-"`
+	Response *FavorBatchList `json:"response,omitempty"`
+	Error    string          `json:"-"`
+}
+
+// 查询批次详情 Rsp
+type FavorBatchDetailRsp struct {
+	Code     int         `json:"-"`
+	SignInfo *SignInfo   `json:"-"`
+	Response *FavorBatch `json:"response,omitempty"`
+	Error    string      `json:"-"`
+}
+
+// 查询批次详情 Rsp
+type FavorDetailRsp struct {
+	Code     int          `json:"-"`
+	SignInfo *SignInfo    `json:"-"`
+	Response *FavorDetail `json:"response,omitempty"`
+	Error    string       `json:"-"`
+}
+
+// 查询代金券可用商户 Rsp
+type FavorMerchantRsp struct {
+	Code     int            `json:"-"`
+	SignInfo *SignInfo      `json:"-"`
+	Response *FavorMerchant `json:"response,omitempty"`
+	Error    string         `json:"-"`
+}
+
+// 查询代金券可用单品 Rsp
+type FavorItemsRsp struct {
+	Code     int         `json:"-"`
+	SignInfo *SignInfo   `json:"-"`
+	Response *FavorItems `json:"response,omitempty"`
+	Error    string      `json:"-"`
+}
+
+// 根据商户号查用户的券 Rsp
+type FavorUserCouponsRsp struct {
+	Code     int               `json:"-"`
+	SignInfo *SignInfo         `json:"-"`
+	Response *FavorUserCoupons `json:"response,omitempty"`
+	Error    string            `json:"-"`
+}
+
+// 下载批次核销明细 Rsp
+type FavorUseFlowDownloadRsp struct {
+	Code     int                `json:"-"`
+	SignInfo *SignInfo          `json:"-"`
+	Response *FavorFlowDownload `json:"response,omitempty"`
+	Error    string             `json:"-"`
+}
+
+// 下载批次退款明细 Rsp
+type FavorRefundFlowDownloadRsp struct {
+	Code     int                `json:"-"`
+	SignInfo *SignInfo          `json:"-"`
+	Response *FavorFlowDownload `json:"response,omitempty"`
+	Error    string             `json:"-"`
+}
+
+// 设置消息通知地址 Rsp
+type FavorCallbackUrlSetRsp struct {
+	Code     int               `json:"-"`
+	SignInfo *SignInfo         `json:"-"`
+	Response *FavorCallbackUrl `json:"response,omitempty"`
+	Error    string            `json:"-"`
+}
+
+// 暂停代金券批次 Rsp
+type FavorBatchPauseRsp struct {
+	Code     int              `json:"-"`
+	SignInfo *SignInfo        `json:"-"`
+	Response *FavorBatchPause `json:"response,omitempty"`
+	Error    string           `json:"-"`
+}
+
+// 重启代金券批次 Rsp
+type FavorBatchRestartRsp struct {
+	Code     int                `json:"-"`
+	SignInfo *SignInfo          `json:"-"`
+	Response *FavorBatchRestart `json:"response,omitempty"`
+	Error    string             `json:"-"`
+}
+
 // ==================================分割==================================
 
 type JSAPIPayParams struct {
@@ -1367,4 +1479,164 @@ type Apply4SubQuerySettlement struct {
 	AccountNumber    string `json:"account_number"`     // 银行账号
 	VerifyResult     string `json:"verify_result"`      // 汇款验证结果
 	VerifyFailReason string `json:"verify_fail_reason"` // 汇款验证失败原因
+}
+
+type FavorBatchCreate struct {
+	StockId    string `json:"stock_id"`    // 微信为每个代金券批次分配的唯一ID
+	CreateTime string `json:"create_time"` // 创建时间，遵循rfc3339标准格式
+}
+
+type FavorBatchGrant struct {
+	CouponId string `json:"coupon_id"` // 微信为代金券唯一分配的id
+}
+
+type FavorBatchStart struct {
+	StockId   string `json:"stock_id"`   // 微信为每个代金券批次分配的唯一ID
+	StartTime string `json:"start_time"` // 生效时间，遵循rfc3339标准格式
+}
+
+type FavorBatchList struct {
+	Data       []*FavorBatch `json:"data,omitempty"` // 批次详情列表
+	TotalCount int           `json:"total_count"`    // 批次总数
+	Offset     int           `json:"offset"`         // 分页页码
+	Limit      int           `json:"limit"`          // 分页大小
+}
+
+type FavorBatch struct {
+	StockId            string        `json:"stock_id"`             // 微信为每个代金券批次分配的唯一ID
+	StockCreatorMchid  string        `json:"stock_creator_mchid"`  // 创建批次的商户号
+	StockName          string        `json:"stock_name"`           // 批次名称
+	Status             string        `json:"status"`               // 批次状态
+	CreateTime         string        `json:"create_time"`          // 创建时间，遵循rfc3339标准格式
+	Description        string        `json:"description"`          // 使用说明
+	StockUseRule       *StockUseRule `json:"stock_use_rule"`       // 普通发券批次特定信息
+	AvailableBeginTime string        `json:"available_begin_time"` // 可用开始时间，遵循rfc3339标准格式
+	AvailableEndTime   string        `json:"available_end_time"`   // 可用结束时间，遵循rfc3339标准格式
+	DistributedCoupons int           `json:"distributed_coupons"`  // 已发券数量
+	NoCash             bool          `json:"no_cash"`              // 是否无资金流
+	StartTime          string        `json:"start_time"`           // 激活批次的时间
+	StopTime           string        `json:"stop_time"`            // 终止批次的时间
+	CutToMessage       *CutToMessage `json:"cut_to_message"`       // 单品优惠特定信息
+	Singleitem         bool          `json:"singleitem"`           // 是否单品优惠
+	StockType          string        `json:"stock_type"`           // 批次类型
+}
+
+type StockUseRule struct {
+	MaxCoupons        int                `json:"max_coupons"`          // 发放总上限
+	MaxAmount         int                `json:"max_amount"`           // 总预算
+	MaxAmountByDay    int                `json:"max_amount_by_day"`    // 当天发放上限金额
+	FixedNormalCoupon *FixedNormalCoupon `json:"fixed_normal_coupon"`  // 固定面额发券批次特定信息
+	MaxCouponsPerUser int                `json:"max_coupons_per_user"` // 单个用户可领个数
+	CouponType        string             `json:"coupon_type"`          // 券类型
+	GoodsTag          []string           `json:"goods_tag,omitempty"`  // 订单优惠标记
+	TradeType         []string           `json:"trade_type"`           // 支付方式
+	CombineUse        bool               `json:"combine_use"`          // 是否可叠加其他优惠
+}
+
+type FixedNormalCoupon struct {
+	CouponAmount       int `json:"coupon_amount"`       // 面额，单位：分
+	TransactionMinimum int `json:"transaction_minimum"` // 使用券金额门槛，单位：分
+}
+
+type CutToMessage struct {
+	SinglePriceMax int `json:"single_price_max"` // 可用优惠的商品最高单价，单位：分
+	CutToPrice     int `json:"cut_to_price"`     // 减至后的优惠单价，单位：分
+}
+
+type FavorDetail struct {
+	StockId                 string                   `json:"stock_id"`                  // 微信为每个代金券批次分配的唯一ID
+	StockCreatorMchid       string                   `json:"stock_creator_mchid"`       // 创建批次的商户号
+	CouponId                string                   `json:"coupon_id"`                 // 微信为代金券唯一分配的id
+	CutToMessage            *CutToMessage            `json:"cut_to_message"`            // 单品优惠特定信息
+	CouponName              string                   `json:"coupon_name"`               // 代金券名称
+	Status                  string                   `json:"status"`                    // 代金券状态
+	Description             string                   `json:"description"`               // 使用说明
+	CreateTime              string                   `json:"create_time"`               // 领券时间，遵循rfc3339标准格式
+	CouponType              string                   `json:"coupon_type"`               // 券类型
+	NoCash                  bool                     `json:"no_cash"`                   // 是否无资金流
+	AvailableBeginTime      string                   `json:"available_begin_time"`      // 可用开始时间，遵循rfc3339标准格式
+	AvailableEndTime        string                   `json:"available_end_time"`        // 可用结束时间，遵循rfc3339标准格式
+	Singleitem              bool                     `json:"singleitem"`                // 是否单品优惠
+	NormalCouponInformation *NormalCouponInformation `json:"normal_coupon_information"` // 普通满减券面额、门槛信息
+}
+
+type NormalCouponInformation struct {
+	CouponAmount       int `json:"coupon_amount"`       // 面额，单位：分
+	TransactionMinimum int `json:"transaction_minimum"` // 使用券金额门槛，单位：分
+}
+
+type FavorMerchant struct {
+	StockId    string   `json:"stock_id"`       // 批次号
+	Data       []string `json:"data,omitempty"` // 可用商户列表
+	TotalCount int      `json:"total_count"`    // 批次总数
+	Offset     int      `json:"offset"`         // 分页页码
+	Limit      int      `json:"limit"`          // 分页大小
+}
+
+type FavorItems struct {
+	StockId    string   `json:"stock_id"`       // 批次号
+	Data       []string `json:"data,omitempty"` // 可用商户列表
+	TotalCount int      `json:"total_count"`    // 批次总数
+	Offset     int      `json:"offset"`         // 分页页码
+	Limit      int      `json:"limit"`          // 分页大小
+}
+
+type FavorUserCoupons struct {
+	Data       []*UserCoupon `json:"data,omitempty"` // 批次详情列表
+	TotalCount int           `json:"total_count"`    // 批次总数
+	Offset     int           `json:"offset"`         // 分页页码
+	Limit      int           `json:"limit"`          // 分页大小
+}
+
+type UserCoupon struct {
+	StockCreatorMchid       string                   `json:"stock_creator_mchid"` // 创建批次的商户号
+	StockId                 string                   `json:"stock_id"`            // 批次号
+	CouponId                string                   `json:"coupon_id"`
+	CouponName              string                   `json:"coupon_name"`
+	CouponType              string                   `json:"coupon_type"`
+	CutToMessage            *CutToMessage            `json:"cut_to_message"`            // 单品优惠特定信息
+	Status                  string                   `json:"status"`                    // 代金券状态
+	Description             string                   `json:"description"`               // 使用说明
+	CreateTime              string                   `json:"create_time"`               // 领券时间，遵循rfc3339标准格式
+	NoCash                  bool                     `json:"no_cash"`                   // 是否无资金流
+	AvailableBeginTime      string                   `json:"available_begin_time"`      // 可用开始时间，遵循rfc3339标准格式
+	AvailableEndTime        string                   `json:"available_end_time"`        // 可用结束时间，遵循rfc3339标准格式
+	Singleitem              bool                     `json:"singleitem"`                // 是否单品优惠
+	NormalCouponInformation *NormalCouponInformation `json:"normal_coupon_information"` // 普通满减券面额、门槛信息
+	ConsumeInformation      *ConsumeInformation      `json:"consume_information"`       // 已实扣代金券信息
+}
+
+type ConsumeInformation struct {
+	ConsumeTime   string               `json:"consume_time"`           // 核销时间，遵循rfc3339标准格式
+	ConsumeMchid  string               `json:"consume_mchid"`          // 核销商户号
+	TransactionId string               `json:"transaction_id"`         // 核销订单号
+	GoodsDetail   []*CouponGoodsDetail `json:"goods_detail,omitempty"` // 商户下单单品信息
+}
+
+type CouponGoodsDetail struct {
+	GoodsId        string `json:"goods_id"`        // 商品编码
+	Quantity       int    `json:"quantity"`        // 商品数量
+	Price          int    `json:"price"`           // 单品价格，单位为分
+	DiscountAmount int    `json:"discount_amount"` // 商品优惠金额
+}
+
+type FavorFlowDownload struct {
+	Url       string `json:"url"`        // 流水文件下载链接，30s内有效
+	HashValue string `json:"hash_value"` // 文件内容的哈希值，防止篡改
+	HashType  string `json:"hash_type"`  // 哈希算法类型，目前只支持sha1
+}
+
+type FavorCallbackUrl struct {
+	UpdateTime string `json:"update_time"` // 修改时间，遵循rfc3339标准格式
+	NotifyUrl  string `json:"notify_url"`  // 通知地址
+}
+
+type FavorBatchPause struct {
+	PauseTime string `json:"pause_time"` // 暂停时间，遵循rfc3339标准格式
+	StockId   string `json:"stock_id"`   // 批次号
+}
+
+type FavorBatchRestart struct {
+	RestartTime string `json:"restart_time"` // 生效时间，遵循rfc3339标准格式
+	StockId     string `json:"stock_id"`     // 批次号
 }
