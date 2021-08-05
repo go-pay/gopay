@@ -104,8 +104,8 @@ const (
 	v3FavorBatchDetail        = "/v3/marketing/favor/stocks/%s"             // stock_id 查询批次详情 GET
 	v3FavorDetail             = "/v3/marketing/favor/users/%s/coupons/%s"   // openid、coupon_id 查询代金券详情 GET
 	v3FavorMerchant           = "/v3/marketing/favor/stocks/%s/merchants"   // stock_id 查询代金券可用商户 GET
-	v3FavorItemQuery          = "/v3/marketing/favor/stocks/%s/items"       // stock_id 查询代金券可用单品 GET
-	v3FavorUserQuery          = "/v3/marketing/favor/users/%s/coupons"      // openid 根据商户号查用户的券 GET
+	v3FavorItems              = "/v3/marketing/favor/stocks/%s/items"       // stock_id 查询代金券可用单品 GET
+	v3FavorUserCoupons        = "/v3/marketing/favor/users/%s/coupons"      // openid 根据商户号查用户的券 GET
 	v3FavorUseFlowDownload    = "/v3/marketing/favor/stocks/%s/use-flow"    // stock_id 下载批次核销明细 GET
 	v3FavorRefundFlowDownload = "/v3/marketing/favor/stocks/%s/refund-flow" // stock_id 下载批次退款明细 GET
 	v3FavorCallbackUrlSet     = "/v3/marketing/favor/callbacks"             // 设置消息通知地址 POST
