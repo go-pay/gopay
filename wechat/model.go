@@ -660,31 +660,32 @@ type ProfitSharingResponse struct {
 
 // ProfitSharingQueryResponse 查询分账结果
 type ProfitSharingQueryResponse struct {
-	ReturnCode    string                   `xml:"return_code,omitempty" json:"return_code,omitempty"`       // 返回状态码 SUCCESS/FAIL 此字段是通信标识，非交易标识
-	ReturnMsg     string                   `xml:"return_msg,omitempty" json:"return_msg,omitempty"`         // 返回信息，如非空，为错误原因
-	ResultCode    string                   `xml:"result_code,omitempty" json:"result_code,omitempty"`       // 业务结果 SUCCESS：分账申请接收成功，结果通过分账查询接口查询 FAIL ：提交业务失败
-	ErrCode       string                   `xml:"err_code,omitempty" json:"err_code,omitempty"`             // 错误代码
-	ErrCodeDes    string                   `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`     // 错误代码描述
-	MchId         string                   `xml:"mch_id,omitempty" json:"mch_id,omitempty"`                 // 商户号
-	NonceStr      string                   `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`           // 随机字符串
-	Sign          string                   `xml:"sign,omitempty" json:"sign,omitempty"`                     // 签名
-	TransactionId string                   `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"` // 微信订单号
-	OutOrderNo    string                   `xml:"out_order_no,omitempty" json:"out_order_no,omitempty"`     // 商户分账单号
-	OrderId       string                   `xml:"order_id,omitempty" json:"order_id,omitempty"`             // 微信分账单号
-	Status        string                   `xml:"status,omitempty" json:"status,omitempty"`                 // 分账单状态 ACCEPTED—受理成功 PROCESSING—处理中 FINISHED—处理完成 CLOSED—处理失败，已关单
-	CloseReason   string                   `xml:"close_reason,omitempty" json:"close_reason,omitempty"`     // 关单原因 NO_AUTH:分账授权已解除
-	Receivers     []*profitSharingReceiver `xml:"receivers,omitempty" json:"receivers,omitempty"`
+	ReturnCode    string `xml:"return_code,omitempty" json:"return_code,omitempty"`       // 返回状态码 SUCCESS/FAIL 此字段是通信标识，非交易标识
+	ReturnMsg     string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`         // 返回信息，如非空，为错误原因
+	ResultCode    string `xml:"result_code,omitempty" json:"result_code,omitempty"`       // 业务结果 SUCCESS：分账申请接收成功，结果通过分账查询接口查询 FAIL ：提交业务失败
+	ErrCode       string `xml:"err_code,omitempty" json:"err_code,omitempty"`             // 错误代码
+	ErrCodeDes    string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`     // 错误代码描述
+	MchId         string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`                 // 商户号
+	NonceStr      string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`           // 随机字符串
+	Sign          string `xml:"sign,omitempty" json:"sign,omitempty"`                     // 签名
+	TransactionId string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"` // 微信订单号
+	OutOrderNo    string `xml:"out_order_no,omitempty" json:"out_order_no,omitempty"`     // 商户分账单号
+	OrderId       string `xml:"order_id,omitempty" json:"order_id,omitempty"`             // 微信分账单号
+	Status        string `xml:"status,omitempty" json:"status,omitempty"`                 // 分账单状态 ACCEPTED—受理成功 PROCESSING—处理中 FINISHED—处理完成 CLOSED—处理失败，已关单
+	CloseReason   string `xml:"close_reason,omitempty" json:"close_reason,omitempty"`     // 关单原因 NO_AUTH:分账授权已解除
+	Receivers     string `xml:"receivers,omitempty" json:"receivers,omitempty"`
 }
 
-type profitSharingReceiver struct {
-	Amount       int    `xml:"amount,omitempty" json:"amount,omitempty"`           // 分账金额 分账金额，单位为分，只能为整数，不能超过原订单支付金额及最大分账比例金额
-	Description  string `xml:"description,omitempty" json:"description,omitempty"` // 分账描述
-	ReceiverType string `xml:"type,omitempty" json:"type,omitempty"`               // 分账接收方类型 MERCHANT_ID：商户ID ;PERSONAL_OPENID：个人openid
-	Account      string `xml:"account,omitempty" json:"account,omitempty"`         // 分账接收方账号
-	Result       string `xml:"result,omitempty" json:"result,omitempty"`           // 分账结果 PENDING:待分账 SUCCESS:分账成功 ADJUST:分账失败待调账 RETURNED:已转回分账方 CLOSED: 已关闭
-	FinishTime   string `xml:"finish_time,omitempty" json:"finish_time,omitempty"` // 分账完成时间
-	FailReason   string `xml:"fail_reason,omitempty" json:"fail_reason,omitempty"` // 分账失败原因 ACCOUNT_ABNORMAL:分账接收账户异常 NO_RELATION：分账关系已解除 RECEIVER_HIGH_RISK:高风险接收方
-}
+//
+//type profitSharingReceiver struct {
+//	Amount       int    `xml:"amount,omitempty" json:"amount,omitempty"`           // 分账金额 分账金额，单位为分，只能为整数，不能超过原订单支付金额及最大分账比例金额
+//	Description  string `xml:"description,omitempty" json:"description,omitempty"` // 分账描述
+//	ReceiverType string `xml:"type,omitempty" json:"type,omitempty"`               // 分账接收方类型 MERCHANT_ID：商户ID ;PERSONAL_OPENID：个人openid
+//	Account      string `xml:"account,omitempty" json:"account,omitempty"`         // 分账接收方账号
+//	Result       string `xml:"result,omitempty" json:"result,omitempty"`           // 分账结果 PENDING:待分账 SUCCESS:分账成功 ADJUST:分账失败待调账 RETURNED:已转回分账方 CLOSED: 已关闭
+//	FinishTime   string `xml:"finish_time,omitempty" json:"finish_time,omitempty"` // 分账完成时间
+//	FailReason   string `xml:"fail_reason,omitempty" json:"fail_reason,omitempty"` // 分账失败原因 ACCOUNT_ABNORMAL:分账接收账户异常 NO_RELATION：分账关系已解除 RECEIVER_HIGH_RISK:高风险接收方
+//}
 
 // ProfitSharingAddReceiverResponse 添加分账接收者结果
 type ProfitSharingAddReceiverResponse struct {

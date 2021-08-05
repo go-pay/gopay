@@ -37,9 +37,10 @@ func (c *ClientV3) V3ProfitShareOrder(bm gopay.BodyMap) (*ProfitShareOrderRsp, e
 
 // 查询分账结果API
 //	Code = 0 is success
-// 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_2.shtml
-func (c *ClientV3) V3ProfitShareOrderQuery(orderNo, transId string) (*ProfitShareOrderQueryRsp, error) {
-	uri := fmt.Sprintf(v3ProfitShareQuery, orderNo) + "?transaction_id=" + transId
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_2.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_2.shtml
+func (c *ClientV3) V3ProfitShareOrderQuery(orderNo string, bm gopay.BodyMap) (*ProfitShareOrderQueryRsp, error) {
+	uri := fmt.Sprintf(v3ProfitShareQuery, orderNo) + "?" + bm.EncodeGetParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
