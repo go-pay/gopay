@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // 创单结单合并API
@@ -15,9 +14,6 @@ import (
 //	注意：限制条件：【免确认订单模式】，用户已授权状态下，可调用该接口。
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_1.shtml
 func (c *ClientV3) V3ScoreDirectComplete(bm gopay.BodyMap) (wxRsp *ScoreDirectCompleteRsp, err error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
 	authorization, err := c.authorization(MethodPost, v3ScoreDirectComplete, bm)
 	if err != nil {
 		return nil, err
@@ -43,9 +39,6 @@ func (c *ClientV3) V3ScoreDirectComplete(bm gopay.BodyMap) (wxRsp *ScoreDirectCo
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_2.shtml
 func (c *ClientV3) V3ScorePermission(bm gopay.BodyMap) (wxRsp *ScorePermissionRsp, err error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
 	authorization, err := c.authorization(MethodPost, v3ScorePermission, bm)
 	if err != nil {
 		return nil, err
@@ -121,8 +114,8 @@ func (c *ClientV3) V3ScorePermissionTerminate(authCode, serviceId, reason string
 // 查询用户授权记录（openid）API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_5.shtml
-func (c *ClientV3) V3ScorePermissionOpenidQuery(openId, serviceId string) (wxRsp *ScorePermissionOpenidQueryRsp, err error) {
-	uri := fmt.Sprintf(v3ScorePermissionOpenidQuery, openId) + "?appid=" + c.Appid + "&service_id=" + serviceId
+func (c *ClientV3) V3ScorePermissionOpenidQuery(appid, openid, serviceid string) (wxRsp *ScorePermissionOpenidQueryRsp, err error) {
+	uri := fmt.Sprintf(v3ScorePermissionOpenidQuery, openid) + "?appid=" + appid + "&service_id=" + serviceid
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -147,11 +140,11 @@ func (c *ClientV3) V3ScorePermissionOpenidQuery(openId, serviceId string) (wxRsp
 // 解除用户授权关系（openid）API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_6.shtml
-func (c *ClientV3) V3ScorePermissionOpenidTerminate(openId, serviceId, reason string) (wxRsp *EmptyRsp, err error) {
-	url := fmt.Sprintf(v3ScorePermissionOpenidTerminate, openId)
+func (c *ClientV3) V3ScorePermissionOpenidTerminate(appid, openid, serviceid, reason string) (wxRsp *EmptyRsp, err error) {
+	url := fmt.Sprintf(v3ScorePermissionOpenidTerminate, openid)
 	bm := make(gopay.BodyMap)
-	bm.Set("service_id", serviceId).
-		Set("appid", c.Appid).
+	bm.Set("service_id", serviceid).
+		Set("appid", appid).
 		Set("reason", reason)
 	authorization, err := c.authorization(MethodPost, url, bm)
 	if err != nil {
@@ -174,9 +167,6 @@ func (c *ClientV3) V3ScorePermissionOpenidTerminate(openId, serviceId, reason st
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_14.shtml
 func (c *ClientV3) V3ScoreOrderCreate(bm gopay.BodyMap) (wxRsp *ScoreOrderCreateRsp, err error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
 	authorization, err := c.authorization(MethodPost, v3ScoreOrderCreate, bm)
 	if err != nil {
 		return nil, err
@@ -201,13 +191,13 @@ func (c *ClientV3) V3ScoreOrderCreate(bm gopay.BodyMap) (wxRsp *ScoreOrderCreate
 // 查询支付分订单API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_15.shtml
-func (c *ClientV3) V3ScoreOrderQuery(orderNoType OrderNoType, orderNo, serviceId string) (wxRsp *ScoreOrderQueryRsp, err error) {
+func (c *ClientV3) V3ScoreOrderQuery(orderNoType OrderNoType, appid, orderNo, serviceid string) (wxRsp *ScoreOrderQueryRsp, err error) {
 	var uri string
 	switch orderNoType {
 	case OutTradeNo:
-		uri = v3ScoreOrderQuery + "?appid=" + c.Appid + "&out_order_no=" + orderNo + "&service_id=" + serviceId
+		uri = v3ScoreOrderQuery + "?appid=" + appid + "&out_order_no=" + orderNo + "&service_id=" + serviceid
 	case QueryId:
-		uri = v3ScoreOrderQuery + "?appid=" + c.Appid + "&query_id=" + orderNo + "&service_id=" + serviceId
+		uri = v3ScoreOrderQuery + "?appid=" + appid + "&query_id=" + orderNo + "&service_id=" + serviceid
 	default:
 		return nil, errors.New("unsupported order number type")
 	}
@@ -235,11 +225,11 @@ func (c *ClientV3) V3ScoreOrderQuery(orderNoType OrderNoType, orderNo, serviceId
 // 取消支付分订单API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_16.shtml
-func (c *ClientV3) V3ScoreOrderCancel(tradeNo, serviceId, reason string) (wxRsp *ScoreOrderCancelRsp, err error) {
+func (c *ClientV3) V3ScoreOrderCancel(appid, tradeNo, serviceid, reason string) (wxRsp *ScoreOrderCancelRsp, err error) {
 	url := fmt.Sprintf(v3ScoreOrderCancel, tradeNo)
 	bm := make(gopay.BodyMap)
-	bm.Set("appid", c.Appid).
-		Set("service_id", serviceId).
+	bm.Set("appid", appid).
+		Set("service_id", serviceid).
 		Set("reason", reason)
 	authorization, err := c.authorization(MethodPost, url, bm)
 	if err != nil {
@@ -267,9 +257,6 @@ func (c *ClientV3) V3ScoreOrderCancel(tradeNo, serviceId, reason string) (wxRsp 
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_17.shtml
 func (c *ClientV3) V3ScoreOrderModify(tradeNo string, bm gopay.BodyMap) (wxRsp *ScoreOrderModifyRsp, err error) {
 	url := fmt.Sprintf(v3ScoreOrderModify, tradeNo)
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
 	authorization, err := c.authorization(MethodPost, url, bm)
 	if err != nil {
 		return nil, err
@@ -296,9 +283,6 @@ func (c *ClientV3) V3ScoreOrderModify(tradeNo string, bm gopay.BodyMap) (wxRsp *
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_18.shtml
 func (c *ClientV3) V3ScoreOrderComplete(tradeNo string, bm gopay.BodyMap) (wxRsp *ScoreOrderCompleteRsp, err error) {
 	url := fmt.Sprintf(v3ScoreOrderComplete, tradeNo)
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
 	authorization, err := c.authorization(MethodPost, url, bm)
 	if err != nil {
 		return nil, err
@@ -323,11 +307,11 @@ func (c *ClientV3) V3ScoreOrderComplete(tradeNo string, bm gopay.BodyMap) (wxRsp
 // 商户发起催收扣款API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_19.shtml
-func (c *ClientV3) V3ScoreOrderPay(tradeNo, serviceId string) (wxRsp *ScoreOrderPayRsp, err error) {
+func (c *ClientV3) V3ScoreOrderPay(appid, tradeNo, serviceid string) (wxRsp *ScoreOrderPayRsp, err error) {
 	url := fmt.Sprintf(v3ScoreOrderPay, tradeNo)
 	bm := make(gopay.BodyMap)
-	bm.Set("appid", c.Appid).
-		Set("service_id", serviceId)
+	bm.Set("appid", appid).
+		Set("service_id", serviceid)
 	authorization, err := c.authorization(MethodPost, url, bm)
 	if err != nil {
 		return nil, err
@@ -354,9 +338,6 @@ func (c *ClientV3) V3ScoreOrderPay(tradeNo, serviceId string) (wxRsp *ScoreOrder
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_20.shtml
 func (c *ClientV3) V3ScoreOrderSync(tradeNo string, bm gopay.BodyMap) (wxRsp *ScoreOrderSyncRsp, err error) {
 	url := fmt.Sprintf(v3ScoreOrderSync, tradeNo)
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
 	authorization, err := c.authorization(MethodPost, url, bm)
 	if err != nil {
 		return nil, err

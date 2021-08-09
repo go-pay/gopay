@@ -92,12 +92,8 @@ func (c *ClientV3) V3SmartGuideQuery(bm gopay.BodyMap) (wxRsp *SmartGuideQueryRs
 //	注意：入参加密字段数据加密：client.V3EncryptText()
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_4_4.shtml
-func (c *ClientV3) V3SmartGuideUpdate(bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
-	if err = bm.CheckEmptyError("guide_id"); err != nil {
-		return nil, err
-	}
-	url := fmt.Sprintf(v3GuideUpdate, bm.GetString("guide_id"))
-	bm.Remove("guide_id")
+func (c *ClientV3) V3SmartGuideUpdate(guideId string, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
+	url := fmt.Sprintf(v3GuideUpdate, guideId)
 	authorization, err := c.authorization(MethodPATCH, url, bm)
 	if err != nil {
 		return nil, err

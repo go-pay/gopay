@@ -95,38 +95,38 @@ const (
 	v3BusinessAuthPointsQuery = "/v3/businesscircle/user-authorizations/%s" // openid 商圈积分授权查询 GET
 
 	// 代金券
-	v3CouponBatchCreate        = "/v3/marketing/favor/coupon-stocks"         // 创建代金券批次 POST
-	v3CouponBatchStart         = "/v3/marketing/favor/stocks/%s/start"       // stock_id 激活代金券批次 POST
-	v3CouponBatchGrant         = "/v3/marketing/favor/users/%s/coupons"      // openid 发放代金券批次 POST
-	v3CouponBatchPause         = "/v3/marketing/favor/stocks/%s/pause"       // stock_id 暂停代金券批次 POST
-	v3CouponBatchRestart       = "/v3/marketing/favor/stocks/%s/restart"     // stock_id 重启代金券批次 POST
-	v3CouponBatchQuery         = "/v3/marketing/favor/stocks"                // 条件查询批次列表 GET
-	v3CouponBatchDetail        = "/v3/marketing/favor/stocks/%s"             // stock_id 查询批次详情 GET
-	v3CouponDetailQuery        = "/v3/marketing/favor/users/%s/coupons/%s"   // openid、coupon_id 查询代金券详情 GET
-	v3CouponMerchantQuery      = "/v3/marketing/favor/stocks/%s/merchants"   // stock_id 查询代金券可用商户 GET
-	v3CouponItemQuery          = "/v3/marketing/favor/stocks/%s/items"       // stock_id 查询代金券可用单品 GET
-	v3UserCouponQuery          = "/v3/marketing/favor/users/%s/coupons"      // openid 根据商户号查用户的券 GET
-	v3CouponUseFlowDownload    = "/v3/marketing/favor/stocks/%s/use-flow"    // stock_id 下载批次核销明细 GET
-	v3CouponRefundFlowDownload = "/v3/marketing/favor/stocks/%s/refund-flow" // stock_id 下载批次退款明细 GET
-	v3CouponCallbackUrlSet     = "/v3/marketing/favor/callbacks"             // 设置消息通知地址 POST
+	v3FavorBatchCreate        = "/v3/marketing/favor/coupon-stocks"         // 创建代金券批次 POST
+	v3FavorBatchStart         = "/v3/marketing/favor/stocks/%s/start"       // stock_id 激活代金券批次 POST
+	v3FavorBatchGrant         = "/v3/marketing/favor/users/%s/coupons"      // openid 发放代金券批次 POST
+	v3FavorBatchPause         = "/v3/marketing/favor/stocks/%s/pause"       // stock_id 暂停代金券批次 POST
+	v3FavorBatchRestart       = "/v3/marketing/favor/stocks/%s/restart"     // stock_id 重启代金券批次 POST
+	v3FavorBatchList          = "/v3/marketing/favor/stocks"                // 条件查询批次列表 GET
+	v3FavorBatchDetail        = "/v3/marketing/favor/stocks/%s"             // stock_id 查询批次详情 GET
+	v3FavorDetail             = "/v3/marketing/favor/users/%s/coupons/%s"   // openid、coupon_id 查询代金券详情 GET
+	v3FavorMerchant           = "/v3/marketing/favor/stocks/%s/merchants"   // stock_id 查询代金券可用商户 GET
+	v3FavorItems              = "/v3/marketing/favor/stocks/%s/items"       // stock_id 查询代金券可用单品 GET
+	v3FavorUserCoupons        = "/v3/marketing/favor/users/%s/coupons"      // openid 根据商户号查用户的券 GET
+	v3FavorUseFlowDownload    = "/v3/marketing/favor/stocks/%s/use-flow"    // stock_id 下载批次核销明细 GET
+	v3FavorRefundFlowDownload = "/v3/marketing/favor/stocks/%s/refund-flow" // stock_id 下载批次退款明细 GET
+	v3FavorCallbackUrlSet     = "/v3/marketing/favor/callbacks"             // 设置消息通知地址 POST
 
 	// 商家券
-	v3BusiCouponBatchCreate      = "/v3/marketing/busifavor/stocks"                        // 创建商家券 POST
-	v3BusiCouponBatchDetailQuery = "/v3/marketing/busifavor/stocks/%s"                     // stock_id 查询商家券详情 GET
-	v3BusiCouponUse              = "/v3/marketing/busifavor/coupons/use"                   // 核销用户券 POST
-	v3UserBusiCouponQuery        = "/v3/marketing/busifavor/users/%s/coupons"              // openid 根据过滤条件查询用户券 GET
-	v3UserBusiCouponDetail       = "/v3/marketing/busifavor/users/%s/coupons/%s/appids/%s" // openid、coupon_code、appid 查询用户单张券详情 GET
-	v3BusiCouponCodeUpload       = "/v3/marketing/busifavor/stocks/%s/couponcodes"         // stock_id 上传预存code POST
-	v3BusiCouponCallbackUrlSet   = "/v3/marketing/busifavor/callbacks"                     // 设置商家券事件通知地址 POST
-	v3BusiCouponCallbackUrlQuery = "/v3/marketing/busifavor/callbacks"                     // 查询商家券事件通知地址 GET
-	v3BusiCouponAssociate        = "/v3/marketing/busifavor/coupons/associate"             // 关联订单信息 POST
-	v3BusiCouponDisassociate     = "/v3/marketing/busifavor/coupons/disassociate"          // 取消关联订单信息 POST
-	v3BusiCouponBatchUpdate      = "/v3/marketing/busifavor/stocks/%s/budget"              // stock_id 修改批次预算 PATCH
-	v3BusiCouponInfoUpdate       = "/v3/marketing/busifavor/stocks/%s"                     // stock_id 修改商家券基本信息 PATCH
-	v3BusiCouponReturn           = "/v3/marketing/busifavor/coupons/return"                // 申请退券 POST
-	v3BusiCouponDeactivate       = "/v3/marketing/busifavor/coupons/deactivate"            // 使券失效 POST
-	v3MarketingSubsidy           = "/v3/marketing/busifavor/subsidy/pay-receipts"          // 营销补差付款 POST
-	v3MarketingSubsidyDetail     = "/v3/marketing/busifavor/subsidy/pay-receipts/%s"       // subsidy_receipt_id 查询营销补差付款单详情 GET
+	v3BusiFavorBatchCreate      = "/v3/marketing/busifavor/stocks"                        // 创建商家券 POST
+	v3BusiFavorBatchDetail      = "/v3/marketing/busifavor/stocks/%s"                     // stock_id 查询商家券详情 GET
+	v3BusiFavorUse              = "/v3/marketing/busifavor/coupons/use"                   // 核销用户券 POST
+	v3BusiFavorUserCoupons      = "/v3/marketing/busifavor/users/%s/coupons"              // openid 根据过滤条件查询用户券 GET
+	v3BusiFavorUserCouponDetail = "/v3/marketing/busifavor/users/%s/coupons/%s/appids/%s" // openid、coupon_code、appid 查询用户单张券详情 GET
+	v3BusiFavorCodeUpload       = "/v3/marketing/busifavor/stocks/%s/couponcodes"         // stock_id 上传预存code POST
+	v3BusiFavorCallbackUrlSet   = "/v3/marketing/busifavor/callbacks"                     // 设置商家券事件通知地址 POST
+	v3BusiFavorCallbackUrl      = "/v3/marketing/busifavor/callbacks"                     // 查询商家券事件通知地址 GET
+	v3BusiFavorAssociate        = "/v3/marketing/busifavor/coupons/associate"             // 关联订单信息 POST
+	v3BusiFavorDisassociate     = "/v3/marketing/busifavor/coupons/disassociate"          // 取消关联订单信息 POST
+	v3BusiFavorBatchUpdate      = "/v3/marketing/busifavor/stocks/%s/budget"              // stock_id 修改批次预算 PATCH
+	v3BusiFavorInfoUpdate       = "/v3/marketing/busifavor/stocks/%s"                     // stock_id 修改商家券基本信息 PATCH
+	v3BusiFavorReturn           = "/v3/marketing/busifavor/coupons/return"                // 申请退券 POST
+	v3BusiFavorDeactivate       = "/v3/marketing/busifavor/coupons/deactivate"            // 使券失效 POST
+	v3BusiFavorSubsidyPay       = "/v3/marketing/busifavor/subsidy/pay-receipts"          // 营销补差付款 POST
+	v3BusiFavorSubsidyPayDetail = "/v3/marketing/busifavor/subsidy/pay-receipts/%s"       // subsidy_receipt_id 查询营销补差付款单详情 GET
 
 	// 点金计划
 	v3GoldPlanManage       = "/v3/goldplan/merchants/changegoldplanstatus"            // 点金计划管理 POST
@@ -148,14 +148,15 @@ const (
 	v3ComplaintUploadImage        = "/v3/merchant-service/images/upload"                         // 商户上传反馈图片 POST
 
 	// 分账
-	v3ProfitShareOrder          = "/v3/profitsharing/orders"                  // 请求分账 POST
-	v3ProfitShareQuery          = "/v3/profitsharing/orders/%s"               // 查询分账结果 GET
-	v3ProfitShareReturn         = "/v3/profitsharing/return-orders"           // 请求分账回退 POST
-	v3ProfitShareReturnResult   = "/v3/profitsharing/return-orders/%s"        // 查询分账回退结果 GET
-	v3ProfitShareUnfreeze       = "/v3/profitsharing/orders/unfreeze"         // 解冻剩余资金 POST
-	v3ProfitShareUnsplitAmount  = "/v3/profitsharing/transactions/%s/amounts" // 查询剩余待分金额 GET
-	v3ProfitShareAddReceiver    = "/v3/profitsharing/receivers/add"           // 添加分账接收方 POST
-	v3ProfitShareDeleteReceiver = "/v3/profitsharing/receivers/delete"        // 删除分账接收方 POST
+	v3ProfitShareOrder           = "/v3/profitsharing/orders"                  // 请求分账 POST
+	v3ProfitShareQuery           = "/v3/profitsharing/orders/%s"               // 查询分账结果 GET
+	v3ProfitShareReturn          = "/v3/profitsharing/return-orders"           // 请求分账回退 POST
+	v3ProfitShareReturnResult    = "/v3/profitsharing/return-orders/%s"        // 查询分账回退结果 GET
+	v3ProfitShareUnfreeze        = "/v3/profitsharing/orders/unfreeze"         // 解冻剩余资金 POST
+	v3ProfitShareUnsplitAmount   = "/v3/profitsharing/transactions/%s/amounts" // 查询剩余待分金额 GET
+	v3ProfitShareAddReceiver     = "/v3/profitsharing/receivers/add"           // 添加分账接收方 POST
+	v3ProfitShareDeleteReceiver  = "/v3/profitsharing/receivers/delete"        // 删除分账接收方 POST
+	v3ProfitShareMerchantConfigs = "/v3/profitsharing/merchant-configs/%s"     // 查询最大分账比例API GET
 
 	// 其他能力
 	v3MediaUploadImage = "/v3/merchant/media/upload"       // 图片上传 POST

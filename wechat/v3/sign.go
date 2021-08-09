@@ -48,71 +48,70 @@ func V3VerifySign(timestamp, nonce, signBody, sign, wxPkContent string) (err err
 
 // PaySignOfJSAPI 获取 JSAPI paySign
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_4.shtml
-func (c *ClientV3) PaySignOfJSAPI(prepayid string) (jsapi *JSAPIPayParams, err error) {
+func (c *ClientV3) PaySignOfJSAPI(appid, prepayid string) (jsapi *JSAPIPayParams, err error) {
 	ts := util.Int642String(time.Now().Unix())
 	nonceStr := util.GetRandomString(32)
-	prepayId := "prepay_id=" + prepayid
+	pkg := "prepay_id=" + prepayid
 
-	_str := c.Appid + "\n" + ts + "\n" + nonceStr + "\n" + prepayId + "\n"
+	_str := appid + "\n" + ts + "\n" + nonceStr + "\n" + pkg + "\n"
 	sign, err := c.rsaSign(_str)
 	if err != nil {
 		return nil, err
 	}
 
 	jsapi = &JSAPIPayParams{
-		AppId:     c.Appid,
+		AppId:     appid,
 		TimeStamp: ts,
 		NonceStr:  nonceStr,
-		Package:   prepayId,
+		Package:   pkg,
 		SignType:  SignTypeRSA,
 		PaySign:   sign,
 	}
 	return jsapi, nil
 }
 
-// PaySignOfApp 获取 App paySign
+// PaySignOfApp 获取 App sign
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_4.shtml
-func (c *ClientV3) PaySignOfApp(prepayid string) (app *AppPayParams, err error) {
+func (c *ClientV3) PaySignOfApp(appid, prepayid string) (app *AppPayParams, err error) {
 	ts := util.Int642String(time.Now().Unix())
 	nonceStr := util.GetRandomString(32)
-	prepayId := prepayid
 
-	_str := c.Appid + "\n" + ts + "\n" + nonceStr + "\n" + prepayId + "\n"
+	_str := appid + "\n" + ts + "\n" + nonceStr + "\n" + prepayid + "\n"
 	sign, err := c.rsaSign(_str)
 	if err != nil {
 		return nil, err
 	}
 
 	app = &AppPayParams{
-		Appid:     c.Appid,
+		Appid:     appid,
 		Partnerid: c.Mchid,
 		Prepayid:  prepayid,
 		Package:   "Sign=WXPay",
 		Noncestr:  nonceStr,
 		Timestamp: ts,
-		PaySign:   sign,
+		Sign:      sign,
 	}
 	return app, nil
 }
 
 // PaySignOfApplet 获取 小程序 paySign
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_4.shtml
-func (c *ClientV3) PaySignOfApplet(prepayid string) (applet *AppletParams, err error) {
+func (c *ClientV3) PaySignOfApplet(appid, prepayid string) (applet *AppletParams, err error) {
 	ts := util.Int642String(time.Now().Unix())
 	nonceStr := util.GetRandomString(32)
-	prepayId := "prepay_id=" + prepayid
+	pkg := "prepay_id=" + prepayid
 
-	_str := c.Appid + "\n" + ts + "\n" + nonceStr + "\n" + prepayId + "\n"
+	_str := appid + "\n" + ts + "\n" + nonceStr + "\n" + pkg + "\n"
 	sign, err := c.rsaSign(_str)
 	if err != nil {
 		return nil, err
 	}
 
 	applet = &AppletParams{
-		AppId:     c.Appid,
+		AppId:     appid,
 		TimeStamp: ts,
 		NonceStr:  nonceStr,
-		Package:   prepayId,
+		Package:   pkg,
 		SignType:  SignTypeRSA,
 		PaySign:   sign,
 	}

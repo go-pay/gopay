@@ -16,7 +16,6 @@ import (
 var (
 	client       *ClientV3
 	err          error
-	Appid        = ""
 	MchId        = ""
 	APIv3Key     = ""
 	SerialNo     = ""
@@ -27,12 +26,11 @@ var (
 
 func TestMain(m *testing.M) {
 	// NewClientV3 初始化微信客户端 V3
-	//	appid：appid
 	//	mchid：商户ID
 	// 	serialNo：商户证书的证书序列号
 	//	apiV3Key：APIv3Key，商户平台获取
 	//	pkContent：私钥 apiclient_key.pem 读取后的字符串内容
-	client, err = NewClientV3(Appid, MchId, SerialNo, APIv3Key, PKContent)
+	client, err = NewClientV3(MchId, SerialNo, APIv3Key, PKContent)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -325,7 +323,9 @@ func TestV3ProfitSharingDeleteReceiver(t *testing.T) {
 }
 
 func TestV3ProfitSharingQuery(t *testing.T) {
-	wxRsp, err := client.V3ProfitShareOrderQuery("202106071738581340", "4200001149202106084654939138")
+	bm := make(gopay.BodyMap)
+	bm.Set("transaction_id", "4200001149202106084654939138")
+	wxRsp, err := client.V3ProfitShareOrderQuery("P20150806125346", bm)
 	if err != nil {
 		xlog.Error(err)
 		return

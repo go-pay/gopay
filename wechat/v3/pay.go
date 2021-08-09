@@ -10,13 +10,10 @@ import (
 	"github.com/go-pay/gopay/pkg/util"
 )
 
-// （直连模式）APP下单API
+// APP下单API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_1.shtml
 func (c *ClientV3) V3TransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
 	if bm.GetString("mchid") == util.NULL {
 		bm.Set("mchid", c.Mchid)
 	}
@@ -41,14 +38,11 @@ func (c *ClientV3) V3TransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err err
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// （直连模式）JSAPI/小程序下单API
+// JSAPI/小程序下单API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_1.shtml
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_1.shtml
 func (c *ClientV3) V3TransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
 	if bm.GetString("mchid") == util.NULL {
 		bm.Set("mchid", c.Mchid)
 	}
@@ -73,13 +67,10 @@ func (c *ClientV3) V3TransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err e
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// （直连模式）Native下单API
+// Native下单API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_4_1.shtml
 func (c *ClientV3) V3TransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
 	if bm.GetString("mchid") == util.NULL {
 		bm.Set("mchid", c.Mchid)
 	}
@@ -104,13 +95,10 @@ func (c *ClientV3) V3TransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err 
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// （直连模式）H5下单API
+// H5下单API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_3_1.shtml
 func (c *ClientV3) V3TransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
 	if bm.GetString("mchid") == util.NULL {
 		bm.Set("mchid", c.Mchid)
 	}
@@ -135,12 +123,11 @@ func (c *ClientV3) V3TransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// （直连模式）查询订单API
+// 查询订单API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter3_5.shtml
 func (c *ClientV3) V3TransactionQueryOrder(orderNoType OrderNoType, orderNo string) (wxRsp *QueryOrderRsp, err error) {
 	var uri string
-
 	switch orderNoType {
 	case TransactionId:
 		uri = fmt.Sprintf(v3ApiQueryOrderTransactionId, orderNo) + "?mchid=" + c.Mchid
@@ -171,7 +158,7 @@ func (c *ClientV3) V3TransactionQueryOrder(orderNoType OrderNoType, orderNo stri
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// （直连模式）关闭订单API
+// 关闭订单API
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter3_6.shtml
 func (c *ClientV3) V3TransactionCloseOrder(tradeNo string) (wxRsp *CloseOrderRsp, err error) {

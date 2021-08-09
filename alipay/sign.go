@@ -224,8 +224,8 @@ func (a *Client) getSignData(bs []byte, alipayCertSN string) (signData string, e
 
 // =============================== 同步验签 ===============================
 
-// VerifySyncSign 支付宝同步返回验签
-//	注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 暂不支持同步返回验签
+// VerifySyncSign 支付宝同步返回验签（公钥模式）
+//	注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 不支持同步返回验签
 //	aliPayPublicKey：支付宝平台获取的支付宝公钥
 //	signData：待验签参数，aliRsp.SignData
 //	sign：待验签sign，aliRsp.Sign
@@ -241,8 +241,8 @@ func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error)
 	return true, nil
 }
 
-// VerifySyncSignWithCert 支付宝同步返回验签
-//	注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 暂不支持同步返回验签
+// VerifySyncSignWithCert 支付宝同步返回验签（公钥证书模式）
+//	注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 不支持同步返回验签
 //	aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayCertPublicKey_RSA2.crt 或文件内容[]byte
 //	signData：待验签参数，aliRsp.SignData
 //	sign：待验签sign，aliRsp.Sign
@@ -300,7 +300,7 @@ func (a *Client) autoVerifySignByCert(sign, signData string, signDataErr error) 
 
 // =============================== 异步验签 ===============================
 
-// VerifySign 支付宝异步通知验签
+// VerifySign 支付宝异步通知验签（公钥模式）
 //	注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
 //	aliPayPublicKey：支付宝平台获取的支付宝公钥
 //	notifyBean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
@@ -346,7 +346,7 @@ func VerifySign(aliPayPublicKey string, notifyBean interface{}) (ok bool, err er
 	return true, nil
 }
 
-// VerifySignWithCert 支付宝异步通知验签
+// VerifySignWithCert 支付宝异步通知验签（公钥证书模式）
 //	注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
 //	aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayCertPublicKey_RSA2.crt 或文件内容[]byte
 //	notifyBean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签

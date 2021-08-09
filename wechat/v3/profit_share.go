@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // 请求分账API
@@ -14,10 +13,6 @@ import (
 //	Code = 0 is success
 // 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_1.shtml
 func (c *ClientV3) V3ProfitShareOrder(bm gopay.BodyMap) (*ProfitShareOrderRsp, error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
-
 	authorization, err := c.authorization(MethodPost, v3ProfitShareOrder, bm)
 	if err != nil {
 		return nil, err
@@ -42,9 +37,10 @@ func (c *ClientV3) V3ProfitShareOrder(bm gopay.BodyMap) (*ProfitShareOrderRsp, e
 
 // 查询分账结果API
 //	Code = 0 is success
-// 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_2.shtml
-func (c *ClientV3) V3ProfitShareOrderQuery(orderNo, transId string) (*ProfitShareOrderQueryRsp, error) {
-	uri := fmt.Sprintf(v3ProfitShareQuery, orderNo) + "?transaction_id=" + transId
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_2.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_2.shtml
+func (c *ClientV3) V3ProfitShareOrderQuery(orderNo string, bm gopay.BodyMap) (*ProfitShareOrderQueryRsp, error) {
+	uri := fmt.Sprintf(v3ProfitShareQuery, orderNo) + "?" + bm.EncodeGetParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -180,10 +176,6 @@ func (c *ClientV3) V3ProfitShareUnsplitAmount(transId string) (*ProfitShareUnspl
 //	Code = 0 is success
 // 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_8.shtml
 func (c *ClientV3) V3ProfitShareAddReceiver(bm gopay.BodyMap) (*ProfitShareAddReceiverRsp, error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
-
 	authorization, err := c.authorization(MethodPost, v3ProfitShareAddReceiver, bm)
 	if err != nil {
 		return nil, err
@@ -210,10 +202,6 @@ func (c *ClientV3) V3ProfitShareAddReceiver(bm gopay.BodyMap) (*ProfitShareAddRe
 //	Code = 0 is success
 // 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_9.shtml
 func (c *ClientV3) V3ProfitShareDeleteReceiver(bm gopay.BodyMap) (*ProfitShareDeleteReceiverRsp, error) {
-	if bm.GetString("appid") == util.NULL {
-		bm.Set("appid", c.Appid)
-	}
-
 	authorization, err := c.authorization(MethodPost, v3ProfitShareDeleteReceiver, bm)
 	if err != nil {
 		return nil, err
@@ -225,6 +213,33 @@ func (c *ClientV3) V3ProfitShareDeleteReceiver(bm gopay.BodyMap) (*ProfitShareDe
 
 	wxRsp := &ProfitShareDeleteReceiverRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(ProfitShareDeleteReceiver)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 查询最大分账比例API
+//	Code = 0 is success
+// 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_7.shtml
+func (c *ClientV3) V3ProfitShareMerchantConfigs(subMchId string) (*ProfitShareMerchantConfigsRsp, error) {
+	uri := fmt.Sprintf(v3ProfitShareMerchantConfigs, subMchId)
+	authorization, err := c.authorization(MethodGet, uri, nil)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdGet(uri, authorization)
+	if err != nil {
+		return nil, err
+	}
+
+	wxRsp := &ProfitShareMerchantConfigsRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(ProfitShareMerchantConfigs)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}

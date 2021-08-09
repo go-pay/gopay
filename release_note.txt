@@ -1,3 +1,21 @@
+版本号：Release 1.5.55
+修改记录：
+   (1) 微信V3：wechat.NewClientV3()，去掉初始化参数 appid，所以方法中需要 appid 或sp_appid 的，需要自行传参
+   (2) 微信V3：新增 代金券 相关接口
+   (3) 微信V3：新增 商家券 相关接口
+   (4) 微信V2、V3：修复部分接口发现的Bug
+
+版本号：Release 1.5.54
+修改记录：
+   (1) 微信V3：新增微信支付分回调参数解密方法 notifyReq.DecryptScoreCipherText()
+   (2) 微信V3：新增分账接口 client.V3ProfitShareMerchantConfigs()
+   (3) Readme：更新Readme
+
+版本号：Release 1.5.53
+修改记录：
+   (1) 支付宝：补充接口
+   (2) 微信V3：修改支付分相关接口的返回参数字段， out_trade_no 为 out_order_no
+
 版本号：Release 1.5.52
 修改记录：
    (1) 支付宝：补充 支付API 相关接口

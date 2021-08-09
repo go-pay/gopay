@@ -146,13 +146,10 @@ func (c *ClientV3) V3ComplaintUploadImage(fileName, fileSha256 string, img *util
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_11.shtml
 func (c *ClientV3) V3ComplaintList(beginDate, endDate, complaintedMchid string, limit, offset int) (wxRsp *ComplaintListRsp, err error) {
-	uri := v3ComplaintList + "?begin_date=" + beginDate + "&end_date=" + endDate
-	if limit != 0 {
-		uri += "&limit=" + util.Int2String(limit)
+	if limit == 0 {
+		limit = 50
 	}
-	if offset != 0 {
-		uri += "&offset=" + util.Int2String(offset)
-	}
+	uri := v3ComplaintList + "?begin_date=" + beginDate + "&end_date=" + endDate + "&limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
 	if complaintedMchid != "" {
 		uri += "&complainted_mchid=" + complaintedMchid
 	}
@@ -181,13 +178,10 @@ func (c *ClientV3) V3ComplaintList(beginDate, endDate, complaintedMchid string, 
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_12.shtml
 func (c *ClientV3) V3ComplaintNegotiationHistory(complaintId string, limit, offset int) (wxRsp *ComplaintNegotiationHistoryRsp, err error) {
-	uri := fmt.Sprintf(v3ComplaintNegotiationHistory, complaintId)
-	if limit != 0 {
-		uri += "&limit=" + util.Int2String(limit)
+	if limit == 0 {
+		limit = 50
 	}
-	if offset != 0 {
-		uri += "&offset=" + util.Int2String(offset)
-	}
+	uri := fmt.Sprintf(v3ComplaintNegotiationHistory, complaintId) + "?limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err

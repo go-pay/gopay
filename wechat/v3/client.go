@@ -17,7 +17,6 @@ import (
 
 // ClientV3 微信支付 V3
 type ClientV3 struct {
-	Appid       string
 	Mchid       string
 	SerialNo    string
 	apiV3Key    []byte
@@ -30,12 +29,11 @@ type ClientV3 struct {
 }
 
 // NewClientV3 初始化微信客户端 V3
-//	appid：appid 或者服务商模式的 sp_appid
 //	mchid：商户ID 或者服务商模式的 sp_mchid
 // 	serialNo：商户API证书的证书序列号
 //	apiV3Key：APIv3Key，商户平台获取
 //	pkContent：私钥 apiclient_key.pem 读取后的字符串内容
-func NewClientV3(appid, mchid, serialNo, apiV3Key, pkContent string) (client *ClientV3, err error) {
+func NewClientV3(mchid, serialNo, apiV3Key, pkContent string) (client *ClientV3, err error) {
 	var (
 		pk *rsa.PrivateKey
 		ok bool
@@ -58,7 +56,6 @@ func NewClientV3(appid, mchid, serialNo, apiV3Key, pkContent string) (client *Cl
 		}
 	}
 	client = &ClientV3{
-		Appid:       appid,
 		Mchid:       mchid,
 		SerialNo:    serialNo,
 		apiV3Key:    []byte(apiV3Key),
