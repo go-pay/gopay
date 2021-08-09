@@ -256,6 +256,10 @@ func main() {
     * 口碑订单预咨询: `client.KoubeiTradeOrderConsult()`
     * 口碑商品交易退货接口: `client.KoubeiTradeItemorderRefund()`
     * 口碑商品交易查询接口: `client.KoubeiTradeItemorderQuery()`
+    * 码商发码成功回调接口: `client.KoubeiTradeTicketTicketcodeSend()`
+    * 口碑凭证延期接口: `client.KoubeiTradeTicketTicketcodeDelay()`
+    * 口碑凭证码查询: `client.KoubeiTradeTicketTicketcodeQuery()`
+    * 口碑凭证码撤销核销: `client.KoubeiTradeTicketTicketcodeCancel()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
     * 单笔转账接口：`client.FundTransUniTransfer()`
     * 查询转账订单接口: `client.FundTransOrderQuery()`
