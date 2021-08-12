@@ -1,3 +1,7 @@
+版本号：Release 1.5.56
+修改记录：
+   (1) 微信V3：修改 client.V3ProfitShareReturnResult() 接口入参，适配服务商模式
+
 版本号：Release 1.5.55
 修改记录：
    (1) 微信V3：wechat.NewClientV3()，去掉初始化参数 appid，所以方法中需要 appid 或sp_appid 的，需要自行传参
