@@ -150,3 +150,99 @@ func (a *Client) KoubeiTradeItemorderQuery(bm gopay.BodyMap) (aliRsp *KoubeiTrad
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+// koubei.trade.ticket.ticketcode.send(码商发码成功回调接口)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/koubei.trade.ticket.ticketcode.send
+func (a *Client) KoubeiTradeTicketTicketcodeSend(bm gopay.BodyMap) (aliRsp *KoubeiTradeTicketTicketcodeSendRsp, err error) {
+	err = bm.CheckEmptyError("request_id", "isv_ma_list", "send_order_no", "send_token", "order_no")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "koubei.trade.ticket.ticketcode.send"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(KoubeiTradeTicketTicketcodeSendRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// koubei.trade.ticket.ticketcode.delay(口碑凭证延期接口)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/koubei.trade.ticket.ticketcode.delay
+func (a *Client) KoubeiTradeTicketTicketcodeDelay(bm gopay.BodyMap) (aliRsp *KoubeiTradeTicketTicketcodeDelayRsp, err error) {
+	err = bm.CheckEmptyError("request_id", "end_date", "ticket_code", "code_type", "order_no")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "koubei.trade.ticket.ticketcode.delay"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(KoubeiTradeTicketTicketcodeDelayRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// koubei.trade.ticket.ticketcode.query(口碑凭证码查询)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/koubei.trade.ticket.ticketcode.query
+func (a *Client) KoubeiTradeTicketTicketcodeQuery(bm gopay.BodyMap) (aliRsp *KoubeiTradeTicketTicketcodeQueryRsp, err error) {
+	err = bm.CheckEmptyError("ticket_code", "shop_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "koubei.trade.ticket.ticketcode.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(KoubeiTradeTicketTicketcodeQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// koubei.trade.ticket.ticketcode.cancel(口碑凭证码撤销核销)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/koubei.trade.ticket.ticketcode.cancel
+func (a *Client) KoubeiTradeTicketTicketcodeCancel(bm gopay.BodyMap) (aliRsp *KoubeiTradeTicketTicketcodeCancelRsp, err error) {
+	err = bm.CheckEmptyError("request_id", "request_biz_no", "ticket_code")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "koubei.trade.ticket.ticketcode.cancel"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(KoubeiTradeTicketTicketcodeCancelRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}

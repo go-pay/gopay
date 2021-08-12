@@ -1806,3 +1806,81 @@ type KoubeiTradeItemorderQuery struct {
 		ExtInfo      string `json:"ext_info,omitempty"`
 	} `json:"item_order_vo"`
 }
+
+// ===================================================
+type KoubeiTradeTicketTicketcodeSendRsp struct {
+	Response     *KoubeiTradeTicketTicketcodeSend `json:"koubei_trade_ticket_ticketcode_send_response"`
+	AlipayCertSn string                           `json:"alipay_cert_sn,omitempty"`
+	SignData     string                           `json:"-"`
+	Sign         string                           `json:"sign"`
+}
+
+type KoubeiTradeTicketTicketcodeSend struct {
+	ErrorResponse
+	RequestId string `json:"request_id"`
+	BizCode   string `json:"biz_code,omitempty"`
+}
+
+// ===================================================
+type KoubeiTradeTicketTicketcodeDelayRsp struct {
+	Response     *KoubeiTradeTicketTicketcodeDelay `json:"koubei_trade_ticket_ticketcode_delay_response"`
+	AlipayCertSn string                            `json:"alipay_cert_sn,omitempty"`
+	SignData     string                            `json:"-"`
+	Sign         string                            `json:"sign"`
+}
+
+type KoubeiTradeTicketTicketcodeDelay struct {
+	ErrorResponse
+	RequestId string `json:"request_id"`
+	BizCode   string `json:"biz_code,omitempty"`
+}
+
+// ===================================================
+type KoubeiTradeTicketTicketcodeQueryRsp struct {
+	Response     *KoubeiTradeTicketTicketcodeQuery `json:"koubei_trade_ticket_ticketcode_query_response"`
+	AlipayCertSn string                            `json:"alipay_cert_sn,omitempty"`
+	SignData     string                            `json:"-"`
+	Sign         string                            `json:"sign"`
+}
+
+type KoubeiTradeTicketTicketcodeQuery struct {
+	ErrorResponse
+	TicketCode          string             `json:"ticket_code"`
+	TicketStatus        string             `json:"ticket_status"`
+	TicketStatusDesc    string             `json:"ticket_status_desc"`
+	ItemName            string             `json:"item_name"`
+	ItemID              string             `json:"item_id"`
+	OriginalPrice       string             `json:"original_price"`
+	CurrentPrice        string             `json:"current_price"`
+	EffectDate          string             `json:"effect_date"`
+	ExpireDate          string             `json:"expire_date"`
+	VoucherID           string             `json:"voucher_id"`
+	OrderNo             string             `json:"order_no"`
+	AvailableQuantity   string             `json:"available_quantity,omitempty"`
+	TotalQuantity       string             `json:"total_quantity,omitempty"`
+	ItemAlias           string             `json:"item_alias,omitempty"`
+	TimeCards           string             `json:"time_cards"`
+	TicketTransInfoList []*TicketTransInfo `json:"ticket_trans_info_list,omitempty"`
+}
+
+type TicketTransInfo struct {
+	TicketTransID   string `json:"ticket_trans_id"`
+	TicketTransType string `json:"ticket_trans_type"`
+	CreateTime      string `json:"create_time"`
+	LastModifyTime  string `json:"last_modify_time"`
+	Quantity        string `json:"quantity"`
+}
+
+// ===================================================
+type KoubeiTradeTicketTicketcodeCancelRsp struct {
+	Response     *KoubeiTradeTicketTicketcodeCancel `json:"koubei_trade_ticket_ticketcode_cancel_response"`
+	AlipayCertSn string                             `json:"alipay_cert_sn,omitempty"`
+	SignData     string                             `json:"-"`
+	Sign         string                             `json:"sign"`
+}
+
+type KoubeiTradeTicketTicketcodeCancel struct {
+	ErrorResponse
+	RequestId string `json:"request_id"`
+	BizCode   string `json:"biz_code,omitempty"`
+}
