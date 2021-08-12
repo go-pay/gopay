@@ -254,8 +254,8 @@ func (c *ClientV3) V3ProfitShareMerchantConfigs(subMchId string) (*ProfitShareMe
 //	Code = 0 is success
 // 直连商户：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_11.shtml
 // 服务商：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_11.shtml
-func (c *ClientV3) V3ProfitShareBills(billDate string, bm gopay.BodyMap) (*ProfitShareBillsRsp, error) {
-	uri := fmt.Sprintf(v3ProfitShareBills, billDate) + "?" + bm.EncodeGetParams()
+func (c *ClientV3) V3ProfitShareBills(bm gopay.BodyMap) (*ProfitShareBillsRsp, error) {
+	uri := v3ProfitShareBills + "?" + bm.EncodeGetParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
