@@ -91,9 +91,10 @@ func (c *ClientV3) V3ProfitShareReturn(bm gopay.BodyMap) (*ProfitShareReturnRsp,
 
 // 查询分账回退结果API
 //	Code = 0 is success
-// 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_4.shtml
-func (c *ClientV3) V3ProfitShareReturnResult(returnNo, orderNo string) (*ProfitShareReturnResultRsp, error) {
-	uri := fmt.Sprintf(v3ProfitShareReturnResult, returnNo) + "?out_order_no=" + orderNo
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_4.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_4.shtml
+func (c *ClientV3) V3ProfitShareReturnResult(returnNo string, bm gopay.BodyMap) (*ProfitShareReturnResultRsp, error) {
+	uri := fmt.Sprintf(v3ProfitShareReturnResult, returnNo) + "?" + bm.EncodeGetParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
