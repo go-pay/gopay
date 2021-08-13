@@ -6,19 +6,19 @@ import (
 	"testing"
 )
 
-func TestAntMerchantExpandShopModify(t *testing.T) {
+func TestAntMerchantShopModify(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 
-	aliRsp, err := client.AntMerchantExpandShopModify(bm)
+	aliRsp, err := client.AntMerchantShopModify(bm)
 	if err != nil {
-		xlog.Errorf("client.AntMerchantExpandShopModify(%+v),error:%+v", bm, err)
+		xlog.Errorf("client.AntMerchantShopModify(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
 }
 
-func TestAntMerchantExpandShopCreate(t *testing.T) {
+func TestAntMerchantShopCreate(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.SetBodyMap("business_address", func(bm gopay.BodyMap) {
@@ -33,15 +33,15 @@ func TestAntMerchantExpandShopCreate(t *testing.T) {
 	bm.Set("ip_role_id", "2088301155943087")
 	bm.Set("shop_name", "肯德基中关村店")
 
-	aliRsp, err := client.AntMerchantExpandShopCreate(bm)
+	aliRsp, err := client.AntMerchantShopCreate(bm)
 	if err != nil {
-		xlog.Errorf("client.AntMerchantExpandShopCreate(%+v),error:%+v", bm, err)
+		xlog.Errorf("client.AntMerchantShopCreate(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
 }
 
-func TestAntMerchantExpandShopConsult(t *testing.T) {
+func TestAntMerchantShopConsult(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.SetBodyMap("business_address", func(bm gopay.BodyMap) {
@@ -56,9 +56,9 @@ func TestAntMerchantExpandShopConsult(t *testing.T) {
 	bm.Set("ip_role_id", "2088301155943087")
 	bm.Set("shop_name", "肯德基中关村店")
 
-	aliRsp, err := client.AntMerchantExpandShopConsult(bm)
+	aliRsp, err := client.AntMerchantShopConsult(bm)
 	if err != nil {
-		xlog.Errorf("client.AntMerchantExpandShopConsult(%+v),error:%+v", bm, err)
+		xlog.Errorf("client.AntMerchantShopConsult(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
