@@ -335,7 +335,11 @@ func TestV3ProfitSharingQuery(t *testing.T) {
 }
 
 func TestV3ProfitSharingUnfreeze(t *testing.T) {
-	wxRsp, err := client.V3ProfitShareOrderUnfreeze("202106071738581338", "4200001037202106072686278117", "账单解冻")
+	bm := make(gopay.BodyMap)
+	bm.Set("transaction_id", "202106071738581338")
+	bm.Set("out_order_no", "4200001037202106072686278117")
+	bm.Set("description", "账单解冻")
+	wxRsp, err := client.V3ProfitShareOrderUnfreeze(bm)
 	if err != nil {
 		xlog.Error(err)
 		return

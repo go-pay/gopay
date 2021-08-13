@@ -157,6 +157,7 @@ const (
 	v3ProfitShareAddReceiver     = "/v3/profitsharing/receivers/add"           // 添加分账接收方 POST
 	v3ProfitShareDeleteReceiver  = "/v3/profitsharing/receivers/delete"        // 删除分账接收方 POST
 	v3ProfitShareMerchantConfigs = "/v3/profitsharing/merchant-configs/%s"     // 查询最大分账比例API GET
+	v3ProfitShareBills           = "/v3/profitsharing/bills"                   // 申请分账账单 GET
 
 	// 其他能力
 	v3MediaUploadImage = "/v3/merchant/media/upload"       // 图片上传 POST
