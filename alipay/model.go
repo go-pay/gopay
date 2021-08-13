@@ -1886,40 +1886,40 @@ type KoubeiTradeTicketTicketcodeCancel struct {
 }
 
 // ===================================================
-type AntMerchantExpandShopModifyRsp struct {
-	Response     *AntMerchantExpandShopModify `json:"ant_merchant_expand_shop_modify_response"`
-	AlipayCertSn string                       `json:"alipay_cert_sn,omitempty"`
-	SignData     string                       `json:"-"`
-	Sign         string                       `json:"sign"`
+type AntMerchantShopModifyRsp struct {
+	Response     *AntMerchantShopModify `json:"ant_merchant_expand_shop_modify_response"`
+	AlipayCertSn string                 `json:"alipay_cert_sn,omitempty"`
+	SignData     string                 `json:"-"`
+	Sign         string                 `json:"sign"`
 }
 
-type AntMerchantExpandShopModify struct {
+type AntMerchantShopModify struct {
 	ErrorResponse
 	OrderId string `json:"order_id"`
 }
 
 // ===================================================
-type AntMerchantExpandShopCreateRsp struct {
-	Response     *AntMerchantExpandShopCreate `json:"ant_merchant_expand_shop_create_response"`
-	AlipayCertSn string                       `json:"alipay_cert_sn,omitempty"`
-	SignData     string                       `json:"-"`
-	Sign         string                       `json:"sign"`
+type AntMerchantShopCreateRsp struct {
+	Response     *AntMerchantShopCreate `json:"ant_merchant_expand_shop_create_response"`
+	AlipayCertSn string                 `json:"alipay_cert_sn,omitempty"`
+	SignData     string                 `json:"-"`
+	Sign         string                 `json:"sign"`
 }
 
-type AntMerchantExpandShopCreate struct {
+type AntMerchantShopCreate struct {
 	ErrorResponse
 	OrderId string `json:"order_id"`
 }
 
 // ===================================================
-type AntMerchantExpandShopConsultRsp struct {
-	Response     *AntMerchantExpandShopConsult `json:"ant_merchant_expand_shop_consult_response"`
-	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
-	SignData     string                        `json:"-"`
-	Sign         string                        `json:"sign"`
+type AntMerchantShopConsultRsp struct {
+	Response     *AntMerchantShopConsult `json:"ant_merchant_expand_shop_consult_response"`
+	AlipayCertSn string                  `json:"alipay_cert_sn,omitempty"`
+	SignData     string                  `json:"-"`
+	Sign         string                  `json:"sign"`
 }
 
-type AntMerchantExpandShopConsult struct {
+type AntMerchantShopConsult struct {
 	ErrorResponse
 	AccountAudit bool   `json:"account_audit"`
 	RiskAudit    bool   `json:"risk_audit"`
