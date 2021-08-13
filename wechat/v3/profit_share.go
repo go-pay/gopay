@@ -120,7 +120,7 @@ func (c *ClientV3) V3ProfitShareReturnResult(returnNo string, bm gopay.BodyMap) 
 // 解冻剩余资金API
 //	Code = 0 is success
 // 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_5.shtml
-// 服务商模式会比直连商户模式多sub_mchid字段，改为gopay.BodyMap更灵活
+//  服务商模式会比直连商户模式多sub_mchid字段，改为gopay.BodyMap更灵活
 func (c *ClientV3) V3ProfitShareOrderUnfreeze(bm gopay.BodyMap) (*ProfitShareOrderUnfreezeRsp, error) {
 	authorization, err := c.authorization(MethodPost, v3ProfitShareUnfreeze, bm)
 	if err != nil {
@@ -252,8 +252,8 @@ func (c *ClientV3) V3ProfitShareMerchantConfigs(subMchId string) (*ProfitShareMe
 
 // 申请分账账单
 //	Code = 0 is success
-// 直连商户：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_11.shtml
-// 服务商：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_11.shtml
+//  商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_11.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_11.shtml
 func (c *ClientV3) V3ProfitShareBills(bm gopay.BodyMap) (*ProfitShareBillsRsp, error) {
 	uri := v3ProfitShareBills + "?" + bm.EncodeGetParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
