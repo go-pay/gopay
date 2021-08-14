@@ -91,9 +91,10 @@ func (c *ClientV3) V3ProfitShareReturn(bm gopay.BodyMap) (*ProfitShareReturnRsp,
 
 // 查询分账回退结果API
 //	Code = 0 is success
-// 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_4.shtml
-func (c *ClientV3) V3ProfitShareReturnResult(returnNo, orderNo string) (*ProfitShareReturnResultRsp, error) {
-	uri := fmt.Sprintf(v3ProfitShareReturnResult, returnNo) + "?out_order_no=" + orderNo
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_4.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_4.shtml
+func (c *ClientV3) V3ProfitShareReturnResult(returnNo string, bm gopay.BodyMap) (*ProfitShareReturnResultRsp, error) {
+	uri := fmt.Sprintf(v3ProfitShareReturnResult, returnNo) + "?" + bm.EncodeGetParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -119,10 +120,8 @@ func (c *ClientV3) V3ProfitShareReturnResult(returnNo, orderNo string) (*ProfitS
 // 解冻剩余资金API
 //	Code = 0 is success
 // 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_5.shtml
-func (c *ClientV3) V3ProfitShareOrderUnfreeze(tradeNo, transId, description string) (*ProfitShareOrderUnfreezeRsp, error) {
-	bm := make(gopay.BodyMap)
-	bm.Set("transaction_id", transId).Set("out_order_no", tradeNo).Set("description", description)
-
+//  服务商模式会比直连商户模式多sub_mchid字段，改为gopay.BodyMap更灵活
+func (c *ClientV3) V3ProfitShareOrderUnfreeze(bm gopay.BodyMap) (*ProfitShareOrderUnfreezeRsp, error) {
 	authorization, err := c.authorization(MethodPost, v3ProfitShareUnfreeze, bm)
 	if err != nil {
 		return nil, err
@@ -240,6 +239,34 @@ func (c *ClientV3) V3ProfitShareMerchantConfigs(subMchId string) (*ProfitShareMe
 
 	wxRsp := &ProfitShareMerchantConfigsRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(ProfitShareMerchantConfigs)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 申请分账账单
+//	Code = 0 is success
+//  商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_11.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_11.shtml
+func (c *ClientV3) V3ProfitShareBills(bm gopay.BodyMap) (*ProfitShareBillsRsp, error) {
+	uri := v3ProfitShareBills + "?" + bm.EncodeGetParams()
+	authorization, err := c.authorization(MethodGet, uri, nil)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdGet(uri, authorization)
+	if err != nil {
+		return nil, err
+	}
+
+	wxRsp := &ProfitShareBillsRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(ProfitShareBills)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}

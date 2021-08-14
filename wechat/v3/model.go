@@ -301,6 +301,14 @@ type ProfitShareMerchantConfigsRsp struct {
 	Error    string                      `json:"-"`
 }
 
+// 申请分账账单 Rsp
+type ProfitShareBillsRsp struct {
+	Code     int               `json:"-"`
+	SignInfo *SignInfo         `json:"-"`
+	Response *ProfitShareBills `json:"response,omitempty"`
+	Error    string            `json:"-"`
+}
+
 // 预受理领卡请求 Rsp
 type DiscountCardApplyRsp struct {
 	Code     int                `json:"-"`
@@ -1233,6 +1241,7 @@ type MediaUpload struct {
 }
 
 type ProfitShareOrder struct {
+	SubMchid      string                   `json:"sub_mchid,omitempty"` // 子商户号，即分账的出资商户号【服务商模式】
 	TransactionId string                   `json:"transaction_id"`      // 微信订单号
 	OutOrderNo    string                   `json:"out_order_no"`        // 商户分账单号
 	OrderId       string                   `json:"order_id"`            // 微信分账单号
@@ -1241,6 +1250,7 @@ type ProfitShareOrder struct {
 }
 
 type ProfitShareOrderQuery struct {
+	SubMchid      string                   `json:"sub_mchid,omitempty"` // 子商户号，即分账的出资商户号【服务商模式】
 	TransactionId string                   `json:"transaction_id"`      // 微信订单号
 	OutOrderNo    string                   `json:"out_order_no"`        // 商户分账单号
 	OrderId       string                   `json:"order_id"`            // 微信分账单号
@@ -1249,6 +1259,7 @@ type ProfitShareOrderQuery struct {
 }
 
 type ProfitShareReturn struct {
+	SubMchid    string `json:"sub_mchid,omitempty"`   // 子商户号，分账回退的接收商户，对应原分账出资的分账方商户【服务商模式】
 	OrderId     string `json:"order_id"`              // 微信分账单号，微信系统返回的唯一标识
 	OutOrderNo  string `json:"out_order_no"`          // 商户系统内部的分账单号，在商户系统内部唯一，同一分账单号多次请求等同一次。只能是数字、大小写字母_-|*@
 	OutReturnNo string `json:"out_return_no"`         // 此回退单号是商户在自己后台生成的一个新的回退单号，在商户后台唯一
@@ -1263,6 +1274,7 @@ type ProfitShareReturn struct {
 }
 
 type ProfitShareReturnResult struct {
+	SubMchid    string `json:"sub_mchid,omitempty"`   // 子商户号，分账回退的接收商户，对应原分账出资的分账方商户【服务商模式】
 	OrderId     string `json:"order_id"`              // 微信分账单号，微信系统返回的唯一标识
 	OutOrderNo  string `json:"out_order_no"`          // 商户系统内部的分账单号，在商户系统内部唯一，同一分账单号多次请求等同一次。只能是数字、大小写字母_-|*@
 	OutReturnNo string `json:"out_return_no"`         // 此回退单号是商户在自己后台生成的一个新的回退单号，在商户后台唯一
@@ -1277,6 +1289,7 @@ type ProfitShareReturnResult struct {
 }
 
 type ProfitShareOrderUnfreeze struct {
+	SubMchid      string                   `json:"sub_mchid,omitempty"` // 子商户号，分账回退的接收商户，对应原分账出资的分账方商户【服务商模式】
 	TransactionId string                   `json:"transaction_id"`      // 微信支付订单号
 	OutOrderNo    string                   `json:"out_order_no"`        // 商户系统内部的分账单号，在商户系统内部唯一，同一分账单号多次请求等同一次。只能是数字、大小写字母_-|*@
 	OrderId       string                   `json:"order_id"`            // 微信分账单号，微信系统返回的唯一标识
@@ -1302,6 +1315,7 @@ type ProfitSharingReceiver struct {
 }
 
 type ProfitShareAddReceiver struct {
+	SubMchid       string `json:"sub_mchid,omitempty"`       // 子商户号，分账回退的接收商户，对应原分账出资的分账方商户【服务商模式】
 	Type           string `json:"type"`                      // 分账接收方类型MERCHANT_ID：商户ID,PERSONAL_OPENID：个人openid（由父商户APPID转换得到）
 	Account        string `json:"account"`                   // 分账接收方帐号
 	Name           string `json:"name,omitempty"`            // 分账接收方类型是MERCHANT_ID时，是商户全称（必传），当商户是小微商户或个体户时，是开户人姓名 分账接收方类型是PERSONAL_OPENID时，是个人姓名（选传，传则校验）
@@ -1310,13 +1324,20 @@ type ProfitShareAddReceiver struct {
 }
 
 type ProfitShareDeleteReceiver struct {
-	Type    string `json:"type"`    // 分账接收方类型MERCHANT_ID：商户ID,PERSONAL_OPENID：个人openid（由父商户APPID转换得到）
-	Account string `json:"account"` // 分账接收方帐号
+	SubMchid string `json:"sub_mchid,omitempty"` // 子商户号，分账回退的接收商户，对应原分账出资的分账方商户【服务商模式】
+	Type     string `json:"type"`                // 分账接收方类型MERCHANT_ID：商户ID,PERSONAL_OPENID：个人openid（由父商户APPID转换得到）
+	Account  string `json:"account"`             // 分账接收方帐号
 }
 
 type ProfitShareMerchantConfigs struct {
 	SubMchId string `json:"sub_mchid"` // 子商户号
 	MaxRatio int    `json:"max_ratio"` // 最大分账比例 (单位万分比，比如2000表示20%)
+}
+
+type ProfitShareBills struct {
+	DownloadUrl string `json:"download_url"` // 下载地址	原始账单（gzip需要解压缩）的摘要值，用于校验文件的完整性。
+	HashType    string `json:"hash_type"`    // 哈希类型 原始账单（gzip需要解压缩）的摘要算法，用于校验文件的完整性
+	HashValue   string `json:"hash_value"`   // 哈希值	供下一步请求账单文件的下载地址，该地址30s内有效。
 }
 
 type DiscountCardApply struct {

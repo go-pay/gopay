@@ -1884,3 +1884,44 @@ type KoubeiTradeTicketTicketcodeCancel struct {
 	RequestId string `json:"request_id"`
 	BizCode   string `json:"biz_code,omitempty"`
 }
+
+// ===================================================
+type AntMerchantShopModifyRsp struct {
+	Response     *AntMerchantShopModify `json:"ant_merchant_expand_shop_modify_response"`
+	AlipayCertSn string                 `json:"alipay_cert_sn,omitempty"`
+	SignData     string                 `json:"-"`
+	Sign         string                 `json:"sign"`
+}
+
+type AntMerchantShopModify struct {
+	ErrorResponse
+	OrderId string `json:"order_id"`
+}
+
+// ===================================================
+type AntMerchantShopCreateRsp struct {
+	Response     *AntMerchantShopCreate `json:"ant_merchant_expand_shop_create_response"`
+	AlipayCertSn string                 `json:"alipay_cert_sn,omitempty"`
+	SignData     string                 `json:"-"`
+	Sign         string                 `json:"sign"`
+}
+
+type AntMerchantShopCreate struct {
+	ErrorResponse
+	OrderId string `json:"order_id"`
+}
+
+// ===================================================
+type AntMerchantShopConsultRsp struct {
+	Response     *AntMerchantShopConsult `json:"ant_merchant_expand_shop_consult_response"`
+	AlipayCertSn string                  `json:"alipay_cert_sn,omitempty"`
+	SignData     string                  `json:"-"`
+	Sign         string                  `json:"sign"`
+}
+
+type AntMerchantShopConsult struct {
+	ErrorResponse
+	AccountAudit bool   `json:"account_audit"`
+	RiskAudit    bool   `json:"risk_audit"`
+	OrderId      string `json:"order_id"`
+}
