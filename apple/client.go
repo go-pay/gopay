@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -61,7 +61,7 @@ func (c Client) Verify(ctx context.Context, receipt string) (VerifyResponse, err
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(res.Body)
+		body, _ := ioutil.ReadAll(res.Body)
 		return vr, fmt.Errorf("response status failed,status:%d body:%s", res.StatusCode, body)
 	}
 
