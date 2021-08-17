@@ -16,7 +16,7 @@ type InfoLogger struct {
 	once   sync.Once
 }
 
-func (i *InfoLogger) logOut(col *ColorType, format *string, v ...interface{}) {
+func (i *InfoLogger) LogOut(col *ColorType, format *string, v ...interface{}) {
 	i.once.Do(func() {
 		i.init()
 	})
