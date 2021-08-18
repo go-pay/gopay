@@ -28,21 +28,21 @@ func (c *ClientV3) V3EncryptText(publicKeyStr, text string) (cipherText string, 
 	case "PUBLIC KEY":
 		pub, err := x509.ParsePKIXPublicKey(block.Bytes)
 		if err != nil {
-			return util.NULL, fmt.Errorf("ParsePKIXPublicKey err:%s", err.Error())
+			return util.NULL, fmt.Errorf("parsePKIXPublicKey err:%s", err.Error())
 		}
 		pKIXPublicKey, ok := pub.(*rsa.PublicKey)
 		if !ok {
-			return util.NULL, fmt.Errorf("断言ParsePKIXPublicKey异常 publicKeyStr:%s", publicKeyStr)
+			return util.NULL, fmt.Errorf("assert parsePKIXPublicKey err publicKeyStr:%s", publicKeyStr)
 		}
 		pubKey = pKIXPublicKey
 	case "CERTIFICATE":
 		pub, err := x509.ParseCertificate(block.Bytes)
 		if err != nil {
-			return util.NULL, fmt.Errorf("ParseCertificate err:%s", err.Error())
+			return util.NULL, fmt.Errorf("parseCertificate err:%s", err.Error())
 		}
 		certificatePubKey, ok := pub.PublicKey.(*rsa.PublicKey)
 		if !ok {
-			return util.NULL, fmt.Errorf("断言ParseCertificate异常 publicKeyStr:%s", publicKeyStr)
+			return util.NULL, fmt.Errorf("assert parseCertificate err publicKeyStr:%s", publicKeyStr)
 		}
 		pubKey = certificatePubKey
 	}
