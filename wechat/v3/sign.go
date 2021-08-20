@@ -48,9 +48,9 @@ func V3VerifySign(timestamp, nonce, signBody, sign, wxPkContent string) (err err
 
 // PaySignOfJSAPI 获取 JSAPI paySign
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_4.shtml
-func (c *ClientV3) PaySignOfJSAPI(appid, prepayid string) (jsapi *JSAPIPayParams, err error) {
-	ts := util.Int642String(time.Now().Unix())
-	nonceStr := util.GetRandomString(32)
+func (c *ClientV3) PaySignOfJSAPI(appid, prepayid string, signInfo *SignInfo) (jsapi *JSAPIPayParams, err error) {
+	ts := signInfo.HeaderTimestamp
+	nonceStr := signInfo.HeaderNonce
 	pkg := "prepay_id=" + prepayid
 
 	_str := appid + "\n" + ts + "\n" + nonceStr + "\n" + pkg + "\n"

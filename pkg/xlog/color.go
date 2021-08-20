@@ -80,33 +80,33 @@ func Color(color ColorType) *ColorLogger {
 }
 
 func (l *ColorLogger) Info(args ...interface{}) {
-	l.i.logOut(&l.Color, nil, args...)
+	l.i.LogOut(&l.Color, nil, args...)
 }
 
 func (l *ColorLogger) Infof(format string, args ...interface{}) {
-	l.i.logOut(&l.Color, &format, args...)
+	l.i.LogOut(&l.Color, &format, args...)
 }
 
 func (l *ColorLogger) Debug(args ...interface{}) {
-	l.d.logOut(&l.Color, nil, args...)
+	l.d.LogOut(&l.Color, nil, args...)
 }
 
 func (l *ColorLogger) Debugf(format string, args ...interface{}) {
-	l.d.logOut(&l.Color, &format, args...)
+	l.d.LogOut(&l.Color, &format, args...)
 }
 
 func (l *ColorLogger) Warn(args ...interface{}) {
-	l.w.logOut(&l.Color, nil, args...)
+	l.w.LogOut(&l.Color, nil, args...)
 }
 
 func (l *ColorLogger) Warnf(format string, args ...interface{}) {
-	l.w.logOut(&l.Color, &format, args...)
+	l.w.LogOut(&l.Color, &format, args...)
 }
 
 func (l *ColorLogger) Error(args ...interface{}) {
-	l.e.logOut(&l.Color, nil, args...)
+	l.e.LogOut(&l.Color, nil, args...)
 }
 
 func (l *ColorLogger) Errorf(format string, args ...interface{}) {
-	l.e.logOut(&l.Color, &format, args...)
+	l.e.LogOut(&l.Color, &format, args...)
 }

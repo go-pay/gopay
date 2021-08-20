@@ -16,18 +16,37 @@ import (
 )
 
 // 敏感信息加密，默认 PKCS1
-func (c *ClientV3) V3EncryptText(text string) (cipherText string, err error) {
-	if c.wxPkContent == nil || c.wxSerialNo == "" {
-		return util.NULL, errors.New("WxPkContent or WxSerialNo is null")
-	}
-	block, _ := pem.Decode(c.wxPkContent)
+func (c *ClientV3) V3EncryptText(publicKeyStr, text string) (cipherText string, err error) {
+
+	block, _ := pem.Decode([]byte(publicKeyStr))
 	if block == nil {
-		return util.NULL, errors.New("pem.Decode：wxPkContent decode error")
+		return util.NULL, errors.New("decode public key error")
 	}
-	pubKey, err := x509.ParsePKCS1PublicKey(block.Bytes)
-	if err != nil {
-		return "", fmt.Errorf("x509.ParsePKCS1PublicKey：%w", err)
+
+	var pubKey *rsa.PublicKey
+	switch block.Type {
+	case "PUBLIC KEY":
+		pub, err := x509.ParsePKIXPublicKey(block.Bytes)
+		if err != nil {
+			return util.NULL, fmt.Errorf("parsePKIXPublicKey err:%s", err.Error())
+		}
+		pKIXPublicKey, ok := pub.(*rsa.PublicKey)
+		if !ok {
+			return util.NULL, fmt.Errorf("assert parsePKIXPublicKey err publicKeyStr:%s", publicKeyStr)
+		}
+		pubKey = pKIXPublicKey
+	case "CERTIFICATE":
+		pub, err := x509.ParseCertificate(block.Bytes)
+		if err != nil {
+			return util.NULL, fmt.Errorf("parseCertificate err:%s", err.Error())
+		}
+		certificatePubKey, ok := pub.PublicKey.(*rsa.PublicKey)
+		if !ok {
+			return util.NULL, fmt.Errorf("assert parseCertificate err publicKeyStr:%s", publicKeyStr)
+		}
+		pubKey = certificatePubKey
 	}
+
 	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, pubKey, []byte(text), nil)
 	if err != nil {
 		return "", fmt.Errorf("rsa.EncryptOAEP：%w", err)
@@ -126,6 +145,20 @@ func V3DecryptCombineNotifyCipherText(ciphertext, nonce, additional, apiV3Key st
 		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
 	}
 	result = &V3DecryptCombineResult{}
+	if err = json.Unmarshal(decrypt, result); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
+	}
+	return result, nil
+}
+
+// 解密分账动账回调中的加密信息
+func V3DecryptProfitShareNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptProfitShareResult, err error) {
+	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
+	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
+	if err != nil {
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
+	}
+	result = &V3DecryptProfitShareResult{}
 	if err = json.Unmarshal(decrypt, result); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
 	}

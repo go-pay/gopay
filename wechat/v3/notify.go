@@ -80,6 +80,21 @@ type V3DecryptScoreResult struct {
 	Collection          *Collection      `json:"collection"`
 }
 
+type V3DecryptProfitShareResult struct {
+	SpMchid       string   `json:"sp_mchid"`       // 服务商商户号
+	SubMchid      string   `json:"sub_mchid"`      // 子商户号
+	TransactionId string   `json:"transaction_id"` // 微信订单号
+	OrderId       string   `json:"order_id"`       // 微信分账/回退单号
+	OutOrderNo    string   `json:"out_order_no"`   // 商户分账/回退单号
+	Receiver      struct { // 分账接收方
+		Type        string `json:"type"`        // 分账接收方类型
+		Account     string `json:"account"`     // 分账接收方账号
+		Amount      int    `json:"amount"`      // 分账动账金额
+		Description string `json:"description"` // 分账/回退描述
+	} `json:"receiver"`
+	SuccessTime string `json:"success_time"` // 成功时间
+}
+
 type V3NotifyReq struct {
 	Id           string    `json:"id"`
 	CreateTime   string    `json:"create_time"`
@@ -168,6 +183,19 @@ func (v *V3NotifyReq) DecryptCombineCipherText(apiV3Key string) (result *V3Decry
 func (v *V3NotifyReq) DecryptScoreCipherText(apiV3Key string) (result *V3DecryptScoreResult, err error) {
 	if v.Resource != nil {
 		result, err = V3DecryptScoreNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
+		if err != nil {
+			bytes, _ := json.Marshal(v)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
+		}
+		return result, nil
+	}
+	return nil, errors.New("notify data Resource is nil")
+}
+
+// 解密分账动账回调中的加密信息
+func (v *V3NotifyReq) DecryptProfitShareCipherText(apiV3Key string) (result *V3DecryptProfitShareResult, err error) {
+	if v.Resource != nil {
+		result, err = V3DecryptProfitShareNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
 			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
