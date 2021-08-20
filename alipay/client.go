@@ -229,7 +229,9 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string, authToken ...string) 
 	if a.NotifyUrl != util.NULL {
 		pubBody.Set("notify_url", a.NotifyUrl)
 	}
-	if aat == util.NULL && a.AppAuthToken != util.NULL {
+	if aat != util.NULL {
+		pubBody.Set("app_auth_token", aat)
+	} else if a.AppAuthToken != util.NULL {
 		pubBody.Set("app_auth_token", a.AppAuthToken)
 	}
 	if method == "alipay.user.info.share" {
