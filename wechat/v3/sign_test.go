@@ -2,12 +2,18 @@ package wechat
 
 import (
 	"testing"
+	"time"
+
+	"github.com/go-pay/gopay/pkg/util"
 
 	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 func TestPaySignOfJSAPIp(t *testing.T) {
-	jsapi, err := client.PaySignOfJSAPI("appid", "prepayid")
+	jsapi, err := client.PaySignOfJSAPI("appid", "prepayid", &SignInfo{
+		HeaderTimestamp: util.Int642String(time.Now().Unix()),
+		HeaderNonce:     util.GetRandomString(32),
+	})
 	if err != nil {
 		xlog.Error(err)
 		return
