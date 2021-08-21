@@ -275,7 +275,7 @@ func (q *Client) doQQGet(bm gopay.BodyMap, url, signType string) (bs []byte, err
 		req, _ := json.Marshal(bm)
 		xlog.Debugf("QQ_Request: %s", req)
 	}
-	param := bm.EncodeGetParams()
+	param := bm.EncodeURLParams()
 	url = url + "?" + param
 	res, bs, errs := xhttp.NewClient().Get(url).EndBytes()
 	if len(errs) > 0 {

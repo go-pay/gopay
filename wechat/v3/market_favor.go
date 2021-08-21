@@ -92,7 +92,7 @@ func (c *ClientV3) V3FavorBatchStart(stockId, stockCreatorMchid string) (wxRsp *
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_1_4.shtml
 func (c *ClientV3) V3FavorBatchList(bm gopay.BodyMap) (wxRsp *FavorBatchListRsp, err error) {
-	uri := v3FavorBatchList + "?" + bm.EncodeGetParams()
+	uri := v3FavorBatchList + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -228,7 +228,7 @@ func (c *ClientV3) V3FavorItems(stockId, stockCreatorMchid string, limit, offset
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_1_9.shtml
 func (c *ClientV3) V3FavorUserCoupons(openid string, bm gopay.BodyMap) (wxRsp *FavorUserCouponsRsp, err error) {
-	uri := fmt.Sprintf(v3FavorUserCoupons, openid) + "?" + bm.EncodeGetParams()
+	uri := fmt.Sprintf(v3FavorUserCoupons, openid) + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err

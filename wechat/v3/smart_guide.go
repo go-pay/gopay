@@ -66,7 +66,7 @@ func (c *ClientV3) V3SmartGuideQuery(bm gopay.BodyMap) (wxRsp *SmartGuideQueryRs
 	if err = bm.CheckEmptyError("store_id"); err != nil {
 		return nil, err
 	}
-	uri := v3GuideQuery + "?" + bm.EncodeGetParams()
+	uri := v3GuideQuery + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err

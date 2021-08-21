@@ -24,7 +24,7 @@ func (c *ClientV3) V3BillTradeBill(bm gopay.BodyMap) (wxRsp *BillRsp, err error)
 			bm.Set("bill_date", yesterday)
 		}
 	}
-	uri := v3ApiTradeBill + "?" + bm.EncodeGetParams()
+	uri := v3ApiTradeBill + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -59,7 +59,7 @@ func (c *ClientV3) V3BillFundFlowBill(bm gopay.BodyMap) (wxRsp *BillRsp, err err
 			bm.Set("bill_date", yesterday)
 		}
 	}
-	uri := v3ApiFundFlowBill + "?" + bm.EncodeGetParams()
+	uri := v3ApiFundFlowBill + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -100,7 +100,7 @@ func (c *ClientV3) V3BillLevel2FundFlowBill(bm gopay.BodyMap) (wxRsp *Level2Fund
 			bm.Set("algorithm", "AEAD_AES_256_GCM")
 		}
 	}
-	uri := v3ApiLevel2FundFlowBill + "?" + bm.EncodeGetParams()
+	uri := v3ApiLevel2FundFlowBill + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err

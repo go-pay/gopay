@@ -67,7 +67,7 @@ func (c *ClientV3) V3MerchantDayBalance(accountType, date string) (*MerchantBala
 //	Code = 0 is success
 // 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer/chapter3_7.shtml
 func (c *ClientV3) V3MerchantIncomeRecord(bm gopay.BodyMap) (*MerchantIncomeRecordRsp, error) {
-	uri := v3MerchantIncomeRecord + "?" + bm.EncodeGetParams()
+	uri := v3MerchantIncomeRecord + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err

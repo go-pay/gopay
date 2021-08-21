@@ -6,11 +6,8 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
-	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
-	"encoding/pem"
-	"errors"
 	"fmt"
 	"net/http"
 	"sync"
@@ -20,6 +17,8 @@ import (
 	"github.com/go-pay/gopay/pkg/errgroup"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/gopay/pkg/xpem"
 )
 
 // 获取微信平台证书公钥（获取后自行保存使用，如需定期刷新功能，自行实现）
@@ -29,32 +28,18 @@ import (
 //	  - 定期调用该接口，间隔时间小于12小时
 //	  - 加密请求消息中的敏感信息时，使用最新的平台证书（即：证书启用时间较晚的证书）
 //	文档说明：https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_1.shtml
-func GetPlatformCerts(mchid, apiV3Key, serialNo, pkContent string) (certs *PlatformCertRsp, err error) {
+func GetPlatformCerts(mchid, apiV3Key, serialNo, privateKey string) (certs *PlatformCertRsp, err error) {
 	var (
 		eg = new(errgroup.Group)
 		mu sync.Mutex
 		jb = ""
-		ok bool
-		pk *rsa.PrivateKey
 	)
 	// Prepare
-	block, _ := pem.Decode([]byte(pkContent))
-	if block == nil {
-		return nil, errors.New(fmt.Sprintf("pem.Decode(%s),error", pkContent))
-	}
-	pk8, err := x509.ParsePKCS8PrivateKey(block.Bytes)
+	priKey, err := xpem.DecodePrivateKey([]byte(privateKey))
 	if err != nil {
-		pk, err = x509.ParsePKCS1PrivateKey(block.Bytes)
-		if err != nil {
-			return nil, err
-		}
+		return nil, err
 	}
-	if pk == nil {
-		pk, ok = pk8.(*rsa.PrivateKey)
-		if !ok {
-			return nil, errors.New("parse PKCS8 key error")
-		}
-	}
+
 	timestamp := time.Now().Unix()
 	nonceStr := util.GetRandomString(32)
 	ts := util.Int642String(timestamp)
@@ -62,7 +47,7 @@ func GetPlatformCerts(mchid, apiV3Key, serialNo, pkContent string) (certs *Platf
 	// Sign
 	h := sha256.New()
 	h.Write([]byte(_str))
-	result, err := rsa.SignPKCS1v15(rand.Reader, pk, crypto.SHA256, h.Sum(nil))
+	result, err := rsa.SignPKCS1v15(rand.Reader, priKey, crypto.SHA256, h.Sum(nil))
 	if err != nil {
 		return nil, fmt.Errorf("rsa.SignPKCS1v15(),err:%+v", err)
 	}
@@ -122,7 +107,6 @@ func GetPlatformCerts(mchid, apiV3Key, serialNo, pkContent string) (certs *Platf
 	if err = eg.Wait(); err != nil {
 		return nil, err
 	}
-
 	return certs, nil
 }
 
@@ -187,10 +171,16 @@ func (c *ClientV3) GetPlatformCerts() (certs *PlatformCertRsp, err error) {
 }
 
 // 设置 微信支付平台证书 和 证书序列号
-//	注意：请预先通过 client.GetPlatformCerts() 获取 微信平台证书 和 证书序列号
+//	注意：请预先通过 client.GetPlatformCerts() 获取 微信平台公钥证书 和 证书序列号
 //	部分接口请求参数中敏感信息加密，使用此 微信支付平台公钥 和 证书序列号
-func (c *ClientV3) SetPlatformCert(wxPkContent []byte, wxSerialNo string) (client *ClientV3) {
-	c.wxPkContent = wxPkContent
+func (c *ClientV3) SetPlatformCert(wxPublicKeyContent []byte, wxSerialNo string) (client *ClientV3) {
+	pubKey, err := xpem.DecodePublicKey(wxPublicKeyContent)
+	if err != nil {
+		xlog.Errorf("SetPlatformCert(%s),err:%+v", wxPublicKeyContent, err)
+	}
+	if pubKey != nil {
+		c.wxPublicKey = pubKey
+	}
 	c.wxSerialNo = wxSerialNo
 	return c
 }

@@ -283,7 +283,7 @@ func (c *Client) EndStruct(v interface{}) (res *http.Response, errs []error) {
 		c.Errors = append(c.Errors, errs...)
 		return nil, c.Errors
 	}
-	if res.StatusCode != 200 {
+	if res.StatusCode != http.StatusOK {
 		c.Errors = append(c.Errors, errors.New(string(bs)))
 		return res, c.Errors
 	}

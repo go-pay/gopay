@@ -88,7 +88,7 @@ func (c *ClientV3) V3BusiFavorUse(bm gopay.BodyMap) (wxRsp *BusiFavorUseRsp, err
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_4.shtml
 func (c *ClientV3) V3BusiFavorUserCoupons(openid string, bm gopay.BodyMap) (wxRsp *BusiFavorUserCouponsRsp, err error) {
-	uri := fmt.Sprintf(v3BusiFavorUserCoupons, openid) + "?" + bm.EncodeGetParams()
+	uri := fmt.Sprintf(v3BusiFavorUserCoupons, openid) + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err

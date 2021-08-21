@@ -148,12 +148,10 @@ func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
 		buf     strings.Builder
 		keyList []string
 	)
-	mu.RLock()
 	for k := range bm {
 		keyList = append(keyList, k)
 	}
 	sort.Strings(keyList)
-	mu.RUnlock()
 	for _, k := range keyList {
 		if v := bm.GetString(k); v != NULL {
 			buf.WriteString(k)
@@ -174,12 +172,10 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 		buf     strings.Builder
 		keyList []string
 	)
-	mu.RLock()
 	for k := range bm {
 		keyList = append(keyList, k)
 	}
 	sort.Strings(keyList)
-	mu.RUnlock()
 	for _, k := range keyList {
 		if v := bm.GetString(k); v != NULL {
 			buf.WriteString(k)
@@ -194,12 +190,17 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 	return buf.String()[:buf.Len()-1]
 }
 
-// ("bar=baz&foo=quux")
-func (bm BodyMap) EncodeGetParams() string {
+// ("bar=baz&foo=quux") sorted by key.
+func (bm BodyMap) EncodeURLParams() string {
 	var (
-		buf strings.Builder
+		buf  strings.Builder
+		keys []string
 	)
-	for k, _ := range bm {
+	for k := range bm {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
 		if v := bm.GetString(k); v != NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
