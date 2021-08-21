@@ -13,24 +13,27 @@ func TradePay() {
 	//    appId：应用ID
 	//    privateKey：应用私钥，支持PKCS1和PKCS8
 	//    isProd：是否是正式环境
-	client := alipay.NewClient("2016091200494382", privateKey, false)
+	client, err := alipay.NewClient("2016091200494382", privateKey, false)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType(alipay.RSA2).
-		SetPrivateKeyType(alipay.PKCS1).
 		//SetAppAuthToken("201908BB03f542de8ecc42b985900f5080407abc").
 		SetNotifyUrl("https://www.fmm.ink")
 
 	//请求参数
-	body := make(gopay.BodyMap)
-	body.Set("subject", "条码支付")
-	body.Set("scene", "bar_code")
-	body.Set("auth_code", "286248566432274952")
-	body.Set("out_trade_no", "GZ201901301040361014")
-	body.Set("total_amount", "0.01")
-	body.Set("timeout_express", "2m")
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "条码支付")
+	bm.Set("scene", "bar_code")
+	bm.Set("auth_code", "286248566432274952")
+	bm.Set("out_trade_no", "GZ201901301040361014")
+	bm.Set("total_amount", "0.01")
+	bm.Set("timeout_express", "2m")
 	//条码支付
-	aliRsp, err := client.TradePay(body)
+	aliRsp, err := client.TradePay(bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

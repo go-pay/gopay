@@ -22,6 +22,7 @@ import (
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/gopay/pkg/xrsa"
 )
 
 // 允许进行 sn 提取的证书签名算法
@@ -139,42 +140,14 @@ func GetRootCertSN(rootCertPathOrData interface{}) (sn string, err error) {
 // 获取支付宝参数签名
 //	bm：签名参数
 //	signType：签名类型，alipay.RSA 或 alipay.RSA2
-//	t：私钥类型，alipay.PKCS1 或 alipay.PKCS1，默认 PKCS1
 //	privateKey：应用私钥，支持PKCS1和PKCS8
-func GetRsaSign(bm gopay.BodyMap, signType string, t PKCSType, privateKey string) (sign string, err error) {
+func GetRsaSign(bm gopay.BodyMap, signType string, privateKey *rsa.PrivateKey) (sign string, err error) {
 	var (
-		block          *pem.Block
 		h              hash.Hash
-		key            *rsa.PrivateKey
 		hashs          crypto.Hash
 		encryptedBytes []byte
 	)
-	pk := FormatPrivateKey(privateKey)
-
-	if block, _ = pem.Decode([]byte(pk)); block == nil {
-		return util.NULL, errors.New("pem.Decode：privateKey decode error")
-	}
-
-	switch t {
-	case PKCS1:
-		if key, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil {
-			return util.NULL, err
-		}
-	case PKCS8:
-		pkcs8Key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
-		if err != nil {
-			return util.NULL, err
-		}
-		pk8, ok := pkcs8Key.(*rsa.PrivateKey)
-		if !ok {
-			return util.NULL, errors.New("parse PKCS8 key error")
-		}
-		key = pk8
-	default:
-		if key, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil {
-			return util.NULL, err
-		}
-	}
+	//pk :=
 
 	switch signType {
 	case RSA:
@@ -190,7 +163,7 @@ func GetRsaSign(bm gopay.BodyMap, signType string, t PKCSType, privateKey string
 	if _, err = h.Write([]byte(bm.EncodeAliPaySignParams())); err != nil {
 		return
 	}
-	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, key, hashs, h.Sum(nil)); err != nil {
+	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, privateKey, hashs, h.Sum(nil)); err != nil {
 		return
 	}
 	sign = base64.StdEncoding.EncodeToString(encryptedBytes)
@@ -234,7 +207,7 @@ func (a *Client) getSignData(bs []byte, alipayCertSN string) (signData string, e
 //	验签文档：https://opendocs.alipay.com/open/200/106120
 func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error) {
 	// 支付宝公钥验签
-	pKey := FormatPublicKey(aliPayPublicKey)
+	pKey := xrsa.FormatAlipayPublicKey(aliPayPublicKey)
 	if err = verifySign(signData, sign, RSA2, pKey); err != nil {
 		return false, err
 	}
@@ -266,7 +239,7 @@ func VerifySyncSignWithCert(aliPayPublicKeyCert interface{}, signData, sign stri
 }
 
 func (a *Client) autoVerifySignByCert(sign, signData string, signDataErr error) (err error) {
-	if a.autoSign && a.aliPayPkContent != nil {
+	if a.autoSign && a.aliPayPublicKey != nil {
 		if a.DebugSwitch == gopay.DebugOn {
 			xlog.Debugf("Alipay_SyncSignData: %s, Sign=[%s]", signData, sign)
 		}
@@ -274,26 +247,12 @@ func (a *Client) autoVerifySignByCert(sign, signData string, signDataErr error) 
 		if signDataErr != nil {
 			return signDataErr
 		}
-		var (
-			block     *pem.Block
-			pubKey    *x509.Certificate
-			publicKey *rsa.PublicKey
-			ok        bool
-		)
+
 		signBytes, _ := base64.StdEncoding.DecodeString(sign)
-		if block, _ = pem.Decode(a.aliPayPkContent); block == nil {
-			return errors.New("支付宝公钥Decode错误")
-		}
-		if pubKey, err = x509.ParseCertificate(block.Bytes); err != nil {
-			return fmt.Errorf("x509.ParseCertificate：%w", err)
-		}
-		if publicKey, ok = pubKey.PublicKey.(*rsa.PublicKey); !ok {
-			return errors.New("支付宝公钥转换错误")
-		}
 		hashs := crypto.SHA256
 		h := hashs.New()
 		h.Write([]byte(signData))
-		return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
+		return rsa.VerifyPKCS1v15(a.aliPayPublicKey, hashs, h.Sum(nil), signBytes)
 	}
 	return nil
 }
@@ -339,7 +298,7 @@ func VerifySign(aliPayPublicKey string, notifyBean interface{}) (ok bool, err er
 		bm.Remove("sign_type")
 		signData = bm.EncodeAliPaySignParams()
 	}
-	pKey := FormatPublicKey(aliPayPublicKey)
+	pKey := xrsa.FormatAlipayPublicKey(aliPayPublicKey)
 	if err = verifySign(signData, bodySign, bodySignType, pKey); err != nil {
 		return false, err
 	}

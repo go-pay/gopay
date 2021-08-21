@@ -81,18 +81,20 @@ type V3DecryptScoreResult struct {
 }
 
 type V3DecryptProfitShareResult struct {
-	SpMchid       string   `json:"sp_mchid"`       // 服务商商户号
-	SubMchid      string   `json:"sub_mchid"`      // 子商户号
-	TransactionId string   `json:"transaction_id"` // 微信订单号
-	OrderId       string   `json:"order_id"`       // 微信分账/回退单号
-	OutOrderNo    string   `json:"out_order_no"`   // 商户分账/回退单号
-	Receiver      struct { // 分账接收方
-		Type        string `json:"type"`        // 分账接收方类型
-		Account     string `json:"account"`     // 分账接收方账号
-		Amount      int    `json:"amount"`      // 分账动账金额
-		Description string `json:"description"` // 分账/回退描述
-	} `json:"receiver"`
-	SuccessTime string `json:"success_time"` // 成功时间
+	SpMchid       string    `json:"sp_mchid"`       // 服务商商户号
+	SubMchid      string    `json:"sub_mchid"`      // 子商户号
+	TransactionId string    `json:"transaction_id"` // 微信订单号
+	OrderId       string    `json:"order_id"`       // 微信分账/回退单号
+	OutOrderNo    string    `json:"out_order_no"`   // 商户分账/回退单号
+	Receiver      *Receiver `json:"receiver"`
+	SuccessTime   string    `json:"success_time"` // 成功时间
+}
+
+type Receiver struct {
+	Type        string `json:"type"`        // 分账接收方类型
+	Account     string `json:"account"`     // 分账接收方账号
+	Amount      int    `json:"amount"`      // 分账动账金额
+	Description string `json:"description"` // 分账/回退描述
 }
 
 type V3NotifyReq struct {
@@ -132,7 +134,7 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 }
 
 // 异步通知验签
-//	wxPkContent 是通过client.GetPlatformCerts()接口向微信获取的微信平台公钥证书内容
+//	wxPubKeyContent 是通过client.GetPlatformCerts()接口向微信获取的微信平台公钥证书内容
 func (v *V3NotifyReq) VerifySign(wxPkContent string) (err error) {
 	if v.SignInfo != nil {
 		return V3VerifySign(v.SignInfo.HeaderTimestamp, v.SignInfo.HeaderNonce, v.SignInfo.SignBody, v.SignInfo.HeaderSignature, wxPkContent)

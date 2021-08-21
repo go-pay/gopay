@@ -68,7 +68,7 @@ func (a *Client) doAliPayCustoms(bm gopay.BodyMap, service string) (bs []byte, e
 	bm.Remove("sign_type")
 	bm.Remove("sign")
 
-	sign, err := GetRsaSign(bm, RSA, a.PrivateKeyType, a.PrivateKey)
+	sign, err := GetRsaSign(bm, RSA, a.privateKey)
 	if err != nil {
 		return nil, fmt.Errorf("GetRsaSign Error: %v", err)
 	}
@@ -78,10 +78,9 @@ func (a *Client) doAliPayCustoms(bm gopay.BodyMap, service string) (bs []byte, e
 		req, _ := json.Marshal(bm)
 		xlog.Debugf("Alipay_Request: %s", req)
 	}
-	param := FormatURLParam(bm)
 	// request
 	httpClient := xhttp.NewClient()
-	res, bs, errs := httpClient.Type(xhttp.TypeForm).Post("https://mapi.alipay.com/gateway.do").SendString(param).EndBytes()
+	res, bs, errs := httpClient.Type(xhttp.TypeForm).Post("https://mapi.alipay.com/gateway.do").SendString(bm.EncodeURLParams()).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}

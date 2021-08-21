@@ -14,14 +14,14 @@ import (
 )
 
 var (
-	client       *ClientV3
-	err          error
-	MchId        = ""
-	APIv3Key     = ""
-	SerialNo     = ""
-	PKContent    = ``
-	WxPkSerialNo = ""
-	WxPkContent  = ``
+	client              *ClientV3
+	err                 error
+	MchId               = ""
+	APIv3Key            = ""
+	SerialNo            = ""
+	PrivateKeyContent   = ``
+	WxPublicKeySerialNo = ""
+	WxPublicKeyContent  = ``
 )
 
 func TestMain(m *testing.M) {
@@ -29,15 +29,15 @@ func TestMain(m *testing.M) {
 	//	mchid：商户ID
 	// 	serialNo：商户证书的证书序列号
 	//	apiV3Key：APIv3Key，商户平台获取
-	//	pkContent：私钥 apiclient_key.pem 读取后的字符串内容
-	client, err = NewClientV3(MchId, SerialNo, APIv3Key, PKContent)
+	//	privateKey：私钥 apiclient_key.pem 读取后的字符串内容
+	client, err = NewClientV3(MchId, SerialNo, APIv3Key, PrivateKeyContent)
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
 	// 设置微信平台证书和序列号，并启用自动同步返回验签
-	//	注意：请预先通过 wechat.GetPlatformCerts() 获取并维护微信平台证书和证书序列号
-	client.SetPlatformCert([]byte(WxPkContent), WxPkSerialNo).AutoVerifySign()
+	//	注意：请预先通过 wechat.GetPlatformCerts() 获取并维护微信平台公钥证书和证书序列号
+	client.SetPlatformCert([]byte(WxPublicKeyContent), WxPublicKeySerialNo).AutoVerifySign()
 
 	// 打开Debug开关，输出日志
 	client.DebugSwitch = gopay.DebugOff
@@ -46,7 +46,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetPlatformCertsWithoutClient(t *testing.T) {
-	certs, err := GetPlatformCerts(MchId, APIv3Key, SerialNo, PKContent)
+	certs, err := GetPlatformCerts(MchId, APIv3Key, SerialNo, PrivateKeyContent)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -94,7 +94,7 @@ func TestV3VerifySign(t *testing.T) {
 	signBody := `{"code_url":"weixin://wxpay/bizpayurl?pr=5zPMHa4zz"}`
 	signature := "D/nRx+h1To/ybCJkJYTXptoSp6+UVPsKNlJ2AsHMf76rXq2qAYDSnoOTB4HRc8ZlPNck5JfeZ19lDXAJ/N9gyvWEwE3n01HNhaKqxOjW0C1KROCtxAj1Wd2qtMyiCzh/Azuk15eIHjht03teGQFDmowoOBSlMg9qOBaK8MNfwFcXvV3J12AMbFFR7s4cXbqzuk2qBeMAz6VrKDAwDHxZOWFqME59mg4bPWwBTNyYeCQVR2sqPflLvY1zttEGMN3s/CDvgLQ/SXZrAsHlS2lkDVHEc/sP9q0x9oU8lFL6DhD6eDU2mVP3pt7CPD/5QAnGnINaHIcZVj6Vb4l3PKzeog=="
 
-	err = V3VerifySign(timestamp, nonce, signBody, signature, WxPkContent)
+	err = V3VerifySign(timestamp, nonce, signBody, signature, WxPublicKeyContent)
 	if err != nil {
 		xlog.Error(err)
 		return

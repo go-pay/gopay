@@ -14,21 +14,24 @@ func TradeCreate() {
 	//    appId：应用ID
 	//    privateKey：应用私钥，支持PKCS1和PKCS8
 	//    isProd：是否是正式环境
-	client := alipay.NewClient("2016091200494382", privateKey, false)
+	client, err := alipay.NewClient("2016091200494382", privateKey, false)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType(alipay.RSA2).
-		SetPrivateKeyType(alipay.PKCS1).
 		SetNotifyUrl("https://www.fmm.ink")
 
 	//请求参数
-	body := make(gopay.BodyMap)
-	body.Set("subject", "创建订单")
-	body.Set("buyer_id", "2088802095984694")
-	body.Set("out_trade_no", "GZ201901301040355709")
-	body.Set("total_amount", "0.01")
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "创建订单").
+		Set("buyer_id", "2088802095984694").
+		Set("out_trade_no", "GZ201901301040355709").
+		Set("total_amount", "0.01")
 	//创建订单
-	aliRsp, err := client.TradeCreate(body)
+	aliRsp, err := client.TradeCreate(bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

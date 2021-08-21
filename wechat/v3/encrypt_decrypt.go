@@ -4,105 +4,62 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha1"
-	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
-	"encoding/pem"
 	"errors"
 	"fmt"
 
+	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/aes"
 	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/gopay/pkg/xpem"
 )
 
-// 敏感信息加密，默认 PKCS1
-func (c *ClientV3) V3EncryptText(publicKeyStr, text string) (cipherText string, err error) {
-
-	block, _ := pem.Decode([]byte(publicKeyStr))
-	if block == nil {
-		return util.NULL, errors.New("decode public key error")
+// 敏感信息加密
+func (c *ClientV3) V3EncryptText(text string) (cipherText string, err error) {
+	if c.wxPublicKey == nil || c.wxSerialNo == "" {
+		return util.NULL, errors.New("WxPublicKey or WxSerialNo is null")
 	}
-
-	var pubKey *rsa.PublicKey
-	switch block.Type {
-	case "PUBLIC KEY":
-		pub, err := x509.ParsePKIXPublicKey(block.Bytes)
-		if err != nil {
-			return util.NULL, fmt.Errorf("parsePKIXPublicKey err:%s", err.Error())
-		}
-		pKIXPublicKey, ok := pub.(*rsa.PublicKey)
-		if !ok {
-			return util.NULL, fmt.Errorf("assert parsePKIXPublicKey err publicKeyStr:%s", publicKeyStr)
-		}
-		pubKey = pKIXPublicKey
-	case "CERTIFICATE":
-		pub, err := x509.ParseCertificate(block.Bytes)
-		if err != nil {
-			return util.NULL, fmt.Errorf("parseCertificate err:%s", err.Error())
-		}
-		certificatePubKey, ok := pub.PublicKey.(*rsa.PublicKey)
-		if !ok {
-			return util.NULL, fmt.Errorf("assert parseCertificate err publicKeyStr:%s", publicKeyStr)
-		}
-		pubKey = certificatePubKey
-	}
-
-	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, pubKey, []byte(text), nil)
+	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, c.wxPublicKey, []byte(text), nil)
 	if err != nil {
 		return "", fmt.Errorf("rsa.EncryptOAEP：%w", err)
 	}
 	return base64.StdEncoding.EncodeToString(cipherByte), nil
 }
 
-// 敏感信息解密，默认 PKCS1
+// 敏感信息解密
 func (c *ClientV3) V3DecryptText(cipherText string) (text string, err error) {
 	cipherByte, _ := base64.StdEncoding.DecodeString(cipherText)
-	block, _ := pem.Decode(c.apiV3Key)
-	if block == nil {
-		return util.NULL, errors.New("pem.Decode：apiV3Key decode error")
-	}
-	priKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
-	if err != nil {
-		return "", fmt.Errorf("x509.ParsePKCS1PrivateKey：%w", err)
-	}
-	textByte, err := rsa.DecryptOAEP(sha1.New(), rand.Reader, priKey, cipherByte, nil)
+	textByte, err := rsa.DecryptOAEP(sha1.New(), rand.Reader, c.privateKey, cipherByte, nil)
 	if err != nil {
 		return "", fmt.Errorf("rsa.DecryptOAEP：%w", err)
 	}
 	return string(textByte), nil
 }
 
-// 敏感参数信息加密，默认 PKCS1
-//	wxPkContent：微信平台证书内容
-func V3EncryptText(text string, wxPkContent []byte) (cipherText string, err error) {
-	block, _ := pem.Decode(wxPkContent)
-	if block == nil {
-		return util.NULL, errors.New("pem.Decode：rsaPublicKey decode error")
-	}
-	pubKey, err := x509.ParsePKCS1PublicKey(block.Bytes)
+// 敏感参数信息加密
+//	wxPublicKeyContent：微信平台证书内容
+func V3EncryptText(text string, wxPublicKeyContent []byte) (cipherText string, err error) {
+	publicKey, err := xpem.DecodePublicKey(wxPublicKeyContent)
 	if err != nil {
-		return "", fmt.Errorf("x509.ParsePKCS1PublicKey：%w", err)
+		return gopay.NULL, err
 	}
-	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, pubKey, []byte(text), nil)
+	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, publicKey, []byte(text), nil)
 	if err != nil {
 		return "", fmt.Errorf("rsa.EncryptOAEP：%w", err)
 	}
 	return base64.StdEncoding.EncodeToString(cipherByte), nil
 }
 
-// 敏感参数信息解密，默认 PKCS1
-//	apiV3Key：商户API证书字符串内容，商户平台获取
-func V3DecryptText(cipherText string, apiV3Key []byte) (text string, err error) {
-	cipherByte, _ := base64.StdEncoding.DecodeString(cipherText)
-	block, _ := pem.Decode(apiV3Key)
-	if block == nil {
-		return util.NULL, errors.New("pem.Decode：rsaPrivateKey decode error")
-	}
-	priKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+// 敏感参数信息解密
+//	privateKeyContent：私钥 apiclient_key.pem 读取后的字符串内容
+func V3DecryptText(cipherText string, privateKeyContent []byte) (text string, err error) {
+	privateKey, err := xpem.DecodePrivateKey(privateKeyContent)
 	if err != nil {
-		return "", fmt.Errorf("x509.ParsePKCS1PrivateKey：%w", err)
+		return gopay.NULL, err
 	}
-	textByte, err := rsa.DecryptOAEP(sha1.New(), rand.Reader, priKey, cipherByte, nil)
+	cipherByte, _ := base64.StdEncoding.DecodeString(cipherText)
+	textByte, err := rsa.DecryptOAEP(sha1.New(), rand.Reader, privateKey, cipherByte, nil)
 	if err != nil {
 		return "", fmt.Errorf("rsa.DecryptOAEP：%w", err)
 	}

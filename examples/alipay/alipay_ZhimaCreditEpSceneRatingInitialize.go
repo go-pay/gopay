@@ -12,11 +12,14 @@ func ZhimaCreditEpSceneRatingInitialize() {
 	//    appId：应用ID
 	//    privateKey：应用私钥，支持PKCS1和PKCS8
 	//    isProd：是否是正式环境
-	client := alipay.NewClient("2014072300007148", privateKey, false)
+	client, err := alipay.NewClient("2014072300007148", privateKey, false)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
 	//配置公共参数
 	client.SetCharset("utf-8").
-		SetSignType(alipay.RSA2).
-		SetPrivateKeyType(alipay.PKCS1)
+		SetSignType(alipay.RSA2)
 
 	//请求参数
 	body := make(gopay.BodyMap)

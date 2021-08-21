@@ -1,6 +1,7 @@
 版本号：Release 1.5.56
 修改记录：
    (1) 微信V3：修改 client.V3ProfitShareReturnResult() 接口入参，适配服务商模式
+   (2) 支付宝：
 
 版本号：Release 1.5.55
 修改记录：

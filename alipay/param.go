@@ -20,7 +20,7 @@ import (
 //	NotifyUrl  string `json:"notify_url"`  //支付宝服务器主动通知商户服务器里指定的页面http/https路径。
 //	BizContent string `json:"biz_content"` //业务请求参数的集合，最大长度不限，除公共参数外所有请求参数都必须放在这个参数中传递，具体参照各产品快速接入文档
 
-type OpenApiRoyaltyDetailInfoPojo struct {
+type RoyaltyDetailInfoPojo struct {
 	RoyaltyType  string `json:"royalty_type,omitempty"`
 	TransOut     string `json:"trans_out,omitempty"`
 	TransOutType string `json:"trans_out_type,omitempty"`
@@ -30,9 +30,8 @@ type OpenApiRoyaltyDetailInfoPojo struct {
 	Desc         string `json:"desc,omitempty"`
 }
 
-// 设置 支付宝 私钥类型，alipay.PKCS1 或 alipay.PKCS8，默认 PKCS1
+// Deprecated
 func (a *Client) SetPrivateKeyType(t PKCSType) (client *Client) {
-	a.PrivateKeyType = t
 	return a
 }
 

@@ -5,9 +5,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
-	"crypto/x509"
 	"encoding/base64"
-	"encoding/pem"
 	"errors"
 	"fmt"
 	"time"
@@ -15,29 +13,19 @@ import (
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/gopay/pkg/xpem"
 )
 
 // V3VerifySign 微信V3 版本验签（同步/异步）
-//	wxPkContent：微信平台证书公钥内容，通过client.GetPlatformCerts() 获取
-func V3VerifySign(timestamp, nonce, signBody, sign, wxPkContent string) (err error) {
-	var (
-		block     *pem.Block
-		pubKey    *x509.Certificate
-		publicKey *rsa.PublicKey
-		ok        bool
-	)
+//	wxPubKeyContent：微信平台证书公钥内容，通过client.GetPlatformCerts() 获取
+func V3VerifySign(timestamp, nonce, signBody, sign, wxPubKeyContent string) (err error) {
+	publicKey, err := xpem.DecodePublicKey([]byte(wxPubKeyContent))
+	if err != nil {
+		return err
+	}
 	str := timestamp + "\n" + nonce + "\n" + signBody + "\n"
 	signBytes, _ := base64.StdEncoding.DecodeString(sign)
 
-	if block, _ = pem.Decode([]byte(wxPkContent)); block == nil {
-		return errors.New("parse wechat platform public key error")
-	}
-	if pubKey, err = x509.ParseCertificate(block.Bytes); err != nil {
-		return fmt.Errorf("x509.ParseCertificate：%+v", err)
-	}
-	if publicKey, ok = pubKey.PublicKey.(*rsa.PublicKey); !ok {
-		return errors.New("convert wechat platform public to rsa.PublicKey error")
-	}
 	h := sha256.New()
 	h.Write([]byte(str))
 	if err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
@@ -155,29 +143,14 @@ func (c *ClientV3) rsaSign(str string) (string, error) {
 
 // 自动同步请求验签
 func (c *ClientV3) verifySyncSign(si *SignInfo) (err error) {
-	if c.autoSign && c.wxPkContent != nil {
+	if c.autoSign && c.wxPublicKey != nil {
 		if si != nil {
-			var (
-				block     *pem.Block
-				pubKey    *x509.Certificate
-				publicKey *rsa.PublicKey
-				ok        bool
-			)
 			str := si.HeaderTimestamp + "\n" + si.HeaderNonce + "\n" + si.SignBody + "\n"
 			signBytes, _ := base64.StdEncoding.DecodeString(si.HeaderSignature)
 
-			if block, _ = pem.Decode(c.wxPkContent); block == nil {
-				return errors.New("parse wechat platform public key error")
-			}
-			if pubKey, err = x509.ParseCertificate(block.Bytes); err != nil {
-				return fmt.Errorf("x509.ParseCertificate：%+v", err)
-			}
-			if publicKey, ok = pubKey.PublicKey.(*rsa.PublicKey); !ok {
-				return errors.New("convert wechat platform public to rsa.PublicKey error")
-			}
 			h := sha256.New()
 			h.Write([]byte(str))
-			if err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
+			if err = rsa.VerifyPKCS1v15(c.wxPublicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
 				return fmt.Errorf("verify sign failed: %+v", err)
 			}
 			return nil
