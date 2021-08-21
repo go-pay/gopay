@@ -184,10 +184,10 @@ func TestV3Native(t *testing.T) {
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
 	bm := make(gopay.BodyMap)
-	bm.Set("description", "测试Native支付商品").
+	bm.Set("appid", "wx52xxxxxxxxxxx").
+		Set("description", "测试Native支付商品").
 		Set("out_trade_no", tradeNo).
 		Set("time_expire", expire).
-		//Set("notify_url", "https://api2.fangyiyun.com/api/v1/wechat/callback").
 		Set("notify_url", "https://www.fmm.ink").
 		SetBodyMap("amount", func(bm gopay.BodyMap) {
 			bm.Set("total", 1).
