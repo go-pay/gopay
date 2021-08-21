@@ -1,7 +1,10 @@
 版本号：Release 1.5.56
 修改记录：
    (1) 微信V3：修改 client.V3ProfitShareReturnResult() 接口入参，适配服务商模式
-   (2) 支付宝：
+   (2) 微信V3：部分接口参数需要加密，修复 V3EncryptText() 和 V3DecryptText() 方法
+   (3) 支付宝：修改 alipay.NewClient()，增加error返回值，去除Client内部分字段
+   (4) Apple：新增apple pay的 apple.VerifyReceipt() 校验收据API
+   (5) 优化代码中所有有关证书的解析操作
 
 版本号：Release 1.5.55
 修改记录：

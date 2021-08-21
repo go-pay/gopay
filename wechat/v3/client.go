@@ -4,7 +4,6 @@ import (
 	"crypto/rsa"
 	"encoding/json"
 	"net/http"
-	"sync"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
@@ -22,7 +21,6 @@ type ClientV3 struct {
 	privateKey  *rsa.PrivateKey
 	wxPublicKey *rsa.PublicKey
 	DebugSwitch gopay.DebugSwitch
-	rwlock      sync.RWMutex
 }
 
 // NewClientV3 初始化微信客户端 V3

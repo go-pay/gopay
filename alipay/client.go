@@ -4,7 +4,6 @@ import (
 	"crypto/rsa"
 	"encoding/json"
 	"fmt"
-	"sync"
 	"time"
 
 	"github.com/go-pay/gopay"
@@ -32,7 +31,6 @@ type Client struct {
 	autoSign           bool
 	DebugSwitch        gopay.DebugSwitch
 	location           *time.Location
-	mu                 sync.RWMutex
 }
 
 // 初始化支付宝客户端

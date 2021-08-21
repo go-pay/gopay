@@ -356,6 +356,16 @@ func main() {
 
 ---
 
+### Apple Pay 支付校验收据
+
+* [苹果校验收据文档](https://developer.apple.com/documentation/appstorereceipts/verifyreceipt)
+
+> url 请选择 apple.UrlSandbox 或 apple.UrlProd
+
+* `apple.VerifyReceipt()` => 苹果支付校验收据API
+
+---
+
 # 二、文档说明
 
 * [GoPay 文档地址](https://pkg.go.dev/github.com/go-pay/gopay)

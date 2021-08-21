@@ -116,17 +116,13 @@ func (a *Client) SetCertSnByContent(appCertContent, aliPayRootCertContent, aliPa
 
 // 设置支付后的ReturnUrl
 func (a *Client) SetReturnUrl(url string) (client *Client) {
-	a.mu.Lock()
 	a.ReturnUrl = url
-	a.mu.Unlock()
 	return a
 }
 
 // 设置支付宝服务器主动通知商户服务器里指定的页面http/https路径。
 func (a *Client) SetNotifyUrl(url string) (client *Client) {
-	a.mu.Lock()
 	a.NotifyUrl = url
-	a.mu.Unlock()
 	return a
 }
 
