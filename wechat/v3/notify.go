@@ -37,6 +37,25 @@ type V3DecryptResult struct {
 	PromotionDetail []*PromotionDetail `json:"promotion_detail"`
 }
 
+type V3PartnerDecryptResult struct {
+	SpAppid         string             `json:"sp_appid"`
+	SpMchid         string             `json:"sp_mchid"`
+	SubAppid        string             `json:"sub_appid"`
+	SubMchid        string             `json:"sub_mchid"`
+	OutTradeNo      string             `json:"out_trade_no"`
+	TransactionId   string             `json:"transaction_id"`
+	TradeType       string             `json:"trade_type"`
+	TradeState      string             `json:"trade_state"`
+	TradeStateDesc  string             `json:"trade_state_desc"`
+	BankType        string             `json:"bank_type"`
+	Attach          string             `json:"attach"`
+	SuccessTime     string             `json:"success_time"`
+	Payer           *PartnerPayer      `json:"payer"`
+	Amount          *Amount            `json:"amount"`
+	SceneInfo       *SceneInfo         `json:"scene_info"`
+	PromotionDetail []*PromotionDetail `json:"promotion_detail"`
+}
+
 type V3DecryptRefundResult struct {
 	Mchid               string        `json:"mchid"`
 	OutTradeNo          string        `json:"out_trade_no"`
@@ -146,6 +165,19 @@ func (v *V3NotifyReq) VerifySign(wxPkContent string) (err error) {
 func (v *V3NotifyReq) DecryptCipherText(apiV3Key string) (result *V3DecryptResult, err error) {
 	if v.Resource != nil {
 		result, err = V3DecryptNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
+		if err != nil {
+			bytes, _ := json.Marshal(v)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
+		}
+		return result, nil
+	}
+	return nil, errors.New("notify data Resource is nil")
+}
+
+// 解密 服务商支付 回调中的加密信息
+func (v *V3NotifyReq) PartnerDecryptCipherText(apiV3Key string) (result *V3PartnerDecryptResult, err error) {
+	if v.Resource != nil {
+		result, err = V3PartnerDecryptNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
 			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
