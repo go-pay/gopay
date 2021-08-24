@@ -165,6 +165,12 @@ func TestV3Jsapi(t *testing.T) {
 		SetBodyMap("payer", func(bm gopay.BodyMap) {
 			bm.Set("openid", "asdas")
 		})
+	text, err := client.V3EncryptText("张三")
+	if err != nil {
+		xlog.Errorf("client.V3EncryptText(),err:%+v", err)
+		err = nil
+	}
+	xlog.Debugf("加密text: %s", text)
 
 	wxRsp, err := client.V3TransactionJsapi(bm)
 	if err != nil {
