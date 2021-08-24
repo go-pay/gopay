@@ -68,6 +68,19 @@ type V3DecryptRefundResult struct {
 	Amount              *RefundAmount `json:"amount"`
 }
 
+type V3PartnerDecryptRefundResult struct {
+	SpMchid             string        `json:"sp_mchid"`
+	SubMchid            string        `json:"sub_mchid"`
+	OutTradeNo          string        `json:"out_trade_no"`
+	TransactionId       string        `json:"transaction_id"`
+	OutRefundNo         string        `json:"out_refund_no"`
+	RefundId            string        `json:"refund_id"`
+	RefundStatus        string        `json:"refund_status"`
+	SuccessTime         string        `json:"success_time"`
+	UserReceivedAccount string        `json:"user_received_account"`
+	Amount              *RefundAmount `json:"amount"`
+}
+
 type V3DecryptCombineResult struct {
 	CombineAppid      string       `json:"combine_appid"`
 	CombineMchid      string       `json:"combine_mchid"`
@@ -191,6 +204,19 @@ func (v *V3NotifyReq) PartnerDecryptCipherText(apiV3Key string) (result *V3Partn
 func (v *V3NotifyReq) DecryptRefundCipherText(apiV3Key string) (result *V3DecryptRefundResult, err error) {
 	if v.Resource != nil {
 		result, err = V3DecryptRefundNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
+		if err != nil {
+			bytes, _ := json.Marshal(v)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
+		}
+		return result, nil
+	}
+	return nil, errors.New("notify data Resource is nil")
+}
+
+// 解密 服务商退款 回调中的加密信息
+func (v *V3NotifyReq) PartnerDecryptRefundCipherText(apiV3Key string) (result *V3PartnerDecryptRefundResult, err error) {
+	if v.Resource != nil {
+		result, err = V3PartnerDecryptRefundNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
 			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
