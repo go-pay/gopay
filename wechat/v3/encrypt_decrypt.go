@@ -81,13 +81,13 @@ func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (
 }
 
 // 解密 服务商支付 回调中的加密信息
-func V3PartnerDecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3PartnerDecryptResult, err error) {
+func V3DecryptPartnerNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptPartnerResult, err error) {
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
 	if err != nil {
 		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
 	}
-	result = &V3PartnerDecryptResult{}
+	result = &V3DecryptPartnerResult{}
 	if err = json.Unmarshal(decrypt, result); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
 	}
@@ -109,13 +109,13 @@ func V3DecryptRefundNotifyCipherText(ciphertext, nonce, additional, apiV3Key str
 }
 
 // 解密 服务商退款 回调中的加密信息
-func V3PartnerDecryptRefundNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3PartnerDecryptRefundResult, err error) {
+func V3DecryptPartnerRefundNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptPartnerRefundResult, err error) {
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
 	if err != nil {
 		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
 	}
-	result = &V3PartnerDecryptRefundResult{}
+	result = &V3DecryptPartnerRefundResult{}
 	if err = json.Unmarshal(decrypt, result); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
 	}

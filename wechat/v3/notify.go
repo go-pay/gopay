@@ -37,7 +37,7 @@ type V3DecryptResult struct {
 	PromotionDetail []*PromotionDetail `json:"promotion_detail"`
 }
 
-type V3PartnerDecryptResult struct {
+type V3DecryptPartnerResult struct {
 	SpAppid         string             `json:"sp_appid"`
 	SpMchid         string             `json:"sp_mchid"`
 	SubAppid        string             `json:"sub_appid"`
@@ -68,7 +68,7 @@ type V3DecryptRefundResult struct {
 	Amount              *RefundAmount `json:"amount"`
 }
 
-type V3PartnerDecryptRefundResult struct {
+type V3DecryptPartnerRefundResult struct {
 	SpMchid             string        `json:"sp_mchid"`
 	SubMchid            string        `json:"sub_mchid"`
 	OutTradeNo          string        `json:"out_trade_no"`
@@ -188,9 +188,9 @@ func (v *V3NotifyReq) DecryptCipherText(apiV3Key string) (result *V3DecryptResul
 }
 
 // 解密 服务商支付 回调中的加密信息
-func (v *V3NotifyReq) PartnerDecryptCipherText(apiV3Key string) (result *V3PartnerDecryptResult, err error) {
+func (v *V3NotifyReq) DecryptPartnerCipherText(apiV3Key string) (result *V3DecryptPartnerResult, err error) {
 	if v.Resource != nil {
-		result, err = V3PartnerDecryptNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
+		result, err = V3DecryptPartnerNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
 			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
@@ -214,9 +214,9 @@ func (v *V3NotifyReq) DecryptRefundCipherText(apiV3Key string) (result *V3Decryp
 }
 
 // 解密 服务商退款 回调中的加密信息
-func (v *V3NotifyReq) PartnerDecryptRefundCipherText(apiV3Key string) (result *V3PartnerDecryptRefundResult, err error) {
+func (v *V3NotifyReq) DecryptPartnerRefundCipherText(apiV3Key string) (result *V3DecryptPartnerRefundResult, err error) {
 	if v.Resource != nil {
-		result, err = V3PartnerDecryptRefundNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
+		result, err = V3DecryptPartnerRefundNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
 			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
