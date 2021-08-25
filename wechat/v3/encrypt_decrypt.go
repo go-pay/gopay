@@ -80,6 +80,20 @@ func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (
 	return result, nil
 }
 
+// 解密 服务商支付 回调中的加密信息
+func V3DecryptPartnerNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptPartnerResult, err error) {
+	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
+	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
+	if err != nil {
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
+	}
+	result = &V3DecryptPartnerResult{}
+	if err = json.Unmarshal(decrypt, result); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
+	}
+	return result, nil
+}
+
 // 解密 普通退款 回调中的加密信息
 func V3DecryptRefundNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptRefundResult, err error) {
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
@@ -88,6 +102,20 @@ func V3DecryptRefundNotifyCipherText(ciphertext, nonce, additional, apiV3Key str
 		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
 	}
 	result = &V3DecryptRefundResult{}
+	if err = json.Unmarshal(decrypt, result); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
+	}
+	return result, nil
+}
+
+// 解密 服务商退款 回调中的加密信息
+func V3DecryptPartnerRefundNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptPartnerRefundResult, err error) {
+	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
+	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
+	if err != nil {
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
+	}
+	result = &V3DecryptPartnerRefundResult{}
 	if err = json.Unmarshal(decrypt, result); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
 	}
