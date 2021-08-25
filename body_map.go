@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"io"
+	"net/url"
 	"sort"
 	"strings"
 	"sync"
@@ -204,7 +205,7 @@ func (bm BodyMap) EncodeURLParams() string {
 		if v := bm.GetString(k); v != NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
-			buf.WriteString(v)
+			buf.WriteString(url.QueryEscape(v))
 			buf.WriteByte('&')
 		}
 	}
