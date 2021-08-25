@@ -680,8 +680,8 @@ type FundBatchDetailQuery struct {
 	SignPrincipal   string `json:"sign_principal,omitempty"`
 	PaymentAmount   string `json:"payment_amount,omitempty"`
 	PaymentCurrency string `json:"payment_currency,omitempty"`
-	PageSize        string `json:"page_size,omitempty"`
-	PageNum         string `json:"page_num,omitempty"`
+	PageSize        int    `json:"page_size,omitempty"`
+	PageNum         int    `json:"page_num,omitempty"`
 	ProductCode     string `json:"product_code,omitempty"`
 	TotalPageCount  string `json:"total_page_count,omitempty"`
 	OutBatchNo      string `json:"out_batch_no,omitempty"`
