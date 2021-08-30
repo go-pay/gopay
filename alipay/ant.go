@@ -74,3 +74,68 @@ func (a *Client) AntMerchantShopConsult(bm gopay.BodyMap) (aliRsp *AntMerchantSh
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+// ant.merchant.expand.order.query(商户申请单查询)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/ant.merchant.expand.order.query
+func (a *Client) AntMerchantOrderQuery(bm gopay.BodyMap) (aliRsp *AntMerchantOrderQueryRsp, err error) {
+	err = bm.CheckEmptyError("order_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "ant.merchant.expand.order.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(AntMerchantOrderQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// ant.merchant.expand.shop.query(店铺查询接口)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/ant.merchant.expand.shop.query
+func (a *Client) AntMerchantShopQuery(bm gopay.BodyMap) (aliRsp *AntMerchantShopQueryRsp, err error) {
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "ant.merchant.expand.shop.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(AntMerchantShopQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// ant.merchant.expand.shop.close(蚂蚁店铺关闭)
+//	文档地址：https://opendocs.alipay.com/apis/api_1/ant.merchant.expand.shop.close
+func (a *Client) AntMerchantShopClose(bm gopay.BodyMap) (aliRsp *AntMerchantShopCloseRsp, err error) {
+	var bs []byte
+	if bs, err = a.doAliPay(bm, "ant.merchant.expand.shop.close"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(AntMerchantShopCloseRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
