@@ -12,7 +12,7 @@ import (
 
 var (
 	client *Client
-
+	err    error
 	// 普通公钥模式时，验签使用
 	//aliPayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1wn1sU/8Q0rYLlZ6sq3enrPZw2ptp6FecHR2bBFLjJ+sKzepROd0bKddgj+Mr1ffr3Ej78mLdWV8IzLfpXUi945DkrQcOUWLY0MHhYVG2jSs/qzFfpzmtut2Cl2TozYpE84zom9ei06u2AXLMBkU6VpznZl+R4qIgnUfByt3Ix5b3h4Cl6gzXMAB1hJrrrCkq+WvWb3Fy0vmk/DUbJEz8i8mQPff2gsHBE1nMPvHVAMw1GMk9ImB4PxucVek4ZbUzVqxZXphaAgUXFK2FSFU+Q+q1SPvHbUsjtIyL+cLA6H/6ybFF9Ffp27Y14AHPw29+243/SpMisbGcj2KD+evBwIDAQAB"
 )
@@ -23,17 +23,20 @@ func TestMain(m *testing.M) {
 	//    appId：应用ID
 	//    privateKey：应用私钥，支持PKCS1和PKCS8
 	//    isProd：是否是正式环境
-	client = NewClient(cert.Appid, cert.PrivateKey, false)
-
+	client, err = NewClient(cert.Appid, cert.PrivateKey, false)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
 	// 打开Debug开关，输出日志
 	client.DebugSwitch = gopay.DebugOn
 
 	// 配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType(RSA2).
-		SetPrivateKeyType(PKCS1)
-	// SetReturnUrl("https://www.fmm.ink").
-	// SetNotifyUrl("https://www.fmm.ink")
+		// SetAppAuthToken("")
+		SetReturnUrl("https://www.fmm.ink").
+		SetNotifyUrl("https://www.fmm.ink")
 
 	// 自动同步验签（只支持证书模式）
 	// 传入 alipayCertPublicKey_RSA2.crt 内容

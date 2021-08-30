@@ -1302,7 +1302,7 @@ type ProfitShareUnsplitAmount struct {
 	UnsplitAmount int    `json:"unsplit_amount"` // 订单剩余待分金额，整数，单位为分
 }
 
-// ProfitSharingReceiver 分账接收方
+// 分账接收方
 type ProfitSharingReceiver struct {
 	Amount      int    `json:"amount"`      // 分账金额
 	Description string `json:"description"` // 分账描述

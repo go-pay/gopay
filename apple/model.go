@@ -253,8 +253,8 @@ type Receipt struct {
 	// The time the request to the verifyReceipt endpoint was processed and the response was generated, in the Pacific Time zone.
 	RequestDatePST string `json:"request_date_pst"`
 
-	// An arbitrary number that identifies a revision of your app. In the sandbox, this key's value is “0”.
-	VersionExternalIdentifier int64 `json:"version_external_identifier,string"`
+	// An arbitrary number that identifies a revision of your app. In the sandbox, this key's value is 0.
+	VersionExternalIdentifier int64 `json:"version_external_identifier"`
 }
 
 //  InApp is the in-app purchase receipt fields for all in-app purchase transactions.

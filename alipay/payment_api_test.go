@@ -231,8 +231,8 @@ func TestClient_TradeOrderSettle(t *testing.T) {
 	bm.Set("out_request_no", "201907301518083384").
 		Set("trade_no", "2019072522001484690549776067")
 
-	var listParams []OpenApiRoyaltyDetailInfoPojo
-	listParams = append(listParams, OpenApiRoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
+	var listParams []RoyaltyDetailInfoPojo
+	listParams = append(listParams, RoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
 
 	bm.Set("royalty_parameters", listParams)
 	// xlog.Debug("listParams:", bm.GetString("royalty_parameters"))

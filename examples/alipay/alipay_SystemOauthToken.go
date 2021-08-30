@@ -12,11 +12,14 @@ func SystemOauthToken() {
 	//    appId：应用ID
 	//    privateKey：应用秘钥
 	//    isProd：是否是正式环境
-	client := alipay.NewClient("2016091200494382", privateKey, false)
+	client, err := alipay.NewClient("2016091200494382", privateKey, false)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
 	//配置公共参数
 	client.SetCharset("utf-8").
 		SetSignType(alipay.RSA2).
-		SetPrivateKeyType(alipay.PKCS1).
 		SetNotifyUrl("https://www.fmm.ink")
 
 	//请求参数

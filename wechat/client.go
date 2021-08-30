@@ -294,7 +294,7 @@ func (w *Client) doProdGet(bm gopay.BodyMap, path, signType string) (bs []byte, 
 		req, _ := json.Marshal(bm)
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	param := bm.EncodeGetParams()
+	param := bm.EncodeURLParams()
 	url = url + "?" + param
 	res, bs, errs := xhttp.NewClient().Get(url).EndBytes()
 	if len(errs) > 0 {

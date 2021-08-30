@@ -1,21 +1,21 @@
 package alipay
 
 import (
+	"crypto/rsa"
 	"encoding/json"
 	"fmt"
-	"sync"
 	"time"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/gopay/pkg/xpem"
+	"github.com/go-pay/gopay/pkg/xrsa"
 )
 
 type Client struct {
 	AppId              string
-	PrivateKeyType     PKCSType
-	PrivateKey         string
 	LocationName       string
 	AppCertSN          string
 	AliPayPublicCertSN string
@@ -26,11 +26,11 @@ type Client struct {
 	SignType           string
 	AppAuthToken       string
 	IsProd             bool
-	aliPayPkContent    []byte // 支付宝证书公钥内容 alipayCertPublicKey_RSA2.crt
+	privateKey         *rsa.PrivateKey
+	aliPayPublicKey    *rsa.PublicKey // 支付宝证书公钥内容 alipayCertPublicKey_RSA2.crt
 	autoSign           bool
 	DebugSwitch        gopay.DebugSwitch
 	location           *time.Location
-	mu                 sync.RWMutex
 }
 
 // 初始化支付宝客户端
@@ -38,21 +38,31 @@ type Client struct {
 //	appId：应用ID
 //	privateKey：应用私钥，支持PKCS1和PKCS8
 //	isProd：是否是正式环境
-func NewClient(appId, privateKey string, isProd bool) (client *Client) {
-	return &Client{
+func NewClient(appId, privateKey string, isProd bool) (client *Client, err error) {
+	key := xrsa.FormatAlipayPrivateKey(privateKey)
+	priKey, err := xpem.DecodePrivateKey([]byte(key))
+	if err != nil {
+		return nil, err
+	}
+	client = &Client{
 		AppId:       appId,
-		PrivateKey:  privateKey,
+		privateKey:  priKey,
 		IsProd:      isProd,
 		DebugSwitch: gopay.DebugOff,
 	}
+	return client, nil
 }
 
 // 开启请求完自动验签功能（默认不开启，推荐开启，只支持证书模式）
 //	注意：只支持证书模式
-//	aliPayPkContent：支付宝公钥证书文件内容[]byte
-func (a *Client) AutoVerifySign(aliPayPkContent []byte) {
-	if aliPayPkContent != nil {
-		a.aliPayPkContent = aliPayPkContent
+//	alipayPublicKeyContent：支付宝公钥证书文件内容[]byte
+func (a *Client) AutoVerifySign(alipayPublicKeyContent []byte) {
+	pubKey, err := xpem.DecodePublicKey(alipayPublicKeyContent)
+	if err != nil {
+		xlog.Errorf("AutoVerifySign(%s),err:%+v", alipayPublicKeyContent, err)
+	}
+	if pubKey != nil {
+		a.aliPayPublicKey = pubKey
 		a.autoSign = true
 	}
 }
@@ -100,7 +110,7 @@ func (a *Client) RequestParam(bm gopay.BodyMap, method string) (string, error) {
 
 	// check sign
 	if bm.GetString("sign") == "" {
-		sign, err = GetRsaSign(bm, bm.GetString("sign_type"), a.PrivateKeyType, a.PrivateKey)
+		sign, err = GetRsaSign(bm, bm.GetString("sign_type"), a.privateKey)
 		if err != nil {
 			return "", fmt.Errorf("GetRsaSign Error: %v", err)
 		}
@@ -111,8 +121,7 @@ func (a *Client) RequestParam(bm gopay.BodyMap, method string) (string, error) {
 		req, _ := json.Marshal(bm)
 		xlog.Debugf("Alipay_Request: %s", req)
 	}
-	param := FormatURLParam(bm)
-	return param, nil
+	return bm.EncodeURLParams(), nil
 }
 
 // PostAliPayAPISelfV2 支付宝接口自行实现方法
@@ -146,24 +155,20 @@ func (a *Client) doAliPaySelf(bm gopay.BodyMap, method string) (bs []byte, err e
 		url, sign string
 	)
 	bm.Set("method", method)
-
 	// check public parameter
 	a.checkPublicParam(bm)
-
 	// check sign
 	if bm.GetString("sign") == "" {
-		sign, err = GetRsaSign(bm, bm.GetString("sign_type"), a.PrivateKeyType, a.PrivateKey)
+		sign, err = GetRsaSign(bm, bm.GetString("sign_type"), a.privateKey)
 		if err != nil {
 			return nil, fmt.Errorf("GetRsaSign Error: %v", err)
 		}
 		bm.Set("sign", sign)
 	}
-
 	if a.DebugSwitch == gopay.DebugOn {
 		req, _ := json.Marshal(bm)
 		xlog.Debugf("Alipay_Request: %s", req)
 	}
-	param := FormatURLParam(bm)
 
 	httpClient := xhttp.NewClient()
 	if a.IsProd {
@@ -171,7 +176,7 @@ func (a *Client) doAliPaySelf(bm gopay.BodyMap, method string) (bs []byte, err e
 	} else {
 		url = sandboxBaseUrlUtf8
 	}
-	res, bs, errs := httpClient.Type(xhttp.TypeForm).Post(url).SendString(param).EndBytes()
+	res, bs, errs := httpClient.Type(xhttp.TypeForm).Post(url).SendString(bm.EncodeURLParams()).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -229,8 +234,11 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string, authToken ...string) 
 	if a.NotifyUrl != util.NULL {
 		pubBody.Set("notify_url", a.NotifyUrl)
 	}
-	if aat == util.NULL && a.AppAuthToken != util.NULL {
+	if a.AppAuthToken != util.NULL {
 		pubBody.Set("app_auth_token", a.AppAuthToken)
+	}
+	if aat != util.NULL {
+		pubBody.Set("app_auth_token", aat)
 	}
 	if method == "alipay.user.info.share" {
 		pubBody.Set("auth_token", authToken[0])
@@ -239,7 +247,7 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string, authToken ...string) 
 	if bodyStr != util.NULL {
 		pubBody.Set("biz_content", bodyStr)
 	}
-	sign, err := GetRsaSign(pubBody, pubBody.GetString("sign_type"), a.PrivateKeyType, a.PrivateKey)
+	sign, err := GetRsaSign(pubBody, pubBody.GetString("sign_type"), a.privateKey)
 	if err != nil {
 		return nil, fmt.Errorf("GetRsaSign Error: %v", err)
 	}
@@ -248,7 +256,7 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string, authToken ...string) 
 		req, _ := json.Marshal(pubBody)
 		xlog.Debugf("Alipay_Request: %s", req)
 	}
-	param := FormatURLParam(pubBody)
+	param := pubBody.EncodeURLParams()
 	switch method {
 	case "alipay.trade.app.pay", "alipay.fund.auth.order.app.freeze":
 		return []byte(param), nil

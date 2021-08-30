@@ -12,25 +12,28 @@ func TradeOrderSettle() {
 	//    appId：应用ID
 	//    privateKey：应用秘钥
 	//    isProd：是否是正式环境
-	client := alipay.NewClient("2016091200494382", privateKey, false)
+	client, err := alipay.NewClient("2016091200494382", privateKey, false)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
 	//配置公共参数
 	client.SetCharset("utf-8").
-		SetSignType(alipay.RSA2).
-		SetPrivateKeyType(alipay.PKCS1)
+		SetSignType(alipay.RSA2)
 
 	//请求参数
-	body := make(gopay.BodyMap)
-	body.Set("out_request_no", "201907301518083384")
-	body.Set("trade_no", "2019072522001484690549776067")
+	bm := make(gopay.BodyMap)
+	bm.Set("out_request_no", "201907301518083384")
+	bm.Set("trade_no", "2019072522001484690549776067")
 
-	var listParams []alipay.OpenApiRoyaltyDetailInfoPojo
-	listParams = append(listParams, alipay.OpenApiRoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
+	var listParams []*alipay.RoyaltyDetailInfoPojo
+	listParams = append(listParams, &alipay.RoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
 
-	body.Set("royalty_parameters", listParams)
-	xlog.Debug("listParams:", body.GetString("royalty_parameters"))
+	bm.Set("royalty_parameters", listParams)
+	xlog.Debug("listParams:", bm.GetString("royalty_parameters"))
 
 	//发起交易结算接口
-	aliRsp, err := client.TradeOrderSettle(body)
+	aliRsp, err := client.TradeOrderSettle(bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

@@ -356,6 +356,16 @@ func main() {
 
 ---
 
+### Apple Pay 支付校验收据
+
+* [苹果校验收据文档](https://developer.apple.com/documentation/appstorereceipts/verifyreceipt)
+
+> url 请选择 apple.UrlSandbox 或 apple.UrlProd
+
+* `apple.VerifyReceipt()` => 苹果支付校验收据API
+
+---
+
 # 二、文档说明
 
 * [GoPay 文档地址](https://pkg.go.dev/github.com/go-pay/gopay)
@@ -390,8 +400,8 @@ import (
 //	mchid：商户ID 或者服务商模式的 sp_mchid
 // 	serialNo：商户证书的证书序列号
 //	apiV3Key：apiV3Key，商户平台获取
-//	pkContent：私钥 apiclient_key.pem 读取后的内容
-client, err = wechat.NewClientV3(MchId, SerialNo, APIv3Key, PKContent)
+//	privateKey：私钥 apiclient_key.pem 读取后的内容
+client, err = wechat.NewClientV3(MchId, SerialNo, APIv3Key, PrivateKey)
 if err != nil {
     xlog.Error(err)
     return
@@ -432,7 +442,6 @@ client.DebugSwitch = gopay.DebugOn
 // 设置支付宝请求 公共参数
 //    注意：具体设置哪些参数，根据不同的方法而不同，此处列举出所有设置参数
 client.SetLocation().                       // 设置时区，不设置或出错均为默认服务器时间
-    SetPrivateKeyType().                    // 设置 支付宝 私钥类型，alipay.PKCS1 或 alipay.PKCS8，默认 PKCS1
     SetAliPayRootCertSN().                  // 设置支付宝根证书SN，通过 alipay.GetRootCertSN() 获取
     SetAppCertSN().                         // 设置应用公钥证书SN，通过 alipay.GetCertSN() 获取
     SetAliPayPublicCertSN().                // 设置支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
