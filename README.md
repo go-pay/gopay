@@ -263,6 +263,9 @@ func main() {
     * 修改蚂蚁店铺: `client.AntMerchantShopModify()`
     * 蚂蚁店铺创建: `client.AntMerchantShopCreate()`
     * 蚂蚁店铺创建咨询: `client.AntMerchantShopConsult()`
+    * 商户申请单查询: `client.AntMerchantOrderQuery()`
+    * 店铺查询接口: `client.AntMerchantShopQuery()`
+    * 蚂蚁店铺关闭: `client.AntMerchantShopClose()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
     * 单笔转账接口：`client.FundTransUniTransfer()`
     * 查询转账订单接口: `client.FundTransOrderQuery()`
