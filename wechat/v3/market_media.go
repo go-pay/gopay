@@ -13,7 +13,7 @@ import (
 //	注意：图片不能超过2MB
 //	Code = 0 is success
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_0_1.shtml
-func (c *ClientV3) v3FavorMediaUploadImage(fileName, fileSha256 string, img *util.File) (wxRsp *MarketMediaUploadRsp, err error) {
+func (c *ClientV3) V3FavorMediaUploadImage(fileName, fileSha256 string, img *util.File) (wxRsp *MarketMediaUploadRsp, err error) {
 	bmFile := make(gopay.BodyMap)
 	bmFile.Set("filename", fileName).Set("sha256", fileSha256)
 	authorization, err := c.authorization(MethodPost, v3FavorMediaUploadImage, bmFile)
