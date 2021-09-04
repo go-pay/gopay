@@ -109,6 +109,7 @@ const (
 	v3FavorUseFlowDownload    = "/v3/marketing/favor/stocks/%s/use-flow"    // stock_id 下载批次核销明细 GET
 	v3FavorRefundFlowDownload = "/v3/marketing/favor/stocks/%s/refund-flow" // stock_id 下载批次退款明细 GET
 	v3FavorCallbackUrlSet     = "/v3/marketing/favor/callbacks"             // 设置消息通知地址 POST
+	v3FavorMediaUploadImage   = "/v3/marketing/favor/media/image-upload"    // 图片上传(营销专用) POST
 
 	// 商家券
 	v3BusiFavorBatchCreate      = "/v3/marketing/busifavor/stocks"                        // 创建商家券 POST
@@ -127,9 +128,6 @@ const (
 	v3BusiFavorDeactivate       = "/v3/marketing/busifavor/coupons/deactivate"            // 使券失效 POST
 	v3BusiFavorSubsidyPay       = "/v3/marketing/busifavor/subsidy/pay-receipts"          // 营销补差付款 POST
 	v3BusiFavorSubsidyPayDetail = "/v3/marketing/busifavor/subsidy/pay-receipts/%s"       // subsidy_receipt_id 查询营销补差付款单详情 GET
-
-	// 图片上传
-	v3FavorMediaUploadImage = "/v3/marketing/favor/media/image-upload" // 图片上传(营销专用) POST
 
 	// 点金计划
 	v3GoldPlanManage       = "/v3/goldplan/merchants/changegoldplanstatus"            // 点金计划管理 POST
