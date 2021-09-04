@@ -693,6 +693,14 @@ type BusiFavorSubsidyPayDetailRsp struct {
 	Error    string               `json:"-"`
 }
 
+// 商户上传(营销专用)反馈图片 Rsp
+type MarketMediaUploadRsp struct {
+	Code     int                `json:"-"`
+	SignInfo *SignInfo          `json:"-"`
+	Response *MarketMediaUpload `json:"response,omitempty"`
+	Error    string             `json:"-"`
+}
+
 // ==================================分割==================================
 
 type JSAPIPayParams struct {
@@ -1988,4 +1996,8 @@ type BusiFavorSubsidyPay struct {
 	SuccessTime      string `json:"success_time"`       // 补差付款完成时间
 	OutSubsidyNo     string `json:"out_subsidy_no"`     // 业务请求唯一单号
 	CreateTime       string `json:"create_time"`        // 补差付款发起时间
+}
+
+type MarketMediaUpload struct {
+	MediaUrl string `json:"media_url"` // 微信返回的媒体文件URL地址
 }
