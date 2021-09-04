@@ -161,6 +161,7 @@ func main() {
 * <font color='#07C160' size='4'>其他能力</font>
     * 图片上传：`client.V3MediaUploadImage()`
     * 视频上传：`client.V3MediaUploadVideo()`
+    * 图片上传（营销专用）：`client.V3FavorMediaUploadImage()`
 * <font color='#07C160' size='4'>公共API</font>
     * 发起批量转账：`client.V3Transfer()`
     * 微信批次单号查询批次单：`client.V3TransferQuery()`
