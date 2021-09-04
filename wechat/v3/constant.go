@@ -56,9 +56,10 @@ const (
 	v3CommerceRefundQuery = "/v3/ecommerce/refunds/id/%s"
 
 	// 基础支付（账单）
-	v3ApiTradeBill          = "/v3/bill/tradebill"              // 申请交易账单
-	v3ApiFundFlowBill       = "/v3/bill/fundflowbill"           // 申请资金账单
-	v3ApiLevel2FundFlowBill = "/v3/ecommerce/bill/fundflowbill" // 申请二级商户资金账单
+	v3TradeBill          = "/v3/bill/tradebill"                 // 申请交易账单 GET
+	v3FundFlowBill       = "/v3/bill/fundflowbill"              // 申请资金账单 GET
+	v3Level2FundFlowBill = "/v3/ecommerce/bill/fundflowbill"    // 申请二级商户资金账单 GET
+	v3SubFundFlowBill    = "/v3/bill/sub-merchant-fundflowbill" // 申请单个子商户资金账单 GET
 
 	// 微信支付分（免确认模式）
 	v3ScoreDirectComplete = "/payscore/serviceorder/direct-complete" // 创单结单合并 POST
@@ -129,7 +130,7 @@ const (
 	v3BusiFavorSubsidyPay       = "/v3/marketing/busifavor/subsidy/pay-receipts"          // 营销补差付款 POST
 	v3BusiFavorSubsidyPayDetail = "/v3/marketing/busifavor/subsidy/pay-receipts/%s"       // subsidy_receipt_id 查询营销补差付款单详情 GET
 
-	// 点金计划
+	// 点金计划（服务商）
 	v3GoldPlanManage       = "/v3/goldplan/merchants/changegoldplanstatus"            // 点金计划管理 POST
 	v3GoldPlanBillManage   = "/v3/goldplan/merchants/changecustompagestatus"          // 商家小票管理 POST
 	v3GoldPlanFilterManage = "/v3/goldplan/merchants/set-advertising-industry-filter" // 同业过滤标签管理 POST
@@ -181,6 +182,7 @@ const (
 
 	// 来账识别API
 	v3MerchantIncomeRecord = "/v3/merchantfund/merchant/income-records" // 商户银行来账查询 GET
+	v3PartnerIncomeRecord  = "/v3/merchantfund/partner/income-records"  // 特约商户银行来账查询 GET
 
 	// 服务商-特约商户进件
 	v3Apply4SubSubmit              = "/v3/applyment4sub/applyment/"                     // 提交申请单 POST

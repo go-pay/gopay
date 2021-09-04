@@ -11,7 +11,7 @@ import (
 // 提交申请单API
 //	注意：本接口会提交一些敏感信息，需调用V3EncryptText进行加密
 //	Code = 0 is success
-// 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_1.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_1.shtml
 func (c *ClientV3) V3Apply4SubSubmit(bm gopay.BodyMap) (*Apply4SubSubmitRsp, error) {
 	if err := bm.CheckEmptyError(
 		"business_code", "contact_info", "subject_info",
@@ -43,7 +43,7 @@ func (c *ClientV3) V3Apply4SubSubmit(bm gopay.BodyMap) (*Apply4SubSubmitRsp, err
 
 // 通过业务申请编号查询申请状态API
 //	Code = 0 is success
-// 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_2.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_2.shtml
 func (c *ClientV3) V3Apply4SubQueryByBusinessCode(businessCode string) (*Apply4SubQueryRsp, error) {
 	uri := fmt.Sprintf(v3Apply4SubQueryByBusinessCode, businessCode)
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -70,7 +70,7 @@ func (c *ClientV3) V3Apply4SubQueryByBusinessCode(businessCode string) (*Apply4S
 
 // 通过申请单号查询申请状态API
 //	Code = 0 is success
-// 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_2.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_2.shtml
 func (c *ClientV3) V3Apply4SubQueryByApplyId(applyId string) (*Apply4SubQueryRsp, error) {
 	uri := fmt.Sprintf(v3Apply4SubQueryByApplyId, applyId)
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -97,7 +97,7 @@ func (c *ClientV3) V3Apply4SubQueryByApplyId(applyId string) (*Apply4SubQueryRsp
 
 // 修改结算账号 API
 //	Code = 0 is success
-// 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_3.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_3.shtml
 func (c *ClientV3) V3Apply4SubModifySettlement(bm gopay.BodyMap) (*EmptyRsp, error) {
 	if err := bm.CheckEmptyError(
 		"sub_mchid", "account_type", "account_bank", "bank_address_code", "account_number",
@@ -125,7 +125,7 @@ func (c *ClientV3) V3Apply4SubModifySettlement(bm gopay.BodyMap) (*EmptyRsp, err
 
 // 查询结算账户 API
 //	Code = 0 is success
-// 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_4.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_4.shtml
 func (c *ClientV3) V3Apply4SubQuerySettlement(subMchId string) (*Apply4SubQuerySettlementRsp, error) {
 	uri := fmt.Sprintf(v3Apply4SubQuerySettlement, subMchId)
 	authorization, err := c.authorization(MethodGet, uri, nil)

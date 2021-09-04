@@ -12,7 +12,8 @@ import (
 // 图片上传API
 //	注意：图片不能超过2MB
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter2_1_1.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter2_1_1.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter2_1_1.shtml
 func (c *ClientV3) V3MediaUploadImage(fileName, fileSha256 string, img *util.File) (wxRsp *MediaUploadRsp, err error) {
 	bmFile := make(gopay.BodyMap)
 	bmFile.Set("filename", fileName).Set("sha256", fileSha256)
@@ -45,7 +46,8 @@ func (c *ClientV3) V3MediaUploadImage(fileName, fileSha256 string, img *util.Fil
 // 视频上传API
 //	注意：媒体视频只支持avi、wmv、mpeg、mp4、mov、mkv、flv、f4v、m4v、rmvb格式，文件大小不能超过5M。
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter2_1_2.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter2_1_2.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter2_1_2.shtml
 func (c *ClientV3) V3MediaUploadVideo(fileName, fileSha256 string, img *util.File) (wxRsp *MediaUploadRsp, err error) {
 	bmFile := make(gopay.BodyMap)
 	bmFile.Set("filename", fileName).Set("sha256", fileSha256)

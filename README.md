@@ -97,9 +97,13 @@ func main() {
     * 服务人员分配：`client.V3SmartGuideAssign()`
     * 服务人员查询：`client.V3SmartGuideQuery()`
     * 服务人员信息更新：`client.V3SmartGuideUpdate()`
+* <font color='#07C160' size='4'>点金计划（服务商平台）</font>
+    * 待实现
 * <font color='#07C160' size='4'>智慧商圈</font>
     * 商圈积分同步：`client.V3BusinessPointsSync()`
     * 商圈积分授权查询：`client.V3BusinessAuthPointsQuery()`
+* <font color='#07C160' size='4'>微信支付分停车服务</font>
+    * 待实现
 * <font color='#07C160' size='4'>代金券</font>
     * 创建代金券批次：`client.V3FavorBatchCreate()`
     * 激活代金券批次：`client.V3FavorBatchStart()`
@@ -162,7 +166,7 @@ func main() {
     * 图片上传：`client.V3MediaUploadImage()`
     * 视频上传：`client.V3MediaUploadVideo()`
     * 图片上传（营销专用）：`client.V3FavorMediaUploadImage()`
-* <font color='#07C160' size='4'>公共API</font>
+* <font color='#07C160' size='4'>批量转账到零钱文档</font>
     * 发起批量转账：`client.V3Transfer()`
     * 微信批次单号查询批次单：`client.V3TransferQuery()`
     * 微信明细单号查询明细单：`client.V3TransferDetailQuery()`
@@ -176,6 +180,7 @@ func main() {
     * 查询账户日终余额：`client.V3MerchantDayBalance()`
 * <font color='#07C160' size='4'>来账识别API</font>
     * 商户银行来账查询：`client.V3MerchantIncomeRecord()`
+    * 特约商户银行来账查询：`client.V3PartnerIncomeRecord()`
 * <font color='#07C160' size='4'>特约商户进件（服务商平台）</font>
     * 提交申请单：`client.V3Apply4SubSubmit()`
     * 查询申请单状态（BusinessCode）：`client.V3Apply4SubQueryByBusinessCode()`
@@ -188,6 +193,8 @@ func main() {
 * `wechat.GetPlatformCerts()` => 获取微信平台证书公钥
 * `wechat.V3VerifySign()` => 微信V3 版本验签（同步/异步）
 * `wechat.V3ParseNotify()` => 解析微信回调请求的参数到 V3NotifyReq 结构体
+* `client.V3EncryptText()` => 敏感参数信息加密
+* `client.V3DecryptText()` =>  敏感参数信息解密
 * `wechat.V3EncryptText()` => 敏感参数信息加密
 * `wechat.V3DecryptText()` =>  敏感参数信息解密
 * `wechat.V3DecryptNotifyCipherText()` => 解密 普通支付 回调中的加密信息

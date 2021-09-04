@@ -63,9 +63,37 @@ func (c *ClientV3) V3MerchantDayBalance(accountType, date string) (*MerchantBala
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 商户银行来账查询API
+// 特约商户银行来账查询API
 //	Code = 0 is success
-// 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer/chapter3_7.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter3_6.shtml
+func (c *ClientV3) V3PartnerIncomeRecord(bm gopay.BodyMap) (*PartnerIncomeRecordRsp, error) {
+	uri := v3PartnerIncomeRecord + "?" + bm.EncodeURLParams()
+	authorization, err := c.authorization(MethodGet, uri, nil)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdGet(uri, authorization)
+	if err != nil {
+		return nil, err
+	}
+
+	wxRsp := &PartnerIncomeRecordRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(PartnerIncomeRecord)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 商户/服务商银行来账查询API
+//	Code = 0 is success
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer/chapter3_7.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter3_7.shtml
 func (c *ClientV3) V3MerchantIncomeRecord(bm gopay.BodyMap) (*MerchantIncomeRecordRsp, error) {
 	uri := v3MerchantIncomeRecord + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
