@@ -9,7 +9,7 @@ import (
 )
 
 // 提交申请单API
-//	注意：本接口会提交一些敏感信息，需调用V3EncryptText进行加密
+//	注意：本接口会提交一些敏感信息，需调用 client.V3EncryptText() 进行加密
 //	Code = 0 is success
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_1.shtml
 func (c *ClientV3) V3Apply4SubSubmit(bm gopay.BodyMap) (*Apply4SubSubmitRsp, error) {

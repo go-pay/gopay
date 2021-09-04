@@ -323,6 +323,32 @@ func (c *ClientV3) V3BusiFavorInfoUpdate(stockId string, bm gopay.BodyMap) (wxRs
 	return wxRsp, c.verifySyncSign(si)
 }
 
+// 发放消费卡
+//	Code = 0 is success
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_6_1.shtml
+func (c *ClientV3) V3BusiFavorSend(cardId string, bm gopay.BodyMap) (wxRsp *BusiFavorSendRsp, err error) {
+	url := fmt.Sprintf(v3BusiFavorSend, cardId)
+	authorization, err := c.authorization(MethodPost, url, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(bm, url, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &BusiFavorSendRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(BusiFavorSend)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
 // 申请退券
 //	Code = 0 is success
 //	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_13.shtml

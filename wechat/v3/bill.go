@@ -82,10 +82,10 @@ func (c *ClientV3) V3BillFundFlowBill(bm gopay.BodyMap) (wxRsp *BillRsp, err err
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 申请二级商户资金账单API
+// 申请特约商户资金账单API
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/bill/chapter3_2.shtml
-func (c *ClientV3) V3BillLevel2FundFlowBill(bm gopay.BodyMap) (wxRsp *Level2FundFlowBillRsp, err error) {
+//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter7_2.shtml
+func (c *ClientV3) V3BillEcommerceFundFlowBill(bm gopay.BodyMap) (wxRsp *EcommerceFundFlowBillRsp, err error) {
 	if bm != nil {
 		if bm.GetString("bill_date") == util.NULL {
 			now := time.Now()
@@ -99,7 +99,7 @@ func (c *ClientV3) V3BillLevel2FundFlowBill(bm gopay.BodyMap) (wxRsp *Level2Fund
 			bm.Set("algorithm", "AEAD_AES_256_GCM")
 		}
 	}
-	uri := v3Level2FundFlowBill + "?" + bm.EncodeURLParams()
+	uri := v3EcommerceFundFlowBill + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -109,7 +109,7 @@ func (c *ClientV3) V3BillLevel2FundFlowBill(bm gopay.BodyMap) (wxRsp *Level2Fund
 		return nil, err
 	}
 
-	wxRsp = &Level2FundFlowBillRsp{Code: Success, SignInfo: si}
+	wxRsp = &EcommerceFundFlowBillRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(DownloadBill)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)

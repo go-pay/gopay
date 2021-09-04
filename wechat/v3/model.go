@@ -79,7 +79,7 @@ type BillRsp struct {
 }
 
 // 二级商户资金账单 Rsp
-type Level2FundFlowBillRsp struct {
+type EcommerceFundFlowBillRsp struct {
 	Code     int           `json:"-"`
 	SignInfo *SignInfo     `json:"-"`
 	Response *DownloadBill `json:"response,omitempty"`
@@ -421,6 +421,14 @@ type TransferDetailReceiptQueryRsp struct {
 	Error    string                      `json:"-"`
 }
 
+// 查询特约商户账户实时余额 Rsp
+type EcommerceBalanceRsp struct {
+	Code     int               `json:"-"`
+	SignInfo *SignInfo         `json:"-"`
+	Response *EcommerceBalance `json:"response,omitempty"`
+	Error    string            `json:"-"`
+}
+
 // 查询账户实时余额 Rsp
 type MerchantBalanceRsp struct {
 	Code     int              `json:"-"`
@@ -669,6 +677,14 @@ type BusiFavorBatchUpdateRsp struct {
 	Error    string                `json:"-"`
 }
 
+// 发放消费卡 Rsp
+type BusiFavorSendRsp struct {
+	Code     int            `json:"-"`
+	SignInfo *SignInfo      `json:"-"`
+	Response *BusiFavorSend `json:"response,omitempty"`
+	Error    string         `json:"-"`
+}
+
 // 申请退券 Rsp
 type BusiFavorReturnRsp struct {
 	Code     int              `json:"-"`
@@ -707,6 +723,30 @@ type MarketMediaUploadRsp struct {
 	SignInfo *SignInfo          `json:"-"`
 	Response *MarketMediaUpload `json:"response,omitempty"`
 	Error    string             `json:"-"`
+}
+
+// 建立合作关系 Rsp
+type PartnershipsBuildRsp struct {
+	Code     int                `json:"-"`
+	SignInfo *SignInfo          `json:"-"`
+	Response *PartnershipsBuild `json:"response,omitempty"`
+	Error    string             `json:"-"`
+}
+
+// 终止合作关系 Rsp
+type PartnershipsTerminateRsp struct {
+	Code     int                    `json:"-"`
+	SignInfo *SignInfo              `json:"-"`
+	Response *PartnershipsTerminate `json:"response,omitempty"`
+	Error    string                 `json:"-"`
+}
+
+// 查询合作关系列表 Rsp
+type PartnershipsListRsp struct {
+	Code     int               `json:"-"`
+	SignInfo *SignInfo         `json:"-"`
+	Response *PartnershipsList `json:"response,omitempty"`
+	Error    string            `json:"-"`
 }
 
 // ==================================分割==================================
@@ -1577,6 +1617,13 @@ type TransferDetailReceiptQuery struct {
 	DownloadUrl     string `json:"download_url,omitempty"`     // 电子回单文件的下载地址，回单状态为：FINISHED时返回
 }
 
+type EcommerceBalance struct {
+	SubMchid        string `json:"sub_mchid"`                // 特约商户号
+	AccountType     string `json:"account_type"`             // 账户类型
+	AvailableAmount int    `json:"available_amount"`         // 可用余额（单位：分），此余额可做提现操作
+	PendingAmount   int    `json:"pending_amount,omitempty"` // 不可用余额（单位：分）
+}
+
 type MerchantBalance struct {
 	AvailableAmount int `json:"available_amount"`         // 可用余额（单位：分），此余额可做提现操作
 	PendingAmount   int `json:"pending_amount,omitempty"` // 不可用余额（单位：分）
@@ -2004,6 +2051,10 @@ type BusiFavorBatchUpdate struct {
 	MaxCouponsByDay int `json:"max_coupons_by_day"` // 当前单天发放上限个数
 }
 
+type BusiFavorSend struct {
+	CardCode string `json:"card_code"` // 消费卡code
+}
+
 type BusiFavorReturn struct {
 	WechatpayReturnTime string `json:"wechatpay_return_time"` // 微信退券成功的时间
 }
@@ -2030,4 +2081,45 @@ type BusiFavorSubsidyPay struct {
 
 type MarketMediaUpload struct {
 	MediaUrl string `json:"media_url"` // 微信返回的媒体文件URL地址
+}
+
+type PartnershipsBuild struct {
+	Partner        *Partner        `json:"partner"`         // 合作方相关的信息
+	AuthorizedData *AuthorizedData `json:"authorized_data"` // 被授权的数据
+	State          string          `json:"state"`           // 合作状态，ESTABLISHED：已建立，TERMINATED：已终止
+	BuildTime      string          `json:"build_time"`      // 建立合作关系时间
+	CreateTime     string          `json:"create_time"`     // 创建时间
+	UpdateTime     string          `json:"update_time"`     // 更新时间
+}
+
+type Partner struct {
+	Appid      string `json:"appid"`       // 合作方APPID
+	Type       string `json:"type"`        // 合作方类别
+	MerchantId string `json:"merchant_id"` // 合作方商户ID
+}
+
+type AuthorizedData struct {
+	BusinessType string   `json:"business_type"` // 授权业务类别
+	Scenarios    []string `json:"scenarios"`     // 授权场景
+	StockId      string   `json:"stock_id"`      // 授权批次ID
+}
+
+type PartnershipsTerminate struct {
+	TerminateTime string `json:"terminate_time"` // 终止合作关系时间
+}
+
+type PartnershipsList struct {
+	Data       []*Partnerships `json:"data,omitempty"` // 合作关系结果集
+	TotalCount int             `json:"total_count"`    // 批次总数
+	Offset     int             `json:"offset"`         // 分页页码
+	Limit      int             `json:"limit"`          // 分页大小
+}
+
+type Partnerships struct {
+	Partner        *Partner        `json:"partner"`         // 合作方相关的信息
+	AuthorizedData *AuthorizedData `json:"authorized_data"` // 被授权的数据
+	BuildTime      string          `json:"build_time"`      // 建立合作关系时间
+	TerminateTime  string          `json:"terminate_time"`  // 终止合作关系时间
+	CreateTime     string          `json:"create_time"`     // 创建时间
+	UpdateTime     string          `json:"update_time"`     // 更新时间
 }
