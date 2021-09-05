@@ -1,3 +1,16 @@
+版本号：Release 1.5.58
+修改记录：
+   (1) 微信V3：新增 client.V3FavorMediaUploadImage() 图片上传(营销专用)
+   (2) 微信V3：新增 client.V3EcommerceIncomeRecord() 特约商户银行来账查询
+   (3) 微信V3：新增 client.V3EcommerceBalance() 查询特约商户账户实时余额
+   (4) 微信V3：新增 client.V3BusiFavorSend() 发放消费卡
+   (5) 微信V3：新增 client.V3PartnershipsBuild() 建立合作关系
+   (6) 微信V3：新增 client.V3PartnershipsTerminate() 终止合作关系
+   (7) 微信V3：新增 client.V3PartnershipsList() 查询合作关系列表
+   (8) 微信V3：修改 client.V3PartnerQueryOrder() 入参参数调整
+   (9) 微信V3：修改 client.V3BillLevel2FundFlowBill() => client.V3BillEcommerceFundFlowBill() 申请特约商户资金账单
+   (10) 支付宝：按照支付宝更新后的文档，修改大量接口返回参数结构体字段
+
 版本号：Release 1.5.57
 修改记录：
    (1) 微信V3：修复一些已知问题

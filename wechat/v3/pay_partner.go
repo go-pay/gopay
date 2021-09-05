@@ -12,8 +12,7 @@ import (
 
 // （服务商模式）APP下单API
 //	Code = 0 is success
-//	注意：sub_appid、sub_mchid 需作为参数自己传入BodyMap
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter5_1.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_2_1.shtml
 func (c *ClientV3) V3PartnerTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	if bm.GetString("sp_mchid") == util.NULL {
 		bm.Set("sp_mchid", c.Mchid)
@@ -41,8 +40,8 @@ func (c *ClientV3) V3PartnerTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, 
 
 // （服务商模式）JSAPI/小程序下单API
 //	Code = 0 is success
-//	注意：sub_appid、sub_mchid 需作为参数自己传入BodyMap
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter5_2.shtml
+//	服务商JSAPI文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_1.shtml
+//	服务商小程序文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_5_1.shtml
 func (c *ClientV3) V3PartnerTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	if bm.GetString("sp_mchid") == util.NULL {
 		bm.Set("sp_mchid", c.Mchid)
@@ -70,8 +69,7 @@ func (c *ClientV3) V3PartnerTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp
 
 // （服务商模式）Native下单API
 //	Code = 0 is success
-//	注意：sub_appid、sub_mchid 需作为参数自己传入BodyMap
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter5_3.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_4_1.shtml
 func (c *ClientV3) V3PartnerTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
 	if bm.GetString("sp_mchid") == util.NULL {
 		bm.Set("sp_mchid", c.Mchid)
@@ -99,8 +97,7 @@ func (c *ClientV3) V3PartnerTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRs
 
 // （服务商模式）H5下单API
 //	Code = 0 is success
-//	注意：sub_appid、sub_mchid 需作为参数自己传入BodyMap
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter5_4.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_3_1.shtml
 func (c *ClientV3) V3PartnerTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
 	if bm.GetString("sp_mchid") == util.NULL {
 		bm.Set("sp_mchid", c.Mchid)
@@ -128,15 +125,17 @@ func (c *ClientV3) V3PartnerTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err e
 
 // （服务商模式）查询订单API
 //	Code = 0 is success
-//	注意：sub_mchid 需作为参数传入
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter5_5.shtml
-func (c *ClientV3) V3PartnerQueryOrder(orderNoType OrderNoType, subMchid, orderNo string) (wxRsp *PartnerQueryOrderRsp, err error) {
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_2.shtml
+func (c *ClientV3) V3PartnerQueryOrder(orderNoType OrderNoType, orderNo string, bm gopay.BodyMap) (wxRsp *PartnerQueryOrderRsp, err error) {
 	var uri string
+	if bm.GetString("sp_mchid") == gopay.NULL {
+		bm.Set("sp_mchid", c.Mchid)
+	}
 	switch orderNoType {
 	case TransactionId:
-		uri = fmt.Sprintf(v3ApiPartnerQueryOrderTransactionId, orderNo) + "?sp_mchid=" + c.Mchid + "&sub_mchid=" + subMchid
+		uri = fmt.Sprintf(v3ApiPartnerQueryOrderTransactionId, orderNo) + "?" + bm.EncodeURLParams()
 	case OutTradeNo:
-		uri = fmt.Sprintf(v3ApiPartnerQueryOrderOutTradeNo, orderNo) + "?sp_mchid=" + c.Mchid + "&sub_mchid=" + subMchid
+		uri = fmt.Sprintf(v3ApiPartnerQueryOrderOutTradeNo, orderNo) + "?" + bm.EncodeURLParams()
 	default:
 		return nil, errors.New("unsupported order number type")
 	}
@@ -164,8 +163,7 @@ func (c *ClientV3) V3PartnerQueryOrder(orderNoType OrderNoType, subMchid, orderN
 
 // （服务商模式）关单API
 //	Code = 0 is success
-//	注意：sub_mchid 需作为参数传入
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter5_6.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_3.shtml
 func (c *ClientV3) V3PartnerCloseOrder(subMchid, tradeNo string) (wxRsp *CloseOrderRsp, err error) {
 	url := fmt.Sprintf(v3ApiPartnerCloseOrder, tradeNo)
 	bm := make(gopay.BodyMap)

@@ -55,10 +55,16 @@ const (
 	v3CommerceRefund      = "/v3/ecommerce/refunds/apply"
 	v3CommerceRefundQuery = "/v3/ecommerce/refunds/id/%s"
 
-	// 基础支付（账单）
-	v3ApiTradeBill          = "/v3/bill/tradebill"              // 申请交易账单
-	v3ApiFundFlowBill       = "/v3/bill/fundflowbill"           // 申请资金账单
-	v3ApiLevel2FundFlowBill = "/v3/ecommerce/bill/fundflowbill" // 申请二级商户资金账单
+	// 账单
+	v3TradeBill             = "/v3/bill/tradebill"                 // 申请交易账单 GET
+	v3FundFlowBill          = "/v3/bill/fundflowbill"              // 申请资金账单 GET
+	v3EcommerceFundFlowBill = "/v3/ecommerce/bill/fundflowbill"    // 申请特约商户资金账单 GET
+	v3SubFundFlowBill       = "/v3/bill/sub-merchant-fundflowbill" // 申请单个子商户资金账单 GET
+
+	// 提现
+	v3Withdraw       = "/v3/ecommerce/fund/withdraw"    // 特约商户余额提 POST
+	v3WithdrawStatus = "/v3/ecommerce/fund/withdraw/%s" // withdraw_id 查询特约商户提现状态 GET
+	v3               = "/v3/merchant/fund/withdraw/bill-type/{bill_type}"
 
 	// 微信支付分（免确认模式）
 	v3ScoreDirectComplete = "/payscore/serviceorder/direct-complete" // 创单结单合并 POST
@@ -109,6 +115,7 @@ const (
 	v3FavorUseFlowDownload    = "/v3/marketing/favor/stocks/%s/use-flow"    // stock_id 下载批次核销明细 GET
 	v3FavorRefundFlowDownload = "/v3/marketing/favor/stocks/%s/refund-flow" // stock_id 下载批次退款明细 GET
 	v3FavorCallbackUrlSet     = "/v3/marketing/favor/callbacks"             // 设置消息通知地址 POST
+	v3FavorMediaUploadImage   = "/v3/marketing/favor/media/image-upload"    // 图片上传(营销专用) POST
 
 	// 商家券
 	v3BusiFavorBatchCreate      = "/v3/marketing/busifavor/stocks"                        // 创建商家券 POST
@@ -123,15 +130,18 @@ const (
 	v3BusiFavorDisassociate     = "/v3/marketing/busifavor/coupons/disassociate"          // 取消关联订单信息 POST
 	v3BusiFavorBatchUpdate      = "/v3/marketing/busifavor/stocks/%s/budget"              // stock_id 修改批次预算 PATCH
 	v3BusiFavorInfoUpdate       = "/v3/marketing/busifavor/stocks/%s"                     // stock_id 修改商家券基本信息 PATCH
+	v3BusiFavorSend             = "/v3/marketing/busifavor/coupons/%s/send"               // card_id 发放消费卡 POST
 	v3BusiFavorReturn           = "/v3/marketing/busifavor/coupons/return"                // 申请退券 POST
 	v3BusiFavorDeactivate       = "/v3/marketing/busifavor/coupons/deactivate"            // 使券失效 POST
 	v3BusiFavorSubsidyPay       = "/v3/marketing/busifavor/subsidy/pay-receipts"          // 营销补差付款 POST
 	v3BusiFavorSubsidyPayDetail = "/v3/marketing/busifavor/subsidy/pay-receipts/%s"       // subsidy_receipt_id 查询营销补差付款单详情 GET
 
-	// 图片上传
-	v3FavorMediaUploadImage = "/v3/marketing/favor/media/image-upload" // 图片上传(营销专用) POST
+	// 委托营销（合作伙伴）
+	v3PartnershipsBuild     = "/v3/marketing/partnerships/build"     // 建立合作关系 POST
+	v3PartnershipsTerminate = "/v3/marketing/partnerships/terminate" // 终止合作关系 POST
+	v3PartnershipsList      = "/v3/marketing/partnerships"           // 查询合作关系列表 GET
 
-	// 点金计划
+	// 点金计划（服务商）
 	v3GoldPlanManage       = "/v3/goldplan/merchants/changegoldplanstatus"            // 点金计划管理 POST
 	v3GoldPlanBillManage   = "/v3/goldplan/merchants/changecustompagestatus"          // 商家小票管理 POST
 	v3GoldPlanFilterManage = "/v3/goldplan/merchants/set-advertising-industry-filter" // 同业过滤标签管理 POST
@@ -166,7 +176,7 @@ const (
 	v3MediaUploadImage = "/v3/merchant/media/upload"       // 图片上传 POST
 	v3MediaUploadVideo = "/v3/merchant/media/video_upload" // 视频上传 POST
 
-	// 公共API 转账
+	// 转账
 	v3Transfer                    = "/v3/transfer/batches"                                          // 发起批量转账 POST
 	v3TransferQuery               = "/v3/transfer/batches/batch-id/%s"                              // batch_id 微信批次单号查询批次单 GET
 	v3TransferDetailQuery         = "/v3/transfer/batches/batch-id/%s/details/detail-id/%s"         // batch_id、detail_id 微信明细单号查询明细单 GET
@@ -177,12 +187,14 @@ const (
 	v3TransferDetailReceipt       = "/v3/transfer-detail/electronic-receipts"                       // 转账明细电子回单受理 POST
 	v3TransferDetailReceiptQuery  = "/v3/transfer-detail/electronic-receipts"                       // 查询转账明细电子回单受理结果 GET
 
-	// 商户账户
+	// 余额
 	v3MerchantBalance    = "/v3/merchant/fund/balance/%s"       // account_type 查询账户实时余额 GET
 	v3MerchantDayBalance = "/v3/merchant/fund/dayendbalance/%s" // account_type 查询账户日终余额 GET
+	v3EcommerceBalance   = "/v3/ecommerce/fund/balance/%s"      // sub_mchid 查询特约商户账户实时余额 GET
 
 	// 来账识别API
-	v3MerchantIncomeRecord = "/v3/merchantfund/merchant/income-records" // 商户银行来账查询 GET
+	v3MerchantIncomeRecord  = "/v3/merchantfund/merchant/income-records" // 商户银行来账查询 GET
+	v3EcommerceIncomeRecord = "/v3/merchantfund/partner/income-records"  // 特约商户银行来账查询 GET
 
 	// 服务商-特约商户进件
 	v3Apply4SubSubmit              = "/v3/applyment4sub/applyment/"                     // 提交申请单 POST

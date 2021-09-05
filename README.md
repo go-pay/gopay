@@ -43,14 +43,14 @@ func main() {
 
 > #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口，欢迎参与完善V3接口。
 
-* <font color='#07C160' size='4'>基础支付（商户平台）</font>
+* <font color='#07C160' size='4'>基础支付</font>
     * APP下单：`client.V3TransactionApp()`
     * JSAPI/小程序下单：`client.V3TransactionJsapi()`
     * Native下单：`client.V3TransactionNative()`
     * H5下单：`client.V3TransactionH5()`
     * 查询订单：`client.V3TransactionQueryOrder()`
     * 关闭订单：`client.V3TransactionCloseOrder()`
-* <font color='#07C160' size='4'>基础支付（服务商平台）</font>
+* <font color='#07C160' size='4'>基础支付（服务商）</font>
     * APP下单：`client.V3PartnerTransactionApp()`
     * JSAPI/小程序下单：`client.V3PartnerTransactionJsapi()`
     * Native下单：`client.V3PartnerTransactionNative()`
@@ -70,8 +70,10 @@ func main() {
 * <font color='#07C160' size='4'>账单</font>
     * 申请交易账单：`client.V3BillTradeBill()`
     * 申请资金账单：`client.V3BillFundFlowBill()`
-    * 申请二级商户资金账单：`client.V3BillLevel2FundFlowBill()`
+    * 申请特约商户资金账单：`client.V3BillEcommerceFundFlowBill()`
     * 下载账单：`client.V3BillDownLoadBill()`
+* <font color='#07C160' size='4'>提现（服务商）</font>
+    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter6_1.shtml)
 * <font color='#07C160' size='4'>微信支付分（公共API）</font>
     * 创建支付分订单：`client.V3ScoreOrderCreate()`
     * 查询支付分订单：`client.V3ScoreOrderQuery()`
@@ -97,9 +99,13 @@ func main() {
     * 服务人员分配：`client.V3SmartGuideAssign()`
     * 服务人员查询：`client.V3SmartGuideQuery()`
     * 服务人员信息更新：`client.V3SmartGuideUpdate()`
+* <font color='#07C160' size='4'>点金计划（服务商）</font>
+    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_5_1.shtml)
 * <font color='#07C160' size='4'>智慧商圈</font>
     * 商圈积分同步：`client.V3BusinessPointsSync()`
     * 商圈积分授权查询：`client.V3BusinessAuthPointsQuery()`
+* <font color='#07C160' size='4'>微信支付分停车服务</font>
+    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_8_1.shtml)
 * <font color='#07C160' size='4'>代金券</font>
     * 创建代金券批次：`client.V3FavorBatchCreate()`
     * 激活代金券批次：`client.V3FavorBatchStart()`
@@ -128,16 +134,17 @@ func main() {
     * 取消关联订单信息：`client.V3BusiFavorDisassociate()`
     * 修改批次预算：`client.V3BusiFavorBatchUpdate()`
     * 修改商家券基本信息：`client.V3BusiFavorInfoUpdate()`
+    * 发放消费卡：`client.V3BusiFavorSend()`
     * 申请退券：`client.V3BusiFavorReturn()`
     * 使券失效：`client.V3BusiFavorDeactivate()`
     * 营销补差付款：`client.V3BusiFavorSubsidyPay()`
     * 查询营销补差付款单详情：`client.V3BusiFavorSubsidyPayDetail()`
 * <font color='#07C160' size='4'>委托营销</font>
-    * 待实现
-* <font color='#07C160' size='4'>消费卡</font>
-    * 待实现
+    * 建立合作关系：`client.V3PartnershipsBuild()`
+    * 终止合作关系：`client.V3PartnershipsTerminate()`
+    * 查询合作关系列表：`client.V3PartnershipsList()`
 * <font color='#07C160' size='4'>支付有礼</font>
-    * 待实现
+    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_7_2.shtml)
 * <font color='#07C160' size='4'>分账</font>
     * 请求分账：`client.V3ProfitShareOrder()`
     * 查询分账结果：`client.V3ProfitShareOrderQuery()`
@@ -161,7 +168,8 @@ func main() {
 * <font color='#07C160' size='4'>其他能力</font>
     * 图片上传：`client.V3MediaUploadImage()`
     * 视频上传：`client.V3MediaUploadVideo()`
-* <font color='#07C160' size='4'>公共API</font>
+    * 图片上传（营销专用）：`client.V3FavorMediaUploadImage()`
+* <font color='#07C160' size='4'>批量转账</font>
     * 发起批量转账：`client.V3Transfer()`
     * 微信批次单号查询批次单：`client.V3TransferQuery()`
     * 微信明细单号查询明细单：`client.V3TransferDetailQuery()`
@@ -171,11 +179,14 @@ func main() {
     * 查询转账电子回单：`client.V3TransferReceiptQuery()`
     * 转账明细电子回单受理：`client.V3TransferDetailReceipt()`
     * 查询转账明细电子回单受理结果：`client.V3TransferDetailReceiptQuery()`
+* <font color='#07C160' size='4'>余额查询</font>
+    * 查询特约商户账户实时余额（服务商）：`client.V3EcommerceBalance()`
     * 查询账户实时余额：`client.V3MerchantBalance()`
     * 查询账户日终余额：`client.V3MerchantDayBalance()`
-* <font color='#07C160' size='4'>来账识别API</font>
+* <font color='#07C160' size='4'>来账识别</font>
     * 商户银行来账查询：`client.V3MerchantIncomeRecord()`
-* <font color='#07C160' size='4'>特约商户进件（服务商平台）</font>
+    * 特约商户银行来账查询：`client.V3EcommerceIncomeRecord()`
+* <font color='#07C160' size='4'>特约商户进件（服务商）</font>
     * 提交申请单：`client.V3Apply4SubSubmit()`
     * 查询申请单状态（BusinessCode）：`client.V3Apply4SubQueryByBusinessCode()`
     * 查询申请单状态（ApplyId）：`client.V3Apply4SubQueryByApplyId()`
@@ -187,6 +198,8 @@ func main() {
 * `wechat.GetPlatformCerts()` => 获取微信平台证书公钥
 * `wechat.V3VerifySign()` => 微信V3 版本验签（同步/异步）
 * `wechat.V3ParseNotify()` => 解析微信回调请求的参数到 V3NotifyReq 结构体
+* `client.V3EncryptText()` => 敏感参数信息加密
+* `client.V3DecryptText()` =>  敏感参数信息解密
 * `wechat.V3EncryptText()` => 敏感参数信息加密
 * `wechat.V3DecryptText()` =>  敏感参数信息解密
 * `wechat.V3DecryptNotifyCipherText()` => 解密 普通支付 回调中的加密信息

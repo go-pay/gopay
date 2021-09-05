@@ -10,7 +10,8 @@ import (
 
 // 申请退款API
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter5_1_14.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_9.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_9.shtml
 func (c *ClientV3) V3Refund(bm gopay.BodyMap) (wxRsp *RefundRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3DomesticRefund, bm)
 	if err != nil {
@@ -36,7 +37,8 @@ func (c *ClientV3) V3Refund(bm gopay.BodyMap) (wxRsp *RefundRsp, err error) {
 
 // 查询单笔退款API
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_10.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_10.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_10.shtml
 func (c *ClientV3) V3RefundQuery(outRefundNo string) (wxRsp *RefundQueryRsp, err error) {
 	uri := fmt.Sprintf(v3DomesticRefundQuery, outRefundNo)
 	authorization, err := c.authorization(MethodGet, uri, nil)

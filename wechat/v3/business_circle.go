@@ -8,12 +8,11 @@ import (
 	"github.com/go-pay/gopay"
 )
 
-// 商圈积分同步API
+// 商圈积分同步
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_6_2.shtml
-func (c *ClientV3) V3BusinessPointsSync(url string) (wxRsp *EmptyRsp, err error) {
-	bm := make(gopay.BodyMap)
-	bm.Set("url", url)
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_6_2.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_6_2.shtml
+func (c *ClientV3) V3BusinessPointsSync(bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3BusinessPointsSync, bm)
 	if err != nil {
 		return nil, err
@@ -31,9 +30,10 @@ func (c *ClientV3) V3BusinessPointsSync(url string) (wxRsp *EmptyRsp, err error)
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 商圈积分授权查询API
+// 商圈积分授权查询
 //	Code = 0 is success
-// 	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_6_4.shtml
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_6_4.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_6_4.shtml
 func (c *ClientV3) V3BusinessAuthPointsQuery(appid, openid string) (*BusinessAuthPointsQueryRsp, error) {
 	uri := fmt.Sprintf(v3BusinessAuthPointsQuery, openid) + "?appid=" + appid
 	authorization, err := c.authorization(MethodGet, uri, nil)
