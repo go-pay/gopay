@@ -450,26 +450,26 @@ import (
 //    appId：应用ID
 //    privateKey：应用私钥，支持PKCS1和PKCS8
 //    isProd：是否是正式环境
-client := alipay.NewClient("2016091200494382", privateKey, false)
-
+client, err := alipay.NewClient("2016091200494382", privateKey, false)
+if err != nil {
+    xlog.Error(err)
+    return
+}
 // 打开Debug开关，输出日志，默认关闭
 client.DebugSwitch = gopay.DebugOn
 
 // 设置支付宝请求 公共参数
 //    注意：具体设置哪些参数，根据不同的方法而不同，此处列举出所有设置参数
-client.SetLocation().                       // 设置时区，不设置或出错均为默认服务器时间
-    SetAliPayRootCertSN().                  // 设置支付宝根证书SN，通过 alipay.GetRootCertSN() 获取
-    SetAppCertSN().                         // 设置应用公钥证书SN，通过 alipay.GetCertSN() 获取
-    SetAliPayPublicCertSN().                // 设置支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
-    SetCharset("utf-8").                    // 设置字符编码，不设置默认 utf-8
-    SetSignType(alipay.RSA2).               // 设置签名类型，不设置默认 RSA2
-    SetReturnUrl("https://www.fmm.ink").    // 设置返回URL
-    SetNotifyUrl("https://www.fmm.ink").    // 设置异步通知URL
-    SetAppAuthToken()                       // 设置第三方应用授权
+client.SetLocation(alipay.LocationShanghai).    // 设置时区，不设置或出错均为默认服务器时间
+    SetCharset(alipay.UTF8).                    // 设置字符编码，不设置默认 utf-8
+    SetSignType(alipay.RSA2).                   // 设置签名类型，不设置默认 RSA2
+    SetReturnUrl("https://www.fmm.ink").        // 设置返回URL
+    SetNotifyUrl("https://www.fmm.ink").        // 设置异步通知URL
+    SetAppAuthToken()                           // 设置第三方应用授权
 
 // 自动同步验签（只支持证书模式）
 // 传入 alipayCertPublicKey_RSA2.crt 内容
-client.AutoVerifySign("alipayCertPublicKey_RSA2 bytes")
+client.AutoVerifySign([]byte("alipayCertPublicKey_RSA2 bytes"))
 
 // 公钥证书模式，需要传入证书，以下两种方式二选一
 // 证书路径

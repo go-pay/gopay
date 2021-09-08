@@ -12,6 +12,7 @@ const (
 	PKCS8            PKCSType = 2 // Java
 	RSA                       = "RSA"
 	RSA2                      = "RSA2"
+	UTF8                      = "utf-8"
 )
 
 type PKCSType uint8
