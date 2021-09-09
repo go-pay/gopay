@@ -279,6 +279,9 @@ func main() {
     * 商户申请单查询: `client.AntMerchantOrderQuery()`
     * 店铺查询接口: `client.AntMerchantShopQuery()`
     * 蚂蚁店铺关闭: `client.AntMerchantShopClose()`
+    * 申请权益发放: `client.CommerceBenefitApply()`
+    * 权益核销: `client.CommerceBenefitVerify()`
+    * 还款账单查询: `client.TradeRepaybillQuery()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
     * 单笔转账接口：`client.FundTransUniTransfer()`
     * 查询转账订单接口: `client.FundTransOrderQuery()`
@@ -287,7 +290,7 @@ func main() {
     * 资金退回接口: `client.FundTransRefund()`
     * 资金授权冻结接口: `client.FundAuthOrderFreeze()`
     * 资金授权发码接口: `client.FundAuthOrderVoucherCreate()`
-    * 线上资金授权冻结接口: client:FundAuthOrderAppFreeze()`
+    * 线上资金授权冻结接口: `client:FundAuthOrderAppFreeze()`
     * 资金授权解冻接口: `client.FundAuthOrderUnfreeze()`
     * 资金授权操作查询接口: `client.FundAuthOperationDetailQuery()`
     * 资金授权撤销接口: `client.FundAuthOperationCancel()`
@@ -296,6 +299,7 @@ func main() {
     * 批量转账明细查询接口: `client.FundBatchDetailQuery()`
     * 现金红包无线支付接口: `client.FundTransAppPay()`
     * 资金收款账号绑定关系查询: `client.FundTransPayeeBindQuery()`
+    * 资金转账页面支付接口: `client.FundTransPagePay()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>会员API</font>
     * 支付宝会员授权信息查询接口（App支付宝登录）：`client.UserInfoShare()`
     * 身份认证初始化服务: `client.UserCertifyOpenInit()`
