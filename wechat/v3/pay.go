@@ -12,7 +12,7 @@ import (
 
 // APP下单API
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_1.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_1.shtml
 func (c *ClientV3) V3TransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	if bm.GetString("mchid") == util.NULL {
 		bm.Set("mchid", c.Mchid)
@@ -40,8 +40,8 @@ func (c *ClientV3) V3TransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err err
 
 // JSAPI/小程序下单API
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_1.shtml
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_1.shtml
+//	商户JSAPI文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_1.shtml
+//	商户小程序文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_1.shtml
 func (c *ClientV3) V3TransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	if bm.GetString("mchid") == util.NULL {
 		bm.Set("mchid", c.Mchid)
@@ -97,7 +97,7 @@ func (c *ClientV3) V3TransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err 
 
 // H5下单API
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_3_1.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_3_1.shtml
 func (c *ClientV3) V3TransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
 	if bm.GetString("mchid") == util.NULL {
 		bm.Set("mchid", c.Mchid)
@@ -125,7 +125,7 @@ func (c *ClientV3) V3TransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
 
 // 查询订单API
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter3_5.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_2.shtml
 func (c *ClientV3) V3TransactionQueryOrder(orderNoType OrderNoType, orderNo string) (wxRsp *QueryOrderRsp, err error) {
 	var uri string
 	switch orderNoType {
@@ -160,7 +160,7 @@ func (c *ClientV3) V3TransactionQueryOrder(orderNoType OrderNoType, orderNo stri
 
 // 关闭订单API
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transactions/chapter3_6.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_3.shtml
 func (c *ClientV3) V3TransactionCloseOrder(tradeNo string) (wxRsp *CloseOrderRsp, err error) {
 	url := fmt.Sprintf(v3ApiCloseOrder, tradeNo)
 	bm := make(gopay.BodyMap)

@@ -50,9 +50,41 @@ func (c *ClientV3) AutoVerifySign() {
 	}
 }
 
+func (c *ClientV3) doProdPostWithHeader(headerMap map[string]string, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
+	var url = v3BaseUrlCh + path
+	httpClient := xhttp.NewClient()
+	if c.DebugSwitch == gopay.DebugOn {
+		jb, _ := json.Marshal(bm)
+		xlog.Debugf("Wechat_V3_RequestBody: %s", jb)
+		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
+	}
+	for k, v := range headerMap {
+		httpClient.Header.Add(k, v)
+	}
+	httpClient.Header.Add(HeaderAuthorization, authorization)
+	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
+	httpClient.Header.Add("Accept", "*/*")
+	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes()
+	if len(errs) > 0 {
+		return nil, nil, nil, errs[0]
+	}
+	si = &SignInfo{
+		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
+		HeaderNonce:     res.Header.Get(HeaderNonce),
+		HeaderSignature: res.Header.Get(HeaderSignature),
+		HeaderSerial:    res.Header.Get(HeaderSerial),
+		SignBody:        string(bs),
+	}
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_Response: %d > %s", res.StatusCode, string(bs))
+		xlog.Debugf("Wechat_Headers: %#v", res.Header)
+		xlog.Debugf("Wechat_SignInfo: %#v", si)
+	}
+	return res, si, bs, nil
+}
+
 func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
-
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
 		jb, _ := json.Marshal(bm)
@@ -83,7 +115,6 @@ func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res
 
 func (c *ClientV3) doProdGet(uri, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + uri
-
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_Url: %s", url)
@@ -113,7 +144,6 @@ func (c *ClientV3) doProdGet(uri, authorization string) (res *http.Response, si 
 
 func (c *ClientV3) doProdPut(bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
-
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
 		jb, _ := json.Marshal(bm)
@@ -144,7 +174,6 @@ func (c *ClientV3) doProdPut(bm gopay.BodyMap, path, authorization string) (res 
 
 func (c *ClientV3) doProdDelete(bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
-
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
 		jb, _ := json.Marshal(bm)
@@ -175,7 +204,6 @@ func (c *ClientV3) doProdDelete(bm gopay.BodyMap, path, authorization string) (r
 
 func (c *ClientV3) doProdPostFile(bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
-
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.GetString("meta"))
@@ -205,7 +233,6 @@ func (c *ClientV3) doProdPostFile(bm gopay.BodyMap, path, authorization string) 
 
 func (c *ClientV3) doProdPatch(bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
-
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
 		jb, _ := json.Marshal(bm)
