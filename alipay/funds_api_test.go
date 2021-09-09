@@ -82,3 +82,18 @@ func TestFundAuthOrderAppFreeze(t *testing.T) {
 	}
 	xlog.Debug("aliRsp:", aliRsp)
 }
+
+func TestClient_FundTransPagePay(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("out_biz_no", "2018062800001").
+		Set("trans_amount", "8.88").
+		Set("product_code", "STD_APP_TRANSFER").
+		Set("biz_scene", "PARTY_MEMBERSHIP_DUES")
+
+	aliRsp, err := client.FundTransPagePay(bm)
+	if err != nil {
+		xlog.Errorf("client.FundTransPagePay(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}

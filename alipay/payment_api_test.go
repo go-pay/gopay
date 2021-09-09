@@ -247,7 +247,7 @@ func TestClient_TradeOrderSettle(t *testing.T) {
 }
 
 // 订单咨询服务测试
-func TestTradeAdvanceConsult(t *testing.T) {
+func TestClient_TradeAdvanceConsult(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("alipay_user_id", "2088302483540171").
@@ -261,7 +261,7 @@ func TestTradeAdvanceConsult(t *testing.T) {
 	xlog.Debug("aliRsp:", *aliRsp)
 }
 
-func TestPcreditHuabeiAuthSettleApply(t *testing.T) {
+func TestClient_PcreditHuabeiAuthSettleApply(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("agreement_no", "20170502000610755993")
@@ -277,7 +277,7 @@ func TestPcreditHuabeiAuthSettleApply(t *testing.T) {
 	xlog.Debug("aliRsp:", *aliRsp)
 }
 
-func TestCommerceTransportNfccardSend(t *testing.T) {
+func TestClient_CommerceTransportNfccardSend(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("issue_org_no", "12345678")
@@ -292,7 +292,7 @@ func TestCommerceTransportNfccardSend(t *testing.T) {
 	xlog.Debug("aliRsp:", *aliRsp)
 }
 
-func TestDataDataserviceAdDataQuery(t *testing.T) {
+func TestClient_DataDataserviceAdDataQuery(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("query_type", "ALL_SUM")
@@ -310,7 +310,7 @@ func TestDataDataserviceAdDataQuery(t *testing.T) {
 	xlog.Debug("aliRsp:", *aliRsp)
 }
 
-func TestCommerceAirCallcenterTradeApply(t *testing.T) {
+func TestClient_CommerceAirCallcenterTradeApply(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("scene_code", "flight_ticket_order")
@@ -336,7 +336,7 @@ func TestCommerceAirCallcenterTradeApply(t *testing.T) {
 	xlog.Debug("aliRsp:", *aliRsp)
 }
 
-func TestPaymentTradeOrderCreate(t *testing.T) {
+func TestClient_PaymentTradeOrderCreate(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("partner_id", "202210000000000001278")
@@ -357,6 +357,49 @@ func TestPaymentTradeOrderCreate(t *testing.T) {
 	aliRsp, err := client.PaymentTradeOrderCreate(bm)
 	if err != nil {
 		xlog.Errorf("client.PaymentTradeOrderCreate(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestClient_CommerceBenefitApply(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("activity_code", "alipay_game_marketing")
+	bm.Set("trade_no", "2020081210122512120003")
+	bm.Set("user_account", "342812199010013210")
+	bm.Set("platform", "ios")
+
+	aliRsp, err := client.CommerceBenefitApply(bm)
+	if err != nil {
+		xlog.Errorf("client.CommerceBenefitApply(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestClient_CommerceBenefitVerify(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("activity_code", "alipay_1212_marketing")
+	bm.Set("voucher_code", "JHK51ITYK")
+	bm.Set("user_account", "342812199010013210")
+	bm.Set("trade_no", "2020081210122512120003")
+
+	aliRsp, err := client.CommerceBenefitVerify(bm)
+	if err != nil {
+		xlog.Errorf("client.CommerceBenefitVerify(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestClient_TradeRepaybillQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	aliRsp, err := client.TradeRepaybillQuery(bm)
+	if err != nil {
+		xlog.Errorf("client.TradeRepaybillQuery(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
