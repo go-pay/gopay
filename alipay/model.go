@@ -12,6 +12,7 @@ const (
 	PKCS8            PKCSType = 2 // Java
 	RSA                       = "RSA"
 	RSA2                      = "RSA2"
+	UTF8                      = "utf-8"
 )
 
 type PKCSType uint8
@@ -2017,4 +2018,64 @@ type AntMerchantShopCloseRsp struct {
 
 type AntMerchantShopClose struct {
 	ErrorResponse
+}
+
+// ===================================================
+type CommerceBenefitApplyRsp struct {
+	Response     *CommerceBenefitApply `json:"alipay_commerce_operation_gamemarketing_benefit_apply_response"`
+	AlipayCertSn string                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                `json:"-"`
+	Sign         string                `json:"sign"`
+}
+
+type CommerceBenefitApply struct {
+	ErrorResponse
+	ApplyVoucherCodeList string `json:"apply_voucher_code_list,omitempty"`
+}
+
+// ===================================================
+type CommerceBenefitVerifyRsp struct {
+	Response     *CommerceBenefitVerify `json:"alipay_commerce_operation_gamemarketing_benefit_verify_response"`
+	AlipayCertSn string                 `json:"alipay_cert_sn,omitempty"`
+	SignData     string                 `json:"-"`
+	Sign         string                 `json:"sign"`
+}
+
+type CommerceBenefitVerify struct {
+	ErrorResponse
+	VoucherVerifyStatus bool `json:"voucher_verify_status,omitempty"`
+}
+
+// ===================================================
+type TradeRepaybillQueryRsp struct {
+	Response     *TradeRepaybillQuery `json:"alipay_trade_repaybill_query_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
+}
+
+type TradeRepaybillQuery struct {
+	ErrorResponse
+	BillNo                string `json:"bill_no"`
+	BillAmount            string `json:"bill_amount"`
+	BillOverdueAmount     string `json:"bill_overdue_amount"`
+	BillPaidAmount        string `json:"bill_paid_amount"`
+	BillPaidRevokedAmount string `json:"bill_paid_revoked_amount"`
+	BillRevokedAmount     string `json:"bill_revoked_amount"`
+	BillStatus            string `json:"bill_status"`
+}
+
+// ===================================================
+type FundTransPagePayRsp struct {
+	Response     *FundTransPagePay `json:"alipay_fund_trans_page_pay_response"`
+	AlipayCertSn string            `json:"alipay_cert_sn,omitempty"`
+	SignData     string            `json:"-"`
+	Sign         string            `json:"sign"`
+}
+
+type FundTransPagePay struct {
+	ErrorResponse
+	OutBizNo string `json:"out_biz_no"`
+	OrderID  string `json:"order_id,omitempty"`
+	Status   string `json:"status"`
 }
