@@ -193,7 +193,7 @@ func main() {
     * 修改结算账号：`client.V3Apply4SubModifySettlement()`
     * 查询结算账户：`client.V3Apply4SubQuerySettlement()`
 
-### 微信V3公共API
+### 微信V3公共 API
 
 * `wechat.GetPlatformCerts()` => 获取微信平台证书公钥
 * `wechat.V3VerifySign()` => 微信V3 版本验签（同步/异步）
@@ -212,7 +212,7 @@ func main() {
 
 ---
 
-### QQ支付API
+### QQ支付 API
 
 * 提交付款码支付：`client.MicroPay()`
 * 撤销订单：`client.Reverse()`
@@ -228,7 +228,7 @@ func main() {
 * 查询红包详情（未测试可用性）：`client.QueryRedInfo()`
 * 自定义方法请求微信API接口：`client.PostQQAPISelf()`
 
-### QQ公共API
+### QQ公共 API
 
 * `qq.ParseNotifyToBodyMap()` => 解析QQ支付异步通知的结果到BodyMap
 * `qq.ParseNotify()` => 解析QQ支付异步通知的参数
@@ -236,7 +236,7 @@ func main() {
 
 ---
 
-### 支付宝支付API
+### 支付宝支付 API
 
 > #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用 `client.PostAliPayAPISelfV2()`方法实现！请参考 `client_test.go` 内的 `TestClient_PostAliPayAPISelfV2()` 方法
 
@@ -356,7 +356,7 @@ func main() {
     * 报关接口：`client.AcquireCustoms()`
     * 报关查询接口：`client.AcquireCustomsQuery()`
 
-### 支付宝公共API
+### 支付宝公共 API
 
 * `alipay.GetCertSN()` => 获取证书SN号（app_cert_sn、alipay_cert_sn）
 * `alipay.GetRootCertSN()` => 获取证书SN号（alipay_root_cert_sn）
@@ -383,6 +383,20 @@ func main() {
 > url 请选择 apple.UrlSandbox 或 apple.UrlProd
 
 * `apple.VerifyReceipt()` => 苹果支付校验收据API
+
+---
+
+### PayPal支付 API
+
+* [PayPal文档概览](https://developer.paypal.com/docs/api/overview)
+* 
+* <font color='#003087' size='4'>AccessToken</font>
+  * 获取AccessToken：`client.GetAccessToken()`
+* <font color='#003087' size='4'>订单</font>
+  * 开发中...
+* <font color='#003087' size='4'>支付</font>
+  * 开发中...
+
 
 ---
 
