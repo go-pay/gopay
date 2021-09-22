@@ -1,9 +1,10 @@
 package alipay
 
 import (
+	"testing"
+
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xlog"
-	"testing"
 )
 
 func TestAntMerchantShopModify(t *testing.T) {
