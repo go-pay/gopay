@@ -3,10 +3,9 @@ package wechat
 type OrderNoType uint8
 
 type PlatformCertRsp struct {
-	Code     int                 `json:"-"`
-	SignInfo *SignInfo           `json:"-"`
-	Certs    []*PlatformCertItem `json:"certs"`
-	Error    string              `json:"-"`
+	Code  int                 `json:"-"`
+	Certs []*PlatformCertItem `json:"certs"`
+	Error string              `json:"-"`
 }
 
 type EmptyRsp struct {
