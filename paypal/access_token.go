@@ -32,8 +32,7 @@ func (c *Client) GetAccessToken() (token *AccessToken, err error) {
 	bm := make(gopay.BodyMap)
 	bm.Set("grant_type", "client_credentials")
 	if c.DebugSwitch == gopay.DebugOn {
-		jb, _ := json.Marshal(bm)
-		xlog.Debugf("PayPal_RequestBody: %s", jb)
+		xlog.Debugf("PayPal_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("PayPal_Authorization: %s", authHeader)
 	}
 	res, bs, errs := httpClient.Type(xhttp.TypeForm).Post(url).SendBodyMap(bm).EndBytes()

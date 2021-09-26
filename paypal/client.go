@@ -1,7 +1,13 @@
 package paypal
 
 import (
+	"context"
+	"encoding/json"
+	"net/http"
+
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 // Client PayPal支付客
@@ -30,91 +36,75 @@ func NewClient(clientid, secret string, isProd bool) (client *Client, err error)
 	return client, nil
 }
 
-//func (c *Client) doPayPalGet(uri, authorization string) (res *http.Response, bs []byte, err error) {
-//	var url = v3BaseUrlCh + uri
-//	httpClient := xhttp.NewClient()
-//	if c.DebugSwitch == gopay.DebugOn {
-//		xlog.Debugf("Wechat_V3_Url: %s", url)
-//		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
-//	}
-//	httpClient.Header.Add(HeaderAuthorization, authorization)
-//	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
-//	httpClient.Header.Add("Accept", "*/*")
-//	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes()
-//	if len(errs) > 0 {
-//		return nil, nil, nil, errs[0]
-//	}
-//	si = &SignInfo{
-//		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
-//		HeaderNonce:     res.Header.Get(HeaderNonce),
-//		HeaderSignature: res.Header.Get(HeaderSignature),
-//		HeaderSerial:    res.Header.Get(HeaderSerial),
-//		SignBody:        string(bs),
-//	}
-//	if c.DebugSwitch == gopay.DebugOn {
-//		xlog.Debugf("Wechat_Response: %d > %s", res.StatusCode, string(bs))
-//		xlog.Debugf("Wechat_Headers: %#v", res.Header)
-//		xlog.Debugf("Wechat_SignInfo: %#v", si)
-//	}
-//	return res, si, bs, nil
-//}
+func (c *Client) doPayPalGet(ctx context.Context, uri string) (res *http.Response, bs []byte, err error) {
+	var url = baseUrlProd + uri
+	if !c.IsProd {
+		url = baseUrlSandbox + uri
+	}
+	httpClient := xhttp.NewClient()
+	authHeader := AuthorizationPrefixBearer + c.AccessToken
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("PayPal_Url: %s", url)
+		xlog.Debugf("PayPal_Authorization: %s", authHeader)
+	}
+	httpClient.Header.Add(HeaderAuthorization, authHeader)
+	httpClient.Header.Add("Accept", "*/*")
+	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes()
+	if len(errs) > 0 {
+		return nil, nil, errs[0]
+	}
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("PayPal_Response: %d > %s", res.StatusCode, string(bs))
+		xlog.Debugf("PayPal_Headers: %#v", res.Header)
+	}
+	return res, bs, nil
+}
 
-//func (c *Client) doPayPalPost(bm gopay.BodyMap, path, authorization string) (res *http.Response, bs []byte, err error) {
-//	var url = v3BaseUrlCh + path
-//	httpClient := xhttp.NewClient()
-//	if c.DebugSwitch == gopay.DebugOn {
-//		jb, _ := json.Marshal(bm)
-//		xlog.Debugf("Wechat_V3_RequestBody: %s", jb)
-//		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
-//	}
-//	httpClient.Header.Add(HeaderAuthorization, authorization)
-//	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
-//	httpClient.Header.Add("Accept", "*/*")
-//	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes()
-//	if len(errs) > 0 {
-//		return nil, nil, nil, errs[0]
-//	}
-//	si = &SignInfo{
-//		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
-//		HeaderNonce:     res.Header.Get(HeaderNonce),
-//		HeaderSignature: res.Header.Get(HeaderSignature),
-//		HeaderSerial:    res.Header.Get(HeaderSerial),
-//		SignBody:        string(bs),
-//	}
-//	if c.DebugSwitch == gopay.DebugOn {
-//		xlog.Debugf("Wechat_Response: %d > %s", res.StatusCode, string(bs))
-//		xlog.Debugf("Wechat_Headers: %#v", res.Header)
-//		xlog.Debugf("Wechat_SignInfo: %#v", si)
-//	}
-//	return res, si, bs, nil
-//}
+func (c *Client) doPayPalPost(ctx context.Context, bm gopay.BodyMap, path string) (res *http.Response, bs []byte, err error) {
+	var url = baseUrlProd + path
+	if !c.IsProd {
+		url = baseUrlSandbox + path
+	}
+	httpClient := xhttp.NewClient()
+	authHeader := AuthorizationPrefixBearer + c.AccessToken
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("PayPal_RequestBody: %s", bm.JsonBody())
+		xlog.Debugf("PayPal_Authorization: %s", authHeader)
+	}
+	httpClient.Header.Add(HeaderAuthorization, authHeader)
+	httpClient.Header.Add("Accept", "*/*")
+	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes()
+	if len(errs) > 0 {
+		return nil, nil, errs[0]
+	}
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("PayPal_Response: %d > %s", res.StatusCode, string(bs))
+		xlog.Debugf("PayPal_Headers: %#v", res.Header)
+	}
+	return res, bs, nil
+}
 
-//func (c *Client) doPayPalPatch(bm gopay.BodyMap, path, authorization string) (res *http.Response, bs []byte, err error) {
-//	var url = v3BaseUrlCh + path
-//	httpClient := xhttp.NewClient()
-//	if c.DebugSwitch == gopay.DebugOn {
-//		jb, _ := json.Marshal(bm)
-//		xlog.Debugf("Wechat_V3_RequestBody: %s", jb)
-//		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
-//	}
-//	httpClient.Header.Add(HeaderAuthorization, authorization)
-//	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
-//	httpClient.Header.Add("Accept", "*/*")
-//	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Patch(url).SendBodyMap(bm).EndBytes()
-//	if len(errs) > 0 {
-//		return nil, nil, nil, errs[0]
-//	}
-//	si = &SignInfo{
-//		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
-//		HeaderNonce:     res.Header.Get(HeaderNonce),
-//		HeaderSignature: res.Header.Get(HeaderSignature),
-//		HeaderSerial:    res.Header.Get(HeaderSerial),
-//		SignBody:        string(bs),
-//	}
-//	if c.DebugSwitch == gopay.DebugOn {
-//		xlog.Debugf("Wechat_Response: %d > %s", res.StatusCode, string(bs))
-//		xlog.Debugf("Wechat_Headers: %#v", res.Header)
-//		xlog.Debugf("Wechat_SignInfo: %#v", si)
-//	}
-//	return res, si, bs, nil
-//}
+func (c *Client) doPayPalPatch(ctx context.Context, patchs []*Patch, path string) (res *http.Response, bs []byte, err error) {
+	var url = baseUrlProd + path
+	if !c.IsProd {
+		url = baseUrlSandbox + path
+	}
+	httpClient := xhttp.NewClient()
+	authHeader := AuthorizationPrefixBearer + c.AccessToken
+	if c.DebugSwitch == gopay.DebugOn {
+		jb, _ := json.Marshal(patchs)
+		xlog.Debugf("PayPal_RequestBody: %s", string(jb))
+		xlog.Debugf("PayPal_Authorization: %s", authHeader)
+	}
+	httpClient.Header.Add(HeaderAuthorization, authHeader)
+	httpClient.Header.Add("Accept", "*/*")
+	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Patch(url).SendStruct(patchs).EndBytes()
+	if len(errs) > 0 {
+		return nil, nil, errs[0]
+	}
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("PayPal_Response: %d > %s", res.StatusCode, string(bs))
+		xlog.Debugf("PayPal_Headers: %#v", res.Header)
+	}
+	return res, bs, nil
+}
