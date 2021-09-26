@@ -358,18 +358,18 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 						if err != nil {
 							return nil, err
 						}
-						fw.Write(file.Content)
+						_, _ = fw.Write(file.Content)
 						continue
 					}
 					// text 参数
 					vs, ok2 := v.(string)
 					if ok2 {
-						bw.WriteField(k, vs)
+						_ = bw.WriteField(k, vs)
 					} else if ss := util.ConvertToString(v); ss != "" {
-						bw.WriteField(k, ss)
+						_ = bw.WriteField(k, ss)
 					}
 				}
-				bw.Close()
+				_ = bw.Close()
 				c.ContentType = bw.FormDataContentType()
 			case TypeXML:
 				body = strings.NewReader(c.FormString)

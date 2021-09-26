@@ -2,7 +2,7 @@
 
 # GoPay
 
-#### 微信、QQ、支付宝的Golang版本SDK
+#### 微信、支付宝、PayPal、QQ 的Golang版本SDK
 
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
 [![Github](https://img.shields.io/github/forks/go-pay/gopay?label=Fork&style=social)](https://github.com/go-pay/gopay/fork)
@@ -393,7 +393,11 @@ func main() {
 * <font color='#003087' size='4'>AccessToken</font>
   * 获取AccessToken：`client.GetAccessToken()`
 * <font color='#003087' size='4'>订单</font>
-  * 开发中...
+  * 创建订单（Create order）：`client.CreateOrder()`
+  * 订单详情（Show order details）：`client.OrderDetail()`
+  * 更新订单（Update order）：`client.UpdateOrder()`
+  * 订单支付授权（Authorize payment for order）：`client.OrderAuthorize()` - 未完成
+  * 订单支付捕获（Capture payment for order）：`client.OrderCapture()` - 未完成
 * <font color='#003087' size='4'>支付</font>
   * 开发中...
 

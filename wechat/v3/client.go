@@ -2,7 +2,6 @@ package wechat
 
 import (
 	"crypto/rsa"
-	"encoding/json"
 	"net/http"
 
 	"github.com/go-pay/gopay"
@@ -54,8 +53,7 @@ func (c *ClientV3) doProdPostWithHeader(headerMap map[string]string, bm gopay.Bo
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
-		jb, _ := json.Marshal(bm)
-		xlog.Debugf("Wechat_V3_RequestBody: %s", jb)
+		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	for k, v := range headerMap {
@@ -87,8 +85,7 @@ func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
-		jb, _ := json.Marshal(bm)
-		xlog.Debugf("Wechat_V3_RequestBody: %s", jb)
+		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
@@ -146,8 +143,7 @@ func (c *ClientV3) doProdPut(bm gopay.BodyMap, path, authorization string) (res 
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
-		jb, _ := json.Marshal(bm)
-		xlog.Debugf("Wechat_V3_RequestBody: %s", jb)
+		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
@@ -176,8 +172,7 @@ func (c *ClientV3) doProdDelete(bm gopay.BodyMap, path, authorization string) (r
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
-		jb, _ := json.Marshal(bm)
-		xlog.Debugf("Wechat_V3_RequestBody: %s", jb)
+		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
@@ -235,8 +230,7 @@ func (c *ClientV3) doProdPatch(bm gopay.BodyMap, path, authorization string) (re
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
-		jb, _ := json.Marshal(bm)
-		xlog.Debugf("Wechat_V3_RequestBody: %s", jb)
+		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)

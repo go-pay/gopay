@@ -75,8 +75,7 @@ func (a *Client) doAliPayCustoms(bm gopay.BodyMap, service string) (bs []byte, e
 
 	bm.Set("sign_type", RSA).Set("sign", sign)
 	if a.DebugSwitch == gopay.DebugOn {
-		req, _ := json.Marshal(bm)
-		xlog.Debugf("Alipay_Request: %s", req)
+		xlog.Debugf("Alipay_Request: %s", bm.JsonBody())
 	}
 	// request
 	httpClient := xhttp.NewClient()

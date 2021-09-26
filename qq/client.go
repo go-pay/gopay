@@ -2,7 +2,6 @@ package qq
 
 import (
 	"crypto/tls"
-	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -243,8 +242,7 @@ func (q *Client) doQQ(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs [
 		httpClient.SetTLSConfig(tlsConfig)
 	}
 	if q.DebugSwitch == gopay.DebugOn {
-		req, _ := json.Marshal(bm)
-		xlog.Debugf("QQ_Request: %s", req)
+		xlog.Debugf("QQ_Request: %s", bm.JsonBody())
 	}
 	res, bs, errs := httpClient.Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndBytes()
 	if len(errs) > 0 {
@@ -272,8 +270,7 @@ func (q *Client) doQQGet(bm gopay.BodyMap, url, signType string) (bs []byte, err
 	bm.Set("sign", sign)
 
 	if q.DebugSwitch == gopay.DebugOn {
-		req, _ := json.Marshal(bm)
-		xlog.Debugf("QQ_Request: %s", req)
+		xlog.Debugf("QQ_Request: %s", bm.JsonBody())
 	}
 	param := bm.EncodeURLParams()
 	url = url + "?" + param
@@ -308,8 +305,7 @@ func (q *Client) doQQRed(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (b
 		httpClient.SetTLSConfig(tlsConfig)
 	}
 	if q.DebugSwitch == gopay.DebugOn {
-		req, _ := json.Marshal(bm)
-		xlog.Debugf("QQ_Request: %s", req)
+		xlog.Debugf("QQ_Request: %s", bm.JsonBody())
 	}
 	res, bs, errs := httpClient.Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndBytes()
 	if len(errs) > 0 {
