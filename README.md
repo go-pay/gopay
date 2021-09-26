@@ -400,8 +400,7 @@ func main() {
   * 订单支付捕获（Capture payment for order）：`client.OrderCapture()` - 未完成
 * <font color='#003087' size='4'>支付</font>
   * 开发中...
-
-
+  
 ---
 
 # 二、文档说明
@@ -410,7 +409,7 @@ func main() {
 * [微信支付V2文档](https://github.com/go-pay/gopay/blob/main/README_wx_v2.md)
 * QQ支付 使用方法请参考微信支付V2的文档
 * 所有方法，如有问题，请仔细查看 `wechat/client_test.go`、`alipay/client_test.go` 或 examples
-* 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群（微信群有两个，一个活跃群，聊的内容比较杂，一个只聊技术群，平时很少说话，加好友后说明加哪个群，默认全邀请）。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
+* 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 
 QQ群：
 <img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/qq_gopay.png"/>
@@ -431,6 +430,7 @@ QQ群：
 
 ```go
 import (
+    "github.com/go-pay/gopay/pkg/xlog"
     "github.com/go-pay/gopay/wechat/v3"
 )
 
@@ -466,6 +466,7 @@ client.DebugSwitch = gopay.DebugOn
 ```go
 import (
     "github.com/go-pay/gopay/alipay"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // 初始化支付宝客户端
@@ -498,6 +499,28 @@ client.AutoVerifySign([]byte("alipayCertPublicKey_RSA2 bytes"))
 err := client.SetCertSnByPath("appCertPublicKey.crt", "alipayRootCert.crt", "alipayCertPublicKey_RSA2.crt")
 // 证书内容
 err := client.SetCertSnByContent("appCertPublicKey bytes", "alipayRootCert bytes", "alipayCertPublicKey_RSA2 bytes")
+```
+
+* #### PayPal 支付
+
+PayPal官方文档：[官方文档](https://developer.paypal.com/docs/api/overview)
+
+> 具体API使用介绍，请参考 `gopay/paypal/client_test.go`
+
+```go
+import (
+    "github.com/go-pay/gopay/paypal"
+    "github.com/go-pay/gopay/pkg/xlog"
+)
+
+// 初始化PayPal支付客户端
+client, err := paypal.NewClient(Clientid, Secret, false)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+// 打开Debug开关，输出日志，默认关闭
+client.DebugSwitch = gopay.DebugOn
 ```
 
 ## 2、初始化并赋值BodyMap（client的方法所需的入参）
