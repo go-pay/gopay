@@ -22,7 +22,7 @@
 go get github.com/go-pay/gopay
 ```
 
-* #### 查看 GoPay 版本
+#### 查看 GoPay 版本
     * [版本更新记录](https://github.com/go-pay/gopay/blob/main/release_note.txt)
 
 ```go
@@ -37,6 +37,8 @@ func main() {
 ```
 
 ---
+
+# 二、API 列表
 
 ### 微信支付V3 API
 * [微信支付V2文档](https://github.com/go-pay/gopay/blob/main/README_wx_v2.md)
@@ -390,7 +392,7 @@ func main() {
 
 * [PayPal文档概览](https://developer.paypal.com/docs/api/overview)
 
-> 具体API使用介绍，请参考 `gopay/paypal/client_test.go`，`gopay/paypal/order_test.go`,`gopay/paypal/payment_test.go`
+> 具体API使用介绍，请参考`gopay/paypal/client_test.go`,`gopay/paypal/order_test.go`,`gopay/paypal/payment_test.go`
 
 * <font color='#003087' size='4'>AccessToken</font>
     * 获取AccessToken：`client.GetAccessToken()`
@@ -411,7 +413,7 @@ func main() {
   
 ---
 
-# 二、文档说明
+# 三、文档说明
 
 * [GoPay 文档地址](https://pkg.go.dev/github.com/go-pay/gopay)
 * [微信支付V2文档](https://github.com/go-pay/gopay/blob/main/README_wx_v2.md)
