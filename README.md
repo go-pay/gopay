@@ -389,7 +389,9 @@ func main() {
 ### PayPal支付 API
 
 * [PayPal文档概览](https://developer.paypal.com/docs/api/overview)
-* 
+
+> 具体API使用介绍，请参考 `gopay/paypal/client_test.go`，`gopay/paypal/order_test.go`,`gopay/paypal/payment_test.go`
+
 * <font color='#003087' size='4'>AccessToken</font>
     * 获取AccessToken：`client.GetAccessToken()`
 * <font color='#003087' size='4'>订单</font>
