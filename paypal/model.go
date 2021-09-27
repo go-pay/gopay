@@ -9,21 +9,96 @@ type AccessToken struct {
 	Nonce       string `json:"nonce"`
 }
 
+type ErrorResponse struct {
+	Name    string        `json:"name,omitempty"`
+	Message string        `json:"message,omitempty"`
+	DebugId string        `json:"debug_id,omitempty"`
+	Details []ErrorDetail `json:"details,omitempty"`
+	Links   []Link        `json:"links,omitempty"`
+}
+
+type ErrorDetail struct {
+	Issue       string `json:"issue,omitempty"`
+	Field       string `json:"field,omitempty"`
+	Value       string `json:"value,omitempty"`
+	Description string `json:"description,omitempty"`
+	Location    string `json:"location,omitempty"`
+}
+
 type EmptyRsp struct {
-	Code  int    `json:"-"`
-	Error string `json:"-"`
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
 }
 
 type CreateOrderRsp struct {
-	Code     int          `json:"-"`
-	Error    string       `json:"-"`
-	Response *OrderDetail `json:"response,omitempty"`
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *OrderDetail   `json:"response,omitempty"`
 }
 
 type OrderDetailRsp struct {
-	Code     int          `json:"-"`
-	Error    string       `json:"-"`
-	Response *OrderDetail `json:"response,omitempty"`
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *OrderDetail   `json:"response,omitempty"`
+}
+
+type OrderAuthorizeRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *OrderDetail   `json:"response,omitempty"`
+}
+
+type OrderCaptureRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *OrderDetail   `json:"response,omitempty"`
+}
+
+type PaymentAuthorizeDetailRsp struct {
+	Code          int                     `json:"-"`
+	Error         string                  `json:"-"`
+	ErrorResponse *ErrorResponse          `json:"-"`
+	Response      *PaymentAuthorizeDetail `json:"response,omitempty"`
+}
+
+type PaymentReauthorizeRsp struct {
+	Code          int                     `json:"-"`
+	Error         string                  `json:"-"`
+	ErrorResponse *ErrorResponse          `json:"-"`
+	Response      *PaymentAuthorizeDetail `json:"response,omitempty"`
+}
+
+type PaymentAuthorizeCaptureRsp struct {
+	Code          int                      `json:"-"`
+	Error         string                   `json:"-"`
+	ErrorResponse *ErrorResponse           `json:"-"`
+	Response      *PaymentAuthorizeCapture `json:"response,omitempty"`
+}
+
+type PaymentCaptureDetailRsp struct {
+	Code          int                      `json:"-"`
+	Error         string                   `json:"-"`
+	ErrorResponse *ErrorResponse           `json:"-"`
+	Response      *PaymentAuthorizeCapture `json:"response,omitempty"`
+}
+
+type PaymentCaptureRefundRsp struct {
+	Code          int                   `json:"-"`
+	Error         string                `json:"-"`
+	ErrorResponse *ErrorResponse        `json:"-"`
+	Response      *PaymentCaptureRefund `json:"response,omitempty"`
+}
+
+type PaymentRefundDetailRsp struct {
+	Code          int                   `json:"-"`
+	Error         string                `json:"-"`
+	ErrorResponse *ErrorResponse        `json:"-"`
+	Response      *PaymentCaptureRefund `json:"response,omitempty"`
 }
 
 // ==================================分割==================================
@@ -36,15 +111,15 @@ type Patch struct {
 }
 
 type OrderDetail struct {
-	CreateTime    string          `json:"create_time"`
-	UpdateTime    string          `json:"update_time"`
-	Id            string          `json:"id"`
+	Id            string          `json:"id,omitempty"`
 	PaymentSource *PaymentSource  `json:"payment_source,omitempty"`
-	Intent        string          `json:"intent"`
+	Intent        string          `json:"intent,omitempty"`
 	Payer         *Payer          `json:"payer,omitempty"`
 	PurchaseUnits []*PurchaseUnit `json:"purchase_units,omitempty"`
-	Status        string          `json:"status"` // CREATED、SAVED、APPROVED、VOIDED、COMPLETED、PAYER_ACTION_REQUIRED
+	Status        string          `json:"status,omitempty"` // CREATED、SAVED、APPROVED、VOIDED、COMPLETED、PAYER_ACTION_REQUIRED
 	Links         []*Link         `json:"links,omitempty"`
+	CreateTime    string          `json:"create_time,omitempty"`
+	UpdateTime    string          `json:"update_time,omitempty"`
 }
 
 type PaymentSource struct {
@@ -172,7 +247,93 @@ type Refund struct {
 }
 
 type Link struct {
-	Href   string `json:"href"`
-	Rel    string `json:"rel"`
-	Method string `json:"method"` // Possible values: GET,POST,PUT,DELETE,HEAD,CONNECT,OPTIONS,PATCH
+	Href   string `json:"href,omitempty"`
+	Rel    string `json:"rel,omitempty"`
+	Method string `json:"method,omitempty"` // Possible values: GET,POST,PUT,DELETE,HEAD,CONNECT,OPTIONS,PATCH
+}
+
+type PaymentAuthorizeDetail struct {
+	Id               string            `json:"id,omitempty"`
+	Status           string            `json:"status,omitempty"` // CREATED、CAPTURED、DENIED、EXPIRED、PARTIALLY_CAPTURED、PARTIALLY_CREATED、VOIDED、PENDING
+	StatusDetails    *StatusDetails    `json:"status_details,omitempty"`
+	Amount           *Amount           `json:"amount,omitempty"`
+	InvoiceId        string            `json:"invoice_id,omitempty"`
+	CustomId         string            `json:"custom_id,omitempty"`
+	SellerProtection *SellerProtection `json:"seller_protection,omitempty"`
+	Links            []*Link           `json:"links,omitempty"`
+	ExpirationTime   string            `json:"expiration_time,omitempty"`
+	CreateTime       string            `json:"create_time,omitempty"`
+	UpdateTime       string            `json:"update_time,omitempty"`
+}
+
+type SellerProtection struct {
+	Status            string             `json:"status,omitempty"` // ELIGIBLE、PARTIALLY_ELIGIBLE、NOT_ELIGIBLE
+	DisputeCategories []*DisputeCategory `json:"dispute_categories,omitempty"`
+}
+
+type DisputeCategory struct {
+	DisputeCategory string `json:"dispute_category,omitempty"`
+}
+
+type PaymentAuthorizeCapture struct {
+	Id                        string                     `json:"id,omitempty"`
+	Status                    string                     `json:"status,omitempty"` // COMPLETED、DECLINED、PARTIALLY_REFUNDED、PENDING、REFUNDED、FAILED
+	StatusDetails             *StatusDetails             `json:"status_details,omitempty"`
+	Amount                    *Amount                    `json:"amount,omitempty"`
+	InvoiceId                 string                     `json:"invoice_id,omitempty"`
+	CustomId                  string                     `json:"custom_id,omitempty"`
+	SellerProtection          *SellerProtection          `json:"seller_protection,omitempty"`
+	FinalCapture              bool                       `json:"final_capture,omitempty"`
+	SellerReceivableBreakdown *SellerReceivableBreakdown `json:"seller_receivable_breakdown,omitempty"`
+	DisbursementMode          string                     `json:"disbursement_mode,omitempty"`
+	Links                     []*Link                    `json:"links,omitempty"`
+	ProcessorResponse         *Processor                 `json:"processor_response,omitempty"`
+	CreateTime                string                     `json:"create_time,omitempty"`
+	UpdateTime                string                     `json:"update_time,omitempty"`
+}
+
+type SellerReceivableBreakdown struct {
+	GrossAmount                   *Amount        `json:"gross_amount"`
+	PaypalFee                     *Amount        `json:"paypal_fee,omitempty"`
+	PaypalFeeInReceivableCurrency *Amount        `json:"paypal_fee_in_receivable_currency,omitempty"`
+	NetAmount                     *Amount        `json:"net_amount,omitempty"`
+	ReceivableAmount              *Amount        `json:"receivable_amount,omitempty"`
+	ExchangeRate                  *ExchangeRate  `json:"exchange_rate,omitempty"`
+	PlatformFees                  []*PlatformFee `json:"platform_fees,omitempty"`
+}
+
+type ExchangeRate struct {
+	SourceCurrency string `json:"source_currency,omitempty"`
+	TargetCurrency string `json:"target_currency,omitempty"`
+	Value          string `json:"value,omitempty"`
+}
+
+type PaymentCaptureRefund struct {
+	Id                     string                  `json:"id,omitempty"`
+	Status                 string                  `json:"status,omitempty"` // CANCELLED、PENDING、COMPLETED
+	StatusDetails          *StatusDetails          `json:"status_details,omitempty"`
+	Amount                 *Amount                 `json:"amount,omitempty"`
+	InvoiceId              string                  `json:"invoice_id,omitempty"`
+	NoteToPayer            string                  `json:"note_to_payer,omitempty"`
+	SellerPayableBreakdown *SellerPayableBreakdown `json:"seller_payable_breakdown,omitempty"`
+	Links                  []*Link                 `json:"links,omitempty"`
+	CreateTime             string                  `json:"create_time,omitempty"`
+	UpdateTime             string                  `json:"update_time,omitempty"`
+}
+
+type SellerPayableBreakdown struct {
+	GrossAmount                   *Amount               `json:"gross_amount"`
+	PaypalFee                     *Amount               `json:"paypal_fee,omitempty"`
+	PaypalFeeInReceivableCurrency *Amount               `json:"paypal_fee_in_receivable_currency,omitempty"`
+	NetAmount                     *Amount               `json:"net_amount,omitempty"`
+	NetAmountInReceivableCurrency *Amount               `json:"net_amount_in_receivable_currency,omitempty"`
+	PlatformFees                  []*PlatformFee        `json:"platform_fees,omitempty"`
+	NetAmountBreakdown            []*NetAmountBreakdown `json:"net_amount_breakdown,omitempty"`
+	TotalRefundedAmount           *Amount               `json:"total_refunded_amount,omitempty"`
+}
+
+type NetAmountBreakdown struct {
+	PayableAmount   *Amount       `json:"payable_amount,omitempty"`
+	ConvertedAmount *Amount       `json:"converted_amount,omitempty"`
+	ExchangeRate    *ExchangeRate `json:"exchange_rate,omitempty"`
 }
