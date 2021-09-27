@@ -2,7 +2,7 @@
 
 # GoPay
 
-#### 微信、QQ、支付宝的Golang版本SDK
+#### 微信、支付宝、PayPal、QQ 的Golang版本SDK
 
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
 [![Github](https://img.shields.io/github/forks/go-pay/gopay?label=Fork&style=social)](https://github.com/go-pay/gopay/fork)
@@ -193,7 +193,7 @@ func main() {
     * 修改结算账号：`client.V3Apply4SubModifySettlement()`
     * 查询结算账户：`client.V3Apply4SubQuerySettlement()`
 
-### 微信V3公共API
+### 微信V3公共 API
 
 * `wechat.GetPlatformCerts()` => 获取微信平台证书公钥
 * `wechat.V3VerifySign()` => 微信V3 版本验签（同步/异步）
@@ -212,7 +212,7 @@ func main() {
 
 ---
 
-### QQ支付API
+### QQ支付 API
 
 * 提交付款码支付：`client.MicroPay()`
 * 撤销订单：`client.Reverse()`
@@ -228,7 +228,7 @@ func main() {
 * 查询红包详情（未测试可用性）：`client.QueryRedInfo()`
 * 自定义方法请求微信API接口：`client.PostQQAPISelf()`
 
-### QQ公共API
+### QQ公共 API
 
 * `qq.ParseNotifyToBodyMap()` => 解析QQ支付异步通知的结果到BodyMap
 * `qq.ParseNotify()` => 解析QQ支付异步通知的参数
@@ -236,7 +236,7 @@ func main() {
 
 ---
 
-### 支付宝支付API
+### 支付宝支付 API
 
 > #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用 `client.PostAliPayAPISelfV2()`方法实现！请参考 `client_test.go` 内的 `TestClient_PostAliPayAPISelfV2()` 方法
 
@@ -356,7 +356,7 @@ func main() {
     * 报关接口：`client.AcquireCustoms()`
     * 报关查询接口：`client.AcquireCustomsQuery()`
 
-### 支付宝公共API
+### 支付宝公共 API
 
 * `alipay.GetCertSN()` => 获取证书SN号（app_cert_sn、alipay_cert_sn）
 * `alipay.GetRootCertSN()` => 获取证书SN号（alipay_root_cert_sn）
@@ -386,13 +386,36 @@ func main() {
 
 ---
 
+### PayPal支付 API
+
+* [PayPal文档概览](https://developer.paypal.com/docs/api/overview)
+* 
+* <font color='#003087' size='4'>AccessToken</font>
+    * 获取AccessToken：`client.GetAccessToken()`
+* <font color='#003087' size='4'>订单</font>
+    * 创建订单（Create order）：`client.CreateOrder()`
+    * 订单详情（Show order details）：`client.OrderDetail()`
+    * 更新订单（Update order）：`client.UpdateOrder()`
+    * 订单支付授权（Authorize payment for order）：`client.OrderAuthorize()`
+    * 订单支付捕获（Capture payment for order）：`client.OrderCapture()`
+* <font color='#003087' size='4'>支付</font>
+    * 支付授权详情（Show details for authorized payment）：`client.PaymentAuthorizeDetail()`
+    * 重新授权支付授权（Reauthorize authorized payment）：`client.PaymentReauthorize()`
+    * 作废支付授权（Void authorized payment）：`client.PaymentAuthorizeVoid()`
+    * 支付授权捕获（Capture authorized payment）：`client.PaymentAuthorizeCapture()`
+    * 支付捕获详情（Show captured payment details）：`client.PaymentCaptureDetail()`
+    * 支付捕获退款（Refund captured payment）：`client.PaymentCaptureRefund()`
+    * 支付退款详情（Show refund details）：`client.PaymentRefundDetail()`
+  
+---
+
 # 二、文档说明
 
 * [GoPay 文档地址](https://pkg.go.dev/github.com/go-pay/gopay)
 * [微信支付V2文档](https://github.com/go-pay/gopay/blob/main/README_wx_v2.md)
 * QQ支付 使用方法请参考微信支付V2的文档
 * 所有方法，如有问题，请仔细查看 `wechat/client_test.go`、`alipay/client_test.go` 或 examples
-* 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群（微信群有两个，一个活跃群，聊的内容比较杂，一个只聊技术群，平时很少说话，加好友后说明加哪个群，默认全邀请）。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
+* 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 
 QQ群：
 <img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/qq_gopay.png"/>
@@ -413,6 +436,7 @@ QQ群：
 
 ```go
 import (
+    "github.com/go-pay/gopay/pkg/xlog"
     "github.com/go-pay/gopay/wechat/v3"
 )
 
@@ -448,6 +472,7 @@ client.DebugSwitch = gopay.DebugOn
 ```go
 import (
     "github.com/go-pay/gopay/alipay"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // 初始化支付宝客户端
@@ -480,6 +505,28 @@ client.AutoVerifySign([]byte("alipayCertPublicKey_RSA2 bytes"))
 err := client.SetCertSnByPath("appCertPublicKey.crt", "alipayRootCert.crt", "alipayCertPublicKey_RSA2.crt")
 // 证书内容
 err := client.SetCertSnByContent("appCertPublicKey bytes", "alipayRootCert bytes", "alipayCertPublicKey_RSA2 bytes")
+```
+
+* #### PayPal 支付
+
+PayPal官方文档：[官方文档](https://developer.paypal.com/docs/api/overview)
+
+> 具体API使用介绍，请参考 `gopay/paypal/client_test.go`
+
+```go
+import (
+    "github.com/go-pay/gopay/paypal"
+    "github.com/go-pay/gopay/pkg/xlog"
+)
+
+// 初始化PayPal支付客户端
+client, err := paypal.NewClient(Clientid, Secret, false)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+// 打开Debug开关，输出日志，默认关闭
+client.DebugSwitch = gopay.DebugOn
 ```
 
 ## 2、初始化并赋值BodyMap（client的方法所需的入参）

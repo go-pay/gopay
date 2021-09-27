@@ -143,8 +143,12 @@ func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) (err err
 	}
 }
 
+// Deprecated
 // ("bar=baz&foo=quux") sorted by key.
 func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
+	if bm == nil {
+		return NULL
+	}
 	var (
 		buf     strings.Builder
 		keyList []string
@@ -169,6 +173,9 @@ func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
 
 // ("bar=baz&foo=quux") sorted by key.
 func (bm BodyMap) EncodeAliPaySignParams() string {
+	if bm == nil {
+		return NULL
+	}
 	var (
 		buf     strings.Builder
 		keyList []string
@@ -193,6 +200,9 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 
 // ("bar=baz&foo=quux") sorted by key.
 func (bm BodyMap) EncodeURLParams() string {
+	if bm == nil {
+		return NULL
+	}
 	var (
 		buf  strings.Builder
 		keys []string
@@ -203,7 +213,7 @@ func (bm BodyMap) EncodeURLParams() string {
 	sort.Strings(keys)
 	for _, k := range keys {
 		if v := bm.GetString(k); v != NULL {
-			buf.WriteString(k)
+			buf.WriteString(url.QueryEscape(k))
 			buf.WriteByte('=')
 			buf.WriteString(url.QueryEscape(v))
 			buf.WriteByte('&')
