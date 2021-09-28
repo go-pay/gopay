@@ -23,7 +23,7 @@ go get github.com/go-pay/gopay
 ```
 
 * #### 查看 GoPay 版本
-    * [版本更新记录](https://github.com/go-pay/gopay/blob/main/release_note.txt)
+  [版本更新记录](https://github.com/go-pay/gopay/blob/main/release_note.txt)
 
 ```go
 import (
