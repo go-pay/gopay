@@ -10,7 +10,8 @@ import (
 
 // 创建商家券
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_1.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_1.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_1.shtml
 func (c *ClientV3) V3BusiFavorBatchCreate(bm gopay.BodyMap) (wxRsp *BusiFavorCreateRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3BusiFavorBatchCreate, bm)
 	if err != nil {
@@ -35,7 +36,8 @@ func (c *ClientV3) V3BusiFavorBatchCreate(bm gopay.BodyMap) (wxRsp *BusiFavorCre
 
 // 查询商家券详情
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_2.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_2.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_2.shtml
 func (c *ClientV3) V3BusiFavorBatchDetail(stockId string) (wxRsp *BusiFavorBatchDetailRsp, err error) {
 	uri := fmt.Sprintf(v3BusiFavorBatchDetail, stockId)
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -61,7 +63,8 @@ func (c *ClientV3) V3BusiFavorBatchDetail(stockId string) (wxRsp *BusiFavorBatch
 
 // 核销用户券
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_3.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_3.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_3.shtml
 func (c *ClientV3) V3BusiFavorUse(bm gopay.BodyMap) (wxRsp *BusiFavorUseRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3BusiFavorUse, bm)
 	if err != nil {
@@ -86,7 +89,8 @@ func (c *ClientV3) V3BusiFavorUse(bm gopay.BodyMap) (wxRsp *BusiFavorUseRsp, err
 
 // 根据过滤条件查询用户券
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_4.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_4.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_4.shtml
 func (c *ClientV3) V3BusiFavorUserCoupons(openid string, bm gopay.BodyMap) (wxRsp *BusiFavorUserCouponsRsp, err error) {
 	uri := fmt.Sprintf(v3BusiFavorUserCoupons, openid) + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -112,7 +116,8 @@ func (c *ClientV3) V3BusiFavorUserCoupons(openid string, bm gopay.BodyMap) (wxRs
 
 // 查询用户单张券详情
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_5.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_5.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_5.shtml
 func (c *ClientV3) V3BusiFavorUserCouponDetail(openid, couponCode, appid string) (wxRsp *BusiFavorUserCouponDetailRsp, err error) {
 	uri := fmt.Sprintf(v3BusiFavorUserCouponDetail, openid, couponCode, appid)
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -138,7 +143,8 @@ func (c *ClientV3) V3BusiFavorUserCouponDetail(openid, couponCode, appid string)
 
 // 上传预存code
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_6.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_6.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_6.shtml
 func (c *ClientV3) V3BusiFavorCodeUpload(stockId string, bm gopay.BodyMap) (wxRsp *BusiFavorCodeUploadRsp, err error) {
 	url := fmt.Sprintf(v3BusiFavorCodeUpload, stockId)
 	authorization, err := c.authorization(MethodPost, url, bm)
@@ -164,7 +170,8 @@ func (c *ClientV3) V3BusiFavorCodeUpload(stockId string, bm gopay.BodyMap) (wxRs
 
 // 设置商家券事件通知地址
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_7.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_7.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_7.shtml
 func (c *ClientV3) V3BusiFavorCallbackUrlSet(bm gopay.BodyMap) (wxRsp *BusiFavorCallbackUrlSetRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3BusiFavorCallbackUrlSet, bm)
 	if err != nil {
@@ -189,7 +196,8 @@ func (c *ClientV3) V3BusiFavorCallbackUrlSet(bm gopay.BodyMap) (wxRsp *BusiFavor
 
 // 查询商家券事件通知地址
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_8.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_8.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_8.shtml
 func (c *ClientV3) V3BusiFavorCallbackUrl(mchid string) (wxRsp *BusiFavorCallbackUrlRsp, err error) {
 	uri := v3BusiFavorCallbackUrl + "?mchid=" + mchid
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -215,7 +223,8 @@ func (c *ClientV3) V3BusiFavorCallbackUrl(mchid string) (wxRsp *BusiFavorCallbac
 
 // 关联订单信息
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_9.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_9.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_9.shtml
 func (c *ClientV3) V3BusiFavorAssociate(bm gopay.BodyMap) (wxRsp *BusiFavorAssociateRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3BusiFavorAssociate, bm)
 	if err != nil {
@@ -240,7 +249,8 @@ func (c *ClientV3) V3BusiFavorAssociate(bm gopay.BodyMap) (wxRsp *BusiFavorAssoc
 
 // 取消关联订单信息
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_10.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_10.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_10.shtml
 func (c *ClientV3) V3BusiFavorDisassociate(bm gopay.BodyMap) (wxRsp *BusiFavorDisassociateRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3BusiFavorDisassociate, bm)
 	if err != nil {
@@ -265,7 +275,8 @@ func (c *ClientV3) V3BusiFavorDisassociate(bm gopay.BodyMap) (wxRsp *BusiFavorDi
 
 // 修改批次预算
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_11.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_11.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_11.shtml
 func (c *ClientV3) V3BusiFavorBatchUpdate(stockId string, bm gopay.BodyMap) (wxRsp *BusiFavorBatchUpdateRsp, err error) {
 	url := fmt.Sprintf(v3BusiFavorBatchUpdate, stockId)
 	authorization, err := c.authorization(MethodPATCH, url, bm)
@@ -291,7 +302,8 @@ func (c *ClientV3) V3BusiFavorBatchUpdate(stockId string, bm gopay.BodyMap) (wxR
 
 // 修改商家券基本信息
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_12.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_12.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_12.shtml
 func (c *ClientV3) V3BusiFavorInfoUpdate(stockId string, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
 	url := fmt.Sprintf(v3BusiFavorInfoUpdate, stockId)
 	authorization, err := c.authorization(MethodPATCH, url, bm)
@@ -311,9 +323,36 @@ func (c *ClientV3) V3BusiFavorInfoUpdate(stockId string, bm gopay.BodyMap) (wxRs
 	return wxRsp, c.verifySyncSign(si)
 }
 
+// 发放消费卡
+//	Code = 0 is success
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_6_1.shtml
+func (c *ClientV3) V3BusiFavorSend(cardId string, bm gopay.BodyMap) (wxRsp *BusiFavorSendRsp, err error) {
+	url := fmt.Sprintf(v3BusiFavorSend, cardId)
+	authorization, err := c.authorization(MethodPost, url, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(bm, url, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &BusiFavorSendRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(BusiFavorSend)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
 // 申请退券
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_13.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_13.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_13.shtml
 func (c *ClientV3) V3BusiFavorReturn(bm gopay.BodyMap) (wxRsp *BusiFavorReturnRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3BusiFavorReturn, bm)
 	if err != nil {
@@ -338,7 +377,8 @@ func (c *ClientV3) V3BusiFavorReturn(bm gopay.BodyMap) (wxRsp *BusiFavorReturnRs
 
 // 使券失效
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_14.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_14.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_14.shtml
 func (c *ClientV3) V3BusiFavorDeactivate(bm gopay.BodyMap) (wxRsp *BusiFavorDeactivateRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3BusiFavorDeactivate, bm)
 	if err != nil {
@@ -363,7 +403,8 @@ func (c *ClientV3) V3BusiFavorDeactivate(bm gopay.BodyMap) (wxRsp *BusiFavorDeac
 
 // 营销补差付款
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_16.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_16.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_16.shtml
 func (c *ClientV3) V3BusiFavorSubsidyPay(bm gopay.BodyMap) (wxRsp *BusiFavorSubsidyPayRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3BusiFavorSubsidyPay, bm)
 	if err != nil {
@@ -388,7 +429,8 @@ func (c *ClientV3) V3BusiFavorSubsidyPay(bm gopay.BodyMap) (wxRsp *BusiFavorSubs
 
 // 查询营销补差付款单详情
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_18.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_2_18.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_2_18.shtml
 func (c *ClientV3) V3BusiFavorSubsidyPayDetail(subsidyReceiptId string) (wxRsp *BusiFavorSubsidyPayDetailRsp, err error) {
 	url := fmt.Sprintf(v3BusiFavorSubsidyPayDetail, subsidyReceiptId)
 	authorization, err := c.authorization(MethodGet, url, nil)

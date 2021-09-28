@@ -11,7 +11,8 @@ import (
 // 服务人员注册API
 //	注意：入参加密字段数据加密：client.V3EncryptText()
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_4_1.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_4_1.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_4_1.shtml
 func (c *ClientV3) V3SmartGuideReg(bm gopay.BodyMap) (wxRsp *SmartGuideRegRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3GuideReg, bm)
 	if err != nil {
@@ -36,7 +37,8 @@ func (c *ClientV3) V3SmartGuideReg(bm gopay.BodyMap) (wxRsp *SmartGuideRegRsp, e
 
 // 服务人员分配API
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_4_2.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_4_2.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_4_2.shtml
 func (c *ClientV3) V3SmartGuideAssign(guideId, tradeNo string) (wxRsp *EmptyRsp, err error) {
 	url := fmt.Sprintf(v3GuideAssign, guideId)
 	bm := make(gopay.BodyMap)
@@ -61,7 +63,8 @@ func (c *ClientV3) V3SmartGuideAssign(guideId, tradeNo string) (wxRsp *EmptyRsp,
 // 服务人员查询API
 //	注意：入参加密字段数据加密：client.V3EncryptText()，返回参数加密字段解密：client.V3DecryptText()
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_4_3.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_4_3.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_4_3.shtml
 func (c *ClientV3) V3SmartGuideQuery(bm gopay.BodyMap) (wxRsp *SmartGuideQueryRsp, err error) {
 	if err = bm.CheckEmptyError("store_id"); err != nil {
 		return nil, err
@@ -91,7 +94,8 @@ func (c *ClientV3) V3SmartGuideQuery(bm gopay.BodyMap) (wxRsp *SmartGuideQueryRs
 // 服务人员信息更新API
 //	注意：入参加密字段数据加密：client.V3EncryptText()
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_4_4.shtml
+//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_4_4.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_4_4.shtml
 func (c *ClientV3) V3SmartGuideUpdate(guideId string, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
 	url := fmt.Sprintf(v3GuideUpdate, guideId)
 	authorization, err := c.authorization(MethodPATCH, url, bm)

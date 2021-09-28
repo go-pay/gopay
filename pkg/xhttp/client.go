@@ -12,6 +12,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
+	"sort"
 	"strings"
 	"time"
 
@@ -357,18 +358,18 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 						if err != nil {
 							return nil, err
 						}
-						fw.Write(file.Content)
+						_, _ = fw.Write(file.Content)
 						continue
 					}
 					// text 参数
 					vs, ok2 := v.(string)
 					if ok2 {
-						bw.WriteField(k, vs)
+						_ = bw.WriteField(k, vs)
 					} else if ss := util.ConvertToString(v); ss != "" {
-						bw.WriteField(k, ss)
+						_ = bw.WriteField(k, ss)
 					}
 				}
-				bw.Close()
+				_ = bw.Close()
 				c.ContentType = bw.FormDataContentType()
 			case TypeXML:
 				body = strings.NewReader(c.FormString)
@@ -418,9 +419,43 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 }
 
 func FormatURLParam(body map[string]interface{}) (urlParam string) {
-	v := url.Values{}
-	for key, value := range body {
-		v.Add(key, value.(string))
+	var (
+		buf  strings.Builder
+		keys []string
+	)
+	for k := range body {
+		keys = append(keys, k)
 	}
-	return v.Encode()
+	sort.Strings(keys)
+	for _, k := range keys {
+		v, ok := body[k].(string)
+		if !ok {
+			v = convertToString(body[k])
+		}
+		if v != "" {
+			buf.WriteString(url.QueryEscape(k))
+			buf.WriteByte('=')
+			buf.WriteString(url.QueryEscape(v))
+			buf.WriteByte('&')
+		}
+	}
+	if buf.Len() <= 0 {
+		return ""
+	}
+	return buf.String()[:buf.Len()-1]
+}
+
+func convertToString(v interface{}) (str string) {
+	if v == nil {
+		return ""
+	}
+	var (
+		bs  []byte
+		err error
+	)
+	if bs, err = json.Marshal(v); err != nil {
+		return ""
+	}
+	str = string(bs)
+	return
 }

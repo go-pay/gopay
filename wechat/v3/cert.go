@@ -63,14 +63,7 @@ func GetPlatformCerts(mchid, apiV3Key, serialNo, privateKey string) (certs *Plat
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
-	si := &SignInfo{
-		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
-		HeaderNonce:     res.Header.Get(HeaderNonce),
-		HeaderSignature: res.Header.Get(HeaderSignature),
-		HeaderSerial:    res.Header.Get(HeaderSerial),
-		SignBody:        string(bs),
-	}
-	certs = &PlatformCertRsp{Code: Success, SignInfo: si}
+	certs = &PlatformCertRsp{Code: Success}
 	if res.StatusCode != http.StatusOK {
 		certs.Code = res.StatusCode
 		certs.Error = string(bs)
@@ -128,11 +121,11 @@ func (c *ClientV3) GetPlatformCerts() (certs *PlatformCertRsp, err error) {
 		return nil, err
 	}
 
-	res, si, bs, err := c.doProdGet(v3GetCerts, authorization)
+	res, _, bs, err := c.doProdGet(v3GetCerts, authorization)
 	if err != nil {
 		return nil, err
 	}
-	certs = &PlatformCertRsp{Code: Success, SignInfo: si}
+	certs = &PlatformCertRsp{Code: Success}
 	if res.StatusCode != http.StatusOK {
 		certs.Code = res.StatusCode
 		certs.Error = string(bs)

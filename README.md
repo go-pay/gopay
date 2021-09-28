@@ -2,7 +2,7 @@
 
 # GoPay
 
-#### 微信、QQ、支付宝的Golang版本SDK
+#### 微信、支付宝、PayPal、QQ 的Golang版本SDK
 
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
 [![Github](https://img.shields.io/github/forks/go-pay/gopay?label=Fork&style=social)](https://github.com/go-pay/gopay/fork)
@@ -22,8 +22,8 @@
 go get github.com/go-pay/gopay
 ```
 
-* #### 查看 GoPay 版本
-  [版本更新记录](https://github.com/go-pay/gopay/blob/main/release_note.txt)
+#### 查看 GoPay 版本
+    * [版本更新记录](https://github.com/go-pay/gopay/blob/main/release_note.txt)
 
 ```go
 import (
@@ -38,19 +38,21 @@ func main() {
 
 ---
 
+# 二、API 列表
+
 ### 微信支付V3 API
 * [微信支付V2文档](https://github.com/go-pay/gopay/blob/main/README_wx_v2.md)
 
 > #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口，欢迎参与完善V3接口。
 
-* <font color='#07C160' size='4'>基础支付（商户平台）</font>
+* <font color='#07C160' size='4'>基础支付</font>
     * APP下单：`client.V3TransactionApp()`
     * JSAPI/小程序下单：`client.V3TransactionJsapi()`
     * Native下单：`client.V3TransactionNative()`
     * H5下单：`client.V3TransactionH5()`
     * 查询订单：`client.V3TransactionQueryOrder()`
     * 关闭订单：`client.V3TransactionCloseOrder()`
-* <font color='#07C160' size='4'>基础支付（服务商平台）</font>
+* <font color='#07C160' size='4'>基础支付（服务商）</font>
     * APP下单：`client.V3PartnerTransactionApp()`
     * JSAPI/小程序下单：`client.V3PartnerTransactionJsapi()`
     * Native下单：`client.V3PartnerTransactionNative()`
@@ -70,8 +72,10 @@ func main() {
 * <font color='#07C160' size='4'>账单</font>
     * 申请交易账单：`client.V3BillTradeBill()`
     * 申请资金账单：`client.V3BillFundFlowBill()`
-    * 申请二级商户资金账单：`client.V3BillLevel2FundFlowBill()`
+    * 申请特约商户资金账单：`client.V3BillEcommerceFundFlowBill()`
     * 下载账单：`client.V3BillDownLoadBill()`
+* <font color='#07C160' size='4'>提现（服务商）</font>
+    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter6_1.shtml)
 * <font color='#07C160' size='4'>微信支付分（公共API）</font>
     * 创建支付分订单：`client.V3ScoreOrderCreate()`
     * 查询支付分订单：`client.V3ScoreOrderQuery()`
@@ -97,9 +101,13 @@ func main() {
     * 服务人员分配：`client.V3SmartGuideAssign()`
     * 服务人员查询：`client.V3SmartGuideQuery()`
     * 服务人员信息更新：`client.V3SmartGuideUpdate()`
+* <font color='#07C160' size='4'>点金计划（服务商）</font>
+    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_5_1.shtml)
 * <font color='#07C160' size='4'>智慧商圈</font>
     * 商圈积分同步：`client.V3BusinessPointsSync()`
     * 商圈积分授权查询：`client.V3BusinessAuthPointsQuery()`
+* <font color='#07C160' size='4'>微信支付分停车服务</font>
+    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_8_1.shtml)
 * <font color='#07C160' size='4'>代金券</font>
     * 创建代金券批次：`client.V3FavorBatchCreate()`
     * 激活代金券批次：`client.V3FavorBatchStart()`
@@ -128,16 +136,17 @@ func main() {
     * 取消关联订单信息：`client.V3BusiFavorDisassociate()`
     * 修改批次预算：`client.V3BusiFavorBatchUpdate()`
     * 修改商家券基本信息：`client.V3BusiFavorInfoUpdate()`
+    * 发放消费卡：`client.V3BusiFavorSend()`
     * 申请退券：`client.V3BusiFavorReturn()`
     * 使券失效：`client.V3BusiFavorDeactivate()`
     * 营销补差付款：`client.V3BusiFavorSubsidyPay()`
     * 查询营销补差付款单详情：`client.V3BusiFavorSubsidyPayDetail()`
 * <font color='#07C160' size='4'>委托营销</font>
-    * 待实现
-* <font color='#07C160' size='4'>消费卡</font>
-    * 待实现
+    * 建立合作关系：`client.V3PartnershipsBuild()`
+    * 终止合作关系：`client.V3PartnershipsTerminate()`
+    * 查询合作关系列表：`client.V3PartnershipsList()`
 * <font color='#07C160' size='4'>支付有礼</font>
-    * 待实现
+    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_7_2.shtml)
 * <font color='#07C160' size='4'>分账</font>
     * 请求分账：`client.V3ProfitShareOrder()`
     * 查询分账结果：`client.V3ProfitShareOrderQuery()`
@@ -161,7 +170,8 @@ func main() {
 * <font color='#07C160' size='4'>其他能力</font>
     * 图片上传：`client.V3MediaUploadImage()`
     * 视频上传：`client.V3MediaUploadVideo()`
-* <font color='#07C160' size='4'>公共API</font>
+    * 图片上传（营销专用）：`client.V3FavorMediaUploadImage()`
+* <font color='#07C160' size='4'>批量转账</font>
     * 发起批量转账：`client.V3Transfer()`
     * 微信批次单号查询批次单：`client.V3TransferQuery()`
     * 微信明细单号查询明细单：`client.V3TransferDetailQuery()`
@@ -171,22 +181,27 @@ func main() {
     * 查询转账电子回单：`client.V3TransferReceiptQuery()`
     * 转账明细电子回单受理：`client.V3TransferDetailReceipt()`
     * 查询转账明细电子回单受理结果：`client.V3TransferDetailReceiptQuery()`
+* <font color='#07C160' size='4'>余额查询</font>
+    * 查询特约商户账户实时余额（服务商）：`client.V3EcommerceBalance()`
     * 查询账户实时余额：`client.V3MerchantBalance()`
     * 查询账户日终余额：`client.V3MerchantDayBalance()`
-* <font color='#07C160' size='4'>来账识别API</font>
+* <font color='#07C160' size='4'>来账识别</font>
     * 商户银行来账查询：`client.V3MerchantIncomeRecord()`
-* <font color='#07C160' size='4'>特约商户进件（服务商平台）</font>
+    * 特约商户银行来账查询：`client.V3EcommerceIncomeRecord()`
+* <font color='#07C160' size='4'>特约商户进件（服务商）</font>
     * 提交申请单：`client.V3Apply4SubSubmit()`
     * 查询申请单状态（BusinessCode）：`client.V3Apply4SubQueryByBusinessCode()`
     * 查询申请单状态（ApplyId）：`client.V3Apply4SubQueryByApplyId()`
     * 修改结算账号：`client.V3Apply4SubModifySettlement()`
     * 查询结算账户：`client.V3Apply4SubQuerySettlement()`
 
-### 微信V3公共API
+### 微信V3公共 API
 
 * `wechat.GetPlatformCerts()` => 获取微信平台证书公钥
 * `wechat.V3VerifySign()` => 微信V3 版本验签（同步/异步）
 * `wechat.V3ParseNotify()` => 解析微信回调请求的参数到 V3NotifyReq 结构体
+* `client.V3EncryptText()` => 敏感参数信息加密
+* `client.V3DecryptText()` =>  敏感参数信息解密
 * `wechat.V3EncryptText()` => 敏感参数信息加密
 * `wechat.V3DecryptText()` =>  敏感参数信息解密
 * `wechat.V3DecryptNotifyCipherText()` => 解密 普通支付 回调中的加密信息
@@ -199,7 +214,7 @@ func main() {
 
 ---
 
-### QQ支付API
+### QQ支付 API
 
 * 提交付款码支付：`client.MicroPay()`
 * 撤销订单：`client.Reverse()`
@@ -215,7 +230,7 @@ func main() {
 * 查询红包详情（未测试可用性）：`client.QueryRedInfo()`
 * 自定义方法请求微信API接口：`client.PostQQAPISelf()`
 
-### QQ公共API
+### QQ公共 API
 
 * `qq.ParseNotifyToBodyMap()` => 解析QQ支付异步通知的结果到BodyMap
 * `qq.ParseNotify()` => 解析QQ支付异步通知的参数
@@ -223,7 +238,7 @@ func main() {
 
 ---
 
-### 支付宝支付API
+### 支付宝支付 API
 
 > #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用 `client.PostAliPayAPISelfV2()`方法实现！请参考 `client_test.go` 内的 `TestClient_PostAliPayAPISelfV2()` 方法
 
@@ -263,6 +278,12 @@ func main() {
     * 修改蚂蚁店铺: `client.AntMerchantShopModify()`
     * 蚂蚁店铺创建: `client.AntMerchantShopCreate()`
     * 蚂蚁店铺创建咨询: `client.AntMerchantShopConsult()`
+    * 商户申请单查询: `client.AntMerchantOrderQuery()`
+    * 店铺查询接口: `client.AntMerchantShopQuery()`
+    * 蚂蚁店铺关闭: `client.AntMerchantShopClose()`
+    * 申请权益发放: `client.CommerceBenefitApply()`
+    * 权益核销: `client.CommerceBenefitVerify()`
+    * 还款账单查询: `client.TradeRepaybillQuery()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
     * 单笔转账接口：`client.FundTransUniTransfer()`
     * 查询转账订单接口: `client.FundTransOrderQuery()`
@@ -271,7 +292,7 @@ func main() {
     * 资金退回接口: `client.FundTransRefund()`
     * 资金授权冻结接口: `client.FundAuthOrderFreeze()`
     * 资金授权发码接口: `client.FundAuthOrderVoucherCreate()`
-    * 线上资金授权冻结接口: client:FundAuthOrderAppFreeze()`
+    * 线上资金授权冻结接口: `client:FundAuthOrderAppFreeze()`
     * 资金授权解冻接口: `client.FundAuthOrderUnfreeze()`
     * 资金授权操作查询接口: `client.FundAuthOperationDetailQuery()`
     * 资金授权撤销接口: `client.FundAuthOperationCancel()`
@@ -280,6 +301,7 @@ func main() {
     * 批量转账明细查询接口: `client.FundBatchDetailQuery()`
     * 现金红包无线支付接口: `client.FundTransAppPay()`
     * 资金收款账号绑定关系查询: `client.FundTransPayeeBindQuery()`
+    * 资金转账页面支付接口: `client.FundTransPagePay()`
 * 网页&移动应用 - <font color='#027AFF' size='4'>会员API</font>
     * 支付宝会员授权信息查询接口（App支付宝登录）：`client.UserInfoShare()`
     * 身份认证初始化服务: `client.UserCertifyOpenInit()`
@@ -336,7 +358,7 @@ func main() {
     * 报关接口：`client.AcquireCustoms()`
     * 报关查询接口：`client.AcquireCustomsQuery()`
 
-### 支付宝公共API
+### 支付宝公共 API
 
 * `alipay.GetCertSN()` => 获取证书SN号（app_cert_sn、alipay_cert_sn）
 * `alipay.GetRootCertSN()` => 获取证书SN号（alipay_root_cert_sn）
@@ -366,13 +388,38 @@ func main() {
 
 ---
 
-# 二、文档说明
+### PayPal支付 API
+
+* [PayPal文档概览](https://developer.paypal.com/docs/api/overview)
+
+> 具体API使用介绍，请参考`gopay/paypal/client_test.go`,`gopay/paypal/order_test.go`,`gopay/paypal/payment_test.go`
+
+* <font color='#003087' size='4'>AccessToken</font>
+    * 获取AccessToken：`client.GetAccessToken()`
+* <font color='#003087' size='4'>订单</font>
+    * 创建订单（Create order）：`client.CreateOrder()`
+    * 订单详情（Show order details）：`client.OrderDetail()`
+    * 更新订单（Update order）：`client.UpdateOrder()`
+    * 订单支付授权（Authorize payment for order）：`client.OrderAuthorize()`
+    * 订单支付捕获（Capture payment for order）：`client.OrderCapture()`
+* <font color='#003087' size='4'>支付</font>
+    * 支付授权详情（Show details for authorized payment）：`client.PaymentAuthorizeDetail()`
+    * 重新授权支付授权（Reauthorize authorized payment）：`client.PaymentReauthorize()`
+    * 作废支付授权（Void authorized payment）：`client.PaymentAuthorizeVoid()`
+    * 支付授权捕获（Capture authorized payment）：`client.PaymentAuthorizeCapture()`
+    * 支付捕获详情（Show captured payment details）：`client.PaymentCaptureDetail()`
+    * 支付捕获退款（Refund captured payment）：`client.PaymentCaptureRefund()`
+    * 支付退款详情（Show refund details）：`client.PaymentRefundDetail()`
+  
+---
+
+# 三、文档说明
 
 * [GoPay 文档地址](https://pkg.go.dev/github.com/go-pay/gopay)
 * [微信支付V2文档](https://github.com/go-pay/gopay/blob/main/README_wx_v2.md)
 * QQ支付 使用方法请参考微信支付V2的文档
 * 所有方法，如有问题，请仔细查看 `wechat/client_test.go`、`alipay/client_test.go` 或 examples
-* 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群（微信群有两个，一个活跃群，聊的内容比较杂，一个只聊技术群，平时很少说话，加好友后说明加哪个群，默认全邀请）。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
+* 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 
 QQ群：
 <img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/qq_gopay.png"/>
@@ -393,6 +440,7 @@ QQ群：
 
 ```go
 import (
+    "github.com/go-pay/gopay/pkg/xlog"
     "github.com/go-pay/gopay/wechat/v3"
 )
 
@@ -428,38 +476,61 @@ client.DebugSwitch = gopay.DebugOn
 ```go
 import (
     "github.com/go-pay/gopay/alipay"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // 初始化支付宝客户端
 //    appId：应用ID
 //    privateKey：应用私钥，支持PKCS1和PKCS8
 //    isProd：是否是正式环境
-client := alipay.NewClient("2016091200494382", privateKey, false)
-
+client, err := alipay.NewClient("2016091200494382", privateKey, false)
+if err != nil {
+    xlog.Error(err)
+    return
+}
 // 打开Debug开关，输出日志，默认关闭
 client.DebugSwitch = gopay.DebugOn
 
 // 设置支付宝请求 公共参数
 //    注意：具体设置哪些参数，根据不同的方法而不同，此处列举出所有设置参数
-client.SetLocation().                       // 设置时区，不设置或出错均为默认服务器时间
-    SetAliPayRootCertSN().                  // 设置支付宝根证书SN，通过 alipay.GetRootCertSN() 获取
-    SetAppCertSN().                         // 设置应用公钥证书SN，通过 alipay.GetCertSN() 获取
-    SetAliPayPublicCertSN().                // 设置支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
-    SetCharset("utf-8").                    // 设置字符编码，不设置默认 utf-8
-    SetSignType(alipay.RSA2).               // 设置签名类型，不设置默认 RSA2
-    SetReturnUrl("https://www.fmm.ink").    // 设置返回URL
-    SetNotifyUrl("https://www.fmm.ink").    // 设置异步通知URL
-    SetAppAuthToken()                       // 设置第三方应用授权
+client.SetLocation(alipay.LocationShanghai).    // 设置时区，不设置或出错均为默认服务器时间
+    SetCharset(alipay.UTF8).                    // 设置字符编码，不设置默认 utf-8
+    SetSignType(alipay.RSA2).                   // 设置签名类型，不设置默认 RSA2
+    SetReturnUrl("https://www.fmm.ink").        // 设置返回URL
+    SetNotifyUrl("https://www.fmm.ink").        // 设置异步通知URL
+    SetAppAuthToken()                           // 设置第三方应用授权
 
 // 自动同步验签（只支持证书模式）
 // 传入 alipayCertPublicKey_RSA2.crt 内容
-client.AutoVerifySign("alipayCertPublicKey_RSA2 bytes")
+client.AutoVerifySign([]byte("alipayCertPublicKey_RSA2 bytes"))
 
 // 公钥证书模式，需要传入证书，以下两种方式二选一
 // 证书路径
 err := client.SetCertSnByPath("appCertPublicKey.crt", "alipayRootCert.crt", "alipayCertPublicKey_RSA2.crt")
 // 证书内容
 err := client.SetCertSnByContent("appCertPublicKey bytes", "alipayRootCert bytes", "alipayCertPublicKey_RSA2 bytes")
+```
+
+* #### PayPal 支付
+
+PayPal官方文档：[官方文档](https://developer.paypal.com/docs/api/overview)
+
+> 具体API使用介绍，请参考 `gopay/paypal/client_test.go`
+
+```go
+import (
+    "github.com/go-pay/gopay/paypal"
+    "github.com/go-pay/gopay/pkg/xlog"
+)
+
+// 初始化PayPal支付客户端
+client, err := paypal.NewClient(Clientid, Secret, false)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+// 打开Debug开关，输出日志，默认关闭
+client.DebugSwitch = gopay.DebugOn
 ```
 
 ## 2、初始化并赋值BodyMap（client的方法所需的入参）

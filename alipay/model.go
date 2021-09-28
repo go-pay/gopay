@@ -12,6 +12,7 @@ const (
 	PKCS8            PKCSType = 2 // Java
 	RSA                       = "RSA"
 	RSA2                      = "RSA2"
+	UTF8                      = "utf-8"
 )
 
 type PKCSType uint8
@@ -85,35 +86,23 @@ type TradePay struct {
 	TradeNo             string           `json:"trade_no,omitempty"`
 	OutTradeNo          string           `json:"out_trade_no,omitempty"`
 	BuyerLogonId        string           `json:"buyer_logon_id,omitempty"`
-	SettleAmount        string           `json:"settle_amount,omitempty"`
-	PayCurrency         string           `json:"pay_currency,omitempty"`
-	PayAmount           string           `json:"pay_amount,omitempty"`
-	SettleTransRate     string           `json:"settle_trans_rate,omitempty"`
-	TransPayRate        string           `json:"trans_pay_rate,omitempty"`
 	TotalAmount         string           `json:"total_amount,omitempty"`
-	TransCurrency       string           `json:"trans_currency,omitempty"`
-	SettleCurrency      string           `json:"settle_currency,omitempty"`
 	ReceiptAmount       string           `json:"receipt_amount,omitempty"`
 	BuyerPayAmount      string           `json:"buyer_pay_amount,omitempty"`
 	PointAmount         string           `json:"point_amount,omitempty"`
 	InvoiceAmount       string           `json:"invoice_amount,omitempty"`
-	GmtPayment          string           `json:"gmt_payment,omitempty"`
-	FundBillList        []*FundBill      `json:"fund_bill_list"`
-	CardBalance         string           `json:"card_balance,omitempty"`
+	FundBillList        []*TradeFundBill `json:"fund_bill_list"`
 	StoreName           string           `json:"store_name,omitempty"`
 	BuyerUserId         string           `json:"buyer_user_id,omitempty"`
 	DiscountGoodsDetail string           `json:"discount_goods_detail,omitempty"`
+	AsyncPaymentMode    string           `json:"async_payment_mode,omitempty"`
 	VoucherDetailList   []*VoucherDetail `json:"voucher_detail_list"`
 	AdvanceAmount       string           `json:"advance_amount,omitempty"`
 	AuthTradePayMode    string           `json:"auth_trade_pay_mode,omitempty"`
-	ChargeAmount        string           `json:"charge_amount,omitempty"`
-	ChargeFlags         string           `json:"charge_flags,omitempty"`
-	SettlementId        string           `json:"settlement_id,omitempty"`
-	BusinessParams      string           `json:"business_params,omitempty"`
-	BuyerUserType       string           `json:"buyer_user_type,omitempty"`
 	MdiscountAmount     string           `json:"mdiscount_amount,omitempty"`
 	DiscountAmount      string           `json:"discount_amount,omitempty"`
-	BuyerUserName       string           `json:"buyer_user_name,omitempty"`
+	CreditPayMode       string           `json:"credit_pay_mode"`
+	CreditBizOrderId    string           `json:"credit_biz_order_id"`
 }
 
 type FundBill struct {
@@ -147,50 +136,62 @@ type TradeQueryResponse struct {
 
 type TradeQuery struct {
 	ErrorResponse
-	TradeNo         string      `json:"trade_no,omitempty"`
-	OutTradeNo      string      `json:"out_trade_no,omitempty"`
-	BuyerLogonId    string      `json:"buyer_logon_id,omitempty"`
-	TradeStatus     string      `json:"trade_status,omitempty"`
-	TotalAmount     string      `json:"total_amount,omitempty"`
-	TransCurrency   string      `json:"trans_currency,omitempty"`
-	SettleCurrency  string      `json:"settle_currency,omitempty"`
-	SettleAmount    string      `json:"settle_amount,omitempty"`
-	PayCurrency     string      `json:"pay_currency,omitempty"`
-	PayAmount       string      `json:"pay_amount,omitempty"`
-	SettleTransRate string      `json:"settle_trans_rate,omitempty"`
-	TransPayRate    string      `json:"trans_pay_rate,omitempty"`
-	BuyerPayAmount  string      `json:"buyer_pay_amount,omitempty"`
-	PointAmount     string      `json:"point_amount,omitempty"`
-	InvoiceAmount   string      `json:"invoice_amount,omitempty"`
-	SendPayDate     string      `json:"send_pay_date,omitempty"`
-	ReceiptAmount   string      `json:"receipt_amount,omitempty"`
-	StoreId         string      `json:"store_id,omitempty"`
-	TerminalId      string      `json:"terminal_id,omitempty"`
-	FundBillList    []*FundBill `json:"fund_bill_list"`
-	StoreName       string      `json:"store_name,omitempty"`
-	BuyerUserId     string      `json:"buyer_user_id,omitempty"`
-	ChargeAmount    string      `json:"charge_amount,omitempty"`
-	ChargeFlags     string      `json:"charge_flags,omitempty"`
-	SettlementId    string      `json:"settlement_id,omitempty"`
-	TradeSettleInfo *struct {
-		TradeSettleDetailList []*struct {
-			OperationType     string `json:"operation_type,omitempty"`
-			OperationSerialNo string `json:"operation_serial_no,omitempty"`
-			OperationDt       string `json:"operation_dt,omitempty"`
-			TransOut          string `json:"trans_out,omitempty"`
-			TransIn           string `json:"trans_in,omitempty"`
-			Amount            string `json:"amount,omitempty"`
-		} `json:"trade_settle_detail_list,omitempty"`
-	} `json:"trade_settle_info,omitempty"`
-	AuthTradePayMode    string `json:"auth_trade_pay_mode,omitempty"`
-	BuyerUserType       string `json:"buyer_user_type,omitempty"`
-	MdiscountAmount     string `json:"mdiscount_amount,omitempty"`
-	DiscountAmount      string `json:"discount_amount,omitempty"`
-	BuyerUserName       string `json:"buyer_user_name,omitempty"`
-	Subject             string `json:"subject,omitempty"`
-	Body                string `json:"body,omitempty"`
-	AlipaySubMerchantId string `json:"alipay_sub_merchant_id,omitempty"`
-	ExtInfos            string `json:"ext_infos,omitempty"`
+	TradeNo             string           `json:"trade_no,omitempty"`
+	OutTradeNo          string           `json:"out_trade_no,omitempty"`
+	BuyerLogonId        string           `json:"buyer_logon_id,omitempty"`
+	TradeStatus         string           `json:"trade_status,omitempty"`
+	TotalAmount         string           `json:"total_amount,omitempty"`
+	TransCurrency       string           `json:"trans_currency,omitempty"`
+	SettleCurrency      string           `json:"settle_currency,omitempty"`
+	SettleAmount        string           `json:"settle_amount,omitempty"`
+	PayCurrency         string           `json:"pay_currency,omitempty"`
+	PayAmount           string           `json:"pay_amount,omitempty"`
+	SettleTransRate     string           `json:"settle_trans_rate,omitempty"`
+	TransPayRate        string           `json:"trans_pay_rate,omitempty"`
+	BuyerPayAmount      string           `json:"buyer_pay_amount,omitempty"`
+	PointAmount         string           `json:"point_amount,omitempty"`
+	InvoiceAmount       string           `json:"invoice_amount,omitempty"`
+	SendPayDate         string           `json:"send_pay_date,omitempty"`
+	ReceiptAmount       string           `json:"receipt_amount,omitempty"`
+	StoreId             string           `json:"store_id,omitempty"`
+	TerminalId          string           `json:"terminal_id,omitempty"`
+	FundBillList        []*TradeFundBill `json:"fund_bill_list"`
+	StoreName           string           `json:"store_name,omitempty"`
+	BuyerUserId         string           `json:"buyer_user_id,omitempty"`
+	ChargeAmount        string           `json:"charge_amount,omitempty"`
+	ChargeFlags         string           `json:"charge_flags,omitempty"`
+	SettlementId        string           `json:"settlement_id,omitempty"`
+	TradeSettleInfo     *TradeSettleInfo `json:"trade_settle_info,omitempty"`
+	AuthTradePayMode    string           `json:"auth_trade_pay_mode,omitempty"`
+	BuyerUserType       string           `json:"buyer_user_type,omitempty"`
+	MdiscountAmount     string           `json:"mdiscount_amount,omitempty"`
+	DiscountAmount      string           `json:"discount_amount,omitempty"`
+	Subject             string           `json:"subject,omitempty"`
+	Body                string           `json:"body,omitempty"`
+	AlipaySubMerchantId string           `json:"alipay_sub_merchant_id,omitempty"`
+	ExtInfos            string           `json:"ext_infos,omitempty"`
+	HbFqPayInfo         *HbFqPayInfo     `json:"hb_fq_pay_info,omitempty"`
+	CreditPayMode       string           `json:"credit_pay_mode"`
+	CreditBizOrderId    string           `json:"credit_biz_order_id"`
+}
+
+type TradeSettleInfo struct {
+	TradeSettleDetailList *TradeSettleDetail `json:"trade_settle_detail_list,omitempty"`
+}
+
+type TradeSettleDetail struct {
+	OperationType     string `json:"operation_type,omitempty"`
+	OperationSerialNo string `json:"operation_serial_no,omitempty"`
+	OperationDt       string `json:"operation_dt,omitempty"`
+	TransOut          string `json:"trans_out,omitempty"`
+	TransIn           string `json:"trans_in,omitempty"`
+	Amount            string `json:"amount,omitempty"`
+	OriTransOut       string `json:"ori_trans_out,omitempty"`
+	OriTransIn        string `json:"ori_trans_in,omitempty"`
+}
+
+type HbFqPayInfo struct {
+	UserInstallNum string `json:"user_install_num,omitempty"`
 }
 
 // ===================================================
@@ -289,26 +290,19 @@ type TradeRefundResponse struct {
 
 type TradeRefund struct {
 	ErrorResponse
-	TradeNo                      string                 `json:"trade_no,omitempty"`
-	OutTradeNo                   string                 `json:"out_trade_no,omitempty"`
-	BuyerLogonId                 string                 `json:"buyer_logon_id,omitempty"`
-	FundChange                   string                 `json:"fund_change,omitempty"`
-	RefundFee                    string                 `json:"refund_fee,omitempty"`
-	RefundCurrency               string                 `json:"refund_currency,omitempty"`
-	GmtRefundPay                 string                 `json:"gmt_refund_pay,omitempty"`
-	RefundDetailItemList         []*TradeFundBill       `json:"refund_detail_item_list,omitempty"`
-	StoreName                    string                 `json:"store_name,omitempty"`
-	BuyerUserId                  string                 `json:"buyer_user_id,omitempty"`
-	RefundPresetPaytoolList      []*RefundPresetPaytool `json:"refund_preset_paytool_list,omitempty"`
-	RefundSettlementId           string                 `json:"refund_settlement_id,omitempty"`
-	PresentRefundBuyerAmount     string                 `json:"present_refund_buyer_amount,omitempty"`
-	PresentRefundDiscountAmount  string                 `json:"present_refund_discount_amount,omitempty"`
-	PresentRefundMdiscountAmount string                 `json:"present_refund_mdiscount_amount,omitempty"`
+	TradeNo              string           `json:"trade_no,omitempty"`
+	OutTradeNo           string           `json:"out_trade_no,omitempty"`
+	BuyerLogonId         string           `json:"buyer_logon_id,omitempty"`
+	FundChange           string           `json:"fund_change,omitempty"`
+	RefundFee            string           `json:"refund_fee,omitempty"`
+	RefundDetailItemList []*TradeFundBill `json:"refund_detail_item_list,omitempty"`
+	StoreName            string           `json:"store_name,omitempty"`
+	BuyerUserId          string           `json:"buyer_user_id,omitempty"`
+	SendBackFee          string           `json:"send_back_fee,omitempty"`
 }
 
 type TradeFundBill struct {
 	FundChannel string `json:"fund_channel,omitempty"` //同步通知里是 fund_channel
-	BankCode    string `json:"bank_code,omitempty"`
 	Amount      string `json:"amount,omitempty"`
 	RealAmount  string `json:"real_amount,omitempty"`
 	FundType    string `json:"fund_type,omitempty"`
@@ -329,20 +323,18 @@ type TradeFastpayRefundQueryResponse struct {
 
 type TradeRefundQuery struct {
 	ErrorResponse
-	TradeNo                      string           `json:"trade_no,omitempty"`
-	OutTradeNo                   string           `json:"out_trade_no,omitempty"`
-	OutRequestNo                 string           `json:"out_request_no,omitempty"`
-	RefundReason                 string           `json:"refund_reason,omitempty"`
-	TotalAmount                  string           `json:"total_amount,omitempty"`
-	RefundAmount                 string           `json:"refund_amount,omitempty"`
-	RefundRoyaltys               []*RefundRoyalty `json:"refund_royaltys,omitempty"`
-	GmtRefundPay                 string           `json:"gmt_refund_pay,omitempty"`
-	RefundDetailItemList         []*TradeFundBill `json:"refund_detail_item_list,omitempty"`
-	SendBackFee                  string           `json:"send_back_fee,omitempty"`
-	RefundSettlementId           string           `json:"refund_settlement_id,omitempty"`
-	PresentRefundBuyerAmount     string           `json:"present_refund_buyer_amount,omitempty"`
-	PresentRefundDiscountAmount  string           `json:"present_refund_discount_amount,omitempty"`
-	PresentRefundMdiscountAmount string           `json:"present_refund_mdiscount_amount,omitempty"`
+	TradeNo              string           `json:"trade_no,omitempty"`
+	OutTradeNo           string           `json:"out_trade_no,omitempty"`
+	OutRequestNo         string           `json:"out_request_no,omitempty"`
+	RefundReason         string           `json:"refund_reason,omitempty"`
+	TotalAmount          string           `json:"total_amount,omitempty"`
+	RefundAmount         string           `json:"refund_amount,omitempty"`
+	RefundStatus         string           `json:"refund_status,omitempty"`
+	RefundRoyaltys       []*RefundRoyalty `json:"refund_royaltys,omitempty"`
+	GmtRefundPay         string           `json:"gmt_refund_pay,omitempty"`
+	RefundDetailItemList []*TradeFundBill `json:"refund_detail_item_list,omitempty"`
+	SendBackFee          string           `json:"send_back_fee,omitempty"`
+	DepositBackInfo      *DepositBackInfo `json:"deposit_back_info,omitempty"`
 }
 
 type RefundRoyalty struct {
@@ -353,6 +345,14 @@ type RefundRoyalty struct {
 	TransOutEmail string `json:"trans_out_email,omitempty"`
 	TransIn       string `json:"trans_in,omitempty"`
 	TransInEmail  string `json:"trans_in_email,omitempty"`
+}
+
+type DepositBackInfo struct {
+	HasDepositBack     string `json:"has_deposit_back,omitempty"`
+	DbackStatus        string `json:"dback_status,omitempty"`
+	DbackAmount        string `json:"dback_amount,omitempty"`
+	BankAckTime        string `json:"bank_ack_time,omitempty"`
+	EstBankReceiptTime string `json:"est_bank_receipt_time,omitempty"`
 }
 
 // ===================================================
@@ -870,7 +870,7 @@ type MonitorHeartbeatSynResponse struct {
 
 type MonitorHeartbeatSynRes struct {
 	ErrorResponse
-	Pid string `json:"pid,omitempty"`
+	Pid string `json:"pid"`
 }
 
 // ===================================================
@@ -1924,4 +1924,158 @@ type AntMerchantShopConsult struct {
 	AccountAudit bool   `json:"account_audit"`
 	RiskAudit    bool   `json:"risk_audit"`
 	OrderId      string `json:"order_id"`
+}
+
+// ===================================================
+type AntMerchantOrderQueryRsp struct {
+	Response     *AntMerchantOrderQuery `json:"ant_merchant_expand_order_query_response"`
+	AlipayCertSn string                 `json:"alipay_cert_sn,omitempty"`
+	SignData     string                 `json:"-"`
+	Sign         string                 `json:"sign"`
+}
+
+type AntMerchantOrderQuery struct {
+	ErrorResponse
+	IPRoleID     []string `json:"ip_role_id,omitempty"`
+	MerchantName string   `json:"merchant_name"`
+	Status       string   `json:"status"`
+	ApplyTime    string   `json:"apply_time"`
+	ExtInfo      string   `json:"ext_info"`
+}
+
+// ===================================================
+type AntMerchantShopQueryRsp struct {
+	Response     *AntMerchantShopQuery `json:"ant_merchant_expand_shop_query_response"`
+	AlipayCertSn string                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                `json:"-"`
+	Sign         string                `json:"sign"`
+}
+
+type AntMerchantShopQuery struct {
+	ErrorResponse
+	ShopID          string `json:"shop_id"`
+	BusinessAddress struct {
+		CityCode     string `json:"city_code"`
+		DistrictCode string `json:"district_code"`
+		Address      string `json:"address"`
+		ProvinceCode string `json:"province_code"`
+		Poiid        string `json:"poiid,omitempty"`
+		Longitude    string `json:"longitude,omitempty"`
+		Latitude     string `json:"latitude,omitempty"`
+		Type         string `json:"type,omitempty"`
+	} `json:"business_address"`
+	ShopCategory   string   `json:"shop_category"`
+	StoreID        string   `json:"store_id"`
+	ShopType       string   `json:"shop_type"`
+	IPRoleID       string   `json:"ip_role_id"`
+	ShopName       string   `json:"shop_name"`
+	ContactPhone   string   `json:"contact_phone"`
+	ContactMobile  string   `json:"contact_mobile"`
+	CertNo         string   `json:"cert_no"`
+	OutDoorImages  []string `json:"out_door_images,omitempty"`
+	Qualifications []struct {
+		IndustryQualificationType  string `json:"industry_qualification_type,omitempty"`
+		IndustryQualificationImage string `json:"industry_qualification_image,omitempty"`
+	} `json:"qualifications,omitempty"`
+	CertType               string `json:"cert_type,omitempty"`
+	CertName               string `json:"cert_name,omitempty"`
+	CertImage              string `json:"cert_image,omitempty"`
+	LegalName              string `json:"legal_name,omitempty"`
+	LegalCertNo            string `json:"legal_cert_no,omitempty"`
+	LicenseAuthLetterImage string `json:"license_auth_letter_image,omitempty"`
+	SettleAlipayLogonID    string `json:"settle_alipay_logon_id,omitempty"`
+	ExtInfos               []struct {
+		KeyName string `json:"key_name"`
+		Value   string `json:"value"`
+	} `json:"ext_infos,omitempty"`
+	BusinessTime []struct {
+		WeekDay   int    `json:"week_day"`
+		OpenTime  string `json:"open_time"`
+		CloseTime string `json:"close_time"`
+	} `json:"business_time,omitempty"`
+	ContactInfos []struct {
+		Name     string   `json:"name"`
+		Phone    string   `json:"phone,omitempty"`
+		Mobile   string   `json:"mobile,omitempty"`
+		Email    string   `json:"email,omitempty"`
+		Tag      []string `json:"tag"`
+		Type     string   `json:"type"`
+		IDCardNo string   `json:"id_card_no,omitempty"`
+	} `json:"contact_infos,omitempty"`
+	Memo            string `json:"memo,omitempty"`
+	BrandID         string `json:"brand_id,omitempty"`
+	Scene           string `json:"scene,omitempty"`
+	NewShopCategory string `json:"new_shop_category"`
+}
+
+// ===================================================
+type AntMerchantShopCloseRsp struct {
+	Response     *AntMerchantShopClose `json:"ant_merchant_expand_shop_close_response"`
+	AlipayCertSn string                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                `json:"-"`
+	Sign         string                `json:"sign"`
+}
+
+type AntMerchantShopClose struct {
+	ErrorResponse
+}
+
+// ===================================================
+type CommerceBenefitApplyRsp struct {
+	Response     *CommerceBenefitApply `json:"alipay_commerce_operation_gamemarketing_benefit_apply_response"`
+	AlipayCertSn string                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                `json:"-"`
+	Sign         string                `json:"sign"`
+}
+
+type CommerceBenefitApply struct {
+	ErrorResponse
+	ApplyVoucherCodeList string `json:"apply_voucher_code_list,omitempty"`
+}
+
+// ===================================================
+type CommerceBenefitVerifyRsp struct {
+	Response     *CommerceBenefitVerify `json:"alipay_commerce_operation_gamemarketing_benefit_verify_response"`
+	AlipayCertSn string                 `json:"alipay_cert_sn,omitempty"`
+	SignData     string                 `json:"-"`
+	Sign         string                 `json:"sign"`
+}
+
+type CommerceBenefitVerify struct {
+	ErrorResponse
+	VoucherVerifyStatus bool `json:"voucher_verify_status,omitempty"`
+}
+
+// ===================================================
+type TradeRepaybillQueryRsp struct {
+	Response     *TradeRepaybillQuery `json:"alipay_trade_repaybill_query_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
+}
+
+type TradeRepaybillQuery struct {
+	ErrorResponse
+	BillNo                string `json:"bill_no"`
+	BillAmount            string `json:"bill_amount"`
+	BillOverdueAmount     string `json:"bill_overdue_amount"`
+	BillPaidAmount        string `json:"bill_paid_amount"`
+	BillPaidRevokedAmount string `json:"bill_paid_revoked_amount"`
+	BillRevokedAmount     string `json:"bill_revoked_amount"`
+	BillStatus            string `json:"bill_status"`
+}
+
+// ===================================================
+type FundTransPagePayRsp struct {
+	Response     *FundTransPagePay `json:"alipay_fund_trans_page_pay_response"`
+	AlipayCertSn string            `json:"alipay_cert_sn,omitempty"`
+	SignData     string            `json:"-"`
+	Sign         string            `json:"sign"`
+}
+
+type FundTransPagePay struct {
+	ErrorResponse
+	OutBizNo string `json:"out_biz_no"`
+	OrderID  string `json:"order_id,omitempty"`
+	Status   string `json:"status"`
 }

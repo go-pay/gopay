@@ -1,9 +1,10 @@
 package alipay
 
 import (
+	"testing"
+
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xlog"
-	"testing"
 )
 
 func TestAntMerchantShopModify(t *testing.T) {
@@ -59,6 +60,49 @@ func TestAntMerchantShopConsult(t *testing.T) {
 	aliRsp, err := client.AntMerchantShopConsult(bm)
 	if err != nil {
 		xlog.Errorf("client.AntMerchantShopConsult(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestAntMerchantOrderQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("order_id", "2017112200502000000004754299")
+
+	aliRsp, err := client.AntMerchantOrderQuery(bm)
+	if err != nil {
+		xlog.Errorf("client.AntMerchantOrderQuery(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestAntMerchantShopQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("shop_id", "2018011900502000000005124744")
+	bm.Set("store_id", "NO0001")
+	bm.Set("ip_role_id", "2088301155943087")
+
+	aliRsp, err := client.AntMerchantShopQuery(bm)
+	if err != nil {
+		xlog.Errorf("client.AntMerchantShopQuery(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestAntMerchantShopClose(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("shop_id", "2018011900502000000005124744")
+	bm.Set("store_id", "NO0001")
+	bm.Set("ip_role_id", "2088301155943087")
+
+	aliRsp, err := client.AntMerchantShopClose(bm)
+	if err != nil {
+		xlog.Errorf("client.AntMerchantShopClose(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)

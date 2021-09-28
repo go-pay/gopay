@@ -52,6 +52,7 @@ func TestBodyMapSetBodyMap(t *testing.T) {
 	}).Set("7key", "7value").
 		Set("8key", "8value")
 	xlog.Debug("高级用法：", bm) // map[scene_info:map[h5_info:map[type:Wap wap_name:H5测试支付 wap_url:https://www.fmm.ink]]]
+	xlog.Debug("高级用法 JsonBody：", bm.JsonBody())
 }
 
 func TestBodyMapMarshal(t *testing.T) {
@@ -74,6 +75,21 @@ func TestBodyMapMarshal(t *testing.T) {
 		Set("8key", "8value")
 	jb2 := bm.JsonBody()
 	xlog.Debug("jb2:", jb2)
+
+	bm.Reset()
+
+	bm.SetBodyMap("partner", func(bm BodyMap) {
+		bm.Set("type", "APPID").
+			Set("appid", "wx123456").
+			Set("merchant_id", "88888")
+	}).SetBodyMap("authorized_data", func(bm BodyMap) {
+		bm.Set("business_type", "BUSIFAVOR_STOCK").
+			Set("stock_id", "66666")
+	}).Set("limit", 5).
+		Set("offset", 10)
+
+	urlParams := bm.EncodeURLParams()
+	xlog.Debug("urlParams:", urlParams)
 }
 
 func TestBodyMapMarshalSlice(t *testing.T) {
@@ -107,6 +123,7 @@ func TestBodyMapMarshalSlice(t *testing.T) {
 
 	bm.Set("receivers", string(bs))
 
+	xlog.Debug("JsonBody:", bm.JsonBody())
 	//receiver := make(BodyMap)
 	//receiver.Set("receiver", string(bs))
 	//
