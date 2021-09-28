@@ -119,8 +119,7 @@ func (a *Client) RequestParam(bm gopay.BodyMap, method string) (string, error) {
 	}
 
 	if a.DebugSwitch == gopay.DebugOn {
-		req, _ := json.Marshal(bm)
-		xlog.Debugf("Alipay_Request: %s", req)
+		xlog.Debugf("Alipay_Request: %s", bm.JsonBody())
 	}
 	return bm.EncodeURLParams(), nil
 }
@@ -167,8 +166,7 @@ func (a *Client) doAliPaySelf(bm gopay.BodyMap, method string) (bs []byte, err e
 		bm.Set("sign", sign)
 	}
 	if a.DebugSwitch == gopay.DebugOn {
-		req, _ := json.Marshal(bm)
-		xlog.Debugf("Alipay_Request: %s", req)
+		xlog.Debugf("Alipay_Request: %s", bm.JsonBody())
 	}
 
 	httpClient := xhttp.NewClient()
@@ -248,8 +246,7 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string, authToken ...string) 
 	}
 	pubBody.Set("sign", sign)
 	if a.DebugSwitch == gopay.DebugOn {
-		req, _ := json.Marshal(pubBody)
-		xlog.Debugf("Alipay_Request: %s", req)
+		xlog.Debugf("Alipay_Request: %s", pubBody.JsonBody())
 	}
 	param := pubBody.EncodeURLParams()
 	switch method {
@@ -262,9 +259,8 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string, authToken ...string) 
 		return []byte(baseUrl + "?" + param), nil
 	default:
 		httpClient := xhttp.NewClient()
-		if a.IsProd {
-			url = baseUrlUtf8
-		} else {
+		url = baseUrlUtf8
+		if !a.IsProd {
 			url = sandboxBaseUrlUtf8
 		}
 		res, bs, errs := httpClient.Type(xhttp.TypeForm).Post(url).SendString(param).EndBytes()

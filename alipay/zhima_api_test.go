@@ -1,10 +1,10 @@
 package alipay
 
 import (
-	"github.com/go-pay/gopay/pkg/util"
 	"testing"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xlog"
 )
 

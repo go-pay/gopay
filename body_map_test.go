@@ -52,6 +52,7 @@ func TestBodyMapSetBodyMap(t *testing.T) {
 	}).Set("7key", "7value").
 		Set("8key", "8value")
 	xlog.Debug("高级用法：", bm) // map[scene_info:map[h5_info:map[type:Wap wap_name:H5测试支付 wap_url:https://www.fmm.ink]]]
+	xlog.Debug("高级用法 JsonBody：", bm.JsonBody())
 }
 
 func TestBodyMapMarshal(t *testing.T) {
@@ -122,6 +123,7 @@ func TestBodyMapMarshalSlice(t *testing.T) {
 
 	bm.Set("receivers", string(bs))
 
+	xlog.Debug("JsonBody:", bm.JsonBody())
 	//receiver := make(BodyMap)
 	//receiver.Set("receiver", string(bs))
 	//

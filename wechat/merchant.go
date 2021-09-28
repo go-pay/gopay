@@ -17,7 +17,6 @@ import (
 //	注意：此方法未支持沙箱环境，默认正式环境，转账请慎重
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
 func (w *Client) Transfer(bm gopay.BodyMap) (wxRsp *TransfersResponse, err error) {
-
 	if err = bm.CheckEmptyError("nonce_str", "partner_trade_no", "openid", "check_name", "amount", "desc", "spbill_create_ip"); err != nil {
 		return nil, err
 	}

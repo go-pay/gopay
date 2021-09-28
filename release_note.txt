@@ -1,3 +1,9 @@
+版本号：Release 1.5.59
+修改记录：
+   (1) 微信V3：证书获取方法返回结构体，去除 SignInfo 字段
+   (2) gopay：BodyMap，EncodeURLParams 方法稍作调整
+   (3) PayPal：PayPal支付能力接入（订单、支付）
+
 版本号：Release 1.5.58
 修改记录：
    (1) 微信V3：新增 client.V3FavorMediaUploadImage() 图片上传(营销专用)
