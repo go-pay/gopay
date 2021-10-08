@@ -1,6 +1,7 @@
-<div align=center><img width="240" height="240" alt="Logo was Loading Faild!" src="https://raw.githubusercontent.com/go-pay/gopay/main/logo.png"/></div>
 
----
+
++ 参考文档
+
 
 ### 微信支付V2 API
 
@@ -119,7 +120,7 @@ client.AddCertPkcs12FileContent()
 ## 2、初始化并赋值BodyMap（client的方法所需的入参）
 
 * #### 微信请求参数
-  * 微信V2接口通用参数（mch_id、appid、sign）无需传入，client 请求时会默认处理
+    * 微信V2接口通用参数（mch_id、appid、sign）无需传入，client 请求时会默认处理
 
 具体参数请根据不同接口查看：[微信支付接口文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 
