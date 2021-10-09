@@ -41,20 +41,18 @@ func main() {
 
 # 二、API 列表
 
-* [GoPay 已实现 API 文档链接地址](https://pkg.go.dev/github.com/go-pay/gopay/doc)
-    - `alipay` [点击这里跳转](https://pkg.go.dev/github.com/go-pay/gopay/doc/alipay)
-    - `wechat` [点击这里跳转](https://pkg.go.dev/github.com/go-pay/gopay/doc/wechat)
-    - `qq` [点击这里跳转](https://pkg.go.dev/github.com/go-pay/gopay/doc/qq)
-    - `paypal` [点击这里跳转](https://pkg.go.dev/github.com/go-pay/gopay/doc/paypal)
-    - `apple` [点击这里跳转](https://pkg.go.dev/github.com/go-pay/gopay/doc/apple)
+* [GoPay 已实现 API 文档链接地址](https://github.com/go-pay/gopay/tree/main/doc)
+    - `alipay` [点击这里跳转](https://github.com/go-pay/gopay/tree/main/doc/alipay)
+    - `wechat` [点击这里跳转](https://github.com/go-pay/gopay/tree/main/doc/wechat)
+    - `qq` [点击这里跳转](https://github.com/go-pay/gopay/tree/main/doc/qq)
+    - `paypal` [点击这里跳转](https://github.com/go-pay/gopay/tree/main/doc/paypal)
+    - `apple` [点击这里跳转](https://github.com/go-pay/gopay/tree/main/doc/apple)
 
 ---
 
 # 三、文档说明
-
+* 使用示例请参考[example](https://github.com/go-pay/gopay/tree/main/examples]) 或者各类单元测试`_test.go`文件
 * [GoPay 文档地址](https://pkg.go.dev/github.com/go-pay/gopay)
-* [微信支付V2文档](https://github.com/go-pay/gopay/blob/main/README_wx_v2.md)
-* QQ支付 使用方法请参考微信支付V2的文档
 * 所有方法，如有问题，请仔细查看 `wechat/client_test.go`、`alipay/client_test.go` 或 examples
 * 有问题请加QQ群（加群验证答案：gopay），微信加好友拉群。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 
@@ -233,25 +231,14 @@ client.V3DecryptText()
 wxRsp, err := client.V3TransactionApp()
 wxRsp, err := client.V3TransactionJsapi()
 wxRsp, err := client.V3TransactionNative()
-wxRsp, err := client.V3TransactionH5()
-wxRsp, err := client.V3TransactionQueryOrder()
-wxRsp, err := client.V3TransactionCloseOrder(bm)
 
 // 服务商
 wxRsp, err := client.V3PartnerTransactionApp()
 wxRsp, err := client.V3PartnerTransactionJsapi()
-wxRsp, err := client.V3PartnerTransactionNative()
-wxRsp, err := client.V3PartnerTransactionH5()
-wxRsp, err := client.V3PartnerQueryOrder()
-wxRsp, err := client.V3PartnerCloseOrder()
 
 // 合单
 wxRsp, err := client.V3CombineTransactionApp()
 wxRsp, err := client.V3CombineTransactionJsapi()
-wxRsp, err := client.V3CombineTransactionNative()
-wxRsp, err := client.V3CombineTransactionH5()
-wxRsp, err := client.V3CombineQueryOrder()
-wxRsp, err := client.V3CombineCloseOrder()
 ...
 ```
 
@@ -275,13 +262,6 @@ aliRsp, err := client.TradePay()
 //  2、client.SystemOauthToken()     返回取值：aliRsp.SystemOauthTokenResponse.UserId
 aliRsp, err := client.TradeCreate()
 aliRsp, err := client.TradeQuery()
-aliRsp, err := client.TradeClose()
-aliRsp, err := client.TradeCancel()
-aliRsp, err := client.TradeRefund()
-aliRsp, err := client.TradePageRefund()
-aliRsp, err := client.TradeFastPayRefundQuery()
-aliRsp, err := client.TradeOrderSettle()
-aliRsp, err := client.TradePrecreate()
 ...
 ```
 

@@ -1,6 +1,6 @@
 
 
-+ 参考文档
+参考文档: [微信支付V2文档](https://github.com/go-pay/gopay/blob/main/README_wx_v2.md)
 
 
 ### 微信支付V2 API
