@@ -1,13 +1,13 @@
 ## PayPal
 
-PayPal官方文档：[官方文档](https://developer.paypal.com/docs/api/overview)
+PayPal官方文档：[Official Document](https://developer.paypal.com/docs/api/overview)
 
 ### PayPal支付 API
 
 > 具体API使用介绍，请参考`gopay/paypal/client_test.go`,`gopay/paypal/order_test.go`,`gopay/paypal/payment_test.go`
 
 * <font color='#003087' size='4'>AccessToken</font>
-    * 获取AccessToken：`client.GetAccessToken()`
+    * 获取AccessToken（Get AccessToken）：`client.GetAccessToken()`
 * <font color='#003087' size='4'>订单</font>
     * 创建订单（Create order）：`client.CreateOrder()`
     * 订单详情（Show order details）：`client.OrderDetail()`
@@ -25,9 +25,7 @@ PayPal官方文档：[官方文档](https://developer.paypal.com/docs/api/overvi
 
 ---
 
-### 1、初始化PayPal客户端并做配置
-
-> 具体API使用介绍，请参考 `gopay/paypal/client_test.go`
+### 1、初始化PayPal客户端并做配置（Init PayPal Client）
 
 ```go
 import (
@@ -45,7 +43,7 @@ if err != nil {
 client.DebugSwitch = gopay.DebugOn
 ```
 
-### 2、API 方法调用及入参
+### 2、API 方法调用及入参（Call API）
 
 > Orders：[Orders API](https://developer.paypal.com/docs/api/orders/v2)
 
