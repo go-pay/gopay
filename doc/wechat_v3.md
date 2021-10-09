@@ -1,14 +1,16 @@
-## 微信v3（已实现API详见最后附录）
-
-微信官方文档：[官方文档](https://pay.weixin.qq.com/wiki/doc/apiv3/index.shtml)
-
-接口规则：[平台证书](https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_0.shtml)
-
-接入规范：[最佳实践](https://pay.weixin.qq.com/wiki/doc/apiv3/Practices/chapter1_1_1.shtml)
-
-GoPay微信v2文档：[GoPay微信v2文档](https://github.com/go-pay/gopay/blob/main/doc/wechat_v2.md) （部分接口仅v2版本支持）
+## 微信v3
 
 > #### 推荐使用v3接口，官方在v3接口实现未覆盖或gopay未开发的接口，还继续用v2接口，欢迎参与完善v3接口。
+
+- 已实现API列表附录：[API 列表附录](https://github.com/go-pay/gopay/blob/main/doc/wechat_v3.md#%E9%99%84%E5%BD%95)
+
+- 微信官方文档：[官方文档](https://pay.weixin.qq.com/wiki/doc/apiv3/index.shtml)
+
+- 接口规则：[平台证书](https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_0.shtml)
+
+- 接入规范：[最佳实践](https://pay.weixin.qq.com/wiki/doc/apiv3/Practices/chapter1_1_1.shtml)
+
+- GoPay微信v2文档：[GoPay微信v2文档](https://github.com/go-pay/gopay/blob/main/doc/wechat_v2.md) （部分接口仅v2版本支持）
 
 ---
 

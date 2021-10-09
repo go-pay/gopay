@@ -1,8 +1,10 @@
-## PayPal（已实现API详见最后附录）
-
-PayPal官方文档：[Official Document](https://developer.paypal.com/docs/api/overview)
+## PayPal
 
 > 具体API使用介绍，请参考`gopay/paypal/client_test.go`,`gopay/paypal/order_test.go`,`gopay/paypal/payment_test.go`
+
+- 已实现API列表附录：[API List](https://github.com/go-pay/gopay/blob/main/doc/paypal.md#%E9%99%84%E5%BD%95)
+
+- PayPal官方文档：[Official Document](https://developer.paypal.com/docs/api/overview)
 
 ---
 

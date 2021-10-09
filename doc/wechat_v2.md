@@ -1,6 +1,8 @@
-## 微信v2（已实现API详见最后附录）
+## 微信v2
 
 > #### 推荐使用v3接口，官方在v3接口实现未覆盖或gopay未开发的接口，还继续用v2接口。
+
+- 已实现API列表附录：[API 列表附录](https://github.com/go-pay/gopay/blob/main/doc/wechat_v2.md#%E9%99%84%E5%BD%95)
 
 ---
 

@@ -1,14 +1,16 @@
-## 支付宝（已实现API详见最后附录）
-
-支付宝官方文档：[官方文档](https://openhome.alipay.com/docCenter/docCenter.htm)
-
-支付宝RSA秘钥生成文档：[生成RSA密钥](https://opendocs.alipay.com/open/291/105971) （推荐使用 RSA2）
-
-沙箱环境使用说明：[文档地址](https://opendocs.alipay.com/open/200/105311)
+## 支付宝
 
 > #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用 `client.PostAliPayAPISelfV2()`方法实现！请参考 `client_test.go` 内的 `TestClient_PostAliPayAPISelfV2()` 方法
 
 > #### 希望有时间的伙伴儿Fork完后，补充并提交Pull Request，一起完善支付宝各个类别下的接口到相应的go文件中
+
+- 已实现API列表附录：[API 列表附录](https://github.com/go-pay/gopay/blob/main/doc/alipay.md#%E9%99%84%E5%BD%95)
+
+- 支付宝官方文档：[官方文档](https://openhome.alipay.com/docCenter/docCenter.htm)
+
+- 支付宝RSA秘钥生成文档：[生成RSA密钥](https://opendocs.alipay.com/open/291/105971) （推荐使用 RSA2）
+
+- 沙箱环境使用说明：[文档地址](https://opendocs.alipay.com/open/200/105311)
 
 ---
 
