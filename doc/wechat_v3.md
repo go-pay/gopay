@@ -6,7 +6,7 @@
 
 接入规范：[最佳实践](https://pay.weixin.qq.com/wiki/doc/apiv3/Practices/chapter1_1_1.shtml)
 
-微信v2文档：[微信支付v2文档](https://github.com/go-pay/gopay/blob/main/README_wx_v2.md) （部分接口仅v2版本支持）
+微信v2文档：[微信支付v2文档](https://github.com/go-pay/gopay/blob/main/doc/wechat_v2.md) （部分接口仅v2版本支持）
 
 ### 微信支付v3 API
 
