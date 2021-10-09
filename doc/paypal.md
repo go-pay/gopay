@@ -25,7 +25,7 @@ PayPal官方文档：[官方文档](https://developer.paypal.com/docs/api/overvi
 
 ---
 
-### 1、初始化微信V3客户端并做配置
+### 1、初始化PayPal客户端并做配置
 
 > 具体API使用介绍，请参考 `gopay/paypal/client_test.go`
 
