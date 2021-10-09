@@ -29,7 +29,7 @@ func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	return
 }
 
-// 通过 url.Values 解析支付宝支付异步通知的参数到Struct
+// 通过 url.Values 解析支付宝支付异步通知的参数到BodyMap
 //	value：url.Values
 //	返回参数notifyReq：Notify请求的参数
 //	返回参数err：错误信息

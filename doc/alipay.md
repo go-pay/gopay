@@ -1,3 +1,11 @@
+## 支付宝
+
+支付宝官方文档：[官方文档](https://openhome.alipay.com/docCenter/docCenter.htm)
+
+支付宝RSA秘钥生成文档：[生成RSA密钥](https://opendocs.alipay.com/open/291/105971) （推荐使用 RSA2）
+
+沙箱环境使用说明：[文档地址](https://opendocs.alipay.com/open/200/105311)
+
 ### 支付宝支付 API
 
 > #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用 `client.PostAliPayAPISelfV2()`方法实现！请参考 `client_test.go` 内的 `TestClient_PostAliPayAPISelfV2()` 方法
@@ -137,3 +145,185 @@
 * `alipay.MonitorHeartbeatSyn()` => 验签接口
 
 ---
+
+### 1、初始化支付宝客户端并做配置
+
+> 具体API使用介绍，请参考 `gopay/alipay/client_test.go`
+
+```go
+import (
+    "github.com/go-pay/gopay/alipay"
+    "github.com/go-pay/gopay/pkg/xlog"
+)
+
+// 初始化支付宝客户端
+//    appId：应用ID
+//    privateKey：应用私钥，支持PKCS1和PKCS8
+//    isProd：是否是正式环境
+client, err := alipay.NewClient("2016091200494382", privateKey, false)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+// 打开Debug开关，输出日志，默认关闭
+client.DebugSwitch = gopay.DebugOn
+
+// 设置支付宝请求 公共参数
+//    注意：具体设置哪些参数，根据不同的方法而不同，此处列举出所有设置参数
+client.SetLocation(alipay.LocationShanghai).    // 设置时区，不设置或出错均为默认服务器时间
+    SetCharset(alipay.UTF8).                    // 设置字符编码，不设置默认 utf-8
+    SetSignType(alipay.RSA2).                   // 设置签名类型，不设置默认 RSA2
+    SetReturnUrl("https://www.fmm.ink").        // 设置返回URL
+    SetNotifyUrl("https://www.fmm.ink").        // 设置异步通知URL
+    SetAppAuthToken()                           // 设置第三方应用授权
+
+// 自动同步验签（只支持证书模式）
+// 传入 alipayCertPublicKey_RSA2.crt 内容
+client.AutoVerifySign([]byte("alipayCertPublicKey_RSA2 bytes"))
+
+// 公钥证书模式，需要传入证书，以下两种方式二选一
+// 证书路径
+err := client.SetCertSnByPath("appCertPublicKey.crt", "alipayRootCert.crt", "alipayCertPublicKey_RSA2.crt")
+// 证书内容
+err := client.SetCertSnByContent("appCertPublicKey bytes", "alipayRootCert bytes", "alipayCertPublicKey_RSA2 bytes")
+```
+
+### 2、API 方法调用及入参
+
+> 具体参数请根据不同接口查看：[支付宝支付API接口文档](https://opendocs.alipay.com/apis)
+
+- 统一收单交易支付接口 示例
+```go
+import (
+    "github.com/go-pay/gopay"
+)
+
+// 初始化 BodyMap
+bm := make(gopay.BodyMap)
+bm.Set("subject", "条码支付").
+    Set("scene", "bar_code").
+    Set("auth_code", "286248566432274952").
+    Set("out_trade_no", "GZ201909081743431443").
+    Set("total_amount", "0.01").
+    Set("timeout_express", "2m")
+
+aliRsp, err := client.TradePay(bm)
+if err != nil {
+    xlog.Error("err:", err)
+    return
+}
+```
+
+### 3、同步返回参数验签Sign、异步通知参数解析和验签Sign、异步通知返回
+
+> 异步通知请求参数需要先解析，解析出来的结构体或BodyMap再验签（此处需要注意，`http.Request.Body` 只能解析一次，如果需要解析前调试，请处理好Body复用问题）
+
+[Gin Web框架（推荐）](https://github.com/gin-gonic/gin)
+
+[Echo Web框架](https://github.com/labstack/echo)
+
+> 注意：APP支付、手机网站支付、电脑网站支付 不支持同步返回验签
+
+> 支付宝支付后的同步/异步通知验签文档：[支付结果通知](https://opendocs.alipay.com/open/200/106120)
+
+- 同步返回验签，手动验签（如已开启自动验签，则无需手动验签操作）
+
+```go
+import (
+    "github.com/go-pay/gopay/alipay"
+)
+
+aliRsp, err := client.TradePay(bm)
+if err != nil {
+    xlog.Error("err:", err)
+    return
+}
+
+// 公钥模式验签
+//    注意：APP支付，手机网站支付，电脑网站支付 不支持同步返回验签
+//    aliPayPublicKey：支付宝平台获取的支付宝公钥
+//    signData：待验签参数，aliRsp.SignData
+//    sign：待验签sign，aliRsp.Sign
+ok, err := alipay.VerifySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
+
+// 公钥证书模式验签
+//    aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayCertPublicKey_RSA2.crt 或文件内容[]byte
+//    signData：待验签参数，aliRsp.SignData
+//    sign：待验签sign，aliRsp.Sign
+ok, err := alipay.VerifySyncSignWithCert(aliPayPublicKeyCert, aliRsp.SignData, aliRsp.Sign)
+```
+
+- 异步通知验签
+
+```go
+import (
+    "github.com/go-pay/gopay/alipay"
+)
+
+// 解析异步通知的参数
+//    req：*http.Request
+notifyReq, err = alipay.ParseNotifyToBodyMap(c.Request)     // c.Request 是 gin 框架的写法
+if err != nil {
+    xlog.Error(err)
+    return
+}
+ 或
+//    value：url.Values
+notifyReq, err = alipay.ParseNotifyByURLValues()
+if err != nil {
+    xlog.Error(err)
+    return
+}
+
+// 支付宝异步通知验签（公钥模式）
+ok, err = alipay.VerifySign(aliPayPublicKey, notifyReq)
+
+// 支付宝异步通知验签（公钥证书模式）
+ok, err = alipay.VerifySignWithCert("alipayCertPublicKey_RSA2.crt content", notifyReq)
+
+// ====异步通知，返回支付宝平台的信息====
+//    文档：https://opendocs.alipay.com/open/203/105286
+//    程序执行完后必须打印输出“success”（不包含引号）。如果商户反馈给支付宝的字符不是success这7个字符，支付宝服务器会不断重发通知，直到超过24小时22分钟。一般情况下，25小时以内完成8次通知（通知的间隔频率一般是：4m,10m,10m,1h,2h,6h,15h）
+
+// 此写法是 gin 框架返回支付宝的写法
+c.String(http.StatusOK, "%s", "success")
+
+// 此写法是 echo 框架返回支付宝的写法
+return c.String(http.StatusOK, "success")
+```
+
+### 4、支付宝 公共API（仅部分说明）
+
+> 支付宝换取授权访问令牌文档：[换取授权访问令牌](https://opendocs.alipay.com/apis/api_9/alipay.system.oauth.token)
+
+> 支付宝小程序 获取用户手机号文档：[获取用户手机号](https://opendocs.alipay.com/mini/api/getphonenumber)
+
+> 支付宝加解密文档：[AES加解密文档](https://opendocs.alipay.com/open/common/104567)
+
+```go
+import (
+    "github.com/go-pay/gopay/alipay"
+    "github.com/go-pay/gopay/pkg/xlog"
+)
+
+// 换取授权访问令牌（默认使用utf-8，RSA2）
+//    appId：应用ID
+//    privateKey：应用私钥，支持PKCS1和PKCS8
+//    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
+//    codeOrToken：支付宝授权码或refresh_token
+rsp, err := alipay.SystemOauthToken(appId, privateKey, grantType, codeOrToken)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+
+// 解密支付宝开放数据带到指定结构体
+//    以小程序获取手机号为例
+phone := new(alipay.UserPhone)
+// 解密支付宝开放数据
+//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
+//    secretKey:AES密钥，支付宝管理平台配置
+//    beanPtr:需要解析到的结构体指针
+err := alipay.DecryptOpenDataToStruct(encryptedData, secretKey, phone)
+xlog.Infof("%+v", phone)
+```

@@ -1,6 +1,16 @@
-### 微信支付V3 API
+## 微信v3
 
-> #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口，欢迎参与完善V3接口。
+微信官方文档：[官方文档](https://pay.weixin.qq.com/wiki/doc/apiv3/index.shtml)
+
+接口规则：[平台证书](https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_0.shtml)
+
+接入规范：[最佳实践](https://pay.weixin.qq.com/wiki/doc/apiv3/Practices/chapter1_1_1.shtml)
+
+微信v2文档：[微信支付v2文档](https://github.com/go-pay/gopay/blob/main/README_wx_v2.md) （部分接口仅v2版本支持）
+
+### 微信支付v3 API
+
+> #### 推荐使用v3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用v2接口，欢迎参与完善v3接口。
 
 * <font color='#07C160' size='4'>基础支付</font>
     * APP下单：`client.V3TransactionApp()`
@@ -168,3 +178,209 @@
 * `client.PaySignOfJSAPI()` => 获取 JSAPI 支付 paySign
 * `client.PaySignOfApp()` => 获取 APP 支付 paySign
 * `client.PaySignOfApplet()` => 获取 小程序 支付 paySign
+
+---
+
+### 1、初始化微信v3客户端并做配置
+
+> 注意：v3 版本接口持续增加中，不支持沙箱支付，测试请用1分钱测试法
+
+> 注意：`微信平台证书` 和 `微信平台证书序列号`，请自行通过 `wechat.GetPlatformCerts()` 或 `client.GetPlatformCerts()` 方法获取和维护
+
+> 具体API使用介绍，请参考 `gopay/wechat/v3/client_test.go`
+
+```go
+import (
+    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay/wechat/v3"
+)
+
+// NewClientV3 初始化微信客户端 v3
+//	mchid：商户ID 或者服务商模式的 sp_mchid
+// 	serialNo：商户证书的证书序列号
+//	apiV3Key：apiV3Key，商户平台获取
+//	privateKey：私钥 apiclient_key.pem 读取后的内容
+client, err = wechat.NewClientV3(MchId, SerialNo, APIv3Key, PrivateKey)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+
+// 设置微信平台证书和序列号，并启用自动同步返回验签
+//	注意：请预先通过 wechat.GetPlatformCerts() 获取并维护微信平台证书和证书序列号
+client.SetPlatformCert([]byte(WxPkContent), WxPkSerialNo).AutoVerifySign()
+
+// 打开Debug开关，输出日志，默认是关闭的
+client.DebugSwitch = gopay.DebugOn
+```
+
+### 2、API 方法调用及入参
+
+> 具体参数请根据不同接口查看：[微信支付V3的API字典概览](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/index.shtml)
+
+- JSAPI下单 示例
+```go
+import (
+    "github.com/go-pay/gopay"
+)
+
+expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
+// 初始化 BodyMap
+bm := make(gopay.BodyMap)
+bm.Set("description", "测试Jsapi支付商品").
+    Set("out_trade_no", tradeNo).
+    Set("time_expire", expire).
+    Set("notify_url", "https://www.fmm.ink").
+    SetBodyMap("amount", func(bm gopay.BodyMap) {
+        bm.Set("total", 1).
+            Set("currency", "CNY")
+    }).
+    SetBodyMap("payer", func(bm gopay.BodyMap) {
+        bm.Set("openid", "asdas")
+    })
+
+wxRsp, err := client.V3TransactionJsapi(bm)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+```
+
+### 3、下单后，获取微信小程序支付、APP支付、JSAPI支付所需要的 pay sign
+
+> 小程序调起支付API：[小程序调起支付API](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_4.shtml)
+
+> APP调起支付API：[APP调起支付API](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_4.shtml)
+
+> JSAPI调起支付API：[JSAPI调起支付API](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_4.shtml)
+
+```go
+// 小程序
+applet, err := client.PaySignOfApplet("appid", "prepayid")
+// app
+app, err := client.PaySignOfApp("appid", "prepayid")
+// jsapi
+jsapi, err := client.PaySignOfJSAPI("appid", "prepayid")
+```
+
+### 4、同步返回参数验签Sign、异步通知参数解析和验签Sign、异步通知返回
+
+> 异步通知请求参数需要先解析，解析出来的结构体或BodyMap再验签（此处需要注意，`http.Request.Body` 只能解析一次，如果需要解析前调试，请处理好Body复用问题）
+
+[Gin Web框架（推荐）](https://github.com/gin-gonic/gin)
+
+[Echo Web框架](https://github.com/labstack/echo)
+
+- 同步返回验签，手动验签（如已开启自动验签，则无需手动验签操作）
+
+```go
+import (
+    "github.com/go-pay/gopay/wechat/v3"
+    "github.com/go-pay/gopay/pkg/xlog"
+)
+
+// ========同步返回 手动验签（如已开启自动验签，则无需手动验签操作）========
+wxRsp, err := client.V3TransactionJsapi(bm)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+err = wechat.V3VerifySign(wxRsp.SignInfo.HeaderTimestamp, wxRsp.SignInfo.HeaderNonce, wxRsp.SignInfo.SignBody, wxRsp.SignInfo.HeaderSignature, WxPkContent)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+
+// ========异步通知验签========
+notifyReq, err := wechat.V3ParseNotify()
+if err != nil {
+    xlog.Error(err)
+    return
+}
+// WxPkContent 是通过 wechat.GetPlatformCerts() 接口向微信获取的微信平台公钥证书内容
+err = notifyReq.VerifySign(WxPkContent)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+
+// ========异步通知敏感信息解密========
+// 普通支付通知解密
+result, err := notifyReq.DecryptCipherText(apiV3Key)
+// 合单支付通知解密
+result, err := notifyReq.DecryptCombineCipherText(apiV3Key)
+// 退款通知解密
+result, err := notifyReq.DecryptRefundCipherText(apiV3Key)
+
+// ========异步通知应答========
+// 退款通知http应答码为200且返回状态码为SUCCESS才会当做商户接收成功，否则会重试。
+// 注意：重试过多会导致微信支付端积压过多通知而堵塞，影响其他正常通知。
+
+// 此写法是 gin 框架返回微信的写法
+c.JSON(http.StatusOK, &wechat.V3NotifyRsp{Code: gopay.SUCCESS, Message: "成功"})
+// 此写法是 echo 框架返回微信的写法
+return c.JSON(http.StatusOK, &wechat.V3NotifyRsp{Code: gopay.SUCCESS, Message: "成功"})
+```
+
+- 异步通知验签 及 敏感参数解密
+
+```go
+import (
+    "github.com/go-pay/gopay/wechat/v3"
+    "github.com/go-pay/gopay/pkg/xlog"
+)
+
+notifyReq, err := wechat.V3ParseNotify()
+if err != nil {
+    xlog.Error(err)
+    return
+}
+
+// WxPkContent 是通过 wechat.GetPlatformCerts() 接口向微信获取的微信平台公钥证书内容
+err = notifyReq.VerifySign("WxPkContent")
+if err != nil {
+    xlog.Error(err)
+    return
+}
+
+// ========异步通知敏感信息解密========
+// 普通支付通知解密
+result, err := notifyReq.DecryptCipherText(apiV3Key)
+// 合单支付通知解密
+result, err := notifyReq.DecryptCombineCipherText(apiV3Key)
+// 退款通知解密
+result, err := notifyReq.DecryptRefundCipherText(apiV3Key)
+
+// ========异步通知应答========
+// 退款通知http应答码为200且返回状态码为SUCCESS才会当做商户接收成功，否则会重试。
+// 注意：重试过多会导致微信支付端积压过多通知而堵塞，影响其他正常通知。
+
+// 此写法是 gin 框架返回微信的写法
+c.JSON(http.StatusOK, &wechat.V3NotifyRsp{Code: gopay.SUCCESS, Message: "成功"})
+
+// 此写法是 echo 框架返回微信的写法
+return c.JSON(http.StatusOK, &wechat.V3NotifyRsp{Code: gopay.SUCCESS, Message: "成功"})
+```
+
+### 5、微信v3 公共API（仅部分说明）
+
+```go
+import (
+    "github.com/go-pay/gopay/wechat/v3"
+)
+
+// 获取微信平台证书和序列号信息
+wechat.GetPlatformCerts()
+
+// 请求参数 敏感信息加密
+wechat.V3EncryptText() 或 client.V3EncryptText()
+
+// 返回参数 敏感信息解密
+wechat.V3DecryptText() 或 client.V3DecryptText()
+
+// 回调通知敏感信息解密
+wechat.V3DecryptNotifyCipherText()
+wechat.V3DecryptRefundNotifyCipherText()
+wechat.V3DecryptCombineNotifyCipherText()
+...
+```
