@@ -1,83 +1,12 @@
-## 微信
+## 微信v2（已实现API详见最后附录）
 
-### 微信支付V2 API
-
-> #### 推荐使用V3接口，官方在V3接口实现未覆盖或gopay未开发的接口，还继续用V2接口。
-
-* 统一下单：`client.UnifiedOrder()`
-    * JSAPI - JSAPI支付（或小程序支付）
-    * NATIVE - Native支付
-    * APP - app支付
-    * MWEB - H5支付
-* 提交付款码支付：`client.Micropay()`
-* 查询订单：`client.QueryOrder()`
-* 关闭订单：`client.CloseOrder()`
-* 撤销订单：`client.Reverse()`
-* 申请退款：`client.Refund()`
-* 查询退款：`client.QueryRefund()`
-* 下载对账单：`client.DownloadBill()`
-* 下载资金账单（正式）：`client.DownloadFundFlow()`
-* 交易保障：`client.Report()`
-* 拉取订单评价数据（正式）：`client.BatchQueryComment()`
-* 企业付款（正式）：`client.Transfer()`
-* 查询企业付款（正式）：`client.GetTransferInfo()`
-* 授权码查询OpenId（正式）：`client.AuthCodeToOpenId()`
-* 公众号纯签约（正式）：`client.EntrustPublic()`
-* APP纯签约-预签约接口-获取预签约ID（正式）：`client.EntrustAppPre()`
-* H5纯签约（正式）：`client.EntrustH5()`
-* 支付中签约（正式）：`client.EntrustPaying()`
-* 请求单次分账（正式）：`client.ProfitSharing()`
-* 请求多次分账（正式）：`client.MultiProfitSharing()`
-* 查询分账结果（正式）：`client.ProfitSharingQuery()`
-* 添加分账接收方（正式）：`client.ProfitSharingAddReceiver()`
-* 删除分账接收方（正式）：`client.ProfitSharingRemoveReceiver()`
-* 完结分账（正式）：`client.ProfitSharingFinish()`
-* 分账回退（正式）：`client.ProfitSharingReturn()`
-* 分账回退结果查询（正式）：`client.ProfitSharingReturnQuery()`
-* 企业付款到银行卡API（正式）：`client.PayBank()`
-* 查询企业付款到银行卡API（正式）：`client.QueryBank()`
-* 获取RSA加密公钥API（正式）：`client.GetRSAPublicKey()`
-* 发放现金红包：`client.SendCashRed()`
-* 发放现金裂变红包：`client.SendGroupCashRed()`
-* 发放小程序红包：`client.SendAppletRed()`
-* 查询红包记录：`client.QueryRedRecord()`
-* 订单附加信息提交（海关）：`client.CustomsDeclareOrder()`
-* 订单附加信息查询（海关）：`client.CustomsDeclareQuery()`
-* 订单附加信息重推（海关）：`client.CustomsReDeclareOrder()`
-* 自定义方法请求微信API接口：`client.PostWeChatAPISelf()`
-
-### 微信公共V2 API
-
-* `wechat.GetParamSign()` => 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
-* `wechat.GetSanBoxParamSign()` => 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
-* `wechat.GetMiniPaySign()` => 获取微信小程序支付所需要的paySign
-* `wechat.GetH5PaySign()` => 获取微信内H5支付所需要的paySign
-* `wechat.GetAppPaySign()` => 获取APP支付所需要的paySign
-* `wechat.ParseNotifyToBodyMap()` => 解析微信支付异步通知的参数到BodyMap
-* `wechat.ParseNotify()` => 解析微信支付异步通知的参数
-* `wechat.ParseRefundNotify()` => 解析微信退款异步通知的参数
-* `wechat.VerifySign()` => 微信同步返回参数验签或异步通知参数验签
-* `wechat.Code2Session()` => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
-* `wechat.GetAppletAccessToken()` => 获取微信小程序全局唯一后台接口调用凭据
-* `wechat.GetAppletPaidUnionId()` => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
-* `wechat.GetPublicUserInfo()` => 微信公众号：获取用户基本信息
-* `wechat.GetPublicUserInfoBatch()` => 微信公众号：批量获取用户基本信息
-* `wechat.DecryptOpenDataToStruct()` => 加密数据，解密到指定结构体
-* `wechat.DecryptOpenDataToBodyMap()` => 加密数据，解密到 BodyMap
-* `wechat.GetOpenIdByAuthCode()` => 授权码查询openid
-* `wechat.GetOauth2AccessToken()` => 微信第三方登录，code 换取 access_token
-* `wechat.RefreshOauth2AccessToken()` => 刷新微信第三方登录后，获取到的 access_token
-* `wechat.CheckOauth2AccessToken()` => 检验授权凭证（access_token）是否有效
-* `wechat.GetOauth2UserInfo()` => 微信开放平台：获取用户个人信息
-* `wechat.DecryptRefundNotifyReqInfo()` => 解密微信退款异步通知的加密数据
+> #### 推荐使用v3接口，官方在v3接口实现未覆盖或gopay未开发的接口，还继续用v2接口。
 
 ---
 
-## 1、初始化GoPay客户端并做配置（HTTP请求均默认设置tls.Config{InsecureSkipVerify: true}）
+### 1、初始化微信v2客户端并做配置
 
-* #### 微信V2
-
-微信官方文档：[官方文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
+微信v2官方文档：[微信v2官方文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 
 > 注意：微信支付下单等操作可用沙箱环境测试是否成功，但真正支付时，请使用正式环境 `isProd = true`，不然会报错。
 
@@ -108,16 +37,17 @@ client.SetCountry(wechat.China)
 // 添加微信pem证书
 client.AddCertPemFilePath()
 client.AddCertPemFileContent()
-
+ 或
 // 添加微信pkcs12证书
 client.AddCertPkcs12FilePath()
 client.AddCertPkcs12FileContent()
 ```
 
-## 2、初始化并赋值BodyMap（client的方法所需的入参）
+### 2、API 方法调用及入参
 
-* #### 微信请求参数
-    * 微信V2接口通用参数（mch_id、appid、sign）无需传入，client 请求时会默认处理
+- #### 微信请求参数
+
+> 微信V2接口通用参数（mch_id、appid、sign）无需传入，client 请求时会默认处理
 
 具体参数请根据不同接口查看：[微信支付接口文档](https://pay.weixin.qq.com/wiki/doc/api/index.html)
 
@@ -147,9 +77,7 @@ bm.Set("nonce_str", util.GetRandomString(32)).
     }) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
 ```
 
-## 3、client 方法调用
-
-* #### 微信V2
+- #### client 方法调用
 
 ```go
 wxRsp, err := client.UnifiedOrder(bm)
@@ -166,15 +94,13 @@ wxRsp, err := client.Transfer(bm)
 ...
 ```
 
-## 4、微信统一下单后，获取微信小程序支付、APP支付、微信内H5支付所需要的 paySign
+### 3、微信统一下单后，获取微信小程序支付、APP支付、微信内H5支付所需要的 paySign
 
-* #### 微信V2
+> 微信小程序支付官方文档：[微信小程序支付API](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html)
 
-微信小程序支付官方文档：[微信小程序支付API](https://developers.weixin.qq.com/miniprogram/dev/api/open-api/payment/wx.requestPayment.html)
+> APP支付官方文档：[APP端调起支付的参数列表文档](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12)
 
-APP支付官方文档：[APP端调起支付的参数列表文档](https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_12)
-
-微信内H5支付官方文档：[微信内H5支付文档](https://pay.weixin.qq.com/wiki/doc/api/wxpay/ch/pay/OfficialPayMent/chapter5_5.shtml)
+> 微信内H5支付官方文档：[微信内H5支付文档](https://pay.weixin.qq.com/wiki/doc/api/wxpay/ch/pay/OfficialPayMent/chapter5_5.shtml)
 
 ```go
 import (
@@ -219,16 +145,13 @@ packages := "prepay_id=" + wxRsp.PrepayId   // 此处的 wxRsp.PrepayId ,统一�
 paySign := wechat.GetH5PaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_MD5, timeStamp, apiKey)
 ```
 
-## 5、同步返回参数验签Sign、异步通知参数解析和验签Sign、异步通知返回
+### 4、同步返回参数验签Sign、异步通知参数解析和验签Sign、异步通知返回
 
 > 异步通知请求参数需要先解析，解析出来的结构体或BodyMap再验签（此处需要注意，`http.Request.Body` 只能解析一次，如果需要解析前调试，请处理好Body复用问题）
 
 [Gin Web框架（推荐）](https://github.com/gin-gonic/gin)
 
 [Echo Web框架](https://github.com/labstack/echo)
-
-
-* #### 微信V2
 
 ```go
 import (
@@ -284,9 +207,7 @@ c.String(http.StatusOK, "%s", rsp.ToXmlString())
 return c.String(http.StatusOK, rsp.ToXmlString())
 ```
 
-## 6、公共API（仅部分说明）
-
-* #### 微信V2 公共API
+### 5、公共API（仅部分说明）
 
 官方文档：[code2Session](https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html)
 
@@ -344,3 +265,76 @@ if err != nil {
 }
 xlog.Debug("WeChatUserPhone:", bm)
 ```
+
+---
+
+## 附录：
+
+### 微信支付v2 API
+
+* 统一下单：`client.UnifiedOrder()`
+    * JSAPI - JSAPI支付（或小程序支付）
+    * NATIVE - Native支付
+    * APP - app支付
+    * MWEB - H5支付
+* 提交付款码支付：`client.Micropay()`
+* 查询订单：`client.QueryOrder()`
+* 关闭订单：`client.CloseOrder()`
+* 撤销订单：`client.Reverse()`
+* 申请退款：`client.Refund()`
+* 查询退款：`client.QueryRefund()`
+* 下载对账单：`client.DownloadBill()`
+* 下载资金账单（正式）：`client.DownloadFundFlow()`
+* 交易保障：`client.Report()`
+* 拉取订单评价数据（正式）：`client.BatchQueryComment()`
+* 企业付款（正式）：`client.Transfer()`
+* 查询企业付款（正式）：`client.GetTransferInfo()`
+* 授权码查询OpenId（正式）：`client.AuthCodeToOpenId()`
+* 公众号纯签约（正式）：`client.EntrustPublic()`
+* APP纯签约-预签约接口-获取预签约ID（正式）：`client.EntrustAppPre()`
+* H5纯签约（正式）：`client.EntrustH5()`
+* 支付中签约（正式）：`client.EntrustPaying()`
+* 请求单次分账（正式）：`client.ProfitSharing()`
+* 请求多次分账（正式）：`client.MultiProfitSharing()`
+* 查询分账结果（正式）：`client.ProfitSharingQuery()`
+* 添加分账接收方（正式）：`client.ProfitSharingAddReceiver()`
+* 删除分账接收方（正式）：`client.ProfitSharingRemoveReceiver()`
+* 完结分账（正式）：`client.ProfitSharingFinish()`
+* 分账回退（正式）：`client.ProfitSharingReturn()`
+* 分账回退结果查询（正式）：`client.ProfitSharingReturnQuery()`
+* 企业付款到银行卡API（正式）：`client.PayBank()`
+* 查询企业付款到银行卡API（正式）：`client.QueryBank()`
+* 获取RSA加密公钥API（正式）：`client.GetRSAPublicKey()`
+* 发放现金红包：`client.SendCashRed()`
+* 发放现金裂变红包：`client.SendGroupCashRed()`
+* 发放小程序红包：`client.SendAppletRed()`
+* 查询红包记录：`client.QueryRedRecord()`
+* 订单附加信息提交（海关）：`client.CustomsDeclareOrder()`
+* 订单附加信息查询（海关）：`client.CustomsDeclareQuery()`
+* 订单附加信息重推（海关）：`client.CustomsReDeclareOrder()`
+* 自定义方法请求微信API接口：`client.PostWeChatAPISelf()`
+
+### 微信公共v2 API
+
+* `wechat.GetParamSign()` => 获取微信支付所需参数里的Sign值（通过支付参数计算Sign值）
+* `wechat.GetSanBoxParamSign()` => 获取微信支付沙箱环境所需参数里的Sign值（通过支付参数计算Sign值）
+* `wechat.GetMiniPaySign()` => 获取微信小程序支付所需要的paySign
+* `wechat.GetH5PaySign()` => 获取微信内H5支付所需要的paySign
+* `wechat.GetAppPaySign()` => 获取APP支付所需要的paySign
+* `wechat.ParseNotifyToBodyMap()` => 解析微信支付异步通知的参数到BodyMap
+* `wechat.ParseNotify()` => 解析微信支付异步通知的参数
+* `wechat.ParseRefundNotify()` => 解析微信退款异步通知的参数
+* `wechat.VerifySign()` => 微信同步返回参数验签或异步通知参数验签
+* `wechat.Code2Session()` => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
+* `wechat.GetAppletAccessToken()` => 获取微信小程序全局唯一后台接口调用凭据
+* `wechat.GetAppletPaidUnionId()` => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
+* `wechat.GetPublicUserInfo()` => 微信公众号：获取用户基本信息
+* `wechat.GetPublicUserInfoBatch()` => 微信公众号：批量获取用户基本信息
+* `wechat.DecryptOpenDataToStruct()` => 加密数据，解密到指定结构体
+* `wechat.DecryptOpenDataToBodyMap()` => 加密数据，解密到 BodyMap
+* `wechat.GetOpenIdByAuthCode()` => 授权码查询openid
+* `wechat.GetOauth2AccessToken()` => 微信第三方登录，code 换取 access_token
+* `wechat.RefreshOauth2AccessToken()` => 刷新微信第三方登录后，获取到的 access_token
+* `wechat.CheckOauth2AccessToken()` => 检验授权凭证（access_token）是否有效
+* `wechat.GetOauth2UserInfo()` => 微信开放平台：获取用户个人信息
+* `wechat.DecryptRefundNotifyReqInfo()` => 解密微信退款异步通知的加密数据
