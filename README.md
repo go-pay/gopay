@@ -15,6 +15,8 @@
 
 ---
 
+<br>
+
 # 一、安装
 
 - v1.5.42 开始，仓库从 `github.com/iGoogle-ink/gopay` 迁移到 `github.com/go-pay/gopay`
@@ -40,6 +42,8 @@ func main() {
 
 ---
 
+<br>
+
 # 二、文档目录
 
 > ### 点击查看不同支付方式的使用文档
@@ -51,6 +55,8 @@ func main() {
 * #### [Apple](https://github.com/go-pay/gopay/blob/main/doc/apple.md)
 
 ---
+
+<br>
 
 # 三、其他说明
 
@@ -70,6 +76,8 @@ QQ群：
 <img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/wechat_jerry.png"/>
 
 ---
+
+<br>
 
 ## 赞赏多少是您的心意，感谢支持！
 
