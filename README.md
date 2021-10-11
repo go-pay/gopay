@@ -42,13 +42,13 @@ func main() {
 
 # 二、文档目录
 
-> 点击查看不同支付方式的使用文档
+> ### 点击查看不同支付方式的使用文档
 
-* [Alipay](https://github.com/go-pay/gopay/blob/main/doc/alipay.md)
-* [Wechat](https://github.com/go-pay/gopay/blob/main/doc/wechat_v3.md)
-* [QQ](https://github.com/go-pay/gopay/blob/main/doc/qq.md)
-* [Paypal](https://github.com/go-pay/gopay/blob/main/doc/paypal.md)
-* [Apple](https://github.com/go-pay/gopay/blob/main/doc/apple.md)
+* #### [Alipay](https://github.com/go-pay/gopay/blob/main/doc/alipay.md)
+* #### [Wechat](https://github.com/go-pay/gopay/blob/main/doc/wechat_v3.md)
+* #### [QQ](https://github.com/go-pay/gopay/blob/main/doc/qq.md)
+* #### [Paypal](https://github.com/go-pay/gopay/blob/main/doc/paypal.md)
+* #### [Apple](https://github.com/go-pay/gopay/blob/main/doc/apple.md)
 
 ---
 
@@ -73,9 +73,9 @@ QQ群：
 
 ## 赞赏多少是您的心意，感谢支持！
 
-<font color='#07C160' size='4'>微信：</font>
+微信：
 <img width="200" height="200" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_wx.png"/>
-<font color='#027AFF' size='4'>支付宝：</font>
+支付宝：
 <img width="200" height="200" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_zfb.png"/>
 
 ## License
