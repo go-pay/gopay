@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-pay/gopay/pkg/util"
+	"github.com/cedarwu/gopay/pkg/util"
 )
 
 type Client struct {

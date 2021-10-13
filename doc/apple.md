@@ -13,8 +13,8 @@
 
 ```go
 import (
-    "github.com/go-pay/gopay/apple"
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/cedarwu/gopay/apple"
+    "github.com/cedarwu/gopay/pkg/xlog"
 )
 
 pwd := ""

@@ -3,7 +3,7 @@ package apple
 import (
 	"testing"
 
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/cedarwu/gopay/pkg/xlog"
 )
 
 func TestVerify(t *testing.T) {

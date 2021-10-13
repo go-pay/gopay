@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/go-pay/gopay"
+	"github.com/cedarwu/gopay"
 )
 
 // ant.merchant.expand.shop.modify(修改蚂蚁店铺)
@@ -138,4 +138,3 @@ func (a *Client) AntMerchantShopClose(bm gopay.BodyMap) (aliRsp *AntMerchantShop
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
-

@@ -4,7 +4,7 @@
 
 > #### 希望有时间的伙伴儿Fork完后，补充并提交Pull Request，一起完善支付宝各个类别下的接口到相应的go文件中
 
-- 已实现API列表附录：[API 列表附录](https://github.com/go-pay/gopay/blob/main/doc/alipay.md#%E9%99%84%E5%BD%95)
+- 已实现API列表附录：[API 列表附录](https://github.com/cedarwu/gopay/blob/main/doc/alipay.md#%E9%99%84%E5%BD%95)
 
 - 支付宝官方文档：[官方文档](https://openhome.alipay.com/docCenter/docCenter.htm)
 
@@ -20,8 +20,8 @@
 
 ```go
 import (
-    "github.com/go-pay/gopay/alipay"
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/cedarwu/gopay/alipay"
+    "github.com/cedarwu/gopay/pkg/xlog"
 )
 
 // 初始化支付宝客户端
@@ -63,7 +63,7 @@ err := client.SetCertSnByContent("appCertPublicKey bytes", "alipayRootCert bytes
 - 统一收单交易支付接口 示例
 ```go
 import (
-    "github.com/go-pay/gopay"
+    "github.com/cedarwu/gopay"
 )
 
 // 初始化 BodyMap
@@ -98,7 +98,7 @@ if err != nil {
 
 ```go
 import (
-    "github.com/go-pay/gopay/alipay"
+    "github.com/cedarwu/gopay/alipay"
 )
 
 aliRsp, err := client.TradePay(bm)
@@ -125,7 +125,7 @@ ok, err := alipay.VerifySyncSignWithCert(aliPayPublicKeyCert, aliRsp.SignData, a
 
 ```go
 import (
-    "github.com/go-pay/gopay/alipay"
+    "github.com/cedarwu/gopay/alipay"
 )
 
 // 解析异步通知的参数
@@ -170,8 +170,8 @@ return c.String(http.StatusOK, "success")
 
 ```go
 import (
-    "github.com/go-pay/gopay/alipay"
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/cedarwu/gopay/alipay"
+    "github.com/cedarwu/gopay/pkg/xlog"
 )
 
 // 换取授权访问令牌（默认使用utf-8，RSA2）

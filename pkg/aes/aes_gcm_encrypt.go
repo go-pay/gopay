@@ -5,7 +5,7 @@ import (
 	"crypto/cipher"
 	"fmt"
 
-	"github.com/go-pay/gopay/pkg/util"
+	"github.com/cedarwu/gopay/pkg/util"
 )
 
 func GCMEncrypt(originText, additional, key []byte) (nonce []byte, cipherText []byte, err error) {

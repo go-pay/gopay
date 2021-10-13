@@ -9,8 +9,8 @@ import (
 	"encoding/xml"
 	"fmt"
 
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
+	"github.com/cedarwu/gopay"
+	"github.com/cedarwu/gopay/pkg/util"
 )
 
 // SendCashRed 创建现金红包

@@ -1,17 +1,17 @@
-<div align=center><img width="240" height="240" alt="Logo was Loading Faild!" src="https://raw.githubusercontent.com/go-pay/gopay/main/logo.png"/></div>
+<div align=center><img width="240" height="240" alt="Logo was Loading Faild!" src="https://raw.githubusercontent.com/cedarwu/gopay/main/logo.png"/></div>
 
 # GoPay
 
 #### 微信、支付宝、PayPal、QQ 的 Golang 版本SDK
 
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
-[![Github](https://img.shields.io/github/forks/go-pay/gopay?label=Fork&style=social)](https://github.com/go-pay/gopay/fork)
+[![Github](https://img.shields.io/github/forks/cedarwu/gopay?label=Fork&style=social)](https://github.com/cedarwu/gopay/fork)
 
 [![Golang](https://img.shields.io/badge/golang-1.16-brightgreen.svg)](https://golang.google.cn)
-[![GoDoc](https://img.shields.io/badge/doc-pkg.go.dev-informational.svg)](https://pkg.go.dev/github.com/go-pay/gopay)
-[![Drone CI](https://cloud.drone.io/api/badges/go-pay/gopay/status.svg)](https://cloud.drone.io/go-pay/gopay)
-[![GitHub Release](https://img.shields.io/github/v/release/go-pay/gopay)](https://github.com/go-pay/gopay/releases)
-[![License](https://img.shields.io/github/license/go-pay/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
+[![GoDoc](https://img.shields.io/badge/doc-pkg.go.dev-informational.svg)](https://pkg.go.dev/github.com/cedarwu/gopay)
+[![Drone CI](https://cloud.drone.io/api/badges/cedarwu/gopay/status.svg)](https://cloud.drone.io/cedarwu/gopay)
+[![GitHub Release](https://img.shields.io/github/v/release/cedarwu/gopay)](https://github.com/cedarwu/gopay/releases)
+[![License](https://img.shields.io/github/license/cedarwu/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
 
 ---
 
@@ -25,20 +25,20 @@
 
 # 一、安装
 
-- v1.5.42 开始，仓库从 `github.com/iGoogle-ink/gopay` 迁移到 `github.com/go-pay/gopay`
+- v1.5.42 开始，仓库从 `github.com/iGoogle-ink/gopay` 迁移到 `github.com/cedarwu/gopay`
 
 ```bash
-go get github.com/go-pay/gopay
+go get github.com/cedarwu/gopay
 ```
 
 #### 查看 GoPay 版本
 
-  [版本更新记录](https://github.com/go-pay/gopay/blob/main/release_note.txt)
+  [版本更新记录](https://github.com/cedarwu/gopay/blob/main/release_note.txt)
 
 ```go
 import (
-    "github.com/go-pay/gopay"
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/cedarwu/gopay"
+    "github.com/cedarwu/gopay/pkg/xlog"
 )
 
 func main() {
@@ -54,11 +54,11 @@ func main() {
 
 > ### 点击查看不同支付方式的使用文档
 
-* #### [Alipay](https://github.com/go-pay/gopay/blob/main/doc/alipay.md)
-* #### [Wechat](https://github.com/go-pay/gopay/blob/main/doc/wechat_v3.md)
-* #### [QQ](https://github.com/go-pay/gopay/blob/main/doc/qq.md)
-* #### [Paypal](https://github.com/go-pay/gopay/blob/main/doc/paypal.md)
-* #### [Apple](https://github.com/go-pay/gopay/blob/main/doc/apple.md)
+* #### [Alipay](https://github.com/cedarwu/gopay/blob/main/doc/alipay.md)
+* #### [Wechat](https://github.com/cedarwu/gopay/blob/main/doc/wechat_v3.md)
+* #### [QQ](https://github.com/cedarwu/gopay/blob/main/doc/qq.md)
+* #### [Paypal](https://github.com/cedarwu/gopay/blob/main/doc/paypal.md)
+* #### [Apple](https://github.com/cedarwu/gopay/blob/main/doc/apple.md)
 
 ---
 
@@ -77,9 +77,9 @@ func main() {
 * 开发过程中，请尽量使用正式环境，1分钱测试法！
 
 QQ群：
-<img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/qq_gopay.png"/>
+<img width="280" height="280" src="https://raw.githubusercontent.com/cedarwu/gopay/main/qq_gopay.png"/>
 加微信拉群：
-<img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/wechat_jerry.png"/>
+<img width="280" height="280" src="https://raw.githubusercontent.com/cedarwu/gopay/main/wechat_jerry.png"/>
 
 ---
 
@@ -88,9 +88,9 @@ QQ群：
 ## 赞赏多少是您的心意，感谢支持！
 
 微信：
-<img width="200" height="200" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_wx.png"/>
+<img width="200" height="200" src="https://raw.githubusercontent.com/cedarwu/gopay/main/zanshang_wx.png"/>
 支付宝：
-<img width="200" height="200" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_zfb.png"/>
+<img width="200" height="200" src="https://raw.githubusercontent.com/cedarwu/gopay/main/zanshang_zfb.png"/>
 
 ## License
 

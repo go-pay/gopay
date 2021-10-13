@@ -13,12 +13,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-pay/gopay/pkg/aes"
-	"github.com/go-pay/gopay/pkg/errgroup"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
-	"github.com/go-pay/gopay/pkg/xpem"
+	"github.com/cedarwu/gopay/pkg/aes"
+	"github.com/cedarwu/gopay/pkg/errgroup"
+	"github.com/cedarwu/gopay/pkg/util"
+	"github.com/cedarwu/gopay/pkg/xhttp"
+	"github.com/cedarwu/gopay/pkg/xlog"
+	"github.com/cedarwu/gopay/pkg/xpem"
 )
 
 // 获取微信平台证书公钥（获取后自行保存使用，如需定期刷新功能，自行实现）

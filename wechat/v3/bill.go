@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
+	"github.com/cedarwu/gopay"
+	"github.com/cedarwu/gopay/pkg/util"
 )
 
 // 申请交易账单API

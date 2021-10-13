@@ -2,7 +2,7 @@
 
 > 具体API使用介绍，请参考`gopay/paypal/client_test.go`,`gopay/paypal/order_test.go`,`gopay/paypal/payment_test.go`
 
-- 已实现API列表附录：[API List](https://github.com/go-pay/gopay/blob/main/doc/paypal.md#%E9%99%84%E5%BD%95)
+- 已实现API列表附录：[API List](https://github.com/cedarwu/gopay/blob/main/doc/paypal.md#%E9%99%84%E5%BD%95)
 
 - PayPal官方文档：[Official Document](https://developer.paypal.com/docs/api/overview)
 
@@ -12,8 +12,8 @@
 
 ```go
 import (
-    "github.com/go-pay/gopay/paypal"
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/cedarwu/gopay/paypal"
+    "github.com/cedarwu/gopay/pkg/xlog"
 )
 
 // 初始化PayPal支付客户端
@@ -35,10 +35,10 @@ client.DebugSwitch = gopay.DebugOn
 - Create Orders example
 ```go
 import (
-    "github.com/go-pay/gopay"
-    "github.com/go-pay/gopay/paypal"
-    "github.com/go-pay/gopay/pkg/util"
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/cedarwu/gopay"
+    "github.com/cedarwu/gopay/paypal"
+    "github.com/cedarwu/gopay/pkg/util"
+    "github.com/cedarwu/gopay/pkg/xlog"
 )
 
 // Create Orders example

@@ -4,9 +4,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/go-pay/gopay/alipay"
-	"github.com/go-pay/gopay/pkg/xlog"
-	"github.com/go-pay/gopay/pkg/xrsa"
+	"github.com/cedarwu/gopay/alipay"
+	"github.com/cedarwu/gopay/pkg/xlog"
+	"github.com/cedarwu/gopay/pkg/xrsa"
 )
 
 func FormatPrivateKey() {

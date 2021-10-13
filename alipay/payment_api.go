@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
+	"github.com/cedarwu/gopay"
+	"github.com/cedarwu/gopay/pkg/util"
 )
 
 // alipay.trade.pay(统一收单交易支付接口)

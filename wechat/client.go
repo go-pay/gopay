@@ -9,10 +9,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/cedarwu/gopay"
+	"github.com/cedarwu/gopay/pkg/util"
+	"github.com/cedarwu/gopay/pkg/xhttp"
+	"github.com/cedarwu/gopay/pkg/xlog"
 )
 
 type Client struct {
@@ -32,7 +32,17 @@ type Client struct {
 //	mchId：商户ID
 //	ApiKey：API秘钥值
 //	IsProd：是否是正式环境
-func NewClient(appId, mchId, apiKey string, isProd bool, httpClient *http.Client) (client *Client) {
+func NewClient(appId, mchId, apiKey string, isProd bool) (client *Client) {
+	return &Client{
+		AppId:       appId,
+		MchId:       mchId,
+		ApiKey:      apiKey,
+		IsProd:      isProd,
+		DebugSwitch: gopay.DebugOff,
+	}
+}
+
+func NewClientFromHttpClient(appId, mchId, apiKey string, isProd bool, httpClient *http.Client) (client *Client) {
 	return &Client{
 		AppId:       appId,
 		MchId:       mchId,
@@ -249,7 +259,7 @@ func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config
 
 func (w *Client) doProdPostPure(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	httpClient := xhttp.NewClientFromHttpClient(w)
+	httpClient := xhttp.NewClientFromHttpClient(w.HttpClient)
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}

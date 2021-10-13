@@ -1,7 +1,7 @@
 package apple
 
 import (
-	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/cedarwu/gopay/pkg/xhttp"
 )
 
 const (

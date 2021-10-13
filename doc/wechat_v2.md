@@ -2,7 +2,7 @@
 
 > #### 推荐使用v3接口，官方在v3接口实现未覆盖或gopay未开发的接口，还继续用v2接口。
 
-- 已实现API列表附录：[API 列表附录](https://github.com/go-pay/gopay/blob/main/doc/wechat_v2.md#%E9%99%84%E5%BD%95)
+- 已实现API列表附录：[API 列表附录](https://github.com/cedarwu/gopay/blob/main/doc/wechat_v2.md#%E9%99%84%E5%BD%95)
 
 ---
 
@@ -16,7 +16,7 @@
 
 ```go
 import (
-    "github.com/go-pay/gopay/wechat"
+    "github.com/cedarwu/gopay/wechat"
 )
 
 // 初始化微信客户端
@@ -55,8 +55,8 @@ client.AddCertPkcs12FileContent()
 
 ```go
 import (
-    "github.com/go-pay/gopay/pkg/util"
-    "github.com/go-pay/gopay/wechat"
+    "github.com/cedarwu/gopay/pkg/util"
+    "github.com/cedarwu/gopay/wechat"
 )
 
 // 初始化 BodyMap
@@ -106,7 +106,7 @@ wxRsp, err := client.Transfer(bm)
 
 ```go
 import (
-    "github.com/go-pay/gopay/wechat"
+    "github.com/cedarwu/gopay/wechat"
 )
 
 // ====微信小程序 paySign====
@@ -157,8 +157,8 @@ paySign := wechat.GetH5PaySign(AppID, wxRsp.NonceStr, packages, wechat.SignType_
 
 ```go
 import (
-    "github.com/go-pay/gopay"
-    "github.com/go-pay/gopay/wechat"
+    "github.com/cedarwu/gopay"
+    "github.com/cedarwu/gopay/wechat"
 )
 
 // ====同步返回参数验签Sign====
@@ -219,7 +219,7 @@ button按钮获取手机号码：[button组件文档](https://developers.weixin.
 
 ```go
 import (
-    "github.com/go-pay/gopay/wechat"
+    "github.com/cedarwu/gopay/wechat"
 )
 
 // 获取微信小程序用户的OpenId、SessionKey、UnionId

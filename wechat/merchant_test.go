@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xlog"
-	"github.com/go-pay/gopay/pkg/xrsa"
+	"github.com/cedarwu/gopay"
+	"github.com/cedarwu/gopay/pkg/util"
+	"github.com/cedarwu/gopay/pkg/xlog"
+	"github.com/cedarwu/gopay/pkg/xrsa"
 )
 
 func TestClient_Transfer(t *testing.T) {

@@ -117,7 +117,7 @@
 
 版本号：Release 1.5.42
 修改记录：
-   (1) 迁移新仓库 https://github.com/go-pay/gopay
+   (1) 迁移新仓库 https://github.com/cedarwu/gopay
 
 版本号：Release 1.5.41
 修改记录：

@@ -1,9 +1,9 @@
 package alipay
 
 import (
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/alipay"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/cedarwu/gopay"
+	"github.com/cedarwu/gopay/alipay"
+	"github.com/cedarwu/gopay/pkg/xlog"
 )
 
 func TradeCreate() {
