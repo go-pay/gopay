@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"net/http"
 	"strings"
 	"sync"
 
@@ -20,6 +21,7 @@ type Client struct {
 	ApiKey      string
 	BaseURL     string
 	IsProd      bool
+	HttpClient  *http.Client
 	DebugSwitch gopay.DebugSwitch
 	certificate *tls.Certificate
 	mu          sync.RWMutex
@@ -30,12 +32,13 @@ type Client struct {
 //	mchId：商户ID
 //	ApiKey：API秘钥值
 //	IsProd：是否是正式环境
-func NewClient(appId, mchId, apiKey string, isProd bool) (client *Client) {
+func NewClient(appId, mchId, apiKey string, isProd bool, httpClient *http.Client) (client *Client) {
 	return &Client{
 		AppId:       appId,
 		MchId:       mchId,
 		ApiKey:      apiKey,
 		IsProd:      isProd,
+		HttpClient:  httpClient,
 		DebugSwitch: gopay.DebugOff,
 	}
 }
@@ -187,7 +190,7 @@ func (w *Client) doSanBoxPost(bm gopay.BodyMap, path string) (bs []byte, err err
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, errs := xhttp.NewClient().Type(xhttp.TypeXML).Post(url).SendString(req).EndBytes()
+	res, bs, errs := xhttp.NewClientFromHttpClient(w.HttpClient).Type(xhttp.TypeXML).Post(url).SendString(req).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -217,7 +220,7 @@ func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config
 		bm.Set("sign", sign)
 	}
 
-	httpClient := xhttp.NewClient()
+	httpClient := xhttp.NewClientFromHttpClient(w.HttpClient)
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
@@ -246,7 +249,7 @@ func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config
 
 func (w *Client) doProdPostPure(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	httpClient := xhttp.NewClient()
+	httpClient := xhttp.NewClientFromHttpClient(w)
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
@@ -294,7 +297,7 @@ func (w *Client) doProdGet(bm gopay.BodyMap, path, signType string) (bs []byte, 
 	}
 	param := bm.EncodeURLParams()
 	url = url + "?" + param
-	res, bs, errs := xhttp.NewClient().Get(url).EndBytes()
+	res, bs, errs := xhttp.NewClientFromHttpClient(w.HttpClient).Get(url).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}

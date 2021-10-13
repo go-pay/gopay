@@ -146,6 +146,30 @@ func NewClient() (client *Client) {
 	return client
 }
 
+// NewClientFromHttpClient
+func NewClientFromHttpClient(httpClient *http.Client) (client *Client) {
+	if httpClient == nil {
+		httpClient = &http.Client{
+			Timeout: 60 * time.Second,
+			Transport: &http.Transport{
+				TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
+				DisableKeepAlives: true,
+				Proxy:             http.ProxyFromEnvironment,
+			},
+		}
+	}
+
+	client = &Client{
+		HttpClient:    httpClient,
+		Transport:     nil,
+		Header:        make(http.Header),
+		requestType:   TypeUrlencoded,
+		unmarshalType: string(TypeJSON),
+		Errors:        make([]error, 0),
+	}
+	return client
+}
+
 func (c *Client) SetTransport(transport *http.Transport) (client *Client) {
 	c.Transport = transport
 	return c
