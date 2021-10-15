@@ -61,11 +61,11 @@ func main() {
 # 三、其他说明
 
 * 各支付方式接入，请仔细查看 `xxx_test.go` 使用方式
-    * `wechat/client_test.go`
-    * `alipay/client_test.go`
-    * `qq/client_test.go`
-    * `paypal/client_test.go`
-    * `apple/verify_test.go`
+    * `gopay/wechat/v3/client_test.go`
+    * `gopay/alipay/client_test.go`
+    * `gopay/qq/client_test.go`
+    * `gopay/paypal/client_test.go`
+    * `gopay/apple/verify_test.go`
     * 或 examples
 * 有问题请加QQ群（加群验证答案：gopay），或加微信好友拉群。在此，非常感谢那些加群后，提出意见和反馈问题的同志们！
 * 开发过程中，请尽量使用正式环境，1分钱测试法！
