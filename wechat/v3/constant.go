@@ -10,6 +10,7 @@ const (
 	MethodDelete        = "DELETE"
 	MethodPATCH         = "PATCH"
 	HeaderAuthorization = "Authorization"
+	HeaderRequestID     = "Request-ID"
 
 	HeaderTimestamp = "Wechatpay-Timestamp"
 	HeaderNonce     = "Wechatpay-Nonce"

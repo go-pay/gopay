@@ -2,9 +2,12 @@ package wechat
 
 import (
 	"crypto/rsa"
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/gopay/pkg/xlog"
 	"github.com/go-pay/gopay/pkg/xpem"
@@ -26,7 +29,7 @@ type ClientV3 struct {
 //	mchid：商户ID 或者服务商模式的 sp_mchid
 // 	serialNo：商户API证书的证书序列号
 //	apiV3Key：APIv3Key，商户平台获取
-//	privateKey：私钥 apiclient_key.pem 读取后的字符串内容
+//	privateKey：商户API证书下载后，私钥 apiclient_key.pem 读取后的字符串内容
 func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3, err error) {
 	priKey, err := xpem.DecodePrivateKey([]byte(privateKey))
 	if err != nil {
@@ -39,14 +42,27 @@ func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3
 		privateKey:  priKey,
 		DebugSwitch: gopay.DebugOff,
 	}
+	// 自动获取
 	return client, nil
 }
 
 // AutoVerifySign 开启请求完自动验签功能（默认不开启，推荐开启）
-func (c *ClientV3) AutoVerifySign() {
-	if c.wxPublicKey != nil && c.wxSerialNo != "" {
-		c.autoSign = true
+//	开启自动验签，自动开启每12小时一次轮询，请求最新证书操作
+func (c *ClientV3) AutoVerifySign() (err error) {
+	wxPk, wxSerialNo, err := c.GetAndSelectNewestCert()
+	if err != nil {
+		return err
 	}
+	// decode cert
+	pubKey, err := xpem.DecodePublicKey([]byte(wxPk))
+	if err != nil {
+		return err
+	}
+	c.wxPublicKey = pubKey
+	c.wxSerialNo = wxSerialNo
+	c.autoSign = true
+	go c.autoCheckCertProc()
+	return
 }
 
 func (c *ClientV3) doProdPostWithHeader(headerMap map[string]string, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
@@ -60,6 +76,7 @@ func (c *ClientV3) doProdPostWithHeader(headerMap map[string]string, bm gopay.Bo
 		httpClient.Header.Add(k, v)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes()
@@ -89,7 +106,8 @@ func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
+	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
@@ -118,7 +136,8 @@ func (c *ClientV3) doProdGet(uri, authorization string) (res *http.Response, si 
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
+	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes()
 	if len(errs) > 0 {
@@ -147,7 +166,8 @@ func (c *ClientV3) doProdPut(bm gopay.BodyMap, path, authorization string) (res 
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
+	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Put(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
@@ -176,7 +196,8 @@ func (c *ClientV3) doProdDelete(bm gopay.BodyMap, path, authorization string) (r
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
+	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Delete(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
@@ -205,7 +226,8 @@ func (c *ClientV3) doProdPostFile(bm gopay.BodyMap, path, authorization string) 
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
+	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeMultipartFormData).Post(url).SendMultipartBodyMap(bm).EndBytes()
 	if len(errs) > 0 {
@@ -234,7 +256,8 @@ func (c *ClientV3) doProdPatch(bm gopay.BodyMap, path, authorization string) (re
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
+	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Patch(url).SendBodyMap(bm).EndBytes()
 	if len(errs) > 0 {

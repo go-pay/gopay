@@ -25,5 +25,8 @@
 * `qq.ParseNotifyToBodyMap()` => 解析QQ支付异步通知的结果到BodyMap
 * `qq.ParseNotify()` => 解析QQ支付异步通知的参数
 * `qq.VerifySign()` => QQ同步返回参数验签或异步通知参数验签
+* `qq.GetAccessToken()` => 获取 AccessToken 信息
+* `qq.GetOpenId()` => 获取 Openid 信息
+* `qq.GetUserInfo()` => 获取用户信息
 
 ---
