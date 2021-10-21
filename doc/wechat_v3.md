@@ -39,9 +39,12 @@ if err != nil {
     return
 }
 
-// 设置微信平台证书和序列号，并启用自动同步返回验签
-//	注意：请预先通过 wechat.GetPlatformCerts() 获取并维护微信平台证书和证书序列号
-client.SetPlatformCert([]byte(WxPkContent), WxPkSerialNo).AutoVerifySign()
+// 启用自动同步返回验签，并定时更新微信平台API证书
+err = client.AutoVerifySign()
+if err != nil {
+    xlog.Error(err)
+    return
+}
 
 // 打开Debug开关，输出日志，默认是关闭的
 client.DebugSwitch = gopay.DebugOn
@@ -60,7 +63,10 @@ import (
 expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 // 初始化 BodyMap
 bm := make(gopay.BodyMap)
-bm.Set("description", "测试Jsapi支付商品").
+bm.Set("sp_appid", "sp_appid").
+    Set("sp_mchid", "sp_mchid").
+    Set("sub_mchid", "sub_mchid").
+    Set("description", "测试Jsapi支付商品").
     Set("out_trade_no", tradeNo).
     Set("time_expire", expire).
     Set("notify_url", "https://www.fmm.ink").
@@ -69,7 +75,7 @@ bm.Set("description", "测试Jsapi支付商品").
             Set("currency", "CNY")
     }).
     SetBodyMap("payer", func(bm gopay.BodyMap) {
-        bm.Set("openid", "asdas")
+        bm.Set("sp_openid", "asdas")
     })
 
 wxRsp, err := client.V3TransactionJsapi(bm)
@@ -377,6 +383,8 @@ wechat.V3DecryptCombineNotifyCipherText()
 ### 微信v3公共 API
 
 * `wechat.GetPlatformCerts()` => 获取微信平台证书公钥
+* `client.GetPlatformCerts()` => 获取微信平台证书公钥
+* `client.GetAndSelectNewestCert()` => 获取并选择最新的有效证书
 * `wechat.V3VerifySign()` => 微信V3 版本验签（同步/异步）
 * `wechat.V3ParseNotify()` => 解析微信回调请求的参数到 V3NotifyReq 结构体
 * `client.V3EncryptText()` => 敏感参数信息加密

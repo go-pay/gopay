@@ -75,15 +75,18 @@ func TestMain(m *testing.M) {
 	//	mchid：商户ID
 	// 	serialNo：商户证书的证书序列号
 	//	apiV3Key：APIv3Key，商户平台获取
-	//	privateKey：私钥 apiclient_key.pem 读取后的字符串内容
+	//	privateKey：商户API证书下载后，私钥 apiclient_key.pem 读取后的字符串内容
 	client, err = NewClientV3(MchId, SerialNo, APIv3Key, PrivateKeyContent)
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
-	// 设置微信平台证书和序列号，并启用自动同步返回验签
-	//	注意：请预先通过 wechat.GetPlatformCerts() 获取并维护微信平台公钥证书和证书序列号
-	client.SetPlatformCert([]byte(WxPublicKeyContent), WxPublicKeySerialNo).AutoVerifySign()
+	// 启用自动同步返回验签，并定时更新微信平台API证书
+	err = client.AutoVerifySign()
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
 
 	// 打开Debug开关，输出日志
 	client.DebugSwitch = gopay.DebugOff
@@ -117,8 +120,8 @@ func TestGetPlatformCerts(t *testing.T) {
 	}
 	if certs.Code == Success {
 		for _, v := range certs.Certs {
-			xlog.Infof("生效时间: %s", v.EffectiveTime)
-			xlog.Infof("到期时间: %s", v.ExpireTime)
+			xlog.Infof("生效时间: %s", v.EffectiveTime) // 2021-09-26T17:17:58+08:00
+			xlog.Infof("到期时间: %s", v.ExpireTime)    // 2026-09-25T17:17:58+08:00
 			xlog.Infof("WxSerialNo: %s", v.SerialNo)
 			xlog.Infof("WxContent: \n%s", v.PublicKey)
 		}
@@ -154,7 +157,10 @@ func TestV3Jsapi(t *testing.T) {
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
 	bm := make(gopay.BodyMap)
-	bm.Set("description", "测试Jsapi支付商品").
+	bm.Set("sp_appid", "sp_appid").
+		Set("sp_mchid", "sp_mchid").
+		Set("sub_mchid", "sub_mchid").
+		Set("description", "测试Jsapi支付商品").
 		Set("out_trade_no", tradeNo).
 		Set("time_expire", expire).
 		Set("notify_url", "https://www.fmm.ink").
@@ -163,14 +169,14 @@ func TestV3Jsapi(t *testing.T) {
 				Set("currency", "CNY")
 		}).
 		SetBodyMap("payer", func(bm gopay.BodyMap) {
-			bm.Set("openid", "asdas")
+			bm.Set("sp_openid", "asdas")
 		})
-	text, err := client.V3EncryptText("张三")
-	if err != nil {
-		xlog.Errorf("client.V3EncryptText(),err:%+v", err)
-		err = nil
-	}
-	xlog.Debugf("加密text: %s", text)
+	//text, err := client.V3EncryptText("张三")
+	//if err != nil {
+	//	xlog.Errorf("client.V3EncryptText(),err:%+v", err)
+	//	err = nil
+	//}
+	//xlog.Debugf("加密text: %s", text)
 
 	wxRsp, err := client.V3TransactionJsapi(bm)
 	if err != nil {
@@ -218,10 +224,12 @@ func TestV3PartnerNative(t *testing.T) {
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
 	bm := make(gopay.BodyMap)
-	bm.Set("description", "测试Native支付商品").
+	bm.Set("sp_appid", "sp_appid").
+		Set("sp_mchid", "sp_mchid").
+		Set("sub_mchid", "sub_mchid").
 		Set("out_trade_no", tradeNo).
+		Set("description", "测试Native支付商品").
 		Set("time_expire", expire).
-		Set("sub_mchid", "1900000109").
 		//Set("notify_url", "https://api2.fangyiyun.com/api/v1/wechat/callback").
 		Set("notify_url", "https://www.fmm.ink").
 		SetBodyMap("amount", func(bm gopay.BodyMap) {

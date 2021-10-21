@@ -1,3 +1,12 @@
+版本号：Release 1.5.60
+修改记录：
+   (1) 微信V3：不再推荐使用 client.SetPlatformCert() 方法
+   (2) 微信V3：新增 client.GetAndSelectNewestCert() 方法
+   (3) 微信V3：重构 client.AutoVerifySign() 方法
+   (4) QQ：新增 qq.GetAccessToken() 方法
+   (5) QQ：新增 qq.GetOpenId() 方法
+   (6) QQ：新增 qq.GetUserInfo() 方法
+
 版本号：Release 1.5.59
 修改记录：
    (1) 微信V3：证书获取方法返回结构体，去除 SignInfo 字段
