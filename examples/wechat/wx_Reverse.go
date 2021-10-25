@@ -1,6 +1,8 @@
 package wechat
 
 import (
+	"context"
+
 	"github.com/cedarwu/gopay"
 	"github.com/cedarwu/gopay/pkg/util"
 	"github.com/cedarwu/gopay/pkg/xlog"
@@ -23,7 +25,7 @@ func Reverse() {
 		Set("sign_type", wechat.SignType_MD5)
 
 	//请求撤销订单，成功后得到结果，沙箱环境下，证书路径参数可传空
-	wxRsp, err := client.Reverse(bm)
+	wxRsp, err := client.Reverse(context.Background(), bm)
 	if err != nil {
 		xlog.Error(err)
 		return

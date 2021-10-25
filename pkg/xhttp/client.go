@@ -2,6 +2,7 @@ package xhttp
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"encoding/xml"
@@ -123,6 +124,7 @@ type Client struct {
 
 	Errors []error
 
+	ctx context.Context
 	//mu sync.RWMutex
 }
 
@@ -147,7 +149,7 @@ func NewClient() (client *Client) {
 }
 
 // NewClientFromHttpClient
-func NewClientFromHttpClient(httpClient *http.Client) (client *Client) {
+func NewClientFromHttpClient(ctx context.Context, httpClient *http.Client) (client *Client) {
 	if httpClient == nil {
 		httpClient = &http.Client{
 			Timeout: 60 * time.Second,
@@ -166,6 +168,7 @@ func NewClientFromHttpClient(httpClient *http.Client) (client *Client) {
 		requestType:   TypeUrlencoded,
 		unmarshalType: string(TypeJSON),
 		Errors:        make([]error, 0),
+		ctx:           ctx,
 	}
 	return client
 }

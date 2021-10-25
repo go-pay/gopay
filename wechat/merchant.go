@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"crypto/tls"
 	"encoding/xml"
 	"errors"
@@ -268,7 +269,7 @@ func (w *Client) profitSharing(bm gopay.BodyMap, uri string) (wxRsp *ProfitShari
 	if err != nil {
 		return nil, err
 	}
-	bs, err := w.doProdPost(bm, uri, tlsConfig)
+	bs, err := w.doProdPost(context.Background(), bm, uri, tlsConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -294,7 +295,7 @@ func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQuery
 		sign := getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
 		bm.Set("sign", sign)
 	}
-	bs, err := w.doProdPostPure(bm, profitSharingQuery, nil)
+	bs, err := w.doProdPostPure(context.Background(), bm, profitSharingQuery, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -315,7 +316,7 @@ func (w *Client) ProfitSharingAddReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharin
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
-	bs, err := w.doProdPost(bm, profitSharingAddReceiver, nil)
+	bs, err := w.doProdPost(context.Background(), bm, profitSharingAddReceiver, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -336,7 +337,7 @@ func (w *Client) ProfitSharingRemoveReceiver(bm gopay.BodyMap) (wxRsp *ProfitSha
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
-	bs, err := w.doProdPost(bm, profitSharingRemoveReceiver, nil)
+	bs, err := w.doProdPost(context.Background(), bm, profitSharingRemoveReceiver, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -364,7 +365,7 @@ func (w *Client) ProfitSharingFinish(bm gopay.BodyMap) (wxRsp *ProfitSharingResp
 	if err != nil {
 		return nil, err
 	}
-	bs, err := w.doProdPost(bm, profitSharingFinish, tlsConfig)
+	bs, err := w.doProdPost(context.Background(), bm, profitSharingFinish, tlsConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -397,7 +398,7 @@ func (w *Client) ProfitSharingReturn(bm gopay.BodyMap) (wxRsp *ProfitSharingRetu
 	if err != nil {
 		return nil, err
 	}
-	bs, err := w.doProdPost(bm, profitSharingReturn, tlsConfig)
+	bs, err := w.doProdPost(context.Background(), bm, profitSharingReturn, tlsConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -423,7 +424,7 @@ func (w *Client) ProfitSharingReturnQuery(bm gopay.BodyMap) (wxRsp *ProfitSharin
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
-	bs, err := w.doProdPost(bm, profitSharingReturnQuery, nil)
+	bs, err := w.doProdPost(context.Background(), bm, profitSharingReturnQuery, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"encoding/xml"
 	"fmt"
 
@@ -15,7 +16,7 @@ func (w *Client) CustomsDeclareOrder(bm gopay.BodyMap) (wxRsp *CustomsDeclareOrd
 		return nil, err
 	}
 	bm.Set("sign_type", SignType_MD5)
-	bs, err := w.doProdPost(bm, customsDeclareOrder, nil)
+	bs, err := w.doProdPost(context.Background(), bm, customsDeclareOrder, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +35,7 @@ func (w *Client) CustomsDeclareQuery(bm gopay.BodyMap) (wxRsp *CustomsDeclareQue
 		return nil, err
 	}
 	bm.Set("sign_type", SignType_MD5)
-	bs, err := w.doProdPost(bm, customsDeclareQuery, nil)
+	bs, err := w.doProdPost(context.Background(), bm, customsDeclareQuery, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +54,7 @@ func (w *Client) CustomsReDeclareOrder(bm gopay.BodyMap) (wxRsp *CustomsReDeclar
 		return nil, err
 	}
 	bm.Set("sign_type", SignType_MD5)
-	bs, err := w.doProdPost(bm, customsReDeclareOrder, nil)
+	bs, err := w.doProdPost(context.Background(), bm, customsReDeclareOrder, nil)
 	if err != nil {
 		return nil, err
 	}

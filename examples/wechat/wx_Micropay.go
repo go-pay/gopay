@@ -1,6 +1,8 @@
 package wechat
 
 import (
+	"context"
+
 	"github.com/cedarwu/gopay"
 	"github.com/cedarwu/gopay/pkg/util"
 	"github.com/cedarwu/gopay/pkg/xlog"
@@ -29,7 +31,7 @@ func Micropay() {
 		Set("sign_type", wechat.SignType_MD5)
 
 	//请求支付，成功后得到结果
-	wxRsp, err := client.Micropay(bm)
+	wxRsp, err := client.Micropay(context.Background(), bm)
 	if err != nil {
 		xlog.Error(err)
 		return

@@ -1,6 +1,8 @@
 package wechat
 
 import (
+	"context"
+
 	"github.com/cedarwu/gopay"
 	"github.com/cedarwu/gopay/pkg/util"
 	"github.com/cedarwu/gopay/pkg/xlog"
@@ -23,7 +25,7 @@ func QueryOrder() {
 		Set("sign_type", wechat.SignType_MD5)
 
 	// 请求订单查询，成功后得到结果
-	wxRsp, resBm, err := client.QueryOrder(bm)
+	wxRsp, resBm, err := client.QueryOrder(context.Background(), bm)
 	if err != nil {
 		xlog.Error(err)
 		return

@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"crypto/tls"
 	"encoding/xml"
 	"errors"
@@ -58,7 +59,7 @@ func NewClientFromHttpClient(appId, mchId, apiKey string, isProd bool, httpClien
 //	path：接口地址去掉baseURL的path，例如：url为https://api.mch.weixin.qq.com/pay/micropay，只需传 pay/micropay
 //	tlsConfig：tls配置，如无需证书请求，传nil
 func (w *Client) PostWeChatAPISelf(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
-	return w.doProdPost(bm, path, tlsConfig)
+	return w.doProdPost(context.Background(), bm, path, tlsConfig)
 }
 
 // 授权码查询openid（正式）
@@ -69,7 +70,7 @@ func (w *Client) AuthCodeToOpenId(bm gopay.BodyMap) (wxRsp *AuthCodeToOpenIdResp
 		return nil, err
 	}
 
-	bs, err := w.doProdPost(bm, authCodeToOpenid, nil)
+	bs, err := w.doProdPost(context.Background(), bm, authCodeToOpenid, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -93,9 +94,9 @@ func (w *Client) DownloadBill(bm gopay.BodyMap) (wxRsp string, err error) {
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doProdPost(bm, downloadBill, nil)
+		bs, err = w.doProdPost(context.Background(), bm, downloadBill, nil)
 	} else {
-		bs, err = w.doSanBoxPost(bm, sandboxDownloadBill)
+		bs, err = w.doSanBoxPost(context.Background(), bm, sandboxDownloadBill)
 	}
 	if err != nil {
 		return util.NULL, err
@@ -121,7 +122,7 @@ func (w *Client) DownloadFundFlow(bm gopay.BodyMap) (wxRsp string, err error) {
 	if err != nil {
 		return util.NULL, err
 	}
-	bs, err := w.doProdPost(bm, downloadFundFlow, tlsConfig)
+	bs, err := w.doProdPost(context.Background(), bm, downloadFundFlow, tlsConfig)
 	if err != nil {
 		return util.NULL, err
 	}
@@ -143,9 +144,9 @@ func (w *Client) Report(bm gopay.BodyMap) (wxRsp *ReportResponse, err error) {
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doProdPost(bm, report, nil)
+		bs, err = w.doProdPost(context.Background(), bm, report, nil)
 	} else {
-		bs, err = w.doSanBoxPost(bm, sandboxReport)
+		bs, err = w.doSanBoxPost(context.Background(), bm, sandboxReport)
 	}
 	if err != nil {
 		return nil, err
@@ -171,7 +172,7 @@ func (w *Client) BatchQueryComment(bm gopay.BodyMap) (wxRsp string, err error) {
 	if err != nil {
 		return util.NULL, err
 	}
-	bs, err := w.doProdPost(bm, batchQueryComment, tlsConfig)
+	bs, err := w.doProdPost(context.Background(), bm, batchQueryComment, tlsConfig)
 	if err != nil {
 		return util.NULL, err
 	}
@@ -179,7 +180,7 @@ func (w *Client) BatchQueryComment(bm gopay.BodyMap) (wxRsp string, err error) {
 }
 
 // doSanBoxPost sanbox环境post请求
-func (w *Client) doSanBoxPost(bm gopay.BodyMap, path string) (bs []byte, err error) {
+func (w *Client) doSanBoxPost(ctx context.Context, bm gopay.BodyMap, path string) (bs []byte, err error) {
 	var url = baseUrlCh + path
 	bm.Set("appid", w.AppId)
 	bm.Set("mch_id", w.MchId)
@@ -200,7 +201,7 @@ func (w *Client) doSanBoxPost(bm gopay.BodyMap, path string) (bs []byte, err err
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, errs := xhttp.NewClientFromHttpClient(w.HttpClient).Type(xhttp.TypeXML).Post(url).SendString(req).EndBytes()
+	res, bs, errs := xhttp.NewClientFromHttpClient(ctx, w.HttpClient).Type(xhttp.TypeXML).Post(url).SendString(req).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
@@ -217,7 +218,7 @@ func (w *Client) doSanBoxPost(bm gopay.BodyMap, path string) (bs []byte, err err
 }
 
 // Post请求、正式
-func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
+func (w *Client) doProdPost(ctx context.Context, bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
 	var url = baseUrlCh + path
 	if bm.GetString("appid") == util.NULL {
 		bm.Set("appid", w.AppId)
@@ -230,7 +231,7 @@ func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config
 		bm.Set("sign", sign)
 	}
 
-	httpClient := xhttp.NewClientFromHttpClient(w.HttpClient)
+	httpClient := xhttp.NewClientFromHttpClient(ctx, w.HttpClient)
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
@@ -257,9 +258,9 @@ func (w *Client) doProdPost(bm gopay.BodyMap, path string, tlsConfig *tls.Config
 	return bs, nil
 }
 
-func (w *Client) doProdPostPure(bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
+func (w *Client) doProdPostPure(ctx context.Context, bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	httpClient := xhttp.NewClientFromHttpClient(w.HttpClient)
+	httpClient := xhttp.NewClientFromHttpClient(ctx, w.HttpClient)
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
@@ -287,7 +288,7 @@ func (w *Client) doProdPostPure(bm gopay.BodyMap, path string, tlsConfig *tls.Co
 }
 
 // Get请求、正式
-func (w *Client) doProdGet(bm gopay.BodyMap, path, signType string) (bs []byte, err error) {
+func (w *Client) doProdGet(ctx context.Context, bm gopay.BodyMap, path, signType string) (bs []byte, err error) {
 	var url = baseUrlCh + path
 	if bm.GetString("appid") == util.NULL {
 		bm.Set("appid", w.AppId)
@@ -307,7 +308,7 @@ func (w *Client) doProdGet(bm gopay.BodyMap, path, signType string) (bs []byte, 
 	}
 	param := bm.EncodeURLParams()
 	url = url + "?" + param
-	res, bs, errs := xhttp.NewClientFromHttpClient(w.HttpClient).Get(url).EndBytes()
+	res, bs, errs := xhttp.NewClientFromHttpClient(ctx, w.HttpClient).Get(url).EndBytes()
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}

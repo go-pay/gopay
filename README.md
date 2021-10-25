@@ -83,15 +83,6 @@ QQ群：
 
 ---
 
-<br>
-
-## 赞赏多少是您的心意，感谢支持！
-
-微信：
-<img width="200" height="200" src="https://raw.githubusercontent.com/cedarwu/gopay/main/zanshang_wx.png"/>
-支付宝：
-<img width="200" height="200" src="https://raw.githubusercontent.com/cedarwu/gopay/main/zanshang_zfb.png"/>
-
 ## License
 
 ```
