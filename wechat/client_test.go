@@ -71,7 +71,7 @@ func TestClient_GetTransferInfo(t *testing.T) {
 
 	// 查询企业付款
 	//    body：参数Body
-	wxRsp, err := client.GetTransferInfo(bm)
+	wxRsp, err := client.GetTransferInfo(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.GetTransferInfo(%+v),error:%+v", bm, err)
 		return

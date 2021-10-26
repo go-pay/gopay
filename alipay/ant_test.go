@@ -1,14 +1,11 @@
 package alipay
 
 import (
-	"context"
 	"testing"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xlog"
 )
-
-var ctx = context.Background()
 
 func TestAntMerchantShopModify(t *testing.T) {
 	// 请求参数
