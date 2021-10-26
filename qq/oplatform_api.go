@@ -1,6 +1,7 @@
 package qq
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -71,13 +72,13 @@ type UserInfo struct {
 // redirect_uri	必须	与上面一步中传入的redirect_uri保持一致。
 // fmt	可选	因历史原因，默认是x-www-form-urlencoded格式，如果填写json，则返回json格式
 //	文档：https://wiki.connect.qq.com/%E4%BD%BF%E7%94%A8authorization_code%E8%8E%B7%E5%8F%96access_token#Step2.EF.BC.9A.E9.80.9A.E8.BF.87AuthorizationCode.E8.8E.B7.E5.8F.96AccessToken
-func GetAccessToken(appId, appSecret, code, redirectUri string) (accessToken *AccessToken, err error) {
+func GetAccessToken(ctx context.Context, appId, appSecret, code, redirectUri string) (accessToken *AccessToken, err error) {
 	accessToken = new(AccessToken)
 	url := "https://graph.qq.com/oauth2.0/token?client_id=" + appId + "&client_secret=" + appSecret + "&code=" + code + "&redirect_uri=" + redirectUri + "&fmt=json" + "&grant_type=authorization_code"
 
-	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, accessToken)
+	if err != nil {
+		return nil, err
 	}
 	return accessToken, nil
 }
@@ -88,15 +89,15 @@ func GetAccessToken(appId, appSecret, code, redirectUri string) (accessToken *Ac
 //	oauthConsumerKey：AppID
 //	lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
 //	文档：https://wiki.open.qq.com/wiki/website/%E5%BC%80%E5%8F%91%E6%94%BB%E7%95%A5_Server-side#Step2.EF.BC.9A.E8.8E.B7.E5.8F.96Authorization_Code
-func GetOpenId(accessToken string, lang ...string) (openid *OpenIdInfo, err error) {
+func GetOpenId(ctx context.Context, accessToken string, lang ...string) (openid *OpenIdInfo, err error) {
 	openid = new(OpenIdInfo)
 	url := "https://graph.qq.com/oauth2.0/me?access_token=" + accessToken + "&unionid=1"
 	if len(lang) == 1 {
 		url += "&lang=" + lang[0]
 	}
-	_, bs, errs := xhttp.NewClient().Get(url).EndBytes()
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, bs, err := xhttp.NewClient().Get(url).EndBytes(ctx)
+	if err != nil {
+		return nil, err
 	}
 	var (
 		MarkBefore = "{"
@@ -121,15 +122,15 @@ func GetOpenId(accessToken string, lang ...string) (openid *OpenIdInfo, err erro
 //	oauthConsumerKey：AppID
 //	lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
 //	文档：https://wiki.open.qq.com/wiki/website/get_user_info
-func GetUserInfo(accessToken, openId string, oauthConsumerKey string, lang ...string) (userInfo *UserInfo, err error) {
+func GetUserInfo(ctx context.Context, accessToken, openId string, oauthConsumerKey string, lang ...string) (userInfo *UserInfo, err error) {
 	userInfo = new(UserInfo)
 	url := "https://graph.qq.com/user/get_user_info?access_token=" + accessToken + "&openid=" + openId + "&oauth_consumer_key=" + oauthConsumerKey
 	if len(lang) == 1 {
 		url += "&lang=" + lang[0]
 	}
-	_, errs := xhttp.NewClient().Get(url).EndStruct(userInfo)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, userInfo)
+	if err != nil {
+		return nil, err
 	}
 	return userInfo, nil
 }

@@ -23,12 +23,12 @@ func TradeRefund() {
 		SetSignType(alipay.RSA2)
 
 	//请求参数
-	body := make(gopay.BodyMap)
-	body.Set("out_trade_no", "GZ201907301420334577")
-	body.Set("refund_amount", "5")
-	body.Set("refund_reason", "测试退款")
+	bm := make(gopay.BodyMap)
+	bm.Set("out_trade_no", "GZ201907301420334577")
+	bm.Set("refund_amount", "5")
+	bm.Set("refund_reason", "测试退款")
 	//发起退款请求
-	aliRsp, err := client.TradeRefund(body)
+	aliRsp, err := client.TradeRefund(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

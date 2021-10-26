@@ -20,7 +20,7 @@ func (a *Client) ZhimaCreditScoreGet(bm gopay.BodyMap) (aliRsp *ZhimaCreditScore
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.score.get"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.score.get"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditScoreGetResponse)
@@ -47,7 +47,7 @@ func (a *Client) ZhimaCreditEpSceneRatingInitialize(bm gopay.BodyMap) (aliRsp *Z
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.ep.scene.rating.initialize"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.ep.scene.rating.initialize"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditEpSceneRatingInitializeRsp)
@@ -71,7 +71,7 @@ func (a *Client) ZhimaCreditEpSceneFulfillmentSync(bm gopay.BodyMap) (aliRsp *Zh
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.ep.scene.fulfillment.sync"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.ep.scene.fulfillment.sync"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditEpSceneFulfillmentSyncRsp)
@@ -95,7 +95,7 @@ func (a *Client) ZhimaCreditEpSceneAgreementUse(bm gopay.BodyMap) (aliRsp *Zhima
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.ep.scene.agreement.use"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.ep.scene.agreement.use"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditEpSceneAgreementUseRsp)
@@ -119,7 +119,7 @@ func (a *Client) ZhimaCreditEpSceneAgreementCancel(bm gopay.BodyMap) (aliRsp *Zh
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.ep.scene.agreement.cancel"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.ep.scene.agreement.cancel"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditEpSceneAgreementCancelRsp)
@@ -143,7 +143,7 @@ func (a *Client) ZhimaCreditEpSceneFulfillmentlistSync(bm gopay.BodyMap) (aliRsp
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.ep.scene.fulfillmentlist.sync"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.ep.scene.fulfillmentlist.sync"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditEpSceneFulfillmentlistSyncRsp)
@@ -167,7 +167,7 @@ func (a *Client) ZhimaCreditPeZmgoCumulationSync(bm gopay.BodyMap) (aliRsp *Zhim
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.cumulation.sync"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.pe.zmgo.cumulation.sync"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditPeZmgoCumulationSyncRsp)
@@ -191,7 +191,7 @@ func (a *Client) ZhimaMerchantZmgoCumulateSync(bm gopay.BodyMap) (aliRsp *ZhimaM
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.merchant.zmgo.cumulate.sync"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.merchant.zmgo.cumulate.sync"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaMerchantZmgoCumulateSyncRsp)
@@ -215,7 +215,7 @@ func (a *Client) ZhimaMerchantZmgoCumulateQuery(bm gopay.BodyMap) (aliRsp *Zhima
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.merchant.zmgo.cumulate.query"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.merchant.zmgo.cumulate.query"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaMerchantZmgoCumulateQueryRsp)
@@ -239,7 +239,7 @@ func (a *Client) ZhimaCreditPeZmgoBizoptClose(bm gopay.BodyMap) (aliRsp *ZhimaCr
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.bizopt.close"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.pe.zmgo.bizopt.close"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditPeZmgoBizoptCloseRsp)
@@ -263,7 +263,7 @@ func (a *Client) ZhimaCreditPeZmgoSettleRefund(bm gopay.BodyMap) (aliRsp *ZhimaC
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.settle.refund"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.pe.zmgo.settle.refund"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditPeZmgoSettleRefundRsp)
@@ -287,7 +287,7 @@ func (a *Client) ZhimaCreditPeZmgoPreorderCreate(bm gopay.BodyMap) (aliRsp *Zhim
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.preorder.create"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.pe.zmgo.preorder.create"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditPeZmgoPreorderCreateRsp)
@@ -311,7 +311,7 @@ func (a *Client) ZhimaCreditPeZmgoAgreementUnsign(bm gopay.BodyMap) (aliRsp *Zhi
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.agreement.unsign"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.pe.zmgo.agreement.unsign"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditPeZmgoAgreementUnsignRsp)
@@ -335,7 +335,7 @@ func (a *Client) ZhimaCreditPeZmgoAgreementQuery(bm gopay.BodyMap) (aliRsp *Zhim
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.agreement.query"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.pe.zmgo.agreement.query"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditPeZmgoAgreementQueryRsp)
@@ -359,7 +359,7 @@ func (a *Client) ZhimaCreditPeZmgoSettleUnfreeze(bm gopay.BodyMap) (aliRsp *Zhim
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.settle.unfreeze"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.pe.zmgo.settle.unfreeze"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditPeZmgoSettleUnfreezeRsp)
@@ -383,7 +383,7 @@ func (a *Client) ZhimaCreditPeZmgoPaysignApply(bm gopay.BodyMap) (aliRsp *ZhimaC
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.paysign.apply"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.pe.zmgo.paysign.apply"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditPeZmgoPaysignApplyRsp)
@@ -407,7 +407,7 @@ func (a *Client) ZhimaCreditPeZmgoPaysignConfirm(bm gopay.BodyMap) (aliRsp *Zhim
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.credit.pe.zmgo.paysign.confirm"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.pe.zmgo.paysign.confirm"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCreditPeZmgoPaysignConfirmRsp)
@@ -427,7 +427,7 @@ func (a *Client) ZhimaCreditPeZmgoPaysignConfirm(bm gopay.BodyMap) (aliRsp *Zhim
 //	文档地址：https://opendocs.alipay.com/apis/022mvz
 func (a *Client) ZhimaCustomerJobworthAdapterQuery(bm gopay.BodyMap) (aliRsp *ZhimaCustomerJobworthAdapterQueryRsp, err error) {
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.customer.jobworth.adapter.query"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.customer.jobworth.adapter.query"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCustomerJobworthAdapterQueryRsp)
@@ -447,7 +447,7 @@ func (a *Client) ZhimaCustomerJobworthAdapterQuery(bm gopay.BodyMap) (aliRsp *Zh
 //	文档地址：https://opendocs.alipay.com/apis/022waz
 func (a *Client) ZhimaCustomerJobworthSceneUse(bm gopay.BodyMap) (aliRsp *ZhimaCustomerJobworthSceneUseRsp, err error) {
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "zhima.customer.jobworth.scene.use"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "zhima.customer.jobworth.scene.use"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(ZhimaCustomerJobworthSceneUseRsp)

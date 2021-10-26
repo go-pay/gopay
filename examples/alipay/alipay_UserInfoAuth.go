@@ -29,7 +29,7 @@ func UserInfoAuth() {
 	bm.Set("state", "init")
 
 	// 发起请求
-	aliRsp, err := client.UserInfoAuth(bm)
+	aliRsp, err := client.UserInfoAuth(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

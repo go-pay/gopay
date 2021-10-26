@@ -6,6 +6,7 @@
 package wechat
 
 import (
+	"context"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/md5"
@@ -186,7 +187,7 @@ func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.Bo
 //	authCode:用户授权码
 //	nonceStr:随即字符串
 //	文档：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_13&index=9
-func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openIdRsp *OpenIdByAuthCodeRsp, err error) {
+func GetOpenIdByAuthCode(ctx context.Context, appId, mchId, apiKey, authCode, nonceStr string) (openIdRsp *OpenIdByAuthCodeRsp, err error) {
 	var (
 		url string
 		bm  gopay.BodyMap
@@ -200,9 +201,9 @@ func GetOpenIdByAuthCode(appId, mchId, apiKey, authCode, nonceStr string) (openI
 	bm.Set("sign", getReleaseSign(apiKey, SignType_MD5, bm))
 
 	openIdRsp = new(OpenIdByAuthCodeRsp)
-	_, errs := xhttp.NewClient().Type(xhttp.TypeXML).Post(url).SendString(GenerateXml(bm)).EndStruct(openIdRsp)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err = xhttp.NewClient().Type(xhttp.TypeXML).Post(url).SendString(GenerateXml(bm)).EndStruct(ctx, openIdRsp)
+	if err != nil {
+		return nil, err
 	}
 	return openIdRsp, nil
 }

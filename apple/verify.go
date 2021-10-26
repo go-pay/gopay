@@ -1,6 +1,8 @@
 package apple
 
 import (
+	"context"
+
 	"github.com/go-pay/gopay/pkg/xhttp"
 )
 
@@ -16,12 +18,12 @@ const (
 //	url：取 UrlProd 或 UrlSandbox
 //	pwd：苹果APP秘钥，https://help.apple.com/app-store-connect/#/devf341c0f01
 // 	文档：https://developer.apple.com/documentation/appstorereceipts/verifyreceipt
-func VerifyReceipt(url, pwd, receipt string) (*VerifyResponse, error) {
+func VerifyReceipt(ctx context.Context, url, pwd, receipt string) (*VerifyResponse, error) {
 	req := &VerifyRequest{Receipt: receipt, Password: pwd}
 	vr := new(VerifyResponse)
-	_, errs := xhttp.NewClient().Type(xhttp.TypeJSON).Post(url).SendStruct(req).EndStruct(vr)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err := xhttp.NewClient().Type(xhttp.TypeJSON).Post(url).SendStruct(req).EndStruct(ctx, vr)
+	if err != nil {
+		return nil, err
 	}
 	return vr, nil
 }

@@ -23,7 +23,7 @@ func QueryOrder() {
 		Set("sign_type", wechat.SignType_MD5)
 
 	// 请求订单查询，成功后得到结果
-	wxRsp, resBm, err := client.QueryOrder(bm)
+	wxRsp, resBm, err := client.QueryOrder(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return

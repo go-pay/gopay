@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -14,7 +15,7 @@ import (
 //	Code = 0 is success
 //	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter2_1_1.shtml
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter2_1_1.shtml
-func (c *ClientV3) V3MediaUploadImage(fileName, fileSha256 string, img *util.File) (wxRsp *MediaUploadRsp, err error) {
+func (c *ClientV3) V3MediaUploadImage(ctx context.Context, fileName, fileSha256 string, img *util.File) (wxRsp *MediaUploadRsp, err error) {
 	bmFile := make(gopay.BodyMap)
 	bmFile.Set("filename", fileName).Set("sha256", fileSha256)
 	authorization, err := c.authorization(MethodPost, v3MediaUploadImage, bmFile)
@@ -26,7 +27,7 @@ func (c *ClientV3) V3MediaUploadImage(fileName, fileSha256 string, img *util.Fil
 	bm.SetBodyMap("meta", func(bm gopay.BodyMap) {
 		bm.Set("filename", fileName).Set("sha256", fileSha256)
 	}).SetFormFile("file", img)
-	res, si, bs, err := c.doProdPostFile(bm, v3MediaUploadImage, authorization)
+	res, si, bs, err := c.doProdPostFile(ctx, bm, v3MediaUploadImage, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +49,7 @@ func (c *ClientV3) V3MediaUploadImage(fileName, fileSha256 string, img *util.Fil
 //	Code = 0 is success
 //	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter2_1_2.shtml
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter2_1_2.shtml
-func (c *ClientV3) V3MediaUploadVideo(fileName, fileSha256 string, img *util.File) (wxRsp *MediaUploadRsp, err error) {
+func (c *ClientV3) V3MediaUploadVideo(ctx context.Context, fileName, fileSha256 string, img *util.File) (wxRsp *MediaUploadRsp, err error) {
 	bmFile := make(gopay.BodyMap)
 	bmFile.Set("filename", fileName).Set("sha256", fileSha256)
 	authorization, err := c.authorization(MethodPost, v3MediaUploadVideo, bmFile)
@@ -60,7 +61,7 @@ func (c *ClientV3) V3MediaUploadVideo(fileName, fileSha256 string, img *util.Fil
 	bm.SetBodyMap("meta", func(bm gopay.BodyMap) {
 		bm.Set("filename", fileName).Set("sha256", fileSha256)
 	}).SetFormFile("file", img)
-	res, si, bs, err := c.doProdPostFile(bm, v3MediaUploadVideo, authorization)
+	res, si, bs, err := c.doProdPostFile(ctx, bm, v3MediaUploadVideo, authorization)
 	if err != nil {
 		return nil, err
 	}

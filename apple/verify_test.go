@@ -1,15 +1,18 @@
 package apple
 
 import (
+	"context"
 	"testing"
 
 	"github.com/go-pay/gopay/pkg/xlog"
 )
 
+var ctx = context.Background()
+
 func TestVerify(t *testing.T) {
 	pwd := ""
 	receipt := ""
-	rsp, err := VerifyReceipt(UrlSandbox, pwd, receipt)
+	rsp, err := VerifyReceipt(ctx, UrlSandbox, pwd, receipt)
 	if err != nil {
 		xlog.Error(err)
 		return

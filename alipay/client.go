@@ -1,6 +1,7 @@
 package alipay
 
 import (
+	"context"
 	"crypto/rsa"
 	"encoding/json"
 	"fmt"
@@ -71,9 +72,9 @@ func (a *Client) AutoVerifySign(alipayPublicKeyContent []byte) {
 // Deprecated
 //	推荐使用 PostAliPayAPISelfV2()
 //	示例：请参考 client_test.go 的 TestClient_PostAliPayAPISelf() 方法
-func (a *Client) PostAliPayAPISelf(bm gopay.BodyMap, method string, aliRsp interface{}) (err error) {
+func (a *Client) PostAliPayAPISelf(ctx context.Context, bm gopay.BodyMap, method string, aliRsp interface{}) (err error) {
 	var bs []byte
-	if bs, err = a.doAliPay(bm, method); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, method); err != nil {
 		return err
 	}
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
@@ -127,7 +128,7 @@ func (a *Client) RequestParam(bm gopay.BodyMap, method string) (string, error) {
 // PostAliPayAPISelfV2 支付宝接口自行实现方法
 //	注意：biz_content 需要自行通过bm.SetBodyMap()设置，不设置则没有此参数
 //	示例：请参考 client_test.go 的 TestClient_PostAliPayAPISelfV2() 方法
-func (a *Client) PostAliPayAPISelfV2(bm gopay.BodyMap, method string, aliRsp interface{}) (err error) {
+func (a *Client) PostAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, method string, aliRsp interface{}) (err error) {
 	var (
 		bs, bodyBs []byte
 	)
@@ -140,7 +141,7 @@ func (a *Client) PostAliPayAPISelfV2(bm gopay.BodyMap, method string, aliRsp int
 		bm.Set("biz_content", string(bodyBs))
 	}
 
-	if bs, err = a.doAliPaySelf(bm, method); err != nil {
+	if bs, err = a.doAliPaySelf(ctx, bm, method); err != nil {
 		return err
 	}
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
@@ -150,7 +151,7 @@ func (a *Client) PostAliPayAPISelfV2(bm gopay.BodyMap, method string, aliRsp int
 }
 
 // 向支付宝发送自定义请求
-func (a *Client) doAliPaySelf(bm gopay.BodyMap, method string) (bs []byte, err error) {
+func (a *Client) doAliPaySelf(ctx context.Context, bm gopay.BodyMap, method string) (bs []byte, err error) {
 	var (
 		url, sign string
 	)
@@ -175,9 +176,9 @@ func (a *Client) doAliPaySelf(bm gopay.BodyMap, method string) (bs []byte, err e
 	} else {
 		url = sandboxBaseUrlUtf8
 	}
-	res, bs, errs := httpClient.Type(xhttp.TypeForm).Post(url).SendString(bm.EncodeURLParams()).EndBytes()
-	if len(errs) > 0 {
-		return nil, errs[0]
+	res, bs, err := httpClient.Type(xhttp.TypeForm).Post(url).SendString(bm.EncodeURLParams()).EndBytes(ctx)
+	if err != nil {
+		return nil, err
 	}
 	if a.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
@@ -189,7 +190,7 @@ func (a *Client) doAliPaySelf(bm gopay.BodyMap, method string) (bs []byte, err e
 }
 
 // 向支付宝发送请求
-func (a *Client) doAliPay(bm gopay.BodyMap, method string, authToken ...string) (bs []byte, err error) {
+func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, authToken ...string) (bs []byte, err error) {
 	var (
 		bodyStr, url string
 		bodyBs       []byte
@@ -263,9 +264,9 @@ func (a *Client) doAliPay(bm gopay.BodyMap, method string, authToken ...string) 
 		if !a.IsProd {
 			url = sandboxBaseUrlUtf8
 		}
-		res, bs, errs := httpClient.Type(xhttp.TypeForm).Post(url).SendString(param).EndBytes()
-		if len(errs) > 0 {
-			return nil, errs[0]
+		res, bs, err := httpClient.Type(xhttp.TypeForm).Post(url).SendString(param).EndBytes(ctx)
+		if err != nil {
+			return nil, err
 		}
 		if a.DebugSwitch == gopay.DebugOn {
 			xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))

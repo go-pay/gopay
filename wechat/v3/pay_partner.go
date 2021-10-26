@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -13,7 +14,7 @@ import (
 // （服务商模式）APP下单API
 //	Code = 0 is success
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_2_1.shtml
-func (c *ClientV3) V3PartnerTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
+func (c *ClientV3) V3PartnerTransactionApp(ctx context.Context, bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	if bm.GetString("sp_mchid") == util.NULL {
 		bm.Set("sp_mchid", c.Mchid)
 	}
@@ -21,7 +22,7 @@ func (c *ClientV3) V3PartnerTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, 
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, v3ApiPartnerPayApp, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, v3ApiPartnerPayApp, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +43,7 @@ func (c *ClientV3) V3PartnerTransactionApp(bm gopay.BodyMap) (wxRsp *PrepayRsp, 
 //	Code = 0 is success
 //	服务商JSAPI文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_1.shtml
 //	服务商小程序文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_5_1.shtml
-func (c *ClientV3) V3PartnerTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
+func (c *ClientV3) V3PartnerTransactionJsapi(ctx context.Context, bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	if bm.GetString("sp_mchid") == util.NULL {
 		bm.Set("sp_mchid", c.Mchid)
 	}
@@ -50,7 +51,7 @@ func (c *ClientV3) V3PartnerTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, v3ApiPartnerJsapi, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, v3ApiPartnerJsapi, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +71,7 @@ func (c *ClientV3) V3PartnerTransactionJsapi(bm gopay.BodyMap) (wxRsp *PrepayRsp
 // （服务商模式）Native下单API
 //	Code = 0 is success
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_4_1.shtml
-func (c *ClientV3) V3PartnerTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
+func (c *ClientV3) V3PartnerTransactionNative(ctx context.Context, bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
 	if bm.GetString("sp_mchid") == util.NULL {
 		bm.Set("sp_mchid", c.Mchid)
 	}
@@ -78,7 +79,7 @@ func (c *ClientV3) V3PartnerTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRs
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, v3ApiPartnerNative, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, v3ApiPartnerNative, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +99,7 @@ func (c *ClientV3) V3PartnerTransactionNative(bm gopay.BodyMap) (wxRsp *NativeRs
 // （服务商模式）H5下单API
 //	Code = 0 is success
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_3_1.shtml
-func (c *ClientV3) V3PartnerTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
+func (c *ClientV3) V3PartnerTransactionH5(ctx context.Context, bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
 	if bm.GetString("sp_mchid") == util.NULL {
 		bm.Set("sp_mchid", c.Mchid)
 	}
@@ -106,7 +107,7 @@ func (c *ClientV3) V3PartnerTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err e
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, v3ApiPartnerH5, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, v3ApiPartnerH5, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +127,7 @@ func (c *ClientV3) V3PartnerTransactionH5(bm gopay.BodyMap) (wxRsp *H5Rsp, err e
 // （服务商模式）查询订单API
 //	Code = 0 is success
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_2.shtml
-func (c *ClientV3) V3PartnerQueryOrder(orderNoType OrderNoType, orderNo string, bm gopay.BodyMap) (wxRsp *PartnerQueryOrderRsp, err error) {
+func (c *ClientV3) V3PartnerQueryOrder(ctx context.Context, orderNoType OrderNoType, orderNo string, bm gopay.BodyMap) (wxRsp *PartnerQueryOrderRsp, err error) {
 	var uri string
 	if bm.GetString("sp_mchid") == gopay.NULL {
 		bm.Set("sp_mchid", c.Mchid)
@@ -143,7 +144,7 @@ func (c *ClientV3) V3PartnerQueryOrder(orderNoType OrderNoType, orderNo string, 
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdGet(uri, authorization)
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -164,7 +165,7 @@ func (c *ClientV3) V3PartnerQueryOrder(orderNoType OrderNoType, orderNo string, 
 // （服务商模式）关单API
 //	Code = 0 is success
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_3.shtml
-func (c *ClientV3) V3PartnerCloseOrder(subMchid, tradeNo string) (wxRsp *CloseOrderRsp, err error) {
+func (c *ClientV3) V3PartnerCloseOrder(ctx context.Context, subMchid, tradeNo string) (wxRsp *CloseOrderRsp, err error) {
 	url := fmt.Sprintf(v3ApiPartnerCloseOrder, tradeNo)
 	bm := make(gopay.BodyMap)
 	bm.Set("sp_mchid", c.Mchid)
@@ -173,7 +174,7 @@ func (c *ClientV3) V3PartnerCloseOrder(subMchid, tradeNo string) (wxRsp *CloseOr
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, url, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, url, authorization)
 	if err != nil {
 		return nil, err
 	}

@@ -33,7 +33,7 @@ func TradeOrderSettle() {
 	xlog.Debug("listParams:", bm.GetString("royalty_parameters"))
 
 	//发起交易结算接口
-	aliRsp, err := client.TradeOrderSettle(bm)
+	aliRsp, err := client.TradeOrderSettle(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

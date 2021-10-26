@@ -3,9 +3,7 @@ package gopay
 import (
 	"encoding/xml"
 	"testing"
-	"time"
 
-	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/gopay/pkg/xlog"
 )
 
@@ -21,16 +19,6 @@ func TestBodyMap_CheckParamsNull(t *testing.T) {
 		xlog.Errorf("bm.CheckEmptyError():error:%+v", err)
 		return
 	}
-}
-
-func TestNewClient(t *testing.T) {
-	client := xhttp.NewClient()
-	res, _, errs := client.Get("http://www.baidu.com").SetTimeout(30 * time.Second).EndBytes()
-	if len(errs) > 0 {
-		xlog.Error(errs[0])
-		return
-	}
-	xlog.Info("bs:", res.StatusCode)
 }
 
 func TestBodyMap_UnmarshalXML(t *testing.T) {

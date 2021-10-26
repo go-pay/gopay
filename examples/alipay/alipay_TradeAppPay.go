@@ -24,12 +24,12 @@ func TradeAppPay() {
 		SetNotifyUrl("https://www.fmm.ink")
 
 	//请求参数
-	body := make(gopay.BodyMap)
-	body.Set("subject", "测试APP支付")
-	body.Set("out_trade_no", "GZ201901301040355706100469")
-	body.Set("total_amount", "1.00")
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "测试APP支付")
+	bm.Set("out_trade_no", "GZ201901301040355706100469")
+	bm.Set("total_amount", "1.00")
 	//手机APP支付参数请求
-	payParam, err := client.TradeAppPay(body)
+	payParam, err := client.TradeAppPay(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

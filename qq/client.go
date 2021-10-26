@@ -1,6 +1,7 @@
 package qq
 
 import (
+	"context"
 	"crypto/tls"
 	"encoding/xml"
 	"errors"
@@ -38,19 +39,19 @@ func NewClient(mchId, apiKey string) (client *Client) {
 //	bm：请求参数的BodyMap
 //	url：完整url地址，例如：https://qpay.qq.com/cgi-bin/pay/qpay_unified_order.cgi
 //	tlsConfig：tls配置，如无需证书请求，传nil
-func (q *Client) PostQQAPISelf(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs []byte, err error) {
-	return q.doQQ(bm, url, tlsConfig)
+func (q *Client) PostQQAPISelf(ctx context.Context, bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs []byte, err error) {
+	return q.doQQ(ctx, bm, url, tlsConfig)
 }
 
 // 提交付款码支付
 //	文档地址：https://qpay.qq.com/buss/wiki/1/1122
-func (q *Client) MicroPay(bm gopay.BodyMap) (qqRsp *MicroPayResponse, err error) {
+func (q *Client) MicroPay(ctx context.Context, bm gopay.BodyMap) (qqRsp *MicroPayResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "device_info", "auth_code")
 	if err != nil {
 		return nil, err
 	}
 	bm.Set("trade_type", TradeType_MicroPay)
-	bs, err := q.doQQ(bm, microPay, nil)
+	bs, err := q.doQQ(ctx, bm, microPay, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -63,12 +64,12 @@ func (q *Client) MicroPay(bm gopay.BodyMap) (qqRsp *MicroPayResponse, err error)
 
 // 撤销订单
 //	文档地址：https://qpay.qq.com/buss/wiki/1/1125
-func (q *Client) Reverse(bm gopay.BodyMap) (qqRsp *ReverseResponse, err error) {
+func (q *Client) Reverse(ctx context.Context, bm gopay.BodyMap) (qqRsp *ReverseResponse, err error) {
 	err = bm.CheckEmptyError("sub_mch_id", "nonce_str", "out_trade_no", "op_user_id", "op_user_passwd")
 	if err != nil {
 		return nil, err
 	}
-	bs, err := q.doQQ(bm, reverse, nil)
+	bs, err := q.doQQ(ctx, bm, reverse, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -81,12 +82,12 @@ func (q *Client) Reverse(bm gopay.BodyMap) (qqRsp *ReverseResponse, err error) {
 
 // 统一下单
 //	文档地址：https://qpay.qq.com/buss/wiki/38/1203
-func (q *Client) UnifiedOrder(bm gopay.BodyMap) (qqRsp *UnifiedOrderResponse, err error) {
+func (q *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (qqRsp *UnifiedOrderResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "trade_type", "notify_url")
 	if err != nil {
 		return nil, err
 	}
-	bs, err := q.doQQ(bm, unifiedOrder, nil)
+	bs, err := q.doQQ(ctx, bm, unifiedOrder, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +100,7 @@ func (q *Client) UnifiedOrder(bm gopay.BodyMap) (qqRsp *UnifiedOrderResponse, er
 
 // 订单查询
 //	文档地址：https://qpay.qq.com/buss/wiki/38/1205
-func (q *Client) OrderQuery(bm gopay.BodyMap) (qqRsp *OrderQueryResponse, err error) {
+func (q *Client) OrderQuery(ctx context.Context, bm gopay.BodyMap) (qqRsp *OrderQueryResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str")
 	if err != nil {
 		return nil, err
@@ -107,7 +108,7 @@ func (q *Client) OrderQuery(bm gopay.BodyMap) (qqRsp *OrderQueryResponse, err er
 	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("transaction_id") == util.NULL {
 		return nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
 	}
-	bs, err := q.doQQ(bm, orderQuery, nil)
+	bs, err := q.doQQ(ctx, bm, orderQuery, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -120,12 +121,12 @@ func (q *Client) OrderQuery(bm gopay.BodyMap) (qqRsp *OrderQueryResponse, err er
 
 // 关闭订单
 //	文档地址：https://qpay.qq.com/buss/wiki/38/1206
-func (q *Client) CloseOrder(bm gopay.BodyMap) (qqRsp *CloseOrderResponse, err error) {
+func (q *Client) CloseOrder(ctx context.Context, bm gopay.BodyMap) (qqRsp *CloseOrderResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_trade_no")
 	if err != nil {
 		return nil, err
 	}
-	bs, err := q.doQQ(bm, orderClose, nil)
+	bs, err := q.doQQ(ctx, bm, orderClose, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +140,7 @@ func (q *Client) CloseOrder(bm gopay.BodyMap) (qqRsp *CloseOrderResponse, err er
 // 申请退款
 //	注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 nil，否则，3证书Path均不可空
 //	文档地址：https://qpay.qq.com/buss/wiki/38/1207
-func (q *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (qqRsp *RefundResponse, err error) {
+func (q *Client) Refund(ctx context.Context, bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (qqRsp *RefundResponse, err error) {
 	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
@@ -154,7 +155,7 @@ func (q *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 	if err != nil {
 		return nil, err
 	}
-	bs, err := q.doQQ(bm, refund, tlsConfig)
+	bs, err := q.doQQ(ctx, bm, refund, tlsConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +168,7 @@ func (q *Client) Refund(bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FileP
 
 // 退款查询
 //	文档地址：https://qpay.qq.com/buss/wiki/38/1208
-func (q *Client) RefundQuery(bm gopay.BodyMap) (qqRsp *RefundQueryResponse, err error) {
+func (q *Client) RefundQuery(ctx context.Context, bm gopay.BodyMap) (qqRsp *RefundQueryResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str")
 	if err != nil {
 		return nil, err
@@ -175,7 +176,7 @@ func (q *Client) RefundQuery(bm gopay.BodyMap) (qqRsp *RefundQueryResponse, err 
 	if bm.GetString("refund_id") == util.NULL && bm.GetString("out_refund_no") == util.NULL && bm.GetString("transaction_id") == util.NULL && bm.GetString("out_trade_no") == util.NULL {
 		return nil, errors.New("refund_id, out_refund_no, out_trade_no, transaction_id are not allowed to be null at the same time")
 	}
-	bs, err := q.doQQ(bm, refundQuery, nil)
+	bs, err := q.doQQ(ctx, bm, refundQuery, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -188,7 +189,7 @@ func (q *Client) RefundQuery(bm gopay.BodyMap) (qqRsp *RefundQueryResponse, err 
 
 // 交易账单
 //	文档地址：https://qpay.qq.com/buss/wiki/38/1209
-func (q *Client) StatementDown(bm gopay.BodyMap) (qqRsp string, err error) {
+func (q *Client) StatementDown(ctx context.Context, bm gopay.BodyMap) (qqRsp string, err error) {
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "bill_type")
 	if err != nil {
 		return util.NULL, err
@@ -197,7 +198,7 @@ func (q *Client) StatementDown(bm gopay.BodyMap) (qqRsp string, err error) {
 	if billType != "ALL" && billType != "SUCCESS" && billType != "REFUND" && billType != "RECHAR" {
 		return util.NULL, errors.New("bill_type error, please reference: https://qpay.qq.com/buss/wiki/38/1209")
 	}
-	bs, err := q.doQQ(bm, statementDown, nil)
+	bs, err := q.doQQ(ctx, bm, statementDown, nil)
 	if err != nil {
 		return util.NULL, err
 	}
@@ -206,7 +207,7 @@ func (q *Client) StatementDown(bm gopay.BodyMap) (qqRsp string, err error) {
 
 // 资金账单
 //	文档地址：https://qpay.qq.com/buss/wiki/38/3089
-func (q *Client) AccRoll(bm gopay.BodyMap) (qqRsp string, err error) {
+func (q *Client) AccRoll(ctx context.Context, bm gopay.BodyMap) (qqRsp string, err error) {
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "acc_type")
 	if err != nil {
 		return util.NULL, err
@@ -215,7 +216,7 @@ func (q *Client) AccRoll(bm gopay.BodyMap) (qqRsp string, err error) {
 	if accType != "CASH" && accType != "MARKETING" {
 		return util.NULL, errors.New("acc_type error, please reference: https://qpay.qq.com/buss/wiki/38/3089")
 	}
-	bs, err := q.doQQ(bm, accRoll, nil)
+	bs, err := q.doQQ(ctx, bm, accRoll, nil)
 	if err != nil {
 		return util.NULL, err
 	}
@@ -223,7 +224,7 @@ func (q *Client) AccRoll(bm gopay.BodyMap) (qqRsp string, err error) {
 }
 
 // 向QQ发送请求
-func (q *Client) doQQ(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs []byte, err error) {
+func (q *Client) doQQ(ctx context.Context, bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs []byte, err error) {
 
 	if bm.GetString("mch_id") == util.NULL {
 		bm.Set("mch_id", q.MchId)
@@ -244,9 +245,9 @@ func (q *Client) doQQ(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs [
 	if q.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("QQ_Request: %s", bm.JsonBody())
 	}
-	res, bs, errs := httpClient.Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndBytes()
-	if len(errs) > 0 {
-		return nil, errs[0]
+	res, bs, err := httpClient.Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndBytes(ctx)
+	if err != nil {
+		return nil, err
 	}
 	if q.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("QQ_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
@@ -261,7 +262,7 @@ func (q *Client) doQQ(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs [
 }
 
 // Get请求、正式
-func (q *Client) doQQGet(bm gopay.BodyMap, url, signType string) (bs []byte, err error) {
+func (q *Client) doQQGet(ctx context.Context, bm gopay.BodyMap, url, signType string) (bs []byte, err error) {
 	if bm.GetString("mch_id") == util.NULL {
 		bm.Set("mch_id", q.MchId)
 	}
@@ -274,9 +275,9 @@ func (q *Client) doQQGet(bm gopay.BodyMap, url, signType string) (bs []byte, err
 	}
 	param := bm.EncodeURLParams()
 	url = url + "?" + param
-	res, bs, errs := xhttp.NewClient().Get(url).EndBytes()
-	if len(errs) > 0 {
-		return nil, errs[0]
+	res, bs, err := xhttp.NewClient().Get(url).EndBytes(ctx)
+	if err != nil {
+		return nil, err
 	}
 	if q.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("QQ_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
@@ -290,7 +291,7 @@ func (q *Client) doQQGet(bm gopay.BodyMap, url, signType string) (bs []byte, err
 	return bs, nil
 }
 
-func (q *Client) doQQRed(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs []byte, err error) {
+func (q *Client) doQQRed(ctx context.Context, bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs []byte, err error) {
 
 	if bm.GetString("mch_id") == util.NULL {
 		bm.Set("mch_id", q.MchId)
@@ -307,9 +308,9 @@ func (q *Client) doQQRed(bm gopay.BodyMap, url string, tlsConfig *tls.Config) (b
 	if q.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("QQ_Request: %s", bm.JsonBody())
 	}
-	res, bs, errs := httpClient.Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndBytes()
-	if len(errs) > 0 {
-		return nil, errs[0]
+	res, bs, err := httpClient.Type(xhttp.TypeXML).Post(url).SendString(generateXml(bm)).EndBytes(ctx)
+	if err != nil {
+		return nil, err
 	}
 	if q.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("QQ_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))

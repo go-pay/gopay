@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -11,12 +12,12 @@ import (
 // 预受理领卡请求API
 //	Code = 0 is success
 //	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_3_1.shtml
-func (c *ClientV3) V3DiscountCardApply(bm gopay.BodyMap) (wxRsp *DiscountCardApplyRsp, err error) {
+func (c *ClientV3) V3DiscountCardApply(ctx context.Context, bm gopay.BodyMap) (wxRsp *DiscountCardApplyRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3CardPre, bm)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, v3CardPre, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, v3CardPre, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +37,7 @@ func (c *ClientV3) V3DiscountCardApply(bm gopay.BodyMap) (wxRsp *DiscountCardApp
 // 增加用户记录API
 //	Code = 0 is success
 //	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_3_2.shtml
-func (c *ClientV3) V3DiscountCardAddUser(bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
+func (c *ClientV3) V3DiscountCardAddUser(ctx context.Context, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
 	if err = bm.CheckEmptyError("out_card_code"); err != nil {
 		return nil, err
 	}
@@ -46,7 +47,7 @@ func (c *ClientV3) V3DiscountCardAddUser(bm gopay.BodyMap) (wxRsp *EmptyRsp, err
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, uri, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, uri, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -62,13 +63,13 @@ func (c *ClientV3) V3DiscountCardAddUser(bm gopay.BodyMap) (wxRsp *EmptyRsp, err
 // 查询先享卡订单API
 //	Code = 0 is success
 //	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_3_3.shtml
-func (c *ClientV3) V3DiscountCardQuery(outCardCode string) (wxRsp *DiscountCardQueryRsp, err error) {
+func (c *ClientV3) V3DiscountCardQuery(ctx context.Context, outCardCode string) (wxRsp *DiscountCardQueryRsp, err error) {
 	url := fmt.Sprintf(v3CardQuery, outCardCode)
 	authorization, err := c.authorization(MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdGet(url, authorization)
+	res, si, bs, err := c.doProdGet(ctx, url, authorization)
 	if err != nil {
 		return nil, err
 	}

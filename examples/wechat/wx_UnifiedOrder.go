@@ -45,7 +45,7 @@ func UnifiedOrder() {
 		}) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
 
 	//请求支付下单，成功后得到结果
-	wxRsp, err := client.UnifiedOrder(bm)
+	wxRsp, err := client.UnifiedOrder(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return

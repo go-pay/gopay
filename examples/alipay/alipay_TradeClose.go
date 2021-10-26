@@ -24,10 +24,10 @@ func TradeClose() {
 		SetNotifyUrl("https://www.fmm.ink")
 
 	//请求参数
-	body := make(gopay.BodyMap)
-	body.Set("out_trade_no", "GYWX201901301040355706100459")
+	bm := make(gopay.BodyMap)
+	bm.Set("out_trade_no", "GYWX201901301040355706100459")
 	//条码支付
-	aliRsp, err := client.TradeClose(body)
+	aliRsp, err := client.TradeClose(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

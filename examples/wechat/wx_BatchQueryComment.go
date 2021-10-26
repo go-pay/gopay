@@ -26,7 +26,7 @@ func BatchQueryComment() {
 		Set("offset", "0")
 
 	// 请求拉取订单评价数据，成功后得到结果，沙箱环境下，证书路径参数可传空
-	wxRsp, err := client.BatchQueryComment(bm)
+	wxRsp, err := client.BatchQueryComment(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return

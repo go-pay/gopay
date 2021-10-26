@@ -24,11 +24,11 @@ func TradeQuery() {
 		SetAppAuthToken("201908BB03f542de8ecc42b985900f5080407abc")
 
 	//请求参数
-	body := make(gopay.BodyMap)
-	body.Set("out_trade_no", "GZ201909081743431443")
+	bm := make(gopay.BodyMap)
+	bm.Set("out_trade_no", "GZ201909081743431443")
 
 	//查询订单
-	aliRsp, err := client.TradeQuery(body)
+	aliRsp, err := client.TradeQuery(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

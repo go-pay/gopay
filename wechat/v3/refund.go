@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -12,12 +13,12 @@ import (
 //	Code = 0 is success
 //	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_9.shtml
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_9.shtml
-func (c *ClientV3) V3Refund(bm gopay.BodyMap) (wxRsp *RefundRsp, err error) {
+func (c *ClientV3) V3Refund(ctx context.Context, bm gopay.BodyMap) (wxRsp *RefundRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3DomesticRefund, bm)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, v3DomesticRefund, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, v3DomesticRefund, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -39,13 +40,13 @@ func (c *ClientV3) V3Refund(bm gopay.BodyMap) (wxRsp *RefundRsp, err error) {
 //	Code = 0 is success
 //	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_10.shtml
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_10.shtml
-func (c *ClientV3) V3RefundQuery(outRefundNo string) (wxRsp *RefundQueryRsp, err error) {
+func (c *ClientV3) V3RefundQuery(ctx context.Context, outRefundNo string) (wxRsp *RefundQueryRsp, err error) {
 	uri := fmt.Sprintf(v3DomesticRefundQuery, outRefundNo)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdGet(uri, authorization)
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
 	if err != nil {
 		return nil, err
 	}

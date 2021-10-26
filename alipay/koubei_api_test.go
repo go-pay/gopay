@@ -13,7 +13,7 @@ func TestKoubeiTradeOrderPrecreate(t *testing.T) {
 	bm.Set("request_id", "20181120111040030100030100002400")
 	bm.Set("biz_type", "POST_ORDER_PAY")
 
-	aliRsp, err := client.KoubeiTradeOrderPrecreate(bm)
+	aliRsp, err := client.KoubeiTradeOrderPrecreate(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.KoubeiTradeOrderPrecreate(%+v),error:%+v", bm, err)
 		return
@@ -38,7 +38,7 @@ func TestKoubeiTradeItemorderBuy(t *testing.T) {
 		bm.Set("quantity", "10")
 	})
 
-	aliRsp, err := client.KoubeiTradeItemorderBuy(bm)
+	aliRsp, err := client.KoubeiTradeItemorderBuy(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.KoubeiTradeItemorderBuy(%+v),error:%+v", bm, err)
 		return
@@ -54,7 +54,7 @@ func TestKoubeiTradeOrderConsult(t *testing.T) {
 	bm.Set("total_amount", "88.88")
 	bm.Set("shop_id", "2015051100077000000000000300")
 
-	aliRsp, err := client.KoubeiTradeOrderConsult(bm)
+	aliRsp, err := client.KoubeiTradeOrderConsult(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.KoubeiTradeOrderConsult(%+v),error:%+v", bm, err)
 		return
@@ -73,7 +73,7 @@ func TestKoubeiTradeItemorderRefund(t *testing.T) {
 		bm.Set("amount", "10.00")
 	})
 
-	aliRsp, err := client.KoubeiTradeItemorderRefund(bm)
+	aliRsp, err := client.KoubeiTradeItemorderRefund(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.KoubeiTradeItemorderRefund(%+v),error:%+v", bm, err)
 		return
@@ -103,7 +103,7 @@ func TestKoubeiTradeItemorderQuery(t *testing.T) {
 		bm.Set("status", "SUCCESS")
 	})
 
-	aliRsp, err := client.KoubeiTradeItemorderQuery(bm)
+	aliRsp, err := client.KoubeiTradeItemorderQuery(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.KoubeiTradeItemorderQuery(%+v),error:%+v", bm, err)
 		return
@@ -123,7 +123,7 @@ func TestKoubeiTradeTicketTicketcodeSend(t *testing.T) {
 		bm.Set("num", "2")
 	})
 
-	aliRsp, err := client.KoubeiTradeTicketTicketcodeSend(bm)
+	aliRsp, err := client.KoubeiTradeTicketTicketcodeSend(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.KoubeiTradeTicketTicketcodeSend(%+v),error:%+v", bm, err)
 		return
@@ -140,7 +140,7 @@ func TestKoubeiTradeTicketTicketcodeDelay(t *testing.T) {
 	bm.Set("code_type", "INTERNAL_CODE")
 	bm.Set("order_no", "20180404111040030100130500594477")
 
-	aliRsp, err := client.KoubeiTradeTicketTicketcodeDelay(bm)
+	aliRsp, err := client.KoubeiTradeTicketTicketcodeDelay(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.KoubeiTradeTicketTicketcodeDelay(%+v),error:%+v", bm, err)
 		return
@@ -154,7 +154,7 @@ func TestKoubeiTradeTicketTicketcodeQuery(t *testing.T) {
 	bm.Set("ticket_code", "016569843362")
 	bm.Set("shop_id", "2017071200077000000039734370")
 
-	aliRsp, err := client.KoubeiTradeTicketTicketcodeQuery(bm)
+	aliRsp, err := client.KoubeiTradeTicketTicketcodeQuery(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.KoubeiTradeTicketTicketcodeQuery(%+v),error:%+v", bm, err)
 		return
@@ -169,7 +169,7 @@ func TestKoubeiTradeTicketTicketcodeCancel(t *testing.T) {
 	bm.Set("request_biz_no", "2016102903214476899999999")
 	bm.Set("ticket_code", "016569843362")
 
-	aliRsp, err := client.KoubeiTradeTicketTicketcodeCancel(bm)
+	aliRsp, err := client.KoubeiTradeTicketTicketcodeCancel(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.KoubeiTradeTicketTicketcodeCancel(%+v),error:%+v", bm, err)
 		return

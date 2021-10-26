@@ -15,7 +15,7 @@ func TestOpenAppQrcodeCreate(t *testing.T) {
 		Set("describe", "二维码描述")
 
 	// 发起请求
-	aliRsp, err := client.OpenAppQrcodeCreate(bm)
+	aliRsp, err := client.OpenAppQrcodeCreate(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return

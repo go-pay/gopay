@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"crypto/rsa"
 	"fmt"
 	"net/http"
@@ -22,6 +23,7 @@ type ClientV3 struct {
 	autoSign    bool
 	privateKey  *rsa.PrivateKey
 	wxPublicKey *rsa.PublicKey
+	ctx         context.Context
 	DebugSwitch gopay.DebugSwitch
 }
 
@@ -40,6 +42,7 @@ func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3
 		SerialNo:    serialNo,
 		apiV3Key:    []byte(apiV3Key),
 		privateKey:  priKey,
+		ctx:         context.Background(),
 		DebugSwitch: gopay.DebugOff,
 	}
 	// 自动获取
@@ -65,7 +68,7 @@ func (c *ClientV3) AutoVerifySign() (err error) {
 	return
 }
 
-func (c *ClientV3) doProdPostWithHeader(headerMap map[string]string, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
+func (c *ClientV3) doProdPostWithHeader(ctx context.Context, headerMap map[string]string, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
@@ -79,9 +82,9 @@ func (c *ClientV3) doProdPostWithHeader(headerMap map[string]string, bm gopay.Bo
 	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
-	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes()
-	if len(errs) > 0 {
-		return nil, nil, nil, errs[0]
+	res, bs, err = httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes(ctx)
+	if err != nil {
+		return nil, nil, nil, err
 	}
 	si = &SignInfo{
 		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
@@ -98,7 +101,7 @@ func (c *ClientV3) doProdPostWithHeader(headerMap map[string]string, bm gopay.Bo
 	return res, si, bs, nil
 }
 
-func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
+func (c *ClientV3) doProdPost(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
@@ -109,9 +112,9 @@ func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res
 	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
-	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes()
-	if len(errs) > 0 {
-		return nil, nil, nil, errs[0]
+	res, bs, err = httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes(ctx)
+	if err != nil {
+		return nil, nil, nil, err
 	}
 	si = &SignInfo{
 		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
@@ -128,7 +131,7 @@ func (c *ClientV3) doProdPost(bm gopay.BodyMap, path, authorization string) (res
 	return res, si, bs, nil
 }
 
-func (c *ClientV3) doProdGet(uri, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
+func (c *ClientV3) doProdGet(ctx context.Context, uri, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + uri
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
@@ -139,9 +142,9 @@ func (c *ClientV3) doProdGet(uri, authorization string) (res *http.Response, si 
 	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
-	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes()
-	if len(errs) > 0 {
-		return nil, nil, nil, errs[0]
+	res, bs, err = httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes(ctx)
+	if err != nil {
+		return nil, nil, nil, err
 	}
 	si = &SignInfo{
 		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
@@ -158,7 +161,7 @@ func (c *ClientV3) doProdGet(uri, authorization string) (res *http.Response, si 
 	return res, si, bs, nil
 }
 
-func (c *ClientV3) doProdPut(bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
+func (c *ClientV3) doProdPut(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
@@ -169,9 +172,9 @@ func (c *ClientV3) doProdPut(bm gopay.BodyMap, path, authorization string) (res 
 	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
-	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Put(url).SendBodyMap(bm).EndBytes()
-	if len(errs) > 0 {
-		return nil, nil, nil, errs[0]
+	res, bs, err = httpClient.Type(xhttp.TypeJSON).Put(url).SendBodyMap(bm).EndBytes(ctx)
+	if err != nil {
+		return nil, nil, nil, err
 	}
 	si = &SignInfo{
 		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
@@ -188,7 +191,7 @@ func (c *ClientV3) doProdPut(bm gopay.BodyMap, path, authorization string) (res 
 	return res, si, bs, nil
 }
 
-func (c *ClientV3) doProdDelete(bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
+func (c *ClientV3) doProdDelete(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
@@ -199,9 +202,9 @@ func (c *ClientV3) doProdDelete(bm gopay.BodyMap, path, authorization string) (r
 	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
-	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Delete(url).SendBodyMap(bm).EndBytes()
-	if len(errs) > 0 {
-		return nil, nil, nil, errs[0]
+	res, bs, err = httpClient.Type(xhttp.TypeJSON).Delete(url).SendBodyMap(bm).EndBytes(ctx)
+	if err != nil {
+		return nil, nil, nil, err
 	}
 	si = &SignInfo{
 		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
@@ -218,7 +221,7 @@ func (c *ClientV3) doProdDelete(bm gopay.BodyMap, path, authorization string) (r
 	return res, si, bs, nil
 }
 
-func (c *ClientV3) doProdPostFile(bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
+func (c *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
@@ -229,9 +232,9 @@ func (c *ClientV3) doProdPostFile(bm gopay.BodyMap, path, authorization string) 
 	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
-	res, bs, errs := httpClient.Type(xhttp.TypeMultipartFormData).Post(url).SendMultipartBodyMap(bm).EndBytes()
-	if len(errs) > 0 {
-		return nil, nil, nil, errs[0]
+	res, bs, err = httpClient.Type(xhttp.TypeMultipartFormData).Post(url).SendMultipartBodyMap(bm).EndBytes(ctx)
+	if err != nil {
+		return nil, nil, nil, err
 	}
 	si = &SignInfo{
 		HeaderTimestamp: res.Header.Get(HeaderTimestamp),
@@ -248,7 +251,7 @@ func (c *ClientV3) doProdPostFile(bm gopay.BodyMap, path, authorization string) 
 	return res, si, bs, nil
 }
 
-func (c *ClientV3) doProdPatch(bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
+func (c *ClientV3) doProdPatch(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
 	if c.DebugSwitch == gopay.DebugOn {
@@ -259,9 +262,9 @@ func (c *ClientV3) doProdPatch(bm gopay.BodyMap, path, authorization string) (re
 	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
-	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Patch(url).SendBodyMap(bm).EndBytes()
-	if len(errs) > 0 {
-		return nil, nil, nil, errs[0]
+	res, bs, err = httpClient.Type(xhttp.TypeJSON).Patch(url).SendBodyMap(bm).EndBytes(ctx)
+	if err != nil {
+		return nil, nil, nil, err
 	}
 	si = &SignInfo{
 		HeaderTimestamp: res.Header.Get(HeaderTimestamp),

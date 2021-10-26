@@ -27,7 +27,7 @@ func OpenAuthTokenApp() {
 		Set("grant_type", "authorization_code").
 		Set("code", "866185490c4e40efa9f71efea6766X02")
 	//发起请求
-	aliRsp, err := client.OpenAuthTokenApp(bm)
+	aliRsp, err := client.OpenAuthTokenApp(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

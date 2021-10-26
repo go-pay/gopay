@@ -1,6 +1,7 @@
 package alipay
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -11,13 +12,13 @@ import (
 
 // alipay.trade.customs.declare(统一收单报关接口)
 //	文档地址：https://opendocs.alipay.com/apis/api_29/alipay.trade.customs.declare
-func (a *Client) TradeCustomsDeclare(bm gopay.BodyMap) (aliRsp *TradeCustomsDeclareRsp, err error) {
+func (a *Client) TradeCustomsDeclare(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCustomsDeclareRsp, err error) {
 	err = bm.CheckEmptyError("out_request_no", "trade_no", "merchant_customs_code", "merchant_customs_name", "amount", "customs_place")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "alipay.trade.customs.declare"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.customs.declare"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(TradeCustomsDeclareRsp)
@@ -35,12 +36,12 @@ func (a *Client) TradeCustomsDeclare(bm gopay.BodyMap) (aliRsp *TradeCustomsDecl
 
 // alipay.acquire.customs(报关接口)
 //	文档地址：https://opendocs.alipay.com/pre-open/01x3kh
-func (a *Client) AcquireCustoms(bm gopay.BodyMap) (aliRspBs []byte, err error) {
+func (a *Client) AcquireCustoms(ctx context.Context, bm gopay.BodyMap) (aliRspBs []byte, err error) {
 	err = bm.CheckEmptyError("partner", "out_request_no", "trade_no", "merchant_customs_code", "amount", "customs_place", "merchant_customs_name")
 	if err != nil {
 		return nil, err
 	}
-	bs, err := a.doAliPayCustoms(bm, "alipay.acquire.customs")
+	bs, err := a.doAliPayCustoms(ctx, bm, "alipay.acquire.customs")
 	if err != nil {
 		return nil, err
 	}
@@ -49,12 +50,12 @@ func (a *Client) AcquireCustoms(bm gopay.BodyMap) (aliRspBs []byte, err error) {
 
 // alipay.overseas.acquire.customs.query(报关查询接口)
 //	文档地址：https://opendocs.alipay.com/pre-open/01x3ki
-func (a *Client) AcquireCustomsQuery(bm gopay.BodyMap) (aliRspBs []byte, err error) {
+func (a *Client) AcquireCustomsQuery(ctx context.Context, bm gopay.BodyMap) (aliRspBs []byte, err error) {
 	err = bm.CheckEmptyError("partner", "out_request_nos")
 	if err != nil {
 		return nil, err
 	}
-	bs, err := a.doAliPayCustoms(bm, "alipay.overseas.acquire.customs.query")
+	bs, err := a.doAliPayCustoms(ctx, bm, "alipay.overseas.acquire.customs.query")
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +63,7 @@ func (a *Client) AcquireCustomsQuery(bm gopay.BodyMap) (aliRspBs []byte, err err
 }
 
 // 向支付宝发送请求
-func (a *Client) doAliPayCustoms(bm gopay.BodyMap, service string) (bs []byte, err error) {
+func (a *Client) doAliPayCustoms(ctx context.Context, bm gopay.BodyMap, service string) (bs []byte, err error) {
 	bm.Set("service", service).
 		Set("_input_charset", "utf-8")
 	bm.Remove("sign_type")
@@ -79,9 +80,9 @@ func (a *Client) doAliPayCustoms(bm gopay.BodyMap, service string) (bs []byte, e
 	}
 	// request
 	httpClient := xhttp.NewClient()
-	res, bs, errs := httpClient.Type(xhttp.TypeForm).Post("https://mapi.alipay.com/gateway.do").SendString(bm.EncodeURLParams()).EndBytes()
-	if len(errs) > 0 {
-		return nil, errs[0]
+	res, bs, err := httpClient.Type(xhttp.TypeForm).Post("https://mapi.alipay.com/gateway.do").SendString(bm.EncodeURLParams()).EndBytes(ctx)
+	if err != nil {
+		return nil, err
 	}
 	if a.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
