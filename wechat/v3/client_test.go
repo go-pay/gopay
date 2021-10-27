@@ -49,27 +49,6 @@ e/ZGMs3PI+CoA/x6lx4Owa7amRsWRKys45NV6gcC8pkbN4IeFaYXVHmJ1Yaef3xn
 0VxHAzWI4BF+1pUwXzS2rAMBZR/VKS0XA856NauAC3mKHipoOWVVs+uFP3VMUQ79
 hSImAa7UBzss6b6ie7AYxXtZBjY=
 -----END PRIVATE KEY-----`
-	WxPublicKeySerialNo = "60A862B18FE9F86BF7075383F09C8092704A2B4D"
-	WxPublicKeyContent  = `-----BEGIN CERTIFICATE-----
-MIIDVzCCAj+gAwIBAgIJANfOWdH1ItcBMA0GCSqGSIb3DQEBCwUAMEIxCzAJBgNV
-BAYTAlhYMRUwEwYDVQQHDAxEZWZhdWx0IENpdHkxHDAaBgNVBAoME0RlZmF1bHQg
-Q29tcGFueSBMdGQwHhcNMjEwNDI3MDg1NTIzWhcNMzEwNDI1MDg1NTIzWjBCMQsw
-CQYDVQQGEwJYWDEVMBMGA1UEBwwMRGVmYXVsdCBDaXR5MRwwGgYDVQQKDBNEZWZh
-dWx0IENvbXBhbnkgTHRkMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-2VCTd91fnUn73Xy9DLvt/V62TVxRTEEstVdeRaZ3B3leO0pldE806mXO4RwdHXag
-HQ4vGeZN0yqm++rDsGK+U3AH7kejyD2pXshNP9Cq5YwbptiLGtjcquw4HNxJQUOm
-DeJf2vg6byms9RUipiq4SzbJKqJFlUpbuIPDpSpWz10PYmyCNeDGUUK65E5h2B83
-4uxl1zNLYQCrkdBzb8oUxwYeP5a2DNxmjL5lsJML7DGr5znsevnoqGRwTm9fxCGf
-y8wus7hwKz6clt3Whmmda7UAdb1c08hEQFVRbF14AR73xbnd8N0obCWJPCbzMCtk
-aSef4FdEEgEXJiw0VAJT8wIDAQABo1AwTjAdBgNVHQ4EFgQUT1c7nd/SUO76HSoZ
-umNUJv1R5PwwHwYDVR0jBBgwFoAUT1c7nd/SUO76HSoZumNUJv1R5PwwDAYDVR0T
-BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAfTjxKRQMzNB/U6ZoCUS+BSNfa2Oh
-0plMN6ZuzwiVVZwg1jywvv5yv04koS7Pd4i9E4gt9ZBUQXlpq+A3oOCEEHNRR6b2
-kyazGRM7s0OP5X21WrbpSmKmU6K7hkfx30yYs08LVs/Q8DIhvaj1FCFeJzUCzYn/
-fHMq4tsbKO0dKAeydPM/nrUZBmaYQVKMVOORGLFjFKVO7JV6Kq/R86ouhjEPgJOe
-2xulNBUcjicqtZlBdEh/PWCYP2SpGVDclKm8jeo175T3EVAkdKzzmfpxtMmnMlmq
-cTJOU9TxuGvNASMtjj7pYIerTx+xgZDXEVBWFW9PjJ0TV06tCRsgSHItgg==
------END CERTIFICATE-----`
 )
 
 func TestMain(m *testing.M) {
@@ -114,22 +93,14 @@ func TestGetPlatformCertsWithoutClient(t *testing.T) {
 	xlog.Errorf("certs:%s", certs.Error)
 }
 
-func TestGetPlatformCerts(t *testing.T) {
-	certs, err := client.GetPlatformCerts()
+func TestGetAndSelectNewestCert(t *testing.T) {
+	cert, serialNo, err := client.GetAndSelectNewestCert()
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
-	if certs.Code == Success {
-		for _, v := range certs.Certs {
-			xlog.Infof("生效时间: %s", v.EffectiveTime) // 2021-09-26T17:17:58+08:00
-			xlog.Infof("到期时间: %s", v.ExpireTime)    // 2026-09-25T17:17:58+08:00
-			xlog.Infof("WxSerialNo: %s", v.SerialNo)
-			xlog.Infof("WxContent: \n%s", v.PublicKey)
-		}
-		return
-	}
-	xlog.Errorf("certs:%s", certs.Error)
+	xlog.Infof("WxSerialNo: %s", serialNo)
+	xlog.Infof("WxContent: \n%s", cert)
 }
 
 func TestV3VerifySign(t *testing.T) {
@@ -145,7 +116,7 @@ func TestV3VerifySign(t *testing.T) {
 	signBody := `{"code_url":"weixin://wxpay/bizpayurl?pr=5zPMHa4zz"}`
 	signature := "D/nRx+h1To/ybCJkJYTXptoSp6+UVPsKNlJ2AsHMf76rXq2qAYDSnoOTB4HRc8ZlPNck5JfeZ19lDXAJ/N9gyvWEwE3n01HNhaKqxOjW0C1KROCtxAj1Wd2qtMyiCzh/Azuk15eIHjht03teGQFDmowoOBSlMg9qOBaK8MNfwFcXvV3J12AMbFFR7s4cXbqzuk2qBeMAz6VrKDAwDHxZOWFqME59mg4bPWwBTNyYeCQVR2sqPflLvY1zttEGMN3s/CDvgLQ/SXZrAsHlS2lkDVHEc/sP9q0x9oU8lFL6DhD6eDU2mVP3pt7CPD/5QAnGnINaHIcZVj6Vb4l3PKzeog=="
 
-	err = V3VerifySign(timestamp, nonce, signBody, signature, WxPublicKeyContent)
+	err = V3VerifySign(timestamp, nonce, signBody, signature, "WxPublicKeyContent")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -232,7 +203,7 @@ func TestV3PartnerNative(t *testing.T) {
 		Set("out_trade_no", tradeNo).
 		Set("description", "测试Native支付商品").
 		Set("time_expire", expire).
-		//Set("notify_url", "https://api2.fangyiyun.com/api/v1/wechat/callback").
+		//Set("notify_url", "https://api.fmm.ink/api/v1/wechat/callback").
 		Set("notify_url", "https://www.fmm.ink").
 		SetBodyMap("amount", func(bm gopay.BodyMap) {
 			bm.Set("total", 1).
