@@ -23,12 +23,12 @@ func SystemOauthToken() {
 		SetNotifyUrl("https://www.fmm.ink")
 
 	//请求参数
-	body := make(gopay.BodyMap)
-	body.Set("grant_type", "authorization_code")
-	body.Set("code", "3a06216ac8f84b8c93507bb9774bWX11")
+	bm := make(gopay.BodyMap)
+	bm.Set("grant_type", "authorization_code")
+	bm.Set("code", "3a06216ac8f84b8c93507bb9774bWX11")
 
 	//发起请求
-	aliRsp, err := client.SystemOauthToken(body)
+	aliRsp, err := client.SystemOauthToken(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return
@@ -38,13 +38,13 @@ func SystemOauthToken() {
 	xlog.Debug("aliRsp:", aliRsp.SignData)
 
 	//支付宝小程序创建订单
-	body2 := make(gopay.BodyMap)
-	body2.Set("subject", "创建订单")
-	body2.Set("buyer_id", aliRsp.Response.UserId)
-	body2.Set("out_trade_no", "GZ201901301040355708")
-	body2.Set("total_amount", "0.01")
+	bm2 := make(gopay.BodyMap)
+	bm2.Set("subject", "创建订单")
+	bm2.Set("buyer_id", aliRsp.Response.UserId)
+	bm2.Set("out_trade_no", "GZ201901301040355708")
+	bm2.Set("total_amount", "0.01")
 
-	rsp, err := client.TradeCreate(body2)
+	rsp, err := client.TradeCreate(ctx, bm2)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

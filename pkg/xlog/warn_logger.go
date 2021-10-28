@@ -5,10 +5,9 @@ import (
 	"log"
 	"os"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
-
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 type WarnLogger struct {
@@ -36,7 +35,8 @@ func (i *WarnLogger) LogOut(col *ColorType, format *string, v ...interface{}) {
 }
 
 func (i *WarnLogger) init() {
-	if util.String2Int(strings.Split(runtime.Version(), ".")[1]) >= 14 {
+	intNum, _ := strconv.Atoi(strings.Split(runtime.Version(), ".")[1])
+	if intNum >= 14 {
 		i.logger = log.New(os.Stdout, "[WARN] >> ", 64|log.Llongfile|log.Ldate|log.Lmicroseconds)
 		return
 	}

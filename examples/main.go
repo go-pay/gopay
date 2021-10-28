@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/go-pay/gopay"
@@ -26,6 +27,6 @@ func main() {
 	bm.Set("out_order_no", "202104021339585117785701")
 	bm.Set("out_request_no", "20210402133958511778570101")
 	bm.Set("remark", "测试取消")
-	rs, err := client.FundAuthOperationCancel(bm)
+	rs, err := client.FundAuthOperationCancel(context.Background(), bm)
 	fmt.Println(rs, err)
 }

@@ -18,8 +18,6 @@
 
 > 注意：v3 版本接口持续增加中，不支持沙箱支付，测试请用1分钱测试法
 
-> 注意：`微信平台证书` 和 `微信平台证书序列号`，请自行通过 `wechat.GetPlatformCerts()` 或 `client.GetPlatformCerts()` 方法获取和维护
-
 > 具体API使用介绍，请参考 `gopay/wechat/v3/client_test.go`
 
 ```go
@@ -383,7 +381,6 @@ wechat.V3DecryptCombineNotifyCipherText()
 ### 微信v3公共 API
 
 * `wechat.GetPlatformCerts()` => 获取微信平台证书公钥
-* `client.GetPlatformCerts()` => 获取微信平台证书公钥
 * `client.GetAndSelectNewestCert()` => 获取并选择最新的有效证书
 * `wechat.V3VerifySign()` => 微信V3 版本验签（同步/异步）
 * `wechat.V3ParseNotify()` => 解析微信回调请求的参数到 V3NotifyReq 结构体

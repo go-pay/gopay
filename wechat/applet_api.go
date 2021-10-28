@@ -6,6 +6,7 @@
 package wechat
 
 import (
+	"context"
 	"crypto/aes"
 	"crypto/cipher"
 	"encoding/base64"
@@ -24,12 +25,12 @@ import (
 //	appSecret:AppSecret
 //	wxCode:小程序调用wx.login 获取的code
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html
-func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp, err error) {
+func Code2Session(ctx context.Context, appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp, err error) {
 	sessionRsp = new(Code2SessionRsp)
 	url := "https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + appSecret + "&js_code=" + wxCode + "&grant_type=authorization_code"
-	_, errs := xhttp.NewClient().Get(url).EndStruct(sessionRsp)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, sessionRsp)
+	if err != nil {
+		return nil, err
 	}
 	return sessionRsp, nil
 }
@@ -38,12 +39,12 @@ func Code2Session(appId, appSecret, wxCode string) (sessionRsp *Code2SessionRsp,
 //	appId:APPID
 //	appSecret:AppSecret
 //	获取access_token文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/access-token/auth.getAccessToken.html
-func GetAppletAccessToken(appId, appSecret string) (accessToken *AccessToken, err error) {
+func GetAppletAccessToken(ctx context.Context, appId, appSecret string) (accessToken *AccessToken, err error) {
 	accessToken = new(AccessToken)
 	url := "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appId + "&secret=" + appSecret
-	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, accessToken)
+	if err != nil {
+		return nil, err
 	}
 	return accessToken, nil
 }
@@ -96,12 +97,12 @@ func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr inter
 //	openId：用户的OpenID
 //	transactionId：微信支付订单号
 //	文档：https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/user-info/auth.getPaidUnionId.html
-func GetAppletPaidUnionId(accessToken, openId, transactionId string) (unionId *PaidUnionId, err error) {
+func GetAppletPaidUnionId(ctx context.Context, accessToken, openId, transactionId string) (unionId *PaidUnionId, err error) {
 	unionId = new(PaidUnionId)
 	url := "https://api.weixin.qq.com/wxa/getpaidunionid?access_token=" + accessToken + "&openid=" + openId + "&transaction_id=" + transactionId
-	_, errs := xhttp.NewClient().Get(url).EndStruct(unionId)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, unionId)
+	if err != nil {
+		return nil, err
 	}
 	return unionId, nil
 }

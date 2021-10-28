@@ -5,10 +5,9 @@ import (
 	"log"
 	"os"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
-
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 type DebugLogger struct {
@@ -36,7 +35,8 @@ func (i *DebugLogger) LogOut(col *ColorType, format *string, v ...interface{}) {
 }
 
 func (i *DebugLogger) init() {
-	if util.String2Int(strings.Split(runtime.Version(), ".")[1]) >= 14 {
+	intNum, _ := strconv.Atoi(strings.Split(runtime.Version(), ".")[1])
+	if intNum >= 14 {
 		i.logger = log.New(os.Stdout, "[DEBUG] >> ", 64|log.Llongfile|log.Ldate|log.Lmicroseconds)
 		return
 	}

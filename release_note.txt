@@ -1,3 +1,7 @@
+版本号：Release 1.5.61
+修改记录：
+   (1) gopay：更新 xhttp pkg, 方法全部增加 context 传递
+
 版本号：Release 1.5.60
 修改记录：
    (1) 微信V3：不再推荐使用 client.SetPlatformCert() 方法

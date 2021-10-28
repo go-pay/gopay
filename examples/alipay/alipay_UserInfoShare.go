@@ -22,7 +22,7 @@ func UserInfoShare() {
 		SetSignType(alipay.RSA2)
 
 	// 发起请求
-	aliRsp, err := client.UserInfoShare("authusrB3888b190f6df4aea964d66129f8a5X11")
+	aliRsp, err := client.UserInfoShare(ctx, "authusrB3888b190f6df4aea964d66129f8a5X11")
 	if err != nil {
 		xlog.Error("err:", err)
 		return

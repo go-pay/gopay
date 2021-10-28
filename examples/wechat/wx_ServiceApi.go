@@ -14,7 +14,7 @@ func Code2Session() {
 	//    appId:APPID
 	//    appSecret:AppSecret
 	//    wxCode:小程序调用wx.login 获取的code
-	userIdRsp, err := wechat.Code2Session("AppID", "APPSecret", "011EZg6p0VO47n1p2W4p0mle6p0EZg6u")
+	userIdRsp, err := wechat.Code2Session(ctx, "AppID", "APPSecret", "011EZg6p0VO47n1p2W4p0mle6p0EZg6u")
 	if err != nil {
 		xlog.Error("err:", err)
 		return
@@ -27,7 +27,7 @@ func Code2Session() {
 }
 
 func GetAppWeChatLoginAccessToken() {
-	accessToken, err := wechat.GetOauth2AccessToken("AppID", "AppSecret", "code")
+	accessToken, err := wechat.GetOauth2AccessToken(ctx, "AppID", "AppSecret", "code")
 	if err != nil {
 		xlog.Error("err:", err)
 		return
@@ -42,7 +42,7 @@ func GetAppWeChatLoginAccessToken() {
 }
 
 func RefreshAppWeChatLoginAccessToken() {
-	accessToken, err := wechat.RefreshOauth2AccessToken("AppID", "refreshToken")
+	accessToken, err := wechat.RefreshOauth2AccessToken(ctx, "AppID", "refreshToken")
 	if err != nil {
 		xlog.Error("err:", err)
 		return
@@ -59,7 +59,7 @@ func GetWeChatAppletAccessToken() {
 	// 获取小程序全局唯一后台接口调用凭据(AccessToken:157字符)
 	//    appId:APPID
 	//    appSecret:AppSecret
-	accessToken, err := wechat.GetAppletAccessToken("AppID", "AppSecret")
+	accessToken, err := wechat.GetAppletAccessToken(ctx, "AppID", "AppSecret")
 	if err != nil {
 		xlog.Error("err:", err)
 		return
@@ -76,7 +76,7 @@ func GetWeChatAppletPaidUnionId() {
 	//    accessToken：接口调用凭据
 	//    openId：用户的OpenID
 	//    transactionId：微信支付订单号
-	rsp, err := wechat.GetAppletPaidUnionId(accessToken, "o0Df70MSI4Ygv2KQ2cLnoMN5CXI8", "4200000326201905256499385970")
+	rsp, err := wechat.GetAppletPaidUnionId(ctx, accessToken, "o0Df70MSI4Ygv2KQ2cLnoMN5CXI8", "4200000326201905256499385970")
 	if err != nil {
 		xlog.Error("err:", err)
 		return
@@ -92,7 +92,7 @@ func GetWeChatUserInfo() {
 	//    accessToken：接口调用凭据
 	//    openId：用户的OpenID
 	//    lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
-	userInfo, err := wechat.GetUserInfo(accessToken, "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
+	userInfo, err := wechat.GetUserInfo(ctx, accessToken, "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 	if err != nil {
 		xlog.Error("err:", err)
 		return
@@ -103,7 +103,7 @@ func GetWeChatUserInfo() {
 func GetWeChatUserInfoOpen() {
 	accessToken := "21_3puo3mxoK6Ry2bR7Dh-qdn41wUP1wClwke8Zhf9a_i39jfWRq9rhNJZZZHaOt_Yad-Gp6u9_46dGW0RbIMz3nANInRI3m-1glvCnGW47v63sjYWV1iyTKOHGwDVxEv78kY-0OfkmkiIveVqAZCZaAAAQTQ"
 
-	userInfo, err := wechat.GetUserInfoOpen(accessToken, "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
+	userInfo, err := wechat.GetUserInfoOpen(ctx, accessToken, "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 	if err != nil {
 		xlog.Error("err:", err)
 		return
@@ -180,7 +180,7 @@ func GetOpenIdByAuthCode() {
 	//    apiKey:ApiKey
 	//    authCode:用户授权码
 	//    nonceStr:随即字符串
-	openIdRsp, err := wechat.GetOpenIdByAuthCode("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", "135127679952609396", util.GetRandomString(32))
+	openIdRsp, err := wechat.GetOpenIdByAuthCode(ctx, "wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", "135127679952609396", util.GetRandomString(32))
 	if err != nil {
 		xlog.Error("err:", err)
 		return

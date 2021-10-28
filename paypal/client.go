@@ -18,6 +18,7 @@ type Client struct {
 	AccessToken string
 	ExpiresIn   int
 	IsProd      bool
+	ctx         context.Context
 	DebugSwitch gopay.DebugSwitch
 }
 
@@ -27,6 +28,7 @@ func NewClient(clientid, secret string, isProd bool) (client *Client, err error)
 		Clientid:    clientid,
 		Secret:      secret,
 		IsProd:      isProd,
+		ctx:         context.Background(),
 		DebugSwitch: gopay.DebugOff,
 	}
 	_, err = client.GetAccessToken()
@@ -49,9 +51,9 @@ func (c *Client) doPayPalGet(ctx context.Context, uri string) (res *http.Respons
 	}
 	httpClient.Header.Add(HeaderAuthorization, authHeader)
 	httpClient.Header.Add("Accept", "*/*")
-	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes()
-	if len(errs) > 0 {
-		return nil, nil, errs[0]
+	res, bs, err = httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes(ctx)
+	if err != nil {
+		return nil, nil, err
 	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("PayPal_Response: %d > %s", res.StatusCode, string(bs))
@@ -73,9 +75,9 @@ func (c *Client) doPayPalPost(ctx context.Context, bm gopay.BodyMap, path string
 	}
 	httpClient.Header.Add(HeaderAuthorization, authHeader)
 	httpClient.Header.Add("Accept", "*/*")
-	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes()
-	if len(errs) > 0 {
-		return nil, nil, errs[0]
+	res, bs, err = httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes(ctx)
+	if err != nil {
+		return nil, nil, err
 	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("PayPal_Response: %d > %s", res.StatusCode, string(bs))
@@ -98,9 +100,9 @@ func (c *Client) doPayPalPatch(ctx context.Context, patchs []*Patch, path string
 	}
 	httpClient.Header.Add(HeaderAuthorization, authHeader)
 	httpClient.Header.Add("Accept", "*/*")
-	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Patch(url).SendStruct(patchs).EndBytes()
-	if len(errs) > 0 {
-		return nil, nil, errs[0]
+	res, bs, err = httpClient.Type(xhttp.TypeJSON).Patch(url).SendStruct(patchs).EndBytes(ctx)
+	if err != nil {
+		return nil, nil, err
 	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("PayPal_Response: %d > %s", res.StatusCode, string(bs))

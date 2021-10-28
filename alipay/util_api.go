@@ -1,6 +1,7 @@
 package alipay
 
 import (
+	"context"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -13,13 +14,13 @@ import (
 
 // alipay.user.info.auth(用户登陆授权)
 //	文档地址：https://opendocs.alipay.com/apis/api_9/alipay.user.info.auth
-func (a *Client) UserInfoAuth(bm gopay.BodyMap) (aliRsp *UserInfoAuthResponse, err error) {
+func (a *Client) UserInfoAuth(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserInfoAuthResponse, err error) {
 	err = bm.CheckEmptyError("scopes", "state")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "alipay.user.info.auth"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.user.info.auth"); err != nil {
 		return nil, err
 	}
 	if strings.Contains(string(bs), "<head>") {
@@ -40,7 +41,7 @@ func (a *Client) UserInfoAuth(bm gopay.BodyMap) (aliRsp *UserInfoAuthResponse, e
 
 // alipay.system.oauth.token(换取授权访问令牌)
 //	文档地址：https://opendocs.alipay.com/apis/api_9/alipay.system.oauth.token
-func (a *Client) SystemOauthToken(bm gopay.BodyMap) (aliRsp *SystemOauthTokenResponse, err error) {
+func (a *Client) SystemOauthToken(ctx context.Context, bm gopay.BodyMap) (aliRsp *SystemOauthTokenResponse, err error) {
 	if bm.GetString("code") == util.NULL && bm.GetString("refresh_token") == util.NULL {
 		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
 	}
@@ -57,7 +58,7 @@ func (a *Client) SystemOauthToken(bm gopay.BodyMap) (aliRsp *SystemOauthTokenRes
 	}
 
 	var bs []byte
-	if bs, err = systemOauthToken(a.AppId, a.privateKey, bm, "alipay.system.oauth.token", a.IsProd, a.SignType); err != nil {
+	if bs, err = systemOauthToken(ctx, a.AppId, a.privateKey, bm, "alipay.system.oauth.token", a.IsProd, a.SignType); err != nil {
 		return nil, err
 	}
 	aliRsp = new(SystemOauthTokenResponse)
@@ -75,7 +76,7 @@ func (a *Client) SystemOauthToken(bm gopay.BodyMap) (aliRsp *SystemOauthTokenRes
 
 // alipay.open.auth.token.app(换取应用授权令牌)
 //	文档地址：https://opendocs.alipay.com/apis/api_9/alipay.open.auth.token.app
-func (a *Client) OpenAuthTokenApp(bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppResponse, err error) {
+func (a *Client) OpenAuthTokenApp(ctx context.Context, bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppResponse, err error) {
 	if bm.GetString("code") == util.NULL && bm.GetString("refresh_token") == util.NULL {
 		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
 	}
@@ -84,7 +85,7 @@ func (a *Client) OpenAuthTokenApp(bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppRes
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "alipay.open.auth.token.app"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.open.auth.token.app"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(OpenAuthTokenAppResponse)
@@ -102,13 +103,13 @@ func (a *Client) OpenAuthTokenApp(bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppRes
 
 // alipay.open.app.alipaycert.download(应用支付宝公钥证书下载)
 //	文档地址：https://opendocs.alipay.com/apis/api_9/alipay.open.app.alipaycert.download
-func (a *Client) PublicCertDownload(bm gopay.BodyMap) (aliRsp *PublicCertDownloadRsp, err error) {
+func (a *Client) PublicCertDownload(ctx context.Context, bm gopay.BodyMap) (aliRsp *PublicCertDownloadRsp, err error) {
 	err = bm.CheckEmptyError("alipay_cert_sn")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "alipay.open.app.alipaycert.download"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.open.app.alipaycert.download"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(PublicCertDownloadRsp)

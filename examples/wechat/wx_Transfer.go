@@ -35,7 +35,7 @@ func Transfer() {
 
 	// 企业向微信用户个人付款（不支持沙箱环境）
 	//    body：参数Body
-	wxRsp, err := client.Transfer(bm)
+	wxRsp, err := client.Transfer(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return

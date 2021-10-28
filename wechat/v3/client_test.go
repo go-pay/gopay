@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"io/ioutil"
@@ -14,6 +15,7 @@ import (
 )
 
 var (
+	ctx               = context.Background()
 	client            *ClientV3
 	err               error
 	MchId             = ""
@@ -47,27 +49,6 @@ e/ZGMs3PI+CoA/x6lx4Owa7amRsWRKys45NV6gcC8pkbN4IeFaYXVHmJ1Yaef3xn
 0VxHAzWI4BF+1pUwXzS2rAMBZR/VKS0XA856NauAC3mKHipoOWVVs+uFP3VMUQ79
 hSImAa7UBzss6b6ie7AYxXtZBjY=
 -----END PRIVATE KEY-----`
-	WxPublicKeySerialNo = "60A862B18FE9F86BF7075383F09C8092704A2B4D"
-	WxPublicKeyContent  = `-----BEGIN CERTIFICATE-----
-MIIDVzCCAj+gAwIBAgIJANfOWdH1ItcBMA0GCSqGSIb3DQEBCwUAMEIxCzAJBgNV
-BAYTAlhYMRUwEwYDVQQHDAxEZWZhdWx0IENpdHkxHDAaBgNVBAoME0RlZmF1bHQg
-Q29tcGFueSBMdGQwHhcNMjEwNDI3MDg1NTIzWhcNMzEwNDI1MDg1NTIzWjBCMQsw
-CQYDVQQGEwJYWDEVMBMGA1UEBwwMRGVmYXVsdCBDaXR5MRwwGgYDVQQKDBNEZWZh
-dWx0IENvbXBhbnkgTHRkMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-2VCTd91fnUn73Xy9DLvt/V62TVxRTEEstVdeRaZ3B3leO0pldE806mXO4RwdHXag
-HQ4vGeZN0yqm++rDsGK+U3AH7kejyD2pXshNP9Cq5YwbptiLGtjcquw4HNxJQUOm
-DeJf2vg6byms9RUipiq4SzbJKqJFlUpbuIPDpSpWz10PYmyCNeDGUUK65E5h2B83
-4uxl1zNLYQCrkdBzb8oUxwYeP5a2DNxmjL5lsJML7DGr5znsevnoqGRwTm9fxCGf
-y8wus7hwKz6clt3Whmmda7UAdb1c08hEQFVRbF14AR73xbnd8N0obCWJPCbzMCtk
-aSef4FdEEgEXJiw0VAJT8wIDAQABo1AwTjAdBgNVHQ4EFgQUT1c7nd/SUO76HSoZ
-umNUJv1R5PwwHwYDVR0jBBgwFoAUT1c7nd/SUO76HSoZumNUJv1R5PwwDAYDVR0T
-BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAfTjxKRQMzNB/U6ZoCUS+BSNfa2Oh
-0plMN6ZuzwiVVZwg1jywvv5yv04koS7Pd4i9E4gt9ZBUQXlpq+A3oOCEEHNRR6b2
-kyazGRM7s0OP5X21WrbpSmKmU6K7hkfx30yYs08LVs/Q8DIhvaj1FCFeJzUCzYn/
-fHMq4tsbKO0dKAeydPM/nrUZBmaYQVKMVOORGLFjFKVO7JV6Kq/R86ouhjEPgJOe
-2xulNBUcjicqtZlBdEh/PWCYP2SpGVDclKm8jeo175T3EVAkdKzzmfpxtMmnMlmq
-cTJOU9TxuGvNASMtjj7pYIerTx+xgZDXEVBWFW9PjJ0TV06tCRsgSHItgg==
------END CERTIFICATE-----`
 )
 
 func TestMain(m *testing.M) {
@@ -95,7 +76,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetPlatformCertsWithoutClient(t *testing.T) {
-	certs, err := GetPlatformCerts(MchId, APIv3Key, SerialNo, PrivateKeyContent)
+	certs, err := GetPlatformCerts(ctx, MchId, APIv3Key, SerialNo, PrivateKeyContent)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -112,22 +93,14 @@ func TestGetPlatformCertsWithoutClient(t *testing.T) {
 	xlog.Errorf("certs:%s", certs.Error)
 }
 
-func TestGetPlatformCerts(t *testing.T) {
-	certs, err := client.GetPlatformCerts()
+func TestGetAndSelectNewestCert(t *testing.T) {
+	cert, serialNo, err := client.GetAndSelectNewestCert()
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
-	if certs.Code == Success {
-		for _, v := range certs.Certs {
-			xlog.Infof("生效时间: %s", v.EffectiveTime) // 2021-09-26T17:17:58+08:00
-			xlog.Infof("到期时间: %s", v.ExpireTime)    // 2026-09-25T17:17:58+08:00
-			xlog.Infof("WxSerialNo: %s", v.SerialNo)
-			xlog.Infof("WxContent: \n%s", v.PublicKey)
-		}
-		return
-	}
-	xlog.Errorf("certs:%s", certs.Error)
+	xlog.Infof("WxSerialNo: %s", serialNo)
+	xlog.Infof("WxContent: \n%s", cert)
 }
 
 func TestV3VerifySign(t *testing.T) {
@@ -143,7 +116,7 @@ func TestV3VerifySign(t *testing.T) {
 	signBody := `{"code_url":"weixin://wxpay/bizpayurl?pr=5zPMHa4zz"}`
 	signature := "D/nRx+h1To/ybCJkJYTXptoSp6+UVPsKNlJ2AsHMf76rXq2qAYDSnoOTB4HRc8ZlPNck5JfeZ19lDXAJ/N9gyvWEwE3n01HNhaKqxOjW0C1KROCtxAj1Wd2qtMyiCzh/Azuk15eIHjht03teGQFDmowoOBSlMg9qOBaK8MNfwFcXvV3J12AMbFFR7s4cXbqzuk2qBeMAz6VrKDAwDHxZOWFqME59mg4bPWwBTNyYeCQVR2sqPflLvY1zttEGMN3s/CDvgLQ/SXZrAsHlS2lkDVHEc/sP9q0x9oU8lFL6DhD6eDU2mVP3pt7CPD/5QAnGnINaHIcZVj6Vb4l3PKzeog=="
 
-	err = V3VerifySign(timestamp, nonce, signBody, signature, WxPublicKeyContent)
+	err = V3VerifySign(timestamp, nonce, signBody, signature, "WxPublicKeyContent")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -178,7 +151,7 @@ func TestV3Jsapi(t *testing.T) {
 	//}
 	//xlog.Debugf("加密text: %s", text)
 
-	wxRsp, err := client.V3TransactionJsapi(bm)
+	wxRsp, err := client.V3TransactionJsapi(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -206,7 +179,7 @@ func TestV3Native(t *testing.T) {
 				Set("currency", "CNY")
 		})
 
-	wxRsp, err := client.V3TransactionNative(bm)
+	wxRsp, err := client.V3TransactionNative(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -230,14 +203,14 @@ func TestV3PartnerNative(t *testing.T) {
 		Set("out_trade_no", tradeNo).
 		Set("description", "测试Native支付商品").
 		Set("time_expire", expire).
-		//Set("notify_url", "https://api2.fangyiyun.com/api/v1/wechat/callback").
+		//Set("notify_url", "https://api.fmm.ink/api/v1/wechat/callback").
 		Set("notify_url", "https://www.fmm.ink").
 		SetBodyMap("amount", func(bm gopay.BodyMap) {
 			bm.Set("total", 1).
 				Set("currency", "CNY")
 		})
 
-	wxRsp, err := client.V3PartnerTransactionNative(bm)
+	wxRsp, err := client.V3PartnerTransactionNative(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -251,7 +224,7 @@ func TestV3PartnerNative(t *testing.T) {
 
 func TestV3QueryOrder(t *testing.T) {
 	//wxRsp, err := client.V3TransactionQueryOrder(TransactionId, "42000008462020122402449153433")
-	wxRsp, err := client.V3TransactionQueryOrder(OutTradeNo, "22LW55HDd8tuxgZgFM445kI52BZVk847")
+	wxRsp, err := client.V3TransactionQueryOrder(ctx, OutTradeNo, "22LW55HDd8tuxgZgFM445kI52BZVk847")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -264,7 +237,7 @@ func TestV3QueryOrder(t *testing.T) {
 }
 
 func TestV3CloseOrder(t *testing.T) {
-	wxRsp, err := client.V3TransactionCloseOrder("FY160932049419637602")
+	wxRsp, err := client.V3TransactionCloseOrder(ctx, "FY160932049419637602")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -281,7 +254,7 @@ func TestV3BillTradeBill(t *testing.T) {
 	bm.Set("bill_date", "2020-12-30").
 		Set("tar_type", "GZIP")
 
-	wxRsp, err := client.V3BillTradeBill(bm)
+	wxRsp, err := client.V3BillTradeBill(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -298,7 +271,7 @@ func TestV3BillFundFlowBill(t *testing.T) {
 	bm.Set("bill_date", "2020-12-30").
 		Set("tar_type", "GZIP")
 
-	wxRsp, err := client.V3BillFundFlowBill(bm)
+	wxRsp, err := client.V3BillFundFlowBill(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -312,7 +285,7 @@ func TestV3BillFundFlowBill(t *testing.T) {
 
 func TestV3BillDownLoadBill(t *testing.T) {
 	url := "https://api.mch.weixin.qq.com/v3/billdownload/file?token=4MWpG4bWfL3smAe2AeB8scfp1MN0LYORxW691-jI-wL9J9fA6F0qG0q66y44xrur&tartype=gzip"
-	fileBytes, err := client.V3BillDownLoadBill(url)
+	fileBytes, err := client.V3BillDownLoadBill(ctx, url)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -344,7 +317,7 @@ func TestV3ProfitSharingOrder(t *testing.T) {
 		Set("out_order_no", "202106071738581340").
 		Set("unfreeze_unsplit", false).Set("receivers", rs)
 
-	wxRsp, err := client.V3ProfitShareOrder(bm)
+	wxRsp, err := client.V3ProfitShareOrder(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -359,7 +332,7 @@ func TestV3ProfitSharingAddReceiver(t *testing.T) {
 		Set("account", "oOv-Z573Ktz7o2WRkzX98eAxePVE").
 		Set("relation_type", "USER")
 
-	wxRsp, err := client.V3ProfitShareAddReceiver(bm)
+	wxRsp, err := client.V3ProfitShareAddReceiver(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -373,7 +346,7 @@ func TestV3ProfitSharingDeleteReceiver(t *testing.T) {
 	bm.Set("type", "PERSONAL_OPENID").
 		Set("account", "oOv-Z573Ktz7o2WRkzX98eAxePVE")
 
-	wxRsp, err := client.V3ProfitShareDeleteReceiver(bm)
+	wxRsp, err := client.V3ProfitShareDeleteReceiver(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -385,7 +358,7 @@ func TestV3ProfitSharingDeleteReceiver(t *testing.T) {
 func TestV3ProfitSharingQuery(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("transaction_id", "4200001149202106084654939138")
-	wxRsp, err := client.V3ProfitShareOrderQuery("P20150806125346", bm)
+	wxRsp, err := client.V3ProfitShareOrderQuery(ctx, "P20150806125346", bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -399,7 +372,7 @@ func TestV3ProfitSharingUnfreeze(t *testing.T) {
 	bm.Set("transaction_id", "202106071738581338")
 	bm.Set("out_order_no", "4200001037202106072686278117")
 	bm.Set("description", "账单解冻")
-	wxRsp, err := client.V3ProfitShareOrderUnfreeze(bm)
+	wxRsp, err := client.V3ProfitShareOrderUnfreeze(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -409,7 +382,7 @@ func TestV3ProfitSharingUnfreeze(t *testing.T) {
 }
 
 func TestV3ProfitSharingUnsplitQuery(t *testing.T) {
-	wxRsp, err := client.V3ProfitShareUnsplitAmount("4200001149202106084654939138")
+	wxRsp, err := client.V3ProfitShareUnsplitAmount(ctx, "4200001149202106084654939138")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -435,7 +408,7 @@ func TestClientV3_V3MediaUploadImage(t *testing.T) {
 		Content: fileContent,
 	}
 
-	wxRsp, err := client.V3MediaUploadImage(fileName, sha256Str, img)
+	wxRsp, err := client.V3MediaUploadImage(ctx, fileName, sha256Str, img)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -464,7 +437,7 @@ func TestClientV3_V3ComplaintUploadImage(t *testing.T) {
 		Content: fileContent,
 	}
 
-	wxRsp, err := client.V3ComplaintUploadImage(fileName, sha256Str, img)
+	wxRsp, err := client.V3ComplaintUploadImage(ctx, fileName, sha256Str, img)
 	if err != nil {
 		xlog.Error(err)
 		return

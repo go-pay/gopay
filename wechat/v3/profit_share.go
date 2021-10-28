@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -13,12 +14,12 @@ import (
 //	Code = 0 is success
 // 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_1.shtml
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_1.shtml
-func (c *ClientV3) V3ProfitShareOrder(bm gopay.BodyMap) (*ProfitShareOrderRsp, error) {
+func (c *ClientV3) V3ProfitShareOrder(ctx context.Context, bm gopay.BodyMap) (*ProfitShareOrderRsp, error) {
 	authorization, err := c.authorization(MethodPost, v3ProfitShareOrder, bm)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, v3ProfitShareOrder, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, v3ProfitShareOrder, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -40,13 +41,13 @@ func (c *ClientV3) V3ProfitShareOrder(bm gopay.BodyMap) (*ProfitShareOrderRsp, e
 //	Code = 0 is success
 // 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_2.shtml
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_2.shtml
-func (c *ClientV3) V3ProfitShareOrderQuery(orderNo string, bm gopay.BodyMap) (*ProfitShareOrderQueryRsp, error) {
+func (c *ClientV3) V3ProfitShareOrderQuery(ctx context.Context, orderNo string, bm gopay.BodyMap) (*ProfitShareOrderQueryRsp, error) {
 	uri := fmt.Sprintf(v3ProfitShareQuery, orderNo) + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdGet(uri, authorization)
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -68,12 +69,12 @@ func (c *ClientV3) V3ProfitShareOrderQuery(orderNo string, bm gopay.BodyMap) (*P
 //	Code = 0 is success
 // 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_3.shtml
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_3.shtml
-func (c *ClientV3) V3ProfitShareReturn(bm gopay.BodyMap) (*ProfitShareReturnRsp, error) {
+func (c *ClientV3) V3ProfitShareReturn(ctx context.Context, bm gopay.BodyMap) (*ProfitShareReturnRsp, error) {
 	authorization, err := c.authorization(MethodPost, v3ProfitShareReturn, bm)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, v3ProfitShareReturn, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, v3ProfitShareReturn, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -95,13 +96,13 @@ func (c *ClientV3) V3ProfitShareReturn(bm gopay.BodyMap) (*ProfitShareReturnRsp,
 //	Code = 0 is success
 // 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_4.shtml
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_4.shtml
-func (c *ClientV3) V3ProfitShareReturnResult(returnNo string, bm gopay.BodyMap) (*ProfitShareReturnResultRsp, error) {
+func (c *ClientV3) V3ProfitShareReturnResult(ctx context.Context, returnNo string, bm gopay.BodyMap) (*ProfitShareReturnResultRsp, error) {
 	uri := fmt.Sprintf(v3ProfitShareReturnResult, returnNo) + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdGet(uri, authorization)
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -123,12 +124,12 @@ func (c *ClientV3) V3ProfitShareReturnResult(returnNo string, bm gopay.BodyMap) 
 //	Code = 0 is success
 // 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_5.shtml
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_5.shtml
-func (c *ClientV3) V3ProfitShareOrderUnfreeze(bm gopay.BodyMap) (*ProfitShareOrderUnfreezeRsp, error) {
+func (c *ClientV3) V3ProfitShareOrderUnfreeze(ctx context.Context, bm gopay.BodyMap) (*ProfitShareOrderUnfreezeRsp, error) {
 	authorization, err := c.authorization(MethodPost, v3ProfitShareUnfreeze, bm)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, v3ProfitShareUnfreeze, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, v3ProfitShareUnfreeze, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -150,13 +151,13 @@ func (c *ClientV3) V3ProfitShareOrderUnfreeze(bm gopay.BodyMap) (*ProfitShareOrd
 //	Code = 0 is success
 // 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_6.shtml
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_6.shtml
-func (c *ClientV3) V3ProfitShareUnsplitAmount(transId string) (*ProfitShareUnsplitAmountRsp, error) {
+func (c *ClientV3) V3ProfitShareUnsplitAmount(ctx context.Context, transId string) (*ProfitShareUnsplitAmountRsp, error) {
 	url := fmt.Sprintf(v3ProfitShareUnsplitAmount, transId)
 	authorization, err := c.authorization(MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdGet(url, authorization)
+	res, si, bs, err := c.doProdGet(ctx, url, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -177,13 +178,13 @@ func (c *ClientV3) V3ProfitShareUnsplitAmount(transId string) (*ProfitShareUnspl
 // 查询最大分账比例API
 //	Code = 0 is success
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_7.shtml
-func (c *ClientV3) V3ProfitShareMerchantConfigs(subMchId string) (*ProfitShareMerchantConfigsRsp, error) {
+func (c *ClientV3) V3ProfitShareMerchantConfigs(ctx context.Context, subMchId string) (*ProfitShareMerchantConfigsRsp, error) {
 	uri := fmt.Sprintf(v3ProfitShareMerchantConfigs, subMchId)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdGet(uri, authorization)
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -205,12 +206,12 @@ func (c *ClientV3) V3ProfitShareMerchantConfigs(subMchId string) (*ProfitShareMe
 //	Code = 0 is success
 // 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_8.shtml
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_8.shtml
-func (c *ClientV3) V3ProfitShareAddReceiver(bm gopay.BodyMap) (*ProfitShareAddReceiverRsp, error) {
+func (c *ClientV3) V3ProfitShareAddReceiver(ctx context.Context, bm gopay.BodyMap) (*ProfitShareAddReceiverRsp, error) {
 	authorization, err := c.authorization(MethodPost, v3ProfitShareAddReceiver, bm)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, v3ProfitShareAddReceiver, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, v3ProfitShareAddReceiver, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -232,12 +233,12 @@ func (c *ClientV3) V3ProfitShareAddReceiver(bm gopay.BodyMap) (*ProfitShareAddRe
 //	Code = 0 is success
 // 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_9.shtml
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_9.shtml
-func (c *ClientV3) V3ProfitShareDeleteReceiver(bm gopay.BodyMap) (*ProfitShareDeleteReceiverRsp, error) {
+func (c *ClientV3) V3ProfitShareDeleteReceiver(ctx context.Context, bm gopay.BodyMap) (*ProfitShareDeleteReceiverRsp, error) {
 	authorization, err := c.authorization(MethodPost, v3ProfitShareDeleteReceiver, bm)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, v3ProfitShareDeleteReceiver, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, v3ProfitShareDeleteReceiver, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -259,13 +260,13 @@ func (c *ClientV3) V3ProfitShareDeleteReceiver(bm gopay.BodyMap) (*ProfitShareDe
 //	Code = 0 is success
 //  商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_1_11.shtml
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_1_11.shtml
-func (c *ClientV3) V3ProfitShareBills(bm gopay.BodyMap) (*ProfitShareBillsRsp, error) {
+func (c *ClientV3) V3ProfitShareBills(ctx context.Context, bm gopay.BodyMap) (*ProfitShareBillsRsp, error) {
 	uri := v3ProfitShareBills + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdGet(uri, authorization)
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
 	if err != nil {
 		return nil, err
 	}

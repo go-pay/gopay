@@ -33,7 +33,7 @@ func TestClient_UnifiedOrder(t *testing.T) {
 		}) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
 
 	// 请求支付下单，成功后得到结果
-	wxRsp, err := client.UnifiedOrder(bm)
+	wxRsp, err := client.UnifiedOrder(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.UnifiedOrder(%+v),error:%+v", bm, err)
 		return
@@ -72,7 +72,7 @@ func TestClient_Micropay(t *testing.T) {
 		Set("sign_type", SignType_MD5)
 
 	// 请求支付，成功后得到结果
-	wxRsp, err := client.Micropay(bm)
+	wxRsp, err := client.Micropay(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.Micropay(%+v),error:%+v", bm, err)
 		return
@@ -93,7 +93,7 @@ func TestClient_QueryOrder(t *testing.T) {
 		Set("sign_type", SignType_MD5)
 
 	// 请求订单查询，成功后得到结果
-	wxRsp, resBm, err := client.QueryOrder(bm)
+	wxRsp, resBm, err := client.QueryOrder(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.QueryOrder(%+v),error:%+v", bm, err)
 		return
@@ -110,7 +110,7 @@ func TestClient_CloseOrder(t *testing.T) {
 		Set("sign_type", SignType_MD5)
 
 	// 请求关闭订单，成功后得到结果
-	wxRsp, err := client.CloseOrder(bm)
+	wxRsp, err := client.CloseOrder(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.CloseOrder(%+v),error:%+v", bm, err)
 		return
@@ -133,7 +133,7 @@ func TestClient_Refund(t *testing.T) {
 
 	// 请求申请退款（沙箱环境下，证书路径参数可传空）
 	//    body：参数Body
-	wxRsp, resBm, err := client.Refund(bm)
+	wxRsp, resBm, err := client.Refund(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.Refund(%+v),error:%+v", bm, err)
 		return
@@ -153,7 +153,7 @@ func TestClient_QueryRefund(t *testing.T) {
 		Set("refund_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")*/
 
 	// 请求申请退款
-	wxRsp, resBm, err := client.QueryRefund(bm)
+	wxRsp, resBm, err := client.QueryRefund(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.QueryRefund(%+v),error:%+v", bm, err)
 		return
@@ -170,7 +170,7 @@ func TestClient_Reverse(t *testing.T) {
 		Set("sign_type", SignType_MD5)
 
 	// 请求撤销订单，成功后得到结果，沙箱环境下，证书路径参数可传nil
-	wxRsp, err := client.Reverse(bm)
+	wxRsp, err := client.Reverse(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.Reverse(%+v),error:%+v", bm, err)
 		return

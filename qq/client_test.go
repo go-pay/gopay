@@ -1,6 +1,7 @@
 package qq
 
 import (
+	"context"
 	"os"
 	"testing"
 
@@ -10,6 +11,7 @@ import (
 )
 
 var (
+	ctx    = context.Background()
 	client *Client
 	mchId  = "1368139502"
 	apiKey = "GFDS8j98rewnmgl45wHTt980jg543abc"
@@ -36,7 +38,7 @@ func TestClient_MicroPay(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("nonce_str", util.GetRandomString(32))
 
-	qqRsp, err := client.MicroPay(bm)
+	qqRsp, err := client.MicroPay(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.Micropay(%+v),error:%+v", bm, err)
 		return
@@ -57,7 +59,7 @@ func TestNotifyResponse_ToXmlString(t *testing.T) {
 func TestClient_DownloadRedListFile(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("date", 20160803)
-	file, err := client.DownloadRedListFile(bm)
+	file, err := client.DownloadRedListFile(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.DownloadRedListFile(%+v),error:%+v", bm, err)
 		return

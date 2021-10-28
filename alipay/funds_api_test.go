@@ -17,7 +17,7 @@ func TestFundTransUniTransfer(t *testing.T) {
 			bm.Set("identity_type", "ALIPAY_LOGON_ID")
 		})
 
-	aliRsp, err := client.FundTransUniTransfer(bm)
+	aliRsp, err := client.FundTransUniTransfer(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -30,7 +30,7 @@ func TestFundAccountQuery(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("alipay_user_id", "2088301409188095") /*.Set("account_type", "ACCTRANS_ACCOUNT")*/
 
-	aliRsp, err := client.FundAccountQuery(bm)
+	aliRsp, err := client.FundAccountQuery(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -45,7 +45,7 @@ func TestFundTransCommonQuery(t *testing.T) {
 		Set("biz_scene", "DIRECT_TRANSFER").
 		Set("order_id", "20190801110070000006380000250621")
 
-	aliRsp, err := client.FundTransCommonQuery(bm)
+	aliRsp, err := client.FundTransCommonQuery(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -58,7 +58,7 @@ func TestFundTransOrderQuery(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("out_biz_no", "201806300011232301")
 
-	aliRsp, err := client.FundTransOrderQuery(bm)
+	aliRsp, err := client.FundTransOrderQuery(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -75,7 +75,7 @@ func TestFundAuthOrderAppFreeze(t *testing.T) {
 		Set("amount", "0.01").
 		Set("product_code", "PRE_AUTH_ONLINE")
 
-	aliRsp, err := client.FundAuthOrderAppFreeze(bm)
+	aliRsp, err := client.FundAuthOrderAppFreeze(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -90,7 +90,7 @@ func TestClient_FundTransPagePay(t *testing.T) {
 		Set("product_code", "STD_APP_TRANSFER").
 		Set("biz_scene", "PARTY_MEMBERSHIP_DUES")
 
-	aliRsp, err := client.FundTransPagePay(bm)
+	aliRsp, err := client.FundTransPagePay(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.FundTransPagePay(%+v),error:%+v", bm, err)
 		return

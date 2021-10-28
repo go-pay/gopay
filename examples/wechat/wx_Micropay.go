@@ -29,7 +29,7 @@ func Micropay() {
 		Set("sign_type", wechat.SignType_MD5)
 
 	//请求支付，成功后得到结果
-	wxRsp, err := client.Micropay(bm)
+	wxRsp, err := client.Micropay(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return

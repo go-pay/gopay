@@ -33,7 +33,7 @@ func TradePay() {
 	bm.Set("total_amount", "0.01")
 	bm.Set("timeout_express", "2m")
 	//条码支付
-	aliRsp, err := client.TradePay(bm)
+	aliRsp, err := client.TradePay(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

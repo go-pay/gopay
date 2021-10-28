@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/iGoogle-ink/gopher/xlog"
+	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 func TestXtime(t *testing.T) {

@@ -31,7 +31,7 @@ func TradeCreate() {
 		Set("out_trade_no", "GZ201901301040355709").
 		Set("total_amount", "0.01")
 	//创建订单
-	aliRsp, err := client.TradeCreate(bm)
+	aliRsp, err := client.TradeCreate(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

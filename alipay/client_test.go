@@ -1,6 +1,7 @@
 package alipay
 
 import (
+	"context"
 	"os"
 	"testing"
 
@@ -11,6 +12,7 @@ import (
 )
 
 var (
+	ctx    = context.Background()
 	client *Client
 	err    error
 	// 普通公钥模式时，验签使用
@@ -69,7 +71,7 @@ func TestClient_PostAliPayAPISelfV2(t *testing.T) {
 	})
 
 	aliPsp := new(TradePrecreateResponse)
-	err := client.PostAliPayAPISelfV2(bm, "alipay.trade.precreate", aliPsp)
+	err := client.PostAliPayAPISelfV2(ctx, bm, "alipay.trade.precreate", aliPsp)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -84,7 +86,7 @@ func TestClient_PostAliPayAPISelf(t *testing.T) {
 	bm.Set("total_amount", "100")
 
 	aliPsp := new(TradePrecreateResponse)
-	err := client.PostAliPayAPISelf(bm, "alipay.trade.precreate", aliPsp)
+	err := client.PostAliPayAPISelf(ctx, bm, "alipay.trade.precreate", aliPsp)
 	if err != nil {
 		xlog.Error(err)
 		return

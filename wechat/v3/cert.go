@@ -31,7 +31,7 @@ import (
 //	  - 定期调用该接口，间隔时间小于12小时
 //	  - 加密请求消息中的敏感信息时，使用最新的平台证书（即：证书启用时间较晚的证书）
 //	文档说明：https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_1.shtml
-func GetPlatformCerts(mchid, apiV3Key, serialNo, privateKey string) (certs *PlatformCertRsp, err error) {
+func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey string) (certs *PlatformCertRsp, err error) {
 	var (
 		eg = new(errgroup.Group)
 		mu sync.Mutex
@@ -64,9 +64,9 @@ func GetPlatformCerts(mchid, apiV3Key, serialNo, privateKey string) (certs *Plat
 	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, serialNo)
 	httpClient.Header.Add("Accept", "*/*")
-	res, bs, errs := httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes()
-	if len(errs) > 0 {
-		return nil, errs[0]
+	res, bs, err := httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes(ctx)
+	if err != nil {
+		return nil, err
 	}
 	certs = &PlatformCertRsp{Code: Success}
 	if res.StatusCode != http.StatusOK {
@@ -126,7 +126,7 @@ func (c *ClientV3) GetPlatformCerts() (certs *PlatformCertRsp, err error) {
 		return nil, err
 	}
 
-	res, _, bs, err := c.doProdGet(v3GetCerts, authorization)
+	res, _, bs, err := c.doProdGet(c.ctx, v3GetCerts, authorization)
 	if err != nil {
 		return nil, err
 	}

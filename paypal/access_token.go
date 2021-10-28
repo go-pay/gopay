@@ -35,9 +35,9 @@ func (c *Client) GetAccessToken() (token *AccessToken, err error) {
 		xlog.Debugf("PayPal_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("PayPal_Authorization: %s", authHeader)
 	}
-	res, bs, errs := httpClient.Type(xhttp.TypeForm).Post(url).SendBodyMap(bm).EndBytes()
-	if len(errs) > 0 {
-		return nil, errs[0]
+	res, bs, err := httpClient.Type(xhttp.TypeForm).Post(url).SendBodyMap(bm).EndBytes(c.ctx)
+	if err != nil {
+		return nil, err
 	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("PayPal_Response: %d > %s", res.StatusCode, string(bs))

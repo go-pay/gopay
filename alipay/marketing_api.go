@@ -1,6 +1,7 @@
 package alipay
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -9,13 +10,13 @@ import (
 
 // alipay.open.app.qrcode.create(小程序生成推广二维码接口)
 //	文档地址：https://opendocs.alipay.com/apis/009zva
-func (a *Client) OpenAppQrcodeCreate(bm gopay.BodyMap) (aliRsp *OpenAppQrcodeCreateRsp, err error) {
+func (a *Client) OpenAppQrcodeCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *OpenAppQrcodeCreateRsp, err error) {
 	err = bm.CheckEmptyError("url_param", "query_param", "describe")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(bm, "alipay.open.app.qrcode.create"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.open.app.qrcode.create"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(OpenAppQrcodeCreateRsp)

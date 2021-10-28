@@ -1,9 +1,14 @@
 package wechat
 
 import (
+	"context"
 	"testing"
 
 	"github.com/go-pay/gopay/pkg/xlog"
+)
+
+var (
+	ctx = context.Background()
 )
 
 func TestDecryptOpenDataToStruct(t *testing.T) {
@@ -50,7 +55,7 @@ func TestDecryptOpenDataToStruct(t *testing.T) {
 }
 
 func TestGetAppletAccessToken(t *testing.T) {
-	token, err := GetAppletAccessToken("wxdaa2ab9ef87b5497", "AppSecret")
+	token, err := GetAppletAccessToken(ctx, "wxdaa2ab9ef87b5497", "AppSecret")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -59,7 +64,7 @@ func TestGetAppletAccessToken(t *testing.T) {
 }
 
 func TestCode2Session(t *testing.T) {
-	session, err := Code2Session("wx2e92b2ff5ed4db71", "AppSecret", "081XxRPj1e8Krp0uGUQj1s0MPj1XxRP5")
+	session, err := Code2Session(ctx, "wx2e92b2ff5ed4db71", "AppSecret", "081XxRPj1e8Krp0uGUQj1s0MPj1XxRP5")
 	if err != nil {
 		xlog.Error(err)
 		return

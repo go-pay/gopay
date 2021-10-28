@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha256"
@@ -209,12 +210,12 @@ func getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign stri
 }
 
 // 获取微信支付沙箱环境Sign值
-func getSignBoxSign(mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
+func getSignBoxSign(ctx context.Context, mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
 	var (
 		sandBoxApiKey string
 		h             hash.Hash
 	)
-	if sandBoxApiKey, err = getSanBoxKey(mchId, util.GetRandomString(32), apiKey, SignType_MD5); err != nil {
+	if sandBoxApiKey, err = getSanBoxKey(ctx, mchId, util.GetRandomString(32), apiKey, SignType_MD5); err != nil {
 		return
 	}
 	h = md5.New()
@@ -224,28 +225,28 @@ func getSignBoxSign(mchId, apiKey string, bm gopay.BodyMap) (sign string, err er
 }
 
 // 从微信提供的接口获取：SandboxSignKey
-func getSanBoxKey(mchId, nonceStr, apiKey, signType string) (key string, err error) {
+func getSanBoxKey(ctx context.Context, mchId, nonceStr, apiKey, signType string) (key string, err error) {
 	bm := make(gopay.BodyMap)
 	bm.Set("mch_id", mchId)
 	bm.Set("nonce_str", nonceStr)
 	// 沙箱环境：获取沙箱环境ApiKey
-	if key, err = getSanBoxSignKey(mchId, nonceStr, getReleaseSign(apiKey, signType, bm)); err != nil {
+	if key, err = getSanBoxSignKey(ctx, mchId, nonceStr, getReleaseSign(apiKey, signType, bm)); err != nil {
 		return
 	}
 	return
 }
 
 // 从微信提供的接口获取：SandboxSignKey
-func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
+func getSanBoxSignKey(ctx context.Context, mchId, nonceStr, sign string) (key string, err error) {
 	reqs := make(gopay.BodyMap)
 	reqs.Set("mch_id", mchId)
 	reqs.Set("nonce_str", nonceStr)
 	reqs.Set("sign", sign)
 
 	keyResponse := new(getSignKeyResponse)
-	_, errs := xhttp.NewClient().Type(xhttp.TypeXML).Post(sandboxGetSignKey).SendString(GenerateXml(reqs)).EndStruct(keyResponse)
-	if len(errs) > 0 {
-		return util.NULL, errs[0]
+	_, err = xhttp.NewClient().Type(xhttp.TypeXML).Post(sandboxGetSignKey).SendString(GenerateXml(reqs)).EndStruct(ctx, keyResponse)
+	if err != nil {
+		return util.NULL, err
 	}
 	if keyResponse.ReturnCode == "FAIL" {
 		return util.NULL, errors.New(keyResponse.ReturnMsg)

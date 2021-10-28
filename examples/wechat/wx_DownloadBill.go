@@ -24,7 +24,7 @@ func DownloadBill() {
 		Set("bill_type", "ALL")
 
 	//请求下载对账单，成功后得到结果（string类型字符串）
-	wxRsp, err := client.DownloadBill(bm)
+	wxRsp, err := client.DownloadBill(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return

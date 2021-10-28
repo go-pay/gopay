@@ -24,14 +24,14 @@ func TradePagePay() {
 		SetNotifyUrl("https://www.fmm.ink")
 
 	//请求参数
-	body := make(gopay.BodyMap)
-	body.Set("subject", "网站测试支付")
-	body.Set("out_trade_no", "GZ201901301040355706100469")
-	body.Set("total_amount", "88.88")
-	body.Set("product_code", "FAST_INSTANT_TRADE_PAY")
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "网站测试支付")
+	bm.Set("out_trade_no", "GZ201901301040355706100469")
+	bm.Set("total_amount", "88.88")
+	bm.Set("product_code", "FAST_INSTANT_TRADE_PAY")
 
 	//电脑网站支付请求
-	payUrl, err := client.TradePagePay(body)
+	payUrl, err := client.TradePagePay(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

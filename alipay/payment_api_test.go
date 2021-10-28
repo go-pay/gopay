@@ -17,7 +17,7 @@ func TestClient_TradePrecreate(t *testing.T) {
 		Set("total_amount", "0.01")
 
 	// 创建订单
-	aliRsp, err := client.TradePrecreate(bm)
+	aliRsp, err := client.TradePrecreate(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -43,7 +43,7 @@ func TestClient_TradeCreate(t *testing.T) {
 		Set("total_amount", "0.01")
 
 	// 创建订单
-	aliRsp, err := client.TradeCreate(bm)
+	aliRsp, err := client.TradeCreate(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -60,7 +60,7 @@ func TestClient_TradeAppPay(t *testing.T) {
 		Set("total_amount", "1.00")
 
 	// 手机APP支付参数请求
-	payParam, err := client.TradeAppPay(bm)
+	payParam, err := client.TradeAppPay(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.TradeAppPay(%+v),error:%+v", bm, err)
 		return
@@ -74,7 +74,7 @@ func TestClient_TradeCancel(t *testing.T) {
 	bm.Set("out_trade_no", "GZ201909081743431443")
 
 	// 撤销支付订单
-	aliRsp, err := client.TradeCancel(bm)
+	aliRsp, err := client.TradeCancel(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.TradeCancel(%+v),error:%+v", bm, err)
 		return
@@ -88,7 +88,7 @@ func TestClient_TradeClose(t *testing.T) {
 	bm.Set("out_trade_no", "GZ201909081743431443")
 
 	// 条码支付
-	aliRsp, err := client.TradeClose(bm)
+	aliRsp, err := client.TradeClose(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.TradeClose(%+v),error:%+v", bm, err)
 		return
@@ -107,7 +107,7 @@ func TestClient_TradePay(t *testing.T) {
 		Set("timeout_express", "2m")
 
 	// 条码支付
-	aliRsp, err := client.TradePay(bm)
+	aliRsp, err := client.TradePay(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -128,7 +128,7 @@ func TestClient_TradeQuery(t *testing.T) {
 	bm.Set("out_trade_no", "Xdhxpe4bI5hhXAldhkMiGTZ03Jm9V6V0")
 
 	// 查询订单
-	aliRsp, err := client.TradeQuery(bm)
+	aliRsp, err := client.TradeQuery(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -153,7 +153,7 @@ func TestClient_TradeWapPay(t *testing.T) {
 		Set("product_code", "QUICK_WAP_WAY")
 
 	// 手机网站支付请求
-	payUrl, err := client.TradeWapPay(bm)
+	payUrl, err := client.TradeWapPay(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.TradeWapPay(%+v),error:%+v", bm, err)
 		return
@@ -170,7 +170,7 @@ func TestClient_TradePagePay(t *testing.T) {
 		Set("product_code", "FAST_INSTANT_TRADE_PAY")
 
 	// 电脑网站支付请求
-	payUrl, err := client.TradePagePay(bm)
+	payUrl, err := client.TradePagePay(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.TradePagePay(%+v),error:%+v", bm, err)
 		return
@@ -186,7 +186,7 @@ func TestClient_TradeRefund(t *testing.T) {
 		Set("refund_reason", "测试退款")
 
 	// 发起退款请求
-	aliRsp, err := client.TradeRefund(bm)
+	aliRsp, err := client.TradeRefund(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.TradeRefund(%+v),error:%+v", bm, err)
 		return
@@ -202,7 +202,7 @@ func TestClient_TradePageRefund(t *testing.T) {
 		Set("out_request_no", util.GetRandomString(32))
 
 	// 发起退款请求
-	aliRsp, err := client.TradePageRefund(bm)
+	aliRsp, err := client.TradePageRefund(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.TradePageRefund(%+v),error:%+v", bm, err)
 		return
@@ -217,7 +217,7 @@ func TestClient_TradeFastPayRefundQuery(t *testing.T) {
 		Set("out_request_no", "GZ201909081743431443")
 
 	// 发起退款查询请求
-	aliRsp, err := client.TradeFastPayRefundQuery(bm)
+	aliRsp, err := client.TradeFastPayRefundQuery(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.TradeFastPayRefundQuery(%+v),error:%+v", bm, err)
 		return
@@ -238,7 +238,7 @@ func TestClient_TradeOrderSettle(t *testing.T) {
 	// xlog.Debug("listParams:", bm.GetString("royalty_parameters"))
 
 	// 发起交易结算接口
-	aliRsp, err := client.TradeOrderSettle(bm)
+	aliRsp, err := client.TradeOrderSettle(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.TradeOrderSettle(%+v),error:%+v", bm, err)
 		return
@@ -253,7 +253,7 @@ func TestClient_TradeAdvanceConsult(t *testing.T) {
 	bm.Set("alipay_user_id", "2088302483540171").
 		Set("consult_scene", "ORDER_RISK_EVALUATION")
 
-	aliRsp, err := client.TradeAdvanceConsult(bm)
+	aliRsp, err := client.TradeAdvanceConsult(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.TradeAdvanceConsult(%+v),error:%+v", bm, err)
 		return
@@ -269,7 +269,7 @@ func TestClient_PcreditHuabeiAuthSettleApply(t *testing.T) {
 	bm.Set("out_request_no", "8077735255938032")
 	bm.Set("alipay_user_id", "2088101117955611")
 
-	aliRsp, err := client.PcreditHuabeiAuthSettleApply(bm)
+	aliRsp, err := client.PcreditHuabeiAuthSettleApply(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.PcreditHuabeiAuthSettleApply(%+v),error:%+v", bm, err)
 		return
@@ -284,7 +284,7 @@ func TestClient_CommerceTransportNfccardSend(t *testing.T) {
 	bm.Set("card_no", "12345678")
 	bm.Set("card_status", "CANCEL")
 
-	aliRsp, err := client.CommerceTransportNfccardSend(bm)
+	aliRsp, err := client.CommerceTransportNfccardSend(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.CommerceTransportNfccardSend(%+v),error:%+v", bm, err)
 		return
@@ -302,7 +302,7 @@ func TestClient_DataDataserviceAdDataQuery(t *testing.T) {
 	bm.Set("end_date", "20180820")
 	bm.Set("outer_id_list", "10760000471-2")
 
-	aliRsp, err := client.DataDataserviceAdDataQuery(bm)
+	aliRsp, err := client.DataDataserviceAdDataQuery(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.DataDataserviceAdDataQuery(%+v),error:%+v", bm, err)
 		return
@@ -328,7 +328,7 @@ func TestClient_CommerceAirCallcenterTradeApply(t *testing.T) {
 
 	})
 
-	aliRsp, err := client.CommerceAirCallcenterTradeApply(bm)
+	aliRsp, err := client.CommerceAirCallcenterTradeApply(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.CommerceAirCallcenterTradeApply(%+v),error:%+v", bm, err)
 		return
@@ -354,7 +354,7 @@ func TestClient_PaymentTradeOrderCreate(t *testing.T) {
 		bm.Set("goods_price", "2000.00")
 	})
 
-	aliRsp, err := client.PaymentTradeOrderCreate(bm)
+	aliRsp, err := client.PaymentTradeOrderCreate(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.PaymentTradeOrderCreate(%+v),error:%+v", bm, err)
 		return
@@ -370,7 +370,7 @@ func TestClient_CommerceBenefitApply(t *testing.T) {
 	bm.Set("user_account", "342812199010013210")
 	bm.Set("platform", "ios")
 
-	aliRsp, err := client.CommerceBenefitApply(bm)
+	aliRsp, err := client.CommerceBenefitApply(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.CommerceBenefitApply(%+v),error:%+v", bm, err)
 		return
@@ -386,7 +386,7 @@ func TestClient_CommerceBenefitVerify(t *testing.T) {
 	bm.Set("user_account", "342812199010013210")
 	bm.Set("trade_no", "2020081210122512120003")
 
-	aliRsp, err := client.CommerceBenefitVerify(bm)
+	aliRsp, err := client.CommerceBenefitVerify(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.CommerceBenefitVerify(%+v),error:%+v", bm, err)
 		return
@@ -397,7 +397,7 @@ func TestClient_CommerceBenefitVerify(t *testing.T) {
 func TestClient_TradeRepaybillQuery(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
-	aliRsp, err := client.TradeRepaybillQuery(bm)
+	aliRsp, err := client.TradeRepaybillQuery(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.TradeRepaybillQuery(%+v),error:%+v", bm, err)
 		return

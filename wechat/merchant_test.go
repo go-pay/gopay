@@ -25,7 +25,7 @@ func TestClient_Transfer(t *testing.T) {
 
 	// 企业向微信用户个人付款（不支持沙箱环境）
 	//    body：参数Body
-	wxRsp, err := client.Transfer(bm)
+	wxRsp, err := client.Transfer(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.Transfer(%+v),error:%+v", bm, err)
 		return
@@ -66,7 +66,7 @@ func Test_ProfitSharing(t *testing.T) {
 
 	bm.Set("receivers", string(bs))
 
-	wxRsp, err := client.ProfitSharing(bm)
+	wxRsp, err := client.ProfitSharing(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ProfitSharingAddReceiver(%+v),error:%+v", bm, err)
 		return
@@ -87,7 +87,7 @@ func Test_ProfitSharingAddReceiver(t *testing.T) {
 
 	bm.Set("receiver", receiver.JsonBody())
 
-	wxRsp, err := client.ProfitSharingAddReceiver(bm)
+	wxRsp, err := client.ProfitSharingAddReceiver(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ProfitSharingAddReceiver(%+v),error:%+v", bm, err)
 		return
@@ -106,7 +106,7 @@ func Test_ProfitSharingRemoveReceiver(t *testing.T) {
 
 	bm.Set("receiver", receiver.JsonBody())
 
-	wxRsp, err := client.ProfitSharingRemoveReceiver(bm)
+	wxRsp, err := client.ProfitSharingRemoveReceiver(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ProfitSharingRemoveReceiver(%+v),error:%+v", bm, err)
 		return
@@ -118,7 +118,7 @@ func TestClient_GetRSAPublicKey(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("nonce_str", util.GetRandomString(32)).
 		Set("sign_type", SignType_MD5)
-	publicKey, err := client.GetRSAPublicKey(bm)
+	publicKey, err := client.GetRSAPublicKey(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -148,7 +148,7 @@ func TestClient_PayBank(t *testing.T) {
 		Set("enc_true_name", encryptName)
 
 	// 企业付款到银行卡API
-	wxRsp, err := client.PayBank(bm)
+	wxRsp, err := client.PayBank(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.EntrustPaying(%+v),error:%+v", bm, err)
 		return

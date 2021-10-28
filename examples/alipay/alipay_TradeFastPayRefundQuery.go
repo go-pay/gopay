@@ -23,11 +23,11 @@ func TradeFastPayRefundQuery() {
 		SetSignType(alipay.RSA2)
 
 	//请求参数
-	body := make(gopay.BodyMap)
-	body.Set("out_trade_no", "GZ201907301420334577")
-	body.Set("out_request_no", "GZ201907301420334577")
+	bm := make(gopay.BodyMap)
+	bm.Set("out_trade_no", "GZ201907301420334577")
+	bm.Set("out_request_no", "GZ201907301420334577")
 	//发起退款查询请求
-	aliRsp, err := client.TradeFastPayRefundQuery(body)
+	aliRsp, err := client.TradeFastPayRefundQuery(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return
