@@ -83,7 +83,7 @@ QQ群：
 
 ## 赞赏多少是您的心意，感谢支持！
 
- <img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshangma.png"/>
+ <img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang.png"/>
 
 ## License
 
