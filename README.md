@@ -48,7 +48,7 @@ func main() {
 
 # 二、文档目录
 
-> ### 点击查看不同支付方式的使用文档
+> ### 点击查看不同支付方式的使用文档。方便的话，请留下您认可的小星星，十分感谢！
 
 * #### [Alipay](https://github.com/go-pay/gopay/blob/main/doc/alipay.md)
 * #### [Wechat](https://github.com/go-pay/gopay/blob/main/doc/wechat_v3.md)
@@ -83,10 +83,7 @@ QQ群：
 
 ## 赞赏多少是您的心意，感谢支持！
 
-微信：
-<img width="150" height="150" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_wx.png"/>
-支付宝：
-<img width="150" height="150" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_zfb.png"/>
+微信赞赏码： <img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang.png"/>
 
 ## License
 
