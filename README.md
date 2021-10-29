@@ -83,10 +83,7 @@ QQ群：
 
 ## 赞赏多少是您的心意，感谢支持！
 
-微信：
-<img width="150" height="150" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_wx.png"/>
-支付宝：
-<img width="150" height="150" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_zfb.png"/>
+ <img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshangma.png"/>
 
 ## License
 
