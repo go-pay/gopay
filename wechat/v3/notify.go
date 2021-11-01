@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"crypto/rsa"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -165,11 +166,20 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 	return notifyReq, nil
 }
 
-// 异步通知验签
-//	wxPubKeyContent 是通过client.GetPlatformCerts()接口向微信获取的微信平台公钥证书内容
+// Deprecated
+//	推荐使用 VerifySignByPK()
 func (v *V3NotifyReq) VerifySign(wxPkContent string) (err error) {
 	if v.SignInfo != nil {
 		return V3VerifySign(v.SignInfo.HeaderTimestamp, v.SignInfo.HeaderNonce, v.SignInfo.SignBody, v.SignInfo.HeaderSignature, wxPkContent)
+	}
+	return errors.New("verify notify sign, bug SignInfo is nil")
+}
+
+// 异步通知验签
+//	wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKey() 获取
+func (v *V3NotifyReq) VerifySignByPK(wxPublicKey *rsa.PublicKey) (err error) {
+	if v.SignInfo != nil {
+		return V3VerifySignByPK(v.SignInfo.HeaderTimestamp, v.SignInfo.HeaderNonce, v.SignInfo.SignBody, v.SignInfo.HeaderSignature, wxPublicKey)
 	}
 	return errors.New("verify notify sign, bug SignInfo is nil")
 }
@@ -266,8 +276,8 @@ func (v *V3NotifyReq) DecryptProfitShareCipherText(apiV3Key string) (result *V3D
 }
 
 // Deprecated
-// 解析微信回调请求的参数到 gopay.BodyMap
 //	暂时不推荐此方法，请使用 wechat.V3ParseNotify()
+//	解析微信回调请求的参数到 gopay.BodyMap
 func V3ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
 	defer req.Body.Close()

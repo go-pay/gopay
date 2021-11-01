@@ -17,7 +17,7 @@ import (
 
 // 敏感信息加密
 func (c *ClientV3) V3EncryptText(text string) (cipherText string, err error) {
-	if c.wxPublicKey == nil || c.wxSerialNo == "" {
+	if c.wxPublicKey == nil || c.WxSerialNo == "" {
 		return util.NULL, errors.New("WxPublicKey or WxSerialNo is null")
 	}
 	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, c.wxPublicKey, []byte(text), nil)

@@ -1,3 +1,11 @@
+版本号：Release 1.5.62
+修改记录：
+   (1) 微信V3：client 内 WxSerialNo、ApiV3Key 公有化
+   (2) 微信V3：client 提供新方法 client.WxPublicKey() 直接获取 微信平台公钥
+   (3) 微信V3：wechat 提供新方法 wechat.V3VerifySignByPK()，不再推荐使用 wechat.V3VerifySign()
+   (4) 微信V3：V3NotifyReq 提供新方法 notify.VerifySignByPK()，不再推荐使用 notify.VerifySign()
+   (5) 微信V3：整理微信v3说明文档
+
 版本号：Release 1.5.61
 修改记录：
    (1) gopay：更新 xhttp pkg, 方法全部增加 context 传递

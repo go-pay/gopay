@@ -108,6 +108,8 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 	return certs, nil
 }
 
+// Deprecated
+// 推荐直接使用 GetAndSelectNewestCert() 方法
 // 获取微信平台证书公钥（获取后自行保存使用，如需定期刷新功能，自行实现）
 //	注意事项
 //	如果自行实现验证平台签名逻辑的话，需要注意以下事项:
@@ -180,18 +182,25 @@ func (c *ClientV3) SetPlatformCert(wxPublicKeyContent []byte, wxSerialNo string)
 	if pubKey != nil {
 		c.wxPublicKey = pubKey
 	}
-	c.wxSerialNo = wxSerialNo
+	c.WxSerialNo = wxSerialNo
 	return c
 }
 
+// Deprecated
 // 解密加密的证书
 func (c *ClientV3) DecryptCerts(ciphertext, nonce, additional string) (wxCerts string, err error) {
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
-	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), c.apiV3Key)
+	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), c.ApiV3Key)
 	if err != nil {
 		return "", fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
 	}
 	return string(decrypt), nil
+}
+
+// 获取 微信平台证书（readonly）
+func (c *ClientV3) WxPublicKey() (wxPublicKey *rsa.PublicKey) {
+	wxPublicKey = c.wxPublicKey
+	return
 }
 
 // 获取并选择最新的有效证书
@@ -264,6 +273,6 @@ func (c *ClientV3) autoCheckCertProc() {
 			continue
 		}
 		c.wxPublicKey = pubKey
-		c.wxSerialNo = wxSerialNo
+		c.WxSerialNo = wxSerialNo
 	}
 }

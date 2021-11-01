@@ -17,9 +17,9 @@ import (
 // ClientV3 微信支付 V3
 type ClientV3 struct {
 	Mchid       string
+	ApiV3Key    []byte
 	SerialNo    string
-	apiV3Key    []byte
-	wxSerialNo  string
+	WxSerialNo  string
 	autoSign    bool
 	privateKey  *rsa.PrivateKey
 	wxPublicKey *rsa.PublicKey
@@ -30,7 +30,7 @@ type ClientV3 struct {
 // NewClientV3 初始化微信客户端 V3
 //	mchid：商户ID 或者服务商模式的 sp_mchid
 // 	serialNo：商户API证书的证书序列号
-//	apiV3Key：APIv3Key，商户平台获取
+//	ApiV3Key：APIv3Key，商户平台获取
 //	privateKey：商户API证书下载后，私钥 apiclient_key.pem 读取后的字符串内容
 func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3, err error) {
 	priKey, err := xpem.DecodePrivateKey([]byte(privateKey))
@@ -40,7 +40,7 @@ func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3
 	client = &ClientV3{
 		Mchid:       mchid,
 		SerialNo:    serialNo,
-		apiV3Key:    []byte(apiV3Key),
+		ApiV3Key:    []byte(apiV3Key),
 		privateKey:  priKey,
 		ctx:         context.Background(),
 		DebugSwitch: gopay.DebugOff,
@@ -62,7 +62,7 @@ func (c *ClientV3) AutoVerifySign() (err error) {
 		return err
 	}
 	c.wxPublicKey = pubKey
-	c.wxSerialNo = wxSerialNo
+	c.WxSerialNo = wxSerialNo
 	c.autoSign = true
 	go c.autoCheckCertProc()
 	return
@@ -80,7 +80,7 @@ func (c *ClientV3) doProdPostWithHeader(ctx context.Context, headerMap map[strin
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
 	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
-	httpClient.Header.Add(HeaderSerial, c.wxSerialNo)
+	httpClient.Header.Add(HeaderSerial, c.SerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, err = httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes(ctx)
 	if err != nil {
