@@ -116,47 +116,17 @@ import (
     "github.com/go-pay/gopay/pkg/xlog"
 )
 
-// ========同步返回 手动验签（如已开启自动验签，则无需手动验签操作）========
 wxRsp, err := client.V3TransactionJsapi(bm)
 if err != nil {
     xlog.Error(err)
     return
 }
-err = wechat.V3VerifySign(wxRsp.SignInfo.HeaderTimestamp, wxRsp.SignInfo.HeaderNonce, wxRsp.SignInfo.SignBody, wxRsp.SignInfo.HeaderSignature, WxPkContent)
+// wxPublicKey 通过 client.WxPublicKey() 获取
+err = wechat.V3VerifySignByPK(wxRsp.SignInfo.HeaderTimestamp, wxRsp.SignInfo.HeaderNonce, wxRsp.SignInfo.SignBody, wxRsp.SignInfo.HeaderSignature, wxPublicKey)
 if err != nil {
     xlog.Error(err)
     return
 }
-
-// ========异步通知验签========
-notifyReq, err := wechat.V3ParseNotify()
-if err != nil {
-    xlog.Error(err)
-    return
-}
-// WxPkContent 是通过 wechat.GetPlatformCerts() 接口向微信获取的微信平台公钥证书内容
-err = notifyReq.VerifySign(WxPkContent)
-if err != nil {
-    xlog.Error(err)
-    return
-}
-
-// ========异步通知敏感信息解密========
-// 普通支付通知解密
-result, err := notifyReq.DecryptCipherText(apiV3Key)
-// 合单支付通知解密
-result, err := notifyReq.DecryptCombineCipherText(apiV3Key)
-// 退款通知解密
-result, err := notifyReq.DecryptRefundCipherText(apiV3Key)
-
-// ========异步通知应答========
-// 退款通知http应答码为200且返回状态码为SUCCESS才会当做商户接收成功，否则会重试。
-// 注意：重试过多会导致微信支付端积压过多通知而堵塞，影响其他正常通知。
-
-// 此写法是 gin 框架返回微信的写法
-c.JSON(http.StatusOK, &wechat.V3NotifyRsp{Code: gopay.SUCCESS, Message: "成功"})
-// 此写法是 echo 框架返回微信的写法
-return c.JSON(http.StatusOK, &wechat.V3NotifyRsp{Code: gopay.SUCCESS, Message: "成功"})
 ```
 
 - 异步通知验签 及 敏感参数解密
@@ -173,8 +143,8 @@ if err != nil {
     return
 }
 
-// WxPkContent 是通过 wechat.GetPlatformCerts() 接口向微信获取的微信平台公钥证书内容
-err = notifyReq.VerifySign("WxPkContent")
+// wxPublicKey 通过 client.WxPublicKey() 获取
+err = notifyReq.VerifySignByPK(wxPublicKey)
 if err != nil {
     xlog.Error(err)
     return
@@ -206,19 +176,22 @@ import (
     "github.com/go-pay/gopay/wechat/v3"
 )
 
-// 获取微信平台证书和序列号信息
+// 获取微信平台证书和序列号信息，推荐使用后者
 wechat.GetPlatformCerts()
+ 或
+client.GetAndSelectNewestCert()
 
-// 请求参数 敏感信息加密
+// 请求参数 敏感信息加密，推荐使用后者
 wechat.V3EncryptText() 或 client.V3EncryptText()
 
-// 返回参数 敏感信息解密
+// 返回参数 敏感信息解密，推荐使用后者
 wechat.V3DecryptText() 或 client.V3DecryptText()
 
 // 回调通知敏感信息解密
 wechat.V3DecryptNotifyCipherText()
 wechat.V3DecryptRefundNotifyCipherText()
 wechat.V3DecryptCombineNotifyCipherText()
+wechat.V3DecryptScoreNotifyCipherText()
 ...
 ```
 
@@ -382,8 +355,9 @@ wechat.V3DecryptCombineNotifyCipherText()
 
 * `wechat.GetPlatformCerts()` => 获取微信平台证书公钥
 * `client.GetAndSelectNewestCert()` => 获取并选择最新的有效证书
-* `wechat.V3VerifySign()` => 微信V3 版本验签（同步/异步）
+* `wechat.V3VerifySignByPK()` => 微信V3 同步验签（推荐直接打开自动验签功能）
 * `wechat.V3ParseNotify()` => 解析微信回调请求的参数到 V3NotifyReq 结构体
+* `notify.VerifySignByPK()` => 微信V3 异步通知验签
 * `client.V3EncryptText()` => 敏感参数信息加密
 * `client.V3DecryptText()` =>  敏感参数信息解密
 * `wechat.V3EncryptText()` => 敏感参数信息加密
