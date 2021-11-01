@@ -26,7 +26,7 @@
 # 一、安装
 
 ```bash
-go get github.com/go-pay/gopay
+go get -u github.com/go-pay/gopay
 ```
 
 #### 查看 GoPay 版本
