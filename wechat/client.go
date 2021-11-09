@@ -22,7 +22,7 @@ type Client struct {
 	BaseURL     string
 	IsProd      bool
 	DebugSwitch gopay.DebugSwitch
-	certificate *tls.Certificate
+	Certificate *tls.Certificate
 	mu          sync.RWMutex
 }
 

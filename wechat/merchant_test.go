@@ -1,7 +1,8 @@
 package wechat
 
 import (
-	"crypto/sha256"
+	"crypto/sha1"
+	"encoding/base64"
 	"encoding/json"
 	"testing"
 
@@ -134,18 +135,21 @@ func TestClient_PayBank(t *testing.T) {
 		Set("bank_code", "1001"). // 招商银行，https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_4&index=5
 		Set("amount", 1)
 
-	encryptBank, err := xrsa.RsaEncryptOAEPData(sha256.New(), xrsa.PKCS1, "publicKey.pem", []byte("621400000000567"), nil)
+	// publicKey 通过 client.GetRSAPublicKey() 获取
+	// 加密 银行账号，需要转 base64，微信解密使用的是 sha1
+	encryptBank, err := xrsa.RsaEncryptOAEPData(sha1.New(), xrsa.PKCS1, "publicKey content", []byte("621400000000567"), nil)
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
-	encryptName, err := xrsa.RsaEncryptOAEPData(sha256.New(), xrsa.PKCS1, "publicKey.pem", []byte("Jerry"), nil)
+	// 加密 银行收款人，需要转 base64，微信解密使用的是 sha1
+	encryptName, err := xrsa.RsaEncryptOAEPData(sha1.New(), xrsa.PKCS1, "publicKey content", []byte("Jerry"), nil)
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
-	bm.Set("enc_bank_no", encryptBank).
-		Set("enc_true_name", encryptName)
+	bm.Set("enc_bank_no", base64.StdEncoding.EncodeToString(encryptBank)).
+		Set("enc_true_name", base64.StdEncoding.EncodeToString(encryptName))
 
 	// 企业付款到银行卡API
 	wxRsp, err := client.PayBank(ctx, bm)

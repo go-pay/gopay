@@ -89,7 +89,7 @@ func (w *Client) addCertFileContentOrPath(certFile, keyFile, pkcs12File interfac
 		return
 	}
 	w.mu.Lock()
-	w.certificate = &config.Certificates[0]
+	w.Certificate = &config.Certificates[0]
 	w.mu.Unlock()
 	return
 }
@@ -98,9 +98,9 @@ func (w *Client) addCertConfig(certFile, keyFile, pkcs12File interface{}) (tlsCo
 	if certFile == nil && keyFile == nil && pkcs12File == nil {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if w.certificate != nil {
+		if w.Certificate != nil {
 			tlsConfig = &tls.Config{
-				Certificates:       []tls.Certificate{*w.certificate},
+				Certificates:       []tls.Certificate{*w.Certificate},
 				InsecureSkipVerify: true,
 			}
 			return tlsConfig, nil
