@@ -164,13 +164,13 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File interface{}) error
 	if certFile != nil && keyFile != nil {
 		files := map[string]interface{}{"certFile": certFile, "keyFile": keyFile}
 		for varName, v := range files {
-			switch v.(type) {
+			switch v := v.(type) {
 			case string:
-				if v.(string) == util.NULL {
+				if v == util.NULL {
 					return fmt.Errorf("%s is empty", varName)
 				}
 			case []byte:
-				if len(v.([]byte)) == 0 {
+				if len(v) == 0 {
 					return fmt.Errorf("%s is empty", varName)
 				}
 			default:
@@ -179,13 +179,13 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File interface{}) error
 		}
 		return nil
 	} else if pkcs12File != nil {
-		switch pkcs12File.(type) {
+		switch pkcs12File := pkcs12File.(type) {
 		case string:
-			if pkcs12File.(string) == util.NULL {
+			if pkcs12File == util.NULL {
 				return errors.New("pkcs12File is empty")
 			}
 		case []byte:
-			if len(pkcs12File.([]byte)) == 0 {
+			if len(pkcs12File) == 0 {
 				return errors.New("pkcs12File is empty")
 			}
 		default:

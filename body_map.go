@@ -97,7 +97,7 @@ func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error)
 	if len(bm) == 0 {
 		return nil
 	}
-	start.Name = xml.Name{NULL, "xml"}
+	start.Name = xml.Name{Space: NULL, Local: "xml"}
 	if err = e.EncodeToken(start); err != nil {
 		return
 	}
