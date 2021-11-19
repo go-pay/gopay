@@ -20,8 +20,13 @@ import (
 	"github.com/go-pay/gopay/pkg/util"
 )
 
+// HttpDoer modules a upstream http client.
+type HttpDoer interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
 type Client struct {
-	HttpClient       *http.Client
+	HttpClient       HttpDoer
 	Transport        *http.Transport
 	Header           http.Header
 	Timeout          time.Duration
@@ -37,17 +42,21 @@ type Client struct {
 	err              error
 }
 
+// DefaultHttpClient 默认为标准 *http.Client
+// 如果使用者实现了自己的 HttpDoer, 请注意设置 http.Client.Timeout 和 http.Client.Transport
+var DefaultHttpClient HttpDoer = &http.Client{
+	Timeout: 60 * time.Second,
+	Transport: &http.Transport{
+		TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
+		DisableKeepAlives: true,
+		Proxy:             http.ProxyFromEnvironment,
+	},
+}
+
 // NewClient , default tls.Config{InsecureSkipVerify: true}
 func NewClient() (client *Client) {
 	client = &Client{
-		HttpClient: &http.Client{
-			Timeout: 60 * time.Second,
-			Transport: &http.Transport{
-				TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
-				DisableKeepAlives: true,
-				Proxy:             http.ProxyFromEnvironment,
-			},
-		},
+		HttpClient:    DefaultHttpClient,
 		Transport:     nil,
 		Header:        make(http.Header),
 		requestType:   TypeJSON,
@@ -56,16 +65,19 @@ func NewClient() (client *Client) {
 	return client
 }
 
+// SetTransport 仅在 DefaultHttpClient 为标准 http.Client 时可使用
 func (c *Client) SetTransport(transport *http.Transport) (client *Client) {
 	c.Transport = transport
 	return c
 }
 
+// SetTLSConfig 仅在 DefaultHttpClient 为标准 http.Client 时可使用
 func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
 	c.Transport = &http.Transport{TLSClientConfig: tlsCfg, DisableKeepAlives: true, Proxy: http.ProxyFromEnvironment}
 	return c
 }
 
+// SetTimeout 仅在 DefaultHttpClient 为标准 http.Client 时可使用
 func (c *Client) SetTimeout(timeout time.Duration) (client *Client) {
 	c.Timeout = timeout
 	return c
@@ -174,7 +186,7 @@ func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client
 	return c
 }
 
-// encodeStr: url.Values.Encode() or jsonBody
+// SendString encodeStr: url.Values.Encode() or jsonBody
 func (c *Client) SendString(encodeStr string) (client *Client) {
 	switch c.requestType {
 	case TypeJSON:
@@ -290,15 +302,21 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 		}
 		req.Header = c.Header
 		req.Header.Set("Content-Type", c.ContentType)
-		if c.Transport != nil {
-			c.HttpClient.Transport = c.Transport
+
+		// 仅在 Client.HttpClient 为标准的 *http.Client 时生效
+		if httpClient, ok := c.HttpClient.(*http.Client); ok {
+			if c.Transport != nil {
+				httpClient.Transport = c.Transport
+			}
+			if c.Timeout != time.Duration(0) {
+				httpClient.Timeout = c.Timeout
+			}
 		}
+
 		if c.Host != "" {
 			req.Host = c.Host
 		}
-		if c.Timeout != time.Duration(0) {
-			c.HttpClient.Timeout = c.Timeout
-		}
+
 		res, err = c.HttpClient.Do(req)
 		if err != nil {
 			return err
