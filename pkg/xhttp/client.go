@@ -42,7 +42,7 @@ type Client struct {
 	err              error
 }
 
-// DefaultHttpClient 默认为标准 *http.Client
+// DefaultHttpClient 默认为标准 *http.Client, default tls.Config{InsecureSkipVerify: true}
 // 如果使用者实现了自己的 HttpDoer, 请注意参考以下设置
 var DefaultHttpClient HttpDoer = &http.Client{
 	Timeout: 60 * time.Second,
@@ -53,8 +53,15 @@ var DefaultHttpClient HttpDoer = &http.Client{
 	},
 }
 
-// NewClient , default tls.Config{InsecureSkipVerify: true}
-func NewClient() (client *Client) {
+// WithHttpDoer 如果用户不想使用 DefaultHttpClient, 使用该方法即可
+func WithHttpDoer(doer HttpDoer) func(client *Client) {
+	return func(client *Client) {
+		client.HttpClient = doer
+	}
+}
+
+// NewClient 创建 *xhttp.Client
+func NewClient(opts ...func(client *Client)) (client *Client) {
 	client = &Client{
 		HttpClient:    DefaultHttpClient,
 		Transport:     nil,
@@ -62,6 +69,10 @@ func NewClient() (client *Client) {
 		requestType:   TypeJSON,
 		unmarshalType: string(TypeJSON),
 	}
+	for _, opt := range opts {
+		opt(client)
+	}
+
 	return client
 }
 
