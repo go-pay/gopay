@@ -43,7 +43,7 @@ type Client struct {
 }
 
 // DefaultHttpClient 默认为标准 *http.Client
-// 如果使用者实现了自己的 HttpDoer, 请注意设置 http.Client.Timeout 和 http.Client.Transport
+// 如果使用者实现了自己的 HttpDoer, 请注意参考以下设置
 var DefaultHttpClient HttpDoer = &http.Client{
 	Timeout: 60 * time.Second,
 	Transport: &http.Transport{
@@ -65,19 +65,19 @@ func NewClient() (client *Client) {
 	return client
 }
 
-// SetTransport 仅在 DefaultHttpClient 为标准 http.Client 时可使用
+// SetTransport 仅在 DefaultHttpClient 为标准 *http.Client 时可生效
 func (c *Client) SetTransport(transport *http.Transport) (client *Client) {
 	c.Transport = transport
 	return c
 }
 
-// SetTLSConfig 仅在 DefaultHttpClient 为标准 http.Client 时可使用
+// SetTLSConfig 仅在 DefaultHttpClient 为标准 *http.Client 时可生效
 func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
 	c.Transport = &http.Transport{TLSClientConfig: tlsCfg, DisableKeepAlives: true, Proxy: http.ProxyFromEnvironment}
 	return c
 }
 
-// SetTimeout 仅在 DefaultHttpClient 为标准 http.Client 时可使用
+// SetTimeout 仅在 DefaultHttpClient 为标准 *http.Client 时可生效
 func (c *Client) SetTimeout(timeout time.Duration) (client *Client) {
 	c.Timeout = timeout
 	return c
@@ -296,7 +296,7 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 			return errors.New("Only support GET and POST and PUT and DELETE ")
 		}
 
-		req, err := http.NewRequest(c.method, c.url, body)
+		req, err := http.NewRequestWithContext(ctx, c.method, c.url, body)
 		if err != nil {
 			return err
 		}
