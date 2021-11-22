@@ -1,3 +1,8 @@
+版本号：Release 1.5.63
+修改记录：
+   (1) GoPay：部分代码优化
+   (2) xhttp：xhttp client 优化，支持自定义client，默认还是使用标准 http.Client
+
 版本号：Release 1.5.62
 修改记录：
    (1) 微信V3：client 内 WxSerialNo、ApiV3Key 公有化

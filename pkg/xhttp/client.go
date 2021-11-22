@@ -26,11 +26,10 @@ type HttpDoer interface {
 }
 
 type Client struct {
-	Header http.Header
-
 	httpClient       HttpDoer
-	transport        *http.Transport
-	timeout          time.Duration
+	Header           http.Header
+	Transport        *http.Transport
+	Timeout          time.Duration
 	url              string
 	Host             string
 	method           string
@@ -65,7 +64,7 @@ func WithHttpDoer(doer HttpDoer) func(client *Client) {
 func NewClient(opts ...func(client *Client)) (client *Client) {
 	client = &Client{
 		httpClient:    DefaultHttpClient,
-		transport:     nil,
+		Transport:     nil,
 		Header:        make(http.Header),
 		requestType:   TypeJSON,
 		unmarshalType: string(TypeJSON),
@@ -73,25 +72,24 @@ func NewClient(opts ...func(client *Client)) (client *Client) {
 	for _, opt := range opts {
 		opt(client)
 	}
-
 	return client
 }
 
 // SetTransport 仅在 DefaultHttpClient 为标准 *http.Client 时可生效
 func (c *Client) SetTransport(transport *http.Transport) (client *Client) {
-	c.transport = transport
+	c.Transport = transport
 	return c
 }
 
 // SetTLSConfig 仅在 DefaultHttpClient 为标准 *http.Client 时可生效
 func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
-	c.transport = &http.Transport{TLSClientConfig: tlsCfg, DisableKeepAlives: true, Proxy: http.ProxyFromEnvironment}
+	c.Transport = &http.Transport{TLSClientConfig: tlsCfg, DisableKeepAlives: true, Proxy: http.ProxyFromEnvironment}
 	return c
 }
 
 // SetTimeout 仅在 DefaultHttpClient 为标准 *http.Client 时可生效
 func (c *Client) SetTimeout(timeout time.Duration) (client *Client) {
-	c.timeout = timeout
+	c.Timeout = timeout
 	return c
 }
 
@@ -317,11 +315,11 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 
 		// 仅在 Client.httpClient 为标准的 *http.Client 时生效
 		if httpClient, ok := c.httpClient.(*http.Client); ok {
-			if c.transport != nil {
-				httpClient.Transport = c.transport
+			if c.Transport != nil {
+				httpClient.Transport = c.Transport
 			}
-			if c.timeout != time.Duration(0) {
-				httpClient.Timeout = c.timeout
+			if c.Timeout > 0 {
+				httpClient.Timeout = c.Timeout
 			}
 		}
 
@@ -341,27 +339,10 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 		return nil
 	}
 
-	done := ctx.Done()
-	if done == nil {
-		if err = reqFunc(); err != nil {
-			return nil, nil, err
-		}
-		return res, bs, nil
+	if err = reqFunc(); err != nil {
+		return nil, nil, err
 	}
-
-	errc := make(chan error, 1)
-	go func() {
-		errc <- reqFunc()
-	}()
-	select {
-	case <-done:
-		return nil, nil, ctx.Err()
-	case err = <-errc:
-		if err != nil {
-			return nil, nil, err
-		}
-		return res, bs, nil
-	}
+	return res, bs, nil
 }
 
 func FormatURLParam(body map[string]interface{}) (urlParam string) {

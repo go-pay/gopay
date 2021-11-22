@@ -23,7 +23,7 @@ var (
 
 func TestHttpGet(t *testing.T) {
 	client := NewClient()
-	client.timeout = 10 * time.Second
+	client.Timeout = 10 * time.Second
 	// test
 	_, bs, err := client.Get("http://www.baidu.com").EndBytes(ctx)
 	if err != nil {
@@ -56,7 +56,7 @@ func TestHttpUploadFile(t *testing.T) {
 	}).SetFormFile("image", &util.File{Name: "logo.png", Content: fileContent})
 
 	client := NewClient()
-	client.timeout = 10 * time.Second
+	client.Timeout = 10 * time.Second
 
 	rsp := new(HttpGet)
 	_, err = client.Type(TypeMultipartFormData).
