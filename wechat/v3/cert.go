@@ -262,14 +262,12 @@ func (c *ClientV3) autoCheckCertProc() {
 		wxPk, wxSerialNo, err := c.GetAndSelectNewestCert()
 		if err != nil {
 			xlog.Errorf("c.GetAndSelectNewestCert()，err:%+v", err)
-			err = nil
 			continue
 		}
 		// decode cert
 		pubKey, err := xpem.DecodePublicKey([]byte(wxPk))
 		if err != nil {
 			xlog.Errorf("xpem.DecodePublicKey(%s)，err:%+v", wxPk, err)
-			err = nil
 			continue
 		}
 		c.wxPublicKey = pubKey
