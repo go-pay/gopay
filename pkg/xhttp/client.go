@@ -20,15 +20,10 @@ import (
 	"github.com/go-pay/gopay/pkg/util"
 )
 
-// HttpDoer modules a upstream http client.
-type HttpDoer interface {
-	Do(req *http.Request) (*http.Response, error)
-}
-
 type Client struct {
-	httpClient       HttpDoer
-	Header           http.Header
+	HttpClient       *http.Client
 	Transport        *http.Transport
+	Header           http.Header
 	Timeout          time.Duration
 	url              string
 	Host             string
@@ -42,52 +37,35 @@ type Client struct {
 	err              error
 }
 
-// DefaultHttpClient 默认为标准 *http.Client, default tls.Config{InsecureSkipVerify: true}
-// 如果使用者实现了自己的 HttpDoer, 请注意参考以下设置
-var DefaultHttpClient HttpDoer = &http.Client{
-	Timeout: 60 * time.Second,
-	Transport: &http.Transport{
-		TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
-		DisableKeepAlives: true,
-		Proxy:             http.ProxyFromEnvironment,
-	},
-}
-
-// WithHttpDoer 如果用户不想使用 DefaultHttpClient, 使用该方法即可
-func WithHttpDoer(doer HttpDoer) func(client *Client) {
-	return func(client *Client) {
-		client.httpClient = doer
-	}
-}
-
-// NewClient 创建 *xhttp.Client
-func NewClient(opts ...func(client *Client)) (client *Client) {
+// NewClient , default tls.Config{InsecureSkipVerify: true}
+func NewClient() (client *Client) {
 	client = &Client{
-		httpClient:    DefaultHttpClient,
+		HttpClient: &http.Client{
+			Timeout: 60 * time.Second,
+			Transport: &http.Transport{
+				TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
+				DisableKeepAlives: true,
+				Proxy:             http.ProxyFromEnvironment,
+			},
+		},
 		Transport:     nil,
 		Header:        make(http.Header),
 		requestType:   TypeJSON,
 		unmarshalType: string(TypeJSON),
 	}
-	for _, opt := range opts {
-		opt(client)
-	}
 	return client
 }
 
-// SetTransport 仅在 DefaultHttpClient 为标准 *http.Client 时可生效
 func (c *Client) SetTransport(transport *http.Transport) (client *Client) {
 	c.Transport = transport
 	return c
 }
 
-// SetTLSConfig 仅在 DefaultHttpClient 为标准 *http.Client 时可生效
 func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
 	c.Transport = &http.Transport{TLSClientConfig: tlsCfg, DisableKeepAlives: true, Proxy: http.ProxyFromEnvironment}
 	return c
 }
 
-// SetTimeout 仅在 DefaultHttpClient 为标准 *http.Client 时可生效
 func (c *Client) SetTimeout(timeout time.Duration) (client *Client) {
 	c.Timeout = timeout
 	return c
@@ -196,7 +174,7 @@ func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client
 	return c
 }
 
-// SendString encodeStr: url.Values.Encode() or jsonBody
+// encodeStr: url.Values.Encode() or jsonBody
 func (c *Client) SendString(encodeStr string) (client *Client) {
 	switch c.requestType {
 	case TypeJSON:
@@ -306,28 +284,22 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 			return errors.New("Only support GET and POST and PUT and DELETE ")
 		}
 
-		req, err := http.NewRequestWithContext(ctx, c.method, c.url, body)
+		req, err := http.NewRequest(c.method, c.url, body)
 		if err != nil {
 			return err
 		}
 		req.Header = c.Header
 		req.Header.Set("Content-Type", c.ContentType)
-
-		// 仅在 Client.httpClient 为标准的 *http.Client 时生效
-		if httpClient, ok := c.httpClient.(*http.Client); ok {
-			if c.Transport != nil {
-				httpClient.Transport = c.Transport
-			}
-			if c.Timeout > 0 {
-				httpClient.Timeout = c.Timeout
-			}
+		if c.Transport != nil {
+			c.HttpClient.Transport = c.Transport
 		}
-
 		if c.Host != "" {
 			req.Host = c.Host
 		}
-
-		res, err = c.httpClient.Do(req)
+		if c.Timeout != time.Duration(0) {
+			c.HttpClient.Timeout = c.Timeout
+		}
+		res, err = c.HttpClient.Do(req)
 		if err != nil {
 			return err
 		}
@@ -339,10 +311,27 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 		return nil
 	}
 
-	if err = reqFunc(); err != nil {
-		return nil, nil, err
+	done := ctx.Done()
+	if done == nil {
+		if err = reqFunc(); err != nil {
+			return nil, nil, err
+		}
+		return res, bs, nil
 	}
-	return res, bs, nil
+
+	errc := make(chan error, 1)
+	go func() {
+		errc <- reqFunc()
+	}()
+	select {
+	case <-done:
+		return nil, nil, ctx.Err()
+	case err = <-errc:
+		if err != nil {
+			return nil, nil, err
+		}
+		return res, bs, nil
+	}
 }
 
 func FormatURLParam(body map[string]interface{}) (urlParam string) {
