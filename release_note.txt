@@ -1,3 +1,7 @@
+版本号：Release 1.5.64
+修改记录：
+   (1) xhttp：恢复 xhttp
+
 版本号：Release 1.5.63
 修改记录：
    (1) GoPay：部分代码优化
