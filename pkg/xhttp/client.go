@@ -284,7 +284,7 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 			return errors.New("Only support GET and POST and PUT and DELETE ")
 		}
 
-		req, err := http.NewRequest(c.method, c.url, body)
+		req, err := http.NewRequestWithContext(ctx, c.method, c.url, body)
 		if err != nil {
 			return err
 		}
