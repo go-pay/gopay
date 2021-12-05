@@ -198,8 +198,9 @@ const (
 	v3EcommerceIncomeRecord = "/v3/merchantfund/partner/income-records"  // 特约商户银行来账查询 GET
 
 	// 电商收付通
-	v3EcommerceApplyments =   "/v3/ecommerce/applyments/";  // 提交申请单 POST
-	//通过申请单ID查询申请状态
+	v3EcommerceSubmit =   "/v3/ecommerce/applyments/"  // 提交申请单 POST
+	v3EcommerceQueryByApplyId =   "/v3/ecommerce/applyments/%s"  //  applyment_id 通过申请单号查询申请状态 GET
+	v3EcommerceQueryByBusinessCode =   "/v3/ecommerce/applyments/out-request-no/%s"  // business_code 通过业务申请编号查询申请状态 GET
 
 	// 服务商-特约商户进件
 	v3Apply4SubSubmit              = "/v3/applyment4sub/applyment/"                     // 提交申请单 POST
