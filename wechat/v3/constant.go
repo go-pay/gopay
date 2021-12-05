@@ -197,6 +197,12 @@ const (
 	v3MerchantIncomeRecord  = "/v3/merchantfund/merchant/income-records" // 商户银行来账查询 GET
 	v3EcommerceIncomeRecord = "/v3/merchantfund/partner/income-records"  // 特约商户银行来账查询 GET
 
+	// 电商收付通
+	v3EcommerceSubmit =   "/v3/ecommerce/applyments/";  // 提交申请单 POST
+	v3EcommerceQueryByApplyId =   "/v3/ecommerce/applyments/%s";  // 提交申请单 GET
+	v3EcommerceQueryByBusinessCode =   "/v3/ecommerce/applyments/out-request-no/%s";  // 提交申请单 GET
+	//通过申请单ID查询申请状态
+
 	// 服务商-特约商户进件
 	v3Apply4SubSubmit              = "/v3/applyment4sub/applyment/"                     // 提交申请单 POST
 	v3Apply4SubQueryByBusinessCode = "/v3/applyment4sub/applyment/business_code/%s"     // business_code 通过业务申请编号查询申请状态 GET
@@ -233,6 +239,4 @@ const (
 	TradeStateNoPay    = "NOTPAY"     // 未支付
 	TradeStateClosed   = "CLOSED"     // 已关闭
 	TradeStateRevoked  = "REVOKED"    // 已撤销（付款码支付）
-	TradeStatePaying   = "USERPAYING" // 用户支付中（付款码支付）
-	TradeStatePayError = "PAYERROR"   // 支付失败(其他原因，如银行返回失败)
-)
+	TradeStatePaying   = "US
