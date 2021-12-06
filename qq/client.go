@@ -234,7 +234,7 @@ func (q *Client) doQQ(ctx context.Context, bm gopay.BodyMap, url string, tlsConf
 	}
 
 	if bm.GetString("sign") == util.NULL {
-		sign := getReleaseSign(q.ApiKey, bm.GetString("sign_type"), bm)
+		sign := GetReleaseSign(q.ApiKey, bm.GetString("sign_type"), bm)
 		bm.Set("sign", sign)
 	}
 
@@ -267,7 +267,7 @@ func (q *Client) doQQGet(ctx context.Context, bm gopay.BodyMap, url, signType st
 		bm.Set("mch_id", q.MchId)
 	}
 	bm.Remove("sign")
-	sign := getReleaseSign(q.ApiKey, signType, bm)
+	sign := GetReleaseSign(q.ApiKey, signType, bm)
 	bm.Set("sign", sign)
 
 	if q.DebugSwitch == gopay.DebugOn {
@@ -297,7 +297,7 @@ func (q *Client) doQQRed(ctx context.Context, bm gopay.BodyMap, url string, tlsC
 		bm.Set("mch_id", q.MchId)
 	}
 	if bm.GetString("sign") == util.NULL {
-		sign := getReleaseSign(q.ApiKey, SignType_MD5, bm)
+		sign := GetReleaseSign(q.ApiKey, SignType_MD5, bm)
 		bm.Set("sign", sign)
 	}
 

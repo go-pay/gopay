@@ -198,7 +198,7 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File interface{}) error
 }
 
 // 获取微信支付正式环境Sign值
-func getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
+func GetReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
 	var h hash.Hash
 	if signType == SignType_HMAC_SHA256 {
 		h = hmac.New(sha256.New, []byte(apiKey))
@@ -210,7 +210,7 @@ func getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign stri
 }
 
 // 获取微信支付沙箱环境Sign值
-func getSignBoxSign(ctx context.Context, mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
+func GetSandBoxSign(ctx context.Context, mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
 	var (
 		sandBoxApiKey string
 		h             hash.Hash
@@ -230,7 +230,7 @@ func getSanBoxKey(ctx context.Context, mchId, nonceStr, apiKey, signType string)
 	bm.Set("mch_id", mchId)
 	bm.Set("nonce_str", nonceStr)
 	// 沙箱环境：获取沙箱环境ApiKey
-	if key, err = getSanBoxSignKey(ctx, mchId, nonceStr, getReleaseSign(apiKey, signType, bm)); err != nil {
+	if key, err = getSanBoxSignKey(ctx, mchId, nonceStr, GetReleaseSign(apiKey, signType, bm)); err != nil {
 		return
 	}
 	return
