@@ -257,8 +257,6 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 服务人员分配：`client.V3SmartGuideAssign()`
     * 服务人员查询：`client.V3SmartGuideQuery()`
     * 服务人员信息更新：`client.V3SmartGuideUpdate()`
-* <font color='#07C160' size='4'>点金计划（服务商）</font>
-    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_5_1.shtml)
 * <font color='#07C160' size='4'>智慧商圈</font>
     * 商圈积分同步：`client.V3BusinessPointsSync()`
     * 商圈积分授权查询：`client.V3BusinessAuthPointsQuery()`
@@ -350,6 +348,12 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 查询申请单状态（ApplyId）：`client.V3Apply4SubQueryByApplyId()`
     * 修改结算账号：`client.V3Apply4SubModifySettlement()`
     * 查询结算账户：`client.V3Apply4SubQuerySettlement()`
+* <font color='#07C160' size='4'>点金计划（服务商）</font>
+    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_5_1.shtml)
+* <font color='#07C160' size='4'>电商收付通（商户进件）</font>
+    * 二级商户进件：`client.V3EcommerceApply()`
+    * 查询申请状态：`client.V3EcommerceApplyStatus()`
+
 
 ### 微信v3公共 API
 
