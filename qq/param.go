@@ -97,7 +97,7 @@ func generateXml(bm gopay.BodyMap) (reqXml string) {
 }
 
 // 获取QQ支付正式环境Sign值
-func getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
+func GetReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
 	var h hash.Hash
 	if signType == SignType_HMAC_SHA256 {
 		h = hmac.New(sha256.New, []byte(apiKey))

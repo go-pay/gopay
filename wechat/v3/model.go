@@ -748,6 +748,22 @@ type PartnershipsListRsp struct {
 	Error    string            `json:"-"`
 }
 
+// 二级商户进件 Rsp
+type EcommerceApplyRsp struct {
+	Code     int             `json:"-"`
+	SignInfo *SignInfo       `json:"-"`
+	Response *EcommerceApply `json:"response,omitempty"`
+	Error    string          `json:"-"`
+}
+
+// 查询申请状态 Rsp
+type EcommerceApplyStatusRsp struct {
+	Code     int                   `json:"-"`
+	SignInfo *SignInfo             `json:"-"`
+	Response *EcommerceApplyStatus `json:"response,omitempty"`
+	Error    string                `json:"-"`
+}
+
 // ==================================分割==================================
 
 type JSAPIPayParams struct {
@@ -2121,4 +2137,39 @@ type Partnerships struct {
 	TerminateTime  string          `json:"terminate_time"`  // 终止合作关系时间
 	CreateTime     string          `json:"create_time"`     // 创建时间
 	UpdateTime     string          `json:"update_time"`     // 更新时间
+}
+
+type EcommerceApply struct {
+	ApplymentId  int64  `json:"applyment_id"`
+	OutRequestNo string `json:"out_request_no"`
+}
+
+type EcommerceApplyStatus struct {
+	ApplymentState     string            `json:"applyment_state"`
+	ApplymentStateDesc string            `json:"applyment_state_desc"`
+	SignState          string            `json:"sign_state,omitempty"`
+	SignUrl            string            `json:"sign_url,omitempty"`
+	SubMchid           string            `json:"sub_mchid,omitempty"`
+	AccountValidation  AccountValidation `json:"account_validation"`
+	AuditDetail        []*AuditDetail    `json:"audit_detail,omitempty"`
+	LegalValidationUrl string            `json:"legal_validation_url,omitempty"`
+	OutRequestNo       string            `json:"out_request_no"`
+	ApplymentId        int64             `json:"applyment_id"`
+}
+
+type AccountValidation struct {
+	AccountName              string `json:"account_name"`
+	AccountNo                string `json:"account_no,omitempty"`
+	PayAmount                int    `json:"pay_amount"`
+	DestinationAccountNumber string `json:"destination_account_number"`
+	DestinationAccountName   string `json:"destination_account_name"`
+	DestinationAccountBank   string `json:"destination_account_bank"`
+	City                     string `json:"city"`
+	Remark                   string `json:"remark"`
+	Deadline                 string `json:"deadline"`
+}
+
+type AuditDetail struct {
+	ParamName    string `json:"param_name"`
+	RejectReason string `json:"reject_reason"`
 }

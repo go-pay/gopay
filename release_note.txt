@@ -1,3 +1,9 @@
+版本号：Release 1.5.65
+修改记录：
+   (1) 微信V3：新增 client.V3EcommerceApply()，二级商户进件
+   (2) 微信V3：新增 client.V3EcommerceApplyStatus()，查询申请状态
+   (3) 微信V3：公有化 wechat.GetReleaseSign()、wechat.GetSandBoxSign() 方法
+
 版本号：Release 1.5.64
 修改记录：
    (1) xhttp：恢复 xhttp
