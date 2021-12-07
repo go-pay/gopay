@@ -202,6 +202,10 @@ const (
 	v3EcommerceQueryByApplyId =   "/v3/ecommerce/applyments/%s"  //  applyment_id 通过申请单号查询申请状态 GET
 	v3EcommerceQueryByBusinessCode =   "/v3/ecommerce/applyments/out-request-no/%s"  // business_code 通过业务申请编号查询申请状态 GET
 
+
+	v3EcommerceFundWithdraw =   "/v3/ecommerce/fund/withdraw"  //  特约商户余额提现
+	v3EcommerceFundQueryByWithdraw =   "/v3/ecommerce/fund/withdraw/%s"  //  特约商户余额提现
+
 	// 服务商-特约商户进件
 	v3Apply4SubSubmit              = "/v3/applyment4sub/applyment/"                     // 提交申请单 POST
 	v3Apply4SubQueryByBusinessCode = "/v3/applyment4sub/applyment/business_code/%s"     // business_code 通过业务申请编号查询申请状态 GET

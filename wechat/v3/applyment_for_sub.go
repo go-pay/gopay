@@ -78,6 +78,35 @@ func (c *ClientV3) v3EcommerceSubmit(ctx context.Context, bm gopay.BodyMap) (*Ap
 }
 
 
+func (c *ClientV3) v3EcommerceFundWithdraw(ctx context.Context, bm gopay.BodyMap) (*Apply4SubSubmitRsp, error) {
+	if err := bm.CheckEmptyError(
+		"business_code", "contact_info", "subject_info",
+		"business_info", "settlement_info", "bank_account_info"); err != nil {
+		return nil, err
+	}
+
+	authorization, err := c.authorization(MethodPost, v3EcommerceSubmit, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(ctx, bm, v3EcommerceSubmit, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxResp := &Apply4SubSubmitRsp{Code: Success, SignInfo: si}
+	wxResp.Response = new(Apply4SubSubmit)
+	if err = json.Unmarshal(bs, wxResp.Response); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	}
+
+	if res.StatusCode != http.StatusOK {
+		wxResp.Code = res.StatusCode
+		wxResp.Error = string(bs)
+		return wxResp, nil
+	}
+	return wxResp, c.verifySyncSign(si)
+}
+
 
 // 通过业务申请编号查询申请状态API
 //	Code = 0 is success
@@ -135,6 +164,30 @@ func (c *ClientV3) V3EcommerceQueryByApplyId(ctx context.Context, businessCode s
 
 
 
+func (c *ClientV3) v3EcommerceFundQueryByWithdraw(ctx context.Context, withdrawId string) (*Apply4SubQueryRsp, error) {
+	uri := fmt.Sprintf(v3EcommerceFundQueryByWithdraw, withdrawId)
+	authorization, err := c.authorization(MethodGet, uri, nil)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp := &Apply4SubQueryRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(Apply4SubQuery)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+
 // 通过申请单号查询申请状态API
 //	Code = 0 is success
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_2.shtml
@@ -189,6 +242,7 @@ func (c *ClientV3) v3EcommerceQueryByBusinessCode(ctx context.Context, applyId s
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
+
 
 // 修改结算账号 API
 //	Code = 0 is success
