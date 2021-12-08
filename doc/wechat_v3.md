@@ -349,7 +349,11 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 修改结算账号：`client.V3Apply4SubModifySettlement()`
     * 查询结算账户：`client.V3Apply4SubQuerySettlement()`
 * <font color='#07C160' size='4'>点金计划（服务商）</font>
-    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_5_1.shtml)
+    * 点金计划管理：`client.V3GoldPlanManage()`
+    * 商家小票管理：`client.V3GoldPlanBillManage()`
+    * 同业过滤标签管理：`client.V3GoldPlanFilterManage()`
+    * 开通广告展示：`client.V3GoldPlanOpenAdShow()`
+    * 关闭广告展示：`client.V3GoldPlanCloseAdShow()`
 * <font color='#07C160' size='4'>电商收付通（商户进件）</font>
     * 二级商户进件：`client.V3EcommerceApply()`
     * 查询申请状态：`client.V3EcommerceApplyStatus()`

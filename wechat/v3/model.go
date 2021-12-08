@@ -764,6 +764,14 @@ type EcommerceApplyStatusRsp struct {
 	Error    string                `json:"-"`
 }
 
+// 点金计划管理 Rsp
+type GoldPlanManageRsp struct {
+	Code     int             `json:"-"`
+	SignInfo *SignInfo       `json:"-"`
+	Response *GoldPlanManage `json:"response,omitempty"`
+	Error    string          `json:"-"`
+}
+
 // ==================================分割==================================
 
 type JSAPIPayParams struct {
@@ -2172,4 +2180,8 @@ type AccountValidation struct {
 type AuditDetail struct {
 	ParamName    string `json:"param_name"`
 	RejectReason string `json:"reject_reason"`
+}
+
+type GoldPlanManage struct {
+	SubMchid string `json:"sub_mchid"`
 }

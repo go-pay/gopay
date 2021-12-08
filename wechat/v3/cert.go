@@ -109,7 +109,7 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 }
 
 // Deprecated
-// 推荐直接使用 GetAndSelectNewestCert() 方法
+// 推荐直接使用 client.GetAndSelectNewestCert() 方法
 // 获取微信平台证书公钥（获取后自行保存使用，如需定期刷新功能，自行实现）
 //	注意事项
 //	如果自行实现验证平台签名逻辑的话，需要注意以下事项:
@@ -171,6 +171,7 @@ func (c *ClientV3) GetPlatformCerts() (certs *PlatformCertRsp, err error) {
 }
 
 // Deprecated
+// client 已内部集成证书获取并维护，无需再Set正式
 // 设置 微信支付平台证书 和 证书序列号
 //	注意：请预先通过 client.GetPlatformCerts() 获取 微信平台公钥证书 和 证书序列号
 //	部分接口请求参数中敏感信息加密，使用此 微信支付平台公钥 和 证书序列号
@@ -192,7 +193,7 @@ func (c *ClientV3) DecryptCerts(ciphertext, nonce, additional string) (wxCerts s
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), c.ApiV3Key)
 	if err != nil {
-		return "", fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
+		return "", fmt.Errorf("aes.GCMDecrypt, err:%w", err)
 	}
 	return string(decrypt), nil
 }

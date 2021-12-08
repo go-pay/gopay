@@ -2,6 +2,7 @@ package wechat
 
 import (
 	"context"
+	"crypto/rsa"
 	"crypto/sha256"
 	"encoding/hex"
 	"io/ioutil"
@@ -103,7 +104,7 @@ func TestGetAndSelectNewestCert(t *testing.T) {
 	xlog.Infof("WxContent: \n%s", cert)
 }
 
-func TestV3VerifySign(t *testing.T) {
+func TestV3VerifySignByPK(t *testing.T) {
 	// type SignInfo struct {
 	//	HeaderTimestamp string `json:"Wechatpay-Timestamp"`
 	//	HeaderNonce     string `json:"Wechatpay-Nonce"`
@@ -111,12 +112,15 @@ func TestV3VerifySign(t *testing.T) {
 	//	HeaderSerial    string `json:"Wechatpay-Serial"`
 	//	SignBody        string `json:"sign_body"`
 	//}
+
+	wxPublicKey := &rsa.PublicKey{}
+
 	timestamp := "1609149813"
 	nonce := "c4682f0902e4c7fd5cfb7568a2a45e1b"
 	signBody := `{"code_url":"weixin://wxpay/bizpayurl?pr=5zPMHa4zz"}`
 	signature := "D/nRx+h1To/ybCJkJYTXptoSp6+UVPsKNlJ2AsHMf76rXq2qAYDSnoOTB4HRc8ZlPNck5JfeZ19lDXAJ/N9gyvWEwE3n01HNhaKqxOjW0C1KROCtxAj1Wd2qtMyiCzh/Azuk15eIHjht03teGQFDmowoOBSlMg9qOBaK8MNfwFcXvV3J12AMbFFR7s4cXbqzuk2qBeMAz6VrKDAwDHxZOWFqME59mg4bPWwBTNyYeCQVR2sqPflLvY1zttEGMN3s/CDvgLQ/SXZrAsHlS2lkDVHEc/sP9q0x9oU8lFL6DhD6eDU2mVP3pt7CPD/5QAnGnINaHIcZVj6Vb4l3PKzeog=="
 
-	err = V3VerifySign(timestamp, nonce, signBody, signature, "WxPublicKeyContent")
+	err = V3VerifySignByPK(timestamp, nonce, signBody, signature, wxPublicKey)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -301,7 +305,6 @@ func TestV3BillDownLoadBill(t *testing.T) {
 }
 
 func TestV3ProfitSharingOrder(t *testing.T) {
-	client.autoSign = true
 	var rs []*ProfitSharingReceiver
 	item := &ProfitSharingReceiver{
 		Type:        "PERSONAL_OPENID",
@@ -447,4 +450,22 @@ func TestClientV3_V3ComplaintUploadImage(t *testing.T) {
 		return
 	}
 	xlog.Errorf("wxRsp: %s", wxRsp.Error)
+}
+
+func TestV3GoldPlanFilterManage(t *testing.T) {
+	var rs []string
+	rs = append(rs, "SOFTWARE")
+	rs = append(rs, "SECURITY")
+	rs = append(rs, "LOVE_MARRIAGE")
+
+	bm := make(gopay.BodyMap)
+	bm.Set("sub_mchid", "2021060717").
+		Set("advertising_industry_filters", rs)
+
+	wxRsp, err := client.V3GoldPlanFilterManage(ctx, bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp: %#v", wxRsp)
 }

@@ -171,11 +171,11 @@ func (c *ClientV3) V3PartnerQueryOrder(ctx context.Context, orderNoType OrderNoT
 //	Code = 0 is success
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_3.shtml
 //	电商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter7_2_6.shtml
-func (c *ClientV3) V3PartnerCloseOrder(ctx context.Context, subMchid, tradeNo string) (wxRsp *CloseOrderRsp, err error) {
+func (c *ClientV3) V3PartnerCloseOrder(ctx context.Context, tradeNo string, bm gopay.BodyMap) (wxRsp *CloseOrderRsp, err error) {
 	url := fmt.Sprintf(v3ApiPartnerCloseOrder, tradeNo)
-	bm := make(gopay.BodyMap)
-	bm.Set("sp_mchid", c.Mchid)
-	bm.Set("sub_mchid", subMchid)
+	if bm.GetString("sp_mchid") == gopay.NULL {
+		bm.Set("sp_mchid", c.Mchid)
+	}
 	authorization, err := c.authorization(MethodPost, url, bm)
 	if err != nil {
 		return nil, err

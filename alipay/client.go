@@ -114,7 +114,7 @@ func (a *Client) RequestParam(bm gopay.BodyMap, method string) (string, error) {
 	if bm.GetString("sign") == "" {
 		sign, err = GetRsaSign(bm, bm.GetString("sign_type"), a.privateKey)
 		if err != nil {
-			return "", fmt.Errorf("GetRsaSign Error: %v", err)
+			return "", fmt.Errorf("GetRsaSign Error: %w", err)
 		}
 		bm.Set("sign", sign)
 	}
@@ -162,7 +162,7 @@ func (a *Client) doAliPaySelf(ctx context.Context, bm gopay.BodyMap, method stri
 	if bm.GetString("sign") == "" {
 		sign, err = GetRsaSign(bm, bm.GetString("sign_type"), a.privateKey)
 		if err != nil {
-			return nil, fmt.Errorf("GetRsaSign Error: %v", err)
+			return nil, fmt.Errorf("GetRsaSign Error: %w", err)
 		}
 		bm.Set("sign", sign)
 	}
@@ -243,7 +243,7 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 	}
 	sign, err := GetRsaSign(pubBody, pubBody.GetString("sign_type"), a.privateKey)
 	if err != nil {
-		return nil, fmt.Errorf("GetRsaSign Error: %v", err)
+		return nil, fmt.Errorf("GetRsaSign Error: %w", err)
 	}
 	pubBody.Set("sign", sign)
 	if a.DebugSwitch == gopay.DebugOn {

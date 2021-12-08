@@ -71,11 +71,11 @@ func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
 	if err != nil {
-		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
 	}
 	result = &V3DecryptResult{}
 	if err = json.Unmarshal(decrypt, result); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%w", string(decrypt), err)
 	}
 	return result, nil
 }
@@ -85,11 +85,11 @@ func V3DecryptPartnerNotifyCipherText(ciphertext, nonce, additional, apiV3Key st
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
 	if err != nil {
-		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
 	}
 	result = &V3DecryptPartnerResult{}
 	if err = json.Unmarshal(decrypt, result); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%w", string(decrypt), err)
 	}
 	return result, nil
 }
@@ -99,11 +99,11 @@ func V3DecryptRefundNotifyCipherText(ciphertext, nonce, additional, apiV3Key str
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
 	if err != nil {
-		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
 	}
 	result = &V3DecryptRefundResult{}
 	if err = json.Unmarshal(decrypt, result); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%w", string(decrypt), err)
 	}
 	return result, nil
 }
@@ -113,11 +113,11 @@ func V3DecryptPartnerRefundNotifyCipherText(ciphertext, nonce, additional, apiV3
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
 	if err != nil {
-		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
 	}
 	result = &V3DecryptPartnerRefundResult{}
 	if err = json.Unmarshal(decrypt, result); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%w", string(decrypt), err)
 	}
 	return result, nil
 }
@@ -127,11 +127,11 @@ func V3DecryptCombineNotifyCipherText(ciphertext, nonce, additional, apiV3Key st
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
 	if err != nil {
-		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
 	}
 	result = &V3DecryptCombineResult{}
 	if err = json.Unmarshal(decrypt, result); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%w", string(decrypt), err)
 	}
 	return result, nil
 }
@@ -141,11 +141,11 @@ func V3DecryptProfitShareNotifyCipherText(ciphertext, nonce, additional, apiV3Ke
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
 	if err != nil {
-		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
 	}
 	result = &V3DecryptProfitShareResult{}
 	if err = json.Unmarshal(decrypt, result); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%w", string(decrypt), err)
 	}
 	return result, nil
 }
@@ -155,11 +155,11 @@ func V3DecryptScoreNotifyCipherText(ciphertext, nonce, additional, apiV3Key stri
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
 	if err != nil {
-		return nil, fmt.Errorf("aes.GCMDecrypt, err:%+v", err)
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
 	}
 	result = &V3DecryptScoreResult{}
 	if err = json.Unmarshal(decrypt, result); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s), err:%+v", string(decrypt), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%w", string(decrypt), err)
 	}
 	return result, nil
 }

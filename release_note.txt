@@ -2,7 +2,14 @@
 修改记录：
    (1) 微信V3：新增 client.V3EcommerceApply()，二级商户进件
    (2) 微信V3：新增 client.V3EcommerceApplyStatus()，查询申请状态
-   (3) 微信V3：公有化 wechat.GetReleaseSign()、wechat.GetSandBoxSign() 方法
+   (3) 微信V3：新增 client.V3GoldPlanManage()，点金计划管理
+   (4) 微信V3：新增 client.V3GoldPlanBillManage()，商家小票管理
+   (5) 微信V3：新增 client.V3GoldPlanFilterManage()，同业过滤标签管理
+   (6) 微信V3：新增 client.V3GoldPlanOpenAdShow()，开通广告展示
+   (7) 微信V3：新增 client.V3GoldPlanCloseAdShow()，关闭广告展示
+   (8) 微信V3：公有化 wechat.GetReleaseSign()、wechat.GetSandBoxSign() 方法
+   (9) 微信V3：修改 client.V3PartnerCloseOrder() 入参参数
+   (10) GoPay：一些小修改优化
 
 版本号：Release 1.5.64
 修改记录：
