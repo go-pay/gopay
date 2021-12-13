@@ -316,7 +316,8 @@ func TestV3ProfitSharingOrder(t *testing.T) {
 	// bs, _ := json.Marshal(rs)
 
 	bm := make(gopay.BodyMap)
-	bm.Set("transaction_id", "4200001149202106084654939138").
+	bm.Set("appid", "wx52a25f196830f677").
+		Set("transaction_id", "4200001149202106084654939138").
 		Set("out_order_no", "202106071738581340").
 		Set("unfreeze_unsplit", false).Set("receivers", rs)
 
@@ -331,7 +332,8 @@ func TestV3ProfitSharingOrder(t *testing.T) {
 
 func TestV3ProfitSharingAddReceiver(t *testing.T) {
 	bm := make(gopay.BodyMap)
-	bm.Set("type", "PERSONAL_OPENID").
+	bm.Set("appid", "wx52a25f196830f677").
+		Set("type", "PERSONAL_OPENID").
 		Set("account", "oOv-Z573Ktz7o2WRkzX98eAxePVE").
 		Set("relation_type", "USER")
 
@@ -346,7 +348,8 @@ func TestV3ProfitSharingAddReceiver(t *testing.T) {
 
 func TestV3ProfitSharingDeleteReceiver(t *testing.T) {
 	bm := make(gopay.BodyMap)
-	bm.Set("type", "PERSONAL_OPENID").
+	bm.Set("appid", "wx52a25f196830f677").
+		Set("type", "PERSONAL_OPENID").
 		Set("account", "oOv-Z573Ktz7o2WRkzX98eAxePVE")
 
 	wxRsp, err := client.V3ProfitShareDeleteReceiver(ctx, bm)

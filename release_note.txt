@@ -1,3 +1,7 @@
+版本号：Release 1.5.66
+修改记录：
+   (1) 微信V3：fix bug that `{"code":"PARAM_ERROR","message":"平台证书序列号Wechatpay-Serial错误"}`
+
 版本号：Release 1.5.65
 修改记录：
    (1) 微信V3：新增 client.V3EcommerceApply()，二级商户进件
