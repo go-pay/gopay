@@ -170,10 +170,9 @@ func (c *ClientV3) GetPlatformCerts() (certs *PlatformCertRsp, err error) {
 	return certs, nil
 }
 
-// Deprecated
-// client 已内部集成证书获取并维护，无需再Set正式
 // 设置 微信支付平台证书 和 证书序列号
-//	注意：请预先通过 client.GetPlatformCerts() 获取 微信平台公钥证书 和 证书序列号
+//	注意1：如已开启自动验签功能 client.AutoVerifySign()，无需再调用此方法设置
+//	注意2：请预先通过 client.GetPlatformCerts() 获取 微信平台公钥证书 和 证书序列号
 //	部分接口请求参数中敏感信息加密，使用此 微信支付平台公钥 和 证书序列号
 func (c *ClientV3) SetPlatformCert(wxPublicKeyContent []byte, wxSerialNo string) (client *ClientV3) {
 	pubKey, err := xpem.DecodePublicKey(wxPublicKeyContent)
