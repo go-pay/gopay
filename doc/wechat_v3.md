@@ -325,16 +325,22 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 图片上传：`client.V3MediaUploadImage()`
     * 视频上传：`client.V3MediaUploadVideo()`
     * 图片上传（营销专用）：`client.V3FavorMediaUploadImage()`
-* <font color='#07C160' size='4'>批量转账</font>
+* <font color='#07C160' size='4'>批量转账（直连商户）</font>
     * 发起批量转账：`client.V3Transfer()`
     * 微信批次单号查询批次单：`client.V3TransferQuery()`
-    * 微信明细单号查询明细单：`client.V3TransferDetailQuery()`
+    * 微信明细单号查询明细单：`client.V3TransferDetail()`
     * 商家批次单号查询批次单：`client.V3TransferMerchantQuery()`
-    * 商家明细单号查询明细单：`client.V3TransferMerchantDetailQuery()`
+    * 商家明细单号查询明细单：`client.V3TransferMerchantDetail()`
     * 转账电子回单申请受理：`client.V3TransferReceipt()`
     * 查询转账电子回单：`client.V3TransferReceiptQuery()`
     * 转账明细电子回单受理：`client.V3TransferDetailReceipt()`
     * 查询转账明细电子回单受理结果：`client.V3TransferDetailReceiptQuery()`
+* <font color='#07C160' size='4'>批量转账（服务商）</font>
+    * 发起批量转账：`client.V3PartnerTransfer()`
+    * 微信批次单号查询批次单：`client.V3PartnerTransferQuery()`
+    * 微信明细单号查询明细单：`client.V3PartnerTransferDetail()`
+    * 商家批次单号查询批次单：`client.V3PartnerTransferMerchantQuery()`
+    * 商家明细单号查询明细单：`client.V3PartnerTransferMerchantDetail()`
 * <font color='#07C160' size='4'>余额查询</font>
     * 查询特约商户账户实时余额（服务商）：`client.V3EcommerceBalance()`
     * 查询账户实时余额：`client.V3MerchantBalance()`

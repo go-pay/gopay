@@ -63,9 +63,10 @@ const (
 	v3SubFundFlowBill       = "/v3/bill/sub-merchant-fundflowbill" // 申请单个子商户资金账单 GET
 
 	// 提现
-	v3Withdraw       = "/v3/ecommerce/fund/withdraw"    // 特约商户余额提 POST
-	v3WithdrawStatus = "/v3/ecommerce/fund/withdraw/%s" // withdraw_id 查询特约商户提现状态 GET
-	v3               = "/v3/merchant/fund/withdraw/bill-type/{bill_type}"
+	v3Withdraw                = "/v3/ecommerce/fund/withdraw"                   // 特约商户余额提现 POST
+	v3WithdrawStatusById      = "/v3/ecommerce/fund/withdraw/%s"                // withdraw_id 微信支付提现单号查询特约商户提现状态 GET
+	v3WithdrawStatusByNo      = "/v3/ecommerce/fund/withdraw/out-request-no/%s" // withdraw_id 商户提现单号查询特约商户提现状态 GET
+	v3WithdrawDownloadErrBill = "/v3/merchant/fund/withdraw/bill-type/%s"       // bill_type 按日下载提现异常文件 GET
 
 	// 微信支付分（免确认模式）
 	v3ScoreDirectComplete = "/payscore/serviceorder/direct-complete" // 创单结单合并 POST
@@ -178,15 +179,22 @@ const (
 	v3MediaUploadVideo = "/v3/merchant/media/video_upload" // 视频上传 POST
 
 	// 转账
-	v3Transfer                    = "/v3/transfer/batches"                                          // 发起批量转账 POST
-	v3TransferQuery               = "/v3/transfer/batches/batch-id/%s"                              // batch_id 微信批次单号查询批次单 GET
-	v3TransferDetailQuery         = "/v3/transfer/batches/batch-id/%s/details/detail-id/%s"         // batch_id、detail_id 微信明细单号查询明细单 GET
-	v3TransferMerchantQuery       = "/v3/transfer/batches/out-batch-no/%s"                          // out_batch_no 商家批次单号查询批次单 GET
-	v3TransferMerchantDetailQuery = "/v3/transfer/batches/out-batch-no/%s/details/out-detail-no/%s" // out_batch_no、out_detail_no 商家明细单号查询明细单 GET
-	v3TransferReceipt             = "/v3/transfer/bill-receipt"                                     // 转账电子回单申请受理 POST
-	v3TransferReceiptQuery        = "/v3/transfer/bill-receipt/%s"                                  // out_batch_no 查询转账电子回单 GET
-	v3TransferDetailReceipt       = "/v3/transfer-detail/electronic-receipts"                       // 转账明细电子回单受理 POST
-	v3TransferDetailReceiptQuery  = "/v3/transfer-detail/electronic-receipts"                       // 查询转账明细电子回单受理结果 GET
+	v3Transfer                   = "/v3/transfer/batches"                                          // 发起批量转账 POST
+	v3TransferQuery              = "/v3/transfer/batches/batch-id/%s"                              // batch_id 微信批次单号查询批次单 GET
+	v3TransferDetail             = "/v3/transfer/batches/batch-id/%s/details/detail-id/%s"         // batch_id、detail_id 微信明细单号查询明细单 GET
+	v3TransferMerchantQuery      = "/v3/transfer/batches/out-batch-no/%s"                          // out_batch_no 商家批次单号查询批次单 GET
+	v3TransferMerchantDetail     = "/v3/transfer/batches/out-batch-no/%s/details/out-detail-no/%s" // out_batch_no、out_detail_no 商家明细单号查询明细单 GET
+	v3TransferReceipt            = "/v3/transfer/bill-receipt"                                     // 转账电子回单申请受理 POST
+	v3TransferReceiptQuery       = "/v3/transfer/bill-receipt/%s"                                  // out_batch_no 查询转账电子回单 GET
+	v3TransferDetailReceipt      = "/v3/transfer-detail/electronic-receipts"                       // 转账明细电子回单受理 POST
+	v3TransferDetailReceiptQuery = "/v3/transfer-detail/electronic-receipts"                       // 查询转账明细电子回单受理结果 GET
+
+	// 转账（服务商）
+	v3PartnerTransfer               = "/v3/partner-transfer/batches"                                          // 发起批量转账 POST
+	v3PartnerTransferQuery          = "/v3/partner-transfer/batches/batch-id/%s"                              // batch_id 微信批次单号查询批次单 GET
+	v3PartnerTransferDetail         = "/v3/partner-transfer/batches/batch-id/%s/details/detail-id/%s"         // batch_id、detail_id 微信明细单号查询明细单 GET
+	v3PartnerTransferMerchantQuery  = "/v3/partner-transfer/batches/out-batch-no/%s"                          // out_batch_no 商家批次单号查询批次单 GET
+	v3PartnerTransferMerchantDetail = "/v3/partner-transfer/batches/out-batch-no/%s/details/out-detail-no/%s" // out_batch_no、out_detail_no 商家明细单号查询明细单 GET
 
 	// 余额
 	v3MerchantBalance    = "/v3/merchant/fund/balance/%s"       // account_type 查询账户实时余额 GET
