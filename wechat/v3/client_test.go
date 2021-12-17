@@ -472,3 +472,17 @@ func TestV3GoldPlanFilterManage(t *testing.T) {
 	}
 	xlog.Debugf("wxRsp: %#v", wxRsp)
 }
+
+func TestV3Withdraw(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("sub_mchid", "2021060717").
+		Set("out_request_no", "123456").
+		Set("amount", 1000)
+
+	wxRsp, err := client.V3Withdraw(ctx, bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp: %#v", wxRsp)
+}

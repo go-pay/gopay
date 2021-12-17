@@ -6,8 +6,11 @@
    (4) 微信V3：新增 client.V3PartnerTransferDetail()
    (5) 微信V3：新增 client.V3PartnerTransferMerchantQuery()
    (6) 微信V3：新增 client.V3PartnerTransferMerchantDetail()
-   (7) 微信V3：修改 V3TransferDetailQuery() => V3TransferDetail()
-   (8) 微信V3：修改 V3TransferMerchantDetailQuery() => V3TransferMerchantDetail()
+   (7) 微信V3：新增 client.V3Withdraw()
+   (8) 微信V3：新增 client.V3WithdrawStatus()
+   (9) 微信V3：新增 client.V3WithdrawDownloadErrBill()
+   (10) 微信V3：修改 V3TransferDetailQuery() => V3TransferDetail()
+   (11) 微信V3：修改 V3TransferMerchantDetailQuery() => V3TransferMerchantDetail()
 
 版本号：Release 1.5.66
 修改记录：

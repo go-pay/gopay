@@ -231,7 +231,9 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 申请特约商户资金账单：`client.V3BillEcommerceFundFlowBill()`
     * 下载账单：`client.V3BillDownLoadBill()`
 * <font color='#07C160' size='4'>提现（服务商）</font>
-    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter6_1.shtml)
+    * 特约商户余额提现：`client.V3Withdraw()`
+    * 查询特约商户提现状态：`client.V3WithdrawStatus()`
+    * 按日下载提现异常文件：`client.V3WithdrawDownloadErrBill()`
 * <font color='#07C160' size='4'>微信支付分（公共API）</font>
     * 创建支付分订单：`client.V3ScoreOrderCreate()`
     * 查询支付分订单：`client.V3ScoreOrderQuery()`

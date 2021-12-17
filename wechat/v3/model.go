@@ -804,6 +804,22 @@ type GoldPlanManageRsp struct {
 	Error    string          `json:"-"`
 }
 
+// 特约商户余额提现 Rsp
+type WithdrawRsp struct {
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Response *Withdraw `json:"response,omitempty"`
+	Error    string    `json:"-"`
+}
+
+// 查询特约商户提现状态 Rsp
+type WithdrawStatusRsp struct {
+	Code     int             `json:"-"`
+	SignInfo *SignInfo       `json:"-"`
+	Response *WithdrawStatus `json:"response,omitempty"`
+	Error    string          `json:"-"`
+}
+
 // ==================================分割==================================
 
 type JSAPIPayParams struct {
@@ -2300,4 +2316,28 @@ type AuditDetail struct {
 
 type GoldPlanManage struct {
 	SubMchid string `json:"sub_mchid"`
+}
+
+type Withdraw struct {
+	SubMchid    string `json:"sub_mchid"`              // 服务商特约商户号，由微信支付生成并下发。
+	WithdrawId  string `json:"withdraw_id"`            // 微信支付提现单号
+	AccountType string `json:"account_type,omitempty"` // 出款账户类型
+}
+
+type WithdrawStatus struct {
+	SubMchid      string `json:"sub_mchid"`      // 服务商特约商户号，由微信支付生成并下发。
+	SpMchid       string `json:"sp_mchid"`       // 服务商户号
+	Status        string `json:"status"`         // 提现单状态：CREATE_SUCCESS：受理成功，SUCCESS：提现成功，FAIL：提现失败，REFUND：提现退票，CLOSE：关单，INIT：业务单已创建
+	WithdrawId    string `json:"withdraw_id"`    // 微信支付提现单号
+	OutRequestNo  string `json:"out_request_no"` // 商户提现单号
+	Amount        int    `json:"amount"`         // 提现金额
+	CreateTime    string `json:"create_time"`    // 创建时间
+	UpdateTime    string `json:"update_time"`    // 更新时间
+	reason        string `json:"reason"`         // 提现失败原因，仅在提现失败、退票、关单时有值
+	Remark        string `json:"remark"`         // 商户对提现单的备注，若发起提现时未传入相应值或输入不合法，则该值为空
+	BankMemo      string `json:"bank_memo"`      // 展示在收款银行系统中的附言，由数字、字母、汉字组成（能否成功展示依赖银行系统支持）。若发起提现时未传入相应值或输入不合法，则该值为空
+	AccountType   string `json:"account_type"`   // 出款账户类型
+	AccountNumber string `json:"account_number"` // 服务商提现入账的银行账号，仅显示后四位。
+	AccountBank   string `json:"account_bank"`   // 服务商提现入账的开户银行
+	BankName      string `json:"bank_name"`      // 服务商提现入账的开户银行全称（含支行）
 }

@@ -180,6 +180,7 @@ func (c *ClientV3) V3EcommerceApply(ctx context.Context, bm gopay.BodyMap) (*Eco
 }
 
 // 查询申请状态API
+//	注意：applyId 和 outRequestNo 二选一
 //	Code = 0 is success
 // 	电商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter7_1_2.shtml
 func (c *ClientV3) V3EcommerceApplyStatus(ctx context.Context, applyId int64, outRequestNo string) (*EcommerceApplyStatusRsp, error) {
