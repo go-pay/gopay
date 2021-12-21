@@ -32,7 +32,7 @@ func Refund() {
 
 	//请求申请退款（沙箱环境下，证书路径参数可传空）
 	//    body：参数Body
-	wxRsp, resBm, err := client.Refund(context.Background(), bm)
+	wxRsp, resBm, _, err := client.Refund(context.Background(), bm)
 	if err != nil {
 		xlog.Error(err)
 		return

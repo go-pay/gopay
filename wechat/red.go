@@ -9,6 +9,7 @@ import (
 	"context"
 	"encoding/xml"
 	"fmt"
+	"net/http"
 
 	"github.com/cedarwu/gopay"
 	"github.com/cedarwu/gopay/pkg/util"
@@ -18,10 +19,10 @@ import (
 //	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	注意：此处参数中的 wxappid 需要单独传参，不复用 NewClient 时的 appid，total_num = 1
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_4&index=3
-func (w *Client) SendCashRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *SendCashRedResponse, err error) {
+func (w *Client) SendCashRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *SendCashRedResponse, header http.Header, err error) {
 	err = bm.CheckEmptyError("nonce_str", "mch_billno", "wxappid", "send_name", "re_openid", "total_amount", "total_num", "wishing", "client_ip", "act_name", "remark")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	if bm.GetString("wxappid") == util.NULL {
 		bm.Set("wxappid", w.AppId)
@@ -36,28 +37,28 @@ func (w *Client) SendCashRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *Send
 
 	tlsConfig, err := w.addCertConfig(nil, nil, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	bs, err := w.doProdPostPure(ctx, bm, sendCashRed, tlsConfig)
+	bs, header, err := w.doProdPostPure(ctx, bm, sendCashRed, tlsConfig)
 	if err != nil {
-		return nil, err
+		return nil, header, err
 	}
 	wxRsp = new(SendCashRedResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, header, nil
 }
 
 // 发放现金裂变红包
 //	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	注意：此处参数中的 wxappid 需要单独传参，不复用 NewClient 时的 appid，amt_type = ALL_RAND
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_5&index=4
-func (w *Client) SendGroupCashRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *SendCashRedResponse, err error) {
+func (w *Client) SendGroupCashRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *SendCashRedResponse, header http.Header, err error) {
 	err = bm.CheckEmptyError("nonce_str", "mch_billno", "wxappid", "send_name", "re_openid", "total_amount", "total_num", "amt_type", "wishing", "act_name", "remark")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if bm.GetString("wxappid") == util.NULL {
@@ -73,28 +74,28 @@ func (w *Client) SendGroupCashRed(ctx context.Context, bm gopay.BodyMap) (wxRsp 
 
 	tlsConfig, err := w.addCertConfig(nil, nil, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	bs, err := w.doProdPostPure(ctx, bm, sendGroupCashRed, tlsConfig)
+	bs, header, err := w.doProdPostPure(ctx, bm, sendGroupCashRed, tlsConfig)
 	if err != nil {
-		return nil, err
+		return nil, header, err
 	}
 	wxRsp = new(SendCashRedResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, header, nil
 }
 
 // 发放小程序红包
 //	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	注意：此处参数中的 wxappid 需要单独传参，不复用 NewClient 时的 appid，total_num = 1，notify_way = MINI_PROGRAM_JSAPI
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=18_2&index=3
-func (w *Client) SendAppletRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *SendAppletRedResponse, err error) {
+func (w *Client) SendAppletRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *SendAppletRedResponse, header http.Header, err error) {
 	err = bm.CheckEmptyError("nonce_str", "mch_billno", "wxappid", "send_name", "re_openid", "total_amount", "total_num", "wishing", "act_name", "remark", "notify_way")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if bm.GetString("wxappid") == util.NULL {
@@ -110,28 +111,28 @@ func (w *Client) SendAppletRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *Se
 
 	tlsConfig, err := w.addCertConfig(nil, nil, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	bs, err := w.doProdPostPure(ctx, bm, sendAppletRed, tlsConfig)
+	bs, header, err := w.doProdPostPure(ctx, bm, sendAppletRed, tlsConfig)
 	if err != nil {
-		return nil, err
+		return nil, header, err
 	}
 	wxRsp = new(SendAppletRedResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, header, nil
 }
 
 // 查询红包记录
 //	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	注意：此处参数中的 appid 需要单独传参，不复用 NewClient 时的 appid，bill_type = MCHT
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_6&index=5
-func (w *Client) QueryRedRecord(ctx context.Context, bm gopay.BodyMap) (wxRsp *QueryRedRecordResponse, err error) {
+func (w *Client) QueryRedRecord(ctx context.Context, bm gopay.BodyMap) (wxRsp *QueryRedRecordResponse, header http.Header, err error) {
 	err = bm.CheckEmptyError("nonce_str", "mch_billno", "appid", "bill_type")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if bm.GetString("appid") == util.NULL {
@@ -147,16 +148,16 @@ func (w *Client) QueryRedRecord(ctx context.Context, bm gopay.BodyMap) (wxRsp *Q
 
 	tlsConfig, err := w.addCertConfig(nil, nil, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	bs, err := w.doProdPostPure(ctx, bm, getRedRecord, tlsConfig)
+	bs, header, err := w.doProdPostPure(ctx, bm, getRedRecord, tlsConfig)
 	if err != nil {
-		return nil, err
+		return nil, header, err
 	}
 	wxRsp = new(QueryRedRecordResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, header, nil
 }

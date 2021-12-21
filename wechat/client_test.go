@@ -55,7 +55,7 @@ func TestClient_AuthCodeToOpenId(t *testing.T) {
 	bm.Set("nonce_str", util.GetRandomString(32)).
 		Set("auth_code", "134753997737645794")
 
-	wxRsp, err := client.AuthCodeToOpenId(bm)
+	wxRsp, _, err := client.AuthCodeToOpenId(bm)
 	if err != nil {
 		xlog.Errorf("client.AuthCodeToOpenId(%+v),error:%+v", bm, err)
 		return
@@ -88,7 +88,7 @@ func TestClient_DownloadBill(t *testing.T) {
 		Set("bill_type", "ALL")
 
 	// 请求下载对账单，成功后得到结果（string类型字符串）
-	wxRsp, err := client.DownloadBill(bm)
+	wxRsp, _, err := client.DownloadBill(bm)
 	if err != nil {
 		xlog.Errorf("client.DownloadBill(%+v),error:%+v", bm, err)
 		return
@@ -105,7 +105,7 @@ func TestClient_DownloadFundFlow(t *testing.T) {
 		Set("account_type", "Basic")
 
 	// 请求下载资金账单，成功后得到结果，沙箱环境下，证书路径参数可传nil
-	wxRsp, err := client.DownloadFundFlow(bm)
+	wxRsp, _, err := client.DownloadFundFlow(bm)
 	if err != nil {
 		xlog.Errorf("client.DownloadFundFlow(%+v),error:%+v", bm, err)
 		return
@@ -123,7 +123,7 @@ func TestClient_BatchQueryComment(t *testing.T) {
 		Set("offset", "0")
 
 	// 请求拉取订单评价数据，成功后得到结果，沙箱环境下，证书路径参数可传nil
-	wxRsp, err := client.BatchQueryComment(bm)
+	wxRsp, _, err := client.BatchQueryComment(bm)
 	if err != nil {
 		xlog.Errorf("client.BatchQueryComment(%+v),error:%+v", bm, err)
 		return

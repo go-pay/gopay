@@ -6,6 +6,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/cedarwu/gopay"
 	"github.com/cedarwu/gopay/pkg/util"
@@ -242,7 +243,7 @@ func (w *Client) GetRSAPublicKey(bm gopay.BodyMap) (wxRsp *RSAPublicKeyResponse,
 //	故操作成功后，订单不能再进行分账，也不能进行分账完结。
 //	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_1&index=1
-func (w *Client) ProfitSharing(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, err error) {
+func (w *Client) ProfitSharing(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, header http.Header, err error) {
 	return w.profitSharing(bm, profitSharing)
 }
 
@@ -253,40 +254,40 @@ func (w *Client) ProfitSharing(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, 
 //	对同一笔订单最多能发起20次多次分账请求
 //	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_1&index=1
-func (w *Client) MultiProfitSharing(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, err error) {
+func (w *Client) MultiProfitSharing(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, header http.Header, err error) {
 	return w.profitSharing(bm, multiProfitSharing)
 }
 
-func (w *Client) profitSharing(bm gopay.BodyMap, uri string) (wxRsp *ProfitSharingResponse, err error) {
+func (w *Client) profitSharing(bm gopay.BodyMap, uri string) (wxRsp *ProfitSharingResponse, header http.Header, err error) {
 	err = bm.CheckEmptyError("nonce_str", "transaction_id", "out_order_no", "receivers")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	tlsConfig, err := w.addCertConfig(nil, nil, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	bs, err := w.doProdPost(context.Background(), bm, uri, tlsConfig)
+	bs, header, err := w.doProdPost(context.Background(), bm, uri, tlsConfig)
 	if err != nil {
-		return nil, err
+		return nil, header, err
 	}
 	wxRsp = new(ProfitSharingResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, header, nil
 }
 
 // 查询分账结果
 //	发起分账请求后，可调用此接口查询分账结果；发起分账完结请求后，可调用此接口查询分账完结的执行结果。
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_2&index=3
-func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQueryResponse, err error) {
+func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQueryResponse, header http.Header, err error) {
 	err = bm.CheckEmptyError("transaction_id", "out_order_no", "nonce_str")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
@@ -295,57 +296,57 @@ func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQuery
 		sign := getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
 		bm.Set("sign", sign)
 	}
-	bs, err := w.doProdPostPure(context.Background(), bm, profitSharingQuery, nil)
+	bs, header, err := w.doProdPostPure(context.Background(), bm, profitSharingQuery, nil)
 	if err != nil {
-		return nil, err
+		return nil, header, err
 	}
 	wxRsp = new(ProfitSharingQueryResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, header, nil
 }
 
 // 添加分账接收方
 //	商户发起添加分账接收方请求，后续可通过发起分账请求将结算后的钱分到该分账接收方。
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_3&index=4
-func (w *Client) ProfitSharingAddReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharingAddReceiverResponse, err error) {
+func (w *Client) ProfitSharingAddReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharingAddReceiverResponse, header http.Header, err error) {
 	err = bm.CheckEmptyError("nonce_str", "receiver")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
-	bs, err := w.doProdPost(context.Background(), bm, profitSharingAddReceiver, nil)
+	bs, header, err := w.doProdPost(context.Background(), bm, profitSharingAddReceiver, nil)
 	if err != nil {
-		return nil, err
+		return nil, header, err
 	}
 	wxRsp = new(ProfitSharingAddReceiverResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, header, nil
 }
 
 // 删除分账接收方
 //	商户发起删除分账接收方请求，删除后不支持将结算后的钱分到该分账接收方
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_4&index=5
-func (w *Client) ProfitSharingRemoveReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharingAddReceiverResponse, err error) {
+func (w *Client) ProfitSharingRemoveReceiver(bm gopay.BodyMap) (wxRsp *ProfitSharingAddReceiverResponse, header http.Header, err error) {
 	err = bm.CheckEmptyError("nonce_str", "receiver")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
-	bs, err := w.doProdPost(context.Background(), bm, profitSharingRemoveReceiver, nil)
+	bs, header, err := w.doProdPost(context.Background(), bm, profitSharingRemoveReceiver, nil)
 	if err != nil {
-		return nil, err
+		return nil, header, err
 	}
 	wxRsp = new(ProfitSharingAddReceiverResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, header, nil
 }
 
 // 完结分账
@@ -354,26 +355,26 @@ func (w *Client) ProfitSharingRemoveReceiver(bm gopay.BodyMap) (wxRsp *ProfitSha
 //	3、已调用请求单次分账后，剩余待分账金额为零，不需要再调用此接口。
 //	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_5&index=6
-func (w *Client) ProfitSharingFinish(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, err error) {
+func (w *Client) ProfitSharingFinish(bm gopay.BodyMap) (wxRsp *ProfitSharingResponse, header http.Header, err error) {
 	err = bm.CheckEmptyError("nonce_str", "transaction_id", "out_order_no", "description")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	tlsConfig, err := w.addCertConfig(nil, nil, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	bs, err := w.doProdPost(context.Background(), bm, profitSharingFinish, tlsConfig)
+	bs, header, err := w.doProdPost(context.Background(), bm, profitSharingFinish, tlsConfig)
 	if err != nil {
-		return nil, err
+		return nil, header, err
 	}
 	wxRsp = new(ProfitSharingResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, header, nil
 }
 
 // 分账回退
@@ -383,54 +384,54 @@ func (w *Client) ProfitSharingFinish(bm gopay.BodyMap) (wxRsp *ProfitSharingResp
 //	此功能需要接收方在商户平台-交易中心-分账-分账接收设置下，开启同意分账回退后，才能使用。
 //	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_7&index=7
-func (w *Client) ProfitSharingReturn(bm gopay.BodyMap) (wxRsp *ProfitSharingReturnResponse, err error) {
+func (w *Client) ProfitSharingReturn(bm gopay.BodyMap) (wxRsp *ProfitSharingReturnResponse, header http.Header, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_return_no", "return_account_type", "return_account", "return_amount", "description")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if (bm.GetString("order_id") == util.NULL) && (bm.GetString("out_order_no") == util.NULL) {
-		return nil, errors.New("param order_id and out_order_no can not be null at the same time")
+		return nil, nil, errors.New("param order_id and out_order_no can not be null at the same time")
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	tlsConfig, err := w.addCertConfig(nil, nil, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	bs, err := w.doProdPost(context.Background(), bm, profitSharingReturn, tlsConfig)
+	bs, header, err := w.doProdPost(context.Background(), bm, profitSharingReturn, tlsConfig)
 	if err != nil {
-		return nil, err
+		return nil, header, err
 	}
 	wxRsp = new(ProfitSharingReturnResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, header, nil
 }
 
 // 回退结果查询
 //	商户需要核实回退结果，可调用此接口查询回退结果。
 //	如果分账回退接口返回状态为处理中，可调用此接口查询回退结果
 //	微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation.php?chapter=27_8&index=8
-func (w *Client) ProfitSharingReturnQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingReturnResponse, err error) {
+func (w *Client) ProfitSharingReturnQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingReturnResponse, header http.Header, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_return_no")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if (bm.GetString("order_id") == util.NULL) && (bm.GetString("out_order_no") == util.NULL) {
-		return nil, errors.New("param order_id and out_order_no can not be null at the same time")
+		return nil, nil, errors.New("param order_id and out_order_no can not be null at the same time")
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
-	bs, err := w.doProdPost(context.Background(), bm, profitSharingReturnQuery, nil)
+	bs, header, err := w.doProdPost(context.Background(), bm, profitSharingReturnQuery, nil)
 	if err != nil {
-		return nil, err
+		return nil, header, err
 	}
 	wxRsp = new(ProfitSharingReturnResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, nil
+	return wxRsp, header, nil
 }

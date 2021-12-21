@@ -30,7 +30,7 @@ func TestClient_Transfer(t *testing.T) {
 		xlog.Errorf("client.Transfer(%+v),error:%+v", bm, err)
 		return
 	}
-	xlog.Debug("wxRsp：", *wxRsp)
+	xlog.Debug("wxRsp: ", *wxRsp)
 }
 
 func Test_ProfitSharing(t *testing.T) {
@@ -66,7 +66,7 @@ func Test_ProfitSharing(t *testing.T) {
 
 	bm.Set("receivers", string(bs))
 
-	wxRsp, err := client.ProfitSharing(bm)
+	wxRsp, _, err := client.ProfitSharing(bm)
 	if err != nil {
 		xlog.Errorf("client.ProfitSharingAddReceiver(%+v),error:%+v", bm, err)
 		return
@@ -87,7 +87,7 @@ func Test_ProfitSharingAddReceiver(t *testing.T) {
 
 	bm.Set("receiver", receiver.JsonBody())
 
-	wxRsp, err := client.ProfitSharingAddReceiver(bm)
+	wxRsp, _, err := client.ProfitSharingAddReceiver(bm)
 	if err != nil {
 		xlog.Errorf("client.ProfitSharingAddReceiver(%+v),error:%+v", bm, err)
 		return
@@ -106,7 +106,7 @@ func Test_ProfitSharingRemoveReceiver(t *testing.T) {
 
 	bm.Set("receiver", receiver.JsonBody())
 
-	wxRsp, err := client.ProfitSharingRemoveReceiver(bm)
+	wxRsp, _, err := client.ProfitSharingRemoveReceiver(bm)
 	if err != nil {
 		xlog.Errorf("client.ProfitSharingRemoveReceiver(%+v),error:%+v", bm, err)
 		return
