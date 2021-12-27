@@ -365,6 +365,25 @@ wechat.V3DecryptScoreNotifyCipherText()
 * <font color='#07C160' size='4'>电商收付通（商户进件）</font>
     * 二级商户进件：`client.V3EcommerceApply()`
     * 查询申请状态：`client.V3EcommerceApplyStatus()`
+* <font color='#07C160' size='4'>电商收付通（分账）</font>
+    * 请求分账：`client.V3EcommerceProfitShare()`
+    * 查询分账结果：`client.V3EcommerceProfitShareResult()`
+    * 请求分账回退：`client.V3EcommerceProfitShareReturn()`
+    * 查询分账回退结果：`client.V3EcommerceProfitShareReturnResult()`
+    * 完结分账：`client.V3EcommerceProfitShareFinish()`
+    * 查询订单剩余待分金额：`client.V3EcommerceProfitShareUnsplitAmount()`
+    * 添加分账接收方：`client.V3EcommerceProfitShareAddReceiver()`
+    * 删除分账接收方：`client.V3EcommerceProfitShareDeleteReceiver()`
+* <font color='#07C160' size='4'>电商收付通（补差）</font>
+    * 请求补差：`client.V3EcommerceProfitShare()`
+    * 请求补差回退：`client.V3EcommerceSubsidiesReturn()`
+    * 取消补差：`client.V3EcommerceSubsidiesCancel()`
+* <font color='#07C160' size='4'>电商收付通（退款）</font>
+    * 申请退款：`client.V3EcommerceRefund()`
+    * 查询退款ById：`client.V3EcommerceRefundQueryById()`
+    * 查询退款ByNo：`client.V3EcommerceRefundQueryByNo()`
+    * 垫付退款回补：`client.V3EcommerceRefundAdvance()`
+    * 查询垫付回补结果：`client.V3EcommerceRefundAdvanceResult()`
 
 
 ### 微信v3公共 API
