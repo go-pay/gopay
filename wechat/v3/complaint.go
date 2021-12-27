@@ -233,7 +233,7 @@ func (c *ClientV3) V3ComplaintDetail(ctx context.Context, complaintId string) (w
 //	Code = 0 is success
 //	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_14.shtml
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_14.shtml
-func (c *ClientV3) V3ComplaintResponse(ctx context.Context, complaintId, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
+func (c *ClientV3) V3ComplaintResponse(ctx context.Context, complaintId string, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
 	url := fmt.Sprintf(v3ComplaintResponse, complaintId)
 	authorization, err := c.authorization(MethodPost, url, bm)
 	if err != nil {
@@ -256,7 +256,7 @@ func (c *ClientV3) V3ComplaintResponse(ctx context.Context, complaintId, bm gopa
 //	Code = 0 is success
 //	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_15.shtml
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_15.shtml
-func (c *ClientV3) V3ComplaintComplete(ctx context.Context, complaintId, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
+func (c *ClientV3) V3ComplaintComplete(ctx context.Context, complaintId string, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
 	url := fmt.Sprintf(v3ComplaintComplete, complaintId)
 	authorization, err := c.authorization(MethodPost, url, bm)
 	if err != nil {

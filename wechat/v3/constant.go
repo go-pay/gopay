@@ -52,10 +52,6 @@ const (
 	v3DomesticRefund      = "/v3/refund/domestic/refunds"    // 申请退款
 	v3DomesticRefundQuery = "/v3/refund/domestic/refunds/%s" // 查询单笔退款
 
-	// 退款（电商收付通）
-	v3CommerceRefund      = "/v3/ecommerce/refunds/apply"
-	v3CommerceRefundQuery = "/v3/ecommerce/refunds/id/%s"
-
 	// 账单
 	v3TradeBill             = "/v3/bill/tradebill"                 // 申请交易账单 GET
 	v3FundFlowBill          = "/v3/bill/fundflowbill"              // 申请资金账单 GET
@@ -162,7 +158,7 @@ const (
 	v3ComplaintComplete           = "/v3/merchant-service/complaints-v2/%s/complete"             // 反馈处理完成 POST
 	v3ComplaintUploadImage        = "/v3/merchant-service/images/upload"                         // 商户上传反馈图片 POST
 
-	// 分账
+	// 分账（服务商）
 	v3ProfitShareOrder           = "/v3/profitsharing/orders"                  // 请求分账 POST
 	v3ProfitShareQuery           = "/v3/profitsharing/orders/%s"               // 查询分账结果 GET
 	v3ProfitShareReturn          = "/v3/profitsharing/return-orders"           // 请求分账回退 POST
@@ -216,6 +212,28 @@ const (
 	v3EcommerceApply          = "/v3/ecommerce/applyments"                   // 二级商户进件 POST
 	v3EcommerceApplyQueryById = "/v3/ecommerce/applyments/%d"                // applyment_id 通过申请单ID查询申请状态 GET
 	v3EcommerceApplyQueryByNo = "/v3/ecommerce/applyments/out-request-no/%s" // out_request_no 通过业务申请编号查询申请状态 GET
+
+	// 电商收付通（分账）
+	v3EcommerceProfitShare               = "/v3/ecommerce/profitsharing/orders"            // 请求分账 POST
+	v3EcommerceProfitShareQuery          = "/v3/ecommerce/profitsharing/orders"            // 查询分账结果 GET
+	v3EcommerceProfitShareReturn         = "/v3/ecommerce/profitsharing/returnorders"      // 请求分账回退 POST
+	v3EcommerceProfitShareReturnResult   = "/v3/ecommerce/profitsharing/returnorders"      // 查询分账回退结果 GET
+	v3EcommerceProfitShareFinish         = "/v3/ecommerce/profitsharing/finish-order"      // 完结分账 POST
+	v3EcommerceProfitShareUnsplitAmount  = "/v3/ecommerce/profitsharing/orders/%s/amounts" // transaction_id 查询订单剩余待分金额 GET
+	v3EcommerceProfitShareAddReceiver    = "/v3/ecommerce/profitsharing/receivers/add"     // 添加分账接收方 POST
+	v3EcommerceProfitShareDeleteReceiver = "/v3/ecommerce/profitsharing/receivers/delete"  // 删除分账接收方 POST
+
+	// 电商收付通（补差）
+	v3EcommerceSubsidies       = "/v3/ecommerce/subsidies/create" // 请求补差 POST
+	v3EcommerceSubsidiesReturn = "/v3/ecommerce/subsidies/return" // 请求补差回退 POST
+	v3EcommerceSubsidiesCancel = "/v3/ecommerce/subsidies/cancel" // 取消补差 POST
+
+	// 电商收付通（退款）
+	v3CommerceRefund              = "/v3/ecommerce/refunds/apply"             // 申请退款 POST
+	v3CommerceRefundQueryById     = "/v3/ecommerce/refunds/id/%s"             // refund_id 通过微信支付退款单号查询退款 GET
+	v3CommerceRefundQueryByNo     = "/v3/ecommerce/refunds/out-refund-no/%s"  // out_refund_no 通过商户退款单号查询退款 GET
+	v3CommerceRefundAdvance       = "/v3/ecommerce/refunds/%s/return-advance" // refund_id 垫付退款回补 POST
+	v3CommerceRefundAdvanceResult = "/v3/ecommerce/refunds/%s/return-advance" // refund_id 查询垫付回补结果 GET
 
 	// 特约商户进件申请单状态
 	ApplyStateEditing       = "APPLYMENT_STATE_EDITTING"        // 编辑中
