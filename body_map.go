@@ -93,6 +93,15 @@ func (bm BodyMap) JsonBody() (jb string) {
 	return jb
 }
 
+// Unmarshal to struct or slice point
+func (bm BodyMap) Unmarshal(ptr interface{}) (err error) {
+	bs, err := json.Marshal(bm)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(bs, ptr)
+}
+
 func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error) {
 	if len(bm) == 0 {
 		return nil

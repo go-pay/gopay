@@ -45,6 +45,7 @@ func ParseNotifyByURLValues(value url.Values) (bm gopay.BodyMap, err error) {
 }
 
 // Deprecated
+// 推荐使用 ParseNotifyToBodyMap()，以防阿里云通知参数变动，NotifyRequest 无法解析。
 // 解析支付宝支付异步通知的参数到Struct
 //	req：*http.Request
 //	返回参数notifyReq：Notify请求的参数
