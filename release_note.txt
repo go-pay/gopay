@@ -1,3 +1,7 @@
+版本号：Release 1.5.69
+修改记录：
+   (1) 微信V3：修改 client.V3RefundQuery()、增加入参参数，适配 服务商 模式
+
 版本号：Release 1.5.68
 修改记录：
    (1) 微信V3：修复 client.V3ComplaintResponse()、client.V3ComplaintComplete()， complaintId 参数类型错误问题
