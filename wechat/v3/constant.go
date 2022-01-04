@@ -209,7 +209,7 @@ const (
 	v3Apply4SubQuerySettlement     = "/v3/apply4sub/sub_merchants/%s/settlement"        // sub_mchid 查询结算账户 GET
 
 	// 电商收付通（商户进件）
-	v3EcommerceApply          = "/v3/ecommerce/applyments"                   // 二级商户进件 POST
+	v3EcommerceApply          = "/v3/ecommerce/applyments/"                  // 二级商户进件 POST
 	v3EcommerceApplyQueryById = "/v3/ecommerce/applyments/%d"                // applyment_id 通过申请单ID查询申请状态 GET
 	v3EcommerceApplyQueryByNo = "/v3/ecommerce/applyments/out-request-no/%s" // out_request_no 通过业务申请编号查询申请状态 GET
 
