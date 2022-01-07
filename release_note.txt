@@ -1,6 +1,8 @@
 版本号：Release 1.5.69
 修改记录：
    (1) 微信V3：修改 client.V3RefundQuery()、增加入参参数，适配 服务商 模式
+   (2) 微信V3：修复 client.V3Apply4SubSubmit()，接口路由修复
+   (2) gopay：BodyMap 新增 Unmarshal() 方法，解析数据到结构体、数组指针
 
 版本号：Release 1.5.68
 修改记录：
