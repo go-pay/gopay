@@ -226,6 +226,47 @@ func TestV3PartnerNative(t *testing.T) {
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
 }
 
+func TestV3TransactionH5(t *testing.T) {
+	number := util.GetRandomString(32)
+	xlog.Info("out_trade_no:", number)
+	// 初始化参数Map
+	bm := make(gopay.BodyMap)
+	bm.Set("appid", "appid").
+		Set("mchid", "mchid").
+		Set("description", "Image形象店-深圳腾大-QQ公仔").
+		Set("out_trade_no", number).
+		Set("time_expire", "2018-06-08T10:34:56+08:00").
+		Set("notify_url", "https://www.fmm.ink").
+		SetBodyMap("amount", func(b gopay.BodyMap) {
+			b.Set("total", 1).
+				Set("currency", "CNY")
+		}).
+		SetBodyMap("scene_info", func(b gopay.BodyMap) {
+			b.Set("payer_client_ip", "127.0.0.1").
+				Set("device_id", "device_id").
+				SetBodyMap("store_info", func(b gopay.BodyMap) {
+					b.Set("id", "id").
+						Set("name", "腾讯大厦分店").
+						Set("area_code", "440305").
+						Set("address", "广东省深圳市南山区科技中一道10000号")
+				}).
+				SetBodyMap("h5_info", func(b gopay.BodyMap) {
+					b.Set("type", "Wap").
+						Set("app_name", "王者荣耀").
+						Set("app_url", "https://pay.qq.com").
+						Set("bundle_id", "com.tencent.wzryiOS")
+				})
+		})
+
+	// 请求支付下单，成功后得到结果
+	wxRsp, err := client.V3TransactionH5(ctx, bm)
+	if err != nil {
+		xlog.Errorf("client.V3TransactionH5(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Info("wxRsp:", *wxRsp)
+}
+
 func TestV3QueryOrder(t *testing.T) {
 	//wxRsp, err := client.V3TransactionQueryOrder(TransactionId, "42000008462020122402449153433")
 	wxRsp, err := client.V3TransactionQueryOrder(ctx, OutTradeNo, "22LW55HDd8tuxgZgFM445kI52BZVk847")
