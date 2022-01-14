@@ -89,6 +89,7 @@ func TestVerifySignWithCert(t *testing.T) {
 		xlog.Errorf("VerifySignWithCert(%+v),error:%+v", bm, err)
 		return
 	}
+	xlog.Debug("VerifySignWithCert", "OK:", ok)
 	// fileByte
 	bts, err := ioutil.ReadFile(filepath)
 	if err != nil {
@@ -100,7 +101,7 @@ func TestVerifySignWithCert(t *testing.T) {
 		xlog.Errorf("VerifySignWithCert(%+v),error:%+v", bm, err)
 		return
 	}
-	xlog.Debug("OK:", ok)
+	xlog.Debug("VerifySignWithCert", "OK:", ok)
 }
 
 func TestGetCertSN(t *testing.T) {

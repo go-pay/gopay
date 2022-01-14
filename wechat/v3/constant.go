@@ -10,6 +10,7 @@ const (
 	MethodDelete        = "DELETE"
 	MethodPATCH         = "PATCH"
 	HeaderAuthorization = "Authorization"
+	HeaderRequestID     = "Request-ID"
 
 	HeaderTimestamp = "Wechatpay-Timestamp"
 	HeaderNonce     = "Wechatpay-Nonce"
@@ -51,10 +52,6 @@ const (
 	v3DomesticRefund      = "/v3/refund/domestic/refunds"    // 申请退款
 	v3DomesticRefundQuery = "/v3/refund/domestic/refunds/%s" // 查询单笔退款
 
-	// 退款（电商收付通）
-	v3CommerceRefund      = "/v3/ecommerce/refunds/apply"
-	v3CommerceRefundQuery = "/v3/ecommerce/refunds/id/%s"
-
 	// 账单
 	v3TradeBill             = "/v3/bill/tradebill"                 // 申请交易账单 GET
 	v3FundFlowBill          = "/v3/bill/fundflowbill"              // 申请资金账单 GET
@@ -62,9 +59,10 @@ const (
 	v3SubFundFlowBill       = "/v3/bill/sub-merchant-fundflowbill" // 申请单个子商户资金账单 GET
 
 	// 提现
-	v3Withdraw       = "/v3/ecommerce/fund/withdraw"    // 特约商户余额提 POST
-	v3WithdrawStatus = "/v3/ecommerce/fund/withdraw/%s" // withdraw_id 查询特约商户提现状态 GET
-	v3               = "/v3/merchant/fund/withdraw/bill-type/{bill_type}"
+	v3Withdraw                = "/v3/ecommerce/fund/withdraw"                   // 特约商户余额提现 POST
+	v3WithdrawStatusById      = "/v3/ecommerce/fund/withdraw/%s"                // withdraw_id 微信支付提现单号查询特约商户提现状态 GET
+	v3WithdrawStatusByNo      = "/v3/ecommerce/fund/withdraw/out-request-no/%s" // withdraw_id 商户提现单号查询特约商户提现状态 GET
+	v3WithdrawDownloadErrBill = "/v3/merchant/fund/withdraw/bill-type/%s"       // bill_type 按日下载提现异常文件 GET
 
 	// 微信支付分（免确认模式）
 	v3ScoreDirectComplete = "/payscore/serviceorder/direct-complete" // 创单结单合并 POST
@@ -146,7 +144,7 @@ const (
 	v3GoldPlanBillManage   = "/v3/goldplan/merchants/changecustompagestatus"          // 商家小票管理 POST
 	v3GoldPlanFilterManage = "/v3/goldplan/merchants/set-advertising-industry-filter" // 同业过滤标签管理 POST
 	v3GoldPlanOpenAdShow   = "/v3/goldplan/merchants/open-advertising-show"           // 开通广告展示 PATCH
-	v3GoldPlanCloseAdShow  = "/v3/goldplan/merchants/close-advertising-show"          // 关闭广告展示 PATCH
+	v3GoldPlanCloseAdShow  = "/v3/goldplan/merchants/close-advertising-show"          // 关闭广告展示 POST
 
 	// 消费者投诉2.0
 	v3ComplaintList               = "/v3/merchant-service/complaints-v2"                         // 查询投诉单列表 GET
@@ -160,7 +158,7 @@ const (
 	v3ComplaintComplete           = "/v3/merchant-service/complaints-v2/%s/complete"             // 反馈处理完成 POST
 	v3ComplaintUploadImage        = "/v3/merchant-service/images/upload"                         // 商户上传反馈图片 POST
 
-	// 分账
+	// 分账（服务商）
 	v3ProfitShareOrder           = "/v3/profitsharing/orders"                  // 请求分账 POST
 	v3ProfitShareQuery           = "/v3/profitsharing/orders/%s"               // 查询分账结果 GET
 	v3ProfitShareReturn          = "/v3/profitsharing/return-orders"           // 请求分账回退 POST
@@ -177,15 +175,22 @@ const (
 	v3MediaUploadVideo = "/v3/merchant/media/video_upload" // 视频上传 POST
 
 	// 转账
-	v3Transfer                    = "/v3/transfer/batches"                                          // 发起批量转账 POST
-	v3TransferQuery               = "/v3/transfer/batches/batch-id/%s"                              // batch_id 微信批次单号查询批次单 GET
-	v3TransferDetailQuery         = "/v3/transfer/batches/batch-id/%s/details/detail-id/%s"         // batch_id、detail_id 微信明细单号查询明细单 GET
-	v3TransferMerchantQuery       = "/v3/transfer/batches/out-batch-no/%s"                          // out_batch_no 商家批次单号查询批次单 GET
-	v3TransferMerchantDetailQuery = "/v3/transfer/batches/out-batch-no/%s/details/out-detail-no/%s" // out_batch_no、out_detail_no 商家明细单号查询明细单 GET
-	v3TransferReceipt             = "/v3/transfer/bill-receipt"                                     // 转账电子回单申请受理 POST
-	v3TransferReceiptQuery        = "/v3/transfer/bill-receipt/%s"                                  // out_batch_no 查询转账电子回单 GET
-	v3TransferDetailReceipt       = "/v3/transfer-detail/electronic-receipts"                       // 转账明细电子回单受理 POST
-	v3TransferDetailReceiptQuery  = "/v3/transfer-detail/electronic-receipts"                       // 查询转账明细电子回单受理结果 GET
+	v3Transfer                   = "/v3/transfer/batches"                                          // 发起批量转账 POST
+	v3TransferQuery              = "/v3/transfer/batches/batch-id/%s"                              // batch_id 微信批次单号查询批次单 GET
+	v3TransferDetail             = "/v3/transfer/batches/batch-id/%s/details/detail-id/%s"         // batch_id、detail_id 微信明细单号查询明细单 GET
+	v3TransferMerchantQuery      = "/v3/transfer/batches/out-batch-no/%s"                          // out_batch_no 商家批次单号查询批次单 GET
+	v3TransferMerchantDetail     = "/v3/transfer/batches/out-batch-no/%s/details/out-detail-no/%s" // out_batch_no、out_detail_no 商家明细单号查询明细单 GET
+	v3TransferReceipt            = "/v3/transfer/bill-receipt"                                     // 转账电子回单申请受理 POST
+	v3TransferReceiptQuery       = "/v3/transfer/bill-receipt/%s"                                  // out_batch_no 查询转账电子回单 GET
+	v3TransferDetailReceipt      = "/v3/transfer-detail/electronic-receipts"                       // 转账明细电子回单受理 POST
+	v3TransferDetailReceiptQuery = "/v3/transfer-detail/electronic-receipts"                       // 查询转账明细电子回单受理结果 GET
+
+	// 转账（服务商）
+	v3PartnerTransfer               = "/v3/partner-transfer/batches"                                          // 发起批量转账 POST
+	v3PartnerTransferQuery          = "/v3/partner-transfer/batches/batch-id/%s"                              // batch_id 微信批次单号查询批次单 GET
+	v3PartnerTransferDetail         = "/v3/partner-transfer/batches/batch-id/%s/details/detail-id/%s"         // batch_id、detail_id 微信明细单号查询明细单 GET
+	v3PartnerTransferMerchantQuery  = "/v3/partner-transfer/batches/out-batch-no/%s"                          // out_batch_no 商家批次单号查询批次单 GET
+	v3PartnerTransferMerchantDetail = "/v3/partner-transfer/batches/out-batch-no/%s/details/out-detail-no/%s" // out_batch_no、out_detail_no 商家明细单号查询明细单 GET
 
 	// 余额
 	v3MerchantBalance    = "/v3/merchant/fund/balance/%s"       // account_type 查询账户实时余额 GET
@@ -202,6 +207,33 @@ const (
 	v3Apply4SubQueryByApplyId      = "/v3/applyment4sub/applyment/applyment_id/%s"      // applyment_id 通过申请单号查询申请状态 GET
 	v3Apply4SubModifySettlement    = "/v3/apply4sub/sub_merchants/%s/modify-settlement" // sub_mchid 修改结算账号 POST
 	v3Apply4SubQuerySettlement     = "/v3/apply4sub/sub_merchants/%s/settlement"        // sub_mchid 查询结算账户 GET
+
+	// 电商收付通（商户进件）
+	v3EcommerceApply          = "/v3/ecommerce/applyments/"                  // 二级商户进件 POST
+	v3EcommerceApplyQueryById = "/v3/ecommerce/applyments/%d"                // applyment_id 通过申请单ID查询申请状态 GET
+	v3EcommerceApplyQueryByNo = "/v3/ecommerce/applyments/out-request-no/%s" // out_request_no 通过业务申请编号查询申请状态 GET
+
+	// 电商收付通（分账）
+	v3EcommerceProfitShare               = "/v3/ecommerce/profitsharing/orders"            // 请求分账 POST
+	v3EcommerceProfitShareQuery          = "/v3/ecommerce/profitsharing/orders"            // 查询分账结果 GET
+	v3EcommerceProfitShareReturn         = "/v3/ecommerce/profitsharing/returnorders"      // 请求分账回退 POST
+	v3EcommerceProfitShareReturnResult   = "/v3/ecommerce/profitsharing/returnorders"      // 查询分账回退结果 GET
+	v3EcommerceProfitShareFinish         = "/v3/ecommerce/profitsharing/finish-order"      // 完结分账 POST
+	v3EcommerceProfitShareUnsplitAmount  = "/v3/ecommerce/profitsharing/orders/%s/amounts" // transaction_id 查询订单剩余待分金额 GET
+	v3EcommerceProfitShareAddReceiver    = "/v3/ecommerce/profitsharing/receivers/add"     // 添加分账接收方 POST
+	v3EcommerceProfitShareDeleteReceiver = "/v3/ecommerce/profitsharing/receivers/delete"  // 删除分账接收方 POST
+
+	// 电商收付通（补差）
+	v3EcommerceSubsidies       = "/v3/ecommerce/subsidies/create" // 请求补差 POST
+	v3EcommerceSubsidiesReturn = "/v3/ecommerce/subsidies/return" // 请求补差回退 POST
+	v3EcommerceSubsidiesCancel = "/v3/ecommerce/subsidies/cancel" // 取消补差 POST
+
+	// 电商收付通（退款）
+	v3CommerceRefund              = "/v3/ecommerce/refunds/apply"             // 申请退款 POST
+	v3CommerceRefundQueryById     = "/v3/ecommerce/refunds/id/%s"             // refund_id 通过微信支付退款单号查询退款 GET
+	v3CommerceRefundQueryByNo     = "/v3/ecommerce/refunds/out-refund-no/%s"  // out_refund_no 通过商户退款单号查询退款 GET
+	v3CommerceRefundAdvance       = "/v3/ecommerce/refunds/%s/return-advance" // refund_id 垫付退款回补 POST
+	v3CommerceRefundAdvanceResult = "/v3/ecommerce/refunds/%s/return-advance" // refund_id 查询垫付回补结果 GET
 
 	// 特约商户进件申请单状态
 	ApplyStateEditing       = "APPLYMENT_STATE_EDITTING"        // 编辑中

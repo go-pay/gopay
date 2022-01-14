@@ -15,7 +15,7 @@ func TestClient_SystemOauthToken(t *testing.T) {
 	bm.Set("code", "3a06216ac8f84b8c93507bb9774bWX11")
 
 	// 发起请求
-	aliRsp, err := client.SystemOauthToken(bm)
+	aliRsp, err := client.SystemOauthToken(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.SystemOauthToken(%+v),error:%+v", bm, err)
 		return
@@ -32,7 +32,7 @@ func TestClient_OpenAuthTokenApp(t *testing.T) {
 		Set("code", "866185490c4e40efa9f71efea6766X02")
 
 	// 发起请求
-	aliRsp, err := client.OpenAuthTokenApp(bm)
+	aliRsp, err := client.OpenAuthTokenApp(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.OpenAuthTokenApp(%+v),error:%+v", bm, err)
 		return
@@ -48,7 +48,7 @@ func TestClient_UserInfoAuth(t *testing.T) {
 		Set("state", "init")
 
 	// 发起请求
-	aliRsp, err := client.UserInfoAuth(bm)
+	aliRsp, err := client.UserInfoAuth(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.UserInfoAuth(%+v),error:%+v", bm, err)
 		return
@@ -58,7 +58,7 @@ func TestClient_UserInfoAuth(t *testing.T) {
 
 func TestClient_UserInfoShare(t *testing.T) {
 	// 发起请求
-	aliRsp, err := client.UserInfoShare("auth_token")
+	aliRsp, err := client.UserInfoShare(ctx, "auth_token")
 	if err != nil {
 		xlog.Errorf("client.UserInfoShare(),error:%+v", err)
 		return
@@ -79,7 +79,7 @@ func TestClient_PublicCertDownload(t *testing.T) {
 	bm.Set("alipay_cert_sn", "52c63ed47b57c049b4bc9bea9da02c2a")
 
 	// 发起请求
-	aliRsp, err := client.PublicCertDownload(bm)
+	aliRsp, err := client.PublicCertDownload(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.UserInfoShare(),error:%+v", err)
 		return

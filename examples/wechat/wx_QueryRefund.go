@@ -26,7 +26,7 @@ func QueryRefund() {
 		Set("sign_type", wechat.SignType_MD5)
 
 	//请求申请退款
-	wxRsp, resBm, err := client.QueryRefund(bm)
+	wxRsp, resBm, err := client.QueryRefund(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return

@@ -16,8 +16,8 @@ import (
 	"github.com/go-pay/gopay/pkg/xpem"
 )
 
-// V3VerifySign 微信V3 版本验签（同步/异步）
-//	wxPubKeyContent：微信平台证书公钥内容，通过client.GetPlatformCerts() 获取
+// Deprecated
+//	推荐使用 wechat.V3VerifySignByPK()
 func V3VerifySign(timestamp, nonce, signBody, sign, wxPubKeyContent string) (err error) {
 	publicKey, err := xpem.DecodePublicKey([]byte(wxPubKeyContent))
 	if err != nil {
@@ -29,7 +29,21 @@ func V3VerifySign(timestamp, nonce, signBody, sign, wxPubKeyContent string) (err
 	h := sha256.New()
 	h.Write([]byte(str))
 	if err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
-		return fmt.Errorf("verify sign failed: %+v", err)
+		return fmt.Errorf("verify sign failed: %w", err)
+	}
+	return nil
+}
+
+// 微信V3 版本验签（同步/异步）
+//	wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKey() 获取
+func V3VerifySignByPK(timestamp, nonce, signBody, sign string, wxPublicKey *rsa.PublicKey) (err error) {
+	str := timestamp + "\n" + nonce + "\n" + signBody + "\n"
+	signBytes, _ := base64.StdEncoding.DecodeString(sign)
+
+	h := sha256.New()
+	h.Write([]byte(str))
+	if err = rsa.VerifyPKCS1v15(wxPublicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
+		return fmt.Errorf("verify sign failed: %w", err)
 	}
 	return nil
 }
@@ -130,7 +144,7 @@ func (c *ClientV3) rsaSign(str string) (string, error) {
 	h.Write([]byte(str))
 	result, err := rsa.SignPKCS1v15(rand.Reader, c.privateKey, crypto.SHA256, h.Sum(nil))
 	if err != nil {
-		return "", fmt.Errorf("rsa.SignPKCS1v15(),err:%+v", err)
+		return "", fmt.Errorf("rsa.SignPKCS1v15(),err:%w", err)
 	}
 	return base64.StdEncoding.EncodeToString(result), nil
 }
@@ -145,7 +159,7 @@ func (c *ClientV3) verifySyncSign(si *SignInfo) (err error) {
 			h := sha256.New()
 			h.Write([]byte(str))
 			if err = rsa.VerifyPKCS1v15(c.wxPublicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
-				return fmt.Errorf("verify sign failed: %+v", err)
+				return fmt.Errorf("verify sign failed: %w", err)
 			}
 			return nil
 		}

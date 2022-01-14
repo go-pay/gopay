@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -14,7 +15,7 @@ import (
 //	Code = 0 is success
 //	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_0_1.shtml
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_0_1.shtml
-func (c *ClientV3) V3FavorMediaUploadImage(fileName, fileSha256 string, img *util.File) (wxRsp *MarketMediaUploadRsp, err error) {
+func (c *ClientV3) V3FavorMediaUploadImage(ctx context.Context, fileName, fileSha256 string, img *util.File) (wxRsp *MarketMediaUploadRsp, err error) {
 	bmFile := make(gopay.BodyMap)
 	bmFile.Set("filename", fileName).Set("sha256", fileSha256)
 	authorization, err := c.authorization(MethodPost, v3FavorMediaUploadImage, bmFile)
@@ -26,7 +27,7 @@ func (c *ClientV3) V3FavorMediaUploadImage(fileName, fileSha256 string, img *uti
 	bm.SetBodyMap("meta", func(bm gopay.BodyMap) {
 		bm.Set("filename", fileName).Set("sha256", fileSha256)
 	}).SetFormFile("file", img)
-	res, si, bs, err := c.doProdPostFile(bm, v3FavorMediaUploadImage, authorization)
+	res, si, bs, err := c.doProdPostFile(ctx, bm, v3FavorMediaUploadImage, authorization)
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"crypto/rsa"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -149,7 +150,7 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
 	defer req.Body.Close()
 	if err != nil {
-		return nil, fmt.Errorf("read request body error:%+v", err)
+		return nil, fmt.Errorf("read request body error:%w", err)
 	}
 	si := &SignInfo{
 		HeaderTimestamp: req.Header.Get(HeaderTimestamp),
@@ -160,16 +161,25 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 	}
 	notifyReq = &V3NotifyReq{SignInfo: si}
 	if err = json.Unmarshal(bs, notifyReq); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s,%#v)：%+v", string(bs), notifyReq, err)
+		return nil, fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), notifyReq, err)
 	}
 	return notifyReq, nil
 }
 
-// 异步通知验签
-//	wxPubKeyContent 是通过client.GetPlatformCerts()接口向微信获取的微信平台公钥证书内容
+// Deprecated
+//	推荐使用 VerifySignByPK()
 func (v *V3NotifyReq) VerifySign(wxPkContent string) (err error) {
 	if v.SignInfo != nil {
 		return V3VerifySign(v.SignInfo.HeaderTimestamp, v.SignInfo.HeaderNonce, v.SignInfo.SignBody, v.SignInfo.HeaderSignature, wxPkContent)
+	}
+	return errors.New("verify notify sign, bug SignInfo is nil")
+}
+
+// 异步通知验签
+//	wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKey() 获取
+func (v *V3NotifyReq) VerifySignByPK(wxPublicKey *rsa.PublicKey) (err error) {
+	if v.SignInfo != nil {
+		return V3VerifySignByPK(v.SignInfo.HeaderTimestamp, v.SignInfo.HeaderNonce, v.SignInfo.SignBody, v.SignInfo.HeaderSignature, wxPublicKey)
 	}
 	return errors.New("verify notify sign, bug SignInfo is nil")
 }
@@ -180,7 +190,7 @@ func (v *V3NotifyReq) DecryptCipherText(apiV3Key string) (result *V3DecryptResul
 		result, err = V3DecryptNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
 		}
 		return result, nil
 	}
@@ -193,7 +203,7 @@ func (v *V3NotifyReq) DecryptPartnerCipherText(apiV3Key string) (result *V3Decry
 		result, err = V3DecryptPartnerNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
 		}
 		return result, nil
 	}
@@ -206,7 +216,7 @@ func (v *V3NotifyReq) DecryptRefundCipherText(apiV3Key string) (result *V3Decryp
 		result, err = V3DecryptRefundNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
 		}
 		return result, nil
 	}
@@ -219,7 +229,7 @@ func (v *V3NotifyReq) DecryptPartnerRefundCipherText(apiV3Key string) (result *V
 		result, err = V3DecryptPartnerRefundNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
 		}
 		return result, nil
 	}
@@ -232,7 +242,7 @@ func (v *V3NotifyReq) DecryptCombineCipherText(apiV3Key string) (result *V3Decry
 		result, err = V3DecryptCombineNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
 		}
 		return result, nil
 	}
@@ -245,7 +255,7 @@ func (v *V3NotifyReq) DecryptScoreCipherText(apiV3Key string) (result *V3Decrypt
 		result, err = V3DecryptScoreNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
 		}
 		return result, nil
 	}
@@ -258,7 +268,7 @@ func (v *V3NotifyReq) DecryptProfitShareCipherText(apiV3Key string) (result *V3D
 		result, err = V3DecryptProfitShareNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%+v)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
 		}
 		return result, nil
 	}
@@ -266,8 +276,8 @@ func (v *V3NotifyReq) DecryptProfitShareCipherText(apiV3Key string) (result *V3D
 }
 
 // Deprecated
-// 解析微信回调请求的参数到 gopay.BodyMap
 //	暂时不推荐此方法，请使用 wechat.V3ParseNotify()
+//	解析微信回调请求的参数到 gopay.BodyMap
 func V3ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
 	defer req.Body.Close()
@@ -277,7 +287,7 @@ func V3ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	}
 	bm = make(gopay.BodyMap)
 	if err = json.Unmarshal(bs, &bm); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%+v", string(bs), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return bm, nil
 }

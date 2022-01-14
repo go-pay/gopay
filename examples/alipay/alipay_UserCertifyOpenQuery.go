@@ -28,7 +28,7 @@ func UserCertifyOpenQuery() {
 	bm.Set("certify_id", "OC201809253000000393900404029253")
 
 	//发起请求
-	aliRsp, err := client.UserCertifyOpenQuery(bm)
+	aliRsp, err := client.UserCertifyOpenQuery(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

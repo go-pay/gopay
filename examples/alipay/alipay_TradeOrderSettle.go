@@ -27,13 +27,21 @@ func TradeOrderSettle() {
 	bm.Set("trade_no", "2019072522001484690549776067")
 
 	var listParams []*alipay.RoyaltyDetailInfoPojo
-	listParams = append(listParams, &alipay.RoyaltyDetailInfoPojo{"transfer", "2088802095984694", "userId", "userId", "2088102363632794", "0.01", "分账给2088102363632794"})
+	listParams = append(listParams, &alipay.RoyaltyDetailInfoPojo{
+		RoyaltyType:  "transfer",
+		TransOut:     "2088802095984694",
+		TransOutType: "userId",
+		TransInType:  "userId",
+		TransIn:      "2088102363632794",
+		Amount:       "0.01",
+		Desc:         "分账给2088102363632794",
+	})
 
 	bm.Set("royalty_parameters", listParams)
 	xlog.Debug("listParams:", bm.GetString("royalty_parameters"))
 
 	//发起交易结算接口
-	aliRsp, err := client.TradeOrderSettle(bm)
+	aliRsp, err := client.TradeOrderSettle(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

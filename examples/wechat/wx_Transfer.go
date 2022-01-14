@@ -16,7 +16,7 @@ func Transfer() {
 	//    isProd：是否是正式环境（企业转账到个人账户，默认正式环境）
 	client := wechat.NewClient("wxdaa2ab9ef87b5497", "1368139502", "GFDS8j98rewnmgl45wHTt980jg543abc", false)
 
-	err := client.AddCertFilePath("iguiyu_cert/apiclient_cert.pem", "iguiyu_cert/apiclient_key.pem", "iguiyu_cert/apiclient_cert.p12")
+	err := client.AddCertPkcs12FileContent([]byte("apiclient_cert.p12 content"))
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -35,7 +35,7 @@ func Transfer() {
 
 	// 企业向微信用户个人付款（不支持沙箱环境）
 	//    body：参数Body
-	wxRsp, err := client.Transfer(bm)
+	wxRsp, err := client.Transfer(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return

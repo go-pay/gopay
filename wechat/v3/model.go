@@ -3,10 +3,9 @@ package wechat
 type OrderNoType uint8
 
 type PlatformCertRsp struct {
-	Code     int                 `json:"-"`
-	SignInfo *SignInfo           `json:"-"`
-	Certs    []*PlatformCertItem `json:"certs"`
-	Error    string              `json:"-"`
+	Code  int                 `json:"-"`
+	Certs []*PlatformCertItem `json:"certs"`
+	Error string              `json:"-"`
 }
 
 type EmptyRsp struct {
@@ -365,12 +364,28 @@ type TransferQueryRsp struct {
 	Error    string         `json:"-"`
 }
 
+// 微信批次单号查询批次单（服务商） Rsp
+type PartnerTransferQueryRsp struct {
+	Code     int                   `json:"-"`
+	SignInfo *SignInfo             `json:"-"`
+	Response *PartnerTransferQuery `json:"response,omitempty"`
+	Error    string                `json:"-"`
+}
+
 // 微信明细单号查询明细单 Rsp
-type TransferDetailQueryRsp struct {
+type TransferDetailRsp struct {
 	Code     int                  `json:"-"`
 	SignInfo *SignInfo            `json:"-"`
 	Response *TransferDetailQuery `json:"response,omitempty"`
 	Error    string               `json:"-"`
+}
+
+// 微信明细单号查询明细单（服务商） Rsp
+type PartnerTransferDetailRsp struct {
+	Code     int                    `json:"-"`
+	SignInfo *SignInfo              `json:"-"`
+	Response *PartnerTransferDetail `json:"response,omitempty"`
+	Error    string                 `json:"-"`
 }
 
 // 商家批次单号查询批次单 Rsp
@@ -381,12 +396,28 @@ type TransferMerchantQueryRsp struct {
 	Error    string                 `json:"-"`
 }
 
+// 商家批次单号查询批次单（服务商） Rsp
+type PartnerTransferMerchantQueryRsp struct {
+	Code     int                           `json:"-"`
+	SignInfo *SignInfo                     `json:"-"`
+	Response *PartnerTransferMerchantQuery `json:"response,omitempty"`
+	Error    string                        `json:"-"`
+}
+
 // 商家明细单号查询明细单 Rsp
-type TransferMerchantDetailQueryRsp struct {
-	Code     int                          `json:"-"`
-	SignInfo *SignInfo                    `json:"-"`
-	Response *TransferMerchantDetailQuery `json:"response,omitempty"`
-	Error    string                       `json:"-"`
+type TransferMerchantDetailRsp struct {
+	Code     int                     `json:"-"`
+	SignInfo *SignInfo               `json:"-"`
+	Response *TransferMerchantDetail `json:"response,omitempty"`
+	Error    string                  `json:"-"`
+}
+
+// 商家明细单号查询明细单（服务商） Rsp
+type PartnerTransferMerchantDetailRsp struct {
+	Code     int                            `json:"-"`
+	SignInfo *SignInfo                      `json:"-"`
+	Response *PartnerTransferMerchantDetail `json:"response,omitempty"`
+	Error    string                         `json:"-"`
 }
 
 // 转账电子回单申请受理 Rsp
@@ -749,6 +780,158 @@ type PartnershipsListRsp struct {
 	Error    string            `json:"-"`
 }
 
+// 二级商户进件 Rsp
+type EcommerceApplyRsp struct {
+	Code     int             `json:"-"`
+	SignInfo *SignInfo       `json:"-"`
+	Response *EcommerceApply `json:"response,omitempty"`
+	Error    string          `json:"-"`
+}
+
+// 查询申请状态 Rsp
+type EcommerceApplyStatusRsp struct {
+	Code     int                   `json:"-"`
+	SignInfo *SignInfo             `json:"-"`
+	Response *EcommerceApplyStatus `json:"response,omitempty"`
+	Error    string                `json:"-"`
+}
+
+// 点金计划管理 Rsp
+type GoldPlanManageRsp struct {
+	Code     int             `json:"-"`
+	SignInfo *SignInfo       `json:"-"`
+	Response *GoldPlanManage `json:"response,omitempty"`
+	Error    string          `json:"-"`
+}
+
+// 特约商户余额提现 Rsp
+type WithdrawRsp struct {
+	Code     int       `json:"-"`
+	SignInfo *SignInfo `json:"-"`
+	Response *Withdraw `json:"response,omitempty"`
+	Error    string    `json:"-"`
+}
+
+// 查询特约商户提现状态 Rsp
+type WithdrawStatusRsp struct {
+	Code     int             `json:"-"`
+	SignInfo *SignInfo       `json:"-"`
+	Response *WithdrawStatus `json:"response,omitempty"`
+	Error    string          `json:"-"`
+}
+
+// 请求分账 Rsp
+type EcommerceProfitShareRsp struct {
+	Code     int                   `json:"-"`
+	SignInfo *SignInfo             `json:"-"`
+	Response *EcommerceProfitShare `json:"response,omitempty"`
+	Error    string                `json:"-"`
+}
+
+// 查询分账结果 Rsp
+type EcommerceProfitShareQueryRsp struct {
+	Code     int                        `json:"-"`
+	SignInfo *SignInfo                  `json:"-"`
+	Response *EcommerceProfitShareQuery `json:"response,omitempty"`
+	Error    string                     `json:"-"`
+}
+
+// 请求分账回退 Rsp
+type EcommerceProfitShareReturnRsp struct {
+	Code     int                         `json:"-"`
+	SignInfo *SignInfo                   `json:"-"`
+	Response *EcommerceProfitShareReturn `json:"response,omitempty"`
+	Error    string                      `json:"-"`
+}
+
+// 查询分账回退结果 Rsp
+type EcommerceProfitShareReturnResultRsp struct {
+	Code     int                         `json:"-"`
+	SignInfo *SignInfo                   `json:"-"`
+	Response *EcommerceProfitShareReturn `json:"response,omitempty"`
+	Error    string                      `json:"-"`
+}
+
+// 完结分账 Rsp
+type EcommerceProfitShareFinishRsp struct {
+	Code     int                         `json:"-"`
+	SignInfo *SignInfo                   `json:"-"`
+	Response *EcommerceProfitShareFinish `json:"response,omitempty"`
+	Error    string                      `json:"-"`
+}
+
+// 查询订单剩余待分金额 Rsp
+type EcommerceProfitShareUnsplitAmountRsp struct {
+	Code     int                                `json:"-"`
+	SignInfo *SignInfo                          `json:"-"`
+	Response *EcommerceProfitShareUnsplitAmount `json:"response,omitempty"`
+	Error    string                             `json:"-"`
+}
+
+// 添加分账接收方 Rsp
+type EcommerceProfitShareAddReceiverRsp struct {
+	Code     int                           `json:"-"`
+	SignInfo *SignInfo                     `json:"-"`
+	Response *EcommerceProfitShareReceiver `json:"response,omitempty"`
+	Error    string                        `json:"-"`
+}
+
+// 删除分账接收方 Rsp
+type EcommerceProfitShareDeleteReceiverRsp struct {
+	Code     int                           `json:"-"`
+	SignInfo *SignInfo                     `json:"-"`
+	Response *EcommerceProfitShareReceiver `json:"response,omitempty"`
+	Error    string                        `json:"-"`
+}
+
+// 请求补差 Rsp
+type EcommerceSubsidiesRsp struct {
+	Code     int                 `json:"-"`
+	SignInfo *SignInfo           `json:"-"`
+	Response *EcommerceSubsidies `json:"response,omitempty"`
+	Error    string              `json:"-"`
+}
+
+// 请求补差回退 Rsp
+type EcommerceSubsidiesReturnRsp struct {
+	Code     int                       `json:"-"`
+	SignInfo *SignInfo                 `json:"-"`
+	Response *EcommerceSubsidiesReturn `json:"response,omitempty"`
+	Error    string                    `json:"-"`
+}
+
+// 取消补差 Rsp
+type EcommerceSubsidiesCancelRsp struct {
+	Code     int                       `json:"-"`
+	SignInfo *SignInfo                 `json:"-"`
+	Response *EcommerceSubsidiesCancel `json:"response,omitempty"`
+	Error    string                    `json:"-"`
+}
+
+// 申请退款 Rsp
+type EcommerceRefundRsp struct {
+	Code     int              `json:"-"`
+	SignInfo *SignInfo        `json:"-"`
+	Response *EcommerceRefund `json:"response,omitempty"`
+	Error    string           `json:"-"`
+}
+
+// 申请退款 Rsp
+type EcommerceRefundQueryRsp struct {
+	Code     int                   `json:"-"`
+	SignInfo *SignInfo             `json:"-"`
+	Response *EcommerceRefundQuery `json:"response,omitempty"`
+	Error    string                `json:"-"`
+}
+
+// 垫付退款回补 Rsp
+type EcommerceRefundAdvanceRsp struct {
+	Code     int                     `json:"-"`
+	SignInfo *SignInfo               `json:"-"`
+	Response *EcommerceRefundAdvance `json:"response,omitempty"`
+	Error    string                  `json:"-"`
+}
+
 // ==================================分割==================================
 
 type JSAPIPayParams struct {
@@ -857,11 +1040,11 @@ type SceneInfo struct {
 
 type PromotionDetail struct {
 	Amount              int            `json:"amount"`                         // 优惠券面额
-	CouponId            string         `json:"coupon_id"`                      // 券ID
+	CouponId            string         `json:"coupon_id"`                      // 券Id
 	Name                string         `json:"name,omitempty"`                 // 优惠名称
 	Scope               string         `json:"scope,omitempty"`                // 优惠范围：GLOBAL：全场代金券, SINGLE：单品优惠
 	Type                string         `json:"type,omitempty"`                 // 优惠类型：CASH：充值, NOCASH：预充值
-	StockId             string         `json:"stock_id,omitempty"`             // 活动ID
+	StockId             string         `json:"stock_id,omitempty"`             // 活动Id
 	WechatpayContribute int            `json:"wechatpay_contribute,omitempty"` // 微信出资，单位为分
 	MerchantContribute  int            `json:"merchant_contribute,omitempty"`  // 商户出资，单位为分
 	OtherContribute     int            `json:"other_contribute,omitempty"`     // 其他出资，单位为分
@@ -875,7 +1058,7 @@ type GoodsDetail struct {
 	UnitPrice       int    `json:"unit_price"`                  // 商品单价，单位为分
 	DiscountAmount  int    `json:"discount_amount"`             // 商品优惠金额
 	GoodsRemark     string `json:"goods_remark,omitempty"`      // 商品备注信息
-	MerchantGoodsID string `json:"merchant_goods_id,omitempty"` // 商户侧商品编码，服务商模式下无此字段
+	MerchantGoodsId string `json:"merchant_goods_id,omitempty"` // 商户侧商品编码，服务商模式下无此字段
 }
 
 type QueryOrder struct {
@@ -939,9 +1122,9 @@ type DownloadBill struct {
 }
 
 type RefundOrderResponse struct {
-	RefundID            string                        `json:"refund_id"`             // 微信支付退款号
+	RefundId            string                        `json:"refund_id"`             // 微信支付退款号
 	OutRefundNo         string                        `json:"out_refund_no"`         // 商户退款单号
-	TransactionID       string                        `json:"transaction_id"`        // 微信支付系统生成的订单号
+	TransactionId       string                        `json:"transaction_id"`        // 微信支付系统生成的订单号
 	OutTradeNo          string                        `json:"out_trade_no"`          // 商户系统内部订单号，只能是数字、大小写字母_-*且在同一个商户号下唯一
 	Channel             string                        `json:"channel"`               // 退款渠道
 	UserReceivedAccount string                        `json:"user_received_account"` // 退款入账账户
@@ -954,9 +1137,9 @@ type RefundOrderResponse struct {
 }
 
 type RefundQueryResponse struct {
-	RefundID            string                        `json:"refund_id"`             // 微信支付退款号
+	RefundId            string                        `json:"refund_id"`             // 微信支付退款号
 	OutRefundNo         string                        `json:"out_refund_no"`         // 商户退款单号
-	TransactionID       string                        `json:"transaction_id"`        // 微信支付系统生成的订单号
+	TransactionId       string                        `json:"transaction_id"`        // 微信支付系统生成的订单号
 	OutTradeNo          string                        `json:"out_trade_no"`          // 商户系统内部订单号，只能是数字、大小写字母_-*且在同一个商户号下唯一
 	Channel             string                        `json:"channel"`               // 退款渠道
 	UserReceivedAccount string                        `json:"user_received_account"` // 退款入账账户
@@ -979,7 +1162,7 @@ type RefundQueryAmount struct {
 }
 
 type RefundQueryPromotionDetail struct {
-	PromotionID  string                    `json:"promotion_id"`           // 券ID，券或立减金额
+	PromotionId  string                    `json:"promotion_id"`           // 券Id，券或立减金额
 	Scope        string                    `json:"scope"`                  // 优惠范围，GLOBAL：全场代金券，SINGLE：单品优惠
 	Type         string                    `json:"type"`                   // 优惠类型，COUPON：代金券，DISCOUNT：优惠券
 	Amount       int                       `json:"amount"`                 // 优惠券面额，用户享受优惠的金额（优惠券面额=微信出资金额+商家出资金额+其他出资方金额），单位为分
@@ -988,8 +1171,8 @@ type RefundQueryPromotionDetail struct {
 }
 
 type RefundQueryGoodsDetail struct {
-	MerchantGoodsID  string `json:"merchant_goods_id"`            // 商户侧商品编码
-	WechatpayGoodsID string `json:"wechatpay_goods_id,omitempty"` // 微信侧商品编码
+	MerchantGoodsId  string `json:"merchant_goods_id"`            // 商户侧商品编码
+	WechatpayGoodsId string `json:"wechatpay_goods_id,omitempty"` // 微信侧商品编码
 	GoodsName        string `json:"goods_name,omitempty"`         // 商品名称
 	UnitPrice        int    `json:"unit_price"`                   // 商品单价金额
 	RefundAmount     int    `json:"refund_amount"`                // 商品退款金额
@@ -1021,10 +1204,10 @@ type PartnerPayer struct {
 }
 
 type ScoreOrderCreate struct {
-	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
+	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号Id。
 	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
 	OutOrderNo          string           `json:"out_order_no"`                // 调用接口提交的商户服务订单号。
-	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
+	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务Id。
 	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
 	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
 	StateDescription    string           `json:"state_description,omitempty"` // 对服务订单"进行中"状态的附加说明。USER_CONFIRM：用户确认，MCH_COMPLETE：商户完结
@@ -1072,9 +1255,9 @@ type Location struct {
 }
 
 type ScoreOrderQuery struct {
-	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
+	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号Id。
 	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
-	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
+	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务Id。
 	OutOrderNo          string           `json:"out_order_no"`                // 调用接口提交的商户服务订单号。
 	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
 	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
@@ -1111,17 +1294,17 @@ type Details struct {
 }
 
 type ScoreOrderCancel struct {
-	Appid      string `json:"appid"`        // 调用接口提交的公众账号ID。
+	Appid      string `json:"appid"`        // 调用接口提交的公众账号Id。
 	Mchid      string `json:"mchid"`        // 调用接口提交的商户号。
-	ServiceId  string `json:"service_id"`   // 调用该接口提交的服务ID。
+	ServiceId  string `json:"service_id"`   // 调用该接口提交的服务Id。
 	OutOrderNo string `json:"out_order_no"` // 调用接口提交的商户服务订单号。
 	OrderId    string `json:"order_id"`     // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
 }
 
 type ScoreOrderModify struct {
-	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
+	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号Id。
 	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
-	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
+	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务Id。
 	OutOrderNo          string           `json:"out_order_no"`                // 调用接口提交的商户服务订单号。
 	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
 	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
@@ -1140,9 +1323,9 @@ type ScoreOrderModify struct {
 }
 
 type ScoreOrderComplete struct {
-	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
+	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号Id。
 	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
-	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
+	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务Id。
 	OutOrderNo          string           `json:"out_order_no"`                // 调用接口提交的商户服务订单号。
 	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
 	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
@@ -1158,17 +1341,17 @@ type ScoreOrderComplete struct {
 }
 
 type ScoreOrderPay struct {
-	Appid      string `json:"appid"`        // 调用接口提交的公众账号ID。
+	Appid      string `json:"appid"`        // 调用接口提交的公众账号Id。
 	Mchid      string `json:"mchid"`        // 调用接口提交的商户号。
-	ServiceId  string `json:"service_id"`   // 调用该接口提交的服务ID。
+	ServiceId  string `json:"service_id"`   // 调用该接口提交的服务Id。
 	OutOrderNo string `json:"out_order_no"` // 调用接口提交的商户服务订单号。
 	OrderId    string `json:"order_id"`     // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
 }
 
 type ScoreOrderSync struct {
-	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
+	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号Id。
 	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
-	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
+	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务Id。
 	OutOrderNo          string           `json:"out_order_no"`                // 调用接口提交的商户服务订单号。
 	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
 	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
@@ -1188,10 +1371,10 @@ type ScoreOrderSync struct {
 }
 
 type ScoreDirectComplete struct {
-	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号ID。
+	Appid               string           `json:"appid"`                       // 调用接口提交的公众账号Id。
 	Mchid               string           `json:"mchid"`                       // 调用接口提交的商户号。
 	OutOrderNo          string           `json:"out_order_no"`                // 调用接口提交的商户服务订单号。
-	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务ID。
+	ServiceId           string           `json:"service_id"`                  // 调用该接口提交的服务Id。
 	OrderId             string           `json:"order_id"`                    // 微信支付服务订单号，每个微信支付服务订单号与商户号下对应的商户服务订单号一一对应。
 	ServiceIntroduction string           `json:"service_introduction"`        // 服务信息，用于介绍本订单所提供的服务。
 	State               string           `json:"state"`                       // 表示当前单据状态。枚举值：CREATED：商户已创建服务订单，DOING：服务订单进行中，DONE：服务订单完成，REVOKED：商户取消服务订单，EXPIRED：服务订单已失效
@@ -1210,9 +1393,9 @@ type ScorePermission struct {
 }
 
 type ScorePermissionQuery struct {
-	Appid                    string `json:"appid"`                               // 调用接口提交的公众账号ID。
+	Appid                    string `json:"appid"`                               // 调用接口提交的公众账号Id。
 	Mchid                    string `json:"mchid"`                               // 调用接口提交的商户号。
-	ServiceId                string `json:"service_id"`                          // 调用该接口提交的服务ID。
+	ServiceId                string `json:"service_id"`                          // 调用该接口提交的服务Id。
 	Openid                   string `json:"openid,omitempty"`                    // 微信用户在商户对应appid下的唯一标识
 	AuthorizationCode        string `json:"authorization_code"`                  // 预授权成功时的授权协议号。
 	AuthorizationState       string `json:"authorization_state"`                 // 标识用户授权服务情况：UNAVAILABLE：用户未授权服务，AVAILABLE：用户已授权服务，UNBINDUSER：未绑定用户（已经预授权但未完成正式授权）
@@ -1222,9 +1405,9 @@ type ScorePermissionQuery struct {
 }
 
 type ScorePermissionOpenidQuery struct {
-	Appid                    string `json:"appid"`                               // 调用接口提交的公众账号ID。
+	Appid                    string `json:"appid"`                               // 调用接口提交的公众账号Id。
 	Mchid                    string `json:"mchid"`                               // 调用接口提交的商户号。
-	ServiceId                string `json:"service_id"`                          // 调用该接口提交的服务ID。
+	ServiceId                string `json:"service_id"`                          // 调用该接口提交的服务Id。
 	Openid                   string `json:"openid,omitempty"`                    // 微信用户在商户对应appid下的唯一标识
 	AuthorizationCode        string `json:"authorization_code"`                  // 预授权成功时的授权协议号。
 	AuthorizationState       string `json:"authorization_state"`                 // 标识用户授权服务情况：UNAVAILABLE：用户未授权服务，AVAILABLE：用户已授权服务，UNBINDUSER：未绑定用户（已经预授权但未完成正式授权）
@@ -1293,11 +1476,11 @@ type ComplaintNotifyUrl struct {
 }
 
 type MediaUpload struct {
-	MediaId string `json:"media_id"` // 微信返回的媒体文件标识ID。
+	MediaId string `json:"media_id"` // 微信返回的媒体文件标识Id。
 }
 
 type ProfitShareOrder struct {
-	SubMchid      string                   `json:"sub_mchid,omitempty"` // 子商户号，即分账的出资商户号【服务商模式】
+	SubMchid      string                   `json:"sub_mchid"`           // 二级商户号
 	TransactionId string                   `json:"transaction_id"`      // 微信订单号
 	OutOrderNo    string                   `json:"out_order_no"`        // 商户分账单号
 	OrderId       string                   `json:"order_id"`            // 微信分账单号
@@ -1315,7 +1498,7 @@ type ProfitShareOrderQuery struct {
 }
 
 type ProfitShareReturn struct {
-	SubMchid    string `json:"sub_mchid,omitempty"`   // 子商户号，分账回退的接收商户，对应原分账出资的分账方商户【服务商模式】
+	SubMchid    string `json:"sub_mchid"`             // 子商户号，分账回退的接收商户，对应原分账出资的分账方商户【服务商模式】
 	OrderId     string `json:"order_id"`              // 微信分账单号，微信系统返回的唯一标识
 	OutOrderNo  string `json:"out_order_no"`          // 商户系统内部的分账单号，在商户系统内部唯一，同一分账单号多次请求等同一次。只能是数字、大小写字母_-|*@
 	OutReturnNo string `json:"out_return_no"`         // 此回退单号是商户在自己后台生成的一个新的回退单号，在商户后台唯一
@@ -1401,11 +1584,11 @@ type DiscountCardApply struct {
 }
 
 type DiscountCardQuery struct {
-	CardId         string `json:"card_id"`          // 先享卡ID，唯一标识一个先享卡。
-	CardTemplateId string `json:"card_template_id"` // 先享卡卡模板ID，唯一定义此资源的标识。
+	CardId         string `json:"card_id"`          // 先享卡Id，唯一标识一个先享卡。
+	CardTemplateId string `json:"card_template_id"` // 先享卡卡模板Id，唯一定义此资源的标识。
 	Openid         string `json:"openid"`           // 微信用户在商户对应appid下的唯一标识
 	OutCardCode    string `json:"out_card_code"`    // 商户领卡号
-	Appid          string `json:"appid"`            // 公众账号ID
+	Appid          string `json:"appid"`            // 公众账号Id
 	Mchid          string `json:"mchid"`            // 商户号
 	TimeRange      *struct {
 		BeginTime string `json:"begin_time"` // 约定开始时间
@@ -1429,7 +1612,7 @@ type PayInformation struct {
 }
 
 type Objective struct {
-	ObjectiveId                string                       `json:"objective_id"`                           // 由先享卡平台生成，唯一标识一个先享卡目标。商户需要记录该目标ID，进行同步用户记录
+	ObjectiveId                string                       `json:"objective_id"`                           // 由先享卡平台生成，唯一标识一个先享卡目标。商户需要记录该目标Id，进行同步用户记录
 	Name                       string                       `json:"name"`                                   // 目标的名称
 	Count                      int                          `json:"count"`                                  // 履约目标需要完成的数量，必须大于0
 	Unit                       string                       `json:"unit"`                                   // 目标的单位
@@ -1439,7 +1622,7 @@ type Objective struct {
 
 type ObjectiveCompletionRecord struct {
 	ObjectiveCompletionSerialNo string `json:"objective_completion_serial_no"` // 目标完成流水号
-	ObjectiveId                 string `json:"objective_id"`                   // 微信先享卡为每个先享卡目标分配的唯一ID
+	ObjectiveId                 string `json:"objective_id"`                   // 微信先享卡为每个先享卡目标分配的唯一Id
 	CompletionTime              string `json:"completion_time"`                // 用户履约行为发生的时间
 	CompletionType              string `json:"completion_type"`                // 目标完成类型： INCREASE：增加数量，DECREASE：减少数量
 	Description                 string `json:"description"`                    // 用户本次履约的描述
@@ -1448,7 +1631,7 @@ type ObjectiveCompletionRecord struct {
 }
 
 type Reward struct {
-	RewardId           string               `json:"reward_id"`                      // 由先享卡平台生成，唯一标识一个先享卡目标。商户需要记录该优惠ID，进行同步用户记录
+	RewardId           string               `json:"reward_id"`                      // 由先享卡平台生成，唯一标识一个先享卡目标。商户需要记录该优惠Id，进行同步用户记录
 	Name               string               `json:"name"`                           // 优惠名称
 	CountType          string               `json:"count_type"`                     // 优惠数量的类型标识：COUNT_UNLIMITED：不限数量，COUNT_LIMIT：有限数量
 	Count              int                  `json:"count"`                          // 本项优惠可使用的数量，必须大于0
@@ -1460,7 +1643,7 @@ type Reward struct {
 
 type RewardUsageRecord struct {
 	RewardUsageSerialNo string `json:"reward_usage_serial_no"` // 优惠使用记录流水号
-	RewardId            string `json:"reward_id"`              // 微信先享卡为每个先享卡优惠分配的唯一ID
+	RewardId            string `json:"reward_id"`              // 微信先享卡为每个先享卡优惠分配的唯一Id
 	UsageTime           string `json:"usage_time"`             // 用户使用优惠的时间
 	UsageType           string `json:"usage_type"`             // 目标完成类型：INCREASE：增加数量，DECREASE：减少数量
 	Description         string `json:"description"`            // 用户获得奖励的描述
@@ -1533,6 +1716,31 @@ type TransferDetail struct {
 	DetailStatus string `json:"detail_status"` // 明细状态：PROCESSING：转账中，SUCCESS：转账成功，FAIL：转账失败
 }
 
+type PartnerTransferQuery struct {
+	SpMchid            string            `json:"sp_mchid"`                       // 微信支付分配的服务商商户号
+	SubMchid           string            `json:"sub_mchid"`                      // 微信支付分配的特约商户号
+	OutBatchNo         string            `json:"out_batch_no"`                   // 商户系统内部的商家批次单号
+	BatchId            string            `json:"batch_id"`                       // 微信批次单号，微信商家转账系统返回的唯一标识
+	SpAppid            string            `json:"sp_appid,omitempty"`             // 微信分配的服务商商户公众账号Id，特约商户授权类型为FUND_AUTHORIZATION_TYPE时才有该字段
+	SubAppid           string            `json:"sub_appid"`                      // 微信分配的特约商户公众账号Id。特约商户appid
+	BatchStatus        string            `json:"batch_status"`                   // 批次状态
+	BatchType          string            `json:"batch_type"`                     // 批次类型
+	AuthorizationType  string            `json:"authorization_type"`             // 特约商户授权类型
+	BatchName          string            `json:"batch_name"`                     // 该笔批量转账的名称
+	BatchRemark        string            `json:"batch_remark"`                   // 转账说明，UTF8编码，最多允许32个字符
+	CloseReason        string            `json:"close_reason,omitempty"`         // 如果批次单状态为“CLOSED”（已关闭），则有关闭原因
+	TotalAmount        int               `json:"total_amount"`                   // 转账金额单位为分
+	TotalNum           int               `json:"total_num"`                      // 一个转账批次单最多发起三千笔转账
+	CreateTime         string            `json:"create_time,omitempty"`          // 批次受理成功时返回
+	UpdateTime         string            `json:"update_time,omitempty"`          // 批次最近一次状态变更的时间
+	SuccessAmount      int               `json:"success_amount,omitempty"`       // 转账成功的金额，单位为分
+	SuccessNum         int               `json:"success_num,omitempty"`          // 转账成功的笔数
+	FailAmount         int               `json:"fail_amount,omitempty"`          // 转账失败的金额，单位为分
+	FailNum            int               `json:"fail_num,omitempty"`             // 转账失败的笔数
+	TransferPurpose    string            `json:"transfer_purpose"`               // 批量转账用途
+	TransferDetailList []*TransferDetail `json:"transfer_detail_list,omitempty"` // 当批次状态为“FINISHED”（已完成），且成功查询到转账明细单时返回
+}
+
 type TransferDetailQuery struct {
 	Mchid          string `json:"mchid"`                 // 微信支付分配的商户号
 	OutBatchNo     string `json:"out_batch_no"`          // 商户系统内部的商家批次单号
@@ -1550,6 +1758,23 @@ type TransferDetailQuery struct {
 	UpdateTime     string `json:"update_time"`           // 明细最后一次状态变更的时间
 }
 
+type PartnerTransferDetail struct {
+	SpMchid        string `json:"sp_mchid"`              // 微信支付分配的服务商商户号
+	OutBatchNo     string `json:"out_batch_no"`          // 商户系统内部的商家批次单号
+	BatchId        string `json:"batch_id"`              // 微信批次单号，微信商家转账系统返回的唯一标识
+	Appid          string `json:"appid"`                 // 申请商户号的appid或商户号绑定的appid（企业号corpid即为此appid）
+	OutDetailNo    string `json:"out_detail_no"`         // 商家明细单号
+	DetailId       string `json:"detail_id"`             // 微信明细单号
+	DetailStatus   string `json:"detail_status"`         // 明细状态：PROCESSING：转账中，SUCCESS：转账成功，FAIL：转账失败
+	TransferAmount int    `json:"transfer_amount"`       // 转账金额单位为分
+	TransferRemark string `json:"transfer_remark"`       // 单条转账备注（微信用户会收到该备注），UTF8编码，最多允许32个字符
+	FailReason     string `json:"fail_reason,omitempty"` // 如果转账失败则有失败原因
+	Openid         string `json:"openid"`                // 用户在直连商户appid下的唯一标识
+	Username       string `json:"username"`              // 收款方姓名（加密）
+	InitiateTime   string `json:"initiate_time"`         // 转账发起的时间
+	UpdateTime     string `json:"update_time"`           // 明细最后一次状态变更的时间
+}
+
 type TransferMerchantQuery struct {
 	TransferBatch      *TransferBatch    `json:"transfer_batch"`                 // 转账批次单基本信息
 	TransferDetailList []*TransferDetail `json:"transfer_detail_list,omitempty"` // 当批次状态为“FINISHED”（已完成），且成功查询到转账明细单时返回
@@ -1557,7 +1782,32 @@ type TransferMerchantQuery struct {
 	Limit              int               `json:"limit,omitempty"`                // 该次请求可返回的最大资源（转账明细单）条数
 }
 
-type TransferMerchantDetailQuery struct {
+type PartnerTransferMerchantQuery struct {
+	SpMchid            string            `json:"sp_mchid"`                       // 微信支付分配的服务商商户号
+	SubMchid           string            `json:"sub_mchid"`                      // 微信支付分配的特约商户号
+	OutBatchNo         string            `json:"out_batch_no"`                   // 商户系统内部的商家批次单号
+	BatchId            string            `json:"batch_id"`                       // 微信批次单号，微信商家转账系统返回的唯一标识
+	SpAppid            string            `json:"sp_appid,omitempty"`             // 微信分配的服务商商户公众账号Id，特约商户授权类型为FUND_AUTHORIZATION_TYPE时才有该字段
+	SubAppid           string            `json:"sub_appid"`                      // 微信分配的特约商户公众账号Id。特约商户appid
+	BatchStatus        string            `json:"batch_status"`                   // 批次状态
+	BatchType          string            `json:"batch_type"`                     // 批次类型
+	AuthorizationType  string            `json:"authorization_type"`             // 特约商户授权类型
+	BatchName          string            `json:"batch_name"`                     // 该笔批量转账的名称
+	BatchRemark        string            `json:"batch_remark"`                   // 转账说明，UTF8编码，最多允许32个字符
+	CloseReason        string            `json:"close_reason,omitempty"`         // 如果批次单状态为“CLOSED”（已关闭），则有关闭原因
+	TotalAmount        int               `json:"total_amount"`                   // 转账金额单位为分
+	TotalNum           int               `json:"total_num"`                      // 一个转账批次单最多发起三千笔转账
+	CreateTime         string            `json:"create_time,omitempty"`          // 批次受理成功时返回
+	UpdateTime         string            `json:"update_time,omitempty"`          // 批次最近一次状态变更的时间
+	SuccessAmount      int               `json:"success_amount,omitempty"`       // 转账成功的金额，单位为分
+	SuccessNum         int               `json:"success_num,omitempty"`          // 转账成功的笔数
+	FailAmount         int               `json:"fail_amount,omitempty"`          // 转账失败的金额，单位为分
+	FailNum            int               `json:"fail_num,omitempty"`             // 转账失败的笔数
+	TransferPurpose    string            `json:"transfer_purpose"`               // 批量转账用途
+	TransferDetailList []*TransferDetail `json:"transfer_detail_list,omitempty"` // 当批次状态为“FINISHED”（已完成），且成功查询到转账明细单时返回
+}
+
+type TransferMerchantDetail struct {
 	OutBatchNo     string `json:"out_batch_no"`          // 商户系统内部的商家批次单号
 	BatchId        string `json:"batch_id"`              // 微信批次单号，微信商家转账系统返回的唯一标识
 	Appid          string `json:"appid"`                 // 申请商户号的appid或商户号绑定的appid（企业号corpid即为此appid）
@@ -1569,6 +1819,23 @@ type TransferMerchantDetailQuery struct {
 	FailReason     string `json:"fail_reason,omitempty"` // 如果转账失败则有失败原因
 	Openid         string `json:"openid"`                // 用户在直连商户appid下的唯一标识
 	UserName       string `json:"user_name"`             // 收款方姓名（加密）
+	InitiateTime   string `json:"initiate_time"`         // 转账发起的时间
+	UpdateTime     string `json:"update_time"`           // 明细最后一次状态变更的时间
+}
+
+type PartnerTransferMerchantDetail struct {
+	SpMchid        string `json:"sp_mchid"`              // 微信支付分配的服务商商户号
+	OutBatchNo     string `json:"out_batch_no"`          // 商户系统内部的商家批次单号
+	BatchId        string `json:"batch_id"`              // 微信批次单号，微信商家转账系统返回的唯一标识
+	Appid          string `json:"appid"`                 // 申请商户号的appid或商户号绑定的appid（企业号corpid即为此appid）
+	OutDetailNo    string `json:"out_detail_no"`         // 商家明细单号
+	DetailId       string `json:"detail_id"`             // 微信明细单号
+	DetailStatus   string `json:"detail_status"`         // 明细状态：PROCESSING：转账中，SUCCESS：转账成功，FAIL：转账失败
+	TransferAmount int    `json:"transfer_amount"`       // 转账金额单位为分
+	TransferRemark string `json:"transfer_remark"`       // 单条转账备注（微信用户会收到该备注），UTF8编码，最多允许32个字符
+	FailReason     string `json:"fail_reason,omitempty"` // 如果转账失败则有失败原因
+	Openid         string `json:"openid"`                // 用户在直连商户appid下的唯一标识
+	Username       string `json:"username"`              // 收款方姓名（加密）
 	InitiateTime   string `json:"initiate_time"`         // 转账发起的时间
 	UpdateTime     string `json:"update_time"`           // 明细最后一次状态变更的时间
 }
@@ -1717,7 +1984,7 @@ type FavorBatchGrant struct {
 }
 
 type FavorBatchStart struct {
-	StockId   string `json:"stock_id"`   // 微信为每个代金券批次分配的唯一ID
+	StockId   string `json:"stock_id"`   // 微信为每个代金券批次分配的唯一Id
 	StartTime string `json:"start_time"` // 生效时间，遵循rfc3339标准格式
 }
 
@@ -1729,7 +1996,7 @@ type FavorBatchList struct {
 }
 
 type FavorBatch struct {
-	StockId            string        `json:"stock_id"`             // 微信为每个代金券批次分配的唯一ID
+	StockId            string        `json:"stock_id"`             // 微信为每个代金券批次分配的唯一Id
 	StockCreatorMchid  string        `json:"stock_creator_mchid"`  // 创建批次的商户号
 	StockName          string        `json:"stock_name"`           // 批次名称
 	Status             string        `json:"status"`               // 批次状态
@@ -1770,7 +2037,7 @@ type CutToMessage struct {
 }
 
 type FavorDetail struct {
-	StockId                 string                   `json:"stock_id"`                  // 微信为每个代金券批次分配的唯一ID
+	StockId                 string                   `json:"stock_id"`                  // 微信为每个代金券批次分配的唯一Id
 	StockCreatorMchid       string                   `json:"stock_creator_mchid"`       // 创建批次的商户号
 	CouponId                string                   `json:"coupon_id"`                 // 微信为代金券唯一分配的id
 	CutToMessage            *CutToMessage            `json:"cut_to_message"`            // 单品优惠特定信息
@@ -2095,13 +2362,13 @@ type PartnershipsBuild struct {
 type Partner struct {
 	Appid      string `json:"appid"`       // 合作方APPID
 	Type       string `json:"type"`        // 合作方类别
-	MerchantId string `json:"merchant_id"` // 合作方商户ID
+	MerchantId string `json:"merchant_id"` // 合作方商户Id
 }
 
 type AuthorizedData struct {
 	BusinessType string   `json:"business_type"` // 授权业务类别
 	Scenarios    []string `json:"scenarios"`     // 授权场景
-	StockId      string   `json:"stock_id"`      // 授权批次ID
+	StockId      string   `json:"stock_id"`      // 授权批次Id
 }
 
 type PartnershipsTerminate struct {
@@ -2122,4 +2389,210 @@ type Partnerships struct {
 	TerminateTime  string          `json:"terminate_time"`  // 终止合作关系时间
 	CreateTime     string          `json:"create_time"`     // 创建时间
 	UpdateTime     string          `json:"update_time"`     // 更新时间
+}
+
+type EcommerceApply struct {
+	ApplymentId  int64  `json:"applyment_id"`
+	OutRequestNo string `json:"out_request_no"`
+}
+
+type EcommerceApplyStatus struct {
+	ApplymentState     string            `json:"applyment_state"`
+	ApplymentStateDesc string            `json:"applyment_state_desc"`
+	SignState          string            `json:"sign_state,omitempty"`
+	SignUrl            string            `json:"sign_url,omitempty"`
+	SubMchid           string            `json:"sub_mchid,omitempty"`
+	AccountValidation  AccountValidation `json:"account_validation"`
+	AuditDetail        []*AuditDetail    `json:"audit_detail,omitempty"`
+	LegalValidationUrl string            `json:"legal_validation_url,omitempty"`
+	OutRequestNo       string            `json:"out_request_no"`
+	ApplymentId        int64             `json:"applyment_id"`
+}
+
+type AccountValidation struct {
+	AccountName              string `json:"account_name"`
+	AccountNo                string `json:"account_no,omitempty"`
+	PayAmount                int    `json:"pay_amount"`
+	DestinationAccountNumber string `json:"destination_account_number"`
+	DestinationAccountName   string `json:"destination_account_name"`
+	DestinationAccountBank   string `json:"destination_account_bank"`
+	City                     string `json:"city"`
+	Remark                   string `json:"remark"`
+	Deadline                 string `json:"deadline"`
+}
+
+type AuditDetail struct {
+	ParamName    string `json:"param_name"`
+	RejectReason string `json:"reject_reason"`
+}
+
+type GoldPlanManage struct {
+	SubMchid string `json:"sub_mchid"`
+}
+
+type Withdraw struct {
+	SubMchid    string `json:"sub_mchid"`              // 服务商特约商户号，由微信支付生成并下发。
+	WithdrawId  string `json:"withdraw_id"`            // 微信支付提现单号
+	AccountType string `json:"account_type,omitempty"` // 出款账户类型
+}
+
+type WithdrawStatus struct {
+	SubMchid      string `json:"sub_mchid"`      // 服务商特约商户号，由微信支付生成并下发。
+	SpMchid       string `json:"sp_mchid"`       // 服务商户号
+	Status        string `json:"status"`         // 提现单状态：CREATE_SUCCESS：受理成功，SUCCESS：提现成功，FAIL：提现失败，REFUND：提现退票，CLOSE：关单，INIT：业务单已创建
+	WithdrawId    string `json:"withdraw_id"`    // 微信支付提现单号
+	OutRequestNo  string `json:"out_request_no"` // 商户提现单号
+	Amount        int    `json:"amount"`         // 提现金额
+	CreateTime    string `json:"create_time"`    // 创建时间
+	UpdateTime    string `json:"update_time"`    // 更新时间
+	Reason        string `json:"reason"`         // 提现失败原因，仅在提现失败、退票、关单时有值
+	Remark        string `json:"remark"`         // 商户对提现单的备注，若发起提现时未传入相应值或输入不合法，则该值为空
+	BankMemo      string `json:"bank_memo"`      // 展示在收款银行系统中的附言，由数字、字母、汉字组成（能否成功展示依赖银行系统支持）。若发起提现时未传入相应值或输入不合法，则该值为空
+	AccountType   string `json:"account_type"`   // 出款账户类型
+	AccountNumber string `json:"account_number"` // 服务商提现入账的银行账号，仅显示后四位。
+	AccountBank   string `json:"account_bank"`   // 服务商提现入账的开户银行
+	BankName      string `json:"bank_name"`      // 服务商提现入账的开户银行全称（含支行）
+}
+
+type EcommerceProfitShare struct {
+	SubMchid      string               `json:"sub_mchid"`           // 二级商户号
+	TransactionId string               `json:"transaction_id"`      // 微信订单号
+	OutOrderNo    string               `json:"out_order_no"`        // 商户分账单号
+	OrderId       string               `json:"order_id"`            // 微信分账单号
+	Status        string               `json:"status"`              // 分账单状态:PROCESSING：处理中,FINISHED：分账完成
+	Receivers     []*EcommerceReceiver `json:"receivers,omitempty"` // 分账接收方列表
+}
+
+type EcommerceReceiver struct {
+	Amount          int    `json:"amount"`                // 分账金额
+	Description     string `json:"description"`           // 分账描述
+	Type            string `json:"type"`                  // 分账接收方类型
+	ReceiverAccount string `json:"receiver_account"`      // 分账接收方帐号
+	ReceiverMchid   string `json:"receiver_mchid"`        // 分账接收商户号
+	Result          string `json:"result"`                // 分账结果,PENDING：待分账,SUCCESS：分账成功,CLOSED：已关闭
+	DetailId        string `json:"detail_id"`             // 分账明细单号
+	FailReason      string `json:"fail_reason,omitempty"` // 分账失败原因ACCOUNT_ABNORMAL : 分账接收账户异常、NO_RELATION : 分账关系已解除、RECEIVER_HIGH_RISK : 高风险接收方、RECEIVER_REAL_NAME_NOT_VERIFIED : 接收方未实名、NO_AUTH : 分账权限已解除
+	FinishTime      string `json:"finish_time"`           // 分账完成时间，遵循rfc3339标准格式，格式为YYYY-MM-DDTHH:mm:ss.sss+TIMEZONE
+}
+
+type EcommerceProfitShareQuery struct {
+	SubMchid          string               `json:"sub_mchid"`                    // 二级商户号
+	TransactionId     string               `json:"transaction_id"`               // 微信订单号
+	OutOrderNo        string               `json:"out_order_no"`                 // 商户分账单号
+	OrderId           string               `json:"order_id"`                     // 微信分账单号
+	Status            string               `json:"status"`                       // 分账单状态:PROCESSING：处理中,FINISHED：分账完成
+	Receivers         []*EcommerceReceiver `json:"receivers,omitempty"`          // 分账接收方列表
+	FinishAmount      int                  `json:"finish_amount,omitempty"`      // 分账完结的分账金额，单位为分，仅当查询分账完结的执行结果时，存在本字段。
+	FinishDescription string               `json:"finish_description,omitempty"` // 分账完结的原因描述，仅当查询分账完结的执行结果时，存在本字段。
+}
+
+type EcommerceProfitShareReturn struct {
+	SubMchid    string `json:"sub_mchid"`             // 二级商户号
+	OrderId     string `json:"order_id"`              // 微信分账单号，微信系统返回的唯一标识
+	OutOrderNo  string `json:"out_order_no"`          // 商户分账单号
+	OutReturnNo string `json:"out_return_no"`         // 商户回退单号
+	ReturnNo    string `json:"return_no"`             // 微信分账回退单号，微信支付系统返回的唯一标识。
+	ReturnMchid string `json:"return_mchid"`          // 只能对原分账请求中成功分给商户接收方进行回退
+	Amount      int    `json:"amount"`                // 需要从分账接收方回退的金额，单位为分，只能为整数
+	Result      string `json:"result"`                // 回退结果: PROCESSING：处理中，SUCCESS：已成功，FAILED：已失败
+	FailReason  string `json:"fail_reason,omitempty"` // 失败原因: ACCOUNT_ABNORMAL : 分账接收方账户异常，TIME_OUT_CLOSED : 超时关单
+	FinishTime  string `json:"finish_time"`           // 分账回退完成时间
+}
+
+type EcommerceProfitShareFinish struct {
+	SubMchid      string `json:"sub_mchid"`      // 二级商户号
+	TransactionId string `json:"transaction_id"` // 微信订单号
+	OutOrderNo    string `json:"out_order_no"`   // 商户分账单号
+	OrderId       string `json:"order_id"`       // 微信分账单号
+}
+
+type EcommerceProfitShareUnsplitAmount struct {
+	TransactionId string `json:"transaction_id"` // 微信订单号
+	UnsplitAmount int    `json:"unsplit_amount"` // 订单剩余待分金额
+}
+
+type EcommerceProfitShareReceiver struct {
+	Type    string `json:"type"`    // 接收方类型:MERCHANT_ID：商户,PERSONAL_OPENID：个人
+	Account string `json:"account"` // 分账接收方帐号
+}
+
+type EcommerceSubsidies struct {
+	SubMchid      string `json:"sub_mchid"`      // 二级商户号
+	TransactionId string `json:"transaction_id"` // 微信订单号
+	SubsidyId     string `json:"subsidy_id"`     // 微信补差单号
+	Description   string `json:"description"`    // 补差描述
+	Amount        int    `json:"amount"`         // 补差金额
+	Result        string `json:"result"`         // 补差单结果
+	SuccessTime   string `json:"success_time"`   // 补差完成时间
+}
+
+type EcommerceSubsidiesReturn struct {
+	SubMchid        string `json:"sub_mchid"`         // 二级商户号
+	TransactionId   string `json:"transaction_id"`    // 微信订单号
+	SubsidyRefundId string `json:"subsidy_refund_id"` // 微信补差回退单号
+	RefundId        string `json:"refund_id"`         // 微信退款单号
+	OutOrderNo      string `json:"out_order_no"`      // 商户补差回退单号
+	Amount          int    `json:"amount"`            // 补差回退金额
+	Description     string `json:"description"`       // 补差回退描述
+	Result          string `json:"result"`            // 补差回退结果
+	SuccessTime     string `json:"success_time"`      // 补差回退完成时间
+}
+
+type EcommerceSubsidiesCancel struct {
+	SubMchid      string `json:"sub_mchid"`      // 二级商户号
+	TransactionId string `json:"transaction_id"` // 微信订单号
+	Result        string `json:"result"`         // 取消补差结果
+	Description   string `json:"description"`    // 取消补差描述
+}
+
+type EcommerceRefund struct {
+	RefundId        string                 `json:"refund_id"`        // 微信支付退款号
+	OutRefundNo     string                 `json:"out_refund_no"`    // 商户退款单号
+	CreateTime      string                 `json:"create_time"`      // 退款创建时间
+	RefundAccount   string                 `json:"refund_account"`   // 退款资金来源
+	Amount          *EcommerceRefundAmount `json:"amount"`           // 金额信息
+	PromotionDetail []*PromotionDetailItem `json:"promotion_detail"` // 优惠退款信息
+}
+
+type EcommerceRefundAmount struct {
+	Refund         int    `json:"refund"`          // 退款金额
+	PayerRefund    int    `json:"payer_refund"`    // 用户退款金额
+	DiscountRefund int    `json:"discount_refund"` // 优惠退款金额
+	Currency       string `json:"currency"`        // 退款币种
+}
+
+type PromotionDetailItem struct {
+	PromotionId  string `json:"promotion_id"`  // 券Id，券或立减金额
+	Scope        string `json:"scope"`         // 优惠范围，GLOBAL：全场代金券，SINGLE：单品优惠
+	Type         string `json:"type"`          // 优惠类型，COUPON：代金券，DISCOUNT：优惠券
+	Amount       int    `json:"amount"`        // 优惠券面额，用户享受优惠的金额（优惠券面额=微信出资金额+商家出资金额+其他出资方金额），单位为分
+	RefundAmount int    `json:"refund_amount"` // 优惠退款金额，单位为分
+}
+
+type EcommerceRefundQuery struct {
+	RefundId            string                 `json:"refund_id"`                // 微信支付退款号
+	OutRefundNo         string                 `json:"out_refund_no"`            // 商户退款单号
+	TransactionId       string                 `json:"transaction_id"`           // 微信支付系统生成的订单号
+	OutTradeNo          string                 `json:"out_trade_no"`             // 商户系统内部订单号，只能是数字、大小写字母_-*且在同一个商户号下唯一
+	Channel             string                 `json:"channel"`                  // 退款渠道
+	UserReceivedAccount string                 `json:"user_received_account"`    // 退款入账账户
+	SuccessTime         string                 `json:"success_time"`             // 退款成功时间
+	CreateTime          string                 `json:"create_time"`              // 退款创建时间
+	Status              string                 `json:"status"`                   // 退款状态
+	RefundAccount       string                 `json:"refund_account,omitempty"` // 退款出资商户
+	FundsAccount        string                 `json:"funds_account"`            // 资金账户
+	Amount              *EcommerceRefundAmount `json:"amount"`                   // 金额信息
+	PromotionDetail     []*PromotionDetailItem `json:"promotion_detail"`         // 优惠退款信息
+}
+
+type EcommerceRefundAdvance struct {
+	RefundId        string `json:"refund_id"`         // 微信支付退款号
+	AdvanceReturnId string `json:"advance_return_id"` // 微信回补单号
+	ReturnAmount    int    `json:"return_amount"`     // 垫付回补金额
+	PayerMchid      string `json:"payer_mchid"`       // 出款方商户号
+	PayerAccount    string `json:"payer_account"`     // 出款方账户
+	PayeeMchid      string `json:"payee_mchid"`       // 入账方商户号
+	PayeeAccount    string `json:"payee_account"`     // 入账方账户
+	Result          string `json:"result"`            // 垫付回补结果
+	SuccessTime     string `json:"success_time"`      // 垫付回补完成时间
 }

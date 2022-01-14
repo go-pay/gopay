@@ -40,7 +40,7 @@ func UserCertifyOpenInit() {
 	bm.Set("merchant_config", merchant)
 
 	//发起请求
-	aliRsp, err := client.UserCertifyOpenInit(bm)
+	aliRsp, err := client.UserCertifyOpenInit(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

@@ -52,6 +52,7 @@ func TestBodyMapSetBodyMap(t *testing.T) {
 	}).Set("7key", "7value").
 		Set("8key", "8value")
 	xlog.Debug("高级用法：", bm) // map[scene_info:map[h5_info:map[type:Wap wap_name:H5测试支付 wap_url:https://www.fmm.ink]]]
+	xlog.Debug("高级用法 JsonBody：", bm.JsonBody())
 }
 
 func TestBodyMapMarshal(t *testing.T) {
@@ -122,10 +123,24 @@ func TestBodyMapMarshalSlice(t *testing.T) {
 
 	bm.Set("receivers", string(bs))
 
+	xlog.Debug("JsonBody:", bm.JsonBody())
 	//receiver := make(BodyMap)
 	//receiver.Set("receiver", string(bs))
 	//
 	//body := receiver.JsonBody()
 	bss, _ := xml.Marshal(bm)
 	xlog.Debug("body:", string(bss))
+}
+
+func TestSliceTest(t *testing.T) {
+	var rs []string
+	rs = append(rs, "SOFTWARE")
+	rs = append(rs, "SECURITY")
+	rs = append(rs, "LOVE_MARRIAGE")
+
+	bm := make(BodyMap)
+	bm.Set("sub_mchid", "2021060717").
+		Set("advertising_industry_filters", rs)
+
+	xlog.Debugf("%s", bm.JsonBody())
 }

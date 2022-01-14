@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha256"
@@ -88,7 +89,7 @@ func (w *Client) addCertFileContentOrPath(certFile, keyFile, pkcs12File interfac
 		return
 	}
 	w.mu.Lock()
-	w.certificate = &config.Certificates[0]
+	w.Certificate = &config.Certificates[0]
 	w.mu.Unlock()
 	return
 }
@@ -97,9 +98,9 @@ func (w *Client) addCertConfig(certFile, keyFile, pkcs12File interface{}) (tlsCo
 	if certFile == nil && keyFile == nil && pkcs12File == nil {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
-		if w.certificate != nil {
+		if w.Certificate != nil {
 			tlsConfig = &tls.Config{
-				Certificates:       []tls.Certificate{*w.certificate},
+				Certificates:       []tls.Certificate{*w.Certificate},
 				InsecureSkipVerify: true,
 			}
 			return tlsConfig, nil
@@ -163,13 +164,13 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File interface{}) error
 	if certFile != nil && keyFile != nil {
 		files := map[string]interface{}{"certFile": certFile, "keyFile": keyFile}
 		for varName, v := range files {
-			switch v.(type) {
+			switch v := v.(type) {
 			case string:
-				if v.(string) == util.NULL {
+				if v == util.NULL {
 					return fmt.Errorf("%s is empty", varName)
 				}
 			case []byte:
-				if len(v.([]byte)) == 0 {
+				if len(v) == 0 {
 					return fmt.Errorf("%s is empty", varName)
 				}
 			default:
@@ -178,13 +179,13 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File interface{}) error
 		}
 		return nil
 	} else if pkcs12File != nil {
-		switch pkcs12File.(type) {
+		switch pkcs12File := pkcs12File.(type) {
 		case string:
-			if pkcs12File.(string) == util.NULL {
+			if pkcs12File == util.NULL {
 				return errors.New("pkcs12File is empty")
 			}
 		case []byte:
-			if len(pkcs12File.([]byte)) == 0 {
+			if len(pkcs12File) == 0 {
 				return errors.New("pkcs12File is empty")
 			}
 		default:
@@ -197,7 +198,7 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File interface{}) error
 }
 
 // 获取微信支付正式环境Sign值
-func getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
+func GetReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
 	var h hash.Hash
 	if signType == SignType_HMAC_SHA256 {
 		h = hmac.New(sha256.New, []byte(apiKey))
@@ -209,12 +210,12 @@ func getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign stri
 }
 
 // 获取微信支付沙箱环境Sign值
-func getSignBoxSign(mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
+func GetSandBoxSign(ctx context.Context, mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
 	var (
 		sandBoxApiKey string
 		h             hash.Hash
 	)
-	if sandBoxApiKey, err = getSanBoxKey(mchId, util.GetRandomString(32), apiKey, SignType_MD5); err != nil {
+	if sandBoxApiKey, err = getSanBoxKey(ctx, mchId, util.GetRandomString(32), apiKey, SignType_MD5); err != nil {
 		return
 	}
 	h = md5.New()
@@ -224,28 +225,28 @@ func getSignBoxSign(mchId, apiKey string, bm gopay.BodyMap) (sign string, err er
 }
 
 // 从微信提供的接口获取：SandboxSignKey
-func getSanBoxKey(mchId, nonceStr, apiKey, signType string) (key string, err error) {
+func getSanBoxKey(ctx context.Context, mchId, nonceStr, apiKey, signType string) (key string, err error) {
 	bm := make(gopay.BodyMap)
 	bm.Set("mch_id", mchId)
 	bm.Set("nonce_str", nonceStr)
 	// 沙箱环境：获取沙箱环境ApiKey
-	if key, err = getSanBoxSignKey(mchId, nonceStr, getReleaseSign(apiKey, signType, bm)); err != nil {
+	if key, err = getSanBoxSignKey(ctx, mchId, nonceStr, GetReleaseSign(apiKey, signType, bm)); err != nil {
 		return
 	}
 	return
 }
 
 // 从微信提供的接口获取：SandboxSignKey
-func getSanBoxSignKey(mchId, nonceStr, sign string) (key string, err error) {
+func getSanBoxSignKey(ctx context.Context, mchId, nonceStr, sign string) (key string, err error) {
 	reqs := make(gopay.BodyMap)
 	reqs.Set("mch_id", mchId)
 	reqs.Set("nonce_str", nonceStr)
 	reqs.Set("sign", sign)
 
 	keyResponse := new(getSignKeyResponse)
-	_, errs := xhttp.NewClient().Type(xhttp.TypeXML).Post(sandboxGetSignKey).SendString(GenerateXml(reqs)).EndStruct(keyResponse)
-	if len(errs) > 0 {
-		return util.NULL, errs[0]
+	_, err = xhttp.NewClient().Type(xhttp.TypeXML).Post(sandboxGetSignKey).SendString(GenerateXml(reqs)).EndStruct(ctx, keyResponse)
+	if err != nil {
+		return util.NULL, err
 	}
 	if keyResponse.ReturnCode == "FAIL" {
 		return util.NULL, errors.New(keyResponse.ReturnMsg)

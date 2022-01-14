@@ -1,11 +1,15 @@
 package wechat
 
 import (
+	"context"
+
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xlog"
 	"github.com/go-pay/gopay/wechat"
 )
+
+var ctx = context.Background()
 
 func Refund() {
 	// client只需要初始化一个，此处为了演示，每个方法都做了初始化
@@ -30,7 +34,7 @@ func Refund() {
 
 	//请求申请退款（沙箱环境下，证书路径参数可传空）
 	//    body：参数Body
-	wxRsp, resBm, err := client.Refund(bm)
+	wxRsp, resBm, err := client.Refund(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return

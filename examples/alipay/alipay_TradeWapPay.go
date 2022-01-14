@@ -24,14 +24,14 @@ func TradeWapPay() {
 		//SetReturnUrl("https://www.fmm.ink").
 		SetNotifyUrl("https://www.fmm.ink")
 	//请求参数
-	body := make(gopay.BodyMap)
-	body.Set("subject", "手机网站测试支付")
-	body.Set("out_trade_no", "GZ201901301040355703")
-	body.Set("quit_url", "https://www.fmm.ink")
-	body.Set("total_amount", "100.00")
-	body.Set("product_code", "QUICK_WAP_WAY")
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "手机网站测试支付")
+	bm.Set("out_trade_no", "GZ201901301040355703")
+	bm.Set("quit_url", "https://www.fmm.ink")
+	bm.Set("total_amount", "100.00")
+	bm.Set("product_code", "QUICK_WAP_WAY")
 	//手机网站支付请求
-	payUrl, err := client.TradeWapPay(body)
+	payUrl, err := client.TradeWapPay(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

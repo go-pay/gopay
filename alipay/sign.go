@@ -61,11 +61,11 @@ A：开发者上传自己的应用公钥证书后，开放平台会为开发者�
 //	返回 err：error 信息
 func GetCertSN(certPathOrData interface{}) (sn string, err error) {
 	var certData []byte
-	switch certPathOrData.(type) {
+	switch certPathOrData := certPathOrData.(type) {
 	case string:
-		certData, err = ioutil.ReadFile(certPathOrData.(string))
+		certData, err = ioutil.ReadFile(certPathOrData)
 	case []byte:
-		certData = certPathOrData.([]byte)
+		certData = certPathOrData
 	default:
 		return util.NULL, errors.New("certPathOrData 证书类型断言错误")
 	}
@@ -100,11 +100,11 @@ func GetRootCertSN(rootCertPathOrData interface{}) (sn string, err error) {
 		certData []byte
 		certEnd  = `-----END CERTIFICATE-----`
 	)
-	switch rootCertPathOrData.(type) {
+	switch rootCertPathOrData := rootCertPathOrData.(type) {
 	case string:
-		certData, err = ioutil.ReadFile(rootCertPathOrData.(string))
+		certData, err = ioutil.ReadFile(rootCertPathOrData)
 	case []byte:
-		certData = rootCertPathOrData.([]byte)
+		certData = rootCertPathOrData
 	default:
 		return util.NULL, errors.New("rootCertPathOrData 断言异常")
 	}

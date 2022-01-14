@@ -1,6 +1,7 @@
 package alipay
 
 import (
+	"context"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rsa"
@@ -115,7 +116,7 @@ func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap
 //	codeOrToken：支付宝授权码或refresh_token
 //	signType：签名方式 RSA 或 RSA2，默认 RSA2
 //	文档：https://opendocs.alipay.com/apis/api_9/alipay.system.oauth.token
-func SystemOauthToken(appId string, privateKey, grantType, codeOrToken, signType string) (rsp *SystemOauthTokenResponse, err error) {
+func SystemOauthToken(ctx context.Context, appId string, privateKey, grantType, codeOrToken, signType string) (rsp *SystemOauthTokenResponse, err error) {
 	key := xrsa.FormatAlipayPrivateKey(privateKey)
 	priKey, err := xpem.DecodePrivateKey([]byte(key))
 	if err != nil {
@@ -134,7 +135,7 @@ func SystemOauthToken(appId string, privateKey, grantType, codeOrToken, signType
 		bm.Set("grant_type", "authorization_code")
 		bm.Set("code", codeOrToken)
 	}
-	if bs, err = systemOauthToken(appId, priKey, bm, "alipay.system.oauth.token", true, signType); err != nil {
+	if bs, err = systemOauthToken(ctx, appId, priKey, bm, "alipay.system.oauth.token", true, signType); err != nil {
 		return
 	}
 	rsp = new(SystemOauthTokenResponse)
@@ -148,7 +149,7 @@ func SystemOauthToken(appId string, privateKey, grantType, codeOrToken, signType
 }
 
 // systemOauthToken 向支付宝发送请求
-func systemOauthToken(appId string, privateKey *rsa.PrivateKey, bm gopay.BodyMap, method string, isProd bool, signType string) (bs []byte, err error) {
+func systemOauthToken(ctx context.Context, appId string, privateKey *rsa.PrivateKey, bm gopay.BodyMap, method string, isProd bool, signType string) (bs []byte, err error) {
 	bm.Set("app_id", appId)
 	bm.Set("method", method)
 	bm.Set("format", "JSON")
@@ -171,9 +172,9 @@ func systemOauthToken(appId string, privateKey *rsa.PrivateKey, bm gopay.BodyMap
 	if !isProd {
 		baseUrl = sandboxBaseUrlUtf8
 	}
-	_, bs, errs := xhttp.NewClient().Type(xhttp.TypeForm).Post(baseUrl).SendString(bm.EncodeURLParams()).EndBytes()
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, bs, err = xhttp.NewClient().Type(xhttp.TypeForm).Post(baseUrl).SendString(bm.EncodeURLParams()).EndBytes(ctx)
+	if err != nil {
+		return nil, err
 	}
 	return bs, nil
 }
@@ -184,7 +185,7 @@ func systemOauthToken(appId string, privateKey *rsa.PrivateKey, bm gopay.BodyMap
 //	signType：签名方式 alipay.RSA 或 alipay.RSA2，默认 RSA2
 //	bizContent：验签时该参数不做任何处理，{任意值}，此参数具体看文档
 //	文档：https://opendocs.alipay.com/apis/api_9/monitor.heartbeat.syn
-func MonitorHeartbeatSyn(appId string, privateKey, signType, bizContent string) (rsp *MonitorHeartbeatSynResponse, err error) {
+func MonitorHeartbeatSyn(ctx context.Context, appId string, privateKey, signType, bizContent string) (rsp *MonitorHeartbeatSynResponse, err error) {
 	key := xrsa.FormatAlipayPrivateKey(privateKey)
 	priKey, err := xpem.DecodePrivateKey([]byte(key))
 	if err != nil {
@@ -211,9 +212,9 @@ func MonitorHeartbeatSyn(appId string, privateKey, signType, bizContent string) 
 	}
 	bm.Set("sign", sign)
 
-	_, bs, errs := xhttp.NewClient().Type(xhttp.TypeForm).Post(baseUrlUtf8).SendString(bm.EncodeURLParams()).EndBytes()
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, bs, err = xhttp.NewClient().Type(xhttp.TypeForm).Post(baseUrlUtf8).SendString(bm.EncodeURLParams()).EndBytes(ctx)
+	if err != nil {
+		return nil, err
 	}
 	rsp = new(MonitorHeartbeatSynResponse)
 	if err = json.Unmarshal(bs, rsp); err != nil {

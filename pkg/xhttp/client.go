@@ -2,6 +2,7 @@ package xhttp
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"encoding/xml"
@@ -12,6 +13,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
+	"sort"
 	"strings"
 	"time"
 
@@ -19,110 +21,20 @@ import (
 )
 
 type Client struct {
-	// A Client is an HTTP client.
-	HttpClient *http.Client
-
-	// Transport specifies the mechanism by which individual
-	// HTTP requests are made.
-	// If nil, DefaultTransport is used.
-	Transport *http.Transport
-
-	// Header contains the request header fields either received
-	// by the server or to be sent by the client.
-	//
-	// If a server received a request with header lines,
-	//
-	//	Host: example.com
-	//	accept-encoding: gzip, deflate
-	//	Accept-Language: en-us
-	//	fOO: Bar
-	//	foo: two
-	//
-	// then
-	//
-	//	Header = map[string][]string{
-	//		"Accept-Encoding": {"gzip, deflate"},
-	//		"Accept-Language": {"en-us"},
-	//		"Foo": {"Bar", "two"},
-	//	}
-	//
-	// For incoming requests, the Host header is promoted to the
-	// Request.Host field and removed from the Header map.
-	//
-	// HTTP defines that header names are case-insensitive. The
-	// request parser implements this by using CanonicalHeaderKey,
-	// making the first character and any characters following a
-	// hyphen uppercase and the rest lowercase.
-	//
-	// For client requests, certain headers such as Content-Length
-	// and Connection are automatically written when needed and
-	// values in Header may be ignored. See the documentation
-	// for the Request.Write method.
-	Header http.Header
-
-	// Timeout specifies a time limit for requests made by this
-	// Client. The timeout includes connection time, any
-	// redirects, and reading the response body. The timer remains
-	// running after Get, Head, Post, or Do return and will
-	// interrupt reading of the Response.Body.
-	//
-	// A Timeout of zero means no timeout.
-	//
-	// The Client cancels requests to the underlying Transport
-	// as if the Request's Context ended.
-	//
-	// For compatibility, the Client will also use the deprecated
-	// CancelRequest method on Transport if found. New
-	// RoundTripper implementations should use the Request's Context
-	// for cancellation instead of implementing CancelRequest.
-	Timeout time.Duration
-
-	// request URL
-	url string
-
-	// For server requests, Host specifies the host on which the
-	// URL is sought. For HTTP/1 (per RFC 7230, section 5.4), this
-	// is either the value of the "Host" header or the host name
-	// given in the URL itself. For HTTP/2, it is the value of the
-	// ":authority" pseudo-header field.
-	// It may be of the form "host:port". For international domain
-	// names, Host may be in Punycode or Unicode form. Use
-	// golang.org/x/net/idna to convert it to either format if
-	// needed.
-	// To prevent DNS rebinding attacks, server Handlers should
-	// validate that the Host header has a value for which the
-	// Handler considers itself authoritative. The included
-	// ServeMux supports patterns registered to particular host
-	// names and thus protects its registered Handlers.
-	//
-	// For client requests, Host optionally overrides the Host
-	// header to send. If empty, the Request.Write method uses
-	// the value of URL.Host. Host may contain an international
-	// domain name.
-	Host string
-
-	// method request method,
-	method string
-
-	// requestType
-	requestType RequestType
-
-	FormString string
-
-	// ContentType, now only support json, form, form-data, urlencoded, xml
-	ContentType string
-
-	// unmarshalType json or xml
-	unmarshalType string
-
-	// types            map[string]string
+	HttpClient       *http.Client
+	Transport        *http.Transport
+	Header           http.Header
+	Timeout          time.Duration
+	url              string
+	Host             string
+	method           string
+	requestType      RequestType
+	FormString       string
+	ContentType      string
+	unmarshalType    string
 	multipartBodyMap map[string]interface{}
-
-	jsonByte []byte
-
-	Errors []error
-
-	//mu sync.RWMutex
+	jsonByte         []byte
+	err              error
 }
 
 // NewClient , default tls.Config{InsecureSkipVerify: true}
@@ -138,9 +50,8 @@ func NewClient() (client *Client) {
 		},
 		Transport:     nil,
 		Header:        make(http.Header),
-		requestType:   TypeUrlencoded,
+		requestType:   TypeJSON,
 		unmarshalType: string(TypeJSON),
-		Errors:        make([]error, 0),
 	}
 	return client
 }
@@ -168,8 +79,6 @@ func (c *Client) SetHost(host string) (client *Client) {
 func (c *Client) Type(typeStr RequestType) (client *Client) {
 	if _, ok := types[typeStr]; ok {
 		c.requestType = typeStr
-	} else {
-		c.Errors = append(c.Errors, errors.New("Type func: incorrect type \""+string(typeStr)+"\""))
 	}
 	return c
 }
@@ -210,7 +119,7 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 	}
 	bs, err := json.Marshal(v)
 	if err != nil {
-		c.Errors = append(c.Errors, err)
+		c.err = fmt.Errorf("json.Marshal(%+v)：%w", v, err)
 		return c
 	}
 	switch c.requestType {
@@ -218,7 +127,8 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 		c.jsonByte = bs
 	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
 		body := make(map[string]interface{})
-		if err := json.Unmarshal(bs, &body); err != nil {
+		if err = json.Unmarshal(bs, &body); err != nil {
+			c.err = fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), body, err)
 			return c
 		}
 		c.FormString = FormatURLParam(body)
@@ -226,7 +136,6 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 	return c
 }
 
-// 参数可直接传 gopay.BodyMap
 func (c *Client) SendBodyMap(bm map[string]interface{}) (client *Client) {
 	if bm == nil {
 		return c
@@ -235,7 +144,7 @@ func (c *Client) SendBodyMap(bm map[string]interface{}) (client *Client) {
 	case TypeJSON:
 		bs, err := json.Marshal(bm)
 		if err != nil {
-			c.Errors = append(c.Errors, err)
+			c.err = fmt.Errorf("json.Marshal(%+v)：%w", bm, err)
 			return c
 		}
 		c.jsonByte = bs
@@ -245,7 +154,6 @@ func (c *Client) SendBodyMap(bm map[string]interface{}) (client *Client) {
 	return c
 }
 
-// 参数可直接传 gopay.BodyMap
 func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client) {
 	if bm == nil {
 		return c
@@ -254,7 +162,7 @@ func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client
 	case TypeJSON:
 		bs, err := json.Marshal(bm)
 		if err != nil {
-			c.Errors = append(c.Errors, err)
+			c.err = fmt.Errorf("json.Marshal(%+v)：%w", bm, err)
 			return c
 		}
 		c.jsonByte = bs
@@ -277,41 +185,36 @@ func (c *Client) SendString(encodeStr string) (client *Client) {
 	return c
 }
 
-func (c *Client) EndStruct(v interface{}) (res *http.Response, errs []error) {
-	res, bs, errs := c.EndBytes()
-	if errs != nil && len(errs) > 0 {
-		c.Errors = append(c.Errors, errs...)
-		return nil, c.Errors
+func (c *Client) EndStruct(ctx context.Context, v interface{}) (res *http.Response, err error) {
+	res, bs, err := c.EndBytes(ctx)
+	if err != nil {
+		return nil, err
 	}
 	if res.StatusCode != http.StatusOK {
-		c.Errors = append(c.Errors, errors.New(string(bs)))
-		return res, c.Errors
+		return res, fmt.Errorf("StatusCode(%d) != 200", res.StatusCode)
 	}
 
 	switch c.unmarshalType {
 	case string(TypeJSON):
-		err := json.Unmarshal(bs, &v)
+		err = json.Unmarshal(bs, &v)
 		if err != nil {
-			c.Errors = append(c.Errors, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err))
-			return nil, c.Errors
+			return nil, fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), v, err)
 		}
 		return res, nil
 	case string(TypeXML):
-		err := xml.Unmarshal(bs, &v)
+		err = xml.Unmarshal(bs, &v)
 		if err != nil {
-			c.Errors = append(c.Errors, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err))
-			return nil, c.Errors
+			return nil, fmt.Errorf("xml.Unmarshal(%s, %+v)：%w", string(bs), v, err)
 		}
 		return res, nil
 	default:
-		c.Errors = append(c.Errors, errors.New("unmarshalType Type Wrong"))
-		return nil, c.Errors
+		return nil, errors.New("unmarshalType Type Wrong")
 	}
 }
 
-func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
-	if len(c.Errors) > 0 {
-		return nil, nil, c.Errors
+func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, err error) {
+	if c.err != nil {
+		return nil, nil, c.err
 	}
 	var (
 		body io.Reader
@@ -323,7 +226,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 		bw = multipart.NewWriter(body.(io.Writer))
 	}
 
-	req, err := func() (*http.Request, error) {
+	reqFunc := func() (err error) {
 		switch c.method {
 		case GET:
 			switch c.requestType {
@@ -337,7 +240,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 				c.ContentType = types[TypeXML]
 				c.unmarshalType = string(TypeXML)
 			default:
-				return nil, errors.New("Request type Error ")
+				return errors.New("Request type Error ")
 			}
 		case POST, PUT, DELETE, PATCH:
 			switch c.requestType {
@@ -355,72 +258,103 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 					if file, ok := v.(*util.File); ok {
 						fw, err := bw.CreateFormFile(k, file.Name)
 						if err != nil {
-							return nil, err
+							return err
 						}
-						fw.Write(file.Content)
+						_, _ = fw.Write(file.Content)
 						continue
 					}
 					// text 参数
 					vs, ok2 := v.(string)
 					if ok2 {
-						bw.WriteField(k, vs)
+						_ = bw.WriteField(k, vs)
 					} else if ss := util.ConvertToString(v); ss != "" {
-						bw.WriteField(k, ss)
+						_ = bw.WriteField(k, ss)
 					}
 				}
-				bw.Close()
+				_ = bw.Close()
 				c.ContentType = bw.FormDataContentType()
 			case TypeXML:
 				body = strings.NewReader(c.FormString)
 				c.ContentType = types[TypeXML]
 				c.unmarshalType = string(TypeXML)
 			default:
-				return nil, errors.New("Request type Error ")
+				return errors.New("Request type Error ")
 			}
 		default:
-			return nil, errors.New("Only support GET and POST and PUT and DELETE ")
+			return errors.New("Only support GET and POST and PUT and DELETE ")
 		}
 
-		req, err := http.NewRequest(c.method, c.url, body)
+		req, err := http.NewRequestWithContext(ctx, c.method, c.url, body)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		req.Header = c.Header
 		req.Header.Set("Content-Type", c.ContentType)
 		if c.Transport != nil {
 			c.HttpClient.Transport = c.Transport
 		}
-		return req, nil
-	}()
-	if err != nil {
-		c.Errors = append(c.Errors, err)
-		return nil, nil, c.Errors
+		if c.Host != "" {
+			req.Host = c.Host
+		}
+		if c.Timeout > 0 {
+			c.HttpClient.Timeout = c.Timeout
+		}
+		res, err = c.HttpClient.Do(req)
+		if err != nil {
+			return err
+		}
+		defer res.Body.Close()
+		bs, err = ioutil.ReadAll(io.LimitReader(res.Body, int64(5<<20))) // default 5MB change the size you want
+		if err != nil {
+			return err
+		}
+		return nil
 	}
 
-	if c.Timeout != time.Duration(0) {
-		c.HttpClient.Timeout = c.Timeout
-	}
-	if c.Host != "" {
-		req.Host = c.Host
-	}
-	res, err = c.HttpClient.Do(req)
-	if err != nil {
-		c.Errors = append(c.Errors, err)
-		return nil, nil, c.Errors
-	}
-	defer res.Body.Close()
-	bs, err = ioutil.ReadAll(io.LimitReader(res.Body, int64(5<<20))) // default 5MB change the size you want
-	if err != nil {
-		c.Errors = append(c.Errors, err)
-		return nil, nil, c.Errors
+	if err = reqFunc(); err != nil {
+		return nil, nil, err
 	}
 	return res, bs, nil
 }
 
 func FormatURLParam(body map[string]interface{}) (urlParam string) {
-	v := url.Values{}
-	for key, value := range body {
-		v.Add(key, value.(string))
+	var (
+		buf  strings.Builder
+		keys []string
+	)
+	for k := range body {
+		keys = append(keys, k)
 	}
-	return v.Encode()
+	sort.Strings(keys)
+	for _, k := range keys {
+		v, ok := body[k].(string)
+		if !ok {
+			v = convertToString(body[k])
+		}
+		if v != "" {
+			buf.WriteString(url.QueryEscape(k))
+			buf.WriteByte('=')
+			buf.WriteString(url.QueryEscape(v))
+			buf.WriteByte('&')
+		}
+	}
+	if buf.Len() <= 0 {
+		return ""
+	}
+	return buf.String()[:buf.Len()-1]
+}
+
+func convertToString(v interface{}) (str string) {
+	if v == nil {
+		return ""
+	}
+	var (
+		bs  []byte
+		err error
+	)
+	if bs, err = json.Marshal(v); err != nil {
+		return ""
+	}
+	str = string(bs)
+	return
 }

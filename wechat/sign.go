@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"crypto/hmac"
 	"crypto/md5"
 	"crypto/sha256"
@@ -31,7 +32,7 @@ func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) 
 		bm := bean.(gopay.BodyMap)
 		bodySign := bm.GetString("sign")
 		bm.Remove("sign")
-		return getReleaseSign(apiKey, signType, bm) == bodySign, nil
+		return GetReleaseSign(apiKey, signType, bm) == bodySign, nil
 	}
 
 	bs, err := json.Marshal(bean)
@@ -44,7 +45,7 @@ func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) 
 	}
 	bodySign := bm.GetString("sign")
 	bm.Remove("sign")
-	return getReleaseSign(apiKey, signType, bm) == bodySign, nil
+	return GetReleaseSign(apiKey, signType, bm) == bodySign, nil
 }
 
 // GetMiniPaySign JSAPI支付，统一下单获取支付参数后，再次计算出小程序用的paySign
@@ -195,7 +196,7 @@ func GetParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string) {
 //	mchId：商户ID
 //	ApiKey：API秘钥值
 //	返回参数 sign：通过Appid、MchId、ApiKey和BodyMap中的参数计算出的Sign值
-func GetSanBoxParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
+func GetSanBoxParamSign(ctx context.Context, appId, mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
 	bm.Set("appid", appId)
 	bm.Set("mch_id", mchId)
 	bm.Set("sign_type", SignType_MD5)
@@ -204,7 +205,7 @@ func GetSanBoxParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign str
 		sandBoxApiKey string
 		hashMd5       hash.Hash
 	)
-	if sandBoxApiKey, err = getSanBoxKey(mchId, util.GetRandomString(32), apiKey, SignType_MD5); err != nil {
+	if sandBoxApiKey, err = getSanBoxKey(ctx, mchId, util.GetRandomString(32), apiKey, SignType_MD5); err != nil {
 		return
 	}
 	hashMd5 = md5.New()

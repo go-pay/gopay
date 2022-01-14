@@ -1,3 +1,84 @@
+版本号：Release 1.5.69
+修改记录：
+   (1) 微信V3：修改 client.V3RefundQuery()、增加入参参数，适配 服务商 模式
+   (2) 微信V3：修复 client.V3Apply4SubSubmit()，接口路由修复
+   (3) gopay：BodyMap 新增 Unmarshal() 方法，解析数据到结构体、数组指针
+
+版本号：Release 1.5.68
+修改记录：
+   (1) 微信V3：修复 client.V3ComplaintResponse()、client.V3ComplaintComplete()， complaintId 参数类型错误问题
+   (2) 微信V3：新增 电商收付通（分账）相关接口，详情查看v3文档最下方的接口列表
+   (3) 微信V3：新增 电商收付通（补差）相关接口，详情查看v3文档最下方的接口列表
+   (4) 微信V3：新增 电商收付通（退款）相关接口，详情查看v3文档最下方的接口列表
+   (5) 微信V3：返回参数中字段，ID写法全部改写为Id写法
+
+版本号：Release 1.5.67
+修改记录：
+   (1) 微信V3：配合微信文档修改，拆分服务商 批量转账 相关接口，接口如下：
+   (2) 微信V3：新增 client.V3PartnerTransfer()
+   (3) 微信V3：新增 client.V3PartnerTransferQuery()
+   (4) 微信V3：新增 client.V3PartnerTransferDetail()
+   (5) 微信V3：新增 client.V3PartnerTransferMerchantQuery()
+   (6) 微信V3：新增 client.V3PartnerTransferMerchantDetail()
+   (7) 微信V3：新增 client.V3Withdraw()
+   (8) 微信V3：新增 client.V3WithdrawStatus()
+   (9) 微信V3：新增 client.V3WithdrawDownloadErrBill()
+   (10) 微信V3：修改 V3TransferDetailQuery() => V3TransferDetail()
+   (11) 微信V3：修改 V3TransferMerchantDetailQuery() => V3TransferMerchantDetail()
+
+版本号：Release 1.5.66
+修改记录：
+   (1) 微信V3：fix bug that `{"code":"PARAM_ERROR","message":"平台证书序列号Wechatpay-Serial错误"}`
+
+版本号：Release 1.5.65
+修改记录：
+   (1) 微信V3：新增 client.V3EcommerceApply()，二级商户进件
+   (2) 微信V3：新增 client.V3EcommerceApplyStatus()，查询申请状态
+   (3) 微信V3：新增 client.V3GoldPlanManage()，点金计划管理
+   (4) 微信V3：新增 client.V3GoldPlanBillManage()，商家小票管理
+   (5) 微信V3：新增 client.V3GoldPlanFilterManage()，同业过滤标签管理
+   (6) 微信V3：新增 client.V3GoldPlanOpenAdShow()，开通广告展示
+   (7) 微信V3：新增 client.V3GoldPlanCloseAdShow()，关闭广告展示
+   (8) 微信V3：公有化 wechat.GetReleaseSign()、wechat.GetSandBoxSign() 方法
+   (9) 微信V3：修改 client.V3PartnerCloseOrder() 入参参数
+   (10) GoPay：一些小修改优化
+
+版本号：Release 1.5.64
+修改记录：
+   (1) xhttp：恢复 xhttp
+
+版本号：Release 1.5.63
+修改记录：
+   (1) GoPay：部分代码优化
+   (2) xhttp：xhttp client 优化，支持自定义client，默认还是使用标准 http.Client
+
+版本号：Release 1.5.62
+修改记录：
+   (1) 微信V3：client 内 WxSerialNo、ApiV3Key 公有化
+   (2) 微信V3：client 提供新方法 client.WxPublicKey() 直接获取 微信平台公钥
+   (3) 微信V3：wechat 提供新方法 wechat.V3VerifySignByPK()，不再推荐使用 wechat.V3VerifySign()
+   (4) 微信V3：V3NotifyReq 提供新方法 notify.VerifySignByPK()，不再推荐使用 notify.VerifySign()
+   (5) 微信V3：整理微信v3说明文档
+
+版本号：Release 1.5.61
+修改记录：
+   (1) gopay：更新 xhttp pkg, 方法全部增加 context 传递
+
+版本号：Release 1.5.60
+修改记录：
+   (1) 微信V3：不再推荐使用 client.SetPlatformCert() 方法
+   (2) 微信V3：新增 client.GetAndSelectNewestCert() 方法
+   (3) 微信V3：重构 client.AutoVerifySign() 方法
+   (4) QQ：新增 qq.GetAccessToken() 方法
+   (5) QQ：新增 qq.GetOpenId() 方法
+   (6) QQ：新增 qq.GetUserInfo() 方法
+
+版本号：Release 1.5.59
+修改记录：
+   (1) 微信V3：证书获取方法返回结构体，去除 SignInfo 字段
+   (2) gopay：BodyMap，EncodeURLParams 方法稍作调整
+   (3) PayPal：PayPal支付能力接入（订单、支付）
+
 版本号：Release 1.5.58
 修改记录：
    (1) 微信V3：新增 client.V3FavorMediaUploadImage() 图片上传(营销专用)

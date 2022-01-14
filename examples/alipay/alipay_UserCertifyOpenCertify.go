@@ -28,7 +28,7 @@ func UserCertifyOpenCertify() {
 	bm.Set("certify_id", "OC201809253000000393900404029253")
 
 	//发起请求
-	certifyUrl, err := client.UserCertifyOpenCertify(bm)
+	certifyUrl, err := client.UserCertifyOpenCertify(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

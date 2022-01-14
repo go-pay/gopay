@@ -24,10 +24,10 @@ func TradeCancel() {
 		SetNotifyUrl("https://www.fmm.ink")
 
 	//请求参数
-	body := make(gopay.BodyMap)
-	body.Set("out_trade_no", "GYWX201901301040355706100457")
+	bm := make(gopay.BodyMap)
+	bm.Set("out_trade_no", "GYWX201901301040355706100457")
 	//撤销支付订单
-	aliRsp, err := client.TradeCancel(body)
+	aliRsp, err := client.TradeCancel(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

@@ -7,20 +7,24 @@
 
 package wechat
 
-import "github.com/go-pay/gopay/pkg/xhttp"
+import (
+	"context"
+
+	"github.com/go-pay/gopay/pkg/xhttp"
+)
 
 // GetOauth2AccessToken 微信第三方登录，code 换取 access_token
 //	appId：应用唯一标识，在微信开放平台提交应用审核通过后获得
 //	appSecret：应用密钥AppSecret，在微信开放平台提交应用审核通过后获得
 //	code：App用户换取access_token的code
 //	文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html
-func GetOauth2AccessToken(appId, appSecret, code string) (accessToken *Oauth2AccessToken, err error) {
+func GetOauth2AccessToken(ctx context.Context, appId, appSecret, code string) (accessToken *Oauth2AccessToken, err error) {
 	accessToken = new(Oauth2AccessToken)
 	url := "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type=authorization_code"
 
-	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, accessToken)
+	if err != nil {
+		return nil, err
 	}
 	return accessToken, nil
 }
@@ -29,13 +33,13 @@ func GetOauth2AccessToken(appId, appSecret, code string) (accessToken *Oauth2Acc
 //	appId：应用唯一标识，在微信开放平台提交应用审核通过后获得
 //	refreshToken：填写通过获取 access_token 获取到的 refresh_token 参数
 //	文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html
-func RefreshOauth2AccessToken(appId, refreshToken string) (accessToken *Oauth2AccessToken, err error) {
+func RefreshOauth2AccessToken(ctx context.Context, appId, refreshToken string) (accessToken *Oauth2AccessToken, err error) {
 	accessToken = new(Oauth2AccessToken)
 	url := "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=" + appId + "&grant_type=refresh_token&refresh_token=" + refreshToken
 
-	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, accessToken)
+	if err != nil {
+		return nil, err
 	}
 	return accessToken, nil
 }
@@ -44,13 +48,13 @@ func RefreshOauth2AccessToken(appId, refreshToken string) (accessToken *Oauth2Ac
 //	accessToken：调用接口凭证
 //	openid：普通用户标识，对该公众帐号唯一，获取 access_token 是获取的
 //	文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Authorized_API_call_UnionID.html
-func CheckOauth2AccessToken(accessToken, openid string) (result *CheckAccessTokenRsp, err error) {
+func CheckOauth2AccessToken(ctx context.Context, accessToken, openid string) (result *CheckAccessTokenRsp, err error) {
 	result = new(CheckAccessTokenRsp)
 	url := "https://api.weixin.qq.com/sns/auth?access_token=" + accessToken + "&openid=" + openid
 
-	_, errs := xhttp.NewClient().Get(url).EndStruct(result)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, result)
+	if err != nil {
+		return nil, err
 	}
 	return result, nil
 }
@@ -60,56 +64,56 @@ func CheckOauth2AccessToken(accessToken, openid string) (result *CheckAccessToke
 //	openId：用户的OpenID
 //	lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
 //	文档：https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Authorized_API_call_UnionID.html
-func GetOauth2UserInfo(accessToken, openId string, lang ...string) (userInfo *Oauth2UserInfo, err error) {
+func GetOauth2UserInfo(ctx context.Context, accessToken, openId string, lang ...string) (userInfo *Oauth2UserInfo, err error) {
 	userInfo = new(Oauth2UserInfo)
 	url := "https://api.weixin.qq.com/sns/userinfo?access_token=" + accessToken + "&openid=" + openId
 	if len(lang) == 1 {
 		url += "&lang=" + lang[0]
 	}
-	_, errs := xhttp.NewClient().Get(url).EndStruct(userInfo)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, userInfo)
+	if err != nil {
+		return nil, err
 	}
 	return userInfo, nil
 }
 
 // Deprecated
 // 请替换 GetOauth2AccessToken 使用
-func GetAppLoginAccessToken(appId, appSecret, code string) (accessToken *Oauth2AccessToken, err error) {
+func GetAppLoginAccessToken(ctx context.Context, appId, appSecret, code string) (accessToken *Oauth2AccessToken, err error) {
 	accessToken = new(Oauth2AccessToken)
 	url := "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type=authorization_code"
 
-	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, accessToken)
+	if err != nil {
+		return nil, err
 	}
 	return accessToken, nil
 }
 
 // Deprecated
 // 请替换 RefreshOauth2AccessToken 使用
-func RefreshAppLoginAccessToken(appId, refreshToken string) (accessToken *RefreshAppLoginAccessTokenRsp, err error) {
+func RefreshAppLoginAccessToken(ctx context.Context, appId, refreshToken string) (accessToken *RefreshAppLoginAccessTokenRsp, err error) {
 	accessToken = new(RefreshAppLoginAccessTokenRsp)
 	url := "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=" + appId + "&grant_type=refresh_token&refresh_token=" + refreshToken
 
-	_, errs := xhttp.NewClient().Get(url).EndStruct(accessToken)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, accessToken)
+	if err != nil {
+		return nil, err
 	}
 	return accessToken, nil
 }
 
 // Deprecated
 // 推荐使用 GetOauth2UserInfo
-func GetUserInfoOpen(accessToken, openId string, lang ...string) (userInfo *Oauth2UserInfo, err error) {
+func GetUserInfoOpen(ctx context.Context, accessToken, openId string, lang ...string) (userInfo *Oauth2UserInfo, err error) {
 	userInfo = new(Oauth2UserInfo)
 	url := "https://api.weixin.qq.com/sns/userinfo?access_token=" + accessToken + "&openid=" + openId
 	if len(lang) == 1 {
 		url += "&lang=" + lang[0]
 	}
-	_, errs := xhttp.NewClient().Get(url).EndStruct(userInfo)
-	if len(errs) > 0 {
-		return nil, errs[0]
+	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, userInfo)
+	if err != nil {
+		return nil, err
 	}
 	return userInfo, nil
 }

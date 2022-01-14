@@ -1,16 +1,17 @@
 package alipay
 
 import (
+	"testing"
+
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xlog"
-	"testing"
 )
 
 func TestAntMerchantShopModify(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 
-	aliRsp, err := client.AntMerchantShopModify(bm)
+	aliRsp, err := client.AntMerchantShopModify(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.AntMerchantShopModify(%+v),error:%+v", bm, err)
 		return
@@ -33,7 +34,7 @@ func TestAntMerchantShopCreate(t *testing.T) {
 	bm.Set("ip_role_id", "2088301155943087")
 	bm.Set("shop_name", "肯德基中关村店")
 
-	aliRsp, err := client.AntMerchantShopCreate(bm)
+	aliRsp, err := client.AntMerchantShopCreate(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.AntMerchantShopCreate(%+v),error:%+v", bm, err)
 		return
@@ -56,7 +57,7 @@ func TestAntMerchantShopConsult(t *testing.T) {
 	bm.Set("ip_role_id", "2088301155943087")
 	bm.Set("shop_name", "肯德基中关村店")
 
-	aliRsp, err := client.AntMerchantShopConsult(bm)
+	aliRsp, err := client.AntMerchantShopConsult(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.AntMerchantShopConsult(%+v),error:%+v", bm, err)
 		return
@@ -69,7 +70,7 @@ func TestAntMerchantOrderQuery(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("order_id", "2017112200502000000004754299")
 
-	aliRsp, err := client.AntMerchantOrderQuery(bm)
+	aliRsp, err := client.AntMerchantOrderQuery(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.AntMerchantOrderQuery(%+v),error:%+v", bm, err)
 		return
@@ -84,7 +85,7 @@ func TestAntMerchantShopQuery(t *testing.T) {
 	bm.Set("store_id", "NO0001")
 	bm.Set("ip_role_id", "2088301155943087")
 
-	aliRsp, err := client.AntMerchantShopQuery(bm)
+	aliRsp, err := client.AntMerchantShopQuery(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.AntMerchantShopQuery(%+v),error:%+v", bm, err)
 		return
@@ -99,7 +100,7 @@ func TestAntMerchantShopClose(t *testing.T) {
 	bm.Set("store_id", "NO0001")
 	bm.Set("ip_role_id", "2088301155943087")
 
-	aliRsp, err := client.AntMerchantShopClose(bm)
+	aliRsp, err := client.AntMerchantShopClose(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.AntMerchantShopClose(%+v),error:%+v", bm, err)
 		return

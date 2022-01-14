@@ -1,10 +1,10 @@
 package alipay
 
 import (
-	"github.com/go-pay/gopay/pkg/util"
 	"testing"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xlog"
 )
 
@@ -17,7 +17,7 @@ func TestZhimaCreditEpSceneRatingInitialize(t *testing.T) {
 	bm.Set("out_order_no", "201805301527674106562F0000954216")
 	bm.Set("user_id", "2088302248028263")
 
-	aliRsp, err := client.ZhimaCreditEpSceneRatingInitialize(bm)
+	aliRsp, err := client.ZhimaCreditEpSceneRatingInitialize(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditEpSceneRatingInitialize(%+v),error:%+v", bm, err)
 		return
@@ -34,7 +34,7 @@ func TestZhimaCreditEpSceneFulfillmentSync(t *testing.T) {
 	bm.Set("biz_time", "2018-12-06 18:53:59")
 	bm.Set("biz_ext_param", "{\"total_amount\":\"32890\"}")
 
-	aliRsp, err := client.ZhimaCreditEpSceneFulfillmentSync(bm)
+	aliRsp, err := client.ZhimaCreditEpSceneFulfillmentSync(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditEpSceneFulfillmentSync(%+v),error:%+v", bm, err)
 		return
@@ -52,7 +52,7 @@ func TestZhimaCreditEpSceneAgreementUse(t *testing.T) {
 	bm.Set("provision_code", "P$ZMSCCO_5_1_1$00001")
 	bm.Set("biz_ext_param", "{\"total_amount\":\"32890\"}")
 
-	aliRsp, err := client.ZhimaCreditEpSceneAgreementUse(bm)
+	aliRsp, err := client.ZhimaCreditEpSceneAgreementUse(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditEpSceneAgreementUse(%+v),error:%+v", bm, err)
 		return
@@ -68,7 +68,7 @@ func TestZhimaCreditEpSceneAgreementCancel(t *testing.T) {
 	bm.Set("out_order_no", util.GetRandomString(64))
 	bm.Set("biz_time", "2018-12-06 18:53:59")
 
-	aliRsp, err := client.ZhimaCreditEpSceneAgreementCancel(bm)
+	aliRsp, err := client.ZhimaCreditEpSceneAgreementCancel(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditEpSceneAgreementCancel(%+v),error:%+v", bm, err)
 		return
@@ -86,7 +86,7 @@ func TestZhimaCreditEpSceneFulfillmentlistSync(t *testing.T) {
 		bm.Set("biz_time", "2018-12-06 18:53:59")
 		bm.Set("biz_ext_param", "{\"total_amount\":\"32890\"}")
 	})
-	aliRsp, err := client.ZhimaCreditEpSceneFulfillmentlistSync(bm)
+	aliRsp, err := client.ZhimaCreditEpSceneFulfillmentlistSync(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditEpSceneFulfillmentlistSync(%+v),error:%+v", bm, err)
 		return
@@ -125,7 +125,7 @@ func TestZhimaCreditPeZmgoCumulationSync(t *testing.T) {
 			bm.Set("discount_amount", "8.75")
 		})
 	})
-	aliRsp, err := client.ZhimaCreditPeZmgoCumulationSync(bm)
+	aliRsp, err := client.ZhimaCreditPeZmgoCumulationSync(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditPeZmgoCumulationSync(%+v),error:%+v", bm, err)
 		return
@@ -168,7 +168,7 @@ func TestZhimaMerchantZmgoCumulateSync(t *testing.T) {
 		bm.Set("discount_amount", "8.75")
 	})
 
-	aliRsp, err := client.ZhimaMerchantZmgoCumulateSync(bm)
+	aliRsp, err := client.ZhimaMerchantZmgoCumulateSync(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaMerchantZmgoCumulateSync(%+v),error:%+v", bm, err)
 		return
@@ -189,7 +189,7 @@ func TestZhimaMerchantZmgoCumulateQuery(t *testing.T) {
 	bm.Set("page_no", "1")
 	bm.Set("page_size", "20")
 
-	aliRsp, err := client.ZhimaMerchantZmgoCumulateQuery(bm)
+	aliRsp, err := client.ZhimaMerchantZmgoCumulateQuery(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaMerchantZmgoCumulateQuery(%+v),error:%+v", bm, err)
 		return
@@ -207,7 +207,7 @@ func TestZhimaCreditPeZmgoBizoptClose(t *testing.T) {
 	bm.Set("out_request_no", "99202005050100930053707258")
 	bm.Set("template_id", "2021012300020903090008858258")
 
-	aliRsp, err := client.ZhimaCreditPeZmgoBizoptClose(bm)
+	aliRsp, err := client.ZhimaCreditPeZmgoBizoptClose(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditPeZmgoBizoptClose(%+v),error:%+v", bm, err)
 		return
@@ -230,7 +230,7 @@ func TestZhimaCreditPeZmgoSettleRefund(t *testing.T) {
 	bm.Set("withhold_plan_no", "ZMGO_WHD2021010510020603410000006001")
 	bm.Set("refund_type", "MEMBER_FEE_REFUND")
 
-	aliRsp, err := client.ZhimaCreditPeZmgoSettleRefund(bm)
+	aliRsp, err := client.ZhimaCreditPeZmgoSettleRefund(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditPeZmgoSettleRefund(%+v),error:%+v", bm, err)
 		return
@@ -261,7 +261,7 @@ func TestZhimaCreditPeZmgoPreorderCreate(t *testing.T) {
 		bm.Set("buyer_id", "11212321121")
 	})
 
-	aliRsp, err := client.ZhimaCreditPeZmgoPreorderCreate(bm)
+	aliRsp, err := client.ZhimaCreditPeZmgoPreorderCreate(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditPeZmgoPreorderCreate(%+v),error:%+v", bm, err)
 		return
@@ -280,7 +280,7 @@ func TestZhimaCreditPeZmgoAgreementUnsign(t *testing.T) {
 	bm.Set("alipay_user_id", "2088302841345600")
 	bm.Set("quit_type", "SETTLE_APPLY_QUIT")
 
-	aliRsp, err := client.ZhimaCreditPeZmgoAgreementUnsign(bm)
+	aliRsp, err := client.ZhimaCreditPeZmgoAgreementUnsign(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditPeZmgoAgreementUnsign(%+v),error:%+v", bm, err)
 		return
@@ -296,7 +296,7 @@ func TestZhimaCreditPeZmgoAgreementQuery(t *testing.T) {
 	bm.Set("agreement_id", "20185513447859192007")
 	bm.Set("alipay_user_id", "2088101117955611")
 
-	aliRsp, err := client.ZhimaCreditPeZmgoAgreementQuery(bm)
+	aliRsp, err := client.ZhimaCreditPeZmgoAgreementQuery(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditPeZmgoAgreementQuery(%+v),error:%+v", bm, err)
 		return
@@ -324,7 +324,7 @@ func TestZhimaCreditPeZmgoSettleUnfreeze(t *testing.T) {
 		bm.Set("quit_type", "SETTLE_APPLY_QUIT")
 	})
 
-	aliRsp, err := client.ZhimaCreditPeZmgoSettleUnfreeze(bm)
+	aliRsp, err := client.ZhimaCreditPeZmgoSettleUnfreeze(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditPeZmgoSettleUnfreeze(%+v),error:%+v", bm, err)
 		return
@@ -346,7 +346,7 @@ func TestZhimaCreditPeZmgoPaysignApply(t *testing.T) {
 	bm.Set("timeout_express", "1m")
 	// 可选
 
-	aliRsp, err := client.ZhimaCreditPeZmgoPaysignApply(bm)
+	aliRsp, err := client.ZhimaCreditPeZmgoPaysignApply(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditPeZmgoPaysignApply(%+v),error:%+v", bm, err)
 		return
@@ -366,7 +366,7 @@ func TestZhimaCreditPeZmgoPaysignConfirm(t *testing.T) {
 	bm.Set("biz_type", "hongbaoqiandao")
 	// 可选
 
-	aliRsp, err := client.ZhimaCreditPeZmgoPaysignConfirm(bm)
+	aliRsp, err := client.ZhimaCreditPeZmgoPaysignConfirm(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCreditPeZmgoPaysignConfirm(%+v),error:%+v", bm, err)
 		return
@@ -394,7 +394,7 @@ func TestZhimaCustomerJobworthAdapterQuery(t *testing.T) {
 		bm.Set("recommend", "5")
 	})
 
-	aliRsp, err := client.ZhimaCustomerJobworthAdapterQuery(bm)
+	aliRsp, err := client.ZhimaCustomerJobworthAdapterQuery(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCustomerJobworthAdapterQuery(%+v),error:%+v", bm, err)
 		return
@@ -424,7 +424,7 @@ func TestZhimaCustomerJobworthSceneUse(t *testing.T) {
 		bm.Set("self_visit", "true")
 	})
 
-	aliRsp, err := client.ZhimaCustomerJobworthSceneUse(bm)
+	aliRsp, err := client.ZhimaCustomerJobworthSceneUse(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.ZhimaCustomerJobworthSceneUse(%+v),error:%+v", bm, err)
 		return

@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -12,7 +13,7 @@ import (
 //	注意：本接口会提交一些敏感信息，需调用 client.V3EncryptText() 进行加密
 //	Code = 0 is success
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_1.shtml
-func (c *ClientV3) V3Apply4SubSubmit(bm gopay.BodyMap) (*Apply4SubSubmitRsp, error) {
+func (c *ClientV3) V3Apply4SubSubmit(ctx context.Context, bm gopay.BodyMap) (*Apply4SubSubmitRsp, error) {
 	if err := bm.CheckEmptyError(
 		"business_code", "contact_info", "subject_info",
 		"business_info", "settlement_info", "bank_account_info"); err != nil {
@@ -23,7 +24,7 @@ func (c *ClientV3) V3Apply4SubSubmit(bm gopay.BodyMap) (*Apply4SubSubmitRsp, err
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, v3Apply4SubSubmit, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, v3Apply4SubSubmit, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -44,13 +45,13 @@ func (c *ClientV3) V3Apply4SubSubmit(bm gopay.BodyMap) (*Apply4SubSubmitRsp, err
 // 通过业务申请编号查询申请状态API
 //	Code = 0 is success
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_2.shtml
-func (c *ClientV3) V3Apply4SubQueryByBusinessCode(businessCode string) (*Apply4SubQueryRsp, error) {
+func (c *ClientV3) V3Apply4SubQueryByBusinessCode(ctx context.Context, businessCode string) (*Apply4SubQueryRsp, error) {
 	uri := fmt.Sprintf(v3Apply4SubQueryByBusinessCode, businessCode)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdGet(uri, authorization)
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -71,13 +72,13 @@ func (c *ClientV3) V3Apply4SubQueryByBusinessCode(businessCode string) (*Apply4S
 // 通过申请单号查询申请状态API
 //	Code = 0 is success
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_2.shtml
-func (c *ClientV3) V3Apply4SubQueryByApplyId(applyId string) (*Apply4SubQueryRsp, error) {
+func (c *ClientV3) V3Apply4SubQueryByApplyId(ctx context.Context, applyId string) (*Apply4SubQueryRsp, error) {
 	uri := fmt.Sprintf(v3Apply4SubQueryByApplyId, applyId)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdGet(uri, authorization)
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +99,8 @@ func (c *ClientV3) V3Apply4SubQueryByApplyId(applyId string) (*Apply4SubQueryRsp
 // 修改结算账号 API
 //	Code = 0 is success
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_3.shtml
-func (c *ClientV3) V3Apply4SubModifySettlement(bm gopay.BodyMap) (*EmptyRsp, error) {
+// 	电商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter7_1_4.shtml
+func (c *ClientV3) V3Apply4SubModifySettlement(ctx context.Context, bm gopay.BodyMap) (*EmptyRsp, error) {
 	if err := bm.CheckEmptyError(
 		"sub_mchid", "account_type", "account_bank", "bank_address_code", "account_number",
 	); err != nil {
@@ -109,7 +111,7 @@ func (c *ClientV3) V3Apply4SubModifySettlement(bm gopay.BodyMap) (*EmptyRsp, err
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(bm, v3Apply4SubModifySettlement, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, v3Apply4SubModifySettlement, authorization)
 	if err != nil {
 		return nil, err
 	}
@@ -126,13 +128,14 @@ func (c *ClientV3) V3Apply4SubModifySettlement(bm gopay.BodyMap) (*EmptyRsp, err
 // 查询结算账户 API
 //	Code = 0 is success
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_4.shtml
-func (c *ClientV3) V3Apply4SubQuerySettlement(subMchId string) (*Apply4SubQuerySettlementRsp, error) {
+// 	电商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter7_1_5.shtml
+func (c *ClientV3) V3Apply4SubQuerySettlement(ctx context.Context, subMchId string) (*Apply4SubQuerySettlementRsp, error) {
 	uri := fmt.Sprintf(v3Apply4SubQuerySettlement, subMchId)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdGet(uri, authorization)
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
 	if err != nil {
 		return nil, err
 	}

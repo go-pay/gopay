@@ -23,12 +23,12 @@ func TradePrecreate() {
 		SetNotifyUrl("https://www.fmm.ink")
 
 	//请求参数
-	body := make(gopay.BodyMap)
-	body.Set("subject", "预创建创建订单")
-	body.Set("out_trade_no", "GZ201907301040355704")
-	body.Set("total_amount", "100")
+	bm := make(gopay.BodyMap)
+	bm.Set("subject", "预创建创建订单")
+	bm.Set("out_trade_no", "GZ201907301040355704")
+	bm.Set("total_amount", "100")
 	//创建订单
-	aliRsp, err := client.TradePrecreate(body)
+	aliRsp, err := client.TradePrecreate(ctx, bm)
 	if err != nil {
 		xlog.Error("err:", err)
 		return

@@ -26,7 +26,7 @@ func TestClient_UserCertifyOpenInit(t *testing.T) {
 	bm.Set("merchant_config", merchant)
 
 	// 发起请求
-	aliRsp, err := client.UserCertifyOpenInit(bm)
+	aliRsp, err := client.UserCertifyOpenInit(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -41,7 +41,7 @@ func TestClient_UserCertifyOpenCertify(t *testing.T) {
 	bm.Set("certify_id", "53827f9d085b3ce43938c6e5915b4729")
 
 	// 发起请求
-	certifyUrl, err := client.UserCertifyOpenCertify(bm)
+	certifyUrl, err := client.UserCertifyOpenCertify(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -56,7 +56,7 @@ func TestClient_UserCertifyOpenQuery(t *testing.T) {
 	bm.Set("certify_id", "OC201809253000000393900404029253")
 
 	// 发起请求
-	aliRsp, err := client.UserCertifyOpenQuery(bm)
+	aliRsp, err := client.UserCertifyOpenQuery(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -73,7 +73,7 @@ func TestUserAgreementExecutionplanModify(t *testing.T) {
 	bm.Set("memo", "用户已购买半年包，需延期扣款时间")
 
 	// 发起请求
-	aliRsp, err := client.UserAgreementExecutionplanModify(bm)
+	aliRsp, err := client.UserAgreementExecutionplanModify(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -94,7 +94,7 @@ func TestUserAgreementTransfer(t *testing.T) {
 	})
 
 	// 发起请求
-	aliRsp, err := client.UserAgreementTransfer(bm)
+	aliRsp, err := client.UserAgreementTransfer(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -110,7 +110,7 @@ func TestUserTwostageCommonUse(t *testing.T) {
 	bm.Set("pay_pid", "2088702093900999")
 
 	// 发起请求
-	aliRsp, err := client.UserTwostageCommonUse(bm)
+	aliRsp, err := client.UserTwostageCommonUse(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -126,7 +126,7 @@ func TestUserAuthZhimaorgIdentityApply(t *testing.T) {
 	bm.Set("name", "中国移动有限公司")
 
 	// 发起请求
-	aliRsp, err := client.UserAuthZhimaorgIdentityApply(bm)
+	aliRsp, err := client.UserAuthZhimaorgIdentityApply(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -141,7 +141,7 @@ func TestUserCharityRecordexistQuery(t *testing.T) {
 	bm.Set("user_id", "2088111122223333")
 
 	// 发起请求
-	aliRsp, err := client.UserCharityRecordexistQuery(bm)
+	aliRsp, err := client.UserCharityRecordexistQuery(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -157,7 +157,7 @@ func TestUserAlipaypointSend(t *testing.T) {
 	bm.Set("point_amount", "1")
 
 	// 发起请求
-	aliRsp, err := client.UserAlipaypointSend(bm)
+	aliRsp, err := client.UserAlipaypointSend(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -175,7 +175,7 @@ func TestMemberDataIsvCreate(t *testing.T) {
 	bm.Set("parter_id", "2088902248579233")
 
 	// 发起请求
-	aliRsp, err := client.MemberDataIsvCreate(bm)
+	aliRsp, err := client.MemberDataIsvCreate(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -189,7 +189,7 @@ func TestUserFamilyArchiveQuery(t *testing.T) {
 	bm.Set("archive_token", "2020050200286001170017000004861")
 
 	// 发起请求
-	aliRsp, err := client.UserFamilyArchiveQuery(bm)
+	aliRsp, err := client.UserFamilyArchiveQuery(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -205,7 +205,7 @@ func TestUserFamilyArchiveInitialize(t *testing.T) {
 	bm.Set("redirect_uri", "https://www.alipay.com")
 
 	// 发起请求
-	aliRsp, err := client.UserFamilyArchiveInitialize(bm)
+	aliRsp, err := client.UserFamilyArchiveInitialize(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -221,7 +221,7 @@ func TestUserCertdocCertverifyPreconsult(t *testing.T) {
 	bm.Set("cert_no", "230100199901010001")
 
 	// 发起请求
-	aliRsp, err := client.UserCertdocCertverifyPreconsult(bm)
+	aliRsp, err := client.UserCertdocCertverifyPreconsult(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -234,7 +234,7 @@ func TestUserCertdocCertverifyConsult(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("verify_id", "671ffcda5447bc87e9ed2f669eb143d4")
 	// 发起请求
-	aliRsp, err := client.UserCertdocCertverifyConsult(bm)
+	aliRsp, err := client.UserCertdocCertverifyConsult(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -250,7 +250,7 @@ func TestUserFamilyShareZmgoInitialize(t *testing.T) {
 	bm.Set("template_id", "2019112500020903940000454087")
 	bm.Set("out_request_no", "d0f003fdf57b4983bae5a0d1af2e7744")
 	// 发起请求
-	aliRsp, err := client.UserFamilyShareZmgoInitialize(bm)
+	aliRsp, err := client.UserFamilyShareZmgoInitialize(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -265,7 +265,7 @@ func TestUserDtbankQrcodedataQuery(t *testing.T) {
 	bm.Set("qrcode_id", "QRC884QRC00014990")
 	bm.Set("qrcode_out_id", "18448-000006")
 	// 发起请求
-	aliRsp, err := client.UserDtbankQrcodedataQuery(bm)
+	aliRsp, err := client.UserDtbankQrcodedataQuery(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -278,7 +278,7 @@ func TestUserAlipaypointBudgetlibQuery(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("budget_code", "20201107050844")
 	// 发起请求
-	aliRsp, err := client.UserAlipaypointBudgetlibQuery(bm)
+	aliRsp, err := client.UserAlipaypointBudgetlibQuery(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
