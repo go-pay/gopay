@@ -147,10 +147,6 @@ func (a *Client) TradeQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *Trad
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
-	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)

@@ -123,13 +123,15 @@ func TestClient_TradePay(t *testing.T) {
 }
 
 func TestClient_TradeQuery(t *testing.T) {
+	const outTradeNo = "Xdhxpe4bI5hhXAldhkMiGTZ03Jm9V6V0"
 	// 请求参数
 	bm := make(gopay.BodyMap)
-	bm.Set("out_trade_no", "Xdhxpe4bI5hhXAldhkMiGTZ03Jm9V6V0")
+	bm.Set("out_trade_no", outTradeNo)
 
 	// 查询订单
 	aliRsp, err := client.TradeQuery(ctx, bm)
 	if err != nil {
+		// 在这里得到的是一些非业务相关的错误 例如请求错误、反序列化错误
 		xlog.Error(err)
 		return
 	}
@@ -141,6 +143,17 @@ func TestClient_TradeQuery(t *testing.T) {
 		xlog.Error(err)
 	}
 	xlog.Debug("同步返回验签：", ok)
+
+	if aliRsp.Response.HasBizError() {
+		// 在这里是code != "10000" 的业务错误处理
+		if aliRsp.Response.Code == "40004" && aliRsp.Response.SubCode == "ACQ.TRADE_NOT_EXIST" {
+			xlog.Debugf("order %s not found", outTradeNo)
+			return
+		} else {
+			xlog.Error("unexpected biz error: %s", aliRsp.Response.Error())
+			return
+		}
+	}
 }
 
 func TestClient_TradeWapPay(t *testing.T) {
