@@ -258,6 +258,7 @@ func TestV3TransactionH5(t *testing.T) {
 				})
 		})
 
+	xlog.Infof("%s", bm.JsonBody())
 	// 请求支付下单，成功后得到结果
 	wxRsp, err := client.V3TransactionH5(ctx, bm)
 	if err != nil {

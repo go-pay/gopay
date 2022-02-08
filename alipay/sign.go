@@ -56,21 +56,21 @@ A：开发者上传自己的应用公钥证书后，开放平台会为开发者�
 */
 
 // GetCertSN 获取证书序列号SN
-//	certPathOrData.509证书文件路径(appCertPublicKey.crt、alipayCertPublicKey_RSA2.crt) 或证书 buffer
+//	certPathOrData x509证书文件路径(appCertPublicKey.crt、alipayCertPublicKey_RSA2.crt) 或证书 buffer
 //	返回 sn：证书序列号(app_cert_sn、alipay_cert_sn)
 //	返回 err：error 信息
 func GetCertSN(certPathOrData interface{}) (sn string, err error) {
 	var certData []byte
-	switch certPathOrData := certPathOrData.(type) {
+	switch pathOrData := certPathOrData.(type) {
 	case string:
-		certData, err = ioutil.ReadFile(certPathOrData)
+		certData, err = ioutil.ReadFile(pathOrData)
+		if err != nil {
+			return util.NULL, err
+		}
 	case []byte:
-		certData = certPathOrData
+		certData = pathOrData
 	default:
 		return util.NULL, errors.New("certPathOrData 证书类型断言错误")
-	}
-	if err != nil {
-		return util.NULL, err
 	}
 
 	if block, _ := pem.Decode(certData); block != nil {
@@ -92,7 +92,7 @@ func GetCertSN(certPathOrData interface{}) (sn string, err error) {
 }
 
 // GetRootCertSN 获取root证书序列号SN
-//	rootCertPathOrData.509证书文件路径(alipayRootCert.crt) 或文件 buffer
+//	rootCertPathOrData x509证书文件路径(alipayRootCert.crt) 或文件 buffer
 //	返回 sn：证书序列号(alipay_root_cert_sn)
 //	返回 err：error 信息
 func GetRootCertSN(rootCertPathOrData interface{}) (sn string, err error) {
@@ -100,16 +100,16 @@ func GetRootCertSN(rootCertPathOrData interface{}) (sn string, err error) {
 		certData []byte
 		certEnd  = `-----END CERTIFICATE-----`
 	)
-	switch rootCertPathOrData := rootCertPathOrData.(type) {
+	switch pathOrData := rootCertPathOrData.(type) {
 	case string:
-		certData, err = ioutil.ReadFile(rootCertPathOrData)
+		certData, err = ioutil.ReadFile(pathOrData)
+		if err != nil {
+			return util.NULL, err
+		}
 	case []byte:
-		certData = rootCertPathOrData
+		certData = pathOrData
 	default:
 		return util.NULL, errors.New("rootCertPathOrData 断言异常")
-	}
-	if err != nil {
-		return util.NULL, err
 	}
 
 	pems := strings.Split(string(certData), certEnd)
@@ -182,19 +182,27 @@ func (a *Client) getSignData(bs []byte, alipayCertSN string) (signData string, e
 		indexStart = strings.Index(str, `_response":`)
 		indexEnd   int
 	)
+	indexStart = indexStart + 11
+	bsLen := len(str)
 	if alipayCertSN != "" {
 		// 公钥证书模式
-		indexEnd = strings.Index(str, `,"alipay_cert_sn":`)
-		signData = str[indexStart+11 : indexEnd]
 		if alipayCertSN != a.AliPayPublicCertSN {
-			return signData, errors.New("当前使用的支付宝公钥证书SN与网关响应报文中的SN不匹配")
+			return gopay.NULL, fmt.Errorf("当前使用的支付宝公钥证书SN[%s]与网关响应报文中的SN[%s]不匹配", a.AliPayPublicCertSN, alipayCertSN)
 		}
-		return
+		indexEnd = strings.Index(str, `,"alipay_cert_sn":`)
+		if indexEnd > indexStart && bsLen > indexStart {
+			signData = str[indexStart:indexEnd]
+			return
+		}
+		return gopay.NULL, fmt.Errorf("[%s] parse error", str)
 	}
 	// 普通公钥模式
 	indexEnd = strings.Index(str, `,"sign":`)
-	signData = str[indexStart+11 : indexEnd]
-	return
+	if indexEnd > indexStart && bsLen > indexStart {
+		signData = str[indexStart:indexEnd]
+		return
+	}
+	return gopay.NULL, fmt.Errorf("[%s] parse error", str)
 }
 
 // =============================== 同步验签 ===============================
