@@ -66,6 +66,13 @@ type UserPhone struct {
 	Mobile string `json:"mobile,omitempty"`
 }
 
+type ErrorResponse struct {
+	Code    string `json:"code"`
+	Msg     string `json:"msg"`
+	SubCode string `json:"sub_code,omitempty"`
+	SubMsg  string `json:"sub_msg,omitempty"`
+}
+
 // ===================================================
 type TradePayResponse struct {
 	Response     *TradePay `json:"alipay_trade_pay_response"`

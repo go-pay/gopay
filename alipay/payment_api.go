@@ -124,9 +124,8 @@ func (a *Client) TradeCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *Tra
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
 		return nil, err
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if bizErr := bizErrCheck(aliRsp.Response.ErrorResponse); bizErr != nil {
+		return aliRsp, bizErr
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData

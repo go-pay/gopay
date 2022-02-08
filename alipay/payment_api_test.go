@@ -44,9 +44,15 @@ func TestClient_TradeCreate(t *testing.T) {
 
 	// 创建订单
 	aliRsp, err := client.TradeCreate(ctx, bm)
-	if err != nil {
+	bizErr := AsBizError(err)
+	if err != nil && bizErr == nil {
+		// 这种情况是非业务逻辑错误
 		xlog.Error(err)
 		return
+	}
+	if bizErr != nil {
+		// 在这里处理业务逻辑
+		xlog.Infof("biz error: code: %v, msg: %v", bizErr.Code, bizErr.Msg)
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
 	xlog.Debug("aliRsp.TradeNo:", aliRsp.Response.TradeNo)
@@ -131,7 +137,6 @@ func TestClient_TradeQuery(t *testing.T) {
 	// 查询订单
 	aliRsp, err := client.TradeQuery(ctx, bm)
 	if err != nil {
-		// 在这里得到的是一些非业务相关的错误 例如请求错误、反序列化错误
 		xlog.Error(err)
 		return
 	}
@@ -143,17 +148,6 @@ func TestClient_TradeQuery(t *testing.T) {
 		xlog.Error(err)
 	}
 	xlog.Debug("同步返回验签：", ok)
-
-	if aliRsp.Response.HasBizError() {
-		// 在这里是code != "10000" 的业务错误处理
-		if aliRsp.Response.Code == "40004" && aliRsp.Response.SubCode == "ACQ.TRADE_NOT_EXIST" {
-			xlog.Debugf("order %s not found", outTradeNo)
-			return
-		} else {
-			xlog.Error("unexpected biz error: %s", aliRsp.Response.Error())
-			return
-		}
-	}
 }
 
 func TestClient_TradeWapPay(t *testing.T) {
