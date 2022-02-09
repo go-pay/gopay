@@ -527,4 +527,20 @@ func TestV3Withdraw(t *testing.T) {
 		return
 	}
 	xlog.Debugf("wxRsp: %#v", wxRsp)
+	xlog.Debugf("wxRsp.Response: %#v", wxRsp.Response)
+}
+
+func TestV3BankSearchBank(t *testing.T) {
+	encryptText, err := client.V3EncryptText("6213123456781234")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	wxRsp, err := client.V3BankSearchBank(ctx, encryptText)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debugf("wxRsp: %#v", wxRsp)
+	xlog.Debugf("wxRsp.Response: %#v", wxRsp.Response)
 }

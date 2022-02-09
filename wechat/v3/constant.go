@@ -235,6 +235,14 @@ const (
 	v3CommerceRefundAdvance       = "/v3/ecommerce/refunds/%s/return-advance" // refund_id 垫付退款回补 POST
 	v3CommerceRefundAdvanceResult = "/v3/ecommerce/refunds/%s/return-advance" // refund_id 查询垫付回补结果 GET
 
+	// 银行组件（服务商）
+	v3BankSearchBank          = "/v3/capital/capitallhh/banks/search-banks-by-bank-account" // 获取对私银行卡号开户银行 GET
+	v3BankSearchPersonalList  = "/v3/capital/capitallhh/banks/personal-banking"             // 查询支持个人业务的银行列表 GET
+	v3BankSearchCorporateList = "/v3/capital/capitallhh/banks/corporate-banking"            // 查询支持对公业务的银行列表 GET
+	v3BankSearchProvinceList  = "/v3/capital/capitallhh/areas/provinces"                    // 查询省份列表 GET
+	v3BankSearchCityList      = "/v3/capital/capitallhh/areas/provinces/%d/cities"          // province_code 查询城市列表 GET
+	v3BankSearchBranchList    = "/v3/capital/capitallhh/banks/%s/branches"                  // bank_alias_code 查询支行列表 GET
+
 	// 特约商户进件申请单状态
 	ApplyStateEditing       = "APPLYMENT_STATE_EDITTING"        // 编辑中
 	ApplyStateAuditing      = "APPLYMENT_STATE_AUDITING"        // 审核中
