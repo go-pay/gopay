@@ -211,63 +211,6 @@ return c.String(http.StatusOK, rsp.ToXmlString())
 
 ### 5、公共API（仅部分说明）
 
-官方文档：[code2Session](https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/login/auth.code2Session.html)
-
-button按钮获取手机号码：[button组件文档](https://developers.weixin.qq.com/miniprogram/dev/component/button.html)
-
-微信解密算法文档：[解密算法文档](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html)
-
-```go
-import (
-    "github.com/go-pay/gopay/wechat"
-)
-
-// 获取微信小程序用户的OpenId、SessionKey、UnionId
-//    appId：微信小程序的APPID
-//    appSecret：微信小程序的AppSecret
-//    wxCode：小程序调用wx.login 获取的code
-sessionRsp, err := wechat.Code2Session(appId, appSecret, wxCode)
-
-// ====解密微信加密数据到指定结构体====
-
-//小程序获取手机号
-data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
-iv := "Cds8j3VYoGvnTp1BrjXdJg=="
-session := "lyY4HPQbaOYzZdG+JcYK9w=="
-phone := new(wechat.UserPhone)
-// 解密开放数据
-//    encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
-//    iv：加密算法的初始向量，小程序获取到
-//    sessionKey：会话密钥，通过 wechat.Code2Session() 方法获取到
-//    beanPtr：需要解析到的结构体指针，操作完后，声明的结构体会被赋值
-err := wechat.DecryptOpenDataToStruct(data, iv, session, phone)
-xlog.Debug(*phone)
-// 获取微信小程序用户信息
-sessionKey := "tiihtNczf5v6AKRyjwEUhQ=="
-encryptedData := "CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZMQmRzooG2xrDcvSnxIMXFufNstNGTyaGS9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+3hVbJSRgv+4lGOETKUQz6OYStslQ142dNCuabNPGBzlooOmB231qMM85d2/fV6ChevvXvQP8Hkue1poOFtnEtpyxVLW1zAo6/1Xx1COxFvrc2d7UL/lmHInNlxuacJXwu0fjpXfz/YqYzBIBzD6WUfTIF9GRHpOn/Hz7saL8xz+W//FRAUid1OksQaQx4CMs8LOddcQhULW4ucetDf96JcR3g0gfRK4PC7E/r7Z6xNrXd2UIeorGj5Ef7b1pJAYB6Y5anaHqZ9J6nKEBvB4DnNLIVWSgARns/8wR2SiRS7MNACwTyrGvt9ts8p12PKFdlqYTopNHR1Vf7XjfhQlVsAJdNiKdYmYVoKlaRv85IfVunYzO0IKXsyl7JCUjCpoG20f0a04COwfneQAGGwd5oa+T8yO5hzuyDb/XcxxmK01EpqOyuxINew=="
-iv2 := "r7BXXKkLb8qrSNn05n0qiA=="
-
-// 微信小程序 用户信息
-userInfo := new(wechat.AppletUserInfo)
-err = wechat.DecryptOpenDataToStruct(encryptedData, iv2, sessionKey, userInfo)
-xlog.Debug(*userInfo)
-
-data := "Kf3TdPbzEmhWMuPKtlKxIWDkijhn402w1bxoHL4kLdcKr6jT1jNcIhvDJfjXmJcgDWLjmBiIGJ5acUuSvxLws3WgAkERmtTuiCG10CKLsJiR+AXVk7B2TUQzsq88YVilDz/YAN3647REE7glGmeBPfvUmdbfDzhL9BzvEiuRhABuCYyTMz4iaM8hFjbLB1caaeoOlykYAFMWC5pZi9P8uw=="
-iv := "Cds8j3VYoGvnTp1BrjXdJg=="
-session := "lyY4HPQbaOYzZdG+JcYK9w=="
-    
-// 解密开放数据到 BodyMap
-//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
-//    iv:加密算法的初始向量
-//    sessionKey:会话密钥
-bm, err := wechat.DecryptOpenDataToBodyMap(data, iv, session)
-if err != nil {
-    xlog.Debug("err:", err)
-    return
-}
-xlog.Debug("WeChatUserPhone:", bm)
-```
-
 ---
 
 ## 附录：
@@ -327,16 +270,8 @@ xlog.Debug("WeChatUserPhone:", bm)
 * `wechat.ParseNotify()` => 解析微信支付异步通知的参数
 * `wechat.ParseRefundNotify()` => 解析微信退款异步通知的参数
 * `wechat.VerifySign()` => 微信同步返回参数验签或异步通知参数验签
-* `wechat.Code2Session()` => 登录凭证校验：获取微信用户OpenId、UnionId、SessionKey
-* `wechat.GetAppletAccessToken()` => 获取微信小程序全局唯一后台接口调用凭据
-* `wechat.GetAppletPaidUnionId()` => 微信小程序用户支付完成后，获取该用户的 UnionId，无需用户授权
-* `wechat.GetPublicUserInfo()` => 微信公众号：获取用户基本信息
-* `wechat.GetPublicUserInfoBatch()` => 微信公众号：批量获取用户基本信息
-* `wechat.DecryptOpenDataToStruct()` => 加密数据，解密到指定结构体
-* `wechat.DecryptOpenDataToBodyMap()` => 加密数据，解密到 BodyMap
 * `wechat.GetOpenIdByAuthCode()` => 授权码查询openid
 * `wechat.GetOauth2AccessToken()` => 微信第三方登录，code 换取 access_token
 * `wechat.RefreshOauth2AccessToken()` => 刷新微信第三方登录后，获取到的 access_token
 * `wechat.CheckOauth2AccessToken()` => 检验授权凭证（access_token）是否有效
-* `wechat.GetOauth2UserInfo()` => 微信开放平台：获取用户个人信息
 * `wechat.DecryptRefundNotifyReqInfo()` => 解密微信退款异步通知的加密数据

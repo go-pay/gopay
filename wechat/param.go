@@ -44,14 +44,6 @@ func (w *Client) SetCountry(country Country) (client *Client) {
 	return w
 }
 
-// Deprecated
-// 推荐使用 AddCertPemFileContent() 或 AddCertPemFilePath() 或 AddCertPkcs12FileContent() 或 AddCertPkcs12FilePath()
-// 添加微信证书路径或内容[]byte
-//	注意：只传pem证书或只传pkcs12证书均可，无需3个证书全传
-func (w *Client) AddCertFilePath(certFileContent, keyFileContent, pkcs12FileContent interface{}) (err error) {
-	return w.addCertFileContentOrPath(certFileContent, keyFileContent, pkcs12FileContent)
-}
-
 // 添加微信pem证书文件路径
 //	certFilePath：apiclient_cert.pem 文件路径
 //	keyFilePath：apiclient_key.pem 文件路径

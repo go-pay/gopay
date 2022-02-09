@@ -503,14 +503,6 @@ type RefundNotify struct {
 	RefundRequestSource string `xml:"refund_request_source,omitempty" json:"refund_request_source,omitempty"`
 }
 
-type Code2SessionRsp struct {
-	SessionKey string `json:"session_key,omitempty"` // 会话密钥
-	Openid     string `json:"openid,omitempty"`      // 用户唯一标识
-	Unionid    string `json:"unionid,omitempty"`     // 用户在开放平台的唯一标识符
-	Errcode    int    `json:"errcode,omitempty"`     // 错误码
-	Errmsg     string `json:"errmsg,omitempty"`      // 错误信息
-}
-
 type PaidUnionId struct {
 	Unionid string `json:"unionid,omitempty"` // 用户在开放平台的唯一标识符
 	Errcode int    `json:"errcode,omitempty"` // 错误码
@@ -627,16 +619,6 @@ type Oauth2AccessToken struct {
 type CheckAccessTokenRsp struct {
 	Errcode int    `json:"errcode,omitempty"` // 错误码
 	Errmsg  string `json:"errmsg,omitempty"`  // 错误信息
-}
-
-type RefreshAppLoginAccessTokenRsp struct {
-	AccessToken  string `json:"access_token,omitempty"`
-	ExpiresIn    int    `json:"expires_in,omitempty"`
-	RefreshToken string `json:"refresh_token,omitempty"`
-	Openid       string `json:"openid,omitempty"`
-	Scope        string `json:"scope,omitempty"`
-	Errcode      int    `json:"errcode,omitempty"` // 错误码
-	Errmsg       string `json:"errmsg,omitempty"`  // 错误信息
 }
 
 // ProfitSharingResponse 请求分账返回结果
