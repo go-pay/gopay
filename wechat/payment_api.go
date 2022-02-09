@@ -167,7 +167,7 @@ func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.Bo
 		return nil, fmt.Errorf("aes.NewCipher：%w", err)
 	} else {
 		blockMode = cipher.NewCBCDecrypter(block, ivKey)
-		plainText = make([]byte, len(cipherText))
+		plainText = make([]byte, 0, len(cipherText))
 		blockMode.CryptBlocks(plainText, cipherText)
 		if len(plainText) > 0 {
 			plainText = xaes.PKCS7UnPadding(plainText)

@@ -87,7 +87,7 @@ func DecryptOpenDataToStruct(encryptedData, iv, sessionKey string, beanPtr inter
 		return fmt.Errorf("aes.NewCipher：%w", err)
 	}
 	blockMode = cipher.NewCBCDecrypter(block, ivKey)
-	plainText = make([]byte, len(cipherText))
+	plainText = make([]byte, 0, len(cipherText))
 	blockMode.CryptBlocks(plainText, cipherText)
 	if len(plainText) > 0 {
 		plainText = xaes.PKCS7UnPadding(plainText)
