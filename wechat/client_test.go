@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"os"
 	"testing"
 
@@ -14,6 +15,7 @@ var (
 	appId  = "wxdaa2ab9ef87b5497"
 	mchId  = "1368139502"
 	apiKey = "GFDS8j98rewnmgl45wHTt980jg543wmg"
+	ctx    = context.Background()
 )
 
 func TestMain(m *testing.M) {

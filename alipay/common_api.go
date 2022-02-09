@@ -62,7 +62,7 @@ func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{
 		return errors.New("encryptedData is error")
 	}
 	blockMode = cipher.NewCBCDecrypter(block, ivKey)
-	originData = make([]byte, 0, len(secretData))
+	originData = make([]byte, len(secretData))
 	blockMode.CryptBlocks(originData, secretData)
 	if len(originData) > 0 {
 		originData = xaes.PKCS5UnPadding(originData)
@@ -97,7 +97,7 @@ func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap
 		return nil, errors.New("encryptedData is error")
 	}
 	blockMode = cipher.NewCBCDecrypter(block, ivKey)
-	originData = make([]byte, 0, len(secretData))
+	originData = make([]byte, len(secretData))
 	blockMode.CryptBlocks(originData, secretData)
 	if len(originData) > 0 {
 		originData = xaes.PKCS5UnPadding(originData)

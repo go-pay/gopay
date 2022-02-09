@@ -50,7 +50,7 @@ func (g *Group) do(f func(ctx context.Context) error) {
 	var err error
 	defer func() {
 		if r := recover(); r != nil {
-			buf := make([]byte, 0, 64<<10)
+			buf := make([]byte, 64<<10)
 			buf = buf[:runtime.Stack(buf, false)]
 			err = fmt.Errorf("errgroup: panic recovered: %s\n%s", r, buf)
 		}

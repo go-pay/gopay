@@ -23,7 +23,7 @@ func decrypt(secretData, key []byte) (originByte []byte, err error) {
 	}
 	blockSize := block.BlockSize()
 	blockMode := cipher.NewCBCDecrypter(block, key[:blockSize])
-	originByte = make([]byte, 0, len(secretData))
+	originByte = make([]byte, len(secretData))
 	blockMode.CryptBlocks(originByte, secretData)
 	if len(originByte) == 0 {
 		return nil, errors.New("blockMode.CryptBlocks error")
@@ -38,7 +38,7 @@ func decryptIv(secretData, key, iv []byte) (originByte []byte, err error) {
 	}
 	blockMode := cipher.NewCBCDecrypter(block, iv[:block.BlockSize()])
 
-	originByte = make([]byte, 0, len(secretData))
+	originByte = make([]byte, len(secretData))
 	blockMode.CryptBlocks(originByte, secretData)
 	if len(originByte) == 0 {
 		return nil, errors.New("blockMode.CryptBlocks error")

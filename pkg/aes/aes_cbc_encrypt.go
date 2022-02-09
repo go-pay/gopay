@@ -24,7 +24,7 @@ func encrypt(originData, key []byte) ([]byte, error) {
 	blockMode := cipher.NewCBCEncrypter(block, key[:blockSize])
 
 	originData = PKCS7Padding(originData, blockSize)
-	secretData := make([]byte, 0, len(originData))
+	secretData := make([]byte, len(originData))
 	blockMode.CryptBlocks(secretData, originData)
 	return secretData, nil
 }
@@ -37,7 +37,7 @@ func encryptIv(originData, key, iv []byte) ([]byte, error) {
 	blockMode := cipher.NewCBCEncrypter(block, iv[:block.BlockSize()])
 
 	originData = PKCS7Padding(originData, block.BlockSize())
-	secretData := make([]byte, 0, len(originData))
+	secretData := make([]byte, len(originData))
 	blockMode.CryptBlocks(secretData, originData)
 	return secretData, nil
 }
