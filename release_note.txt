@@ -1,3 +1,7 @@
+版本号：Release 1.5.71
+修改记录：
+   (1) 支付宝：client.UserCertdocCertverifyConsult() 方法，增加 authToken 参数
+
 版本号：Release 1.5.70
 修改记录：
    (1) 微信V2：去除所有微信小程序、公众号相关接口，请使用 wechat-sdk
