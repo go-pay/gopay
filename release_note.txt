@@ -1,6 +1,8 @@
-版本号：Release 1.5.70
+版本号：Release 1.5.71
 修改记录：
    (1) 微信V2：去除所有微信小程序、公众号相关接口，请使用 wechat-sdk
+   (2) 支付宝：client.UserCertdocCertverifyConsult() 方法，增加 authToken 参数
+   (2) 微信V3：新增 银行组件（服务商） 相关接口，详情查看v3文档最下方的接口列表
 
 版本号：Release 1.5.69
 修改记录：

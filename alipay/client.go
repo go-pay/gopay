@@ -235,7 +235,7 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 	if aat != util.NULL {
 		pubBody.Set("app_auth_token", aat)
 	}
-	if method == "alipay.user.info.share" {
+	if len(authToken) > 0 {
 		pubBody.Set("auth_token", authToken[0])
 	}
 	if bodyStr != util.NULL {

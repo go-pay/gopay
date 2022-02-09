@@ -394,9 +394,9 @@ func (a *Client) UserCertdocCertverifyPreconsult(ctx context.Context, bm gopay.B
 
 // alipay.user.certdoc.certverify.consult(实名证件信息比对验证咨询)
 //	文档地址：https://opendocs.alipay.com/apis/api_2/alipay.user.certdoc.certverify.consult
-func (a *Client) UserCertdocCertverifyConsult(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserCertdocCertverifyConsultRsp, err error) {
+func (a *Client) UserCertdocCertverifyConsult(ctx context.Context, bm gopay.BodyMap, authToken string) (aliRsp *UserCertdocCertverifyConsultRsp, err error) {
 	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.user.certdoc.certverify.consult"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.user.certdoc.certverify.consult", authToken); err != nil {
 		return nil, err
 	}
 	aliRsp = new(UserCertdocCertverifyConsultRsp)
