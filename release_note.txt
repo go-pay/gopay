@@ -1,3 +1,9 @@
+版本号：Release 1.5.72
+修改记录：
+   (1) Apple：返回参数类型错误修复，pending_renewal_info -> 数组类型
+   (2) QQ：获取 AccessToken 结果 expires_in 类型修复，expires_in -> 字符串类型
+   (3) 微信V3：证书相关代码优化
+
 版本号：Release 1.5.71
 修改记录：
    (1) 微信V2：去除所有微信小程序、公众号相关接口，请使用 wechat-sdk
