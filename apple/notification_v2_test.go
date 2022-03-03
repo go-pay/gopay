@@ -11,11 +11,13 @@ func TestNotify(t *testing.T) {
 	var payload *NotificationV2SignedPayload
 	err := json.Unmarshal([]byte(body), &payload)
 	if err != nil {
-		panic(err)
+		xlog.Error(err)
+		return
 	}
 	rsp, err := payload.Decode()
 	if err != nil {
-		panic(err)
+		xlog.Error(err)
+		return
 	}
 	xlog.Debugf("notfiy data: %s", rsp)
 
