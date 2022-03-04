@@ -2,50 +2,13 @@ package apple
 
 import "github.com/golang-jwt/jwt"
 
-// NotificationTypeV2 通知类型
-type NotificationTypeV2 string
-
-// 通知类型常量
-// https://developer.apple.com/documentation/appstoreservernotifications/notificationtype
-const (
-	NotificationTypeV2ConsumptionRequest     NotificationTypeV2 = "CONSUMPTION_REQUEST"
-	NotificationTypeV2DidChangeRenewalPref   NotificationTypeV2 = "DID_CHANGE_RENEWAL_PREF"
-	NotificationTypeV2DidChangeRenewalStatus NotificationTypeV2 = "DID_CHANGE_RENEWAL_STATUS"
-	NotificationTypeV2DidFailToRenew         NotificationTypeV2 = "DID_FAIL_TO_RENEW"
-	NotificationTypeV2DidRenew               NotificationTypeV2 = "DID_RENEW"
-	NotificationTypeV2Expired                NotificationTypeV2 = "EXPIRED"
-	NotificationTypeV2GracePeriodExpired     NotificationTypeV2 = "GRACE_PERIOD_EXPIRED"
-	NotificationTypeV2OfferRedeemed          NotificationTypeV2 = "OFFER_REDEEMED"
-	NotificationTypeV2PriceIncrease          NotificationTypeV2 = "PRICE_INCREASE"
-	NotificationTypeV2Refund                 NotificationTypeV2 = "REFUND"
-	NotificationTypeV2RefundDeclined         NotificationTypeV2 = "REFUND_DECLINED"
-	NotificationTypeV2RenewalExtended        NotificationTypeV2 = "RENEWAL_EXTENDED"
-	NotificationTypeV2Revoke                 NotificationTypeV2 = "REVOKE"
-	NotificationTypeV2Subscribed             NotificationTypeV2 = "SUBSCRIBED"
-)
-
-// SubtypeV2 子类型
-type SubtypeV2 string
-
-// 子类型列表
-// https://developer.apple.com/documentation/appstoreservernotifications/subtype
-const (
-	SubTypeV2InitialBuy        = "INITIAL_BUY"
-	SubTypeV2Resubscribe       = "RESUBSCRIBE"
-	SubTypeV2Downgrade         = "DOWNGRADE"
-	SubTypeV2Upgrade           = "UPGRADE"
-	SubTypeV2AutoRenewEnabled  = "AUTO_RENEW_ENABLED"
-	SubTypeV2AutoRenewDisabled = "AUTO_RENEW_DISABLED"
-	SubTypeV2Voluntary         = "VOLUNTARY"
-	SubTypeV2BillingRetry      = "BILLING_RETRY"
-	SubTypeV2PriceIncrease     = "PRICE_INCREASE"
-	SubTypeV2GracePeriod       = "GRACE_PERIOD"
-	SubTypeV2BillingRecovery   = "BILLING_RECOVERY"
-	SubTypeV2Pending           = "PENDING"
-	SubTypeV2Accepted          = "ACCEPTED"
-)
-
 type (
+	// NotificationTypeV2 通知类型
+	NotificationTypeV2 string
+
+	// SubtypeV2 子类型
+	SubtypeV2 string
+
 	// NotificationV2SignedPayload
 	// https://developer.apple.com/documentation/appstoreservernotifications/signedpayload
 	NotificationV2SignedPayload struct {
@@ -117,9 +80,7 @@ type (
 		Type                        string `json:"type"`
 		WebOrderLineItemId          string `json:"webOrderLineItemId"`
 	}
-)
 
-type (
 	JWSNotificationV2Payload struct {
 		jwt.StandardClaims
 		SubscriptionNotificationV2DecodedPayload
@@ -136,4 +97,41 @@ type (
 		jwt.StandardClaims
 		SignedTransactionInfo
 	}
+)
+
+// 通知类型常量
+// https://developer.apple.com/documentation/appstoreservernotifications/notificationtype
+const (
+	NotificationTypeV2ConsumptionRequest     NotificationTypeV2 = "CONSUMPTION_REQUEST"
+	NotificationTypeV2DidChangeRenewalPref   NotificationTypeV2 = "DID_CHANGE_RENEWAL_PREF"
+	NotificationTypeV2DidChangeRenewalStatus NotificationTypeV2 = "DID_CHANGE_RENEWAL_STATUS"
+	NotificationTypeV2DidFailToRenew         NotificationTypeV2 = "DID_FAIL_TO_RENEW"
+	NotificationTypeV2DidRenew               NotificationTypeV2 = "DID_RENEW"
+	NotificationTypeV2Expired                NotificationTypeV2 = "EXPIRED"
+	NotificationTypeV2GracePeriodExpired     NotificationTypeV2 = "GRACE_PERIOD_EXPIRED"
+	NotificationTypeV2OfferRedeemed          NotificationTypeV2 = "OFFER_REDEEMED"
+	NotificationTypeV2PriceIncrease          NotificationTypeV2 = "PRICE_INCREASE"
+	NotificationTypeV2Refund                 NotificationTypeV2 = "REFUND"
+	NotificationTypeV2RefundDeclined         NotificationTypeV2 = "REFUND_DECLINED"
+	NotificationTypeV2RenewalExtended        NotificationTypeV2 = "RENEWAL_EXTENDED"
+	NotificationTypeV2Revoke                 NotificationTypeV2 = "REVOKE"
+	NotificationTypeV2Subscribed             NotificationTypeV2 = "SUBSCRIBED"
+)
+
+// 子类型常量
+// https://developer.apple.com/documentation/appstoreservernotifications/subtype
+const (
+	SubTypeV2InitialBuy        SubtypeV2 = "INITIAL_BUY"
+	SubTypeV2Resubscribe       SubtypeV2 = "RESUBSCRIBE"
+	SubTypeV2Downgrade         SubtypeV2 = "DOWNGRADE"
+	SubTypeV2Upgrade           SubtypeV2 = "UPGRADE"
+	SubTypeV2AutoRenewEnabled  SubtypeV2 = "AUTO_RENEW_ENABLED"
+	SubTypeV2AutoRenewDisabled SubtypeV2 = "AUTO_RENEW_DISABLED"
+	SubTypeV2Voluntary         SubtypeV2 = "VOLUNTARY"
+	SubTypeV2BillingRetry      SubtypeV2 = "BILLING_RETRY"
+	SubTypeV2PriceIncrease     SubtypeV2 = "PRICE_INCREASE"
+	SubTypeV2GracePeriod       SubtypeV2 = "GRACE_PERIOD"
+	SubTypeV2BillingRecovery   SubtypeV2 = "BILLING_RECOVERY"
+	SubTypeV2Pending           SubtypeV2 = "PENDING"
+	SubTypeV2Accepted          SubtypeV2 = "ACCEPTED"
 )

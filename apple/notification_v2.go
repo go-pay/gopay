@@ -107,7 +107,6 @@ func (a *NotificationV2SignedPayload) extractHeaderByIndex(tokenStr string, inde
 	if err != nil {
 		return nil, err
 	}
-
 	return certByte, nil
 }
 
@@ -134,11 +133,11 @@ func (a *NotificationV2SignedPayload) verifyCert(certByte, intermediaCertStr []b
 		Roots:         roots,
 		Intermediates: intermedia,
 	}
-
 	_, err = cert.Verify(opts)
 	return err
 }
 
+// ExtractClaims 解析jws格式数据
 func (a *NotificationV2SignedPayload) ExtractClaims(tran jwt.Claims) (interface{}, error) {
 	tokenStr := a.SignedPayload
 	rootCertStr, err := a.extractHeaderByIndex(tokenStr, 2)
@@ -152,13 +151,11 @@ func (a *NotificationV2SignedPayload) ExtractClaims(tran jwt.Claims) (interface{
 	if err = a.verifyCert(rootCertStr, intermediaCertStr); err != nil {
 		return nil, err
 	}
-
 	_, err = jwt.ParseWithClaims(tokenStr, tran, func(token *jwt.Token) (interface{}, error) {
 		return a.extractPublicKeyFromToken(tokenStr)
 	})
 	if err != nil {
 		return nil, err
 	}
-
 	return tran, nil
 }
