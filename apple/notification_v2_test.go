@@ -19,6 +19,6 @@ func TestNotify(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debugf("notfiy data: %s", rsp)
+	xlog.Debugf("notify data: %s", rsp)
 
 }
