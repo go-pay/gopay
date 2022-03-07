@@ -25,15 +25,13 @@ if err != nil {
     return
 }
 /**
-    response body:
-    {
-"receipt":{"original_purchase_date_pst":"2021-08-14 05:28:17 America/Los_Angeles", "purchase_date_ms":"1628944097586", "unique_identifier":"13f339a765b706f8775f729723e9b889b0cbb64e", "original_transaction_id":"1000000859439868", "bvrs":"10", "transaction_id":"1000000859439868", "quantity":"1", "in_app_ownership_type":"PURCHASED", "unique_vendor_identifier":"6DFDEA8B-38CE-4710-A1E1-BAEB8B66FEBD", "item_id":"1581250870", "version_external_identifier":"0", "bid":"com.huochai.main", "is_in_intro_offer_period":"false", "product_id":"10002", "purchase_date":"2021-08-14 12:28:17 Etc/GMT", "is_trial_period":"false", "purchase_date_pst":"2021-08-14 05:28:17 America/Los_Angeles", "original_purchase_date":"2021-08-14 12:28:17 Etc/GMT", "original_purchase_date_ms":"1628944097586"}, "status":0}
+  response body:
+  {"receipt":{"original_purchase_date_pst":"2021-08-14 05:28:17 America/Los_Angeles", "purchase_date_ms":"1628944097586", "unique_identifier":"13f339a765b706f8775f729723e9b889b0cbb64e", "original_transaction_id":"1000000859439868", "bvrs":"10", "transaction_id":"1000000859439868", "quantity":"1", "in_app_ownership_type":"PURCHASED", "unique_vendor_identifier":"6DFDEA8B-38CE-4710-A1E1-BAEB8B66FEBD", "item_id":"1581250870", "version_external_identifier":"0", "bid":"com.huochai.main", "is_in_intro_offer_period":"false", "product_id":"10002", "purchase_date":"2021-08-14 12:28:17 Etc/GMT", "is_trial_period":"false", "purchase_date_pst":"2021-08-14 05:28:17 America/Los_Angeles", "original_purchase_date":"2021-08-14 12:28:17 Etc/GMT", "original_purchase_date_ms":"1628944097586"}, "status":0}
 */
 if rsp.Receipt != nil {
     xlog.Infof("receipt:%+v", rsp.Receipt)
 }
 ```
-
 
 * [苹果服务端通知V2版本](https://developer.apple.com/documentation/appstoreservernotifications)
 
@@ -42,30 +40,99 @@ if rsp.Receipt != nil {
 
 ### 示例
 
+- 请参考 `notification_v2_test.go`
+
 ```go
 import (
-    "github.com/go-pay/gopay/apple"
-    "github.com/go-pay/gopay/pkg/xlog"
-    "encoding/json"
+"github.com/go-pay/gopay/apple"
+"github.com/go-pay/gopay/pkg/xlog"
 )
 
-// Apple 通知请求体
-body := "{\"signedPayload\":\"eyJhbGciOiJFUzI1NiIsIng1YyI6WyJNSUlOW...mnpo2QrItvA\"}"
-
-var payload *NotificationV2SignedPayload
-err := json.Unmarshal([]byte(body), &payload)
+// decode signedPayload
+payload, err := apple.DecodeSignedPayload(signedPayload)
 if err != nil {
-    xlog.Error(err)
-    return
+xlog.Error(err)
+return
 }
-rsp, err := payload.Decode()
-if err != nil {
-    xlog.Error(err)
-    return
-}
+xlog.Debugf("payload.NotificationType: %s", payload.NotificationType)
+xlog.Debugf("payload.Subtype: %s", payload.Subtype)
+xlog.Debugf("payload.NotificationUUID: %s", payload.NotificationUUID)
+xlog.Debugf("payload.NotificationVersion: %s", payload.NotificationVersion)
+xlog.Debugf("payload.Data: %+v", payload.Data)
+bs1, _ := json.Marshal(payload)
+xlog.Color(xlog.RedBright).Info(string(bs1))
 /*
-* rsp结构如下
-* {"notificationType":"DID_RENEW","subtype":"","notificationUUID":"7a33cb9d-2503-4104-a1e9-24bb9ea8bb75","notificationVersion":"","data":{"appAppleId":0,"bundleId":"bundleId","bundleVersion":"7","environment":"Sandbox","signedRenewalInfo":"","signedTransactionInfo":""},"renewalInfo":{"autoRenewProductId":"bundleId.productId","autoRenewStatus":1,"expirationIntent":0,"gracePeriodExpiresDate":0,"isInBillingRetryPeriod":false,"offerIdentifier":"","offerType":0,"originalTransactionId":"2000000000842607","priceIncreaseStatus":0,"productId":"bundleId.productId","signedDate":1646327704113},"transactionInfo":{"appAccountToken":"","bundleId":"bundleId","expiresDate":1646329907000,"inAppOwnershipType":"PURCHASED","isUpgraded":false,"offerIdentifier":"","offerType":0,"originalPurchaseDate":1646046037000,"originalTransactionId":"2000000000842607","productId":"bundleId.productId","purchaseDate":1646327747000,"quantity":1,"revocationDate":0,"revocationReason":"","signedDate":1646327704135,"subscriptionGroupIdentifier":"20929536","transactionId":"2000000003595767","type":"Auto-Renewable Subscription","webOrderLineItemId":"2000000000264942"}}
+	{
+	    "notificationType":"DID_RENEW",
+	    "subtype":"",
+	    "notificationUUID":"469bf30e-7715-4f9f-aae3-a7bfc12aea77",
+	    "notificationVersion":"",
+	    "data":{
+	        "appAppleId":0,
+	        "bundleId":"com.audaos.audarecorder",
+	        "bundleVersion":"7",
+	        "environment":"Sandbox",
+	        "signedRenewalInfo":"xxxxxxxxxx",
+	        "signedTransactionInfo":"xxxxxxxxxxx"
+	    }
+	}
 */
-xlog.Debugf("notify data: %s", rsp)
+
+// decode renewalInfo
+renewalInfo, err := payload.DecodeRenewalInfo()
+if err != nil {
+xlog.Error(err)
+return
+}
+xlog.Debugf("data.renewalInfo: %+v", renewalInfo)
+bs, _ := json.Marshal(renewalInfo)
+xlog.Color(xlog.GreenBright).Info(string(bs))
+/*
+	{
+	    "autoRenewProductId":"com.audaos.audarecorder.vip.m2",
+	    "autoRenewStatus":1,
+	    "expirationIntent":0,
+	    "gracePeriodExpiresDate":0,
+	    "isInBillingRetryPeriod":false,
+	    "offerIdentifier":"",
+	    "offerType":0,
+	    "originalTransactionId":"2000000000842607",
+	    "priceIncreaseStatus":0,
+	    "productId":"com.audaos.audarecorder.vip.m2",
+	    "signedDate":1646387008228
+	}
+*/
+
+// decode transactionInfo
+transactionInfo, err := payload.DecodeTransactionInfo()
+if err != nil {
+xlog.Error(err)
+return
+}
+xlog.Debugf("data.transactionInfo: %+v", transactionInfo)
+bs2, _ := json.Marshal(transactionInfo)
+xlog.Color(xlog.YellowBright).Info(string(bs2))
+/*
+	{
+	    "appAccountToken":"",
+	    "bundleId":"com.audaos.audarecorder",
+	    "expiresDate":1646387196000,
+	    "inAppOwnershipType":"PURCHASED",
+	    "isUpgraded":false,
+	    "offerIdentifier":"",
+	    "offerType":0,
+	    "originalPurchaseDate":1646046037000,
+	    "originalTransactionId":"2000000000842607",
+	    "productId":"com.audaos.audarecorder.vip.m2",
+	    "purchaseDate":1646387016000,
+	    "quantity":1,
+	    "revocationDate":0,
+	    "revocationReason":"",
+	    "signedDate":1646387008254,
+	    "subscriptionGroupIdentifier":"20929536",
+	    "transactionId":"2000000004047119",
+	    "type":"Auto-Renewable Subscription",
+	    "webOrderLineItemId":"2000000000302832"
+	}
+*/
 ```

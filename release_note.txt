@@ -1,3 +1,7 @@
+版本号：Release 1.5.73
+修改记录：
+   (1) Apple：新增内购支付通知V2解析
+
 版本号：Release 1.5.72
 修改记录：
    (1) Apple：返回参数类型错误修复，pending_renewal_info -> 数组类型
