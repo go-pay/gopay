@@ -41,6 +41,11 @@ const (
 	SubTypeV2Accepted          = "ACCEPTED"
 )
 
+// https://developer.apple.com/documentation/appstoreservernotifications/responsebodyv2
+type NotificationV2Req struct {
+	SignedPayload string `json:"signedPayload"`
+}
+
 // https://developer.apple.com/documentation/appstoreservernotifications/responsebodyv2decodedpayload
 type NotificationV2Payload struct {
 	jwt.StandardClaims
