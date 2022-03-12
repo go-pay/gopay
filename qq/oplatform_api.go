@@ -12,7 +12,7 @@ import (
 // 获取开放平台，access_token 返回结构体
 type AccessToken struct {
 	AccessToken  string `json:"access_token,omitempty"`
-	ExpiresIn    int    `json:"expires_in,omitempty"`
+	ExpiresIn    string `json:"expires_in,omitempty"`
 	RefreshToken string `json:"refresh_token,omitempty"`
 }
 

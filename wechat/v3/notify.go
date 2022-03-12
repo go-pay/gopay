@@ -130,6 +130,28 @@ type Receiver struct {
 	Description string `json:"description"` // 分账/回退描述
 }
 
+type V3DecryptBusifavorResult struct {
+	EventType    string               `json:"event_type"`    // 事件类型
+	CouponCode   string               `json:"coupon_code"`   // 券code
+	StockId      string               `json:"stock_id"`      // 批次号
+	SendTime     string               `json:"send_time"`     // 发放时间
+	Openid       string               `json:"openid"`        // 用户标识
+	Unionid      string               `json:"unionid"`       // 用户统一标识
+	SendChannel  string               `json:"send_channel"`  // 发放渠道
+	SendMerchant string               `json:"send_merchant"` // 发券商户号
+	AttachInfo   *BusifavorAttachInfo `json:"attach_info"`   // 发券附加信息
+}
+
+type BusifavorAttachInfo struct {
+	TransactionId   string `json:"transaction_id"`     // 交易订单编号
+	ActCode         string `json:"act_code"`           // 支付有礼活动编号/营销馆活动ID
+	HallCode        string `json:"hall_code"`          // 营销馆ID
+	HallBelongMchID int    `json:"hall_belong_mch_id"` // 营销馆所属商户号
+	CardID          string `json:"card_id"`            // 会员卡ID
+	Code            string `json:"code"`               // 会员卡code
+	ActivityID      string `json:"activity_id"`        // 会员活动ID
+}
+
 type V3NotifyReq struct {
 	Id           string    `json:"id"`
 	CreateTime   string    `json:"create_time"`
@@ -266,6 +288,19 @@ func (v *V3NotifyReq) DecryptScoreCipherText(apiV3Key string) (result *V3Decrypt
 func (v *V3NotifyReq) DecryptProfitShareCipherText(apiV3Key string) (result *V3DecryptProfitShareResult, err error) {
 	if v.Resource != nil {
 		result, err = V3DecryptProfitShareNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
+		if err != nil {
+			bytes, _ := json.Marshal(v)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+		}
+		return result, nil
+	}
+	return nil, errors.New("notify data Resource is nil")
+}
+
+// 解密商家券回调中的加密信息
+func (v *V3NotifyReq) DecryptBusifavorCipherText(apiV3Key string) (result *V3DecryptBusifavorResult, err error) {
+	if v.Resource != nil {
+		result, err = V3DecryptBusifavorNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
 			bytes, _ := json.Marshal(v)
 			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)

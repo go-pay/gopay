@@ -30,7 +30,7 @@ func (bm BodyMap) Set(key string, value interface{}) BodyMap {
 	return bm
 }
 
-func (bm BodyMap) SetBodyMap(key string, value func(bm BodyMap)) BodyMap {
+func (bm BodyMap) SetBodyMap(key string, value func(b BodyMap)) BodyMap {
 	_bm := make(BodyMap)
 	value(_bm)
 	bm[key] = _bm

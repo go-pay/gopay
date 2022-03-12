@@ -1,6 +1,24 @@
+版本号：Release 1.5.73
+修改记录：
+   (1) Apple：新增内购支付通知V2解析
+
+版本号：Release 1.5.72
+修改记录：
+   (1) Apple：返回参数类型错误修复，pending_renewal_info -> 数组类型
+   (2) QQ：获取 AccessToken 结果 expires_in 类型修复，expires_in -> 字符串类型
+   (3) 微信V3：证书相关代码优化
+
+版本号：Release 1.5.71
+修改记录：
+   (1) 微信V2：去除所有微信小程序、公众号相关接口，请使用 wechat-sdk
+   (2) 支付宝：client.UserCertdocCertverifyConsult() 方法，增加 authToken 参数
+   (2) 微信V3：新增 银行组件（服务商） 相关接口，详情查看v3文档最下方的接口列表
+
 版本号：Release 1.5.69
 修改记录：
    (1) 微信V3：修改 client.V3RefundQuery()、增加入参参数，适配 服务商 模式
+   (2) 微信V3：修复 client.V3Apply4SubSubmit()，接口路由修复
+   (3) gopay：BodyMap 新增 Unmarshal() 方法，解析数据到结构体、数组指针
 
 版本号：Release 1.5.68
 修改记录：

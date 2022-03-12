@@ -234,7 +234,7 @@ func TestUserCertdocCertverifyConsult(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("verify_id", "671ffcda5447bc87e9ed2f669eb143d4")
 	// 发起请求
-	aliRsp, err := client.UserCertdocCertverifyConsult(ctx, bm)
+	aliRsp, err := client.UserCertdocCertverifyConsult(ctx, bm, "auth_token")
 	if err != nil {
 		xlog.Error(err)
 		return

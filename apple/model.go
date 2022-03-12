@@ -29,7 +29,7 @@ type VerifyResponse struct {
 	LatestReceiptInfo []*LatestReceiptInfo `json:"latest_receipt_info,omitempty"`
 
 	// PendingRenewalInfo ,in the JSON file, an array where each element contains the pending renewal information for each auto-renewable subscription identified by the product_id. Only returned for app receipts that contain auto-renewable subscriptions.
-	PendingRenewalInfo *PendingRenewalInfo `json:"pending_renewal_info,omitempty"`
+	PendingRenewalInfo []*PendingRenewalInfo `json:"pending_renewal_info,omitempty"`
 
 	// Receipt is a JSON representation of the receipt that was sent for verification.
 	Receipt *Receipt `json:"receipt,omitempty"`

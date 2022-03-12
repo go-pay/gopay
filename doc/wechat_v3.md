@@ -384,6 +384,13 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 查询退款ByNo：`client.V3EcommerceRefundQueryByNo()`
     * 垫付退款回补：`client.V3EcommerceRefundAdvance()`
     * 查询垫付回补结果：`client.V3EcommerceRefundAdvanceResult()`
+* <font color='#07C160' size='4'>银行组件（服务商）</font>
+    * 获取对私银行卡号开户银行：`client.V3BankSearchBank()`
+    * 查询支持个人业务的银行列表：`client.V3BankSearchPersonalList()`
+    * 查询支持对公业务的银行列表：`client.V3BankSearchCorporateList()`
+    * 查询省份列表：`client.V3BankSearchProvinceList()`
+    * 查询城市列表：`client.V3BankSearchCityList()`
+    * 查询支行列表：`client.V3BankSearchBranchList()`
 
 
 ### 微信v3公共 API

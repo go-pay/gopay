@@ -100,26 +100,16 @@ func (a *Client) UserCertifyOpenQuery(ctx context.Context, bm gopay.BodyMap) (al
 
 // alipay.user.agreement.page.sign(支付宝个人协议页面签约接口)
 //	文档地址：https://opendocs.alipay.com/apis/api_2/alipay.user.agreement.page.sign
-func (a *Client) UserAgreementPageSign(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserAgreementPageSignRsp, err error) {
+func (a *Client) UserAgreementPageSign(ctx context.Context, bm gopay.BodyMap) (ret string, err error) {
 	err = bm.CheckEmptyError("personal_product_code")
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	var bs []byte
 	if bs, err = a.doAliPay(ctx, bm, "alipay.user.agreement.page.sign"); err != nil {
-		return nil, err
+		return "", err
 	}
-	aliRsp = new(UserAgreementPageSignRsp)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
-	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
-	}
-	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
-	aliRsp.SignData = signData
-	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+	return string(bs), nil
 }
 
 // alipay.user.agreement.unsign(支付宝个人代扣协议解约接口)
@@ -404,9 +394,9 @@ func (a *Client) UserCertdocCertverifyPreconsult(ctx context.Context, bm gopay.B
 
 // alipay.user.certdoc.certverify.consult(实名证件信息比对验证咨询)
 //	文档地址：https://opendocs.alipay.com/apis/api_2/alipay.user.certdoc.certverify.consult
-func (a *Client) UserCertdocCertverifyConsult(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserCertdocCertverifyConsultRsp, err error) {
+func (a *Client) UserCertdocCertverifyConsult(ctx context.Context, bm gopay.BodyMap, authToken string) (aliRsp *UserCertdocCertverifyConsultRsp, err error) {
 	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.user.certdoc.certverify.consult"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.user.certdoc.certverify.consult", authToken); err != nil {
 		return nil, err
 	}
 	aliRsp = new(UserCertdocCertverifyConsultRsp)

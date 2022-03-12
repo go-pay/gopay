@@ -12,7 +12,6 @@ import (
 	"crypto/md5"
 	"encoding/base64"
 	"encoding/hex"
-	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -141,43 +140,6 @@ func (w *NotifyResponse) ToXmlString() (xmlStr string) {
 	buffer.WriteString("]]></return_msg></xml>")
 	xmlStr = buffer.String()
 	return
-}
-
-// DecryptOpenDataToBodyMap 解密开放数据到 BodyMap
-//	encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
-//	iv：加密算法的初始向量，小程序获取到
-//	sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
-//	文档：https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/signature.html
-func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.BodyMap, err error) {
-	if encryptedData == util.NULL || iv == util.NULL || sessionKey == util.NULL {
-		return nil, errors.New("input params can not null")
-	}
-	var (
-		cipherText, aesKey, ivKey, plainText []byte
-		block                                cipher.Block
-		blockMode                            cipher.BlockMode
-	)
-	cipherText, _ = base64.StdEncoding.DecodeString(encryptedData)
-	aesKey, _ = base64.StdEncoding.DecodeString(sessionKey)
-	ivKey, _ = base64.StdEncoding.DecodeString(iv)
-	if len(cipherText)%len(aesKey) != 0 {
-		return nil, errors.New("encryptedData is error")
-	}
-	if block, err = aes.NewCipher(aesKey); err != nil {
-		return nil, fmt.Errorf("aes.NewCipher：%w", err)
-	} else {
-		blockMode = cipher.NewCBCDecrypter(block, ivKey)
-		plainText = make([]byte, len(cipherText))
-		blockMode.CryptBlocks(plainText, cipherText)
-		if len(plainText) > 0 {
-			plainText = xaes.PKCS7UnPadding(plainText)
-		}
-		bm = make(gopay.BodyMap)
-		if err = json.Unmarshal(plainText, &bm); err != nil {
-			return nil, fmt.Errorf("json.Marshal(%s)：%w", string(plainText), err)
-		}
-		return
-	}
 }
 
 // GetOpenIdByAuthCode 授权码查询openid(AccessToken:157字符)

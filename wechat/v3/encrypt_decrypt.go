@@ -163,3 +163,17 @@ func V3DecryptScoreNotifyCipherText(ciphertext, nonce, additional, apiV3Key stri
 	}
 	return result, nil
 }
+
+// 解密商家券回调中的加密信息
+func V3DecryptBusifavorNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptBusifavorResult, err error) {
+	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
+	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
+	if err != nil {
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
+	}
+	result = &V3DecryptBusifavorResult{}
+	if err = json.Unmarshal(decrypt, result); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%w", string(decrypt), err)
+	}
+	return result, nil
+}

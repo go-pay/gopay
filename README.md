@@ -12,6 +12,7 @@
 [![Drone CI](https://cloud.drone.io/api/badges/go-pay/gopay/status.svg)](https://cloud.drone.io/go-pay/gopay)
 [![GitHub Release](https://img.shields.io/github/v/release/go-pay/gopay)](https://github.com/go-pay/gopay/releases)
 [![License](https://img.shields.io/github/license/go-pay/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
+[![GoDoc](https://tokei.rs/b1/github.com/go-pay/gopay?category=lines)](https://github.com/go-pay/gopay)
 
 ---
 
@@ -19,7 +20,7 @@
 
 > 将 gopay 库中，非支付相关的一些接口方法独立出去另外的 sdk 库，在 go-pay 组织下新建 `wechat-sdk` 和 `alipay-sdk` 两个项目，分别实现各个平台相关接口方法，优先进行 `wechat-sdk` 开发。
 
-> 微信小程序或公众号相关接口方法：请计划从 `微信v2` 移步替换成 `github.com/go-pay/wechat-sdk`
+> 微信小程序或公众号相关接口方法：已从 `微信v2` 移步替换成 `github.com/go-pay/wechat-sdk`
 
 <br>
 
