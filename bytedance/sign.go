@@ -1,4 +1,4 @@
-package byte
+package bytedance
 
 import (
 	"crypto/sha1"
