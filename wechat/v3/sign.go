@@ -52,7 +52,7 @@ func V3VerifySignByPK(timestamp, nonce, signBody, sign string, wxPublicKey *rsa.
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_4.shtml
 func (c *ClientV3) PaySignOfJSAPI(appid, prepayid string) (jsapi *JSAPIPayParams, err error) {
 	ts := util.Int642String(time.Now().Unix())
-	nonceStr := util.GetRandomString(32)
+	nonceStr := util.RandomString(32)
 	pkg := "prepay_id=" + prepayid
 
 	_str := appid + "\n" + ts + "\n" + nonceStr + "\n" + pkg + "\n"
@@ -76,7 +76,7 @@ func (c *ClientV3) PaySignOfJSAPI(appid, prepayid string) (jsapi *JSAPIPayParams
 //	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_4.shtml
 func (c *ClientV3) PaySignOfApp(appid, prepayid string) (app *AppPayParams, err error) {
 	ts := util.Int642String(time.Now().Unix())
-	nonceStr := util.GetRandomString(32)
+	nonceStr := util.RandomString(32)
 
 	_str := appid + "\n" + ts + "\n" + nonceStr + "\n" + prepayid + "\n"
 	sign, err := c.rsaSign(_str)
@@ -119,7 +119,7 @@ func (c *ClientV3) authorization(method, path string, bm gopay.BodyMap) (string,
 	var (
 		jb        = ""
 		timestamp = time.Now().Unix()
-		nonceStr  = util.GetRandomString(32)
+		nonceStr  = util.RandomString(32)
 	)
 	if bm != nil {
 		jb = bm.JsonBody()

@@ -65,7 +65,7 @@ func TestZhimaCreditEpSceneAgreementCancel(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("credit_order_no", "zme20181106154144733795615964647")
-	bm.Set("out_order_no", util.GetRandomString(64))
+	bm.Set("out_order_no", util.RandomString(64))
 	bm.Set("biz_time", "2018-12-06 18:53:59")
 
 	aliRsp, err := client.ZhimaCreditEpSceneAgreementCancel(ctx, bm)

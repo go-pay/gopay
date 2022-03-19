@@ -18,7 +18,7 @@ func DownloadBill() {
 
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
 		Set("sign_type", wechat.SignType_MD5).
 		Set("bill_date", "20190722").
 		Set("bill_type", "ALL")

@@ -71,7 +71,6 @@ func TestDecodeSignedPayload(t *testing.T) {
 		    "signedDate":1646387008228
 		}
 	*/
-
 	// decode transactionInfo
 	transactionInfo, err := payload.DecodeTransactionInfo()
 	if err != nil {

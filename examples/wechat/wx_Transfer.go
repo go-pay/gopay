@@ -24,8 +24,8 @@ func Transfer() {
 
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
-		Set("partner_trade_no", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
+		Set("partner_trade_no", util.RandomString(32)).
 		Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8").
 		Set("check_name", "FORCE_CHECK"). // NO_CHECK：不校验真实姓名 , FORCE_CHECK：强校验真实姓名
 		Set("re_user_name", "付明明").       // 收款用户真实姓名。 如果check_name设置为FORCE_CHECK，则必填用户真实姓名

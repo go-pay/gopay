@@ -22,12 +22,12 @@ func UnifiedOrder() {
 	//设置国家
 	client.SetCountry(wechat.China)
 
-	number := util.GetRandomString(32)
+	number := util.RandomString(32)
 	xlog.Debug("out_trade_no:", number)
 
 	//初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
 		Set("body", "H5支付").
 		Set("out_trade_no", number).
 		Set("total_fee", 1).

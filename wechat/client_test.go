@@ -54,7 +54,7 @@ func TestMain(m *testing.M) {
 func TestClient_AuthCodeToOpenId(t *testing.T) {
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
 		Set("auth_code", "134753997737645794")
 
 	wxRsp, err := client.AuthCodeToOpenId(ctx, bm)
@@ -68,8 +68,8 @@ func TestClient_AuthCodeToOpenId(t *testing.T) {
 func TestClient_GetTransferInfo(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
-		Set("partner_trade_no", util.GetRandomString(32))
+	bm.Set("nonce_str", util.RandomString(32)).
+		Set("partner_trade_no", util.RandomString(32))
 
 	// 查询企业付款
 	//    body：参数Body
@@ -84,7 +84,7 @@ func TestClient_GetTransferInfo(t *testing.T) {
 func TestClient_DownloadBill(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
 		Set("sign_type", SignType_MD5).
 		Set("bill_date", "20190722").
 		Set("bill_type", "ALL")
@@ -101,7 +101,7 @@ func TestClient_DownloadBill(t *testing.T) {
 func TestClient_DownloadFundFlow(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
 		Set("sign_type", SignType_HMAC_SHA256).
 		Set("bill_date", "20190122").
 		Set("account_type", "Basic")
@@ -118,7 +118,7 @@ func TestClient_DownloadFundFlow(t *testing.T) {
 func TestClient_BatchQueryComment(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
 		Set("sign_type", SignType_HMAC_SHA256).
 		Set("begin_time", "20190120000000").
 		Set("end_time", "20190122174000").

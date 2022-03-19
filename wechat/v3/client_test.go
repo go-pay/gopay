@@ -129,7 +129,7 @@ func TestV3VerifySignByPK(t *testing.T) {
 }
 
 func TestV3Jsapi(t *testing.T) {
-	tradeNo := util.GetRandomString(32)
+	tradeNo := util.RandomString(32)
 	xlog.Debug("tradeNo:", tradeNo)
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
@@ -168,7 +168,7 @@ func TestV3Jsapi(t *testing.T) {
 }
 
 func TestV3Native(t *testing.T) {
-	tradeNo := util.GetRandomString(32)
+	tradeNo := util.RandomString(32)
 	xlog.Debug("tradeNo:", tradeNo)
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
@@ -196,7 +196,7 @@ func TestV3Native(t *testing.T) {
 }
 
 func TestV3PartnerNative(t *testing.T) {
-	tradeNo := util.GetRandomString(32)
+	tradeNo := util.RandomString(32)
 	xlog.Debug("tradeNo:", tradeNo)
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
@@ -227,7 +227,7 @@ func TestV3PartnerNative(t *testing.T) {
 }
 
 func TestV3TransactionH5(t *testing.T) {
-	number := util.GetRandomString(32)
+	number := util.RandomString(32)
 	xlog.Info("out_trade_no:", number)
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)

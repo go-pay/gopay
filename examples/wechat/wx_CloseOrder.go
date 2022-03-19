@@ -19,7 +19,7 @@ func CloseOrder() {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ").
-		Set("nonce_str", util.GetRandomString(32)).
+		Set("nonce_str", util.RandomString(32)).
 		Set("sign_type", wechat.SignType_MD5)
 
 	// 请求关闭订单，成功后得到结果

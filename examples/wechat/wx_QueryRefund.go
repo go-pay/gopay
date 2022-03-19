@@ -22,7 +22,7 @@ func QueryRefund() {
 		//Set("out_refund_no", "vk4264I1UQ3Hm3E4AKsavK8npylGSgQA092f9ckUxp8A2gXmnsLEdsupURVTcaC7").
 		//Set("transaction_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk").
 		//Set("refund_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk").
-		Set("nonce_str", util.GetRandomString(32)).
+		Set("nonce_str", util.RandomString(32)).
 		Set("sign_type", wechat.SignType_MD5)
 
 	//请求申请退款

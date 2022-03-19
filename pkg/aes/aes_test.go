@@ -4,24 +4,28 @@ import (
 	"encoding/base64"
 	"testing"
 
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/gopher/xlog"
 )
 
 var (
-	secretKey = "GYBh3Rmey7nNzR/NpV0vAw=="
+	secretKey = "JYRn4wbCy8KgVIZJaPhYTcTn2zixVC4Y"
 	iv        = "JR3unO2glQuMhUx3"
 )
 
-func TestAesCBCEncryptDecrypt(t *testing.T) {
-	originData := "https://www.fmm.ink"
+func init() {
+	xlog.Level = xlog.DebugLevel
+}
+
+func TestAesECBEncryptDecrypt(t *testing.T) {
+	originData := "www.gopay.ink"
 	xlog.Debug("originData:", originData)
-	encryptData, err := CBCEncryptData([]byte(originData), []byte(secretKey))
+	encryptData, err := ECBEncrypt([]byte(originData), []byte(secretKey))
 	if err != nil {
 		xlog.Error("AesCBCEncryptToString:", err)
 		return
 	}
 	xlog.Debug("encryptData:", string(encryptData))
-	origin, err := CBCDecryptData(encryptData, []byte(secretKey))
+	origin, err := ECBDecrypt(encryptData, []byte(secretKey))
 	if err != nil {
 		xlog.Error("AesDecryptToBytes:", err)
 		return
@@ -29,18 +33,18 @@ func TestAesCBCEncryptDecrypt(t *testing.T) {
 	xlog.Debug("origin:", string(origin))
 }
 
-func TestAesCBCEncryptDecryptIv(t *testing.T) {
-	originData := "https://www.fmm.ink"
+func TestAesCBCEncryptDecrypt(t *testing.T) {
+	originData := "www.gopay.ink"
 	xlog.Debug("originData:", originData)
-	encryptData, err := CBCEncryptIvData([]byte(originData), []byte(secretKey), []byte(iv))
+	encryptData, err := CBCEncrypt([]byte(originData), []byte(secretKey), []byte(iv))
 	if err != nil {
-		xlog.Error("CBCEncryptIvData:", err)
+		xlog.Error("CBCEncrypt:", err)
 		return
 	}
 	xlog.Debug("encryptData:", string(encryptData))
-	origin, err := CBCDecryptIvData(encryptData, []byte(secretKey), []byte(iv))
+	origin, err := CBCDecrypt(encryptData, []byte(secretKey), []byte(iv))
 	if err != nil {
-		xlog.Error("CBCDecryptIvData:", err)
+		xlog.Error("CBCDecrypt:", err)
 		return
 	}
 	xlog.Debug("origin:", string(origin))
