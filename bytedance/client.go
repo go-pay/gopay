@@ -8,12 +8,9 @@ import (
 
 // Client 字节担保支付
 type Client struct {
-	Token string
-	Mchid string
-	Salt  string
-	//autoSign    bool
-	//privateKey  *rsa.PrivateKey
-	//wxPublicKey *rsa.PublicKey
+	Token       string
+	Mchid       string
+	Salt        string
 	ctx         context.Context
 	DebugSwitch gopay.DebugSwitch
 }
@@ -23,10 +20,6 @@ type Client struct {
 //	mchid：商户号
 //	salt：SALT
 func NewClient(token, mchid, salt string) (client *Client, err error) {
-	//priKey, err := xpem.DecodePrivateKey([]byte(privateKey))
-	//if err != nil {
-	//	return nil, err
-	//}
 	client = &Client{
 		Token:       token,
 		Mchid:       mchid,
