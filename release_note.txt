@@ -1,3 +1,7 @@
+版本号：Release 1.5.74
+修改记录：
+   (1) gopay：一些小改动，util.GetRandomString() -> util.RandomString()
+
 版本号：Release 1.5.73
 修改记录：
    (1) Apple：新增内购支付通知V2解析
