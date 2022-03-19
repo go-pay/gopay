@@ -1,6 +1,7 @@
 版本号：Release 1.5.74
 修改记录：
    (1) gopay：一些小改动，util.GetRandomString() -> util.RandomString()
+   (2) gopay：升级 xlog
 
 版本号：Release 1.5.73
 修改记录：

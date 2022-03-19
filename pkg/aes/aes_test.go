@@ -4,7 +4,7 @@ import (
 	"encoding/base64"
 	"testing"
 
-	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 var (
