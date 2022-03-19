@@ -11,7 +11,7 @@ import (
 func TestCreateOrder(t *testing.T) {
 	var pus []*PurchaseUnit
 	var item = &PurchaseUnit{
-		ReferenceId: util.GetRandomString(16),
+		ReferenceId: util.RandomString(16),
 		Amount: &Amount{
 			CurrencyCode: "USD",
 			Value:        "8",

@@ -207,7 +207,7 @@ func GetSandBoxSign(ctx context.Context, mchId, apiKey string, bm gopay.BodyMap)
 		sandBoxApiKey string
 		h             hash.Hash
 	)
-	if sandBoxApiKey, err = getSanBoxKey(ctx, mchId, util.GetRandomString(32), apiKey, SignType_MD5); err != nil {
+	if sandBoxApiKey, err = getSanBoxKey(ctx, mchId, util.RandomString(32), apiKey, SignType_MD5); err != nil {
 		return
 	}
 	h = md5.New()

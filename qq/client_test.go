@@ -36,7 +36,7 @@ func TestMain(m *testing.M) {
 
 func TestClient_MicroPay(t *testing.T) {
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32))
+	bm.Set("nonce_str", util.RandomString(32))
 
 	qqRsp, err := client.MicroPay(ctx, bm)
 	if err != nil {

@@ -205,7 +205,7 @@ func GetSanBoxParamSign(ctx context.Context, appId, mchId, apiKey string, bm gop
 		sandBoxApiKey string
 		hashMd5       hash.Hash
 	)
-	if sandBoxApiKey, err = getSanBoxKey(ctx, mchId, util.GetRandomString(32), apiKey, SignType_MD5); err != nil {
+	if sandBoxApiKey, err = getSanBoxKey(ctx, mchId, util.RandomString(32), apiKey, SignType_MD5); err != nil {
 		return
 	}
 	hashMd5 = md5.New()

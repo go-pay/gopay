@@ -6,7 +6,7 @@ import (
 )
 
 //随机生成字符串
-func GetRandomString(l int) string {
+func RandomString(l int) string {
 	str := "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
 	bytes := []byte(str)
 	var result []byte = make([]byte, 0, l)
@@ -18,7 +18,7 @@ func GetRandomString(l int) string {
 }
 
 //随机生成纯字符串
-func GetRandomPureString(l int) string {
+func RandomPureString(l int) string {
 	str := "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
 	bytes := []byte(str)
 	var result []byte = make([]byte, 0, l)
@@ -30,7 +30,7 @@ func GetRandomPureString(l int) string {
 }
 
 //随机生成数字字符串
-func GetRandomNumber(l int) string {
+func RandomNumber(l int) string {
 	str := "0123456789"
 	bytes := []byte(str)
 	var result []byte

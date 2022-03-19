@@ -15,8 +15,8 @@ import (
 func TestClient_Transfer(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
-		Set("partner_trade_no", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
+		Set("partner_trade_no", util.RandomString(32)).
 		Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8").
 		Set("check_name", "FORCE_CHECK"). // NO_CHECK：不校验真实姓名 , FORCE_CHECK：强校验真实姓名
 		Set("re_user_name", "付明明").       // 收款用户真实姓名。 如果check_name设置为FORCE_CHECK，则必填用户真实姓名
@@ -44,7 +44,7 @@ func Test_ProfitSharing(t *testing.T) {
 
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
 		Set("transaction_id", "4208450740201411110007820472").
 		Set("out_order_no", "P20150806125346")
 
@@ -78,7 +78,7 @@ func Test_ProfitSharing(t *testing.T) {
 func Test_ProfitSharingAddReceiver(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32))
+	bm.Set("nonce_str", util.RandomString(32))
 
 	receiver := make(gopay.BodyMap)
 	receiver.Set("type", "MERCHANT_ID").
@@ -99,7 +99,7 @@ func Test_ProfitSharingAddReceiver(t *testing.T) {
 func Test_ProfitSharingRemoveReceiver(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32))
+	bm.Set("nonce_str", util.RandomString(32))
 
 	receiver := make(gopay.BodyMap)
 	receiver.Set("type", "MERCHANT_ID").
@@ -117,7 +117,7 @@ func Test_ProfitSharingRemoveReceiver(t *testing.T) {
 
 func TestClient_GetRSAPublicKey(t *testing.T) {
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
 		Set("sign_type", SignType_MD5)
 	publicKey, err := client.GetRSAPublicKey(ctx, bm)
 	if err != nil {
@@ -131,7 +131,7 @@ func TestClient_PayBank(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("partner_trade_no", mchId).
-		Set("nonce_str", util.GetRandomString(32)).
+		Set("nonce_str", util.RandomString(32)).
 		Set("bank_code", "1001"). // 招商银行，https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=24_4&index=5
 		Set("amount", 1)
 

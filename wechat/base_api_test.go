@@ -11,11 +11,11 @@ import (
 )
 
 func TestClient_UnifiedOrder(t *testing.T) {
-	number := util.GetRandomString(32)
+	number := util.RandomString(32)
 	xlog.Info("out_trade_no:", number)
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
 		Set("body", "H5支付").
 		Set("out_trade_no", number).
 		Set("total_fee", 1).
@@ -59,11 +59,11 @@ func TestClient_UnifiedOrder(t *testing.T) {
 }
 
 func TestClient_Micropay(t *testing.T) {
-	number := util.GetRandomString(32)
+	number := util.RandomString(32)
 	xlog.Info("out_trade_no:", number)
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
 		Set("body", "扫用户付款码支付").
 		Set("out_trade_no", number).
 		Set("total_fee", 1).
@@ -89,7 +89,7 @@ func TestClient_QueryOrder(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ").
-		Set("nonce_str", util.GetRandomString(32)).
+		Set("nonce_str", util.RandomString(32)).
 		Set("sign_type", SignType_MD5)
 
 	// 请求订单查询，成功后得到结果
@@ -106,7 +106,7 @@ func TestClient_CloseOrder(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "MfZC2segKxh0bnJSELbvKNeH3d9oWvvQ").
-		Set("nonce_str", util.GetRandomString(32)).
+		Set("nonce_str", util.RandomString(32)).
 		Set("sign_type", SignType_MD5)
 
 	// 请求关闭订单，成功后得到结果
@@ -120,11 +120,11 @@ func TestClient_CloseOrder(t *testing.T) {
 
 func TestClient_Refund(t *testing.T) {
 	// 初始化参数结构体
-	s := util.GetRandomString(64)
+	s := util.RandomString(64)
 	xlog.Info("out_refund_no:", s)
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "QRcTBTbJLoDrWSW9FtpSFlgWhft2QbaY").
-		Set("nonce_str", util.GetRandomString(32)).
+		Set("nonce_str", util.RandomString(32)).
 		Set("sign_type", SignType_MD5).
 		Set("out_refund_no", s).
 		Set("total_fee", 101).
@@ -146,7 +146,7 @@ func TestClient_QueryRefund(t *testing.T) {
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk").
-		Set("nonce_str", util.GetRandomString(32)).
+		Set("nonce_str", util.RandomString(32)).
 		Set("sign_type", SignType_MD5) /*.
 		Set("transaction_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk").
 		Set("out_refund_no", "vk4264I1UQ3Hm3E4AKsavK8npylGSgQA092f9ckUxp8A2gXmnsLEdsupURVTcaC7").
@@ -165,7 +165,7 @@ func TestClient_QueryRefund(t *testing.T) {
 func TestClient_Reverse(t *testing.T) {
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
 		Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B").
 		Set("sign_type", SignType_MD5)
 

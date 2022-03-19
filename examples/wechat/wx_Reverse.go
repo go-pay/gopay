@@ -18,7 +18,7 @@ func Reverse() {
 
 	// 初始化参数Map
 	bm := make(gopay.BodyMap)
-	bm.Set("nonce_str", util.GetRandomString(32)).
+	bm.Set("nonce_str", util.RandomString(32)).
 		Set("out_trade_no", "6aDCor1nUcAihrV5JBlI09tLvXbUp02B").
 		Set("sign_type", wechat.SignType_MD5)
 

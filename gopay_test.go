@@ -1,7 +1,10 @@
 package gopay
 
 import (
+	"crypto/sha1"
+	"encoding/hex"
 	"encoding/xml"
+	"fmt"
 	"testing"
 
 	"github.com/go-pay/gopay/pkg/xlog"
@@ -11,7 +14,7 @@ func TestBodyMap_CheckParamsNull(t *testing.T) {
 	bm := make(BodyMap)
 	bm.Set("name", "jerry")
 	bm.Set("age", 2)
-	bm.Set("phone", "")
+	bm.Set("phone", "123")
 	bm.Set("pi", 3.1415926)
 
 	err := bm.CheckEmptyError("name", "age", "phone")
@@ -19,6 +22,12 @@ func TestBodyMap_CheckParamsNull(t *testing.T) {
 		xlog.Errorf("bm.CheckEmptyError():error:%+v", err)
 		return
 	}
+	h := sha1.New()
+	h.Write([]byte("golang"))
+	bs := h.Sum(nil)
+	_signature := fmt.Sprintf("%s", hex.EncodeToString(bs))
+	xlog.Info(_signature) // 771e417b9dcae54aead2f3cbbbff340787bc462f
+	// 771e417b9dcae54aead2f3cbbbff340787bc462f
 }
 
 func TestBodyMap_UnmarshalXML(t *testing.T) {

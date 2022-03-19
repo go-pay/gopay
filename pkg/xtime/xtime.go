@@ -14,6 +14,9 @@ type Time int64
 func (t *Time) Scan(src interface{}) (err error) {
 	switch sc := src.(type) {
 	case time.Time:
+		if sc.IsZero() {
+			return
+		}
 		*t = Time(sc.Unix())
 	case string:
 		var i int64
@@ -38,6 +41,9 @@ func (t *Time) FromDB(bs []byte) error {
 	ti, err := time.ParseInLocation("2006-01-02T15:04:05", timeStr[:19], time.Local)
 	if err != nil {
 		return err
+	}
+	if ti.IsZero() {
+		return nil
 	}
 	*t = Time(ti.Unix())
 	return nil
