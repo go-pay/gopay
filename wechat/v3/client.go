@@ -45,7 +45,6 @@ func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3
 		ctx:         context.Background(),
 		DebugSwitch: gopay.DebugOff,
 	}
-	// 自动获取
 	return client, nil
 }
 
@@ -79,7 +78,7 @@ func (c *ClientV3) doProdPostWithHeader(ctx context.Context, headerMap map[strin
 		httpClient.Header.Add(k, v)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.WxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, err = httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes(ctx)
@@ -109,7 +108,7 @@ func (c *ClientV3) doProdPost(ctx context.Context, bm gopay.BodyMap, path, autho
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.WxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, err = httpClient.Type(xhttp.TypeJSON).Post(url).SendBodyMap(bm).EndBytes(ctx)
@@ -139,7 +138,7 @@ func (c *ClientV3) doProdGet(ctx context.Context, uri, authorization string) (re
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.WxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, err = httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes(ctx)
@@ -169,7 +168,7 @@ func (c *ClientV3) doProdPut(ctx context.Context, bm gopay.BodyMap, path, author
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.WxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, err = httpClient.Type(xhttp.TypeJSON).Put(url).SendBodyMap(bm).EndBytes(ctx)
@@ -199,7 +198,7 @@ func (c *ClientV3) doProdDelete(ctx context.Context, bm gopay.BodyMap, path, aut
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.WxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, err = httpClient.Type(xhttp.TypeJSON).Delete(url).SendBodyMap(bm).EndBytes(ctx)
@@ -229,7 +228,7 @@ func (c *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, path, a
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.WxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, err = httpClient.Type(xhttp.TypeMultipartFormData).Post(url).SendMultipartBodyMap(bm).EndBytes(ctx)
@@ -259,7 +258,7 @@ func (c *ClientV3) doProdPatch(ctx context.Context, bm gopay.BodyMap, path, auth
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
 	}
 	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.GetRandomString(21), time.Now().Unix()))
+	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
 	httpClient.Header.Add(HeaderSerial, c.WxSerialNo)
 	httpClient.Header.Add("Accept", "*/*")
 	res, bs, err = httpClient.Type(xhttp.TypeJSON).Patch(url).SendBodyMap(bm).EndBytes(ctx)

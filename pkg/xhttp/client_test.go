@@ -17,9 +17,7 @@ type HttpGet struct {
 	Data    interface{} `json:"data,omitempty"`
 }
 
-var (
-	ctx = context.Background()
-)
+var ctx = context.Background()
 
 func TestHttpGet(t *testing.T) {
 	client := NewClient()

@@ -13,7 +13,7 @@ func TestClient_TradePrecreate(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("subject", "预创建创建订单").
-		Set("out_trade_no", util.GetRandomString(32)).
+		Set("out_trade_no", util.RandomString(32)).
 		Set("total_amount", "0.01")
 
 	// 创建订单
@@ -39,7 +39,7 @@ func TestClient_TradeCreate(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("subject", "创建订单").
 		Set("buyer_id", "2088802095984694").
-		Set("out_trade_no", util.GetRandomString(32)).
+		Set("out_trade_no", util.RandomString(32)).
 		Set("total_amount", "0.01")
 
 	// 创建订单
@@ -199,7 +199,7 @@ func TestClient_TradePageRefund(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", "GZ201909081743431443").
 		Set("refund_amount", "5").
-		Set("out_request_no", util.GetRandomString(32))
+		Set("out_request_no", util.RandomString(32))
 
 	// 发起退款请求
 	aliRsp, err := client.TradePageRefund(ctx, bm)

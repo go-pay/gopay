@@ -71,14 +71,14 @@ func TestClient_EntrustH5(t *testing.T) {
 }
 
 func TestClient_EntrustPaying(t *testing.T) {
-	number := util.GetRandomString(32)
+	number := util.RandomString(32)
 	xlog.Info("out_trade_no:", number)
 	// 初始化参数结构体
 	bm := make(gopay.BodyMap)
 	bm.Set("contract_mchid", mchId).
 		Set("contract_appid", appId).
 		Set("out_trade_no", number).
-		Set("nonce_str", util.GetRandomString(32)).
+		Set("nonce_str", util.RandomString(32)).
 		Set("body", "测试签约").
 		Set("total_fee", 1).
 		Set("spbill_create_ip", "127.0.0.1").

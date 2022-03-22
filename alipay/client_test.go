@@ -66,7 +66,7 @@ func TestClient_PostAliPayAPISelfV2(t *testing.T) {
 	// biz_content
 	bm.SetBodyMap("biz_content", func(bz gopay.BodyMap) {
 		bz.Set("subject", "预创建创建订单")
-		bz.Set("out_trade_no", util.GetRandomString(32))
+		bz.Set("out_trade_no", util.RandomString(32))
 		bz.Set("total_amount", "100")
 	})
 
@@ -82,7 +82,7 @@ func TestClient_PostAliPayAPISelfV2(t *testing.T) {
 func TestClient_PostAliPayAPISelf(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("subject", "预创建创建订单")
-	bm.Set("out_trade_no", util.GetRandomString(32))
+	bm.Set("out_trade_no", util.RandomString(32))
 	bm.Set("total_amount", "100")
 
 	aliPsp := new(TradePrecreateResponse)

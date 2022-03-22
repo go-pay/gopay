@@ -1,10 +1,21 @@
 package xlog
 
+const (
+	ErrorLevel LogLevel = iota + 1
+	WarnLevel
+	InfoLevel
+	DebugLevel
+)
+
+type LogLevel int
+
 var (
 	debugLog XLogger = &DebugLogger{}
 	infoLog  XLogger = &InfoLogger{}
 	warnLog  XLogger = &WarnLogger{}
 	errLog   XLogger = &ErrorLogger{}
+
+	Level LogLevel
 )
 
 type XLogger interface {
@@ -41,20 +52,4 @@ func Error(args ...interface{}) {
 
 func Errorf(format string, args ...interface{}) {
 	errLog.LogOut(nil, &format, args...)
-}
-
-func SetDebugLog(logger XLogger) {
-	debugLog = logger
-}
-
-func SetInfoLog(logger XLogger) {
-	infoLog = logger
-}
-
-func SetWarnLog(logger XLogger) {
-	warnLog = logger
-}
-
-func SetErrLog(logger XLogger) {
-	errLog = logger
 }
