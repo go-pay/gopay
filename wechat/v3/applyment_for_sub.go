@@ -106,12 +106,13 @@ func (c *ClientV3) V3Apply4SubModifySettlement(ctx context.Context, bm gopay.Bod
 	); err != nil {
 		return nil, err
 	}
-
-	authorization, err := c.authorization(MethodPost, v3Apply4SubModifySettlement, bm)
+	postUrl := fmt.Sprintf(v3Apply4SubModifySettlement, bm["sub_mchid"])
+	bm.Remove("sub_mchid")
+	authorization, err := c.authorization(MethodPost, postUrl, bm)
 	if err != nil {
 		return nil, err
 	}
-	res, si, bs, err := c.doProdPost(ctx, bm, v3Apply4SubModifySettlement, authorization)
+	res, si, bs, err := c.doProdPost(ctx, bm, postUrl, authorization)
 	if err != nil {
 		return nil, err
 	}
