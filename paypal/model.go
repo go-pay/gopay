@@ -59,6 +59,13 @@ type OrderCaptureRsp struct {
 	Response      *OrderDetail   `json:"response,omitempty"`
 }
 
+type OrderConfirmRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *OrderDetail   `json:"response,omitempty"`
+}
+
 type PaymentAuthorizeDetailRsp struct {
 	Code          int                     `json:"-"`
 	Error         string                  `json:"-"`
@@ -111,15 +118,16 @@ type Patch struct {
 }
 
 type OrderDetail struct {
-	Id            string          `json:"id,omitempty"`
-	PaymentSource *PaymentSource  `json:"payment_source,omitempty"`
-	Intent        string          `json:"intent,omitempty"`
-	Payer         *Payer          `json:"payer,omitempty"`
-	PurchaseUnits []*PurchaseUnit `json:"purchase_units,omitempty"`
-	Status        string          `json:"status,omitempty"` // CREATED、SAVED、APPROVED、VOIDED、COMPLETED、PAYER_ACTION_REQUIRED
-	Links         []*Link         `json:"links,omitempty"`
-	CreateTime    string          `json:"create_time,omitempty"`
-	UpdateTime    string          `json:"update_time,omitempty"`
+	Id                    string          `json:"id,omitempty"`
+	Status                string          `json:"status,omitempty"` // CREATED、SAVED、APPROVED、VOIDED、COMPLETED、PAYER_ACTION_REQUIRED
+	PaymentSource         *PaymentSource  `json:"payment_source,omitempty"`
+	Intent                string          `json:"intent,omitempty"`
+	ProcessingInstruction string          `json:"processing_instruction,omitempty"`
+	Payer                 *Payer          `json:"payer,omitempty"`
+	PurchaseUnits         []*PurchaseUnit `json:"purchase_units,omitempty"`
+	Links                 []*Link         `json:"links,omitempty"`
+	CreateTime            string          `json:"create_time,omitempty"`
+	UpdateTime            string          `json:"update_time,omitempty"`
 }
 
 type PaymentSource struct {
@@ -155,11 +163,22 @@ type ThreeDSecure struct {
 }
 
 type Payer struct {
-	EmailAddress string `json:"email_address"`
-	PayerId      string `json:"payer_id"`
+	Name         *Name    `json:"name"`
+	Phone        *Phone   `json:"phone,omitempty"`
+	BirthDate    string   `json:"birth_date"`
+	TaxInfo      *TaxInfo `json:"tax_info,omitempty"`
+	EmailAddress string   `json:"email_address"`
+	PayerId      string   `json:"payer_id"`
+	Address      *Address `json:"address"`
+}
+
+type TaxInfo struct {
+	TaxId     string `json:"tax_id"`
+	TaxIdType string `json:"tax_id_type"`
 }
 
 type PurchaseUnit struct {
+	Id                 string              `json:"id,omitempty"`
 	ReferenceId        string              `json:"reference_id,omitempty"`
 	Amount             *Amount             `json:"amount,omitempty"`
 	Payee              *Payee              `json:"payee,omitempty"`
@@ -167,7 +186,6 @@ type PurchaseUnit struct {
 	Description        string              `json:"description,omitempty"`
 	CustomId           string              `json:"custom_id,omitempty"`
 	InvoiceId          string              `json:"invoice_id,omitempty"`
-	Id                 string              `json:"id,omitempty"`
 	SoftDescriptor     string              `json:"soft_descriptor,omitempty"`
 	Items              []*Item             `json:"items,omitempty"`
 	Shipping           *Shipping           `json:"shipping,omitempty"`
@@ -212,7 +230,21 @@ type Shipping struct {
 }
 
 type Name struct {
-	FullName string `json:"full_name,omitempty"`
+	Prefix     string `json:"prefix,omitempty"`
+	GivenName  string `json:"given_name,omitempty"`
+	Surname    string `json:"surname,omitempty"`
+	MiddleName string `json:"middle_name,omitempty"`
+	Suffix     string `json:"suffix,omitempty"`
+	FullName   string `json:"full_name,omitempty"`
+}
+
+type Phone struct {
+	PhoneType   string       `json:"phone_type"`
+	PhoneNumber *PhoneNumber `json:"phone_number"`
+}
+
+type PhoneNumber struct {
+	NationalNumber string `json:"national_number"`
 }
 
 type Payments struct {
@@ -237,8 +269,16 @@ type StatusDetails struct {
 }
 
 type Capture struct {
-	Status        string         `json:"status,omitempty"`
-	StatusDetails *StatusDetails `json:"status_details,omitempty"`
+	Id                        string                     `json:"id,omitempty"`
+	Status                    string                     `json:"status,omitempty"`
+	StatusDetails             *StatusDetails             `json:"status_details,omitempty"`
+	Amount                    *Amount                    `json:"amount,omitempty"`
+	FinalCapture              bool                       `json:"final_capture,omitempty"`
+	SellerProtection          *SellerProtection          `json:"seller_protection,omitempty"`
+	SellerReceivableBreakdown *SellerReceivableBreakdown `json:"seller_receivable_breakdown,omitempty"`
+	Links                     []*Link                    `json:"links,omitempty"`
+	CreateTime                string                     `json:"create_time,omitempty"`
+	UpdateTime                string                     `json:"update_time,omitempty"`
 }
 
 type Refund struct {
@@ -282,8 +322,8 @@ type PaymentAuthorizeCapture struct {
 	Amount                    *Amount                    `json:"amount,omitempty"`
 	InvoiceId                 string                     `json:"invoice_id,omitempty"`
 	CustomId                  string                     `json:"custom_id,omitempty"`
-	SellerProtection          *SellerProtection          `json:"seller_protection,omitempty"`
 	FinalCapture              bool                       `json:"final_capture,omitempty"`
+	SellerProtection          *SellerProtection          `json:"seller_protection,omitempty"`
 	SellerReceivableBreakdown *SellerReceivableBreakdown `json:"seller_receivable_breakdown,omitempty"`
 	DisbursementMode          string                     `json:"disbursement_mode,omitempty"`
 	Links                     []*Link                    `json:"links,omitempty"`

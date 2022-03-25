@@ -28,9 +28,9 @@ client.DebugSwitch = gopay.DebugOn
 
 ### 2、API 方法调用及入参（Call API）
 
-> Orders：[Orders API](https://developer.paypal.com/docs/api/orders/v2)
+> Orders：[Orders API](https://developer.paypal.com/api/orders/v2/)
 
-> Payments：[Payments API](https://developer.paypal.com/docs/api/payments/v2)
+> Payments：[Payments API](https://developer.paypal.com/api/payments/v2/)
 
 - Create Orders example
 ```go
@@ -44,26 +44,58 @@ import (
 // Create Orders example
 var pus []*paypal.PurchaseUnit
 var item = &paypal.PurchaseUnit{
-    ReferenceId: util.GetRandomString(16),
-    Amount: &paypal.Amount{
-        CurrencyCode: "USD",
-        Value:        "8",
-    },
+ReferenceId: util.GetRandomString(16),
+Amount: &paypal.Amount{
+CurrencyCode: "USD",
+Value:        "8",
+},
 }
 pus = append(pus, item)
 
 bm := make(gopay.BodyMap)
 bm.Set("intent", "CAPTURE").
-    Set("purchase_units", pus)
-
+Set("purchase_units", pus).
+SetBodyMap("application_context", func(b gopay.BodyMap) {
+b.Set("brand_name", "gopay").
+Set("locale", "en-PT").
+Set("return_url", "https://example.com/returnUrl").
+Set("cancel_url", "https://example.com/cancelUrl")
+})
 ppRsp, err := client.CreateOrder(ctx, bm)
 if err != nil {
-    xlog.Error(err)
-    return
+xlog.Error(err)
+return
 }
 if ppRsp.Code != paypal.Success {
-    // do something
-    return
+// do something
+return
+}
+```
+
+- Capture payment for order
+
+```go
+import (
+"github.com/go-pay/gopay"
+"github.com/go-pay/gopay/pkg/xlog"
+)
+
+// Capture payment for order
+//bm := make(gopay.BodyMap)
+//bm.SetBodyMap("payment_source", func(b gopay.BodyMap) {
+//	b.SetBodyMap("token", func(b gopay.BodyMap) {
+//		b.Set("id", "The PayPal-generated ID for the token").
+//			Set("type", "BILLING_AGREEMENT")
+//	})
+//})
+ppRsp, err := client.OrderCapture(ctx, "4X223967G91314611", nil)
+if err != nil {
+xlog.Error(err)
+return
+}
+if ppRsp.Code != paypal.Success {
+// do something
+return
 }
 ```
 
@@ -74,13 +106,14 @@ if ppRsp.Code != paypal.Success {
 ### PayPal API
 
 * <font color='#003087' size='4'>AccessToken</font>
-    * 获取AccessToken（Get AccessToken）：`client.GetAccessToken()`
+	* 获取AccessToken（Get AccessToken）：`client.GetAccessToken()`
 * <font color='#003087' size='4'>订单</font>
     * 创建订单（Create order）：`client.CreateOrder()`
     * 订单详情（Show order details）：`client.OrderDetail()`
     * 更新订单（Update order）：`client.UpdateOrder()`
     * 订单支付授权（Authorize payment for order）：`client.OrderAuthorize()`
     * 订单支付捕获（Capture payment for order）：`client.OrderCapture()`
+    * 订单支付确认（Confirm the Order）：`client.OrderConfirm()`
 * <font color='#003087' size='4'>支付</font>
     * 支付授权详情（Show details for authorized payment）：`client.PaymentAuthorizeDetail()`
     * 重新授权支付授权（Reauthorize authorized payment）：`client.PaymentReauthorize()`

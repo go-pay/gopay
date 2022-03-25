@@ -14,11 +14,12 @@ const (
 	getAccessToken = "/v1/oauth2/token" // 获取AccessToken POST
 
 	// 订单相关
-	orderCreate    = "/v2/checkout/orders"              // 创建订单 POST
-	orderUpdate    = "/v2/checkout/orders/%s"           // order_id 更新订单 PATCH
-	orderDetail    = "/v2/checkout/orders/%s"           // order_id 订单详情 GET
-	orderAuthorize = "/v2/checkout/orders/%s/authorize" // order_id 订单支付授权 POST
-	orderCapture   = "/v2/checkout/orders/%s/capture"   // order_id 订单支付捕获 POST
+	orderCreate    = "/v2/checkout/orders"                           // 创建订单 POST
+	orderUpdate    = "/v2/checkout/orders/%s"                        // order_id 更新订单 PATCH
+	orderDetail    = "/v2/checkout/orders/%s"                        // order_id 订单详情 GET
+	orderAuthorize = "/v2/checkout/orders/%s/authorize"              // order_id 订单支付授权 POST
+	orderCapture   = "/v2/checkout/orders/%s/capture"                // order_id 订单支付捕获 POST
+	orderConfirm   = "/v2/checkout/orders/%s/confirm-payment-source" // order_id 订单支付确认 POST
 
 	// 支付相关
 	paymentAuthorizeDetail  = "/v2/payments/authorizations/%s"             // authorization_id 支付授权详情 GET

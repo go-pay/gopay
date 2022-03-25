@@ -12,7 +12,7 @@ import (
 
 // 创建订单（Create order）
 //	Code = 0 is success
-//	文档：https://developer.paypal.com/docs/api/orders/v2/#orders_create
+//	文档：https://developer.paypal.com/api/orders/v2/#orders_create
 func (c *Client) CreateOrder(ctx context.Context, bm gopay.BodyMap) (ppRsp *CreateOrderRsp, err error) {
 	if err = bm.CheckEmptyError("intent", "purchase_units"); err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func (c *Client) CreateOrder(ctx context.Context, bm gopay.BodyMap) (ppRsp *Crea
 
 // 更新订单（Update order）
 //	Code = 0 is success
-//	文档：https://developer.paypal.com/docs/api/orders/v2/#orders_patch
+//	文档：https://developer.paypal.com/api/orders/v2/#orders_patch
 func (c *Client) UpdateOrder(ctx context.Context, orderId string, patchs []*Patch) (ppRsp *EmptyRsp, err error) {
 	if orderId == gopay.NULL {
 		return nil, errors.New("order_id is empty")
@@ -59,7 +59,7 @@ func (c *Client) UpdateOrder(ctx context.Context, orderId string, patchs []*Patc
 
 // 订单详情（Show order details）
 //	Code = 0 is success
-//	文档：https://developer.paypal.com/docs/api/orders/v2/#orders_get
+//	文档：https://developer.paypal.com/api/orders/v2/#orders_get
 func (c *Client) OrderDetail(ctx context.Context, orderId string, bm gopay.BodyMap) (ppRsp *OrderDetailRsp, err error) {
 	if orderId == gopay.NULL {
 		return nil, errors.New("order_id is empty")
@@ -85,7 +85,7 @@ func (c *Client) OrderDetail(ctx context.Context, orderId string, bm gopay.BodyM
 
 // 订单支付授权（Authorize payment for order）
 //	Code = 0 is success
-//	文档：https://developer.paypal.com/docs/api/orders/v2/#orders_authorize
+//	文档：https://developer.paypal.com/api/orders/v2/#orders_authorize
 func (c *Client) OrderAuthorize(ctx context.Context, orderId string, bm gopay.BodyMap) (ppRsp *OrderAuthorizeRsp, err error) {
 	if orderId == gopay.NULL {
 		return nil, errors.New("order_id is empty")
@@ -111,7 +111,7 @@ func (c *Client) OrderAuthorize(ctx context.Context, orderId string, bm gopay.Bo
 
 // 订单支付捕获（Capture payment for order）
 //	Code = 0 is success
-//	文档：https://developer.paypal.com/docs/api/orders/v2/#orders_capture
+//	文档：https://developer.paypal.com/api/orders/v2/#orders_capture
 func (c *Client) OrderCapture(ctx context.Context, orderId string, bm gopay.BodyMap) (ppRsp *OrderCaptureRsp, err error) {
 	if orderId == gopay.NULL {
 		return nil, errors.New("order_id is empty")
@@ -127,6 +127,32 @@ func (c *Client) OrderCapture(ctx context.Context, orderId string, bm gopay.Body
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
 	if res.StatusCode != http.StatusCreated && res.StatusCode != http.StatusOK {
+		ppRsp.Code = res.StatusCode
+		ppRsp.Error = string(bs)
+		ppRsp.ErrorResponse = new(ErrorResponse)
+		_ = json.Unmarshal(bs, ppRsp.ErrorResponse)
+	}
+	return ppRsp, nil
+}
+
+// 订单支付确认（Confirm the Order）
+//	Code = 0 is success
+//	文档：https://developer.paypal.com/api/orders/v2/#orders_confirm
+func (c *Client) OrderConfirm(ctx context.Context, orderId string, bm gopay.BodyMap) (ppRsp *OrderConfirmRsp, err error) {
+	if orderId == gopay.NULL {
+		return nil, errors.New("order_id is empty")
+	}
+	url := fmt.Sprintf(orderConfirm, orderId)
+	res, bs, err := c.doPayPalPost(ctx, bm, url)
+	if err != nil {
+		return nil, err
+	}
+	ppRsp = &OrderConfirmRsp{Code: Success}
+	ppRsp.Response = new(OrderDetail)
+	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	}
+	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
 		ppRsp.Error = string(bs)
 		ppRsp.ErrorResponse = new(ErrorResponse)
