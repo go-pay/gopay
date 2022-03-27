@@ -1,3 +1,12 @@
+版本号：Release 1.5.75
+修改记录：
+   (1) 微信V3：client.V3Apply4SubModifySettlement()，sub_mchid 问题处理
+   (2) 微信V3：微信分账接收方，model参数补充添加 detail_id
+   (3) PayPal：注释中接口文档地址更新
+   (4) PayPal：新增 client.OrderConfirm()，订单确认
+   (5) PayPal：OrderDetail、Capture、Payer、Name 等结构体，遗漏参数补充
+   (6) gopay：pkg/xtime/parse_format.go，优化 DurationToUnit() 方法，int -> int64
+
 版本号：Release 1.5.74
 修改记录：
    (1) gopay：一些小改动，util.GetRandomString() -> util.RandomString()
