@@ -142,8 +142,8 @@ func SystemOauthToken(ctx context.Context, appId string, privateKey, grantType, 
 	if err = json.Unmarshal(bs, rsp); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
-	if rsp.Response.AccessToken == "" {
-		return nil, errors.New("access_token is NULL")
+	if (rsp.Response == nil) || (rsp.Response != nil && rsp.Response.AccessToken == "") {
+		return nil, errors.New("response is nil or access_token is NULL")
 	}
 	return
 }
