@@ -44,9 +44,15 @@ func TestClient_TradeCreate(t *testing.T) {
 
 	// 创建订单
 	aliRsp, err := client.TradeCreate(ctx, bm)
-	if err != nil {
+	bizErr := AsBizError(err)
+	if err != nil && bizErr == nil {
+		// 这种情况是非业务逻辑错误
 		xlog.Error(err)
 		return
+	}
+	if bizErr != nil {
+		// 在这里处理业务逻辑
+		xlog.Infof("biz error: code: %v, msg: %v", bizErr.Code, bizErr.Msg)
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
 	xlog.Debug("aliRsp.TradeNo:", aliRsp.Response.TradeNo)
@@ -123,9 +129,10 @@ func TestClient_TradePay(t *testing.T) {
 }
 
 func TestClient_TradeQuery(t *testing.T) {
+	const outTradeNo = "Xdhxpe4bI5hhXAldhkMiGTZ03Jm9V6V0"
 	// 请求参数
 	bm := make(gopay.BodyMap)
-	bm.Set("out_trade_no", "Xdhxpe4bI5hhXAldhkMiGTZ03Jm9V6V0")
+	bm.Set("out_trade_no", outTradeNo)
 
 	// 查询订单
 	aliRsp, err := client.TradeQuery(ctx, bm)
