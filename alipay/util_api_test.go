@@ -17,7 +17,11 @@ func TestClient_SystemOauthToken(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.SystemOauthToken(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.SystemOauthToken(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -34,7 +38,11 @@ func TestClient_OpenAuthTokenApp(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.OpenAuthTokenApp(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.OpenAuthTokenApp(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -50,7 +58,11 @@ func TestClient_UserInfoAuth(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserInfoAuth(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.UserInfoAuth(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -60,7 +72,11 @@ func TestClient_UserInfoShare(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserInfoShare(ctx, "auth_token")
 	if err != nil {
-		xlog.Errorf("client.UserInfoShare(),error:%+v", err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -81,7 +97,7 @@ func TestClient_PublicCertDownload(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.PublicCertDownload(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.UserInfoShare(),error:%+v", err)
+		//xlog.Errorf("client.UserInfoShare(),error:%+v", err)
 		return
 	}
 	xlog.Debugf("aliRsp.Response.AlipayCertContent:\n %s", aliRsp.Response.AlipayCertContent)

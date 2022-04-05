@@ -19,7 +19,11 @@ func TestClient_TradePrecreate(t *testing.T) {
 	// 创建订单
 	aliRsp, err := client.TradePrecreate(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debugf("aliRsp:%+v", aliRsp.Response)
@@ -47,21 +51,12 @@ func TestClient_TradeCreate(t *testing.T) {
 	if err != nil {
 		if bizErr, ok := IsBizError(err); ok {
 			xlog.Errorf("%s, %s", bizErr.Code, bizErr.Msg)
+			// do something
+			return
 		}
 		xlog.Errorf("%s", err)
 		return
 	}
-
-	//bizErr := IsBizError(err)
-	//if err != nil && bizErr == nil {
-	//	// 这种情况是非业务逻辑错误
-	//	xlog.Error(err)
-	//	return
-	//}
-	//if bizErr != nil {
-	//	// 在这里处理业务逻辑
-	//	xlog.Infof("biz error: code: %v, msg: %v", bizErr.Code, bizErr.Msg)
-	//}
 	xlog.Debug("aliRsp:", *aliRsp)
 	xlog.Debug("aliRsp.TradeNo:", aliRsp.Response.TradeNo)
 }
@@ -76,7 +71,11 @@ func TestClient_TradeAppPay(t *testing.T) {
 	// 手机APP支付参数请求
 	payParam, err := client.TradeAppPay(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.TradeAppPay(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("payParam:", payParam)
@@ -90,7 +89,11 @@ func TestClient_TradeCancel(t *testing.T) {
 	// 撤销支付订单
 	aliRsp, err := client.TradeCancel(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.TradeCancel(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -104,7 +107,11 @@ func TestClient_TradeClose(t *testing.T) {
 	// 条码支付
 	aliRsp, err := client.TradeClose(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.TradeClose(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -123,7 +130,11 @@ func TestClient_TradePay(t *testing.T) {
 	// 条码支付
 	aliRsp, err := client.TradePay(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -145,7 +156,11 @@ func TestClient_TradeQuery(t *testing.T) {
 	// 查询订单
 	aliRsp, err := client.TradeQuery(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debugf("aliRsp:%+v", aliRsp.Response)
@@ -203,7 +218,11 @@ func TestClient_TradeRefund(t *testing.T) {
 	// 发起退款请求
 	aliRsp, err := client.TradeRefund(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.TradeRefund(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -219,7 +238,11 @@ func TestClient_TradePageRefund(t *testing.T) {
 	// 发起退款请求
 	aliRsp, err := client.TradePageRefund(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.TradePageRefund(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -234,7 +257,11 @@ func TestClient_TradeFastPayRefundQuery(t *testing.T) {
 	// 发起退款查询请求
 	aliRsp, err := client.TradeFastPayRefundQuery(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.TradeFastPayRefundQuery(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -255,7 +282,11 @@ func TestClient_TradeOrderSettle(t *testing.T) {
 	// 发起交易结算接口
 	aliRsp, err := client.TradeOrderSettle(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.TradeOrderSettle(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -270,7 +301,11 @@ func TestClient_TradeAdvanceConsult(t *testing.T) {
 
 	aliRsp, err := client.TradeAdvanceConsult(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.TradeAdvanceConsult(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -286,7 +321,11 @@ func TestClient_PcreditHuabeiAuthSettleApply(t *testing.T) {
 
 	aliRsp, err := client.PcreditHuabeiAuthSettleApply(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.PcreditHuabeiAuthSettleApply(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -301,7 +340,11 @@ func TestClient_CommerceTransportNfccardSend(t *testing.T) {
 
 	aliRsp, err := client.CommerceTransportNfccardSend(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.CommerceTransportNfccardSend(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -319,7 +362,11 @@ func TestClient_DataDataserviceAdDataQuery(t *testing.T) {
 
 	aliRsp, err := client.DataDataserviceAdDataQuery(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.DataDataserviceAdDataQuery(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -345,7 +392,11 @@ func TestClient_CommerceAirCallcenterTradeApply(t *testing.T) {
 
 	aliRsp, err := client.CommerceAirCallcenterTradeApply(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.CommerceAirCallcenterTradeApply(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -371,6 +422,11 @@ func TestClient_PaymentTradeOrderCreate(t *testing.T) {
 
 	aliRsp, err := client.PaymentTradeOrderCreate(ctx, bm)
 	if err != nil {
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		xlog.Errorf("client.PaymentTradeOrderCreate(%+v),error:%+v", bm, err)
 		return
 	}
@@ -387,6 +443,11 @@ func TestClient_CommerceBenefitApply(t *testing.T) {
 
 	aliRsp, err := client.CommerceBenefitApply(ctx, bm)
 	if err != nil {
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		xlog.Errorf("client.CommerceBenefitApply(%+v),error:%+v", bm, err)
 		return
 	}
@@ -403,6 +464,11 @@ func TestClient_CommerceBenefitVerify(t *testing.T) {
 
 	aliRsp, err := client.CommerceBenefitVerify(ctx, bm)
 	if err != nil {
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		xlog.Errorf("client.CommerceBenefitVerify(%+v),error:%+v", bm, err)
 		return
 	}
@@ -414,7 +480,11 @@ func TestClient_TradeRepaybillQuery(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	aliRsp, err := client.TradeRepaybillQuery(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.TradeRepaybillQuery(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)

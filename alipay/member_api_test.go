@@ -28,7 +28,11 @@ func TestClient_UserCertifyOpenInit(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserCertifyOpenInit(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -43,7 +47,11 @@ func TestClient_UserCertifyOpenCertify(t *testing.T) {
 	// 发起请求
 	certifyUrl, err := client.UserCertifyOpenCertify(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("certifyUrl:", certifyUrl)
@@ -58,7 +66,11 @@ func TestClient_UserCertifyOpenQuery(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserCertifyOpenQuery(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -75,7 +87,11 @@ func TestUserAgreementExecutionplanModify(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserAgreementExecutionplanModify(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -96,7 +112,11 @@ func TestUserAgreementTransfer(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserAgreementTransfer(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -112,7 +132,11 @@ func TestUserTwostageCommonUse(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserTwostageCommonUse(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -128,7 +152,11 @@ func TestUserAuthZhimaorgIdentityApply(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserAuthZhimaorgIdentityApply(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -143,7 +171,11 @@ func TestUserCharityRecordexistQuery(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserCharityRecordexistQuery(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -159,7 +191,11 @@ func TestUserAlipaypointSend(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserAlipaypointSend(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -177,7 +213,11 @@ func TestMemberDataIsvCreate(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.MemberDataIsvCreate(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -191,7 +231,11 @@ func TestUserFamilyArchiveQuery(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserFamilyArchiveQuery(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -207,7 +251,11 @@ func TestUserFamilyArchiveInitialize(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserFamilyArchiveInitialize(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -223,7 +271,11 @@ func TestUserCertdocCertverifyPreconsult(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserCertdocCertverifyPreconsult(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -236,7 +288,11 @@ func TestUserCertdocCertverifyConsult(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserCertdocCertverifyConsult(ctx, bm, "auth_token")
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -252,7 +308,11 @@ func TestUserFamilyShareZmgoInitialize(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserFamilyShareZmgoInitialize(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -267,7 +327,11 @@ func TestUserDtbankQrcodedataQuery(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserDtbankQrcodedataQuery(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -280,7 +344,11 @@ func TestUserAlipaypointBudgetlibQuery(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserAlipaypointBudgetlibQuery(ctx, bm)
 	if err != nil {
-		xlog.Error(err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)

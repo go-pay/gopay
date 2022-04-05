@@ -22,7 +22,7 @@ var (
 func TestMain(m *testing.M) {
 
 	// 初始化支付宝客户端
-	//    appId：应用ID
+	//    appid：应用ID
 	//    privateKey：应用私钥，支持PKCS1和PKCS8
 	//    isProd：是否是正式环境
 	client, err = NewClient(cert.Appid, cert.PrivateKey, false)

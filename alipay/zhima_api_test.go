@@ -20,7 +20,7 @@ func TestZhimaCreditEpSceneRatingInitialize(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCreditEpSceneRatingInitialize(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditEpSceneRatingInitialize(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditEpSceneRatingInitialize(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -37,7 +37,7 @@ func TestZhimaCreditEpSceneFulfillmentSync(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCreditEpSceneFulfillmentSync(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditEpSceneFulfillmentSync(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditEpSceneFulfillmentSync(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -55,7 +55,7 @@ func TestZhimaCreditEpSceneAgreementUse(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCreditEpSceneAgreementUse(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditEpSceneAgreementUse(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditEpSceneAgreementUse(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -71,7 +71,7 @@ func TestZhimaCreditEpSceneAgreementCancel(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCreditEpSceneAgreementCancel(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditEpSceneAgreementCancel(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditEpSceneAgreementCancel(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -89,7 +89,7 @@ func TestZhimaCreditEpSceneFulfillmentlistSync(t *testing.T) {
 	})
 	aliRsp, err := client.ZhimaCreditEpSceneFulfillmentlistSync(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditEpSceneFulfillmentlistSync(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditEpSceneFulfillmentlistSync(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -128,7 +128,7 @@ func TestZhimaCreditPeZmgoCumulationSync(t *testing.T) {
 	})
 	aliRsp, err := client.ZhimaCreditPeZmgoCumulationSync(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditPeZmgoCumulationSync(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditPeZmgoCumulationSync(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -171,7 +171,7 @@ func TestZhimaMerchantZmgoCumulateSync(t *testing.T) {
 
 	aliRsp, err := client.ZhimaMerchantZmgoCumulateSync(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaMerchantZmgoCumulateSync(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaMerchantZmgoCumulateSync(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -192,7 +192,7 @@ func TestZhimaMerchantZmgoCumulateQuery(t *testing.T) {
 
 	aliRsp, err := client.ZhimaMerchantZmgoCumulateQuery(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaMerchantZmgoCumulateQuery(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaMerchantZmgoCumulateQuery(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -210,7 +210,7 @@ func TestZhimaCreditPeZmgoBizoptClose(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCreditPeZmgoBizoptClose(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditPeZmgoBizoptClose(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditPeZmgoBizoptClose(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -233,7 +233,7 @@ func TestZhimaCreditPeZmgoSettleRefund(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCreditPeZmgoSettleRefund(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditPeZmgoSettleRefund(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditPeZmgoSettleRefund(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -264,7 +264,7 @@ func TestZhimaCreditPeZmgoPreorderCreate(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCreditPeZmgoPreorderCreate(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditPeZmgoPreorderCreate(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditPeZmgoPreorderCreate(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -283,7 +283,7 @@ func TestZhimaCreditPeZmgoAgreementUnsign(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCreditPeZmgoAgreementUnsign(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditPeZmgoAgreementUnsign(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditPeZmgoAgreementUnsign(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -299,7 +299,7 @@ func TestZhimaCreditPeZmgoAgreementQuery(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCreditPeZmgoAgreementQuery(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditPeZmgoAgreementQuery(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditPeZmgoAgreementQuery(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -327,7 +327,7 @@ func TestZhimaCreditPeZmgoSettleUnfreeze(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCreditPeZmgoSettleUnfreeze(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditPeZmgoSettleUnfreeze(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditPeZmgoSettleUnfreeze(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -349,7 +349,7 @@ func TestZhimaCreditPeZmgoPaysignApply(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCreditPeZmgoPaysignApply(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditPeZmgoPaysignApply(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditPeZmgoPaysignApply(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -369,7 +369,7 @@ func TestZhimaCreditPeZmgoPaysignConfirm(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCreditPeZmgoPaysignConfirm(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCreditPeZmgoPaysignConfirm(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCreditPeZmgoPaysignConfirm(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -397,7 +397,7 @@ func TestZhimaCustomerJobworthAdapterQuery(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCustomerJobworthAdapterQuery(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.ZhimaCustomerJobworthAdapterQuery(%+v),error:%+v", bm, err)
+		//xlog.Errorf("client.ZhimaCustomerJobworthAdapterQuery(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -428,7 +428,7 @@ func TestZhimaCustomerJobworthSceneUse(t *testing.T) {
 	aliRsp, err := client.ZhimaCustomerJobworthSceneUse(ctx, bm)
 	if err != nil {
 		if errors.Is(err, gopay.UnmarshalErr) {
-			xlog.Errorf("%v", err)
+			//xlog.Errorf("%v", err)
 			return
 		}
 		xlog.Errorf("client.ZhimaCustomerJobworthSceneUse(%+v),error:%+v", bm, err)
