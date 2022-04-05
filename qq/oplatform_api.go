@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
 )
 
@@ -108,11 +109,12 @@ func GetOpenId(ctx context.Context, accessToken string, lang ...string) (openid 
 	if len(ListBefore) > 1 {
 		ListAfter = strings.Split(ListBefore[1], MarkAfter)
 	}
-	JoinStr := fmt.Sprintf("%v%v%v", MarkBefore, ListAfter[0], MarkAfter)
-	err = json.Unmarshal([]byte(JoinStr), openid)
+	joinStr := fmt.Sprintf("%v%v%v", MarkBefore, ListAfter[0], MarkAfter)
+	err = json.Unmarshal([]byte(joinStr), openid)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, joinStr)
 	}
+
 	return
 }
 

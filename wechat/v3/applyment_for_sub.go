@@ -28,18 +28,17 @@ func (c *ClientV3) V3Apply4SubSubmit(ctx context.Context, bm gopay.BodyMap) (*Ap
 	if err != nil {
 		return nil, err
 	}
-	wxResp := &Apply4SubSubmitRsp{Code: Success, SignInfo: si}
-	wxResp.Response = new(Apply4SubSubmit)
-	if err = json.Unmarshal(bs, wxResp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	wxRsp := &Apply4SubSubmitRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(Apply4SubSubmit)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
-
 	if res.StatusCode != http.StatusOK {
-		wxResp.Code = res.StatusCode
-		wxResp.Error = string(bs)
-		return wxResp, nil
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
 	}
-	return wxResp, c.verifySyncSign(si)
+	return wxRsp, c.verifySyncSign(si)
 }
 
 // 通过业务申请编号查询申请状态API
@@ -59,7 +58,7 @@ func (c *ClientV3) V3Apply4SubQueryByBusinessCode(ctx context.Context, businessC
 	wxRsp := &Apply4SubQueryRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(Apply4SubQuery)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -86,7 +85,7 @@ func (c *ClientV3) V3Apply4SubQueryByApplyId(ctx context.Context, applyId string
 	wxRsp := &Apply4SubQueryRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(Apply4SubQuery)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -144,7 +143,7 @@ func (c *ClientV3) V3Apply4SubQuerySettlement(ctx context.Context, subMchId stri
 	wxRsp := &Apply4SubQuerySettlementRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(Apply4SubQuerySettlement)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode

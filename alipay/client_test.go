@@ -30,8 +30,8 @@ func TestMain(m *testing.M) {
 		xlog.Error(err)
 		return
 	}
-	// 打开Debug开关，输出日志
-	client.DebugSwitch = gopay.DebugOn
+	// Debug开关，输出/关闭日志
+	client.DebugSwitch = gopay.DebugOff
 
 	// 配置公共参数
 	client.SetCharset("utf-8").

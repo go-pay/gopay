@@ -44,16 +44,24 @@ func TestClient_TradeCreate(t *testing.T) {
 
 	// 创建订单
 	aliRsp, err := client.TradeCreate(ctx, bm)
-	bizErr := AsBizError(err)
-	if err != nil && bizErr == nil {
-		// 这种情况是非业务逻辑错误
-		xlog.Error(err)
+	if err != nil {
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%s, %s", bizErr.Code, bizErr.Msg)
+		}
+		xlog.Errorf("%s", err)
 		return
 	}
-	if bizErr != nil {
-		// 在这里处理业务逻辑
-		xlog.Infof("biz error: code: %v, msg: %v", bizErr.Code, bizErr.Msg)
-	}
+
+	//bizErr := IsBizError(err)
+	//if err != nil && bizErr == nil {
+	//	// 这种情况是非业务逻辑错误
+	//	xlog.Error(err)
+	//	return
+	//}
+	//if bizErr != nil {
+	//	// 在这里处理业务逻辑
+	//	xlog.Infof("biz error: code: %v, msg: %v", bizErr.Code, bizErr.Msg)
+	//}
 	xlog.Debug("aliRsp:", *aliRsp)
 	xlog.Debug("aliRsp.TradeNo:", aliRsp.Response.TradeNo)
 }

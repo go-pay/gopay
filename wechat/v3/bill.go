@@ -39,7 +39,7 @@ func (c *ClientV3) V3BillTradeBill(ctx context.Context, bm gopay.BodyMap) (wxRsp
 	wxRsp = &BillRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(TradeBill)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -75,7 +75,7 @@ func (c *ClientV3) V3BillFundFlowBill(ctx context.Context, bm gopay.BodyMap) (wx
 	wxRsp = &BillRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(TradeBill)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -116,7 +116,7 @@ func (c *ClientV3) V3BillEcommerceFundFlowBill(ctx context.Context, bm gopay.Bod
 	wxRsp = &EcommerceFundFlowBillRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(DownloadBill)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -151,7 +151,7 @@ func (c *ClientV3) V3BillSubFundFlowBill(ctx context.Context, bm gopay.BodyMap) 
 	wxRsp = &BillRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(TradeBill)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode

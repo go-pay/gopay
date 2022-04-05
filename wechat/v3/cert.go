@@ -53,7 +53,7 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 	h.Write([]byte(_str))
 	result, err := rsa.SignPKCS1v15(rand.Reader, priKey, crypto.SHA256, h.Sum(nil))
 	if err != nil {
-		return nil, fmt.Errorf("rsa.SignPKCS1v15(),err:%+v", err)
+		return nil, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
 	}
 	sign := base64.StdEncoding.EncodeToString(result)
 	// Authorization

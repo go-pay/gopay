@@ -27,7 +27,7 @@ func (c *ClientV3) V3Withdraw(ctx context.Context, bm gopay.BodyMap) (*WithdrawR
 	wxRsp := &WithdrawRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(Withdraw)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -62,7 +62,7 @@ func (c *ClientV3) V3WithdrawStatus(ctx context.Context, withdrawId, outRequestN
 	wxRsp := &WithdrawStatusRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(WithdrawStatus)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -98,7 +98,7 @@ func (c *ClientV3) V3WithdrawDownloadErrBill(ctx context.Context, bm gopay.BodyM
 	wxRsp = &BillRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(TradeBill)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode

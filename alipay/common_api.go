@@ -185,7 +185,7 @@ func systemOauthToken(ctx context.Context, appId string, privateKey *rsa.Private
 //	signType：签名方式 alipay.RSA 或 alipay.RSA2，默认 RSA2
 //	bizContent：验签时该参数不做任何处理，{任意值}，此参数具体看文档
 //	文档：https://opendocs.alipay.com/apis/api_9/monitor.heartbeat.syn
-func MonitorHeartbeatSyn(ctx context.Context, appId string, privateKey, signType, bizContent string) (rsp *MonitorHeartbeatSynResponse, err error) {
+func MonitorHeartbeatSyn(ctx context.Context, appId string, privateKey, signType, bizContent string) (aliRsp *MonitorHeartbeatSynResponse, err error) {
 	key := xrsa.FormatAlipayPrivateKey(privateKey)
 	priKey, err := xpem.DecodePrivateKey([]byte(key))
 	if err != nil {
@@ -216,9 +216,12 @@ func MonitorHeartbeatSyn(ctx context.Context, appId string, privateKey, signType
 	if err != nil {
 		return nil, err
 	}
-	rsp = new(MonitorHeartbeatSynResponse)
-	if err = json.Unmarshal(bs, rsp); err != nil {
-		return nil, err
+	aliRsp = new(MonitorHeartbeatSynResponse)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	return rsp, nil
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	return aliRsp, nil
 }

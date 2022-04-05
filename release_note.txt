@@ -1,3 +1,9 @@
+版本号：Release 1.5.76
+修改记录：
+   (1) gopay：大量优化error处理和返回，统一部分通用错误到 error.go 中
+   (2) 支付宝：新增 alipay.IsBizError()，判断并捕获业务错误
+   (3) 微信、支付宝：优化部分 error 返回格式以及透传，优化参数校验返回
+
 版本号：Release 1.5.75
 修改记录：
    (1) 微信V3：client.V3Apply4SubModifySettlement()，sub_mchid 问题处理

@@ -34,13 +34,12 @@ func TestBizErr_AsBizError(t *testing.T) {
 	}
 	var err error
 	err = bizErrCheck(bizErrRsp)
-	if bizErr := AsBizError(err); bizErr == nil {
+	if _, ok := IsBizError(err); !ok {
 		t.Fail()
 	}
 
 	err = bizErrCheck(noBizErrRsp)
-	if bizErr := AsBizError(err); bizErr != nil {
+	if _, ok := IsBizError(err); !ok {
 		t.Fail()
 	}
-
 }

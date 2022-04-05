@@ -3,7 +3,7 @@ package gopay
 import (
 	"encoding/json"
 	"encoding/xml"
-	"errors"
+	"fmt"
 	"io"
 	"net/url"
 	"sort"
@@ -221,7 +221,7 @@ func (bm BodyMap) CheckEmptyError(keys ...string) error {
 		}
 	}
 	if len(emptyKeys) > 0 {
-		return errors.New(strings.Join(emptyKeys, ", ") + " : cannot be empty")
+		return fmt.Errorf("[%w], %v", MissParamErr, strings.Join(emptyKeys, ", "))
 	}
 	return nil
 }

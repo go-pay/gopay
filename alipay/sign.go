@@ -166,7 +166,7 @@ func GetRsaSign(bm gopay.BodyMap, signType string, privateKey *rsa.PrivateKey) (
 		return
 	}
 	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, privateKey, hashs, h.Sum(nil)); err != nil {
-		return
+		return util.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
 	}
 	sign = base64.StdEncoding.EncodeToString(encryptedBytes)
 	return
@@ -187,14 +187,14 @@ func (a *Client) getSignData(bs []byte, alipayCertSN string) (signData string, e
 	if alipayCertSN != "" {
 		// 公钥证书模式
 		if alipayCertSN != a.AliPayPublicCertSN {
-			return gopay.NULL, fmt.Errorf("当前使用的支付宝公钥证书SN[%s]与网关响应报文中的SN[%s]不匹配", a.AliPayPublicCertSN, alipayCertSN)
+			return gopay.NULL, fmt.Errorf("[%w], 当前使用的支付宝公钥证书SN[%s]与网关响应报文中的SN[%s]不匹配", gopay.CertNotMatchErr, a.AliPayPublicCertSN, alipayCertSN)
 		}
 		indexEnd = strings.Index(str, `,"alipay_cert_sn":`)
 		if indexEnd > indexStart && bsLen > indexStart {
 			signData = str[indexStart:indexEnd]
 			return
 		}
-		return gopay.NULL, fmt.Errorf("[%s] parse error", str)
+		return gopay.NULL, fmt.Errorf("[%w], value: %s", gopay.GetSignDataErr, str)
 	}
 	// 普通公钥模式
 	indexEnd = strings.Index(str, `,"sign":`)
@@ -202,7 +202,7 @@ func (a *Client) getSignData(bs []byte, alipayCertSN string) (signData string, e
 		signData = str[indexStart:indexEnd]
 		return
 	}
-	return gopay.NULL, fmt.Errorf("[%s] parse error", str)
+	return gopay.NULL, fmt.Errorf("[%w], value: %s", gopay.GetSignDataErr, str)
 }
 
 // =============================== 同步验签 ===============================
@@ -262,7 +262,9 @@ func (a *Client) autoVerifySignByCert(sign, signData string, signDataErr error) 
 		hashs := crypto.SHA256
 		h := hashs.New()
 		h.Write([]byte(signData))
-		return rsa.VerifyPKCS1v15(a.aliPayPublicKey, hashs, h.Sum(nil), signBytes)
+		if err = rsa.VerifyPKCS1v15(a.aliPayPublicKey, hashs, h.Sum(nil), signBytes); err != nil {
+			return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
+		}
 	}
 	return nil
 }
@@ -392,7 +394,10 @@ func verifySign(signData, sign, signType, alipayPublicKey string) (err error) {
 	}
 	h = hashs.New()
 	h.Write([]byte(signData))
-	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
+	if err = rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes); err != nil {
+		return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
+	}
+	return nil
 }
 
 func verifySignCert(signData, sign, signType string, alipayPublicKeyCert interface{}) (err error) {
@@ -427,5 +432,8 @@ func verifySignCert(signData, sign, signType string, alipayPublicKeyCert interfa
 	}
 	h = hashs.New()
 	h.Write([]byte(signData))
-	return rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes)
+	if err = rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes); err != nil {
+		return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
+	}
+	return nil
 }

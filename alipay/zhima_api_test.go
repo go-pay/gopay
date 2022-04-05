@@ -1,6 +1,7 @@
 package alipay
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/go-pay/gopay"
@@ -426,6 +427,10 @@ func TestZhimaCustomerJobworthSceneUse(t *testing.T) {
 
 	aliRsp, err := client.ZhimaCustomerJobworthSceneUse(ctx, bm)
 	if err != nil {
+		if errors.Is(err, gopay.UnmarshalErr) {
+			xlog.Errorf("%v", err)
+			return
+		}
 		xlog.Errorf("client.ZhimaCustomerJobworthSceneUse(%+v),error:%+v", bm, err)
 		return
 	}

@@ -17,6 +17,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 )
 
@@ -119,7 +120,7 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 	}
 	bs, err := json.Marshal(v)
 	if err != nil {
-		c.err = fmt.Errorf("json.Marshal(%+v)：%w", v, err)
+		c.err = fmt.Errorf("[%w]: %v, value: %v", gopay.MarshalErr, err, v)
 		return c
 	}
 	switch c.requestType {
@@ -128,7 +129,7 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
 		body := make(map[string]interface{})
 		if err = json.Unmarshal(bs, &body); err != nil {
-			c.err = fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), body, err)
+			c.err = fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 			return c
 		}
 		c.FormString = FormatURLParam(body)
@@ -144,7 +145,7 @@ func (c *Client) SendBodyMap(bm map[string]interface{}) (client *Client) {
 	case TypeJSON:
 		bs, err := json.Marshal(bm)
 		if err != nil {
-			c.err = fmt.Errorf("json.Marshal(%+v)：%w", bm, err)
+			c.err = fmt.Errorf("[%w]: %v, value: %v", gopay.MarshalErr, err, bm)
 			return c
 		}
 		c.jsonByte = bs
@@ -162,7 +163,7 @@ func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client
 	case TypeJSON:
 		bs, err := json.Marshal(bm)
 		if err != nil {
-			c.err = fmt.Errorf("json.Marshal(%+v)：%w", bm, err)
+			c.err = fmt.Errorf("[%w]: %v, value: %v", gopay.MarshalErr, err, bm)
 			return c
 		}
 		c.jsonByte = bs
@@ -198,13 +199,13 @@ func (c *Client) EndStruct(ctx context.Context, v interface{}) (res *http.Respon
 	case string(TypeJSON):
 		err = json.Unmarshal(bs, &v)
 		if err != nil {
-			return nil, fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), v, err)
+			return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 		}
 		return res, nil
 	case string(TypeXML):
 		err = xml.Unmarshal(bs, &v)
 		if err != nil {
-			return nil, fmt.Errorf("xml.Unmarshal(%s, %+v)：%w", string(bs), v, err)
+			return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 		}
 		return res, nil
 	default:

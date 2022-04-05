@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/pkg/util"
 )
 
 // alipay.fund.trans.uni.transfer(单笔转账接口)
@@ -20,12 +21,11 @@ func (a *Client) FundTransUniTransfer(ctx context.Context, bm gopay.BodyMap) (al
 		return nil, err
 	}
 	aliRsp = new(FundTransUniTransferResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -44,12 +44,11 @@ func (a *Client) FundAccountQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp
 		return nil, err
 	}
 	aliRsp = new(FundAccountQueryResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -64,12 +63,11 @@ func (a *Client) FundTransCommonQuery(ctx context.Context, bm gopay.BodyMap) (al
 		return nil, err
 	}
 	aliRsp = new(FundTransCommonQueryResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -92,12 +90,11 @@ func (a *Client) FundTransOrderQuery(ctx context.Context, bm gopay.BodyMap) (ali
 	}
 
 	aliRsp = new(FundTransOrderQueryResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -116,12 +113,11 @@ func (a *Client) FundTransRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp 
 		return nil, err
 	}
 	aliRsp = new(FundTransRefundResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -140,12 +136,11 @@ func (a *Client) FundAuthOrderFreeze(ctx context.Context, bm gopay.BodyMap) (ali
 		return nil, err
 	}
 	aliRsp = new(FundAuthOrderFreezeResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -164,12 +159,11 @@ func (a *Client) FundAuthOrderVoucherCreate(ctx context.Context, bm gopay.BodyMa
 		return nil, err
 	}
 	aliRsp = new(FundAuthOrderVoucherCreateResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -181,7 +175,7 @@ func (a *Client) FundAuthOrderVoucherCreate(ctx context.Context, bm gopay.BodyMa
 func (a *Client) FundAuthOrderAppFreeze(ctx context.Context, bm gopay.BodyMap) (payParam string, err error) {
 	err = bm.CheckEmptyError("out_order_no", "out_request_no", "order_title", "amount", "product_code")
 	if err != nil {
-		return "", err
+		return util.NULL, err
 	}
 	var bs []byte
 	if bs, err = a.doAliPay(ctx, bm, "alipay.fund.auth.order.app.freeze"); err != nil {
@@ -203,12 +197,11 @@ func (a *Client) FundAuthOrderUnfreeze(ctx context.Context, bm gopay.BodyMap) (a
 		return nil, err
 	}
 	aliRsp = new(FundAuthOrderUnfreezeResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -223,12 +216,11 @@ func (a *Client) FundAuthOperationDetailQuery(ctx context.Context, bm gopay.Body
 		return nil, err
 	}
 	aliRsp = new(FundAuthOperationDetailQueryResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -247,12 +239,11 @@ func (a *Client) FundAuthOperationCancel(ctx context.Context, bm gopay.BodyMap) 
 		return nil, err
 	}
 	aliRsp = new(FundAuthOperationCancelResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -271,12 +262,11 @@ func (a *Client) FundBatchCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp 
 		return nil, err
 	}
 	aliRsp = new(FundBatchCreateResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -295,12 +285,11 @@ func (a *Client) FundBatchClose(ctx context.Context, bm gopay.BodyMap) (aliRsp *
 		return nil, err
 	}
 	aliRsp = new(FundBatchCloseResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -319,12 +308,11 @@ func (a *Client) FundBatchDetailQuery(ctx context.Context, bm gopay.BodyMap) (al
 		return nil, err
 	}
 	aliRsp = new(FundBatchDetailQueryResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -343,12 +331,11 @@ func (a *Client) FundTransAppPay(ctx context.Context, bm gopay.BodyMap) (aliRsp 
 		return nil, err
 	}
 	aliRsp = new(FundTransAppPayResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -367,12 +354,11 @@ func (a *Client) FundTransPayeeBindQuery(ctx context.Context, bm gopay.BodyMap) 
 		return nil, err
 	}
 	aliRsp = new(FundTransPayeeBindQueryRsp)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -391,12 +377,11 @@ func (a *Client) FundTransPagePay(ctx context.Context, bm gopay.BodyMap) (aliRsp
 		return nil, err
 	}
 	aliRsp = new(FundTransPagePayRsp)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData

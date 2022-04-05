@@ -24,7 +24,7 @@ func (c *ClientV3) V3DiscountCardApply(ctx context.Context, bm gopay.BodyMap) (w
 	wxRsp = &DiscountCardApplyRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(DiscountCardApply)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -76,7 +76,7 @@ func (c *ClientV3) V3DiscountCardQuery(ctx context.Context, outCardCode string) 
 	wxRsp = &DiscountCardQueryRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(DiscountCardQuery)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode

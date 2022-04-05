@@ -30,7 +30,7 @@ func (w *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Uni
 	}
 	wxRsp = new(UnifiedOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, nil
 }
@@ -54,7 +54,7 @@ func (w *Client) Micropay(ctx context.Context, bm gopay.BodyMap) (wxRsp *Micropa
 	}
 	wxRsp = new(MicropayResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, nil
 }
@@ -107,7 +107,7 @@ func (w *Client) CloseOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Close
 	}
 	wxRsp = new(CloseOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, nil
 }
@@ -204,7 +204,7 @@ func (w *Client) Reverse(ctx context.Context, bm gopay.BodyMap) (wxRsp *ReverseR
 	}
 	wxRsp = new(ReverseResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, nil
 }

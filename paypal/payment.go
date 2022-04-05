@@ -25,7 +25,7 @@ func (c *Client) PaymentAuthorizeDetail(ctx context.Context, authorizationId str
 	ppRsp = &PaymentAuthorizeDetailRsp{Code: Success}
 	ppRsp.Response = new(PaymentAuthorizeDetail)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
@@ -51,7 +51,7 @@ func (c *Client) PaymentReauthorize(ctx context.Context, authorizationId string,
 	ppRsp = &PaymentReauthorizeRsp{Code: Success}
 	ppRsp.Response = new(PaymentAuthorizeDetail)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusCreated {
 		ppRsp.Code = res.StatusCode
@@ -99,7 +99,7 @@ func (c *Client) PaymentAuthorizeCapture(ctx context.Context, authorizationId st
 	ppRsp = &PaymentAuthorizeCaptureRsp{Code: Success}
 	ppRsp.Response = new(PaymentAuthorizeCapture)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusCreated {
 		ppRsp.Code = res.StatusCode
@@ -125,7 +125,7 @@ func (c *Client) PaymentCaptureDetail(ctx context.Context, captureId string) (pp
 	ppRsp = &PaymentCaptureDetailRsp{Code: Success}
 	ppRsp.Response = new(PaymentAuthorizeCapture)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
@@ -151,7 +151,7 @@ func (c *Client) PaymentCaptureRefund(ctx context.Context, captureId string, bm 
 	ppRsp = &PaymentCaptureRefundRsp{Code: Success}
 	ppRsp.Response = new(PaymentCaptureRefund)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusCreated {
 		ppRsp.Code = res.StatusCode
@@ -177,7 +177,7 @@ func (c *Client) PaymentRefundDetail(ctx context.Context, refundId string) (ppRs
 	ppRsp = &PaymentRefundDetailRsp{Code: Success}
 	ppRsp.Response = new(PaymentCaptureRefund)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
