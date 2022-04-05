@@ -48,7 +48,7 @@ func (c *ClientV3) V3BusinessAuthPointsQuery(ctx context.Context, appid, openid 
 	wxRsp := &BusinessAuthPointsQueryRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusinessAuthPointsQuery)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode

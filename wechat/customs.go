@@ -22,7 +22,7 @@ func (w *Client) CustomsDeclareOrder(ctx context.Context, bm gopay.BodyMap) (wxR
 	}
 	wxRsp = new(CustomsDeclareOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, nil
 }
@@ -41,7 +41,7 @@ func (w *Client) CustomsDeclareQuery(ctx context.Context, bm gopay.BodyMap) (wxR
 	}
 	wxRsp = new(CustomsDeclareQueryResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, nil
 }
@@ -60,7 +60,7 @@ func (w *Client) CustomsReDeclareOrder(ctx context.Context, bm gopay.BodyMap) (w
 	}
 	wxRsp = new(CustomsReDeclareOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, nil
 }

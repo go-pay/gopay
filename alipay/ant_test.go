@@ -36,6 +36,11 @@ func TestAntMerchantShopCreate(t *testing.T) {
 
 	aliRsp, err := client.AntMerchantShopCreate(ctx, bm)
 	if err != nil {
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		xlog.Errorf("client.AntMerchantShopCreate(%+v),error:%+v", bm, err)
 		return
 	}

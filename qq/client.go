@@ -57,7 +57,7 @@ func (q *Client) MicroPay(ctx context.Context, bm gopay.BodyMap) (qqRsp *MicroPa
 	}
 	qqRsp = new(MicroPayResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
@@ -75,7 +75,7 @@ func (q *Client) Reverse(ctx context.Context, bm gopay.BodyMap) (qqRsp *ReverseR
 	}
 	qqRsp = new(ReverseResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
@@ -93,7 +93,7 @@ func (q *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (qqRsp *Uni
 	}
 	qqRsp = new(UnifiedOrderResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
@@ -114,7 +114,7 @@ func (q *Client) OrderQuery(ctx context.Context, bm gopay.BodyMap) (qqRsp *Order
 	}
 	qqRsp = new(OrderQueryResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
@@ -132,7 +132,7 @@ func (q *Client) CloseOrder(ctx context.Context, bm gopay.BodyMap) (qqRsp *Close
 	}
 	qqRsp = new(CloseOrderResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
@@ -161,7 +161,7 @@ func (q *Client) Refund(ctx context.Context, bm gopay.BodyMap, certFilePath, key
 	}
 	qqRsp = new(RefundResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
@@ -182,7 +182,7 @@ func (q *Client) RefundQuery(ctx context.Context, bm gopay.BodyMap) (qqRsp *Refu
 	}
 	qqRsp = new(RefundQueryResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }

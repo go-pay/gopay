@@ -26,7 +26,7 @@ func (c *ClientV3) V3Refund(ctx context.Context, bm gopay.BodyMap) (wxRsp *Refun
 	wxRsp = &RefundRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(RefundOrderResponse)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -58,7 +58,7 @@ func (c *ClientV3) V3RefundQuery(ctx context.Context, outRefundNo string, bm gop
 	wxRsp = &RefundQueryRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(RefundQueryResponse)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -84,7 +84,7 @@ func (c *ClientV3) V3EcommerceRefund(ctx context.Context, bm gopay.BodyMap) (wxR
 	wxRsp = &EcommerceRefundRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceRefund)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -111,7 +111,7 @@ func (c *ClientV3) V3EcommerceRefundQueryById(ctx context.Context, refundId stri
 	wxRsp = &EcommerceRefundQueryRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceRefundQuery)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -138,7 +138,7 @@ func (c *ClientV3) V3EcommerceRefundQueryByNo(ctx context.Context, outRefundNo s
 	wxRsp = &EcommerceRefundQueryRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceRefundQuery)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -165,7 +165,7 @@ func (c *ClientV3) V3EcommerceRefundAdvance(ctx context.Context, refundId string
 	wxRsp = &EcommerceRefundAdvanceRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceRefundAdvance)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -192,7 +192,7 @@ func (c *ClientV3) V3EcommerceRefundAdvanceResult(ctx context.Context, refundId 
 	wxRsp = &EcommerceRefundAdvanceRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceRefundAdvance)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode

@@ -24,7 +24,7 @@ func (c *ClientV3) V3GoldPlanManage(ctx context.Context, bm gopay.BodyMap) (wxRs
 	wxRsp = &GoldPlanManageRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(GoldPlanManage)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -49,7 +49,7 @@ func (c *ClientV3) V3GoldPlanBillManage(ctx context.Context, bm gopay.BodyMap) (
 	wxRsp = &GoldPlanManageRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(GoldPlanManage)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode

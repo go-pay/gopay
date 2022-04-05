@@ -34,7 +34,7 @@ func (c *ClientV3) V3FavorMediaUploadImage(ctx context.Context, fileName, fileSh
 	wxRsp = &MarketMediaUploadRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(MarketMediaUpload)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode

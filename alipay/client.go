@@ -35,17 +35,20 @@ type Client struct {
 
 // 初始化支付宝客户端
 //	注意：如果使用支付宝公钥证书验签，请设置 支付宝根证书SN（client.SetAlipayRootCertSN()）、应用公钥证书SN（client.SetAppCertSN()）
-//	appId：应用ID
+//	appid：应用ID
 //	privateKey：应用私钥，支持PKCS1和PKCS8
 //	isProd：是否是正式环境
-func NewClient(appId, privateKey string, isProd bool) (client *Client, err error) {
+func NewClient(appid, privateKey string, isProd bool) (client *Client, err error) {
+	if appid == util.NULL || privateKey == util.NULL {
+		return nil, gopay.MissAlipayInitParamErr
+	}
 	key := xrsa.FormatAlipayPrivateKey(privateKey)
 	priKey, err := xpem.DecodePrivateKey([]byte(key))
 	if err != nil {
 		return nil, err
 	}
 	client = &Client{
-		AppId:       appId,
+		AppId:       appid,
 		Charset:     UTF8,
 		SignType:    RSA2,
 		IsProd:      isProd,
