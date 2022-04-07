@@ -97,8 +97,8 @@ func (c *ClientV3) V3EcommerceRefund(ctx context.Context, bm gopay.BodyMap) (wxR
 // 通过微信支付退款单号查询退款API
 //	Code = 0 is success
 //	电商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter7_6_2.shtml
-func (c *ClientV3) V3EcommerceRefundQueryById(ctx context.Context, refundId string) (wxRsp *EcommerceRefundQueryRsp, err error) {
-	uri := fmt.Sprintf(v3CommerceRefundQueryById, refundId)
+func (c *ClientV3) V3EcommerceRefundQueryById(ctx context.Context, refundId string, bm gopay.BodyMap) (wxRsp *EcommerceRefundQueryRsp, err error) {
+	uri := fmt.Sprintf(v3CommerceRefundQueryById, refundId) + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -124,8 +124,8 @@ func (c *ClientV3) V3EcommerceRefundQueryById(ctx context.Context, refundId stri
 // 通过商户退款单号查询退款API
 //	Code = 0 is success
 //	电商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter7_6_2.shtml
-func (c *ClientV3) V3EcommerceRefundQueryByNo(ctx context.Context, outRefundNo string) (wxRsp *EcommerceRefundQueryRsp, err error) {
-	uri := fmt.Sprintf(v3CommerceRefundQueryByNo, outRefundNo)
+func (c *ClientV3) V3EcommerceRefundQueryByNo(ctx context.Context, outRefundNo string, bm gopay.BodyMap) (wxRsp *EcommerceRefundQueryRsp, err error) {
+	uri := fmt.Sprintf(v3CommerceRefundQueryByNo, outRefundNo) + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
