@@ -1,6 +1,6 @@
 版本号：Release 1.5.77
 修改记录：
-   (1) 微信V3：V3EcommerceRefundQueryById()、V3EcommerceRefundQueryByNo()，确实参数补充
+   (1) 微信V3：V3EcommerceRefundQueryById()、V3EcommerceRefundQueryByNo()，缺失参数补充
 
 版本号：Release 1.5.76
 修改记录：
