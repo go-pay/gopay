@@ -1,3 +1,7 @@
+版本号：Release 1.5.77
+修改记录：
+   (1) 微信V3：V3EcommerceRefundQueryById()、V3EcommerceRefundQueryByNo()，确实参数补充
+
 版本号：Release 1.5.76
 修改记录：
    (1) gopay：大量优化error处理和返回，统一部分通用错误到 error.go 中
