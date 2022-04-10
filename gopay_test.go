@@ -19,7 +19,7 @@ func TestBodyMap_CheckParamsNull(t *testing.T) {
 
 	err := bm.CheckEmptyError("name", "age", "phone")
 	if err != nil {
-		xlog.Errorf("bm.CheckEmptyError():error:%+v", err)
+		xlog.Errorf("bm.CheckEmptyError(),err: %+v", err)
 		return
 	}
 	h := sha1.New()
