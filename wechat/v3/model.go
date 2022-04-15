@@ -820,6 +820,22 @@ type WithdrawStatusRsp struct {
 	Error    string          `json:"-"`
 }
 
+// 电商平台预约提现 Rsp
+type EcommerceWithdrawRsp struct {
+	Code     int                `json:"-"`
+	SignInfo *SignInfo          `json:"-"`
+	Response *EcommerceWithdraw `json:"response,omitempty"`
+	Error    string             `json:"-"`
+}
+
+// 电商平台查询预约提现状态 Rsp
+type EcommerceWithdrawStatusRsp struct {
+	Code     int                      `json:"-"`
+	SignInfo *SignInfo                `json:"-"`
+	Response *EcommerceWithdrawStatus `json:"response,omitempty"`
+	Error    string                   `json:"-"`
+}
+
 // 请求分账 Rsp
 type EcommerceProfitShareRsp struct {
 	Code     int                   `json:"-"`
@@ -2501,6 +2517,28 @@ type WithdrawStatus struct {
 	AccountNumber string `json:"account_number"` // 服务商提现入账的银行账号，仅显示后四位。
 	AccountBank   string `json:"account_bank"`   // 服务商提现入账的开户银行
 	BankName      string `json:"bank_name"`      // 服务商提现入账的开户银行全称（含支行）
+}
+
+type EcommerceWithdraw struct {
+	WithdrawId   string `json:"withdraw_id"`    // 微信支付预约提现单号
+	OutRequestNo string `json:"out_request_no"` // 商户预约提现单号
+}
+
+type EcommerceWithdrawStatus struct {
+	Status        string `json:"status"`         // 提现单状态：CREATE_SUCCESS：受理成功，SUCCESS：提现成功，FAIL：提现失败，REFUND：提现退票，CLOSE：关单，INIT：业务单已创建
+	WithdrawId    string `json:"withdraw_id"`    // 微信支付提现单号
+	OutRequestNo  string `json:"out_request_no"` // 商户提现单号
+	Amount        int    `json:"amount"`         // 提现金额
+	CreateTime    string `json:"create_time"`    // 创建时间
+	UpdateTime    string `json:"update_time"`    // 更新时间
+	Reason        string `json:"reason"`         // 提现失败原因，仅在提现失败、退票、关单时有值
+	Remark        string `json:"remark"`         // 商户对提现单的备注，若发起提现时未传入相应值或输入不合法，则该值为空
+	BankMemo      string `json:"bank_memo"`      // 展示在收款银行系统中的附言，由数字、字母、汉字组成（能否成功展示依赖银行系统支持）。若发起提现时未传入相应值或输入不合法，则该值为空
+	AccountType   string `json:"account_type"`   // 出款账户类型
+	AccountNumber string `json:"account_number"` // 服务商提现入账的银行账号，仅显示后四位。
+	AccountBank   string `json:"account_bank"`   // 服务商提现入账的开户银行
+	BankName      string `json:"bank_name"`      // 服务商提现入账的开户银行全称（含支行）
+	Solution      string `json:"solution"`       // 提现失败解决方案，仅在提现失败、退票、关单时有值
 }
 
 type EcommerceProfitShare struct {

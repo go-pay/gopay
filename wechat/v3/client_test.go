@@ -63,6 +63,10 @@ func TestMain(m *testing.M) {
 		xlog.Error(err)
 		return
 	}
+
+	// 设置微信平台证书和序列号，如开启自动验签，请忽略此步骤
+	//client.SetPlatformCert([]byte(""), "")
+
 	// 启用自动同步返回验签，并定时更新微信平台API证书
 	err = client.AutoVerifySign()
 	if err != nil {

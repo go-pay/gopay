@@ -14,12 +14,9 @@ import (
 //	Code = 0 is success
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_1.shtml
 func (c *ClientV3) V3Apply4SubSubmit(ctx context.Context, bm gopay.BodyMap) (*Apply4SubSubmitRsp, error) {
-	if err := bm.CheckEmptyError(
-		"business_code", "contact_info", "subject_info",
-		"business_info", "settlement_info", "bank_account_info"); err != nil {
+	if err := bm.CheckEmptyError("business_code", "contact_info", "subject_info", "business_info", "settlement_info", "bank_account_info"); err != nil {
 		return nil, err
 	}
-
 	authorization, err := c.authorization(MethodPost, v3Apply4SubSubmit, bm)
 	if err != nil {
 		return nil, err
@@ -54,7 +51,6 @@ func (c *ClientV3) V3Apply4SubQueryByBusinessCode(ctx context.Context, businessC
 	if err != nil {
 		return nil, err
 	}
-
 	wxRsp := &Apply4SubQueryRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(Apply4SubQuery)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -100,9 +96,7 @@ func (c *ClientV3) V3Apply4SubQueryByApplyId(ctx context.Context, applyId string
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter11_1_3.shtml
 // 	电商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter7_1_4.shtml
 func (c *ClientV3) V3Apply4SubModifySettlement(ctx context.Context, bm gopay.BodyMap) (*EmptyRsp, error) {
-	if err := bm.CheckEmptyError(
-		"sub_mchid", "account_type", "account_bank", "bank_address_code", "account_number",
-	); err != nil {
+	if err := bm.CheckEmptyError("sub_mchid", "account_type", "account_bank", "account_number"); err != nil {
 		return nil, err
 	}
 	postUrl := fmt.Sprintf(v3Apply4SubModifySettlement, bm["sub_mchid"])
@@ -115,14 +109,13 @@ func (c *ClientV3) V3Apply4SubModifySettlement(ctx context.Context, bm gopay.Bod
 	if err != nil {
 		return nil, err
 	}
-	wxResp := &EmptyRsp{Code: Success, SignInfo: si}
-
+	wxRsp := &EmptyRsp{Code: Success, SignInfo: si}
 	if res.StatusCode != http.StatusNoContent {
-		wxResp.Code = res.StatusCode
-		wxResp.Error = string(bs)
-		return wxResp, nil
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
 	}
-	return wxResp, c.verifySyncSign(si)
+	return wxRsp, c.verifySyncSign(si)
 }
 
 // 查询结算账户 API
@@ -139,7 +132,6 @@ func (c *ClientV3) V3Apply4SubQuerySettlement(ctx context.Context, subMchId stri
 	if err != nil {
 		return nil, err
 	}
-
 	wxRsp := &Apply4SubQuerySettlementRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(Apply4SubQuerySettlement)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {

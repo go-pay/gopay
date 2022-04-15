@@ -1,6 +1,8 @@
 版本号：Release 1.5.77
 修改记录：
    (1) 微信V3：V3EcommerceRefundQueryById()、V3EcommerceRefundQueryByNo()，缺失参数补充
+   (2) 微信V3：新增 client.V3EcommerceWithdraw() 方法，电商平台预约提现
+   (3) 微信V3：新增 client.V3EcommerceWithdrawStatus() 方法，电商平台查询预约提现状态
 
 版本号：Release 1.5.76
 修改记录：
