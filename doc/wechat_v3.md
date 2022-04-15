@@ -338,18 +338,19 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 转账明细电子回单受理：`client.V3TransferDetailReceipt()`
     * 查询转账明细电子回单受理结果：`client.V3TransferDetailReceiptQuery()`
 * <font color='#07C160' size='4'>批量转账（服务商）</font>
-    * 发起批量转账：`client.V3PartnerTransfer()`
-    * 微信批次单号查询批次单：`client.V3PartnerTransferQuery()`
-    * 微信明细单号查询明细单：`client.V3PartnerTransferDetail()`
-    * 商家批次单号查询批次单：`client.V3PartnerTransferMerchantQuery()`
-    * 商家明细单号查询明细单：`client.V3PartnerTransferMerchantDetail()`
+  * 发起批量转账：`client.V3PartnerTransfer()`
+  * 微信批次单号查询批次单：`client.V3PartnerTransferQuery()`
+  * 微信明细单号查询明细单：`client.V3PartnerTransferDetail()`
+  * 商家批次单号查询批次单：`client.V3PartnerTransferMerchantQuery()`
+  * 商家明细单号查询明细单：`client.V3PartnerTransferMerchantDetail()`
 * <font color='#07C160' size='4'>余额查询</font>
-    * 查询特约商户账户实时余额（服务商）：`client.V3EcommerceBalance()`
-    * 查询账户实时余额：`client.V3MerchantBalance()`
-    * 查询账户日终余额：`client.V3MerchantDayBalance()`
+  * 查询特约商户账户实时余额：`client.V3EcommerceBalance()`
+  * 查询二级商户账户日终余额：`client.V3EcommerceDayBalance()`
+  * 查询账户实时余额：`client.V3MerchantBalance()`
+  * 查询账户日终余额：`client.V3MerchantDayBalance()`
 * <font color='#07C160' size='4'>来账识别</font>
-    * 商户银行来账查询：`client.V3MerchantIncomeRecord()`
-    * 特约商户银行来账查询：`client.V3EcommerceIncomeRecord()`
+  * 商户银行来账查询：`client.V3MerchantIncomeRecord()`
+  * 特约商户银行来账查询：`client.V3EcommerceIncomeRecord()`
 * <font color='#07C160' size='4'>特约商户进件（服务商）</font>
     * 提交申请单：`client.V3Apply4SubSubmit()`
     * 查询申请单状态（BusinessCode）：`client.V3Apply4SubQueryByBusinessCode()`

@@ -1935,7 +1935,7 @@ type TransferDetailReceiptQuery struct {
 
 type EcommerceBalance struct {
 	SubMchid        string `json:"sub_mchid"`                // 特约商户号
-	AccountType     string `json:"account_type"`             // 账户类型
+	AccountType     string `json:"account_type,omitempty"`   // 账户类型
 	AvailableAmount int    `json:"available_amount"`         // 可用余额（单位：分），此余额可做提现操作
 	PendingAmount   int    `json:"pending_amount,omitempty"` // 不可用余额（单位：分）
 }
