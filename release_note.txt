@@ -1,3 +1,8 @@
+版本号：Release 1.5.78
+修改记录：
+   (1) 微信V3：V3EcommerceBalance() 缺失参数补充
+   (2) 微信V3：新增 client.V3EcommerceDayBalance() 方法，电商平台预约提现
+
 版本号：Release 1.5.77
 修改记录：
    (1) 微信V3：V3EcommerceRefundQueryById()、V3EcommerceRefundQueryByNo()，缺失参数补充
