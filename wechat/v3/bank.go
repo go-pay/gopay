@@ -44,7 +44,7 @@ func (c *ClientV3) V3BankSearchPersonalList(ctx context.Context, limit, offset i
 	if limit == 0 {
 		limit = 20
 	}
-	uri := v3BankSearchPersonalList + "&limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
+	uri := v3BankSearchPersonalList + "?limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func (c *ClientV3) V3BankSearchCorporateList(ctx context.Context, limit, offset 
 	if limit == 0 {
 		limit = 20
 	}
-	uri := v3BankSearchCorporateList + "&limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
+	uri := v3BankSearchCorporateList + "?limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
