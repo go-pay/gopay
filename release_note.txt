@@ -2,6 +2,7 @@
 修改记录：
    (1) 微信V3：V3EcommerceBalance() 缺失参数补充
    (2) 微信V3：新增 client.V3EcommerceDayBalance() 方法，电商平台预约提现
+   (3) 微信V3：修复 银行列表获取相关接口，路由修正
 
 版本号：Release 1.5.77
 修改记录：
