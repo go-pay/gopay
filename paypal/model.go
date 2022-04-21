@@ -307,12 +307,8 @@ type PaymentAuthorizeDetail struct {
 }
 
 type SellerProtection struct {
-	Status            string             `json:"status,omitempty"` // ELIGIBLE、PARTIALLY_ELIGIBLE、NOT_ELIGIBLE
-	DisputeCategories []*DisputeCategory `json:"dispute_categories,omitempty"`
-}
-
-type DisputeCategory struct {
-	DisputeCategory string `json:"dispute_category,omitempty"`
+	Status            string   `json:"status,omitempty"` // ELIGIBLE、PARTIALLY_ELIGIBLE、NOT_ELIGIBLE
+	DisputeCategories []string `json:"dispute_categories,omitempty"`
 }
 
 type PaymentAuthorizeCapture struct {
