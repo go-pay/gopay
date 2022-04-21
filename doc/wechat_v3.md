@@ -84,6 +84,11 @@ if err != nil {
     xlog.Error(err)
     return
 }
+if wxRsp.Code == Success {
+    xlog.Debugf("wxRsp: %#v", wxRsp.Response)
+    return
+}
+xlog.Errorf("wxRsp:%s", wxRsp.Error)
 ```
 
 ### 3、下单后，获取微信小程序支付、APP支付、JSAPI支付所需要的 pay sign
