@@ -42,8 +42,8 @@ func (c *ClientV3) V3EcommerceBalance(ctx context.Context, subMchid string, bm g
 //	date示例值：2019-08-17
 //	Code = 0 is success
 // 	电商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter7_7_2.shtml
-func (c *ClientV3) V3EcommerceDayBalance(ctx context.Context, accountType, date string) (*EcommerceBalanceRsp, error) {
-	uri := fmt.Sprintf(v3EcommerceDayBalance, accountType) + "?date=" + date
+func (c *ClientV3) V3EcommerceDayBalance(ctx context.Context, subMchid, date string) (*EcommerceBalanceRsp, error) {
+	uri := fmt.Sprintf(v3EcommerceDayBalance, subMchid) + "?date=" + date
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err

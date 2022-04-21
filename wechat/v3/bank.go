@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
@@ -15,7 +16,7 @@ import (
 //	Code = 0 is success
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter11_2_1.shtml
 func (c *ClientV3) V3BankSearchBank(ctx context.Context, accountNo string) (wxRsp *BankSearchBankRsp, err error) {
-	uri := v3BankSearchBank + "?account_number=" + accountNo
+	uri := v3BankSearchBank + "?account_number=" + url.QueryEscape(accountNo)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
