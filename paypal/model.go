@@ -373,3 +373,59 @@ type NetAmountBreakdown struct {
 	ConvertedAmount *Amount       `json:"converted_amount,omitempty"`
 	ExchangeRate    *ExchangeRate `json:"exchange_rate,omitempty"`
 }
+
+// Subscription Model
+
+type Frequency struct {
+	IntervalUnit  string `json:"interval_unit"`
+	IntervalCount int    `json:"interval_count"`
+}
+
+type PricingScheme struct {
+	FixedPrice *FixedPrice `json:"fixed_price"`
+}
+
+type FixedPrice struct {
+	Value        string `json:"value"`
+	CurrencyCode string `json:"currency_code"`
+}
+
+type BillingCycles struct {
+	Frequency     *Frequency     `json:"frequency"`
+	TenureType    string         `json:"tenure_type"`
+	Sequence      int            `json:"sequence"`
+	TotalCycles   int            `json:"total_cycles"`
+	PricingScheme *PricingScheme `json:"pricing_scheme"`
+}
+
+type Plans struct {
+	ProductId          string              `json:"product_id"`
+	Name               string              `json:"name"`
+	Description        string              `json:"description"`
+	BillingCycles      []*BillingCycles    `json:"billing_cycles"`
+	PaymentDefinitions *PaymentPreferences `json:"payment_preferences"`
+}
+
+type PaymentPreferences struct {
+	AutoBillOutstanding     bool   `json:"auto_bill_outstanding"`
+	SetupFeeFailureAction   string `json:"setup_fee_failure_action"`
+	PaymentFailureThreshold int    `json:"payment_failure_threshold"`
+}
+
+type CreateBillingRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *BillingDetail `json:"response,omitempty"`
+}
+
+type BillingDetail struct {
+	ID          string  `json:"id"`
+	ProductID   string  `json:"product_id"`
+	Name        string  `json:"name"`
+	Status      string  `json:"status"`
+	Description string  `json:"description"`
+	UsageType   string  `json:"usage_type"`
+	CreateTime  string  `json:"create_time"`
+	Links       []*Link `json:"links"`
+}

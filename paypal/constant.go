@@ -30,4 +30,6 @@ const (
 	paymentCaptureRefund    = "/v2/payments/captures/%s/refund"            // capture_id 支付捕获退款 POST
 	paymentRefundDetail     = "/v2/payments/refunds/%s"                    // refund_id 支付退款详情 GET
 
+	// 订阅相关
+	subscriptionCreate = "/v1/billing/subscriptions" // 创建订阅 POST
 )

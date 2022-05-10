@@ -106,7 +106,7 @@ return
 ### PayPal API
 
 * <font color='#003087' size='4'>AccessToken</font>
-	* 获取AccessToken（Get AccessToken）：`client.GetAccessToken()`
+    * 获取AccessToken（Get AccessToken）：`client.GetAccessToken()`
 * <font color='#003087' size='4'>订单</font>
     * 创建订单（Create order）：`client.CreateOrder()`
     * 订单详情（Show order details）：`client.OrderDetail()`
@@ -122,3 +122,5 @@ return
     * 支付捕获详情（Show captured payment details）：`client.PaymentCaptureDetail()`
     * 支付捕获退款（Refund captured payment）：`client.PaymentCaptureRefund()`
     * 支付退款详情（Show refund details）：`client.PaymentRefundDetail()`
+* <font color='#003087' size='4'>订阅</font>
+    * 创建订单（Create order）：`client.CreateBillingPlan()`
