@@ -1,6 +1,6 @@
 ## PayPal
 
-> 具体API使用介绍，请参考`gopay/paypal/client_test.go`,`gopay/paypal/order_test.go`,`gopay/paypal/payment_test.go`
+> 具体API使用介绍，请参考`gopay/paypal/client_test.go`,`gopay/paypal/order_test.go`,`gopay/paypal/payment_test.go` 等xxx_test.go
 
 - 已实现API列表附录：[API List](https://github.com/go-pay/gopay/blob/main/doc/paypal.md#%E9%99%84%E5%BD%95)
 
@@ -32,13 +32,16 @@ client.DebugSwitch = gopay.DebugOn
 
 > Payments：[Payments API](https://developer.paypal.com/api/payments/v2/)
 
+> Subscriptions：[Subscriptions API](https://developer.paypal.com/docs/api/subscriptions/v1/)
+
 - Create Orders example
+
 ```go
 import (
-    "github.com/go-pay/gopay"
-    "github.com/go-pay/gopay/paypal"
-    "github.com/go-pay/gopay/pkg/util"
-    "github.com/go-pay/gopay/pkg/xlog"
+"github.com/go-pay/gopay"
+"github.com/go-pay/gopay/paypal"
+"github.com/go-pay/gopay/pkg/util"
+"github.com/go-pay/gopay/pkg/xlog"
 )
 
 // Create Orders example
@@ -123,4 +126,4 @@ return
     * 支付捕获退款（Refund captured payment）：`client.PaymentCaptureRefund()`
     * 支付退款详情（Show refund details）：`client.PaymentRefundDetail()`
 * <font color='#003087' size='4'>订阅</font>
-    * 创建订单（Create order）：`client.CreateBillingPlan()`
+	* 创建订阅计划（Create plan）：`client.CreateBillingPlan()`
