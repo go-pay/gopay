@@ -179,7 +179,13 @@ func (c *Client) SetTransport(transport *http.Transport) (client *Client) {
 }
 
 func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
-	c.Transport = &http.Transport{TLSClientConfig: tlsCfg, DisableKeepAlives: true, Proxy: http.ProxyFromEnvironment}
+	if c.Transport == nil {
+		c.Transport = &http.Transport{TLSClientConfig: tlsCfg, DisableKeepAlives: true, Proxy: http.ProxyFromEnvironment}
+	} else {
+		c.Transport.TLSClientConfig = tlsCfg
+		c.Transport.DisableKeepAlives = true
+		c.Transport.Proxy = http.ProxyFromEnvironment
+	}
 	return c
 }
 
