@@ -13,7 +13,7 @@ import (
 
 // 特约商户余额提现、二级商户预约提现
 //	Code = 0 is success
-// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter6_1.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_14.shtml
 func (c *ClientV3) V3Withdraw(ctx context.Context, bm gopay.BodyMap) (*WithdrawRsp, error) {
 	if err := bm.CheckEmptyError("sub_mchid", "out_request_no", "amount"); err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (c *ClientV3) V3Withdraw(ctx context.Context, bm gopay.BodyMap) (*WithdrawR
 // 查询特约商户提现状态、二级商户查询预约提现状态
 //	注意：withdrawId 和 outRequestNo 二选一
 //	Code = 0 is success
-// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter6_2.shtml
+// 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_15.shtml
 func (c *ClientV3) V3WithdrawStatus(ctx context.Context, withdrawId, outRequestNo string, bm gopay.BodyMap) (*WithdrawStatusRsp, error) {
 	if withdrawId == gopay.NULL && outRequestNo == gopay.NULL {
 		return nil, fmt.Errorf("[%w]: withdrawId[%s] and outRequestNo[%s] empty at the same time", gopay.MissParamErr, withdrawId, outRequestNo)
@@ -142,7 +142,7 @@ func (c *ClientV3) V3EcommerceWithdrawStatus(ctx context.Context, withdrawId, ou
 // 按日下载提现异常文件
 //	注意：如 bill_date 为空，默认查前一天的
 //	Code = 0 is success
-//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter6_3.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_16.shtml
 func (c *ClientV3) V3WithdrawDownloadErrBill(ctx context.Context, bm gopay.BodyMap) (wxRsp *BillRsp, err error) {
 	if bm != nil {
 		if bm.GetString("bill_date") == util.NULL {

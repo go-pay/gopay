@@ -88,7 +88,7 @@ func (c *ClientV3) V3BillFundFlowBill(ctx context.Context, bm gopay.BodyMap) (wx
 // 申请特约商户资金账单API
 //	注意：如 bill_date 为空，默认查前一天的
 //	Code = 0 is success
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter7_2.shtml
+//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_17.shtml
 func (c *ClientV3) V3BillEcommerceFundFlowBill(ctx context.Context, bm gopay.BodyMap) (wxRsp *EcommerceFundFlowBillRsp, err error) {
 	if bm != nil {
 		if bm.GetString("bill_date") == util.NULL {

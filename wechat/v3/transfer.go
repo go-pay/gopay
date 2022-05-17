@@ -12,7 +12,7 @@ import (
 // 发起批量转账API
 //	注意：入参加密字段数据加密：client.V3EncryptText()
 //	Code = 0 is success
-// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer/chapter3_1.shtml
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter4_3_1.shtml
 func (c *ClientV3) V3Transfer(ctx context.Context, bm gopay.BodyMap) (*TransferRsp, error) {
 	authorization, err := c.authorization(MethodPost, v3Transfer, bm)
 	if err != nil {
@@ -39,7 +39,7 @@ func (c *ClientV3) V3Transfer(ctx context.Context, bm gopay.BodyMap) (*TransferR
 // 发起批量转账API（服务商）
 //	注意：入参加密字段数据加密：client.V3EncryptText()
 //	Code = 0 is success
-//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter3_1.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_1.shtml
 func (c *ClientV3) V3PartnerTransfer(ctx context.Context, bm gopay.BodyMap) (*TransferRsp, error) {
 	authorization, err := c.authorization(MethodPost, v3PartnerTransfer, bm)
 	if err != nil {
@@ -65,7 +65,7 @@ func (c *ClientV3) V3PartnerTransfer(ctx context.Context, bm gopay.BodyMap) (*Tr
 
 // 微信批次单号查询批次单API
 //	Code = 0 is success
-// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer/chapter3_2.shtml
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter4_3_2.shtml
 func (c *ClientV3) V3TransferQuery(ctx context.Context, batchId string, bm gopay.BodyMap) (*TransferQueryRsp, error) {
 	url := fmt.Sprintf(v3TransferQuery, batchId)
 	bm.Remove("batch_id")
@@ -94,7 +94,7 @@ func (c *ClientV3) V3TransferQuery(ctx context.Context, batchId string, bm gopay
 
 // 微信批次单号查询批次单API（服务商）
 //	Code = 0 is success
-//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter3_2.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_2.shtml
 func (c *ClientV3) V3PartnerTransferQuery(ctx context.Context, batchId string, bm gopay.BodyMap) (*PartnerTransferQueryRsp, error) {
 	url := fmt.Sprintf(v3PartnerTransferQuery, batchId)
 	bm.Remove("batch_id")
@@ -123,7 +123,7 @@ func (c *ClientV3) V3PartnerTransferQuery(ctx context.Context, batchId string, b
 
 // 微信明细单号查询明细单API
 //	Code = 0 is success
-// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer/chapter3_3.shtml
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter4_3_3.shtml
 func (c *ClientV3) V3TransferDetail(ctx context.Context, batchId, detailId string) (*TransferDetailRsp, error) {
 	url := fmt.Sprintf(v3TransferDetail, batchId, detailId)
 	authorization, err := c.authorization(MethodGet, url, nil)
@@ -150,7 +150,7 @@ func (c *ClientV3) V3TransferDetail(ctx context.Context, batchId, detailId strin
 
 // 微信明细单号查询明细单API（服务商）
 //	Code = 0 is success
-//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter3_3.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_3.shtml
 func (c *ClientV3) V3PartnerTransferDetail(ctx context.Context, batchId, detailId string) (*PartnerTransferDetailRsp, error) {
 	url := fmt.Sprintf(v3PartnerTransferDetail, batchId, detailId)
 	authorization, err := c.authorization(MethodGet, url, nil)
@@ -183,7 +183,7 @@ func (c *ClientV3) V3TransferDetailQuery(ctx context.Context, batchId, detailId 
 
 // 商家批次单号查询批次单API
 //	Code = 0 is success
-// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer/chapter3_4.shtml
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter4_3_5.shtml
 func (c *ClientV3) V3TransferMerchantQuery(ctx context.Context, outBatchNo string, bm gopay.BodyMap) (*TransferMerchantQueryRsp, error) {
 	url := fmt.Sprintf(v3TransferMerchantQuery, outBatchNo)
 	bm.Remove("out_batch_no")
@@ -212,7 +212,7 @@ func (c *ClientV3) V3TransferMerchantQuery(ctx context.Context, outBatchNo strin
 
 // 商家批次单号查询批次单API（服务商）
 //	Code = 0 is success
-//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter3_4.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_4.shtml
 func (c *ClientV3) V3PartnerTransferMerchantQuery(ctx context.Context, outBatchNo string, bm gopay.BodyMap) (*PartnerTransferMerchantQueryRsp, error) {
 	url := fmt.Sprintf(v3PartnerTransferMerchantQuery, outBatchNo)
 	bm.Remove("out_batch_no")
@@ -241,7 +241,7 @@ func (c *ClientV3) V3PartnerTransferMerchantQuery(ctx context.Context, outBatchN
 
 // 商家明细单号查询明细单API
 //	Code = 0 is success
-// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer/chapter3_5.shtml
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter4_3_6.shtml
 func (c *ClientV3) V3TransferMerchantDetail(ctx context.Context, outBatchNo, outDetailNo string) (*TransferMerchantDetailRsp, error) {
 	url := fmt.Sprintf(v3TransferMerchantDetail, outBatchNo, outDetailNo)
 	authorization, err := c.authorization(MethodGet, url, nil)
@@ -268,7 +268,7 @@ func (c *ClientV3) V3TransferMerchantDetail(ctx context.Context, outBatchNo, out
 
 // 商家明细单号查询明细单API（服务商）
 //	Code = 0 is success
-//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter3_5.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_5.shtml
 func (c *ClientV3) V3PartnerTransferMerchantDetail(ctx context.Context, outBatchNo, outDetailNo string) (*PartnerTransferMerchantDetailRsp, error) {
 	url := fmt.Sprintf(v3PartnerTransferMerchantDetail, outBatchNo, outDetailNo)
 	authorization, err := c.authorization(MethodGet, url, nil)
@@ -301,8 +301,8 @@ func (c *ClientV3) V3TransferMerchantDetailQuery(ctx context.Context, outBatchNo
 
 // 转账电子回单申请受理API
 //	Code = 0 is success
-// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer/chapter4_1.shtml
-//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter4_1.shtml
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter4_3_7.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_6.shtml
 func (c *ClientV3) V3TransferReceipt(ctx context.Context, outBatchNo string) (*TransferReceiptRsp, error) {
 	bm := make(gopay.BodyMap)
 	bm.Set("out_batch_no", outBatchNo)
@@ -331,8 +331,8 @@ func (c *ClientV3) V3TransferReceipt(ctx context.Context, outBatchNo string) (*T
 
 // 查询转账电子回单API
 //	Code = 0 is success
-// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer/chapter4_2.shtml
-//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter4_2.shtml
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter4_3_8.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_7.shtml
 func (c *ClientV3) V3TransferReceiptQuery(ctx context.Context, outBatchNo string) (*TransferReceiptQueryRsp, error) {
 	url := fmt.Sprintf(v3TransferReceiptQuery, outBatchNo)
 	authorization, err := c.authorization(MethodGet, url, nil)
@@ -359,8 +359,8 @@ func (c *ClientV3) V3TransferReceiptQuery(ctx context.Context, outBatchNo string
 
 // 转账明细电子回单受理API
 //	Code = 0 is success
-// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer/chapter4_4.shtml
-//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter4_4.shtml
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter4_3_9.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_8.shtml
 func (c *ClientV3) V3TransferDetailReceipt(ctx context.Context, bm gopay.BodyMap) (*TransferDetailReceiptRsp, error) {
 	authorization, err := c.authorization(MethodPost, v3TransferDetailReceipt, bm)
 	if err != nil {
@@ -386,8 +386,8 @@ func (c *ClientV3) V3TransferDetailReceipt(ctx context.Context, bm gopay.BodyMap
 
 // 查询转账明细电子回单受理结果API
 //	Code = 0 is success
-// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer/chapter4_5.shtml
-//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pay/transfer_partner/chapter4_5.shtml
+// 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter4_3_10.shtml
+//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_9.shtml
 func (c *ClientV3) V3TransferDetailReceiptQuery(ctx context.Context, bm gopay.BodyMap) (*TransferDetailReceiptQueryRsp, error) {
 	uri := v3TransferDetailReceiptQuery + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)

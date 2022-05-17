@@ -31,7 +31,7 @@ import (
 //	  - 程序实现定期更新平台证书的逻辑，不要硬编码验证应答消息签名的平台证书
 //	  - 定期调用该接口，间隔时间小于12小时
 //	  - 加密请求消息中的敏感信息时，使用最新的平台证书（即：证书启用时间较晚的证书）
-//	文档说明：https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_1.shtml
+//	文档说明：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/wechatpay5_1.shtml
 func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey string) (certs *PlatformCertRsp, err error) {
 	var (
 		eg = new(errgroup.Group)
@@ -191,7 +191,7 @@ func (c *ClientV3) GetAndSelectNewestCert() (cert, serialNo string, err error) {
 //	  - 程序实现定期更新平台证书的逻辑，不要硬编码验证应答消息签名的平台证书
 //	  - 定期调用该接口，间隔时间小于12小时
 //	  - 加密请求消息中的敏感信息时，使用最新的平台证书（即：证书启用时间较晚的证书）
-//	文档说明：https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay5_1.shtml
+//	文档说明：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/wechatpay5_1.shtml
 func (c *ClientV3) getPlatformCerts() (certs *PlatformCertRsp, err error) {
 	var (
 		eg = new(errgroup.Group)
