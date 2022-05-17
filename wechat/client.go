@@ -23,6 +23,7 @@ type Client struct {
 	BaseURL     string
 	IsProd      bool
 	HttpClient  *http.Client
+	Transport   *http.Transport
 	DebugSwitch gopay.DebugSwitch
 	certificate *tls.Certificate
 	mu          sync.RWMutex
@@ -43,13 +44,14 @@ func NewClient(appId, mchId, apiKey string, isProd bool) (client *Client) {
 	}
 }
 
-func NewClientFromHttpClient(appId, mchId, apiKey string, isProd bool, httpClient *http.Client) (client *Client) {
+func NewClientFromHttpClient(appId, mchId, apiKey string, isProd bool, httpClient *http.Client, transport *http.Transport) (client *Client) {
 	return &Client{
 		AppId:       appId,
 		MchId:       mchId,
 		ApiKey:      apiKey,
 		IsProd:      isProd,
 		HttpClient:  httpClient,
+		Transport:   transport,
 		DebugSwitch: gopay.DebugOff,
 	}
 }
@@ -201,7 +203,7 @@ func (w *Client) doSanBoxPost(ctx context.Context, bm gopay.BodyMap, path string
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, errs := xhttp.NewClientFromHttpClient(ctx, w.HttpClient).Type(xhttp.TypeXML).Post(url).SendString(req).EndBytes()
+	res, bs, errs := xhttp.NewClientFromHttpClient(ctx, w.HttpClient, w.Transport).Type(xhttp.TypeXML).Post(url).SendString(req).EndBytes()
 	if len(errs) > 0 {
 		return nil, nil, errs[0]
 	}
@@ -231,7 +233,7 @@ func (w *Client) doProdPost(ctx context.Context, bm gopay.BodyMap, path string, 
 		bm.Set("sign", sign)
 	}
 
-	httpClient := xhttp.NewClientFromHttpClient(ctx, w.HttpClient)
+	httpClient := xhttp.NewClientFromHttpClient(ctx, w.HttpClient, w.Transport)
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
@@ -260,7 +262,7 @@ func (w *Client) doProdPost(ctx context.Context, bm gopay.BodyMap, path string, 
 
 func (w *Client) doProdPostPure(ctx context.Context, bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, header http.Header, err error) {
 	var url = baseUrlCh + path
-	httpClient := xhttp.NewClientFromHttpClient(ctx, w.HttpClient)
+	httpClient := xhttp.NewClientFromHttpClient(ctx, w.HttpClient, w.Transport)
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
@@ -308,7 +310,7 @@ func (w *Client) doProdGet(ctx context.Context, bm gopay.BodyMap, path, signType
 	}
 	param := bm.EncodeURLParams()
 	url = url + "?" + param
-	res, bs, errs := xhttp.NewClientFromHttpClient(ctx, w.HttpClient).Get(url).EndBytes()
+	res, bs, errs := xhttp.NewClientFromHttpClient(ctx, w.HttpClient, w.Transport).Get(url).EndBytes()
 	if len(errs) > 0 {
 		return nil, nil, errs[0]
 	}

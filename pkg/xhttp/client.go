@@ -149,21 +149,24 @@ func NewClient() (client *Client) {
 }
 
 // NewClientFromHttpClient
-func NewClientFromHttpClient(ctx context.Context, httpClient *http.Client) (client *Client) {
+func NewClientFromHttpClient(ctx context.Context, httpClient *http.Client, transport *http.Transport) (client *Client) {
+	if transport == nil {
+		transport = &http.Transport{
+			TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
+			DisableKeepAlives: true,
+			Proxy:             http.ProxyFromEnvironment,
+		}
+	}
 	if httpClient == nil {
 		httpClient = &http.Client{
-			Timeout: 60 * time.Second,
-			Transport: &http.Transport{
-				TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
-				DisableKeepAlives: true,
-				Proxy:             http.ProxyFromEnvironment,
-			},
+			Timeout:   60 * time.Second,
+			Transport: transport,
 		}
 	}
 
 	client = &Client{
 		HttpClient:    httpClient,
-		Transport:     nil,
+		Transport:     transport,
 		Header:        make(http.Header),
 		requestType:   TypeUrlencoded,
 		unmarshalType: string(TypeJSON),
