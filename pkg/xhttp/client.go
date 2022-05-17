@@ -424,9 +424,12 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 		}
 		req.Header = c.Header
 		req.Header.Set("Content-Type", c.ContentType)
-		if c.Transport != nil {
-			c.HttpClient.Transport = c.Transport
-		}
+		/*
+			// ignore transport, user must set transport in httpclient
+			if c.Transport != nil {
+				// c.HttpClient.Transport = c.Transport
+			}
+		*/
 		return req, nil
 	}()
 	if err != nil {
