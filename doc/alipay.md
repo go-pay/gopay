@@ -63,6 +63,8 @@ err := client.SetCertSnByContent("appCertPublicKey bytes", "alipayRootCert bytes
 > 业务错误处理：当 `err != nil` 时，可通过 `alipay.IsBizError()` 捕获业务错误状态码和说明。
 > 不在乎 `BizError` 的可忽略统一判错处理
 
+> ★入参 BodyMap中，支持如下公共参数在当次请求中自定义设置：`version`、`return_url`、`notify_url`、`app_auth_token`
+
 - 统一收单交易支付接口 - 示例
 
 ```go
@@ -81,13 +83,13 @@ bm.Set("subject", "条码支付").
 
 aliRsp, err := client.TradePay(bm)
 if err != nil {
-	if bizErr, ok := alipay.IsBizError(err); ok {
-		xlog.Errorf("%+v", bizErr)
-		// do something
-		return
-	}
-	xlog.Errorf("client.TradePay(%+v),err:%+v", bm, err)
-	return
+    if bizErr, ok := alipay.IsBizError(err); ok {
+        xlog.Errorf("%+v", bizErr)
+        // do something
+        return
+    }
+    xlog.Errorf("client.TradePay(%+v),err:%+v", bm, err)
+    return
 }
 ```
 

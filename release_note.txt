@@ -1,3 +1,9 @@
+版本号：Release 1.5.79
+修改记录：
+   (1) PayPal：增加订阅相关的v1接口
+   (2) 微信V3：更新部分接口上注释的文档地址
+   (3) 支付宝：接口请求中，如下公共参数（version、return_url、notify_url、app_auth_token）支持 BodyMap 中此次请求自定义设置
+
 版本号：Release 1.5.78
 修改记录：
    (1) 微信V3：V3EcommerceBalance() 缺失参数补充
