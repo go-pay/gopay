@@ -131,7 +131,78 @@ type OrderDetail struct {
 }
 
 type PaymentSource struct {
-	Card *Card `json:"card,omitempty"`
+	Bancontact *Bancontact `json:"bancontact,omitempty"`
+	Blik       *Blik       `json:"blik,omitempty"`
+	Card       *Card       `json:"card,omitempty"`
+	Eps        *Eps        `json:"eps,omitempty"`
+	Giropay    *Giropay    `json:"giropay,omitempty"`
+	Ideal      *Ideal      `json:"ideal,omitempty"`
+	Mybank     *Mybank     `json:"mybank,omitempty"`
+	P24        *P24        `json:"p24,omitempty"`
+	Sofort     *Sofort     `json:"sofort,omitempty"`
+	Trustly    *Trustly    `json:"trustly,omitempty"`
+}
+
+type Bancontact struct {
+	Bic            string `json:"bic,omitempty"`
+	CardLastDigits string `json:"card_last_digits,omitempty"`
+	CountryCode    string `json:"country_code,omitempty"`
+	IbanLastChars  string `json:"iban_last_chars,omitempty"`
+	Name           string `json:"name,omitempty"`
+}
+
+type Blik struct {
+	CountryCode string `json:"country_code,omitempty"`
+	Email       string `json:"email,omitempty"`
+	Name        string `json:"name,omitempty"`
+}
+type Eps struct {
+	Bic         string `json:"bic,omitempty"`
+	CountryCode string `json:"country_code,omitempty"`
+	Name        string `json:"name,omitempty"`
+}
+
+type Giropay struct {
+	Bic         string `json:"bic,omitempty"`
+	CountryCode string `json:"country_code,omitempty"`
+	Name        string `json:"name,omitempty"`
+}
+
+type Ideal struct {
+	Bic           string `json:"bic,omitempty"`
+	CountryCode   string `json:"country_code,omitempty"`
+	IbanLastChars string `json:"iban_last_chars,omitempty"`
+	Name          string `json:"name,omitempty"`
+}
+
+type Mybank struct {
+	Bic           string `json:"bic,omitempty"`
+	CountryCode   string `json:"country_code,omitempty"`
+	IbanLastChars string `json:"iban_last_chars,omitempty"`
+	Name          string `json:"name,omitempty"`
+}
+
+type P24 struct {
+	CountryCode       string `json:"country_code,omitempty"`
+	Email             string `json:"email,omitempty"`
+	MethodDescription string `json:"method_description,omitempty"`
+	MethodId          string `json:"method_id,omitempty"`
+	Name              string `json:"name,omitempty"`
+	PaymentDescriptor string `json:"payment_descriptor,omitempty"`
+}
+
+type Sofort struct {
+	Bic           string `json:"bic,omitempty"`
+	CountryCode   string `json:"country_code,omitempty"`
+	IbanLastChars string `json:"iban_last_chars,omitempty"`
+	Name          string `json:"name,omitempty"`
+}
+
+type Trustly struct {
+	Bic           string `json:"bic,omitempty"`
+	CountryCode   string `json:"country_code,omitempty"`
+	IbanLastChars string `json:"iban_last_chars,omitempty"`
+	Name          string `json:"name,omitempty"`
 }
 
 type Card struct {
@@ -248,9 +319,9 @@ type PhoneNumber struct {
 }
 
 type Payments struct {
-	Authorizations []*Authorization `json:"authorizations"`
-	Captures       []*Capture       `json:"captures"`
-	Refunds        []*Refund        `json:"refunds"`
+	Authorizations []*Authorization `json:"authorizations,omitempty"`
+	Captures       []*Capture       `json:"captures,omitempty"`
+	Refunds        []*Refund        `json:"refunds,omitempty"`
 }
 
 type Authorization struct {
@@ -274,6 +345,7 @@ type Capture struct {
 	StatusDetails             *StatusDetails             `json:"status_details,omitempty"`
 	Amount                    *Amount                    `json:"amount,omitempty"`
 	FinalCapture              bool                       `json:"final_capture,omitempty"`
+	DisbursementMode          string                     `json:"disbursement_mode,omitempty"`
 	SellerProtection          *SellerProtection          `json:"seller_protection,omitempty"`
 	SellerReceivableBreakdown *SellerReceivableBreakdown `json:"seller_receivable_breakdown,omitempty"`
 	Links                     []*Link                    `json:"links,omitempty"`
