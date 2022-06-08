@@ -29,4 +29,9 @@ const (
 	paymentCaptureRefund    = "/v2/payments/captures/%s/refund"            // capture_id 支付捕获退款 POST
 	paymentRefundDetail     = "/v2/payments/refunds/%s"                    // refund_id 支付退款详情 GET
 
+	// 支出相关
+	createBatchPayout         = "/v1/payments/payouts"                // 创建批量支出 POST
+	showPayoutBatchDetail     = "/v1/payments/payouts/%s"             // payout_batch_id 获取批量支出详情 GET
+	showPayoutItemDetail      = "/v1/payments/payouts-item/%s"        // payout_item_id 获取支出项目详情 GET
+	cancelUnclaimedPayoutItem = "/v1/payments/payouts-item/%s/cancel" // payout_item_id 取消支出项目 POST
 )

@@ -101,6 +101,34 @@ type PaymentRefundDetailRsp struct {
 	Response      *PaymentCaptureRefund `json:"response,omitempty"`
 }
 
+type CreateBatchPayoutRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *BatchPayout   `json:"response,omitempty"`
+}
+
+type PayoutBatchDetailRsp struct {
+	Code          int                `json:"-"`
+	Error         string             `json:"-"`
+	ErrorResponse *ErrorResponse     `json:"-"`
+	Response      *PayoutBatchDetail `json:"response,omitempty"`
+}
+
+type PayoutItemDetailRsp struct {
+	Code          int               `json:"-"`
+	Error         string            `json:"-"`
+	ErrorResponse *ErrorResponse    `json:"-"`
+	Response      *PayoutItemDetail `json:"response,omitempty"`
+}
+
+type CancelUnclaimedPayoutItemRsp struct {
+	Code          int               `json:"-"`
+	Error         string            `json:"-"`
+	ErrorResponse *ErrorResponse    `json:"-"`
+	Response      *PayoutItemDetail `json:"response,omitempty"`
+}
+
 // ==================================分割==================================
 
 type Patch struct {
@@ -336,4 +364,75 @@ type NetAmountBreakdown struct {
 	PayableAmount   *Amount       `json:"payable_amount,omitempty"`
 	ConvertedAmount *Amount       `json:"converted_amount,omitempty"`
 	ExchangeRate    *ExchangeRate `json:"exchange_rate,omitempty"`
+}
+
+// =============== V1 API Payout ==================================
+
+type V1Amount struct {
+	Currency string `json:"currency"`
+	Value    string `json:"value"`
+}
+
+type Errors struct {
+	Name            string `json:"name"`
+	Message         string `json:"message"`
+	InformationLink string `json:"information_link"`
+}
+
+type PayoutCurrencyConversion struct {
+	ExchangeRate string    `json:"exchange_rate"`
+	FromAmount   *V1Amount `json:"from_amount"`
+	ToAmount     *V1Amount `json:"to_amount"`
+}
+
+type PayoutItem struct {
+	RecipientType string    `json:"recipient_type"`
+	Amount        *V1Amount `json:"amount"`
+	Note          string    `json:"note"`
+	Receiver      string    `json:"receiver"`
+	SenderItemId  string    `json:"sender_item_id"`
+}
+
+type SenderBatchHeader struct {
+	SenderBatchId string `json:"sender_batch_id"`
+	EmailSubject  string `json:"email_subject"`
+	EmailMessage  string `json:"email_message,omitempty"`
+}
+
+type BatchHeader struct {
+	PayoutBatchId     string             `json:"payout_batch_id"`
+	BatchStatus       string             `json:"batch_status"` // DENIED、PENDING、PROCESSING、SUCCESS、CANCELED
+	TimeCreated       string             `json:"time_created,omitempty"`
+	TimeCompleted     string             `json:"time_completed,omitempty"`
+	SenderBatchHeader *SenderBatchHeader `json:"sender_batch_header"`
+	Amount            *V1Amount          `json:"amount,omitempty"`
+	Fees              *V1Amount          `json:"fees,omitempty"`
+}
+
+type BatchPayout struct {
+	BatchHeader *BatchHeader `json:"batch_header"`
+	Links       []*Link      `json:"links,omitempty"`
+}
+
+type PayoutItemDetail struct {
+	ActivityId         string                    `json:"activity_id,omitempty"`
+	CurrencyConversion *PayoutCurrencyConversion `json:"currency_conversion,omitempty"`
+	Errors             *Errors                   `json:"errors,omitempty"`
+	Links              []*Link                   `json:"links,omitempty"`
+	PayoutBatchId      string                    `json:"payout_batch_id"`
+	PayoutItem         *PayoutItem               `json:"payout_item"`
+	PayoutItemFee      *V1Amount                 `json:"payout_item_fee"`
+	PayoutItemId       string                    `json:"payout_item_id"`
+	SenderBatchId      string                    `json:"sender_batch_id,omitempty"`
+	TimeProcessed      string                    `json:"time_processed"`
+	TransactionId      string                    `json:"transaction_id"`
+	TransactionStatus  string                    `json:"transaction_status"`
+}
+
+type PayoutBatchDetail struct {
+	BatchHeader *BatchHeader        `json:"batch_header"`
+	Items       []*PayoutItemDetail `json:"items"`
+	Links       []*Link             `json:"links"`
+	TotalItems  int64               `json:"total_items,omitempty"`
+	TotalPage   int64               `json:"total_page,omitempty"`
 }
