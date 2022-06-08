@@ -219,7 +219,12 @@ func (w *Client) doSanBoxPost(ctx context.Context, bm gopay.BodyMap, path string
 
 // Post请求、正式
 func (w *Client) doProdPost(ctx context.Context, bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, header http.Header, err error) {
-	var url = baseUrlCh + path
+	var url string
+	if strings.HasPrefix(path, "http") {
+		url = path
+	} else {
+		url = baseUrlCh + path
+	}
 	if bm.GetString("appid") == util.NULL {
 		bm.Set("appid", w.AppId)
 	}
