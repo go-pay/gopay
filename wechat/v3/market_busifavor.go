@@ -25,7 +25,7 @@ func (c *ClientV3) V3BusiFavorBatchCreate(ctx context.Context, bm gopay.BodyMap)
 	wxRsp = &BusiFavorCreateRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(FavorBatchCreate)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -52,7 +52,7 @@ func (c *ClientV3) V3BusiFavorBatchDetail(ctx context.Context, stockId string) (
 	wxRsp = &BusiFavorBatchDetailRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorBatchDetail)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -78,7 +78,7 @@ func (c *ClientV3) V3BusiFavorUse(ctx context.Context, bm gopay.BodyMap) (wxRsp 
 	wxRsp = &BusiFavorUseRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorUse)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -105,7 +105,7 @@ func (c *ClientV3) V3BusiFavorUserCoupons(ctx context.Context, openid string, bm
 	wxRsp = &BusiFavorUserCouponsRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorUserCoupons)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -132,7 +132,7 @@ func (c *ClientV3) V3BusiFavorUserCouponDetail(ctx context.Context, openid, coup
 	wxRsp = &BusiFavorUserCouponDetailRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiUserCoupon)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -159,7 +159,7 @@ func (c *ClientV3) V3BusiFavorCodeUpload(ctx context.Context, stockId string, bm
 	wxRsp = &BusiFavorCodeUploadRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorCodeUpload)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -185,7 +185,7 @@ func (c *ClientV3) V3BusiFavorCallbackUrlSet(ctx context.Context, bm gopay.BodyM
 	wxRsp = &BusiFavorCallbackUrlSetRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorCallbackUrlSet)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -212,7 +212,7 @@ func (c *ClientV3) V3BusiFavorCallbackUrl(ctx context.Context, mchid string) (wx
 	wxRsp = &BusiFavorCallbackUrlRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorCallbackUrl)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -238,7 +238,7 @@ func (c *ClientV3) V3BusiFavorAssociate(ctx context.Context, bm gopay.BodyMap) (
 	wxRsp = &BusiFavorAssociateRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorAssociate)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -264,7 +264,7 @@ func (c *ClientV3) V3BusiFavorDisassociate(ctx context.Context, bm gopay.BodyMap
 	wxRsp = &BusiFavorDisassociateRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorDisassociate)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -291,7 +291,7 @@ func (c *ClientV3) V3BusiFavorBatchUpdate(ctx context.Context, stockId string, b
 	wxRsp = &BusiFavorBatchUpdateRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorBatchUpdate)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -340,7 +340,7 @@ func (c *ClientV3) V3BusiFavorSend(ctx context.Context, cardId string, bm gopay.
 	wxRsp = &BusiFavorSendRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorSend)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -366,7 +366,7 @@ func (c *ClientV3) V3BusiFavorReturn(ctx context.Context, bm gopay.BodyMap) (wxR
 	wxRsp = &BusiFavorReturnRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorReturn)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -392,7 +392,7 @@ func (c *ClientV3) V3BusiFavorDeactivate(ctx context.Context, bm gopay.BodyMap) 
 	wxRsp = &BusiFavorDeactivateRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorDeactivate)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -418,7 +418,7 @@ func (c *ClientV3) V3BusiFavorSubsidyPay(ctx context.Context, bm gopay.BodyMap) 
 	wxRsp = &BusiFavorSubsidyPayRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorSubsidyPay)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -445,7 +445,7 @@ func (c *ClientV3) V3BusiFavorSubsidyPayDetail(ctx context.Context, subsidyRecei
 	wxRsp = &BusiFavorSubsidyPayDetailRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BusiFavorSubsidyPay)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode

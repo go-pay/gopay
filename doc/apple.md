@@ -62,20 +62,20 @@ xlog.Debugf("payload.Data: %+v", payload.Data)
 bs1, _ := json.Marshal(payload)
 xlog.Color(xlog.RedBright).Info(string(bs1))
 /*
-	{
-	    "notificationType":"DID_RENEW",
-	    "subtype":"",
-	    "notificationUUID":"469bf30e-7715-4f9f-aae3-a7bfc12aea77",
-	    "notificationVersion":"",
-	    "data":{
-	        "appAppleId":0,
-	        "bundleId":"com.audaos.audarecorder",
-	        "bundleVersion":"7",
-	        "environment":"Sandbox",
-	        "signedRenewalInfo":"xxxxxxxxxx",
-	        "signedTransactionInfo":"xxxxxxxxxxx"
-	    }
-	}
+   {
+       "notificationType":"DID_RENEW",
+       "subtype":"",
+       "notificationUUID":"469bf30e-7715-4f9f-aae3-a7bfc12aea77",
+       "notificationVersion":"",
+       "data":{
+           "appAppleId":0,
+           "bundleId":"com.audaos.audarecorder",
+           "bundleVersion":"7",
+           "environment":"Sandbox",
+           "signedRenewalInfo":"xxxxxxxxxx",
+           "signedTransactionInfo":"xxxxxxxxxxx"
+       }
+   }
 */
 
 // decode renewalInfo
@@ -88,19 +88,19 @@ xlog.Debugf("data.renewalInfo: %+v", renewalInfo)
 bs, _ := json.Marshal(renewalInfo)
 xlog.Color(xlog.GreenBright).Info(string(bs))
 /*
-	{
-	    "autoRenewProductId":"com.audaos.audarecorder.vip.m2",
-	    "autoRenewStatus":1,
-	    "expirationIntent":0,
-	    "gracePeriodExpiresDate":0,
-	    "isInBillingRetryPeriod":false,
-	    "offerIdentifier":"",
-	    "offerType":0,
-	    "originalTransactionId":"2000000000842607",
-	    "priceIncreaseStatus":0,
-	    "productId":"com.audaos.audarecorder.vip.m2",
-	    "signedDate":1646387008228
-	}
+   {
+       "autoRenewProductId":"com.audaos.audarecorder.vip.m2",
+       "autoRenewStatus":1,
+       "expirationIntent":0,
+       "gracePeriodExpiresDate":0,
+       "isInBillingRetryPeriod":false,
+       "offerIdentifier":"",
+       "offerType":0,
+       "originalTransactionId":"2000000000842607",
+       "priceIncreaseStatus":0,
+       "productId":"com.audaos.audarecorder.vip.m2",
+       "signedDate":1646387008228
+   }
 */
 
 // decode transactionInfo
@@ -113,26 +113,26 @@ xlog.Debugf("data.transactionInfo: %+v", transactionInfo)
 bs2, _ := json.Marshal(transactionInfo)
 xlog.Color(xlog.YellowBright).Info(string(bs2))
 /*
-	{
-	    "appAccountToken":"",
-	    "bundleId":"com.audaos.audarecorder",
-	    "expiresDate":1646387196000,
-	    "inAppOwnershipType":"PURCHASED",
-	    "isUpgraded":false,
-	    "offerIdentifier":"",
-	    "offerType":0,
-	    "originalPurchaseDate":1646046037000,
-	    "originalTransactionId":"2000000000842607",
-	    "productId":"com.audaos.audarecorder.vip.m2",
-	    "purchaseDate":1646387016000,
-	    "quantity":1,
-	    "revocationDate":0,
-	    "revocationReason":"",
-	    "signedDate":1646387008254,
-	    "subscriptionGroupIdentifier":"20929536",
-	    "transactionId":"2000000004047119",
-	    "type":"Auto-Renewable Subscription",
-	    "webOrderLineItemId":"2000000000302832"
-	}
+{
+    "appAccountToken":"",
+    "bundleId":"com.audaos.audarecorder",
+    "expiresDate":1646387196000,
+    "inAppOwnershipType":"PURCHASED",
+    "isUpgraded":false,
+    "offerIdentifier":"",
+    "offerType":0,
+    "originalPurchaseDate":1646046037000,
+    "originalTransactionId":"2000000000842607",
+    "productId":"com.audaos.audarecorder.vip.m2",
+    "purchaseDate":1646387016000,
+    "quantity":1,
+    "revocationDate":0,
+    "revocationReason":"",
+    "signedDate":1646387008254,
+    "subscriptionGroupIdentifier":"20929536",
+    "transactionId":"2000000004047119",
+    "type":"Auto-Renewable Subscription",
+    "webOrderLineItemId":"2000000000302832"
+}
 */
 ```

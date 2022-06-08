@@ -30,7 +30,7 @@ func (c *ClientV3) V3CombineTransactionApp(ctx context.Context, bm gopay.BodyMap
 	wxRsp = &PrepayRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(Prepay)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -63,7 +63,7 @@ func (c *ClientV3) V3CombineTransactionJsapi(ctx context.Context, bm gopay.BodyM
 	wxRsp = &PrepayRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(Prepay)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -93,7 +93,7 @@ func (c *ClientV3) V3CombineTransactionNative(ctx context.Context, bm gopay.Body
 	wxRsp = &NativeRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(Native)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -121,7 +121,7 @@ func (c *ClientV3) V3CombineTransactionH5(ctx context.Context, bm gopay.BodyMap)
 	wxRsp = &H5Rsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(H5Url)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -150,7 +150,7 @@ func (c *ClientV3) V3CombineQueryOrder(ctx context.Context, traderNo string) (wx
 	wxRsp = &CombineQueryOrderRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(CombineQueryOrder)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode

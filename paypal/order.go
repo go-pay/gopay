@@ -24,7 +24,7 @@ func (c *Client) CreateOrder(ctx context.Context, bm gopay.BodyMap) (ppRsp *Crea
 	ppRsp = &CreateOrderRsp{Code: Success}
 	ppRsp.Response = new(OrderDetail)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusCreated {
 		ppRsp.Code = res.StatusCode
@@ -72,7 +72,7 @@ func (c *Client) OrderDetail(ctx context.Context, orderId string, bm gopay.BodyM
 	ppRsp = &OrderDetailRsp{Code: Success}
 	ppRsp.Response = new(OrderDetail)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
@@ -98,7 +98,7 @@ func (c *Client) OrderAuthorize(ctx context.Context, orderId string, bm gopay.Bo
 	ppRsp = &OrderAuthorizeRsp{Code: Success}
 	ppRsp.Response = new(OrderDetail)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusCreated && res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
@@ -124,9 +124,35 @@ func (c *Client) OrderCapture(ctx context.Context, orderId string, bm gopay.Body
 	ppRsp = &OrderCaptureRsp{Code: Success}
 	ppRsp.Response = new(OrderDetail)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusCreated && res.StatusCode != http.StatusOK {
+		ppRsp.Code = res.StatusCode
+		ppRsp.Error = string(bs)
+		ppRsp.ErrorResponse = new(ErrorResponse)
+		_ = json.Unmarshal(bs, ppRsp.ErrorResponse)
+	}
+	return ppRsp, nil
+}
+
+// 订单支付确认（Confirm the Order）
+//	Code = 0 is success
+//	文档：https://developer.paypal.com/docs/api/orders/v2/#orders_confirm
+func (c *Client) OrderConfirm(ctx context.Context, orderId string, bm gopay.BodyMap) (ppRsp *OrderConfirmRsp, err error) {
+	if orderId == gopay.NULL {
+		return nil, errors.New("order_id is empty")
+	}
+	url := fmt.Sprintf(orderConfirm, orderId)
+	res, bs, err := c.doPayPalPost(ctx, bm, url)
+	if err != nil {
+		return nil, err
+	}
+	ppRsp = &OrderConfirmRsp{Code: Success}
+	ppRsp.Response = new(OrderDetail)
+	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
 		ppRsp.Error = string(bs)
 		ppRsp.ErrorResponse = new(ErrorResponse)

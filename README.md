@@ -86,8 +86,8 @@ QQ群：
 
 ## 赞赏多少是您的心意，感谢支持！
 
-微信赞赏码： <img width="240" height="240" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang.png"/>
-支付宝赞助码： <img width="240" height="240" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_zfb.png"/>
+微信赞赏码： <img width="200" height="200" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang.png"/>
+支付宝赞助码： <img width="200" height="200" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_zfb.png"/>
 
 ## License
 

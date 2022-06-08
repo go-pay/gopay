@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 
+	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 )
 
@@ -14,7 +16,7 @@ import (
 //	Code = 0 is success
 //	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter11_2_1.shtml
 func (c *ClientV3) V3BankSearchBank(ctx context.Context, accountNo string) (wxRsp *BankSearchBankRsp, err error) {
-	uri := v3BankSearchBank + "?account_number=" + accountNo
+	uri := v3BankSearchBank + "?account_number=" + url.QueryEscape(accountNo)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -26,7 +28,7 @@ func (c *ClientV3) V3BankSearchBank(ctx context.Context, accountNo string) (wxRs
 	wxRsp = &BankSearchBankRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BankSearchBank)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -43,7 +45,7 @@ func (c *ClientV3) V3BankSearchPersonalList(ctx context.Context, limit, offset i
 	if limit == 0 {
 		limit = 20
 	}
-	uri := v3BankSearchPersonalList + "&limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
+	uri := v3BankSearchPersonalList + "?limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -55,7 +57,7 @@ func (c *ClientV3) V3BankSearchPersonalList(ctx context.Context, limit, offset i
 	wxRsp = &BankSearchPersonalListRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BankSearchList)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -72,7 +74,7 @@ func (c *ClientV3) V3BankSearchCorporateList(ctx context.Context, limit, offset 
 	if limit == 0 {
 		limit = 20
 	}
-	uri := v3BankSearchCorporateList + "&limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
+	uri := v3BankSearchCorporateList + "?limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -84,7 +86,7 @@ func (c *ClientV3) V3BankSearchCorporateList(ctx context.Context, limit, offset 
 	wxRsp = &BankSearchCorporateListRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BankSearchList)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -109,7 +111,7 @@ func (c *ClientV3) V3BankSearchProvinceList(ctx context.Context) (wxRsp *BankSea
 	wxRsp = &BankSearchProvinceListRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BankSearchProvince)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -135,7 +137,7 @@ func (c *ClientV3) V3BankSearchCityList(ctx context.Context, provinceCode int) (
 	wxRsp = &BankSearchCityListRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BankSearchCity)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -164,7 +166,7 @@ func (c *ClientV3) V3BankSearchBranchList(ctx context.Context, bankAliasCode str
 	wxRsp = &BankSearchBranchListRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(BankSearchBranch)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode

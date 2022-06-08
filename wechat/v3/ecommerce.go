@@ -22,17 +22,17 @@ func (c *ClientV3) V3EcommerceApply(ctx context.Context, bm gopay.BodyMap) (*Eco
 	if err != nil {
 		return nil, err
 	}
-	wxResp := &EcommerceApplyRsp{Code: Success, SignInfo: si}
-	wxResp.Response = new(EcommerceApply)
-	if err = json.Unmarshal(bs, wxResp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+	wxRsp := &EcommerceApplyRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(EcommerceApply)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
-		wxResp.Code = res.StatusCode
-		wxResp.Error = string(bs)
-		return wxResp, nil
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
 	}
-	return wxResp, c.verifySyncSign(si)
+	return wxRsp, c.verifySyncSign(si)
 }
 
 // 查询申请状态API
@@ -60,7 +60,7 @@ func (c *ClientV3) V3EcommerceApplyStatus(ctx context.Context, applyId int64, ou
 	wxRsp := &EcommerceApplyStatusRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceApplyStatus)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -86,7 +86,7 @@ func (c *ClientV3) V3EcommerceProfitShare(ctx context.Context, bm gopay.BodyMap)
 	wxRsp := &EcommerceProfitShareRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceProfitShare)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -113,7 +113,7 @@ func (c *ClientV3) V3EcommerceProfitShareQuery(ctx context.Context, bm gopay.Bod
 	wxRsp := &EcommerceProfitShareQueryRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceProfitShareQuery)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -139,7 +139,7 @@ func (c *ClientV3) V3EcommerceProfitShareReturn(ctx context.Context, bm gopay.Bo
 	wxRsp := &EcommerceProfitShareReturnRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceProfitShareReturn)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -166,7 +166,7 @@ func (c *ClientV3) V3EcommerceProfitShareReturnResult(ctx context.Context, bm go
 	wxRsp := &EcommerceProfitShareReturnResultRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceProfitShareReturn)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -192,7 +192,7 @@ func (c *ClientV3) V3EcommerceProfitShareFinish(ctx context.Context, bm gopay.Bo
 	wxRsp := &EcommerceProfitShareFinishRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceProfitShareFinish)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -219,7 +219,7 @@ func (c *ClientV3) V3EcommerceProfitShareUnsplitAmount(ctx context.Context, tran
 	wxRsp := &EcommerceProfitShareUnsplitAmountRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceProfitShareUnsplitAmount)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -245,7 +245,7 @@ func (c *ClientV3) V3EcommerceProfitShareAddReceiver(ctx context.Context, bm gop
 	wxRsp := &EcommerceProfitShareAddReceiverRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceProfitShareReceiver)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -271,7 +271,7 @@ func (c *ClientV3) V3EcommerceProfitShareDeleteReceiver(ctx context.Context, bm 
 	wxRsp := &EcommerceProfitShareDeleteReceiverRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceProfitShareReceiver)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -297,7 +297,7 @@ func (c *ClientV3) V3EcommerceSubsidies(ctx context.Context, bm gopay.BodyMap) (
 	wxRsp := &EcommerceSubsidiesRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceSubsidies)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -323,7 +323,7 @@ func (c *ClientV3) V3EcommerceSubsidiesReturn(ctx context.Context, bm gopay.Body
 	wxRsp := &EcommerceSubsidiesReturnRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceSubsidiesReturn)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -349,7 +349,7 @@ func (c *ClientV3) V3EcommerceSubsidiesCancel(ctx context.Context, bm gopay.Body
 	wxRsp := &EcommerceSubsidiesCancelRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(EcommerceSubsidiesCancel)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode

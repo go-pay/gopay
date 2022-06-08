@@ -59,10 +59,13 @@ const (
 	v3SubFundFlowBill       = "/v3/bill/sub-merchant-fundflowbill" // 申请单个子商户资金账单 GET
 
 	// 提现
-	v3Withdraw                = "/v3/ecommerce/fund/withdraw"                   // 特约商户余额提现 POST
-	v3WithdrawStatusById      = "/v3/ecommerce/fund/withdraw/%s"                // withdraw_id 微信支付提现单号查询特约商户提现状态 GET
-	v3WithdrawStatusByNo      = "/v3/ecommerce/fund/withdraw/out-request-no/%s" // withdraw_id 商户提现单号查询特约商户提现状态 GET
-	v3WithdrawDownloadErrBill = "/v3/merchant/fund/withdraw/bill-type/%s"       // bill_type 按日下载提现异常文件 GET
+	v3Withdraw                    = "/v3/ecommerce/fund/withdraw"                   // 特约商户余额提现 POST
+	v3WithdrawStatusById          = "/v3/ecommerce/fund/withdraw/%s"                // withdraw_id 查询特约商户提现状态 GET
+	v3WithdrawStatusByNo          = "/v3/ecommerce/fund/withdraw/out-request-no/%s" // out_request_no 查询特约商户提现状态 GET
+	v3EcommerceWithdraw           = "/v3/merchant/fund/withdraw"                    // 电商平台预约提现 POST
+	v3EcommerceWithdrawStatusById = "/v3/merchant/fund/withdraw/withdraw-id/%s"     // withdraw_id 电商平台查询预约提现状态 POST
+	v3EcommerceWithdrawStatusByNo = "/v3/merchant/fund/withdraw/out-request-no/%s"  // out_request_no 电商平台查询预约提现状态 POST
+	v3WithdrawDownloadErrBill     = "/v3/merchant/fund/withdraw/bill-type/%s"       // bill_type 按日下载提现异常文件 GET
 
 	// 微信支付分（免确认模式）
 	v3ScoreDirectComplete = "/payscore/serviceorder/direct-complete" // 创单结单合并 POST
@@ -193,9 +196,10 @@ const (
 	v3PartnerTransferMerchantDetail = "/v3/partner-transfer/batches/out-batch-no/%s/details/out-detail-no/%s" // out_batch_no、out_detail_no 商家明细单号查询明细单 GET
 
 	// 余额
-	v3MerchantBalance    = "/v3/merchant/fund/balance/%s"       // account_type 查询账户实时余额 GET
-	v3MerchantDayBalance = "/v3/merchant/fund/dayendbalance/%s" // account_type 查询账户日终余额 GET
-	v3EcommerceBalance   = "/v3/ecommerce/fund/balance/%s"      // sub_mchid 查询特约商户账户实时余额 GET
+	v3MerchantBalance     = "/v3/merchant/fund/balance/%s"        // account_type 查询账户实时余额 GET
+	v3MerchantDayBalance  = "/v3/merchant/fund/dayendbalance/%s"  // account_type 查询账户日终余额 GET
+	v3EcommerceBalance    = "/v3/ecommerce/fund/balance/%s"       // sub_mchid 查询特约商户账户实时余额 GET
+	v3EcommerceDayBalance = "/v3/ecommerce/fund/enddaybalance/%s" // sub_mchid 查询二级商户账户日终余额 GET
 
 	// 来账识别API
 	v3MerchantIncomeRecord  = "/v3/merchantfund/merchant/income-records" // 商户银行来账查询 GET

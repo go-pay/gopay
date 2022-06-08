@@ -21,7 +21,13 @@ func TestCreateOrder(t *testing.T) {
 
 	bm := make(gopay.BodyMap)
 	bm.Set("intent", "CAPTURE").
-		Set("purchase_units", pus)
+		Set("purchase_units", pus).
+		SetBodyMap("application_context", func(b gopay.BodyMap) {
+			b.Set("brand_name", "gopay").
+				Set("locale", "en-PT").
+				Set("return_url", "https://example.com/returnUrl").
+				Set("cancel_url", "https://example.com/cancelUrl")
+		})
 
 	xlog.Debug("bm：", bm.JsonBody())
 
@@ -132,7 +138,14 @@ func TestOrderAuthorize(t *testing.T) {
 }
 
 func TestOrderCapture(t *testing.T) {
-	ppRsp, err := client.OrderCapture(ctx, "4X223967G91314611", nil)
+	bm := make(gopay.BodyMap)
+	bm.SetBodyMap("payment_source", func(b gopay.BodyMap) {
+		b.SetBodyMap("token", func(b gopay.BodyMap) {
+			b.Set("id", "The PayPal-generated ID for the token").
+				Set("type", "BILLING_AGREEMENT")
+		})
+	})
+	ppRsp, err := client.OrderCapture(ctx, "4X223967G91314611", bm)
 	if err != nil {
 		xlog.Error(err)
 		return

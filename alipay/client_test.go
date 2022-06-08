@@ -22,7 +22,7 @@ var (
 func TestMain(m *testing.M) {
 
 	// 初始化支付宝客户端
-	//    appId：应用ID
+	//    appid：应用ID
 	//    privateKey：应用私钥，支持PKCS1和PKCS8
 	//    isProd：是否是正式环境
 	client, err = NewClient(cert.Appid, cert.PrivateKey, false)
@@ -30,8 +30,8 @@ func TestMain(m *testing.M) {
 		xlog.Error(err)
 		return
 	}
-	// 打开Debug开关，输出日志
-	client.DebugSwitch = gopay.DebugOn
+	// Debug开关，输出/关闭日志
+	client.DebugSwitch = gopay.DebugOff
 
 	// 配置公共参数
 	client.SetCharset("utf-8").

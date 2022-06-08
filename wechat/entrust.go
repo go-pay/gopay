@@ -21,7 +21,7 @@ func (w *Client) EntrustPublic(ctx context.Context, bm gopay.BodyMap) (wxRsp *En
 	}
 	wxRsp = new(EntrustPublicResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, nil
 }
@@ -39,7 +39,7 @@ func (w *Client) EntrustAppPre(ctx context.Context, bm gopay.BodyMap) (wxRsp *En
 	}
 	wxRsp = new(EntrustAppPreResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, nil
 }
@@ -57,7 +57,7 @@ func (w *Client) EntrustH5(ctx context.Context, bm gopay.BodyMap) (wxRsp *Entrus
 	}
 	wxRsp = new(EntrustH5Response)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, nil
 }
@@ -78,7 +78,7 @@ func (w *Client) EntrustPaying(ctx context.Context, bm gopay.BodyMap) (wxRsp *En
 	}
 	wxRsp = new(EntrustPayingResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, nil
 }

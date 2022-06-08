@@ -37,7 +37,10 @@ if err != nil {
     return
 }
 
-// 启用自动同步返回验签，并定时更新微信平台API证书
+// 设置微信平台API证书和序列号（如开启自动验签，请忽略此步骤）
+//client.SetPlatformCert([]byte(""), "")
+
+// 启用自动同步返回验签，并定时更新微信平台API证书（开启自动验签时，无需单独设置微信平台API证书和序列号）
 err = client.AutoVerifySign()
 if err != nil {
     xlog.Error(err)
@@ -81,6 +84,11 @@ if err != nil {
     xlog.Error(err)
     return
 }
+if wxRsp.Code == Success {
+    xlog.Debugf("wxRsp: %#v", wxRsp.Response)
+    return
+}
+xlog.Errorf("wxRsp:%s", wxRsp.Error)
 ```
 
 ### 3、下单后，获取微信小程序支付、APP支付、JSAPI支付所需要的 pay sign
@@ -230,9 +238,11 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 申请资金账单：`client.V3BillFundFlowBill()`
     * 申请特约商户资金账单：`client.V3BillEcommerceFundFlowBill()`
     * 下载账单：`client.V3BillDownLoadBill()`
-* <font color='#07C160' size='4'>提现（服务商）</font>
-    * 特约商户余额提现：`client.V3Withdraw()`
-    * 查询特约商户提现状态：`client.V3WithdrawStatus()`
+* <font color='#07C160' size='4'>提现（服务商、电商）</font>
+    * 特约商户余额提现/二级商户预约提现：`client.V3Withdraw()`
+    * 查询特约商户提现状态/二级商户查询预约提现状态：`client.V3WithdrawStatus()`
+    * 电商平台预约提现：`client.V3EcommerceWithdraw()`
+    * 电商平台查询预约提现状态：`client.V3EcommerceWithdrawStatus()`
     * 按日下载提现异常文件：`client.V3WithdrawDownloadErrBill()`
 * <font color='#07C160' size='4'>微信支付分（公共API）</font>
     * 创建支付分订单：`client.V3ScoreOrderCreate()`
@@ -338,18 +348,19 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 转账明细电子回单受理：`client.V3TransferDetailReceipt()`
     * 查询转账明细电子回单受理结果：`client.V3TransferDetailReceiptQuery()`
 * <font color='#07C160' size='4'>批量转账（服务商）</font>
-    * 发起批量转账：`client.V3PartnerTransfer()`
-    * 微信批次单号查询批次单：`client.V3PartnerTransferQuery()`
-    * 微信明细单号查询明细单：`client.V3PartnerTransferDetail()`
-    * 商家批次单号查询批次单：`client.V3PartnerTransferMerchantQuery()`
-    * 商家明细单号查询明细单：`client.V3PartnerTransferMerchantDetail()`
+  * 发起批量转账：`client.V3PartnerTransfer()`
+  * 微信批次单号查询批次单：`client.V3PartnerTransferQuery()`
+  * 微信明细单号查询明细单：`client.V3PartnerTransferDetail()`
+  * 商家批次单号查询批次单：`client.V3PartnerTransferMerchantQuery()`
+  * 商家明细单号查询明细单：`client.V3PartnerTransferMerchantDetail()`
 * <font color='#07C160' size='4'>余额查询</font>
-    * 查询特约商户账户实时余额（服务商）：`client.V3EcommerceBalance()`
-    * 查询账户实时余额：`client.V3MerchantBalance()`
-    * 查询账户日终余额：`client.V3MerchantDayBalance()`
+  * 查询特约商户账户实时余额：`client.V3EcommerceBalance()`
+  * 查询二级商户账户日终余额：`client.V3EcommerceDayBalance()`
+  * 查询账户实时余额：`client.V3MerchantBalance()`
+  * 查询账户日终余额：`client.V3MerchantDayBalance()`
 * <font color='#07C160' size='4'>来账识别</font>
-    * 商户银行来账查询：`client.V3MerchantIncomeRecord()`
-    * 特约商户银行来账查询：`client.V3EcommerceIncomeRecord()`
+  * 商户银行来账查询：`client.V3MerchantIncomeRecord()`
+  * 特约商户银行来账查询：`client.V3EcommerceIncomeRecord()`
 * <font color='#07C160' size='4'>特约商户进件（服务商）</font>
     * 提交申请单：`client.V3Apply4SubSubmit()`
     * 查询申请单状态（BusinessCode）：`client.V3Apply4SubQueryByBusinessCode()`

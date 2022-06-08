@@ -30,9 +30,12 @@ type ClientV3 struct {
 // NewClientV3 初始化微信客户端 V3
 //	mchid：商户ID 或者服务商模式的 sp_mchid
 // 	serialNo：商户API证书的证书序列号
-//	ApiV3Key：APIv3Key，商户平台获取
+//	apiV3Key：APIv3Key，商户平台获取
 //	privateKey：商户API证书下载后，私钥 apiclient_key.pem 读取后的字符串内容
 func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3, err error) {
+	if mchid == util.NULL || serialNo == util.NULL || apiV3Key == util.NULL || privateKey == util.NULL {
+		return nil, gopay.MissWechatInitParamErr
+	}
 	priKey, err := xpem.DecodePrivateKey([]byte(privateKey))
 	if err != nil {
 		return nil, err

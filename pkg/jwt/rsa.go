@@ -4,6 +4,9 @@ import (
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
+	"fmt"
+
+	"github.com/go-pay/gopay"
 )
 
 // Implements the RSA family of signing methods signing methods
@@ -62,15 +65,18 @@ func (m *SigningMethodRSA) Verify(signingString, signature string, key interface
 		return ErrInvalidKeyType
 	}
 
-	// Create hasher
+	// Create h
 	if !m.Hash.Available() {
 		return ErrHashUnavailable
 	}
-	hasher := m.Hash.New()
-	hasher.Write([]byte(signingString))
+	h := m.Hash.New()
+	h.Write([]byte(signingString))
 
 	// Verify the signature
-	return rsa.VerifyPKCS1v15(rsaKey, m.Hash, hasher.Sum(nil), sig)
+	if err = rsa.VerifyPKCS1v15(rsaKey, crypto.SHA256, h.Sum(nil), sig); err != nil {
+		return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
+	}
+	return nil
 }
 
 // Implements the Sign method from SigningMethod
@@ -93,9 +99,9 @@ func (m *SigningMethodRSA) Sign(signingString string, key interface{}) (string, 
 	hasher.Write([]byte(signingString))
 
 	// Sign the string and return the encoded bytes
-	if sigBytes, err := rsa.SignPKCS1v15(rand.Reader, rsaKey, m.Hash, hasher.Sum(nil)); err == nil {
+	sigBytes, err := rsa.SignPKCS1v15(rand.Reader, rsaKey, m.Hash, hasher.Sum(nil))
+	if err == nil {
 		return EncodeSegment(sigBytes), nil
-	} else {
-		return "", err
 	}
+	return "", err
 }

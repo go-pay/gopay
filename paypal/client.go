@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/gopay/pkg/xlog"
 )
@@ -24,6 +25,9 @@ type Client struct {
 
 // NewClient 初始化PayPal支付客户端
 func NewClient(clientid, secret string, isProd bool) (client *Client, err error) {
+	if clientid == util.NULL || secret == util.NULL {
+		return nil, gopay.MissPayPalInitParamErr
+	}
 	client = &Client{
 		Clientid:    clientid,
 		Secret:      secret,

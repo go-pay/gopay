@@ -25,7 +25,7 @@ import (
 )
 
 // 初始化支付宝客户端
-//    appId：应用ID
+//    appid：应用ID
 //    privateKey：应用私钥，支持PKCS1和PKCS8
 //    isProd：是否是正式环境
 client, err := alipay.NewClient("2016091200494382", privateKey, false)
@@ -60,7 +60,13 @@ err := client.SetCertSnByContent("appCertPublicKey bytes", "alipayRootCert bytes
 
 > 具体参数请根据不同接口查看：[支付宝支付API接口文档](https://opendocs.alipay.com/apis)
 
-- 统一收单交易支付接口 示例
+> 业务错误处理：当 `err != nil` 时，可通过 `alipay.IsBizError()` 捕获业务错误状态码和说明。
+> 不在乎 `BizError` 的可忽略统一判错处理
+
+> ★入参 BodyMap中，支持如下公共参数在当次请求中自定义设置：`version`、`return_url`、`notify_url`、`app_auth_token`
+
+- 统一收单交易支付接口 - 示例
+
 ```go
 import (
     "github.com/go-pay/gopay"
@@ -77,7 +83,12 @@ bm.Set("subject", "条码支付").
 
 aliRsp, err := client.TradePay(bm)
 if err != nil {
-    xlog.Error("err:", err)
+    if bizErr, ok := alipay.IsBizError(err); ok {
+        xlog.Errorf("%+v", bizErr)
+        // do something
+        return
+    }
+    xlog.Errorf("client.TradePay(%+v),err:%+v", bm, err)
     return
 }
 ```
@@ -139,8 +150,8 @@ if err != nil {
 //    value：url.Values
 notifyReq, err = alipay.ParseNotifyByURLValues()
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 
 // 支付宝异步通知验签（公钥模式）
@@ -321,6 +332,7 @@ xlog.Infof("%+v", phone)
 
 ### 支付宝公共 API
 
+* `alipay.IsBizError()` => 判断并捕获业务错误 BizError
 * `alipay.GetCertSN()` => 获取证书SN号（app_cert_sn、alipay_cert_sn）
 * `alipay.GetRootCertSN()` => 获取证书SN号（alipay_root_cert_sn）
 * `alipay.GetRsaSign()` => 获取支付宝参数签名（参数sign值）

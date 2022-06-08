@@ -36,7 +36,7 @@ func (q *Client) SendCashRed(ctx context.Context, bm gopay.BodyMap, certFilePath
 	}
 	qqRsp = new(SendCashRedResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
@@ -69,7 +69,7 @@ func (q *Client) QueryRedInfo(ctx context.Context, bm gopay.BodyMap) (qqRsp *Que
 	}
 	qqRsp = new(QueryRedInfoResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
