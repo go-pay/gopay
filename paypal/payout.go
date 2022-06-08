@@ -14,7 +14,7 @@ import (
 	"net/http"
 )
 
-// 创建批量支付（Create batch payout）
+// 创建批量支出（Create batch payout）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/payments.payouts-batch/v1/#payouts_post
 func (c *Client) CreateBatchPayout(ctx context.Context, bm gopay.BodyMap) (ppRsp *CreateBatchPayoutRsp, err error) {
@@ -91,7 +91,7 @@ func (c Client) ShowPayoutItemDetails(ctx context.Context, payoutItemId string) 
 	return ppRsp, nil
 }
 
-// 取消批量支付的项目（Cancel Unclaimed Payout Item）
+// 取消批量支付中收款人无PayPal账号的项目（Cancel Unclaimed Payout Item）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/payments.payouts-batch/v1/#payouts-item_cancel
 func (c Client) CancelUnclaimedPayoutItem(ctx context.Context, payoutItemId string) (ppRsp *CancelUnclaimedPayoutItemRsp, err error) {

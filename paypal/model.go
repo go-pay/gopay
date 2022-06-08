@@ -426,7 +426,7 @@ type PayoutItemDetail struct {
 	SenderBatchId      string                    `json:"sender_batch_id,omitempty"`
 	TimeProcessed      string                    `json:"time_processed"`
 	TransactionId      string                    `json:"transaction_id"`
-	TransactionStatus  string                    `json:"transaction_status"`
+	TransactionStatus  string                    `json:"transaction_status"` // SUCCESS、FAILED、PENDING、UNCLAIMED、RETURNED、ONHOLD、BLOCKED、REFUNDED、REVERSED
 }
 
 type PayoutBatchDetail struct {
