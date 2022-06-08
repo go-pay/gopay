@@ -474,7 +474,6 @@ type NetAmountBreakdown struct {
 	ExchangeRate    *ExchangeRate `json:"exchange_rate,omitempty"`
 }
 
-
 // =============== V1 API Payout ==================================
 
 type V1Amount struct {
@@ -544,6 +543,7 @@ type PayoutBatchDetail struct {
 	Links       []*Link             `json:"links"`
 	TotalItems  int64               `json:"total_items,omitempty"`
 	TotalPage   int64               `json:"total_page,omitempty"`
+}
 
 // Subscription Model
 
@@ -599,5 +599,4 @@ type BillingDetail struct {
 	UsageType   string  `json:"usage_type"`
 	CreateTime  string  `json:"create_time"`
 	Links       []*Link `json:"links"`
-
 }
