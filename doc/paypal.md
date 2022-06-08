@@ -12,15 +12,15 @@
 
 ```go
 import (
-"github.com/go-pay/gopay/paypal"
-"github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay/paypal"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // 初始化PayPal支付客户端
 client, err := paypal.NewClient(Clientid, Secret, false)
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 // 打开Debug开关，输出日志，默认关闭
 client.DebugSwitch = gopay.DebugOn
@@ -33,38 +33,37 @@ client.DebugSwitch = gopay.DebugOn
 > Payments：[Payments API](https://developer.paypal.com/docs/api/payments/v2)
 
 - Create Orders example
-
 ```go
 import (
-"github.com/go-pay/gopay"
-"github.com/go-pay/gopay/paypal"
-"github.com/go-pay/gopay/pkg/util"
-"github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay"
+    "github.com/go-pay/gopay/paypal"
+    "github.com/go-pay/gopay/pkg/util"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // Create Orders example
 var pus []*paypal.PurchaseUnit
 var item = &paypal.PurchaseUnit{
-ReferenceId: util.GetRandomString(16),
-Amount: &paypal.Amount{
-CurrencyCode: "USD",
-Value:        "8",
-},
+    ReferenceId: util.GetRandomString(16),
+    Amount: &paypal.Amount{
+        CurrencyCode: "USD",
+        Value:        "8",
+    },
 }
 pus = append(pus, item)
 
 bm := make(gopay.BodyMap)
 bm.Set("intent", "CAPTURE").
-Set("purchase_units", pus)
+    Set("purchase_units", pus)
 
 ppRsp, err := client.CreateOrder(ctx, bm)
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 if ppRsp.Code != paypal.Success {
-// do something
-return
+    // do something
+    return
 }
 ```
 
