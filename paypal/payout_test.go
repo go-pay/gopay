@@ -1,4 +1,3 @@
-// Package paypal
 /*
 @Author: wzy
 @Time: 2022/6/8
@@ -7,9 +6,10 @@ package paypal
 
 import (
 	"encoding/json"
+	"testing"
+
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xlog"
-	"testing"
 )
 
 func TestCreateBatchPayout(t *testing.T) {

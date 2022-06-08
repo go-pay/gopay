@@ -1,3 +1,8 @@
+版本号：Release 1.5.80
+修改记录：
+   (1) PayPal：增加payout相关的v1接口
+   (2) PayPal：部分接口返回参数补齐
+
 版本号：Release 1.5.79
 修改记录：
    (1) PayPal：增加订阅相关的v1接口
