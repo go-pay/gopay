@@ -1,11 +1,10 @@
 package qq
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
-	"strings"
-
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
 )
@@ -19,9 +18,11 @@ type AccessToken struct {
 
 // 获取开放平台，access_token 返回结构体
 type OpenIdInfo struct {
-	ClientId string `json:"client_id,omitempty"` //用户ClientID
-	OpenId   string `json:"openid,omitempty"`    //用户OpenID
-	UnionId  string `json:"unionid,omitempty"`   //用户UnionID
+	ClientId         string `json:"client_id,omitempty"`         // 用户ClientID
+	OpenId           string `json:"openid,omitempty"`            // 用户OpenID
+	UnionId          string `json:"unionid,omitempty"`           // 用户UnionID
+	Error            int    `json:"error,omitempty"`             // 错误代码
+	ErrorDescription string `json:"error_description,omitempty"` // 错误描述
 }
 
 // QQ开放平台用户信息
@@ -100,19 +101,11 @@ func GetOpenId(ctx context.Context, accessToken string, lang ...string) (openid 
 	if err != nil {
 		return nil, err
 	}
-	var (
-		MarkBefore = "{"
-		MarkAfter  = "}"
-		ListAfter  []string
-	)
-	ListBefore := strings.Split(string(bs), MarkBefore)
-	if len(ListBefore) > 1 {
-		ListAfter = strings.Split(ListBefore[1], MarkAfter)
-	}
-	joinStr := fmt.Sprintf("%v%v%v", MarkBefore, ListAfter[0], MarkAfter)
-	err = json.Unmarshal([]byte(joinStr), openid)
+	bs = bytes.TrimLeft(bs, "callback(")
+	bs = bytes.TrimRight(bs, ");")
+	err = json.Unmarshal(bs, openid)
 	if err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, joinStr)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, bs)
 	}
 
 	return
