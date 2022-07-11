@@ -178,7 +178,7 @@ const (
 	v3MediaUploadVideo = "/v3/merchant/media/video_upload" // 视频上传 POST
 
 	// 转账
-	v3Transfer                   = "/v3/transfer/batches"                                          // 发起批量转账 POST
+	v3Transfer                   = "/v3/transfer/batches"                                          // 发起商家转账 POST
 	v3TransferQuery              = "/v3/transfer/batches/batch-id/%s"                              // batch_id 微信批次单号查询批次单 GET
 	v3TransferDetail             = "/v3/transfer/batches/batch-id/%s/details/detail-id/%s"         // batch_id、detail_id 微信明细单号查询明细单 GET
 	v3TransferMerchantQuery      = "/v3/transfer/batches/out-batch-no/%s"                          // out_batch_no 商家批次单号查询批次单 GET

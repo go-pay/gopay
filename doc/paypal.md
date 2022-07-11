@@ -38,40 +38,40 @@ client.DebugSwitch = gopay.DebugOn
 
 ```go
 import (
-"github.com/go-pay/gopay"
-"github.com/go-pay/gopay/paypal"
-"github.com/go-pay/gopay/pkg/util"
-"github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay"
+    "github.com/go-pay/gopay/paypal"
+    "github.com/go-pay/gopay/pkg/util"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // Create Orders example
 var pus []*paypal.PurchaseUnit
 var item = &paypal.PurchaseUnit{
-ReferenceId: util.GetRandomString(16),
-Amount: &paypal.Amount{
-CurrencyCode: "USD",
-Value:        "8",
-},
+	ReferenceId: util.GetRandomString(16),
+	Amount: &paypal.Amount{
+		CurrencyCode: "USD",
+		Value:        "8",
+	},
 }
 pus = append(pus, item)
 
 bm := make(gopay.BodyMap)
 bm.Set("intent", "CAPTURE").
-Set("purchase_units", pus).
-SetBodyMap("application_context", func(b gopay.BodyMap) {
-b.Set("brand_name", "gopay").
-Set("locale", "en-PT").
-Set("return_url", "https://example.com/returnUrl").
-Set("cancel_url", "https://example.com/cancelUrl")
-})
+	Set("purchase_units", pus).
+	SetBodyMap("application_context", func(b gopay.BodyMap) {
+		b.Set("brand_name", "gopay").
+			Set("locale", "en-PT").
+			Set("return_url", "https://example.com/returnUrl").
+			Set("cancel_url", "https://example.com/cancelUrl")
+	})
 ppRsp, err := client.CreateOrder(ctx, bm)
 if err != nil {
-xlog.Error(err)
-return
+	xlog.Error(err)
+	return
 }
 if ppRsp.Code != paypal.Success {
-// do something
-return
+	// do something
+	return
 }
 ```
 
@@ -79,8 +79,8 @@ return
 
 ```go
 import (
-"github.com/go-pay/gopay"
-"github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // Capture payment for order
@@ -93,12 +93,12 @@ import (
 //})
 ppRsp, err := client.OrderCapture(ctx, "4X223967G91314611", nil)
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 if ppRsp.Code != paypal.Success {
-// do something
-return
+    // do something
+    return
 }
 ```
 
@@ -133,5 +133,5 @@ return
     * 取消批量支付中收款人无PayPal账号的项目（Cancel Unclaimed Payout Item）：`client.CancelUnclaimedPayoutItem()`
 
 * <font color='#003087' size='4'>订阅</font>
-	* 创建订阅计划（Create plan）：`client.CreateBillingPlan()`
+    * 创建订阅计划（Create plan）：`client.CreateBillingPlan()`
 

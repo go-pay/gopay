@@ -9,7 +9,7 @@ import (
 	"github.com/go-pay/gopay"
 )
 
-// 发起批量转账API
+// 发起商家转账API
 //	注意：入参加密字段数据加密：client.V3EncryptText()
 //	Code = 0 is success
 // 	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter4_3_1.shtml
