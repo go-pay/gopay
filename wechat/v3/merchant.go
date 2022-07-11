@@ -15,7 +15,10 @@ import (
 // 	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_11.shtml
 //	电商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter7_7_1.shtml
 func (c *ClientV3) V3EcommerceBalance(ctx context.Context, subMchid string, bm gopay.BodyMap) (*EcommerceBalanceRsp, error) {
-	url := fmt.Sprintf(v3EcommerceBalance, subMchid) + "?" + bm.EncodeURLParams()
+	url := fmt.Sprintf(v3EcommerceBalance, subMchid)
+	if bm != nil {
+		url = url + "?" + bm.EncodeURLParams()
+	}
 	authorization, err := c.authorization(MethodGet, url, nil)
 	if err != nil {
 		return nil, err
