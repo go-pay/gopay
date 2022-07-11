@@ -44,15 +44,15 @@ if rsp.Receipt != nil {
 
 ```go
 import (
-"github.com/go-pay/gopay/apple"
-"github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay/apple"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // decode signedPayload
 payload, err := apple.DecodeSignedPayload(signedPayload)
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 xlog.Debugf("payload.NotificationType: %s", payload.NotificationType)
 xlog.Debugf("payload.Subtype: %s", payload.Subtype)
@@ -81,8 +81,8 @@ xlog.Color(xlog.RedBright).Info(string(bs1))
 // decode renewalInfo
 renewalInfo, err := payload.DecodeRenewalInfo()
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 xlog.Debugf("data.renewalInfo: %+v", renewalInfo)
 bs, _ := json.Marshal(renewalInfo)
@@ -106,8 +106,8 @@ xlog.Color(xlog.GreenBright).Info(string(bs))
 // decode transactionInfo
 transactionInfo, err := payload.DecodeTransactionInfo()
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 xlog.Debugf("data.transactionInfo: %+v", transactionInfo)
 bs2, _ := json.Marshal(transactionInfo)
