@@ -586,6 +586,7 @@ type FundAuthOperationDetailQuery struct {
 	ErrorResponse
 	AuthNo                  string `json:"auth_no,omitempty"`
 	OutOrderNo              string `json:"out_order_no,omitempty"`
+	OrderStatus             string `json:"order_status,omitempty"`
 	TotalFreezeAmount       string `json:"total_freeze_amount,omitempty"`
 	RestAmount              string `json:"rest_amount,omitempty"`
 	TotalPayAmount          string `json:"total_pay_amount,omitempty"`
