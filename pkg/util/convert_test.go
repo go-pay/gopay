@@ -1,6 +1,8 @@
 package util
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestBytesToString(t *testing.T) {
 	var b []byte = []byte("abc")
