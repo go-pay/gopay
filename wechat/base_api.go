@@ -209,3 +209,24 @@ func (w *Client) Reverse(ctx context.Context, bm gopay.BodyMap) (wxRsp *ReverseR
 	}
 	return wxRsp, header, nil
 }
+
+// GetShortUrl native模式一长码换短码
+// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=9_9&index=10
+func (w *Client) GetShortUrl(ctx context.Context, bm gopay.BodyMap) (wxRsp *ShortUrlResponse, header http.Header, err error) {
+	err = bm.CheckEmptyError("appid", "mch_id", "long_url", "nonce_str")
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var bs []byte
+	bs, header, err = w.doProdPost(ctx, bm, shortUrl, nil)
+	if err != nil {
+		return nil, header, err
+	}
+
+	wxRsp = new(ShortUrlResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+	}
+	return wxRsp, header, nil
+}

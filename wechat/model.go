@@ -20,6 +20,7 @@ const (
 	closeOrder                  = "pay/closeorder"                                    // 关闭订单
 	refund                      = "secapi/pay/refund"                                 // 申请退款
 	reverse                     = "secapi/pay/reverse"                                // 撤销订单
+	shortUrl                    = "tools/shorturl"                                    // 长码换短码
 	refundQuery                 = "pay/refundquery"                                   // 查询退款
 	downloadBill                = "pay/downloadbill"                                  // 下载对账单
 	downloadFundFlow            = "pay/downloadfundflow"                              // 下载资金账单
@@ -209,6 +210,19 @@ type ReverseResponse struct {
 	ErrCode    string `xml:"err_code,omitempty" json:"err_code,omitempty"`
 	ErrCodeDes string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
 	Recall     string `xml:"recall,omitempty" json:"recall,omitempty"`
+}
+
+type ShortUrlResponse struct {
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	Appid      string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId      string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	NonceStr   string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign       string `xml:"sign,omitempty" json:"sign,omitempty"`
+	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode    string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	ShortUrl   string `xml:"short_url,omitempty" json:"short_url,omitempty"`
 }
 
 type RefundResponse struct {
