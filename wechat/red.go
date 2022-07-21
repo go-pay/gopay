@@ -31,7 +31,7 @@ func (w *Client) SendCashRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *Send
 		bm.Set("mch_id", w.MchId)
 	}
 	if bm.GetString("sign") == util.NULL {
-		sign := getReleaseSign(w.ApiKey, SignType_MD5, bm)
+		sign := GetReleaseSign(w.ApiKey, SignType_MD5, bm)
 		bm.Set("sign", sign)
 	}
 
@@ -68,7 +68,7 @@ func (w *Client) SendGroupCashRed(ctx context.Context, bm gopay.BodyMap) (wxRsp 
 		bm.Set("mch_id", w.MchId)
 	}
 	if bm.GetString("sign") == util.NULL {
-		sign := getReleaseSign(w.ApiKey, SignType_MD5, bm)
+		sign := GetReleaseSign(w.ApiKey, SignType_MD5, bm)
 		bm.Set("sign", sign)
 	}
 
@@ -105,7 +105,7 @@ func (w *Client) SendAppletRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *Se
 		bm.Set("mch_id", w.MchId)
 	}
 	if bm.GetString("sign") == util.NULL {
-		sign := getReleaseSign(w.ApiKey, SignType_MD5, bm)
+		sign := GetReleaseSign(w.ApiKey, SignType_MD5, bm)
 		bm.Set("sign", sign)
 	}
 
@@ -142,7 +142,7 @@ func (w *Client) QueryRedRecord(ctx context.Context, bm gopay.BodyMap) (wxRsp *Q
 		bm.Set("mch_id", w.MchId)
 	}
 	if bm.GetString("sign") == util.NULL {
-		sign := getReleaseSign(w.ApiKey, SignType_MD5, bm)
+		sign := GetReleaseSign(w.ApiKey, SignType_MD5, bm)
 		bm.Set("sign", sign)
 	}
 

@@ -64,7 +64,7 @@ func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) 
 		bm := bean.(gopay.BodyMap)
 		bodySign := bm.GetString("sign")
 		bm.Remove("sign")
-		return getReleaseSign(apiKey, signType, bm) == bodySign, nil
+		return GetReleaseSign(apiKey, signType, bm) == bodySign, nil
 	}
 
 	bs, err := json.Marshal(bean)
@@ -77,7 +77,7 @@ func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) 
 	}
 	bodySign := bm.GetString("sign")
 	bm.Remove("sign")
-	return getReleaseSign(apiKey, signType, bm) == bodySign, nil
+	return GetReleaseSign(apiKey, signType, bm) == bodySign, nil
 }
 
 type NotifyResponse struct {

@@ -31,7 +31,7 @@ func (w *Client) Transfer(bm gopay.BodyMap) (wxRsp *TransfersResponse, err error
 	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
 		return nil, err
 	}
-	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
+	bm.Set("sign", GetReleaseSign(w.ApiKey, SignType_MD5, bm))
 
 	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
 	if w.BaseURL != util.NULL {
@@ -77,7 +77,7 @@ func (w *Client) GetTransferInfo(bm gopay.BodyMap) (wxRsp *TransfersInfoResponse
 	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
 		return nil, err
 	}
-	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
+	bm.Set("sign", GetReleaseSign(w.ApiKey, SignType_MD5, bm))
 
 	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
 	if w.BaseURL != util.NULL {
@@ -125,7 +125,7 @@ func (w *Client) PayBank(bm gopay.BodyMap) (wxRsp *PayBankResponse, err error) {
 	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
 		return nil, err
 	}
-	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
+	bm.Set("sign", GetReleaseSign(w.ApiKey, SignType_MD5, bm))
 
 	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
 	if w.BaseURL != util.NULL {
@@ -169,7 +169,7 @@ func (w *Client) QueryBank(bm gopay.BodyMap) (wxRsp *QueryBankResponse, err erro
 	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
 		return nil, err
 	}
-	bm.Set("sign", getReleaseSign(w.ApiKey, SignType_MD5, bm))
+	bm.Set("sign", GetReleaseSign(w.ApiKey, SignType_MD5, bm))
 
 	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
 	if w.BaseURL != util.NULL {
@@ -213,7 +213,7 @@ func (w *Client) GetRSAPublicKey(bm gopay.BodyMap) (wxRsp *RSAPublicKeyResponse,
 	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
 		return nil, err
 	}
-	bm.Set("sign", getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm))
+	bm.Set("sign", GetReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm))
 
 	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Type(xhttp.TypeXML)
 	req := GenerateXml(bm)
@@ -293,7 +293,7 @@ func (w *Client) ProfitSharingQuery(bm gopay.BodyMap) (wxRsp *ProfitSharingQuery
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bm.Set("mch_id", w.MchId)
 	if bm.GetString("sign") == util.NULL {
-		sign := getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
+		sign := GetReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
 		bm.Set("sign", sign)
 	}
 	bs, header, err := w.doProdPostPure(context.Background(), bm, profitSharingQuery, nil)

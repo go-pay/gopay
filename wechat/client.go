@@ -187,7 +187,7 @@ func (w *Client) doSanBoxPost(ctx context.Context, bm gopay.BodyMap, path string
 
 	if bm.GetString("sign") == util.NULL {
 		bm.Set("sign_type", SignType_MD5)
-		sign, err := getSignBoxSign(w.MchId, w.ApiKey, bm)
+		sign, err := GetSandBoxSign(w.MchId, w.ApiKey, bm)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -232,7 +232,7 @@ func (w *Client) doProdPost(ctx context.Context, bm gopay.BodyMap, path string, 
 		bm.Set("mch_id", w.MchId)
 	}
 	if bm.GetString("sign") == util.NULL {
-		sign := getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
+		sign := GetReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
 		bm.Set("sign", sign)
 	}
 
@@ -302,7 +302,7 @@ func (w *Client) doProdGet(ctx context.Context, bm gopay.BodyMap, path, signType
 		bm.Set("mch_id", w.MchId)
 	}
 	bm.Remove("sign")
-	sign := getReleaseSign(w.ApiKey, signType, bm)
+	sign := GetReleaseSign(w.ApiKey, signType, bm)
 	bm.Set("sign", sign)
 	if w.BaseURL != util.NULL {
 		url = w.BaseURL + path
