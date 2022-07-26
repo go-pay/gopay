@@ -26,8 +26,9 @@ type Client struct {
 	Transport        *http.Transport
 	Header           http.Header
 	Timeout          time.Duration
-	url              string
 	Host             string
+	bodySize         int // body size limit(MB), default is 10MB
+	url              string
 	method           string
 	requestType      RequestType
 	FormString       string
@@ -51,6 +52,7 @@ func NewClient() (client *Client) {
 		},
 		Transport:     nil,
 		Header:        make(http.Header),
+		bodySize:      10, // default is 10MB
 		requestType:   TypeJSON,
 		unmarshalType: string(TypeJSON),
 	}
@@ -74,6 +76,12 @@ func (c *Client) SetTimeout(timeout time.Duration) (client *Client) {
 
 func (c *Client) SetHost(host string) (client *Client) {
 	c.Host = host
+	return c
+}
+
+// set body size (MB), default is 10MB
+func (c *Client) SetBodySize(sizeMB int) (client *Client) {
+	c.bodySize = sizeMB
 	return c
 }
 
@@ -305,7 +313,7 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 			return err
 		}
 		defer res.Body.Close()
-		bs, err = ioutil.ReadAll(io.LimitReader(res.Body, int64(5<<20))) // default 5MB change the size you want
+		bs, err = ioutil.ReadAll(io.LimitReader(res.Body, int64(c.bodySize<<20))) // default 10MB change the size you want
 		if err != nil {
 			return err
 		}
