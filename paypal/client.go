@@ -18,6 +18,7 @@ type Client struct {
 	Appid       string
 	AccessToken string
 	ExpiresIn   int
+	bodySize    int // http response body size(MB), default is 10MB
 	IsProd      bool
 	ctx         context.Context
 	DebugSwitch gopay.DebugSwitch
@@ -42,12 +43,22 @@ func NewClient(clientid, secret string, isProd bool) (client *Client, err error)
 	return client, nil
 }
 
+// SetBodySize 设置http response body size(MB)
+func (c *Client) SetBodySize(sizeMB int) {
+	if sizeMB > 0 {
+		c.bodySize = sizeMB
+	}
+}
+
 func (c *Client) doPayPalGet(ctx context.Context, uri string) (res *http.Response, bs []byte, err error) {
 	var url = baseUrlProd + uri
 	if !c.IsProd {
 		url = baseUrlSandbox + uri
 	}
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	authHeader := AuthorizationPrefixBearer + c.AccessToken
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("PayPal_Url: %s", url)
@@ -72,6 +83,9 @@ func (c *Client) doPayPalPost(ctx context.Context, bm gopay.BodyMap, path string
 		url = baseUrlSandbox + path
 	}
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	authHeader := AuthorizationPrefixBearer + c.AccessToken
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("PayPal_RequestBody: %s", bm.JsonBody())
@@ -96,6 +110,9 @@ func (c *Client) doPayPalPatch(ctx context.Context, patchs []*Patch, path string
 		url = baseUrlSandbox + path
 	}
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	authHeader := AuthorizationPrefixBearer + c.AccessToken
 	if c.DebugSwitch == gopay.DebugOn {
 		jb, _ := json.Marshal(patchs)

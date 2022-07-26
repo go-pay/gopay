@@ -21,6 +21,7 @@ type Client struct {
 	ApiKey      string
 	BaseURL     string
 	IsProd      bool
+	bodySize    int // http response body size(MB), default is 10MB
 	DebugSwitch gopay.DebugSwitch
 	Certificate *tls.Certificate
 	mu          sync.RWMutex
@@ -38,6 +39,13 @@ func NewClient(appId, mchId, apiKey string, isProd bool) (client *Client) {
 		ApiKey:      apiKey,
 		IsProd:      isProd,
 		DebugSwitch: gopay.DebugOff,
+	}
+}
+
+// SetBodySize 设置http response body size(MB)
+func (w *Client) SetBodySize(sizeMB int) {
+	if sizeMB > 0 {
+		w.bodySize = sizeMB
 	}
 }
 
@@ -188,7 +196,11 @@ func (w *Client) doSanBoxPost(ctx context.Context, bm gopay.BodyMap, path string
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, err := xhttp.NewClient().Type(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
+	httpClient := xhttp.NewClient().Type(xhttp.TypeXML)
+	if w.bodySize > 0 {
+		httpClient.SetBodySize(w.bodySize)
+	}
+	res, bs, err := httpClient.Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -222,6 +234,9 @@ func (w *Client) doProdPost(ctx context.Context, bm gopay.BodyMap, path string, 
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
+	if w.bodySize > 0 {
+		httpClient.SetBodySize(w.bodySize)
+	}
 	if w.BaseURL != util.NULL {
 		url = w.BaseURL + path
 	}
@@ -250,6 +265,9 @@ func (w *Client) doProdPostPure(ctx context.Context, bm gopay.BodyMap, path stri
 	httpClient := xhttp.NewClient()
 	if w.IsProd && tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
+	}
+	if w.bodySize > 0 {
+		httpClient.SetBodySize(w.bodySize)
 	}
 	if w.BaseURL != util.NULL {
 		url = w.BaseURL + path
@@ -295,7 +313,11 @@ func (w *Client) doProdGet(ctx context.Context, bm gopay.BodyMap, path, signType
 	}
 	param := bm.EncodeURLParams()
 	url = url + "?" + param
-	res, bs, err := xhttp.NewClient().Get(url).EndBytes(ctx)
+	httpClient := xhttp.NewClient()
+	if w.bodySize > 0 {
+		httpClient.SetBodySize(w.bodySize)
+	}
+	res, bs, err := httpClient.Get(url).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}

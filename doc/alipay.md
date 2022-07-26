@@ -30,18 +30,22 @@ import (
 //    isProd：是否是正式环境
 client, err := alipay.NewClient("2016091200494382", privateKey, false)
 if err != nil {
-    xlog.Error(err)
-    return
+xlog.Error(err)
+return
 }
+
+// 自定义配置http请求接收返回结果body大小，默认 10MB
+client.SetBodySize() // 没有特殊需求，可忽略此配置
+
 // 打开Debug开关，输出日志，默认关闭
 client.DebugSwitch = gopay.DebugOn
 
 // 设置支付宝请求 公共参数
 //    注意：具体设置哪些参数，根据不同的方法而不同，此处列举出所有设置参数
-client.SetLocation(alipay.LocationShanghai).    // 设置时区，不设置或出错均为默认服务器时间
-    SetCharset(alipay.UTF8).                    // 设置字符编码，不设置默认 utf-8
-    SetSignType(alipay.RSA2).                   // 设置签名类型，不设置默认 RSA2
-    SetReturnUrl("https://www.fmm.ink").        // 设置返回URL
+client.SetLocation(alipay.LocationShanghai). // 设置时区，不设置或出错均为默认服务器时间
+SetCharset(alipay.UTF8).  // 设置字符编码，不设置默认 utf-8
+SetSignType(alipay.RSA2). // 设置签名类型，不设置默认 RSA2
+SetReturnUrl("https://www.fmm.ink").            // 设置返回URL
     SetNotifyUrl("https://www.fmm.ink").        // 设置异步通知URL
     SetAppAuthToken()                           // 设置第三方应用授权
 

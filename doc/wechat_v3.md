@@ -43,9 +43,12 @@ if err != nil {
 // 启用自动同步返回验签，并定时更新微信平台API证书（开启自动验签时，无需单独设置微信平台API证书和序列号）
 err = client.AutoVerifySign()
 if err != nil {
-    xlog.Error(err)
-    return
+xlog.Error(err)
+return
 }
+
+// 自定义配置http请求接收返回结果body大小，默认 10MB
+client.SetBodySize() // 没有特殊需求，可忽略此配置
 
 // 打开Debug开关，输出日志，默认是关闭的
 client.DebugSwitch = gopay.DebugOn

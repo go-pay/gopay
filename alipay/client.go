@@ -26,6 +26,7 @@ type Client struct {
 	SignType           string
 	AppAuthToken       string
 	IsProd             bool
+	bodySize           int // http response body size(MB), default is 10MB
 	privateKey         *rsa.PrivateKey
 	aliPayPublicKey    *rsa.PublicKey // 支付宝证书公钥内容 alipayCertPublicKey_RSA2.crt
 	autoSign           bool
@@ -69,6 +70,13 @@ func (a *Client) AutoVerifySign(alipayPublicKeyContent []byte) {
 	if pubKey != nil {
 		a.aliPayPublicKey = pubKey
 		a.autoSign = true
+	}
+}
+
+// SetBodySize 设置http response body size(MB)
+func (a *Client) SetBodySize(sizeMB int) {
+	if sizeMB > 0 {
+		a.bodySize = sizeMB
 	}
 }
 
@@ -174,6 +182,9 @@ func (a *Client) doAliPaySelf(ctx context.Context, bm gopay.BodyMap, method stri
 	}
 
 	httpClient := xhttp.NewClient()
+	if a.bodySize > 0 {
+		httpClient.SetBodySize(a.bodySize)
+	}
 	if a.IsProd {
 		url = baseUrlUtf8
 	} else {
@@ -218,6 +229,9 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 		return []byte(baseUrl + "?" + param), nil
 	default:
 		httpClient := xhttp.NewClient()
+		if a.bodySize > 0 {
+			httpClient.SetBodySize(a.bodySize)
+		}
 		url = baseUrlUtf8
 		if !a.IsProd {
 			url = sandboxBaseUrlUtf8

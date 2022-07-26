@@ -21,6 +21,7 @@ type ClientV3 struct {
 	SerialNo    string
 	WxSerialNo  string
 	autoSign    bool
+	bodySize    int // http response body size(MB), default is 10MB
 	privateKey  *rsa.PrivateKey
 	wxPublicKey *rsa.PublicKey
 	ctx         context.Context
@@ -70,9 +71,19 @@ func (c *ClientV3) AutoVerifySign() (err error) {
 	return
 }
 
+// SetBodySize 设置http response body size(MB)
+func (c *ClientV3) SetBodySize(sizeMB int) {
+	if sizeMB > 0 {
+		c.bodySize = sizeMB
+	}
+}
+
 func (c *ClientV3) doProdPostWithHeader(ctx context.Context, headerMap map[string]string, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
@@ -106,6 +117,9 @@ func (c *ClientV3) doProdPostWithHeader(ctx context.Context, headerMap map[strin
 func (c *ClientV3) doProdPost(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
@@ -136,6 +150,9 @@ func (c *ClientV3) doProdPost(ctx context.Context, bm gopay.BodyMap, path, autho
 func (c *ClientV3) doProdGet(ctx context.Context, uri, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + uri
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_Url: %s", url)
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
@@ -166,6 +183,9 @@ func (c *ClientV3) doProdGet(ctx context.Context, uri, authorization string) (re
 func (c *ClientV3) doProdPut(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
@@ -196,6 +216,9 @@ func (c *ClientV3) doProdPut(ctx context.Context, bm gopay.BodyMap, path, author
 func (c *ClientV3) doProdDelete(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
@@ -226,6 +249,9 @@ func (c *ClientV3) doProdDelete(ctx context.Context, bm gopay.BodyMap, path, aut
 func (c *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.GetString("meta"))
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
@@ -256,6 +282,9 @@ func (c *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, path, a
 func (c *ClientV3) doProdPatch(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)

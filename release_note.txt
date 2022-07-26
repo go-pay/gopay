@@ -1,6 +1,6 @@
 版本号：Release 1.5.82
 修改记录：
-   (1) gopay：xhttp库增加BodySize的自定义化设置。
+   (1) gopay：xhttp库增加BodySize的自定义化设置，各支付渠道 Client 增加 client.SetBodySize() 方法。
 
 版本号：Release 1.5.81
 修改记录：

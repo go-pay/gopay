@@ -19,6 +19,7 @@ type Client struct {
 	MchId       string
 	ApiKey      string
 	IsProd      bool
+	bodySize    int // http response body size(MB), default is 10MB
 	DebugSwitch gopay.DebugSwitch
 	certificate *tls.Certificate
 	mu          sync.RWMutex
@@ -32,6 +33,13 @@ func NewClient(mchId, apiKey string) (client *Client) {
 		MchId:       mchId,
 		ApiKey:      apiKey,
 		DebugSwitch: gopay.DebugOff,
+	}
+}
+
+// SetBodySize 设置http response body size(MB)
+func (q *Client) SetBodySize(sizeMB int) {
+	if sizeMB > 0 {
+		q.bodySize = sizeMB
 	}
 }
 
@@ -239,6 +247,9 @@ func (q *Client) doQQ(ctx context.Context, bm gopay.BodyMap, url string, tlsConf
 	}
 
 	httpClient := xhttp.NewClient()
+	if q.bodySize > 0 {
+		httpClient.SetBodySize(q.bodySize)
+	}
 	if tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
@@ -275,7 +286,12 @@ func (q *Client) doQQGet(ctx context.Context, bm gopay.BodyMap, url, signType st
 	}
 	param := bm.EncodeURLParams()
 	url = url + "?" + param
-	res, bs, err := xhttp.NewClient().Get(url).EndBytes(ctx)
+
+	httpClient := xhttp.NewClient()
+	if q.bodySize > 0 {
+		httpClient.SetBodySize(q.bodySize)
+	}
+	res, bs, err := httpClient.Get(url).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -304,6 +320,9 @@ func (q *Client) doQQRed(ctx context.Context, bm gopay.BodyMap, url string, tlsC
 	httpClient := xhttp.NewClient()
 	if tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
+	}
+	if q.bodySize > 0 {
+		httpClient.SetBodySize(q.bodySize)
 	}
 	if q.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("QQ_Request: %s", bm.JsonBody())
