@@ -53,3 +53,19 @@ func Error(args ...interface{}) {
 func Errorf(format string, args ...interface{}) {
 	errLog.LogOut(nil, &format, args...)
 }
+
+func SetDebugLog(logger XLogger) {
+	debugLog = logger
+}
+
+func SetInfoLog(logger XLogger) {
+	infoLog = logger
+}
+
+func SetWarnLog(logger XLogger) {
+	warnLog = logger
+}
+
+func SetErrLog(logger XLogger) {
+	errLog = logger
+}
