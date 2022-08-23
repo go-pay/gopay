@@ -128,7 +128,7 @@ type TransactionInfo struct {
 	PurchaseDate                int64  `json:"purchaseDate"`
 	Quantity                    int64  `json:"quantity"`
 	RevocationDate              int64  `json:"revocationDate"`
-	RevocationReason            string `json:"revocationReason"`
+	RevocationReason            int    `json:"revocationReason"`
 	SignedDate                  int64  `json:"signedDate"` // Auto-Renewable Subscription: An auto-renewable subscription.  Non-Consumable: A non-consumable in-app purchase.  Consumable: A consumable in-app purchase.  Non-Renewing Subscription: A non-renewing subcription.
 	SubscriptionGroupIdentifier string `json:"subscriptionGroupIdentifier"`
 	TransactionId               string `json:"transactionId"`
