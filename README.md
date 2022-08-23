@@ -12,7 +12,7 @@
 [![Drone CI](https://cloud.drone.io/api/badges/go-pay/gopay/status.svg)](https://cloud.drone.io/go-pay/gopay)
 [![GitHub Release](https://img.shields.io/github/v/release/go-pay/gopay)](https://github.com/go-pay/gopay/releases)
 [![License](https://img.shields.io/github/license/go-pay/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
-[![GoDoc](https://tokei.rs/b1/github.com/go-pay/gopay?category=lines)](https://github.com/go-pay/gopay)
+[![GoDoc](https://tokei.rs/b1/github.com/go-pay/gopay)](https://github.com/go-pay/gopay)
 
 ---
 
