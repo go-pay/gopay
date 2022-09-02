@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
 )
@@ -62,18 +63,18 @@ type UserInfo struct {
 "is_yellow_year_vip":"1"
 }*/
 
-// 参数	是否必须	含义
-// grant_type	必须	授权类型，在本步骤中，此值为“authorization_code”。
-// client_id	必须	申请QQ登录成功后，分配给网站的appid。
-// client_secret	必须	申请QQ登录成功后，分配给网站的appkey。
-// code	必须	上一步返回的authorization code。
+// 参数 是否必须 含义
+// grant_type 必须 授权类型，在本步骤中，此值为“authorization_code”。
+// client_id 必须 申请QQ登录成功后，分配给网站的appid。
+// client_secret 必须 申请QQ登录成功后，分配给网站的appkey。
+// code 必须 上一步返回的authorization code。
 // 如果用户成功登录并授权，则会跳转到指定的回调地址，并在URL中带上Authorization Code。
 // 例如，回调地址为www.qq.com/my.php，则跳转到：
 // http://www.qq.com/my.php?code=520DD95263C1CFEA087******
 // 注意此code会在10分钟内过期。
-// redirect_uri	必须	与上面一步中传入的redirect_uri保持一致。
-// fmt	可选	因历史原因，默认是x-www-form-urlencoded格式，如果填写json，则返回json格式
-//	文档：https://wiki.connect.qq.com/%E4%BD%BF%E7%94%A8authorization_code%E8%8E%B7%E5%8F%96access_token#Step2.EF.BC.9A.E9.80.9A.E8.BF.87AuthorizationCode.E8.8E.B7.E5.8F.96AccessToken
+// redirect_uri 必须 与上面一步中传入的redirect_uri保持一致。
+// fmt 可选 因历史原因，默认是x-www-form-urlencoded格式，如果填写json，则返回json格式
+// 文档：https://wiki.connect.qq.com/%E4%BD%BF%E7%94%A8authorization_code%E8%8E%B7%E5%8F%96access_token#Step2.EF.BC.9A.E9.80.9A.E8.BF.87AuthorizationCode.E8.8E.B7.E5.8F.96AccessToken
 func GetAccessToken(ctx context.Context, appId, appSecret, code, redirectUri string) (accessToken *AccessToken, err error) {
 	accessToken = new(AccessToken)
 	url := "https://graph.qq.com/oauth2.0/token?client_id=" + appId + "&client_secret=" + appSecret + "&code=" + code + "&redirect_uri=" + redirectUri + "&fmt=json" + "&grant_type=authorization_code"
@@ -86,11 +87,11 @@ func GetAccessToken(ctx context.Context, appId, appSecret, code, redirectUri str
 }
 
 // GetOpenId QQ开放平台：使用Access Token来获取用户的OpenID
-//	accessToken：接口调用凭据
-//	openId：用户的OpenID
-//	oauthConsumerKey：AppID
-//	lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
-//	文档：https://wiki.open.qq.com/wiki/website/%E5%BC%80%E5%8F%91%E6%94%BB%E7%95%A5_Server-side#Step2.EF.BC.9A.E8.8E.B7.E5.8F.96Authorization_Code
+// accessToken：接口调用凭据
+// openId：用户的OpenID
+// oauthConsumerKey：AppID
+// lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
+// 文档：https://wiki.open.qq.com/wiki/website/%E5%BC%80%E5%8F%91%E6%94%BB%E7%95%A5_Server-side#Step2.EF.BC.9A.E8.8E.B7.E5.8F.96Authorization_Code
 func GetOpenId(ctx context.Context, accessToken string, lang ...string) (openid *OpenIdInfo, err error) {
 	openid = new(OpenIdInfo)
 	url := "https://graph.qq.com/oauth2.0/me?access_token=" + accessToken + "&unionid=1"
@@ -112,11 +113,11 @@ func GetOpenId(ctx context.Context, accessToken string, lang ...string) (openid 
 }
 
 // GetUserInfo QQ开放平台：获取用户个人信息
-//	accessToken：接口调用凭据
-//	openId：用户的OpenID
-//	oauthConsumerKey：AppID
-//	lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
-//	文档：https://wiki.open.qq.com/wiki/website/get_user_info
+// accessToken：接口调用凭据
+// openId：用户的OpenID
+// oauthConsumerKey：AppID
+// lang:默认为 zh_CN ，可选填 zh_CN 简体，zh_TW 繁体，en 英语
+// 文档：https://wiki.open.qq.com/wiki/website/get_user_info
 func GetUserInfo(ctx context.Context, accessToken, openId string, oauthConsumerKey string, lang ...string) (userInfo *UserInfo, err error) {
 	userInfo = new(UserInfo)
 	url := "https://graph.qq.com/user/get_user_info?access_token=" + accessToken + "&openid=" + openId + "&oauth_consumer_key=" + oauthConsumerKey

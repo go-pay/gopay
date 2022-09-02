@@ -9,7 +9,7 @@ import (
 )
 
 // alipay.open.app.qrcode.create(小程序生成推广二维码接口)
-//	文档地址：https://opendocs.alipay.com/apis/009zva
+// 文档地址：https://opendocs.alipay.com/apis/009zva
 func (a *Client) OpenAppQrcodeCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *OpenAppQrcodeCreateRsp, err error) {
 	err = bm.CheckEmptyError("url_param", "query_param", "describe")
 	if err != nil {

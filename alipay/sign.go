@@ -56,9 +56,9 @@ A：开发者上传自己的应用公钥证书后，开放平台会为开发者�
 */
 
 // GetCertSN 获取证书序列号SN
-//	certPathOrData x509证书文件路径(appCertPublicKey.crt、alipayCertPublicKey_RSA2.crt) 或证书 buffer
-//	返回 sn：证书序列号(app_cert_sn、alipay_cert_sn)
-//	返回 err：error 信息
+// certPathOrData x509证书文件路径(appCertPublicKey.crt、alipayCertPublicKey_RSA2.crt) 或证书 buffer
+// 返回 sn：证书序列号(app_cert_sn、alipay_cert_sn)
+// 返回 err：error 信息
 func GetCertSN(certPathOrData interface{}) (sn string, err error) {
 	var certData []byte
 	switch pathOrData := certPathOrData.(type) {
@@ -92,9 +92,9 @@ func GetCertSN(certPathOrData interface{}) (sn string, err error) {
 }
 
 // GetRootCertSN 获取root证书序列号SN
-//	rootCertPathOrData x509证书文件路径(alipayRootCert.crt) 或文件 buffer
-//	返回 sn：证书序列号(alipay_root_cert_sn)
-//	返回 err：error 信息
+// rootCertPathOrData x509证书文件路径(alipayRootCert.crt) 或文件 buffer
+// 返回 sn：证书序列号(alipay_root_cert_sn)
+// 返回 err：error 信息
 func GetRootCertSN(rootCertPathOrData interface{}) (sn string, err error) {
 	var (
 		certData []byte
@@ -141,9 +141,9 @@ func GetRootCertSN(rootCertPathOrData interface{}) (sn string, err error) {
 }
 
 // 获取支付宝参数签名
-//	bm：签名参数
-//	signType：签名类型，alipay.RSA 或 alipay.RSA2
-//	privateKey：应用私钥，支持PKCS1和PKCS8
+// bm：签名参数
+// signType：签名类型，alipay.RSA 或 alipay.RSA2
+// privateKey：应用私钥，支持PKCS1和PKCS8
 func GetRsaSign(bm gopay.BodyMap, signType string, privateKey *rsa.PrivateKey) (sign string, err error) {
 	var (
 		h              hash.Hash
@@ -175,7 +175,7 @@ func GetRsaSign(bm gopay.BodyMap, signType string, privateKey *rsa.PrivateKey) (
 // =============================== 获取SignData ===============================
 
 // 需注意的是，公钥签名模式和公钥证书签名模式的不同之处
-//	验签文档：https://opendocs.alipay.com/open/200/106120
+// 验签文档：https://opendocs.alipay.com/open/200/106120
 func (a *Client) getSignData(bs []byte, alipayCertSN string) (signData string, err error) {
 	var (
 		str        = string(bs)
@@ -208,13 +208,13 @@ func (a *Client) getSignData(bs []byte, alipayCertSN string) (signData string, e
 // =============================== 同步验签 ===============================
 
 // VerifySyncSign 支付宝同步返回验签（公钥模式）
-//	注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 不支持同步返回验签
-//	aliPayPublicKey：支付宝平台获取的支付宝公钥
-//	signData：待验签参数，aliRsp.SignData
-//	sign：待验签sign，aliRsp.Sign
-//	返回参数ok：是否验签通过
-//	返回参数err：错误信息
-//	验签文档：https://opendocs.alipay.com/open/200/106120
+// 注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 不支持同步返回验签
+// aliPayPublicKey：支付宝平台获取的支付宝公钥
+// signData：待验签参数，aliRsp.SignData
+// sign：待验签sign，aliRsp.Sign
+// 返回参数ok：是否验签通过
+// 返回参数err：错误信息
+// 验签文档：https://opendocs.alipay.com/open/200/106120
 func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error) {
 	// 支付宝公钥验签
 	pKey := xrsa.FormatAlipayPublicKey(aliPayPublicKey)
@@ -225,13 +225,13 @@ func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error)
 }
 
 // VerifySyncSignWithCert 支付宝同步返回验签（公钥证书模式）
-//	注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 不支持同步返回验签
-//	aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayCertPublicKey_RSA2.crt 或文件内容[]byte
-//	signData：待验签参数，aliRsp.SignData
-//	sign：待验签sign，aliRsp.Sign
-//	返回参数ok：是否验签通过
-//	返回参数err：错误信息
-//	验签文档：https://opendocs.alipay.com/open/200/106120
+// 注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 不支持同步返回验签
+// aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayCertPublicKey_RSA2.crt 或文件内容[]byte
+// signData：待验签参数，aliRsp.SignData
+// sign：待验签sign，aliRsp.Sign
+// 返回参数ok：是否验签通过
+// 返回参数err：错误信息
+// 验签文档：https://opendocs.alipay.com/open/200/106120
 func VerifySyncSignWithCert(alipayPublicKeyCert interface{}, signData, sign string) (ok bool, err error) {
 	switch alipayPublicKeyCert.(type) {
 	case string:
@@ -272,12 +272,12 @@ func (a *Client) autoVerifySignByCert(sign, signData string, signDataErr error) 
 // =============================== 异步验签 ===============================
 
 // VerifySign 支付宝异步通知验签（公钥模式）
-//	注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
-//	alipayPublicKey：支付宝平台获取的支付宝公钥
-//	notifyBean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
-//	返回参数ok：是否验签通过
-//	返回参数err：错误信息
-//	验签文档：https://opendocs.alipay.com/open/200/106120
+// 注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
+// alipayPublicKey：支付宝平台获取的支付宝公钥
+// notifyBean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
+// 返回参数ok：是否验签通过
+// 返回参数err：错误信息
+// 验签文档：https://opendocs.alipay.com/open/200/106120
 func VerifySign(alipayPublicKey string, notifyBean interface{}) (ok bool, err error) {
 	if alipayPublicKey == util.NULL || notifyBean == nil {
 		return false, errors.New("alipayPublicKey or notifyBean is nil")
@@ -318,12 +318,12 @@ func VerifySign(alipayPublicKey string, notifyBean interface{}) (ok bool, err er
 }
 
 // 支付宝异步通知验签（公钥证书模式）
-//	注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
-//	aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayCertPublicKey_RSA2.crt 或文件内容[]byte
-//	notifyBean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
-//	返回参数ok：是否验签通过
-//	返回参数err：错误信息
-//	验签文档：https://opendocs.alipay.com/open/200/106120
+// 注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
+// aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayCertPublicKey_RSA2.crt 或文件内容[]byte
+// notifyBean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
+// 返回参数ok：是否验签通过
+// 返回参数err：错误信息
+// 验签文档：https://opendocs.alipay.com/open/200/106120
 func VerifySignWithCert(aliPayPublicKeyCert, notifyBean interface{}) (ok bool, err error) {
 	if notifyBean == nil || aliPayPublicKeyCert == nil {
 		return false, errors.New("aliPayPublicKeyCert or notifyBean is nil")

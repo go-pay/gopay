@@ -11,10 +11,10 @@ import (
 )
 
 // 解析支付宝支付异步通知的参数到BodyMap
-//	req：*http.Request
-//	返回参数bm：Notify请求的参数
-//	返回参数err：错误信息
-//	文档：https://opendocs.alipay.com/open/203/105286
+// req：*http.Request
+// 返回参数bm：Notify请求的参数
+// 返回参数err：错误信息
+// 文档：https://opendocs.alipay.com/open/203/105286
 func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	if err = req.ParseForm(); err != nil {
 		return nil, err
@@ -30,10 +30,10 @@ func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 }
 
 // 通过 url.Values 解析支付宝支付异步通知的参数到BodyMap
-//	value：url.Values
-//	返回参数notifyReq：Notify请求的参数
-//	返回参数err：错误信息
-//	文档：https://opendocs.alipay.com/open/203/105286
+// value：url.Values
+// 返回参数notifyReq：Notify请求的参数
+// 返回参数err：错误信息
+// 文档：https://opendocs.alipay.com/open/203/105286
 func ParseNotifyByURLValues(value url.Values) (bm gopay.BodyMap, err error) {
 	bm = make(gopay.BodyMap, len(value)+1)
 	for k, v := range value {
@@ -47,10 +47,10 @@ func ParseNotifyByURLValues(value url.Values) (bm gopay.BodyMap, err error) {
 // Deprecated
 // 推荐使用 ParseNotifyToBodyMap()，以防阿里云通知参数变动，NotifyRequest 无法解析。
 // 解析支付宝支付异步通知的参数到Struct
-//	req：*http.Request
-//	返回参数notifyReq：Notify请求的参数
-//	返回参数err：错误信息
-//	文档：https://opendocs.alipay.com/open/203/105286
+// req：*http.Request
+// 返回参数notifyReq：Notify请求的参数
+// 返回参数err：错误信息
+// 文档：https://opendocs.alipay.com/open/203/105286
 func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) {
 	notifyReq = new(NotifyRequest)
 	if err = req.ParseForm(); err != nil {

@@ -31,11 +31,11 @@ func FormatURLParam(body gopay.BodyMap) (urlParam string) {
 }
 
 // DecryptOpenDataToStruct 解密支付宝开放数据到 结构体
-//	encryptedData:包括敏感数据在内的完整用户信息的加密数据
-//	secretKey:AES密钥，支付宝管理平台配置
-//	beanPtr:需要解析到的结构体指针
-//	文档：https://opendocs.alipay.com/mini/introduce/aes
-//	文档：https://opendocs.alipay.com/open/common/104567
+// encryptedData:包括敏感数据在内的完整用户信息的加密数据
+// secretKey:AES密钥，支付宝管理平台配置
+// beanPtr:需要解析到的结构体指针
+// 文档：https://opendocs.alipay.com/mini/introduce/aes
+// 文档：https://opendocs.alipay.com/open/common/104567
 func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{}) (err error) {
 	if encryptedData == util.NULL || secretKey == util.NULL {
 		return errors.New("encryptedData or secretKey is null")
@@ -74,10 +74,10 @@ func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{
 }
 
 // DecryptOpenDataToBodyMap 解密支付宝开放数据到 BodyMap
-//	encryptedData:包括敏感数据在内的完整用户信息的加密数据
-//	secretKey:AES密钥，支付宝管理平台配置
-//	文档：https://opendocs.alipay.com/mini/introduce/aes
-//	文档：https://opendocs.alipay.com/open/common/104567
+// encryptedData:包括敏感数据在内的完整用户信息的加密数据
+// secretKey:AES密钥，支付宝管理平台配置
+// 文档：https://opendocs.alipay.com/mini/introduce/aes
+// 文档：https://opendocs.alipay.com/open/common/104567
 func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap, err error) {
 	if encryptedData == util.NULL || secretKey == util.NULL {
 		return nil, errors.New("encryptedData or secretKey is null")
@@ -110,12 +110,12 @@ func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap
 }
 
 // SystemOauthToken 换取授权访问令牌（默认使用utf-8，RSA2）
-//	appId：应用ID
-//	privateKey：应用私钥
-//	grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
-//	codeOrToken：支付宝授权码或refresh_token
-//	signType：签名方式 RSA 或 RSA2，默认 RSA2
-//	文档：https://opendocs.alipay.com/apis/api_9/alipay.system.oauth.token
+// appId：应用ID
+// privateKey：应用私钥
+// grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
+// codeOrToken：支付宝授权码或refresh_token
+// signType：签名方式 RSA 或 RSA2，默认 RSA2
+// 文档：https://opendocs.alipay.com/apis/api_9/alipay.system.oauth.token
 func SystemOauthToken(ctx context.Context, appId string, privateKey, grantType, codeOrToken, signType string) (rsp *SystemOauthTokenResponse, err error) {
 	key := xrsa.FormatAlipayPrivateKey(privateKey)
 	priKey, err := xpem.DecodePrivateKey([]byte(key))
@@ -180,11 +180,11 @@ func systemOauthToken(ctx context.Context, appId string, privateKey *rsa.Private
 }
 
 // monitor.heartbeat.syn(验签接口)
-//	appId：应用ID
-//	privateKey：应用私钥，支持PKCS1和PKCS8
-//	signType：签名方式 alipay.RSA 或 alipay.RSA2，默认 RSA2
-//	bizContent：验签时该参数不做任何处理，{任意值}，此参数具体看文档
-//	文档：https://opendocs.alipay.com/apis/api_9/monitor.heartbeat.syn
+// appId：应用ID
+// privateKey：应用私钥，支持PKCS1和PKCS8
+// signType：签名方式 alipay.RSA 或 alipay.RSA2，默认 RSA2
+// bizContent：验签时该参数不做任何处理，{任意值}，此参数具体看文档
+// 文档：https://opendocs.alipay.com/apis/api_9/monitor.heartbeat.syn
 func MonitorHeartbeatSyn(ctx context.Context, appId string, privateKey, signType, bizContent string) (aliRsp *MonitorHeartbeatSynResponse, err error) {
 	key := xrsa.FormatAlipayPrivateKey(privateKey)
 	priKey, err := xpem.DecodePrivateKey([]byte(key))

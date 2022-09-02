@@ -13,7 +13,7 @@ import (
 )
 
 // alipay.user.info.auth(用户登陆授权)
-//	文档地址：https://opendocs.alipay.com/apis/api_9/alipay.user.info.auth
+// 文档地址：https://opendocs.alipay.com/apis/api_9/alipay.user.info.auth
 func (a *Client) UserInfoAuth(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserInfoAuthResponse, err error) {
 	err = bm.CheckEmptyError("scopes", "state")
 	if err != nil {
@@ -39,7 +39,7 @@ func (a *Client) UserInfoAuth(ctx context.Context, bm gopay.BodyMap) (aliRsp *Us
 }
 
 // alipay.system.oauth.token(换取授权访问令牌)
-//	文档地址：https://opendocs.alipay.com/apis/api_9/alipay.system.oauth.token
+// 文档地址：https://opendocs.alipay.com/apis/api_9/alipay.system.oauth.token
 func (a *Client) SystemOauthToken(ctx context.Context, bm gopay.BodyMap) (aliRsp *SystemOauthTokenResponse, err error) {
 	if bm.GetString("code") == util.NULL && bm.GetString("refresh_token") == util.NULL {
 		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
@@ -74,7 +74,7 @@ func (a *Client) SystemOauthToken(ctx context.Context, bm gopay.BodyMap) (aliRsp
 }
 
 // alipay.open.auth.token.app(换取应用授权令牌)
-//	文档地址：https://opendocs.alipay.com/apis/api_9/alipay.open.auth.token.app
+// 文档地址：https://opendocs.alipay.com/apis/api_9/alipay.open.auth.token.app
 func (a *Client) OpenAuthTokenApp(ctx context.Context, bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppResponse, err error) {
 	if bm.GetString("code") == util.NULL && bm.GetString("refresh_token") == util.NULL {
 		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
@@ -100,7 +100,7 @@ func (a *Client) OpenAuthTokenApp(ctx context.Context, bm gopay.BodyMap) (aliRsp
 }
 
 // alipay.open.app.alipaycert.download(应用支付宝公钥证书下载)
-//	文档地址：https://opendocs.alipay.com/apis/api_9/alipay.open.app.alipaycert.download
+// 文档地址：https://opendocs.alipay.com/apis/api_9/alipay.open.app.alipaycert.download
 func (a *Client) PublicCertDownload(ctx context.Context, bm gopay.BodyMap) (aliRsp *PublicCertDownloadRsp, err error) {
 	err = bm.CheckEmptyError("alipay_cert_sn")
 	if err != nil {

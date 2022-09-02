@@ -10,8 +10,8 @@ import (
 )
 
 // 创建订阅计划（CreateBillingPlan）
-//	Code = 0 is success
-//	文档：https://developer.paypal.com/docs/api/subscriptions/v1/#plans_create
+// Code = 0 is success
+// 文档：https://developer.paypal.com/docs/api/subscriptions/v1/#plans_create
 func (c *Client) CreateBillingPlan(ctx context.Context, bm gopay.BodyMap) (ppRsp *CreateBillingRsp, err error) {
 	if err = bm.CheckEmptyError("product_id", "billing_cycles"); err != nil {
 		return nil, err

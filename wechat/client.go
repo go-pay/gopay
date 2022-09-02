@@ -28,10 +28,10 @@ type Client struct {
 }
 
 // 初始化微信客户端 V2
-//	appId：应用ID
-//	mchId：商户ID
-//	ApiKey：API秘钥值
-//	IsProd：是否是正式环境
+// appId：应用ID
+// mchId：商户ID
+// ApiKey：API秘钥值
+// IsProd：是否是正式环境
 func NewClient(appId, mchId, apiKey string, isProd bool) (client *Client) {
 	return &Client{
 		AppId:       appId,
@@ -50,15 +50,15 @@ func (w *Client) SetBodySize(sizeMB int) {
 }
 
 // 向微信发送Post请求，对于本库未提供的微信API，可自行实现，通过此方法发送请求
-//	bm：请求参数的BodyMap
-//	path：接口地址去掉baseURL的path，例如：url为https://api.mch.weixin.qq.com/pay/micropay，只需传 pay/micropay
-//	tlsConfig：tls配置，如无需证书请求，传nil
+// bm：请求参数的BodyMap
+// path：接口地址去掉baseURL的path，例如：url为https://api.mch.weixin.qq.com/pay/micropay，只需传 pay/micropay
+// tlsConfig：tls配置，如无需证书请求，传nil
 func (w *Client) PostWeChatAPISelf(ctx context.Context, bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
 	return w.doProdPost(ctx, bm, path, tlsConfig)
 }
 
 // 授权码查询openid（正式）
-//	文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter4_8.shtml
+// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter4_8.shtml
 func (w *Client) AuthCodeToOpenId(ctx context.Context, bm gopay.BodyMap) (wxRsp *AuthCodeToOpenIdResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "auth_code")
 	if err != nil {
@@ -77,7 +77,7 @@ func (w *Client) AuthCodeToOpenId(ctx context.Context, bm gopay.BodyMap) (wxRsp 
 }
 
 // 下载对账单
-//	文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_6.shtml
+// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_6.shtml
 func (w *Client) DownloadBill(ctx context.Context, bm gopay.BodyMap) (wxRsp string, err error) {
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "bill_type")
 	if err != nil {
@@ -100,9 +100,9 @@ func (w *Client) DownloadBill(ctx context.Context, bm gopay.BodyMap) (wxRsp stri
 }
 
 // 下载资金账单（正式）
-//	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
-//	不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
-//	文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_7.shtml
+// 注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
+// 不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
+// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_7.shtml
 func (w *Client) DownloadFundFlow(ctx context.Context, bm gopay.BodyMap) (wxRsp string, err error) {
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "account_type")
 	if err != nil {
@@ -126,12 +126,12 @@ func (w *Client) DownloadFundFlow(ctx context.Context, bm gopay.BodyMap) (wxRsp 
 }
 
 // 交易保障
-//	文档地址：（JSAPI）https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_9.shtml
-//	文档地址：（付款码）https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter4_9.shtml
-//	文档地址：（Native）https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter6_9.shtml
-//	文档地址：（APP）https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter7_9.shtml
-//	文档地址：（H5）https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter8_9.shtml
-//	文档地址：（微信小程序）https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter5_9.shtml
+// 文档地址：（JSAPI）https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_9.shtml
+// 文档地址：（付款码）https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter4_9.shtml
+// 文档地址：（Native）https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter6_9.shtml
+// 文档地址：（APP）https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter7_9.shtml
+// 文档地址：（H5）https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter8_9.shtml
+// 文档地址：（微信小程序）https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter5_9.shtml
 func (w *Client) Report(ctx context.Context, bm gopay.BodyMap) (wxRsp *ReportResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "interface_url", "execute_time", "return_code", "return_msg", "result_code", "user_ip")
 	if err != nil {
@@ -154,9 +154,9 @@ func (w *Client) Report(ctx context.Context, bm gopay.BodyMap) (wxRsp *ReportRes
 }
 
 // 拉取订单评价数据（正式）
-//	注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
-//	不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
-//	文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_11.shtml
+// 注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
+// 不支持沙箱环境，因为沙箱环境默认需要用MD5签名，但是此接口仅支持HMAC-SHA256签名
+// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_11.shtml
 func (w *Client) BatchQueryComment(ctx context.Context, bm gopay.BodyMap) (wxRsp string, err error) {
 	err = bm.CheckEmptyError("nonce_str", "begin_time", "end_time", "offset")
 	if err != nil {
