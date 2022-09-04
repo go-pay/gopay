@@ -66,6 +66,7 @@ func main() {
     * 或 examples
 * 有问题请加QQ群（加群验证答案：gopay），或加微信好友拉群。在此，非常感谢提出宝贵意见和反馈问题的同志们！
 * 开发过程中，请尽量使用正式环境，1分钱测试法！
+* 承接各种业务外包项目开发（后端+前端），养家糊口、价格合理，有需要的加微信联系。
 
 QQ群：
 <img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/qq_gopay.png"/>
