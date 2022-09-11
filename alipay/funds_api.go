@@ -125,7 +125,7 @@ func (a *Client) FundTransRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp 
 }
 
 // alipay.fund.auth.order.freeze(资金授权冻结接口)
-// 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.auth.order.freeze
+// 文档地址: https://opendocs.alipay.com/open/02fkb9
 func (a *Client) FundAuthOrderFreeze(ctx context.Context, bm gopay.BodyMap) (aliRsp *FundAuthOrderFreezeResponse, err error) {
 	err = bm.CheckEmptyError("auth_code", "auth_code_type", "out_order_no", "out_request_no", "order_title", "amount")
 	if err != nil {
@@ -148,7 +148,7 @@ func (a *Client) FundAuthOrderFreeze(ctx context.Context, bm gopay.BodyMap) (ali
 }
 
 // alipay.fund.auth.order.voucher.create(资金授权发码接口)
-// 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.auth.order.voucher.create
+// 文档地址: https://opendocs.alipay.com/open/02fit5
 func (a *Client) FundAuthOrderVoucherCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *FundAuthOrderVoucherCreateResponse, err error) {
 	err = bm.CheckEmptyError("out_order_no", "out_request_no", "order_title", "amount", "product_code")
 	if err != nil {
@@ -186,7 +186,7 @@ func (a *Client) FundAuthOrderAppFreeze(ctx context.Context, bm gopay.BodyMap) (
 }
 
 // alipay.fund.auth.order.unfreeze(资金授权解冻接口)
-// 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.auth.order.unfreeze
+// 文档地址: https://opendocs.alipay.com/open/02fkbc
 func (a *Client) FundAuthOrderUnfreeze(ctx context.Context, bm gopay.BodyMap) (aliRsp *FundAuthOrderUnfreezeResponse, err error) {
 	err = bm.CheckEmptyError("auth_no", "out_request_no", "amount", "remark")
 	if err != nil {
@@ -209,7 +209,7 @@ func (a *Client) FundAuthOrderUnfreeze(ctx context.Context, bm gopay.BodyMap) (a
 }
 
 // alipay.fund.auth.operation.detail.query(资金授权操作查询接口)
-// 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.auth.operation.detail.query
+// 文档地址: https://opendocs.alipay.com/open/02fkbd
 func (a *Client) FundAuthOperationDetailQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *FundAuthOperationDetailQueryResponse, err error) {
 	var bs []byte
 	if bs, err = a.doAliPay(ctx, bm, "alipay.fund.auth.operation.detail.query"); err != nil {
@@ -228,7 +228,7 @@ func (a *Client) FundAuthOperationDetailQuery(ctx context.Context, bm gopay.Body
 }
 
 // alipay.fund.auth.operation.cancel(资金授权撤销接口)
-// 文档地址: https://opendocs.alipay.com/apis/api_28/alipay.fund.auth.operation.cancel
+// 文档地址: https://opendocs.alipay.com/open/02fkbb
 func (a *Client) FundAuthOperationCancel(ctx context.Context, bm gopay.BodyMap) (aliRsp *FundAuthOperationCancelResponse, err error) {
 	err = bm.CheckEmptyError("remark")
 	if err != nil {
