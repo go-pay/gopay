@@ -10,7 +10,7 @@ import (
 )
 
 // alipay.fund.trans.uni.transfer(单笔转账接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.uni.transfer
+// 文档地址：https://opendocs.alipay.com/open/02byuo
 func (a *Client) FundTransUniTransfer(ctx context.Context, bm gopay.BodyMap) (aliRsp *FundTransUniTransferResponse, err error) {
 	err = bm.CheckEmptyError("out_biz_no", "trans_amount", "product_code", "payee_info")
 	if err != nil {
@@ -33,7 +33,7 @@ func (a *Client) FundTransUniTransfer(ctx context.Context, bm gopay.BodyMap) (al
 }
 
 // alipay.fund.account.query(支付宝资金账户资产查询接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_28/alipay.fund.account.query
+// 文档地址：https://opendocs.alipay.com/open/02byuq
 func (a *Client) FundAccountQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *FundAccountQueryResponse, err error) {
 	err = bm.CheckEmptyError("alipay_user_id")
 	if err != nil {
@@ -56,7 +56,7 @@ func (a *Client) FundAccountQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp
 }
 
 // alipay.fund.trans.common.query(转账业务单据查询接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_28/alipay.fund.trans.common.query
+// 文档地址：https://opendocs.alipay.com/open/02byup
 func (a *Client) FundTransCommonQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *FundTransCommonQueryResponse, err error) {
 	var bs []byte
 	if bs, err = a.doAliPay(ctx, bm, "alipay.fund.trans.common.query"); err != nil {
