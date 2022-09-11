@@ -11,7 +11,7 @@ import (
 )
 
 // alipay.trade.pay(统一收单交易支付接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.pay
+// 文档地址：https://opendocs.alipay.com/open/02cdx8?ref=api
 func (a *Client) TradePay(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradePayResponse, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "subject")
 	if err != nil {
@@ -34,7 +34,7 @@ func (a *Client) TradePay(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeP
 }
 
 // alipay.trade.precreate(统一收单线下交易预创建)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.precreate
+// 文档地址：https://opendocs.alipay.com/open/02ekfg?ref=api&scene=19
 func (a *Client) TradePrecreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradePrecreateResponse, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
@@ -61,7 +61,7 @@ func (a *Client) TradePrecreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *
 }
 
 // alipay.trade.app.pay(app支付接口2.0)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.app.pay
+// 文档地址：https://opendocs.alipay.com/open/02e7gq?ref=api&scene=20
 func (a *Client) TradeAppPay(ctx context.Context, bm gopay.BodyMap) (payParam string, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
@@ -76,7 +76,7 @@ func (a *Client) TradeAppPay(ctx context.Context, bm gopay.BodyMap) (payParam st
 }
 
 // alipay.trade.wap.pay(手机网站支付接口2.0)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.wap.pay
+// 文档地址：https://opendocs.alipay.com/open/02ivbs?scene=21&ref=api
 func (a *Client) TradeWapPay(ctx context.Context, bm gopay.BodyMap) (payUrl string, err error) {
 	bm.Set("product_code", "QUICK_WAP_WAY")
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
@@ -92,7 +92,7 @@ func (a *Client) TradeWapPay(ctx context.Context, bm gopay.BodyMap) (payUrl stri
 }
 
 // alipay.trade.page.pay(统一收单下单并支付页面接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.page.pay
+// 文档地址：https://opendocs.alipay.com/open/028r8t?ref=api
 func (a *Client) TradePagePay(ctx context.Context, bm gopay.BodyMap) (payUrl string, err error) {
 	bm.Set("product_code", "FAST_INSTANT_TRADE_PAY")
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
@@ -108,7 +108,7 @@ func (a *Client) TradePagePay(ctx context.Context, bm gopay.BodyMap) (payUrl str
 }
 
 // alipay.trade.create(统一收单交易创建接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.create
+// 文档地址：https://opendocs.alipay.com/open/02ekfj?ref=api
 func (a *Client) TradeCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCreateResponse, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
@@ -131,7 +131,7 @@ func (a *Client) TradeCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *Tra
 }
 
 // alipay.trade.query(统一收单线下交易查询)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.query
+// 文档地址：https://opendocs.alipay.com/open/02e7gm?ref=api
 func (a *Client) TradeQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeQueryResponse, err error) {
 	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("trade_no") == util.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
@@ -153,7 +153,7 @@ func (a *Client) TradeQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *Trad
 }
 
 // alipay.trade.cancel(统一收单交易撤销接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.cancel
+// 文档地址：https://opendocs.alipay.com/open/02ekfi?ref=api
 func (a *Client) TradeCancel(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCancelResponse, err error) {
 	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("trade_no") == util.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
@@ -175,7 +175,7 @@ func (a *Client) TradeCancel(ctx context.Context, bm gopay.BodyMap) (aliRsp *Tra
 }
 
 // alipay.trade.close(统一收单交易关闭接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.close
+// 文档地址：https://opendocs.alipay.com/open/02e7gn?ref=api
 func (a *Client) TradeClose(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCloseResponse, err error) {
 	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("trade_no") == util.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
@@ -197,7 +197,7 @@ func (a *Client) TradeClose(ctx context.Context, bm gopay.BodyMap) (aliRsp *Trad
 }
 
 // alipay.trade.refund(统一收单交易退款接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.refund
+// 文档地址：https://opendocs.alipay.com/open/02e7go?ref=api
 func (a *Client) TradeRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeRefundResponse, err error) {
 	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("trade_no") == util.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
@@ -249,7 +249,7 @@ func (a *Client) TradePageRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp 
 }
 
 // alipay.trade.fastpay.refund.query(统一收单交易退款查询)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.fastpay.refund.query
+// 文档地址：https://opendocs.alipay.com/open/02e7gp?ref=api
 func (a *Client) TradeFastPayRefundQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeFastpayRefundQueryResponse, err error) {
 	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("trade_no") == util.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
@@ -274,31 +274,8 @@ func (a *Client) TradeFastPayRefundQuery(ctx context.Context, bm gopay.BodyMap) 
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
-// alipay.trade.order.settle(统一收单交易结算接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.order.settle
-func (a *Client) TradeOrderSettle(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeOrderSettleResponse, err error) {
-	err = bm.CheckEmptyError("out_request_no", "trade_no", "royalty_parameters")
-	if err != nil {
-		return nil, err
-	}
-	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.order.settle"); err != nil {
-		return nil, err
-	}
-	aliRsp = new(TradeOrderSettleResponse)
-	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
-		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
-	}
-	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
-		return aliRsp, err
-	}
-	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
-	aliRsp.SignData = signData
-	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
-}
-
 // alipay.trade.orderinfo.sync(支付宝订单信息同步接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.orderinfo.sync
+// 文档地址：https://opendocs.alipay.com/open/02cnou?ref=api
 func (a *Client) TradeOrderInfoSync(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeOrderInfoSyncRsp, err error) {
 	err = bm.CheckEmptyError("out_request_no", "trade_no", "biz_type")
 	if err != nil {
