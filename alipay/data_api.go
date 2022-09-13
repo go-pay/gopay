@@ -30,7 +30,7 @@ func (a *Client) DataBillBalanceQuery(ctx context.Context, bm gopay.BodyMap) (al
 }
 
 // alipay.data.dataservice.bill.downloadurl.query(查询对账单下载地址)
-// 文档地址：https://opendocs.alipay.com/apis/api_15/alipay.data.dataservice.bill.downloadurl.query
+// 文档地址：https://opendocs.alipay.com/open/02e7gr
 func (a *Client) DataBillDownloadUrlQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *DataBillDownloadUrlQueryResponse, err error) {
 	err = bm.CheckEmptyError("bill_type", "bill_date")
 	if err != nil {

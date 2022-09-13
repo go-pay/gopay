@@ -221,7 +221,7 @@ xlog.Infof("%+v", phone)
 ### 支付宝支付 API
 
 * 支付宝接口自行实现方法：`client.PostAliPayAPISelfV2()`
-* 网页&移动应用 - <font color='#027AFF' size='4'>支付API</font>
+* <font color='#027AFF' size='4'>支付</font>
     * 统一收单交易支付接口（商家扫用户付款码）：`client.TradePay()`
     * 统一收单线下交易预创建（用户扫商品收款码）：`client.TradePrecreate()`
     * APP支付接口2.0（APP支付）：`client.TradeAppPay()`
@@ -234,7 +234,6 @@ xlog.Infof("%+v", phone)
     * 统一收单交易退款接口: `client.TradeRefund()`
     * 统一收单退款页面接口: `client.TradePageRefund()`
     * 统一收单交易退款查询: `client.TradeFastPayRefundQuery()`
-    * 统一收单交易结算接口: `client.TradeOrderSettle()`
     * 支付宝订单信息同步接口: `client.TradeOrderInfoSync()`
     * 花芝轻会员结算申请: `client.PcreditHuabeiAuthSettleApply()`
     * NFC用户卡信息同步: `client.CommerceTransportNfccardSend()`
@@ -260,7 +259,7 @@ xlog.Infof("%+v", phone)
     * 申请权益发放: `client.CommerceBenefitApply()`
     * 权益核销: `client.CommerceBenefitVerify()`
     * 还款账单查询: `client.TradeRepaybillQuery()`
-* 网页&移动应用 - <font color='#027AFF' size='4'>资金API</font>
+* <font color='#027AFF' size='4'>转账到支付宝账户</font>
     * 单笔转账接口：`client.FundTransUniTransfer()`
     * 查询转账订单接口: `client.FundTransOrderQuery()`
     * 支付宝资金账户资产查询接口：`client.FundAccountQuery()`
@@ -278,7 +277,9 @@ xlog.Infof("%+v", phone)
     * 现金红包无线支付接口: `client.FundTransAppPay()`
     * 资金收款账号绑定关系查询: `client.FundTransPayeeBindQuery()`
     * 资金转账页面支付接口: `client.FundTransPagePay()`
-* 网页&移动应用 - <font color='#027AFF' size='4'>会员API</font>
+    * 申请电子回单(incubating)接口：todo
+    * 查询电子回单状态(incubating)接口：todo
+* <font color='#027AFF' size='4'>会员</font>
     * 支付宝会员授权信息查询接口（App支付宝登录）：`client.UserInfoShare()`
     * 身份认证初始化服务: `client.UserCertifyOpenInit()`
     * 身份认证开始认证（获取认证链接）: `client.UserCertifyOpenCertify()`
@@ -300,14 +301,14 @@ xlog.Infof("%+v", phone)
     * 初始化家庭芝麻GO共享组件: `client.UserFamilyShareZmgoInitialize()`
     * 数字分行银行码明细数据查询: `client.UserDtbankQrcodedataQuery()`
     * 查询集分宝预算库详情: `client.UserAlipaypointBudgetlibQuery()`
-* 网页&移动应用 - <font color='#027AFF' size='4'>营销API</font>
+* <font color='#027AFF' size='4'>营销</font>
     * 小程序生成推广二维码接口：`client.OpenAppQrcodeCreate()`
-* 网页&移动应用 - <font color='#027AFF' size='4'>工具类API</font>
+* <font color='#027AFF' size='4'>工具类</font>
     * 用户登陆授权：`client.UserInfoAuth()`
     * 换取授权访问令牌：`client.SystemOauthToken()`
     * 换取应用授权令牌：`client.OpenAuthTokenApp()`
     * 应用支付宝公钥证书下载：`client.PublicCertDownload()`
-* 网页&移动应用 - <font color='#027AFF' size='4'>芝麻信用API</font>
+* <font color='#027AFF' size='4'>芝麻信用</font>
     * 芝麻企业信用信用评估初始化: `client.ZhimaCreditEpSceneRatingInitialize()`
     * 信用服务履约同步: `client.ZhimaCreditEpSceneFulfillmentSync()`
     * 加入信用服务: `clinet.ZhimaCreditEpSceneAgreementUse()`
@@ -326,13 +327,14 @@ xlog.Infof("%+v", phone)
     * 芝麻GO支付下单链路签约确认: `client.ZhimaCreditPeZmgoPaysignConfirm()`
     * 职得工作证信息匹配度查询: `client.ZhimaCustomerJobworthAdapterQuery()`
     * 职得工作证外部渠道应用数据回流: `client.ZhimaCustomerJobworthSceneUse()`
-* 网页&移动应用 - <font color='#027AFF' size='4'>财务API</font>
-    * ~~支付宝商家账户当前余额查询：`client.DataBillBalanceQuery()`（失效）~~
+* <font color='#027AFF' size='4'>对账</font>
     * 查询对账单下载地址：`client.DataBillDownloadUrlQuery()`
-* 网页&移动应用 - <font color='#027AFF' size='4'>海关相关API</font>
-    * 统一收单报关接口：`client.TradeCustomsDeclare()`
-    * 报关接口：`client.AcquireCustoms()`
-    * 报关查询接口：`client.AcquireCustomsQuery()`
+* <font color='#027AFF' size='4'>商家分账</font>
+	* 分账关系绑定接口：`client.TradeRelationBind()`
+	* 分账关系解绑接口：`client.TradeRelationUnbind()`
+	* 分账关系查询接口：`client.TradeRelationBatchQuery()`
+	* 统一收单交易结算接口：`client.TradeOrderSettle()`
+	* 交易分账查询接口：`client.TradeOrderSettleQuery()`
 
 ### 支付宝公共 API
 

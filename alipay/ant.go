@@ -29,7 +29,7 @@ func (a *Client) AntMerchantShopModify(ctx context.Context, bm gopay.BodyMap) (a
 
 // ant.merchant.expand.shop.create(蚂蚁店铺创建)
 //
-//	文档地址：https://opendocs.alipay.com/apis/api_1/ant.merchant.expand.shop.create
+//文档地址：https://opendocs.alipay.com/apis/api_1/ant.merchant.expand.shop.create
 func (a *Client) AntMerchantShopCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *AntMerchantShopCreateRsp, err error) {
 	err = bm.CheckEmptyError("business_address", "shop_category", "store_id", "shop_type", "ip_role_id", "shop_name")
 	if err != nil {
@@ -52,8 +52,7 @@ func (a *Client) AntMerchantShopCreate(ctx context.Context, bm gopay.BodyMap) (a
 }
 
 // ant.merchant.expand.shop.consult(蚂蚁店铺创建咨询)
-//
-//	文档地址：https://opendocs.alipay.com/apis/014yig
+// 文档地址：https://opendocs.alipay.com/apis/014yig
 func (a *Client) AntMerchantShopConsult(ctx context.Context, bm gopay.BodyMap) (aliRsp *AntMerchantShopConsultRsp, err error) {
 	err = bm.CheckEmptyError("business_address", "shop_category", "store_id", "shop_type", "ip_role_id", "shop_name")
 	if err != nil {
@@ -76,8 +75,7 @@ func (a *Client) AntMerchantShopConsult(ctx context.Context, bm gopay.BodyMap) (
 }
 
 // ant.merchant.expand.order.query(商户申请单查询)
-//
-//	文档地址：https://opendocs.alipay.com/apis/api_1/ant.merchant.expand.order.query
+// 文档地址：https://opendocs.alipay.com/apis/api_1/ant.merchant.expand.order.query
 func (a *Client) AntMerchantOrderQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *AntMerchantOrderQueryRsp, err error) {
 	err = bm.CheckEmptyError("order_id")
 	if err != nil {
@@ -100,8 +98,7 @@ func (a *Client) AntMerchantOrderQuery(ctx context.Context, bm gopay.BodyMap) (a
 }
 
 // ant.merchant.expand.shop.query(店铺查询接口)
-//
-//	文档地址：https://opendocs.alipay.com/apis/api_1/ant.merchant.expand.shop.query
+// 文档地址：https://opendocs.alipay.com/apis/api_1/ant.merchant.expand.shop.query
 func (a *Client) AntMerchantShopQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *AntMerchantShopQueryRsp, err error) {
 	var bs []byte
 	if bs, err = a.doAliPay(ctx, bm, "ant.merchant.expand.shop.query"); err != nil {
@@ -120,8 +117,7 @@ func (a *Client) AntMerchantShopQuery(ctx context.Context, bm gopay.BodyMap) (al
 }
 
 // ant.merchant.expand.shop.close(蚂蚁店铺关闭)
-//
-//	文档地址：https://opendocs.alipay.com/apis/api_1/ant.merchant.expand.shop.close
+// 文档地址：https://opendocs.alipay.com/apis/api_1/ant.merchant.expand.shop.close
 func (a *Client) AntMerchantShopClose(ctx context.Context, bm gopay.BodyMap) (aliRsp *AntMerchantShopCloseRsp, err error) {
 	var bs []byte
 	if bs, err = a.doAliPay(ctx, bm, "ant.merchant.expand.shop.close"); err != nil {
