@@ -155,19 +155,31 @@ func (c *ClientV3) rsaSign(str string) (string, error) {
 
 // 自动同步请求验签
 func (c *ClientV3) verifySyncSign(si *SignInfo) (err error) {
-	if c.autoSign && c.wxPublicKey != nil {
-		if si != nil {
-			str := si.HeaderTimestamp + "\n" + si.HeaderNonce + "\n" + si.SignBody + "\n"
-			signBytes, _ := base64.StdEncoding.DecodeString(si.HeaderSignature)
-
-			h := sha256.New()
-			h.Write([]byte(str))
-			if err = rsa.VerifyPKCS1v15(c.wxPublicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
-				return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
-			}
-			return nil
+	// 为了安全所有的请求都应该进行校验, 为了保证之前的逻辑，判断是否需要自动校验
+	if !c.autoSign {
+		return nil
+	}
+	if si != nil {
+		return errors.New("auto verify sign, but SignInfo is nil")
+	}
+	wxPublicKey, exist := c.CertMap[si.HeaderSerial]
+	if !exist {
+		err = c.AutoVerifySign()
+		if err != nil {
+			return fmt.Errorf("[get all public key err]: %v", err)
 		}
-		return errors.New("auto verify sign, bug SignInfo is nil")
+		wxPublicKey, exist = c.CertMap[si.HeaderSerial]
+		if !exist {
+			return errors.New("auto verify sign, but public key not found")
+		}
+	}
+	str := si.HeaderTimestamp + "\n" + si.HeaderNonce + "\n" + si.SignBody + "\n"
+	signBytes, _ := base64.StdEncoding.DecodeString(si.HeaderSignature)
+	h := sha256.New()
+	h.Write([]byte(str))
+	if err = rsa.VerifyPKCS1v15(wxPublicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
+		return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
 	}
 	return nil
+
 }
