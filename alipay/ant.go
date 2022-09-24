@@ -28,8 +28,7 @@ func (a *Client) AntMerchantShopModify(ctx context.Context, bm gopay.BodyMap) (a
 }
 
 // ant.merchant.expand.shop.create(蚂蚁店铺创建)
-//
-//文档地址：https://opendocs.alipay.com/apis/api_1/ant.merchant.expand.shop.create
+// 文档地址：https://opendocs.alipay.com/apis/api_1/ant.merchant.expand.shop.create
 func (a *Client) AntMerchantShopCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *AntMerchantShopCreateRsp, err error) {
 	err = bm.CheckEmptyError("business_address", "shop_category", "store_id", "shop_type", "ip_role_id", "shop_name")
 	if err != nil {
