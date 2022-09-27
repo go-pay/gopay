@@ -23,9 +23,9 @@ type ClientV3 struct {
 	autoSign    bool
 	bodySize    int // http response body size(MB), default is 10MB
 	privateKey  *rsa.PrivateKey
-	wxPublicKey *rsa.PublicKey
 	ctx         context.Context
 	DebugSwitch gopay.DebugSwitch
+	CertMap     map[string]*rsa.PublicKey
 }
 
 // NewClientV3 初始化微信客户端 V3
@@ -53,22 +53,23 @@ func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3
 }
 
 // AutoVerifySign 开启请求完自动验签功能（默认不开启，推荐开启）
-//	开启自动验签，自动开启每12小时一次轮询，请求最新证书操作
-func (c *ClientV3) AutoVerifySign() (err error) {
-	wxPk, wxSerialNo, err := c.GetAndSelectNewestCert()
+//	开启自动验签，在校验时，如果证书不存在，会获取所有已生效的证书
+func (c *ClientV3) AutoVerifySign() error {
+	certMap, err := c.GetAllValidCert()
 	if err != nil {
 		return err
 	}
-	// decode cert
-	pubKey, err := xpem.DecodePublicKey([]byte(wxPk))
-	if err != nil {
-		return err
+	newCertMap := map[string]*rsa.PublicKey{}
+	for key, value := range certMap {
+		pubKey, err := xpem.DecodePublicKey([]byte(value))
+		if err != nil {
+			return err
+		}
+		newCertMap[key] = pubKey
 	}
-	c.wxPublicKey = pubKey
-	c.WxSerialNo = wxSerialNo
+	c.CertMap = newCertMap
 	c.autoSign = true
-	go c.autoCheckCertProc()
-	return
+	return nil
 }
 
 // SetBodySize 设置http response body size(MB)
