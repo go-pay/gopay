@@ -15,16 +15,12 @@ import (
 	"github.com/go-pay/gopay/pkg/xpem"
 )
 
-// 敏感信息加密
+// 敏感信息加密，默认使用最新的有效微信平台证书加密
 func (c *ClientV3) V3EncryptText(text string) (cipherText string, err error) {
-	if len(c.CertMap) == 0 || c.WxSerialNo == "" {
+	if c.wxPublicKey == nil || c.WxSerialNo == "" {
 		return util.NULL, errors.New("WxPublicKey or WxSerialNo is null")
 	}
-	var publicKey *rsa.PublicKey
-	for _, value := range c.CertMap {
-		publicKey = value
-	}
-	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, publicKey, []byte(text), nil)
+	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, c.wxPublicKey, []byte(text), nil)
 	if err != nil {
 		return "", fmt.Errorf("rsa.EncryptOAEP：%w", err)
 	}

@@ -155,20 +155,23 @@ func (c *ClientV3) rsaSign(str string) (string, error) {
 
 // 自动同步请求验签
 func (c *ClientV3) verifySyncSign(si *SignInfo) (err error) {
-	// 为了安全所有的请求都应该进行校验, 为了保证之前的逻辑，判断是否需要自动校验
 	if !c.autoSign {
 		return nil
 	}
 	if si != nil {
 		return errors.New("auto verify sign, but SignInfo is nil")
 	}
-	wxPublicKey, exist := c.CertMap[si.HeaderSerial]
+	c.rwMu.RLock()
+	wxPublicKey, exist := c.SnCertMap[si.HeaderSerial]
+	c.rwMu.RUnlock()
 	if !exist {
-		err = c.AutoVerifySign()
+		err = c.AutoVerifySign(false)
 		if err != nil {
 			return fmt.Errorf("[get all public key err]: %v", err)
 		}
-		wxPublicKey, exist = c.CertMap[si.HeaderSerial]
+		c.rwMu.RLock()
+		wxPublicKey, exist = c.SnCertMap[si.HeaderSerial]
+		c.rwMu.RUnlock()
 		if !exist {
 			return errors.New("auto verify sign, but public key not found")
 		}
@@ -181,5 +184,4 @@ func (c *ClientV3) verifySyncSign(si *SignInfo) (err error) {
 		return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
 	}
 	return nil
-
 }

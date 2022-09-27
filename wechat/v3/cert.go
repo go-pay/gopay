@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"runtime"
 	"sort"
 	"sync"
 	"time"
@@ -17,8 +18,10 @@ import (
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/aes"
 	"github.com/go-pay/gopay/pkg/errgroup"
+	"github.com/go-pay/gopay/pkg/retry"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/go-pay/gopay/pkg/xlog"
 	"github.com/go-pay/gopay/pkg/xpem"
 	"github.com/go-pay/gopay/pkg/xtime"
 )
@@ -107,56 +110,51 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 	return certs, nil
 }
 
-// 获取 微信平台证书（readonly）
-func (c *ClientV3) WxPublicKey(serialNo string) (wxPublicKey *rsa.PublicKey) {
-	wxPublicKey = c.CertMap[serialNo]
+// 设置 微信支付平台证书 和 证书序列号
+//	注意1：如已开启自动验签功能 client.AutoVerifySign()，无需再调用此方法设置
+//	注意2：请预先通过 wechat.GetPlatformCerts() 获取 微信平台公钥证书 和 证书序列号
+//	部分接口请求参数中敏感信息加密，使用此 微信支付平台公钥 和 证书序列号
+func (c *ClientV3) SetPlatformCert(wxPublicKeyContent []byte, wxSerialNo string) (client *ClientV3) {
+	pubKey, err := xpem.DecodePublicKey(wxPublicKeyContent)
+	if err != nil {
+		xlog.Errorf("SetPlatformCert(%s),err:%+v", wxPublicKeyContent, err)
+	}
+	if pubKey != nil {
+		c.wxPublicKey = pubKey
+	}
+	c.WxSerialNo = wxSerialNo
+	return c
+}
+
+// 获取 微信平台证书（readonly、disordered）
+func (c *ClientV3) WxPublicKey() (wxPublicKey []*rsa.PublicKey) {
+	for _, v := range c.SnCertMap {
+		wxPublicKey = append(wxPublicKey, v)
+	}
 	return
 }
 
-func (c *ClientV3) GetAllValidCert() (map[string]string, error) {
+// 获取证书Map集并选择最新的有效证书序列号
+func (c *ClientV3) GetAndSelectNewestCert() (serialNo string, snCertMap map[string]string, err error) {
 	certs, err := c.getPlatformCerts()
 	if err != nil {
-		return map[string]string{}, err
-	}
-	var result map[string]string
-	if certs.Code == Success && len(certs.Certs) > 0 {
-		// more one
-		for _, v := range certs.Certs {
-			formatEffective := xtime.FormatDateTime(v.EffectiveTime)
-			effectiveTime, err := time.ParseInLocation(xtime.TimeLayout, formatEffective, time.Local)
-			if err != nil {
-				return map[string]string{}, fmt.Errorf("time.ParseInLocation(%s, %s),err:%w", xtime.TimeLayout, formatEffective, err)
-			}
-			if time.Now().Unix() >= effectiveTime.Unix() {
-				continue
-			}
-			result[v.SerialNo] = v.PublicKey
-		}
-		return result, nil
-	}
-	// failed
-	return map[string]string{}, fmt.Errorf("GetAndSelectNewestCert() failed or certs is nil: %+v", certs)
-}
-
-// 获取并选择最新的有效证书
-func (c *ClientV3) GetAndSelectNewestCert() (cert, serialNo string, err error) {
-	certs, err := c.getPlatformCerts()
-	if err != nil {
-		return gopay.NULL, gopay.NULL, err
+		return gopay.NULL, nil, err
 	}
 	if certs.Code == Success && len(certs.Certs) > 0 {
+		snCertMap = make(map[string]string)
 		// only one
 		if len(certs.Certs) == 1 {
 			formatExpire := xtime.FormatDateTime(certs.Certs[0].ExpireTime)
 			expireTime, err := time.ParseInLocation(xtime.TimeLayout, formatExpire, time.Local)
 			if err != nil {
-				return gopay.NULL, gopay.NULL, fmt.Errorf("time.ParseInLocation(%s, %s),err:%w", xtime.TimeLayout, formatExpire, err)
+				return gopay.NULL, nil, fmt.Errorf("time.ParseInLocation(%s, %s),err:%w", xtime.TimeLayout, formatExpire, err)
 			}
-			if time.Now().Unix() >= expireTime.Unix() {
-				// 过期了
-				return gopay.NULL, gopay.NULL, fmt.Errorf("wechat platform API cert expired, expired time: %s", formatExpire)
+			if time.Since(expireTime) > 0 {
+				return gopay.NULL, nil, fmt.Errorf("wechat platform API cert expired, expired time: %s", formatExpire)
 			}
-			return certs.Certs[0].PublicKey, certs.Certs[0].SerialNo, nil
+			serialNo = certs.Certs[0].SerialNo
+			snCertMap[serialNo] = certs.Certs[0].PublicKey
+			return serialNo, snCertMap, nil
 		}
 		// more one
 		var (
@@ -165,30 +163,31 @@ func (c *ClientV3) GetAndSelectNewestCert() (cert, serialNo string, err error) {
 		)
 		for _, v := range certs.Certs {
 			formatEffective := xtime.FormatDateTime(v.EffectiveTime)
+			formatExpire := xtime.FormatDateTime(v.ExpireTime)
 			effectiveTime, err := time.ParseInLocation(xtime.TimeLayout, formatEffective, time.Local)
 			if err != nil {
-				return gopay.NULL, gopay.NULL, fmt.Errorf("time.ParseInLocation(%s, %s),err:%w", xtime.TimeLayout, formatEffective, err)
+				return gopay.NULL, nil, fmt.Errorf("time.ParseInLocation(%s, %s),err:%w", xtime.TimeLayout, formatEffective, err)
+			}
+			expireTime, err := time.ParseInLocation(xtime.TimeLayout, formatExpire, time.Local)
+			if err != nil {
+				return gopay.NULL, nil, fmt.Errorf("time.ParseInLocation(%s, %s),err:%w", xtime.TimeLayout, formatExpire, err)
+			}
+			if time.Since(expireTime) > 0 {
+				// expired
+				continue
 			}
 			eu := int(effectiveTime.Unix())
 			effectiveTs = append(effectiveTs, eu)
 			certMap[eu] = v
+			snCertMap[v.SerialNo] = v.PublicKey
 		}
 		sort.Ints(effectiveTs)
 		// newest cert
 		newestCert := certMap[effectiveTs[len(effectiveTs)-1]]
-		formatExpire := xtime.FormatDateTime(newestCert.ExpireTime)
-		expireTime, err := time.ParseInLocation(xtime.TimeLayout, formatExpire, time.Local)
-		if err != nil {
-			return gopay.NULL, gopay.NULL, fmt.Errorf("time.ParseInLocation(%s, %s),err:%w", xtime.TimeLayout, formatExpire, err)
-		}
-		if time.Now().Unix() >= expireTime.Unix() {
-			// 过期了
-			return gopay.NULL, gopay.NULL, fmt.Errorf("wechat platform API cert expired, expired time: %s", formatExpire)
-		}
-		return newestCert.PublicKey, newestCert.SerialNo, nil
+		return newestCert.SerialNo, snCertMap, nil
 	}
 	// failed
-	return gopay.NULL, gopay.NULL, fmt.Errorf("GetAndSelectNewestCert() failed or certs is nil: %+v", certs)
+	return gopay.NULL, nil, fmt.Errorf("GetAndSelectNewestCert() failed or certs is nil: %+v", certs)
 }
 
 // 推荐直接使用 client.GetAndSelectNewestCert() 方法
@@ -260,4 +259,44 @@ func (c *ClientV3) decryptCerts(ciphertext, nonce, additional string) (wxCerts s
 		return "", fmt.Errorf("aes.GCMDecrypt, err:%w", err)
 	}
 	return string(decrypt), nil
+}
+
+func (c *ClientV3) autoCheckCertProc() {
+	xlog.Info("auto refresh wechat platform public key")
+	defer func() {
+		if r := recover(); r != nil {
+			buf := make([]byte, 64<<10)
+			buf = buf[:runtime.Stack(buf, false)]
+			xlog.Errorf("autoCheckCertProc: panic recovered: %s\n%s", r, buf)
+			// 重启
+			c.autoCheckCertProc()
+		}
+	}()
+	for {
+		time.Sleep(time.Hour * 12)
+		err := retry.Retry(func() error {
+			serialNo, snCertMap, err := c.GetAndSelectNewestCert()
+			if err != nil {
+				return err
+			}
+			snPkMap := make(map[string]*rsa.PublicKey)
+			for sn, cert := range snCertMap {
+				pubKey, err := xpem.DecodePublicKey([]byte(cert))
+				if err != nil {
+					return err
+				}
+				snPkMap[sn] = pubKey
+			}
+			c.rwMu.Lock()
+			c.SnCertMap = snPkMap
+			c.WxSerialNo = serialNo
+			c.wxPublicKey = snPkMap[serialNo]
+			c.rwMu.Unlock()
+			return nil
+		}, 3, time.Second)
+		if err != nil {
+			xlog.Errorf("c.GetAndSelectNewestCert()，err:%+v", err)
+			continue
+		}
+	}
 }

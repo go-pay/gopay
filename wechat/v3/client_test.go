@@ -99,13 +99,14 @@ func TestGetPlatformCertsWithoutClient(t *testing.T) {
 }
 
 func TestGetAndSelectNewestCert(t *testing.T) {
-	cert, serialNo, err := client.GetAndSelectNewestCert()
+	serialNo, snCertMap, err := client.GetAndSelectNewestCert()
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
 	xlog.Infof("WxSerialNo: %s", serialNo)
-	xlog.Infof("WxContent: \n%s", cert)
+	xlog.Infof("snCertMap: %v", snCertMap)
+	xlog.Infof("WxContent: \n%s", snCertMap[serialNo])
 }
 
 func TestV3VerifySignByPK(t *testing.T) {
@@ -138,6 +139,43 @@ func TestV3Jsapi(t *testing.T) {
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
 	bm := make(gopay.BodyMap)
+	bm.Set("appid", "appid").
+		Set("description", "测试Jsapi支付商品").
+		Set("out_trade_no", tradeNo).
+		Set("time_expire", expire).
+		Set("notify_url", "https://www.fmm.ink").
+		SetBodyMap("amount", func(bm gopay.BodyMap) {
+			bm.Set("total", 1).
+				Set("currency", "CNY")
+		}).
+		SetBodyMap("payer", func(bm gopay.BodyMap) {
+			bm.Set("openid", "asdas")
+		})
+	//text, err := client.V3EncryptText("张三")
+	//if err != nil {
+	//	xlog.Errorf("client.V3EncryptText(),err:%+v", err)
+	//	err = nil
+	//}
+	//xlog.Debugf("加密text: %s", text)
+
+	wxRsp, err := client.V3TransactionJsapi(ctx, bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
+}
+
+func TestV3PartnerJsapi(t *testing.T) {
+	tradeNo := util.RandomString(32)
+	xlog.Debug("tradeNo:", tradeNo)
+	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
+
+	bm := make(gopay.BodyMap)
 	bm.Set("sp_appid", "sp_appid").
 		Set("sp_mchid", "sp_mchid").
 		Set("sub_mchid", "sub_mchid").
@@ -159,7 +197,7 @@ func TestV3Jsapi(t *testing.T) {
 	//}
 	//xlog.Debugf("加密text: %s", text)
 
-	wxRsp, err := client.V3TransactionJsapi(ctx, bm)
+	wxRsp, err := client.V3PartnerTransactionJsapi(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return

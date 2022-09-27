@@ -5,6 +5,7 @@ import (
 	"crypto/rsa"
 	"fmt"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/go-pay/gopay"
@@ -22,17 +23,19 @@ type ClientV3 struct {
 	WxSerialNo  string
 	autoSign    bool
 	bodySize    int // http response body size(MB), default is 10MB
+	rwMu        sync.RWMutex
 	privateKey  *rsa.PrivateKey
+	wxPublicKey *rsa.PublicKey
 	ctx         context.Context
 	DebugSwitch gopay.DebugSwitch
-	CertMap     map[string]*rsa.PublicKey
+	SnCertMap   map[string]*rsa.PublicKey // key: serial_no
 }
 
 // NewClientV3 初始化微信客户端 V3
-//	mchid：商户ID 或者服务商模式的 sp_mchid
-// 	serialNo：商户API证书的证书序列号
-//	apiV3Key：APIv3Key，商户平台获取
-//	privateKey：商户API证书下载后，私钥 apiclient_key.pem 读取后的字符串内容
+// mchid：商户ID 或者服务商模式的 sp_mchid
+// serialNo：商户API证书的证书序列号
+// apiV3Key：APIv3Key，商户平台获取
+// privateKey：商户API证书下载后，私钥 apiclient_key.pem 读取后的字符串内容
 func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3, err error) {
 	if mchid == util.NULL || serialNo == util.NULL || apiV3Key == util.NULL || privateKey == util.NULL {
 		return nil, gopay.MissWechatInitParamErr
@@ -53,23 +56,31 @@ func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3
 }
 
 // AutoVerifySign 开启请求完自动验签功能（默认不开启，推荐开启）
-//	开启自动验签，在校验时，如果证书不存在，会获取所有已生效的证书
-func (c *ClientV3) AutoVerifySign() error {
-	certMap, err := c.GetAllValidCert()
+// 开启自动验签，自动开启每12小时一次轮询，请求最新证书操作
+func (c *ClientV3) AutoVerifySign(autoRefresh ...bool) (err error) {
+	wxSerialNo, certMap, err := c.GetAndSelectNewestCert()
 	if err != nil {
 		return err
 	}
-	newCertMap := map[string]*rsa.PublicKey{}
-	for key, value := range certMap {
-		pubKey, err := xpem.DecodePublicKey([]byte(value))
+	if len(c.SnCertMap) <= 0 {
+		c.SnCertMap = make(map[string]*rsa.PublicKey)
+	}
+	for sn, cert := range certMap {
+		// decode cert
+		pubKey, err := xpem.DecodePublicKey([]byte(cert))
 		if err != nil {
 			return err
 		}
-		newCertMap[key] = pubKey
+		c.SnCertMap[sn] = pubKey
 	}
-	c.CertMap = newCertMap
+	c.WxSerialNo = wxSerialNo
+	c.wxPublicKey = c.SnCertMap[wxSerialNo]
+	if len(autoRefresh) == 1 && !autoRefresh[0] {
+		return
+	}
 	c.autoSign = true
-	return nil
+	go c.autoCheckCertProc()
+	return
 }
 
 // SetBodySize 设置http response body size(MB)
