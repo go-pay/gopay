@@ -158,7 +158,7 @@ func (c *ClientV3) verifySyncSign(si *SignInfo) (err error) {
 	if !c.autoSign {
 		return nil
 	}
-	if si != nil {
+	if si == nil {
 		return errors.New("auto verify sign, but SignInfo is nil")
 	}
 	c.rwMu.RLock()
