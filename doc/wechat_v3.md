@@ -144,21 +144,23 @@ if err != nil {
 
 ```go
 import (
-    "github.com/go-pay/gopay/wechat/v3"
-    "github.com/go-pay/gopay/pkg/xlog"
+"github.com/go-pay/gopay/wechat/v3"
+"github.com/go-pay/gopay/pkg/xlog"
 )
 
 notifyReq, err := wechat.V3ParseNotify()
 if err != nil {
-    xlog.Error(err)
-    return
+xlog.Error(err)
+return
 }
 
-// wxPublicKey 通过 client.WxPublicKey() 获取
-err = notifyReq.VerifySignByPK(wxPublicKey)
+// 获取微信平台证书
+certMap := client.WxPublicKeyMap()
+// 验证异步通知的签名
+err = notifyReq.VerifySignByPKMap(certMap)
 if err != nil {
-    xlog.Error(err)
-    return
+xlog.Error(err)
+return
 }
 
 // ========异步通知敏感信息解密========
@@ -411,9 +413,9 @@ wechat.V3DecryptScoreNotifyCipherText()
 
 * `wechat.GetPlatformCerts()` => 获取微信平台证书公钥
 * `client.GetAndSelectNewestCert()` => 获取并选择最新的有效证书
-* `wechat.V3VerifySignByPK()` => 微信V3 同步验签（推荐直接打开自动验签功能）
+* `client.WxPublicKeyMap()` => 获取并选择最新的有效证书 Map
 * `wechat.V3ParseNotify()` => 解析微信回调请求的参数到 V3NotifyReq 结构体
-* `notify.VerifySignByPK()` => 微信V3 异步通知验签
+* `notify.VerifySignByPKMap()` => 微信V3 异步通知验签
 * `client.V3EncryptText()` => 敏感参数信息加密
 * `client.V3DecryptText()` =>  敏感参数信息解密
 * `wechat.V3EncryptText()` => 敏感参数信息加密
