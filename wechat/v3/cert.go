@@ -27,12 +27,13 @@ import (
 )
 
 // 获取微信平台证书公钥（获取后自行保存使用，如需定期刷新功能，自行实现）
-//	注意事项
-//	如果自行实现验证平台签名逻辑的话，需要注意以下事项:
-//	  - 程序实现定期更新平台证书的逻辑，不要硬编码验证应答消息签名的平台证书
-//	  - 定期调用该接口，间隔时间小于12小时
-//	  - 加密请求消息中的敏感信息时，使用最新的平台证书（即：证书启用时间较晚的证书）
-//	文档说明：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/wechatpay5_1.shtml
+// 注意事项
+// 如果自行实现验证平台签名逻辑的话，需要注意以下事项:
+//   - 程序实现定期更新平台证书的逻辑，不要硬编码验证应答消息签名的平台证书
+//   - 定期调用该接口，间隔时间小于12小时
+//   - 加密请求消息中的敏感信息时，使用最新的平台证书（即：证书启用时间较晚的证书）
+//
+// 文档说明：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/wechatpay5_1.shtml
 func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey string) (certs *PlatformCertRsp, err error) {
 	var (
 		eg = new(errgroup.Group)
@@ -111,6 +112,7 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 }
 
 // 设置 微信支付平台证书 和 证书序列号
+//
 //	注意1：如已开启自动验签功能 client.AutoVerifySign()，无需再调用此方法设置
 //	注意2：请预先通过 wechat.GetPlatformCerts() 获取 微信平台公钥证书 和 证书序列号
 //	部分接口请求参数中敏感信息加密，使用此 微信支付平台公钥 和 证书序列号
@@ -126,12 +128,24 @@ func (c *ClientV3) SetPlatformCert(wxPublicKeyContent []byte, wxSerialNo string)
 	return c
 }
 
+// Deprecated
+// 推荐使用：client.WxPublicKeyMap()
 // 获取 微信平台证书（readonly、disordered）
 func (c *ClientV3) WxPublicKey() (wxPublicKey []*rsa.PublicKey) {
 	for _, v := range c.SnCertMap {
 		wxPublicKey = append(wxPublicKey, v)
 	}
 	return
+}
+
+// 获取 微信平台证书 Map（readonly）
+// wxPublicKeyMap: key:SerialNo, value:WxPublicKey
+func (c *ClientV3) WxPublicKeyMap() (wxPublicKeyMap map[string]*rsa.PublicKey) {
+	wxPublicKeyMap = make(map[string]*rsa.PublicKey, len(c.SnCertMap))
+	for k, v := range c.SnCertMap {
+		wxPublicKeyMap[k] = v
+	}
+	return wxPublicKeyMap
 }
 
 // 获取证书Map集并选择最新的有效证书序列号
@@ -192,12 +206,13 @@ func (c *ClientV3) GetAndSelectNewestCert() (serialNo string, snCertMap map[stri
 
 // 推荐直接使用 client.GetAndSelectNewestCert() 方法
 // 获取微信平台证书公钥（获取后自行保存使用，如需定期刷新功能，自行实现）
-//	注意事项
-//	如果自行实现验证平台签名逻辑的话，需要注意以下事项:
-//	  - 程序实现定期更新平台证书的逻辑，不要硬编码验证应答消息签名的平台证书
-//	  - 定期调用该接口，间隔时间小于12小时
-//	  - 加密请求消息中的敏感信息时，使用最新的平台证书（即：证书启用时间较晚的证书）
-//	文档说明：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/wechatpay5_1.shtml
+// 注意事项
+// 如果自行实现验证平台签名逻辑的话，需要注意以下事项:
+//   - 程序实现定期更新平台证书的逻辑，不要硬编码验证应答消息签名的平台证书
+//   - 定期调用该接口，间隔时间小于12小时
+//   - 加密请求消息中的敏感信息时，使用最新的平台证书（即：证书启用时间较晚的证书）
+//
+// 文档说明：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/wechatpay5_1.shtml
 func (c *ClientV3) getPlatformCerts() (certs *PlatformCertRsp, err error) {
 	var (
 		eg = new(errgroup.Group)

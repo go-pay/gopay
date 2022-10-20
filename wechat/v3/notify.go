@@ -189,7 +189,7 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 }
 
 // Deprecated
-//	推荐使用 VerifySignByPK()
+// 推荐使用 VerifySignByPK()
 func (v *V3NotifyReq) VerifySign(wxPkContent string) (err error) {
 	if v.SignInfo != nil {
 		return V3VerifySign(v.SignInfo.HeaderTimestamp, v.SignInfo.HeaderNonce, v.SignInfo.SignBody, v.SignInfo.HeaderSignature, wxPkContent)
@@ -198,12 +198,22 @@ func (v *V3NotifyReq) VerifySign(wxPkContent string) (err error) {
 }
 
 // 异步通知验签
-//	wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKey() 获取
+// wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKeyMap() 获取后，取Serial相应的 微信平台公钥
+// 推荐使用 VerifySignByPKMap()
 func (v *V3NotifyReq) VerifySignByPK(wxPublicKey *rsa.PublicKey) (err error) {
 	if v.SignInfo != nil {
 		return V3VerifySignByPK(v.SignInfo.HeaderTimestamp, v.SignInfo.HeaderNonce, v.SignInfo.SignBody, v.SignInfo.HeaderSignature, wxPublicKey)
 	}
 	return errors.New("verify notify sign, bug SignInfo is nil")
+}
+
+// 异步通知验签
+// wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKeyMap() 获取
+func (v *V3NotifyReq) VerifySignByPKMap(wxPublicKeyMap map[string]*rsa.PublicKey) (err error) {
+	if v.SignInfo != nil && wxPublicKeyMap != nil {
+		return V3VerifySignByPK(v.SignInfo.HeaderTimestamp, v.SignInfo.HeaderNonce, v.SignInfo.SignBody, v.SignInfo.HeaderSignature, wxPublicKeyMap[v.SignInfo.HeaderSerial])
+	}
+	return errors.New("verify notify sign, bug SignInfo or wxPublicKeyMap is nil")
 }
 
 // 解密 普通支付 回调中的加密信息
@@ -311,8 +321,8 @@ func (v *V3NotifyReq) DecryptBusifavorCipherText(apiV3Key string) (result *V3Dec
 }
 
 // Deprecated
-//	暂时不推荐此方法，请使用 wechat.V3ParseNotify()
-//	解析微信回调请求的参数到 gopay.BodyMap
+// 暂时不推荐此方法，请使用 wechat.V3ParseNotify()
+// 解析微信回调请求的参数到 gopay.BodyMap
 func V3ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
 	defer req.Body.Close()
