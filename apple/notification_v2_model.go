@@ -99,17 +99,19 @@ type Data struct {
 // RenewalInfo https://developer.apple.com/documentation/appstoreservernotifications/jwsrenewalinfodecodedpayload
 type RenewalInfo struct {
 	jwt.StandardClaims
-	AutoRenewProductId     string `json:"autoRenewProductId"`
-	AutoRenewStatus        int64  `json:"autoRenewStatus"`
-	ExpirationIntent       int64  `json:"expirationIntent"`
-	GracePeriodExpiresDate int64  `json:"gracePeriodExpiresDate"`
-	IsInBillingRetryPeriod bool   `json:"isInBillingRetryPeriod"`
-	OfferIdentifier        string `json:"offerIdentifier"`
-	OfferType              int64  `json:"offerType"` // 1:An introductory offer. 2:A promotional offer. 3:An offer with a subscription offer code.
-	OriginalTransactionId  string `json:"originalTransactionId"`
-	PriceIncreaseStatus    int64  `json:"priceIncreaseStatus"` // 0: The customer hasn’t responded to the subscription price increase. 1:The customer consented to the subscription price increase.
-	ProductId              string `json:"productId"`
-	SignedDate             int64  `json:"signedDate"`
+	AutoRenewProductId          string `json:"autoRenewProductId"`
+	AutoRenewStatus             int64  `json:"autoRenewStatus"`
+	Environment                 string `json:"environment"`
+	ExpirationIntent            int64  `json:"expirationIntent"`
+	GracePeriodExpiresDate      int64  `json:"gracePeriodExpiresDate"`
+	IsInBillingRetryPeriod      bool   `json:"isInBillingRetryPeriod"`
+	OfferIdentifier             string `json:"offerIdentifier"`
+	OfferType                   int64  `json:"offerType"` // 1:An introductory offer. 2:A promotional offer. 3:An offer with a subscription offer code.
+	OriginalTransactionId       string `json:"originalTransactionId"`
+	PriceIncreaseStatus         int64  `json:"priceIncreaseStatus"` // 0: The customer hasn’t responded to the subscription price increase. 1:The customer consented to the subscription price increase.
+	ProductId                   string `json:"productId"`
+	RecentSubscriptionStartDate int64  `json:"recentSubscriptionStartDate"`
+	SignedDate                  int64  `json:"signedDate"`
 }
 
 // TransactionInfo https://developer.apple.com/documentation/appstoreservernotifications/jwstransactiondecodedpayload
@@ -117,6 +119,7 @@ type TransactionInfo struct {
 	jwt.StandardClaims
 	AppAccountToken             string `json:"appAccountToken"`
 	BundleId                    string `json:"bundleId"`
+	Environment                 string `json:"environment"`
 	ExpiresDate                 int64  `json:"expiresDate"`
 	InAppOwnershipType          string `json:"inAppOwnershipType"` // FAMILY_SHARED  PURCHASED
 	IsUpgraded                  bool   `json:"isUpgraded"`

@@ -1,5 +1,6 @@
 ## Apple
-### Apple Pay 支付校验收据
+
+## Apple Pay 支付校验收据
 
 * [苹果校验收据文档](https://developer.apple.com/documentation/appstorereceipts/verifyreceipt)
 
@@ -9,7 +10,7 @@
 
 ---
 
-### 校验示例
+#### 校验示例
 
 ```go
 import (
@@ -38,7 +39,7 @@ if rsp.Receipt != nil {
 > 苹果支付服务服务端通知数据解析
 > 对应App下 `[App 信息] --> [App Store 服务器通知]  --> [版本 2]` 配置对应的服务器地址,支付状态发生变化时Apple 将通过POST请求推送消息至配置的地址
 
-### 示例
+#### 示例
 
 - 请参考 `notification_v2_test.go`
 
@@ -136,3 +137,8 @@ xlog.Color(xlog.YellowBright).Info(string(bs2))
 }
 */
 ```
+
+### App Store Server API
+
+* `apple.GetTransactionHistory()` => Get Transaction History
+* `apple.GetAllSubscriptionStatuses()` => GetAllSubscriptionStatuses
