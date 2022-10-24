@@ -2,6 +2,7 @@ package unionpay
 
 import (
 	"fmt"
+	"github.com/go-pay/gopay/pkg/xlog"
 	"testing"
 	"time"
 )
@@ -66,7 +67,7 @@ func TestClient_PrepayMchScanUser(t *testing.T) {
 
 	response, err := client.PrepayMchScanUser(req)
 	if err != nil {
-		t.Error(err)
+		xlog.Error(err)
 		return
 	}
 
@@ -83,7 +84,7 @@ func TestClient_QueryOrder(t *testing.T) {
 
 	response, err := client.QueryOrder(req)
 	if err != nil {
-		t.Error(err)
+		xlog.Error(err)
 		return
 	}
 
@@ -116,7 +117,7 @@ func TestClient_Refund(t *testing.T) {
 
 	response, err := client.Refund(req)
 	if err != nil {
-		t.Error(err)
+		xlog.Error(err)
 		return
 	}
 
@@ -134,7 +135,7 @@ func TestClient_QueryRefundOrder(t *testing.T) {
 
 	response, err := client.QueryRefund(req)
 	if err != nil {
-		t.Error("错误========", err)
+		xlog.Error("错误========", err)
 		return
 	}
 
