@@ -1,4 +1,4 @@
-package chinaunionpay
+package unionpay
 
 // 常量参数
 const (

@@ -1,4 +1,4 @@
-package chinaunionpay
+package unionpay
 
 import (
 	"math/rand"

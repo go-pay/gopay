@@ -1,11 +1,84 @@
-package chinaunionpay
+package unionpay
 
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"net"
 	"net/http"
+	"time"
 )
+
+type BaseClient struct {
+	RequestId  string
+	HttpClient *http.Client
+
+	RequestBody  []byte
+	ResponseBody []byte
+}
+
+func NewBaseClient(requestId string) *BaseClient {
+	c := new(BaseClient)
+	c.HttpClient = &http.Client{
+		Transport: &http.Transport{
+			DialContext: (&net.Dialer{
+				Timeout:   10 * time.Second,
+				KeepAlive: 90 * time.Second,
+				// DualStack: true,
+			}).DialContext,
+			MaxIdleConns:        100,
+			IdleConnTimeout:     90 * time.Second,
+			TLSHandshakeTimeout: 10 * time.Second,
+			// ExpectContinueTimeout: 1 * time.Second,
+			// TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		},
+		Timeout: 40 * time.Second, // 整个http请求发起到等待应答的超时时间
+	}
+	c.RequestId = requestId
+	return c
+}
+
+func (r *BaseClient) SetRequestBody(body []byte) {
+	body = r.TrimSpace(body)
+	r.RequestBody = body
+}
+
+func (r *BaseClient) SetResponseBody(body []byte) {
+	body = r.TrimSpace(body)
+	r.ResponseBody = body
+}
+
+func (r *BaseClient) GetRequestBody() string {
+	return string(r.RequestBody)
+}
+
+func (r *BaseClient) GetResponseBody() string {
+	return string(r.ResponseBody)
+}
+
+func (r *BaseClient) TrimSpace(body []byte) []byte {
+	body = bytes.TrimSpace(body)
+	body = bytes.Replace(body, []byte("\r"), []byte(""), -1)
+	body = bytes.Replace(body, []byte("\n"), []byte(""), -1)
+	return body
+}
+
+func (r *BaseClient) GetGateWayError(gatewayCode, gatewayMsg string) error {
+	return fmt.Errorf(r.GetGateWayStatus(gatewayCode, gatewayMsg))
+}
+
+func (r *BaseClient) GetGateWayStatus(gatewayCode, gatewayMsg string) string {
+	return fmt.Sprintf("gatewayCode:%s gatewayMsg:%s", gatewayCode, gatewayMsg)
+}
+
+func (r *BaseClient) GetBizError(bizCode, bizMsg string) error {
+	return fmt.Errorf(r.GetBizTrxMsg(bizCode, bizMsg))
+}
+
+func (r *BaseClient) GetBizTrxMsg(bizCode, bizMsg string) string {
+	return fmt.Sprintf("bizCode:%s bizMsg:%s", bizCode, bizMsg)
+}
 
 type Client struct {
 	*BaseClient
@@ -27,13 +100,9 @@ func NewClient(requestId, appId, appKey string, isProEnv bool) *Client {
 	return c
 }
 
-func (c *Client) buildRequestBody(req interface{}) ([]byte, error) {
-	return json.Marshal(req)
-}
-
 // 请求API地址
 func (c *Client) requestApi(reqObj interface{}, addr string) ([]byte, error) {
-	body, err := c.buildRequestBody(reqObj)
+	body, err := json.Marshal(reqObj)
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +210,7 @@ func (c *Client) Refund(req *RefundRequest) (respObj *RefundResponse, err error)
 	return respObj, err
 }
 
-// 交易退款
+// 交易撤销
 func (c *Client) Cancel(req *CancelRequest) (respObj *CancelResponse, err error) {
 	respObj = new(CancelResponse)
 
