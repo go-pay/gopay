@@ -50,6 +50,7 @@ func main() {
 * #### [QQ](https://github.com/go-pay/gopay/blob/main/doc/qq.md)
 * #### [Paypal](https://github.com/go-pay/gopay/blob/main/doc/paypal.md)
 * #### [Apple](https://github.com/go-pay/gopay/blob/main/doc/apple.md)
+* #### [Unionpay](https://github.com/go-pay/gopay/blob/main/doc/unionpay.md)
 
 ---
 
@@ -63,6 +64,7 @@ func main() {
     * `gopay/qq/client_test.go`
     * `gopay/paypal/client_test.go`
     * `gopay/apple/verify_test.go`
+      * `gopay/unionpay/client_test.go`
     * 或 examples
 * 有问题请加QQ群（加群验证答案：gopay），或加微信好友拉群。在此，非常感谢提出宝贵意见和反馈问题的同志们！
 * 开发过程中，请尽量使用正式环境，1分钱测试法！
