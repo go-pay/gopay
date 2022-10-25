@@ -2,7 +2,7 @@
 
 # GoPay
 
-### 微信、支付宝、PayPal、QQ、银联支付 的 Golang 版本SDK
+### 微信、支付宝、PayPal、QQ 的 Golang 版本SDK
 
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
 [![Github](https://img.shields.io/github/forks/go-pay/gopay?label=Fork&style=social)](https://github.com/go-pay/gopay/fork)
@@ -63,7 +63,6 @@ func main() {
     * `gopay/qq/client_test.go`
     * `gopay/paypal/client_test.go`
     * `gopay/apple/verify_test.go`
-      * `gopay/unionpay/client_test.go`
     * 或 examples
 * 有问题请加QQ群（加群验证答案：gopay），或加微信好友拉群。在此，非常感谢提出宝贵意见和反馈问题的同志们！
 * 开发过程中，请尽量使用正式环境，1分钱测试法！
