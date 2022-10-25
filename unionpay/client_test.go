@@ -142,3 +142,22 @@ func TestClient_QueryRefundOrder(t *testing.T) {
 	t.Logf("%+v", response)
 }
 
+func TestClient_PreAppOrder(t *testing.T) {
+	req := &PreAppOrderRequest{
+		Mid:              merchantCode,
+		RequestTimestamp: "2022-01-01 10:10:10",
+		MerOrderId:       "159000002",
+		Tid:              "1111111",
+		InstMid:          "159000002_1",
+		TotalAmount:      1,
+		TradeType:        "APP",
+	}
+
+	response, err := client.PreAppOrder(req)
+	if err != nil {
+		xlog.Error("错误========", err)
+		return
+	}
+
+	t.Logf("%+v", response)
+}

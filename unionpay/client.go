@@ -87,7 +87,7 @@ type Client struct {
 	AppId        string // 应用ID 实际交易的商户号
 	AppKey       string // 签名秘钥
 	MerchantCode string // 服务商商户号
-	isProEnv bool // 是否生产环境
+	isProEnv     bool   // 是否生产环境
 }
 
 func NewClient(requestId, appId, appKey string, isProEnv bool) *Client {
@@ -231,6 +231,20 @@ func (c *Client) QueryRefund(req *QueryRefundRequest) (respObj *QueryRefundRespo
 		err = c.doRequest(req, respObj, QueryRefundApi)
 	} else {
 		err = c.doRequest(req, respObj, QueryRefundApiBeta)
+	}
+
+	return respObj, err
+}
+
+//APP支付
+func (c *Client) PreAppOrder(req *PreAppOrderRequest) (respObj *PreAppOrderResponse, err error) {
+
+	respObj = new(PreAppOrderResponse)
+
+	if c.isProEnv {
+		err = c.doRequest(req, respObj, PreAppOrderApi)
+	} else {
+		err = c.doRequest(req, respObj, PreAppOrderApiBeta)
 	}
 
 	return respObj, err

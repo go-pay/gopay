@@ -6,3 +6,4 @@
 * 交易退款：`client.Refund()`
 * 交易撤销：`client.Cancel()`
 * 交易退款查询：`client.QueryRefund()`
+* APP支付：`client.PreAppOrder()`

@@ -113,18 +113,21 @@ type QueryRefundResponse struct {
 // URL 接口地址
 const (
 	// 测试环境
-	MchScanApiBeta     = "http://0.0.0.0:12345/v2/poslink/transaction/pay"          // 聚合反扫 商家扫用户
-	QueryApiBeta       = "http://0.0.0.0:12345/v2/poslink/transaction/query"        // 支付查询
-	RefundApiBeta      = "http://0.0.0.0:12345/v2/poslink/transaction/refund"       // 退款
-	QueryRefundApiBeta = "http://0.0.0.0:12345/v2/poslink/transaction/query-refund" // 退款查询
-	CancelApiBeta      = "http://0.0.0.0:12345/v2/poslink/transaction/voidpayment"  // 交易撤销
-
+	MchScanApiBeta        = "https://test-api-open.chinaums.com/v2/poslink/transaction/pay"          // 聚合反扫 商家扫用户
+	QueryApiBeta          = "https://test-api-open.chinaums.com/v2/poslink/transaction/query"        // 支付查询
+	RefundApiBeta         = "https://test-api-open.chinaums.com/v2/poslink/transaction/refund"       // 退款
+	QueryRefundApiBeta    = "https://test-api-open.chinaums.com/v2/poslink/transaction/query-refund" // 退款查询
+	CancelApiBeta         = "https://test-api-open.chinaums.com/v2/poslink/transaction/voidpayment"  // 交易撤销
+	GetAccessTokenApiBeta = "https://test-api-open.chinaums.com/v1/token/access"                     // APP支付
+	PreAppOrderApiBeta    = "https://test-api-open.chinaums.com/v1/netpay/trade/precreate"           // APP支付
 	// 正式环境
-	MchScanApi     = "https://api-mop.chinaums.com/v2/poslink/transaction/pay"          // 聚合反扫 商家扫用户
-	QueryApi       = "https://api-mop.chinaums.com/v2/poslink/transaction/query"        // 支付查询
-	RefundApi      = "https://api-mop.chinaums.com/v2/poslink/transaction/refund"       // 退款
-	QueryRefundApi = "https://api-mop.chinaums.com/v2/poslink/transaction/query-refund" // 退款查询
-	CancelApi      = "https://api-mop.chinaums.com/v2/poslink/transaction/voidpayment"  // 交易撤销
+	MchScanApi        = "https://api-mop.chinaums.com/v2/poslink/transaction/pay"          // 聚合反扫 商家扫用户
+	QueryApi          = "https://api-mop.chinaums.com/v2/poslink/transaction/query"        // 支付查询
+	RefundApi         = "https://api-mop.chinaums.com/v2/poslink/transaction/refund"       // 退款
+	QueryRefundApi    = "https://api-mop.chinaums.com/v2/poslink/transaction/query-refund" // 退款查询
+	CancelApi         = "https://api-mop.chinaums.com/v2/poslink/transaction/voidpayment"  // 交易撤销
+	GetAccessTokenApi = "https://api-mop.chinaums.com/v1/token/access"                     // APP支付
+	PreAppOrderApi    = "https://api-mop.chinaums.com/v1/netpay/trade/precreate"           // APP支付
 )
 
 const (
@@ -152,3 +155,20 @@ const (
 	QueryResCode_Failed  = "5"  // 失败（失败情况，后面追加 失败描述)
 	QueryResCode_Unkonwn = "FF" // 交易状态未知
 )
+
+//app支付请求参数
+type PreAppOrderRequest struct {
+	RequestTimestamp string `json:"requestTimestamp,omitempty"` // 必填 报文请求时间 yyyy-MM-dd HH:mm:ss
+	MerOrderId       string `json:"merOrderId,omitempty"`       // 条件必填 商户单号，全局唯一，不可重复，长度不超过50位
+	Mid              string `json:"mid,omitempty"`              //商户号
+	Tid              string `json:"tid,omitempty"`              // 终端号
+	InstMid          string `json:"instMid,omitempty"`          // 业务类型
+	TotalAmount      int64  `json:"totalAmount,omitempty"`      // 支付总金额
+	TradeType        string `json:"tid,omitempty"`              // APP 交易类型，微信必传
+}
+
+//app支付响应参数
+type PreAppOrderResponse struct {
+	ErrCode string `json:"errCode,omitempty"`
+	ErrInfo string `json:"errInfo,omitempty"`
+}
