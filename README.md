@@ -50,7 +50,6 @@ func main() {
 * #### [QQ](https://github.com/go-pay/gopay/blob/main/doc/qq.md)
 * #### [Paypal](https://github.com/go-pay/gopay/blob/main/doc/paypal.md)
 * #### [Apple](https://github.com/go-pay/gopay/blob/main/doc/apple.md)
-* #### [Unionpay](https://github.com/go-pay/gopay/blob/main/doc/unionpay.md)
 
 ---
 
