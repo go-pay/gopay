@@ -210,11 +210,13 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 		bodyBs          []byte
 	)
 	if bm != nil {
+		aat := bm.GetString("app_auth_token")
 		bm.Remove("app_auth_token")
 		if bodyBs, err = json.Marshal(bm); err != nil {
 			return nil, fmt.Errorf("json.Marshal：%w", err)
 		}
 		bizContent = string(bodyBs)
+		bm.Set("app_auth_token", aat)
 	}
 	// 处理公共参数
 	param, err := a.pubParamsHandle(bm, method, bizContent, authToken...)
@@ -288,10 +290,11 @@ func (a *Client) pubParamsHandle(bm gopay.BodyMap, method, bizContent string, au
 	if notifyUrl := bm.GetString("notify_url"); notifyUrl != util.NULL {
 		pubBody.Set("notify_url", notifyUrl)
 	}
-	// app_auth_token
+	// default use app_auth_token
 	if a.AppAuthToken != util.NULL {
 		pubBody.Set("app_auth_token", a.AppAuthToken)
 	}
+	// if user set app_auth_token in body_map, use this
 	if aat := bm.GetString("app_auth_token"); aat != util.NULL {
 		pubBody.Set("app_auth_token", aat)
 	}
@@ -301,7 +304,7 @@ func (a *Client) pubParamsHandle(bm gopay.BodyMap, method, bizContent string, au
 	if bizContent != util.NULL {
 		pubBody.Set("biz_content", bizContent)
 	}
-	// 计算sign
+	// sign
 	sign, err := GetRsaSign(pubBody, pubBody.GetString("sign_type"), a.privateKey)
 	if err != nil {
 		return "", fmt.Errorf("GetRsaSign Error: %w", err)
