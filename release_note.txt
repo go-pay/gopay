@@ -1,8 +1,8 @@
 版本号：Release 1.5.86
 修改记录：
-   (1) 微信V3：新增优化异步验签方法，client.WxPublicKeyMap()，v3NotifyReq.VerifySignByPKMap()。
-   (2) 支付宝：修复 app_auth_token 的问题。
-   (3) apple：新增接口，Get Transaction History，GetAllSubscriptionStatuses，未真实场景测试。
+   (1) 微信V3：优化异步验签方法，v3NotifyReq.VerifySignByPKMap()，通过证书Map自动选择相应的证书验签。
+   (2) 微信V3：微信平台证书获取方法变更，client.WxPublicKey() 获取最新微信平台证书；client.WxPublicKeyMap()，获取微信平台证书Map。
+   (3) 支付宝：修复 app_auth_token 的问题。
 
 版本号：Release 1.5.85
 修改记录：

@@ -18,7 +18,7 @@ import (
 )
 
 // Deprecated
-//	推荐使用 wechat.V3VerifySignByPK()
+// 推荐使用 wechat.V3VerifySignByPK()
 func V3VerifySign(timestamp, nonce, signBody, sign, wxPubKeyContent string) (err error) {
 	publicKey, err := xpem.DecodePublicKey([]byte(wxPubKeyContent))
 	if err != nil {
@@ -35,8 +35,9 @@ func V3VerifySign(timestamp, nonce, signBody, sign, wxPubKeyContent string) (err
 	return nil
 }
 
-// 微信V3 版本验签（同步/异步）
-//	wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKey() 获取
+// 推荐直接开启自动同步验签功能
+// 微信V3 版本验签（同步）
+// wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKeyMap() 获取，然后根据 signInfo.HeaderSerial 获取相应的公钥
 func V3VerifySignByPK(timestamp, nonce, signBody, sign string, wxPublicKey *rsa.PublicKey) (err error) {
 	str := timestamp + "\n" + nonce + "\n" + signBody + "\n"
 	signBytes, _ := base64.StdEncoding.DecodeString(sign)
@@ -50,7 +51,7 @@ func V3VerifySignByPK(timestamp, nonce, signBody, sign string, wxPublicKey *rsa.
 }
 
 // PaySignOfJSAPI 获取 JSAPI paySign
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_4.shtml
+// 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_4.shtml
 func (c *ClientV3) PaySignOfJSAPI(appid, prepayid string) (jsapi *JSAPIPayParams, err error) {
 	ts := util.Int642String(time.Now().Unix())
 	nonceStr := util.RandomString(32)
@@ -74,7 +75,7 @@ func (c *ClientV3) PaySignOfJSAPI(appid, prepayid string) (jsapi *JSAPIPayParams
 }
 
 // PaySignOfApp 获取 App sign
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_4.shtml
+// 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_4.shtml
 func (c *ClientV3) PaySignOfApp(appid, prepayid string) (app *AppPayParams, err error) {
 	ts := util.Int642String(time.Now().Unix())
 	nonceStr := util.RandomString(32)
@@ -98,7 +99,7 @@ func (c *ClientV3) PaySignOfApp(appid, prepayid string) (app *AppPayParams, err 
 }
 
 // PaySignOfApplet 获取 小程序 paySign
-//	文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_4.shtml
+// 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_4.shtml
 func (c *ClientV3) PaySignOfApplet(appid, prepayid string) (applet *AppletParams, err error) {
 	jsapi, err := c.PaySignOfJSAPI(appid, prepayid)
 	if err != nil {

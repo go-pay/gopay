@@ -198,7 +198,7 @@ func (v *V3NotifyReq) VerifySign(wxPkContent string) (err error) {
 }
 
 // 异步通知验签
-// wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKeyMap() 获取后，取Serial相应的 微信平台公钥
+// wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKeyMap() 获取，然后根据 signInfo.HeaderSerial 获取相应的公钥
 // 推荐使用 VerifySignByPKMap()
 func (v *V3NotifyReq) VerifySignByPK(wxPublicKey *rsa.PublicKey) (err error) {
 	if v.SignInfo != nil {

@@ -128,14 +128,9 @@ func (c *ClientV3) SetPlatformCert(wxPublicKeyContent []byte, wxSerialNo string)
 	return c
 }
 
-// Deprecated
-// 推荐使用：client.WxPublicKeyMap()
-// 获取 微信平台证书（readonly、disordered）
-func (c *ClientV3) WxPublicKey() (wxPublicKey []*rsa.PublicKey) {
-	for _, v := range c.SnCertMap {
-		wxPublicKey = append(wxPublicKey, v)
-	}
-	return
+// 获取最新的 微信平台证书
+func (c *ClientV3) WxPublicKey() (wxPublicKey *rsa.PublicKey) {
+	return c.wxPublicKey
 }
 
 // 获取 微信平台证书 Map（readonly）
