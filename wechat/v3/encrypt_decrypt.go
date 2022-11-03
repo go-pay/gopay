@@ -65,6 +65,15 @@ func V3DecryptText(cipherText string, privateKeyContent []byte) (text string, er
 	}
 	return string(textByte), nil
 }
+// 解密 通用方法ToBytes对象
+func V3DecryptNotifyCipherTextToBytes(ciphertext, nonce, additional, apiV3Key string) (decrypt []byte, err error) {
+   cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
+   decrypt, err = aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
+   if err != nil {
+      return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
+   }
+   return decrypt, nil
+}
 
 // 解密 普通支付 回调中的加密信息
 func V3DecryptNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptResult, err error) {
