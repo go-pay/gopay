@@ -6,8 +6,9 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
-	"github.com/go-pay/gopay/pkg/jwt"
 	"time"
+
+	"github.com/go-pay/gopay/pkg/jwt"
 )
 
 type SignConfig struct {

@@ -1,8 +1,9 @@
 package apple
 
 import (
-	"github.com/go-pay/gopay/pkg/xlog"
 	"testing"
+
+	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 func TestGetAllSubscriptionStatuses(t *testing.T) {

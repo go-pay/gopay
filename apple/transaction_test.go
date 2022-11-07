@@ -1,9 +1,10 @@
 package apple
 
 import (
+	"testing"
+
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xlog"
-	"testing"
 )
 
 func TestGetTransactionHistory(t *testing.T) {
