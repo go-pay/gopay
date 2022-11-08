@@ -290,19 +290,30 @@ type TradeRefundResponse struct {
 
 type TradeRefund struct {
 	ErrorResponse
-	TradeNo              string           `json:"trade_no,omitempty"`
-	OutTradeNo           string           `json:"out_trade_no,omitempty"`
-	BuyerLogonId         string           `json:"buyer_logon_id,omitempty"`
-	FundChange           string           `json:"fund_change,omitempty"`
-	RefundFee            string           `json:"refund_fee,omitempty"`
-	RefundDetailItemList []*TradeFundBill `json:"refund_detail_item_list,omitempty"`
-	StoreName            string           `json:"store_name,omitempty"`
-	BuyerUserId          string           `json:"buyer_user_id,omitempty"`
-	SendBackFee          string           `json:"send_back_fee,omitempty"`
+	TradeNo                      string                 `json:"trade_no,omitempty"`
+	OutTradeNo                   string                 `json:"out_trade_no,omitempty"`
+	BuyerLogonId                 string                 `json:"buyer_logon_id,omitempty"`
+	FundChange                   string                 `json:"fund_change,omitempty"`
+	RefundFee                    string                 `json:"refund_fee,omitempty"`
+	RefundDetailItemList         []*TradeFundBill       `json:"refund_detail_item_list,omitempty"`
+	StoreName                    string                 `json:"store_name,omitempty"`
+	BuyerUserId                  string                 `json:"buyer_user_id,omitempty"`
+	SendBackFee                  string                 `json:"send_back_fee,omitempty"`
+	OpenId                       string                 `json:"open_id,omitempty"`
+	RefundCurrency               string                 `json:"refund_currency,omitempty"`
+	GmtRefundPay                 string                 `json:"gmt_refund_pay,omitempty"`
+	RefundPresetPaytoolList      []*RefundPresetPaytool `json:"refund_preset_paytool_list,omitempty"`
+	RefundChargeAmount           string                 `json:"refund_charge_amount,omitempty"`
+	RefundSettlementId           string                 `json:"refund_settlement_id,omitempty"`
+	PresentRefundBuyerAmount     string                 `json:"present_refund_buyer_amount,omitempty"`
+	PresentRefundDiscountAmount  string                 `json:"present_refund_discount_amount,omitempty"`
+	PresentRefundMdiscountAmount string                 `json:"present_refund_mdiscount_amount,omitempty"`
+	HasDepositBack               string                 `json:"has_deposit_back,omitempty"`
+	RefundHybAmount              string                 `json:"refund_hyb_amount,omitempty"`
 }
 
 type TradeFundBill struct {
-	FundChannel string `json:"fund_channel,omitempty"` //同步通知里是 fund_channel
+	FundChannel string `json:"fund_channel,omitempty"` // 同步通知里是 fund_channel
 	Amount      string `json:"amount,omitempty"`
 	RealAmount  string `json:"real_amount,omitempty"`
 	FundType    string `json:"fund_type,omitempty"`
