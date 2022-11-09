@@ -2,12 +2,15 @@ package wechat
 
 import (
 	"crypto"
+	"crypto/hmac"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
 	"encoding/base64"
+	"encoding/hex"
 	"errors"
 	"fmt"
+	"hash"
 	"strings"
 	"time"
 
@@ -114,6 +117,39 @@ func (c *ClientV3) PaySignOfApplet(appid, prepayid string) (applet *AppletParams
 		PaySign:   jsapi.PaySign,
 	}
 	return applet, nil
+}
+
+// PaySignOfAppletScore 获取 小程序调起支付分 sign
+// 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_13.shtml
+func (c *ClientV3) PaySignOfAppletScore(mchId, pkg, timeStamp, nonceStr string) (extraData *AppletScoreExtraData, err error) {
+	var (
+		buffer strings.Builder
+		h      hash.Hash
+	)
+	buffer.WriteString("mch_id=")
+	buffer.WriteString(mchId)
+	buffer.WriteString("&nonce_str=")
+	buffer.WriteString(nonceStr)
+	buffer.WriteString("&package=")
+	buffer.WriteString(pkg)
+	buffer.WriteString("&sign_type=HMAC-SHA256")
+	buffer.WriteString("&timestamp=")
+	buffer.WriteString(timeStamp)
+	buffer.WriteString("&key=")
+	buffer.WriteString(string(c.ApiV3Key))
+
+	h = hmac.New(sha256.New, c.ApiV3Key)
+	h.Write([]byte(buffer.String()))
+
+	extraData = &AppletScoreExtraData{
+		MchId:     mchId,
+		TimeStamp: timeStamp,
+		NonceStr:  nonceStr,
+		Package:   pkg,
+		SignType:  "HMAC-SHA256",
+		Sign:      strings.ToUpper(hex.EncodeToString(h.Sum(nil))),
+	}
+	return extraData, nil
 }
 
 // v3 鉴权请求Header
