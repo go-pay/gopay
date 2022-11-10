@@ -38,7 +38,7 @@ func (c *ClientV3) V3DecryptText(cipherText string) (text string, err error) {
 }
 
 // 敏感参数信息加密
-//	wxPublicKeyContent：微信平台证书内容
+// wxPublicKeyContent：微信平台证书内容
 func V3EncryptText(text string, wxPublicKeyContent []byte) (cipherText string, err error) {
 	publicKey, err := xpem.DecodePublicKey(wxPublicKeyContent)
 	if err != nil {
@@ -52,7 +52,7 @@ func V3EncryptText(text string, wxPublicKeyContent []byte) (cipherText string, e
 }
 
 // 敏感参数信息解密
-//	privateKeyContent：私钥 apiclient_key.pem 读取后的字符串内容
+// privateKeyContent：私钥 apiclient_key.pem 读取后的字符串内容
 func V3DecryptText(cipherText string, privateKeyContent []byte) (text string, err error) {
 	privateKey, err := xpem.DecodePrivateKey(privateKeyContent)
 	if err != nil {
@@ -65,14 +65,15 @@ func V3DecryptText(cipherText string, privateKeyContent []byte) (text string, er
 	}
 	return string(textByte), nil
 }
+
 // 解密 通用方法ToBytes对象
 func V3DecryptNotifyCipherTextToBytes(ciphertext, nonce, additional, apiV3Key string) (decrypt []byte, err error) {
-   cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
-   decrypt, err = aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
-   if err != nil {
-      return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
-   }
-   return decrypt, nil
+	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
+	decrypt, err = aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
+	if err != nil {
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
+	}
+	return decrypt, nil
 }
 
 // 解密 普通支付 回调中的加密信息

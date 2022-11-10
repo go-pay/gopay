@@ -53,7 +53,7 @@ func V3VerifySignByPK(timestamp, nonce, signBody, sign string, wxPublicKey *rsa.
 	return nil
 }
 
-// PaySignOfJSAPI 获取 JSAPI paySign
+// PaySignOfJSAPI 获取 JSAPI 支付所需要的参数
 // 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_4.shtml
 func (c *ClientV3) PaySignOfJSAPI(appid, prepayid string) (jsapi *JSAPIPayParams, err error) {
 	ts := util.Int642String(time.Now().Unix())
@@ -77,7 +77,7 @@ func (c *ClientV3) PaySignOfJSAPI(appid, prepayid string) (jsapi *JSAPIPayParams
 	return jsapi, nil
 }
 
-// PaySignOfApp 获取 App sign
+// PaySignOfApp 获取 App 支付所需要的参数
 // 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_4.shtml
 func (c *ClientV3) PaySignOfApp(appid, prepayid string) (app *AppPayParams, err error) {
 	ts := util.Int642String(time.Now().Unix())
@@ -101,7 +101,7 @@ func (c *ClientV3) PaySignOfApp(appid, prepayid string) (app *AppPayParams, err 
 	return app, nil
 }
 
-// PaySignOfApplet 获取 小程序 paySign
+// PaySignOfApplet 获取 小程序 支付所需要的参数
 // 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_4.shtml
 func (c *ClientV3) PaySignOfApplet(appid, prepayid string) (applet *AppletParams, err error) {
 	jsapi, err := c.PaySignOfJSAPI(appid, prepayid)
@@ -119,12 +119,14 @@ func (c *ClientV3) PaySignOfApplet(appid, prepayid string) (applet *AppletParams
 	return applet, nil
 }
 
-// PaySignOfAppletScore 获取 小程序调起支付分 sign
+// PaySignOfAppletScore 获取 小程序调起支付分 所需要的 ExtraData
 // 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_13.shtml
-func (c *ClientV3) PaySignOfAppletScore(mchId, pkg, timeStamp, nonceStr string) (extraData *AppletScoreExtraData, err error) {
+func (c *ClientV3) PaySignOfAppletScore(mchId, pkg string) (extraData *AppletScoreExtraData, err error) {
 	var (
-		buffer strings.Builder
-		h      hash.Hash
+		buffer   strings.Builder
+		h        hash.Hash
+		ts       = util.Int642String(time.Now().Unix())
+		nonceStr = util.RandomString(32)
 	)
 	buffer.WriteString("mch_id=")
 	buffer.WriteString(mchId)
@@ -134,7 +136,7 @@ func (c *ClientV3) PaySignOfAppletScore(mchId, pkg, timeStamp, nonceStr string) 
 	buffer.WriteString(pkg)
 	buffer.WriteString("&sign_type=HMAC-SHA256")
 	buffer.WriteString("&timestamp=")
-	buffer.WriteString(timeStamp)
+	buffer.WriteString(ts)
 	buffer.WriteString("&key=")
 	buffer.WriteString(string(c.ApiV3Key))
 
@@ -143,7 +145,7 @@ func (c *ClientV3) PaySignOfAppletScore(mchId, pkg, timeStamp, nonceStr string) 
 
 	extraData = &AppletScoreExtraData{
 		MchId:     mchId,
-		TimeStamp: timeStamp,
+		TimeStamp: ts,
 		NonceStr:  nonceStr,
 		Package:   pkg,
 		SignType:  "HMAC-SHA256",
