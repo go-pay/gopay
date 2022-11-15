@@ -250,12 +250,15 @@ type SystemOauthTokenResponse struct {
 }
 
 type OauthTokenInfo struct {
-	AccessToken  string `json:"access_token,omitempty"`
-	AlipayUserId string `json:"alipay_user_id,omitempty"`
-	ExpiresIn    int64  `json:"expires_in,omitempty"`
-	ReExpiresIn  int64  `json:"re_expires_in,omitempty"`
-	RefreshToken string `json:"refresh_token,omitempty"`
-	UserId       string `json:"user_id,omitempty"`
+	UserId        string `json:"user_id,omitempty"`
+	AlipayUserId  string `json:"alipay_user_id,omitempty"`
+	UnionId       string `json:"union_id,omitempty"`
+	AccessToken   string `json:"access_token,omitempty"`
+	ExpiresIn     string `json:"expires_in,omitempty"`
+	RefreshToken  string `json:"refresh_token,omitempty"`
+	ReExpiresIn   string `json:"re_expires_in,omitempty"`
+	AuthStart     string `json:"auth_start,omitempty"`
+	AuthTokenType string `json:"auth_token_type,omitempty"`
 }
 
 // ===================================================
@@ -849,18 +852,18 @@ type AuthTokenApp struct {
 	UserId          string   `json:"user_id,omitempty"`
 	AuthAppId       string   `json:"auth_app_id,omitempty"`
 	AppAuthToken    string   `json:"app_auth_token,omitempty"`
+	ExpiresIn       string   `json:"expires_in,omitempty"`
 	AppRefreshToken string   `json:"app_refresh_token,omitempty"`
-	ExpiresIn       int64    `json:"expires_in,omitempty"`
-	ReExpiresIn     int64    `json:"re_expires_in,omitempty"`
+	ReExpiresIn     string   `json:"re_expires_in,omitempty"`
 	Tokens          []*Token `json:"tokens,omitempty"`
 }
 
 type Token struct {
-	AppAuthToken    string `json:"app_auth_token,omitempty"`
-	AppRefreshToken string `json:"app_refresh_token,omitempty"`
 	AuthAppId       string `json:"auth_app_id,omitempty"`
-	ExpiresIn       int64  `json:"expires_in,omitempty"`
-	ReExpiresIn     int64  `json:"re_expires_in,omitempty"`
+	AppAuthToken    string `json:"app_auth_token,omitempty"`
+	ExpiresIn       string `json:"expires_in,omitempty"`
+	AppRefreshToken string `json:"app_refresh_token,omitempty"`
+	ReExpiresIn     string `json:"re_expires_in,omitempty"`
 	UserId          string `json:"user_id,omitempty"`
 }
 
