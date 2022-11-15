@@ -12,15 +12,15 @@
 
 ```go
 import (
-"github.com/go-pay/gopay/paypal"
-"github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay/paypal"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // 初始化PayPal支付客户端
 client, err := paypal.NewClient(Clientid, Secret, false)
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 
 // 自定义配置http请求接收返回结果body大小，默认 10MB
