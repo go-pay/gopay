@@ -16,7 +16,7 @@ type BizErr struct {
 func bizErrCheck(errRsp ErrorResponse) error {
 	if errRsp.Code != "10000" {
 		return &BizErr{
-			Code:    errRsp.SubCode,
+			Code:    errRsp.Code,
 			Msg:     errRsp.Msg,
 			SubCode: errRsp.SubCode,
 			SubMsg:  errRsp.SubMsg,

@@ -1,7 +1,20 @@
-/.idea
+# idea ignore
+.idea/
+.vscode/
+.vendor/
+*.ipr
+*.iml
+*.iws
 
-.vscode
+# system ignore
+.DS_Store
+Thumbs.db
 
-settings.json
-
-vendor
+# temp ignore
+*.log
+*.cache
+*.diff
+*.exe
+*.patch
+*.tmp
+main

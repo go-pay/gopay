@@ -12,12 +12,18 @@ import (
 
 // GetAllSubscriptionStatuses
 // Doc: https://developer.apple.com/documentation/appstoreserverapi/get_all_subscription_statuses
-func GetAllSubscriptionStatuses(ctx context.Context, originalTransactionId string, sandbox bool) (rsp *AllSubscriptionStatusesRsp, err error) {
+func GetAllSubscriptionStatuses(ctx context.Context, signConfig *SignConfig, originalTransactionId string, sandbox bool) (rsp *AllSubscriptionStatusesRsp, err error) {
 	uri := hostUrl + fmt.Sprintf(getAllSubscriptionStatuses, originalTransactionId)
 	if sandbox {
 		uri = sandBoxHostUrl + fmt.Sprintf(getAllSubscriptionStatuses, originalTransactionId)
 	}
-	res, bs, err := xhttp.NewClient().Type(xhttp.TypeJSON).Get(uri).EndBytes(ctx)
+	token, err := generatingToken(ctx, signConfig)
+	if err != nil {
+		return nil, err
+	}
+	cli := xhttp.NewClient()
+	cli.Header.Set("Authorization", "Bearer "+token)
+	res, bs, err := cli.Type(xhttp.TypeJSON).Get(uri).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}

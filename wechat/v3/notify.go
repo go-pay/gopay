@@ -14,7 +14,7 @@ import (
 )
 
 type Resource struct {
-	OriginalType   string `json:"original_type"`
+	OriginalType   string `json:"original_type,omitempty"`
 	Algorithm      string `json:"algorithm"`
 	Ciphertext     string `json:"ciphertext"`
 	AssociatedData string `json:"associated_data"`
@@ -167,9 +167,11 @@ type V3NotifyRsp struct {
 	Message string `json:"message"`
 }
 
+// =====================================================================================================================
+
 // 解析微信回调请求的参数到 V3NotifyReq 结构体
 func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
-	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
+	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(5<<20))) // default 5MB change the size you want;
 	defer req.Body.Close()
 	if err != nil {
 		return nil, fmt.Errorf("read request body error:%w", err)

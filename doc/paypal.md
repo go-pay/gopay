@@ -12,15 +12,15 @@
 
 ```go
 import (
-"github.com/go-pay/gopay/paypal"
-"github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay/paypal"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // 初始化PayPal支付客户端
 client, err := paypal.NewClient(Clientid, Secret, false)
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 
 // 自定义配置http请求接收返回结果body大小，默认 10MB
@@ -129,13 +129,11 @@ if ppRsp.Code != paypal.Success {
     * 支付捕获详情（Show captured payment details）：`client.PaymentCaptureDetail()`
     * 支付捕获退款（Refund captured payment）：`client.PaymentCaptureRefund()`
     * 支付退款详情（Show refund details）：`client.PaymentRefundDetail()`
-
 * <font color='#003087' size='4'>支出</font>
     * 创建批量支出（Create batch payout）：`client.CreateBatchPayout()`
     * 批量支出详情（Show payout batch details）：`client.ShowPayoutBatchDetails()`
     * 批量支出项目详情（Show Payout Item Details）：`client.ShowPayoutItemDetails()`
     * 取消批量支付中收款人无PayPal账号的项目（Cancel Unclaimed Payout Item）：`client.CancelUnclaimedPayoutItem()`
-
 * <font color='#003087' size='4'>订阅</font>
     * 创建订阅计划（Create plan）：`client.CreateBillingPlan()`
 

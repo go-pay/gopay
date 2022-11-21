@@ -1026,6 +1026,15 @@ type AppletParams struct {
 	PaySign   string `json:"paySign"`
 }
 
+type AppletScoreExtraData struct {
+	MchId     string `json:"mch_id"`
+	Package   string `json:"package"`
+	TimeStamp string `json:"timestamp"`
+	NonceStr  string `json:"nonce_str"`
+	SignType  string `json:"sign_type"`
+	Sign      string `json:"sign"`
+}
+
 // ==================================分割==================================
 
 type SignInfo struct {

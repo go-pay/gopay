@@ -250,12 +250,15 @@ type SystemOauthTokenResponse struct {
 }
 
 type OauthTokenInfo struct {
-	AccessToken  string `json:"access_token,omitempty"`
-	AlipayUserId string `json:"alipay_user_id,omitempty"`
-	ExpiresIn    int64  `json:"expires_in,omitempty"`
-	ReExpiresIn  int64  `json:"re_expires_in,omitempty"`
-	RefreshToken string `json:"refresh_token,omitempty"`
-	UserId       string `json:"user_id,omitempty"`
+	UserId        string `json:"user_id,omitempty"`
+	AlipayUserId  string `json:"alipay_user_id,omitempty"`
+	UnionId       string `json:"union_id,omitempty"`
+	AccessToken   string `json:"access_token,omitempty"`
+	ExpiresIn     string `json:"expires_in,omitempty"`
+	RefreshToken  string `json:"refresh_token,omitempty"`
+	ReExpiresIn   string `json:"re_expires_in,omitempty"`
+	AuthStart     string `json:"auth_start,omitempty"`
+	AuthTokenType string `json:"auth_token_type,omitempty"`
 }
 
 // ===================================================
@@ -290,19 +293,30 @@ type TradeRefundResponse struct {
 
 type TradeRefund struct {
 	ErrorResponse
-	TradeNo              string           `json:"trade_no,omitempty"`
-	OutTradeNo           string           `json:"out_trade_no,omitempty"`
-	BuyerLogonId         string           `json:"buyer_logon_id,omitempty"`
-	FundChange           string           `json:"fund_change,omitempty"`
-	RefundFee            string           `json:"refund_fee,omitempty"`
-	RefundDetailItemList []*TradeFundBill `json:"refund_detail_item_list,omitempty"`
-	StoreName            string           `json:"store_name,omitempty"`
-	BuyerUserId          string           `json:"buyer_user_id,omitempty"`
-	SendBackFee          string           `json:"send_back_fee,omitempty"`
+	TradeNo                      string                 `json:"trade_no,omitempty"`
+	OutTradeNo                   string                 `json:"out_trade_no,omitempty"`
+	BuyerLogonId                 string                 `json:"buyer_logon_id,omitempty"`
+	FundChange                   string                 `json:"fund_change,omitempty"`
+	RefundFee                    string                 `json:"refund_fee,omitempty"`
+	RefundDetailItemList         []*TradeFundBill       `json:"refund_detail_item_list,omitempty"`
+	StoreName                    string                 `json:"store_name,omitempty"`
+	BuyerUserId                  string                 `json:"buyer_user_id,omitempty"`
+	SendBackFee                  string                 `json:"send_back_fee,omitempty"`
+	OpenId                       string                 `json:"open_id,omitempty"`
+	RefundCurrency               string                 `json:"refund_currency,omitempty"`
+	GmtRefundPay                 string                 `json:"gmt_refund_pay,omitempty"`
+	RefundPresetPaytoolList      []*RefundPresetPaytool `json:"refund_preset_paytool_list,omitempty"`
+	RefundChargeAmount           string                 `json:"refund_charge_amount,omitempty"`
+	RefundSettlementId           string                 `json:"refund_settlement_id,omitempty"`
+	PresentRefundBuyerAmount     string                 `json:"present_refund_buyer_amount,omitempty"`
+	PresentRefundDiscountAmount  string                 `json:"present_refund_discount_amount,omitempty"`
+	PresentRefundMdiscountAmount string                 `json:"present_refund_mdiscount_amount,omitempty"`
+	HasDepositBack               string                 `json:"has_deposit_back,omitempty"`
+	RefundHybAmount              string                 `json:"refund_hyb_amount,omitempty"`
 }
 
 type TradeFundBill struct {
-	FundChannel string `json:"fund_channel,omitempty"` //同步通知里是 fund_channel
+	FundChannel string `json:"fund_channel,omitempty"` // 同步通知里是 fund_channel
 	Amount      string `json:"amount,omitempty"`
 	RealAmount  string `json:"real_amount,omitempty"`
 	FundType    string `json:"fund_type,omitempty"`
@@ -838,18 +852,18 @@ type AuthTokenApp struct {
 	UserId          string   `json:"user_id,omitempty"`
 	AuthAppId       string   `json:"auth_app_id,omitempty"`
 	AppAuthToken    string   `json:"app_auth_token,omitempty"`
+	ExpiresIn       string   `json:"expires_in,omitempty"`
 	AppRefreshToken string   `json:"app_refresh_token,omitempty"`
-	ExpiresIn       int64    `json:"expires_in,omitempty"`
-	ReExpiresIn     int64    `json:"re_expires_in,omitempty"`
+	ReExpiresIn     string   `json:"re_expires_in,omitempty"`
 	Tokens          []*Token `json:"tokens,omitempty"`
 }
 
 type Token struct {
-	AppAuthToken    string `json:"app_auth_token,omitempty"`
-	AppRefreshToken string `json:"app_refresh_token,omitempty"`
 	AuthAppId       string `json:"auth_app_id,omitempty"`
-	ExpiresIn       int64  `json:"expires_in,omitempty"`
-	ReExpiresIn     int64  `json:"re_expires_in,omitempty"`
+	AppAuthToken    string `json:"app_auth_token,omitempty"`
+	ExpiresIn       string `json:"expires_in,omitempty"`
+	AppRefreshToken string `json:"app_refresh_token,omitempty"`
+	ReExpiresIn     string `json:"re_expires_in,omitempty"`
 	UserId          string `json:"user_id,omitempty"`
 }
 

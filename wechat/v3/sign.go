@@ -2,12 +2,15 @@ package wechat
 
 import (
 	"crypto"
+	"crypto/hmac"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
 	"encoding/base64"
+	"encoding/hex"
 	"errors"
 	"fmt"
+	"hash"
 	"strings"
 	"time"
 
@@ -50,7 +53,7 @@ func V3VerifySignByPK(timestamp, nonce, signBody, sign string, wxPublicKey *rsa.
 	return nil
 }
 
-// PaySignOfJSAPI 获取 JSAPI paySign
+// PaySignOfJSAPI 获取 JSAPI 支付所需要的参数
 // 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_4.shtml
 func (c *ClientV3) PaySignOfJSAPI(appid, prepayid string) (jsapi *JSAPIPayParams, err error) {
 	ts := util.Int642String(time.Now().Unix())
@@ -74,7 +77,7 @@ func (c *ClientV3) PaySignOfJSAPI(appid, prepayid string) (jsapi *JSAPIPayParams
 	return jsapi, nil
 }
 
-// PaySignOfApp 获取 App sign
+// PaySignOfApp 获取 App 支付所需要的参数
 // 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_4.shtml
 func (c *ClientV3) PaySignOfApp(appid, prepayid string) (app *AppPayParams, err error) {
 	ts := util.Int642String(time.Now().Unix())
@@ -98,7 +101,7 @@ func (c *ClientV3) PaySignOfApp(appid, prepayid string) (app *AppPayParams, err 
 	return app, nil
 }
 
-// PaySignOfApplet 获取 小程序 paySign
+// PaySignOfApplet 获取 小程序 支付所需要的参数
 // 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_4.shtml
 func (c *ClientV3) PaySignOfApplet(appid, prepayid string) (applet *AppletParams, err error) {
 	jsapi, err := c.PaySignOfJSAPI(appid, prepayid)
@@ -114,6 +117,41 @@ func (c *ClientV3) PaySignOfApplet(appid, prepayid string) (applet *AppletParams
 		PaySign:   jsapi.PaySign,
 	}
 	return applet, nil
+}
+
+// PaySignOfAppletScore 获取 小程序调起支付分 所需要的 ExtraData
+// 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_13.shtml
+func (c *ClientV3) PaySignOfAppletScore(mchId, pkg string) (extraData *AppletScoreExtraData, err error) {
+	var (
+		buffer   strings.Builder
+		h        hash.Hash
+		ts       = util.Int642String(time.Now().Unix())
+		nonceStr = util.RandomString(32)
+	)
+	buffer.WriteString("mch_id=")
+	buffer.WriteString(mchId)
+	buffer.WriteString("&nonce_str=")
+	buffer.WriteString(nonceStr)
+	buffer.WriteString("&package=")
+	buffer.WriteString(pkg)
+	buffer.WriteString("&sign_type=HMAC-SHA256")
+	buffer.WriteString("&timestamp=")
+	buffer.WriteString(ts)
+	buffer.WriteString("&key=")
+	buffer.WriteString(string(c.ApiV3Key))
+
+	h = hmac.New(sha256.New, c.ApiV3Key)
+	h.Write([]byte(buffer.String()))
+
+	extraData = &AppletScoreExtraData{
+		MchId:     mchId,
+		TimeStamp: ts,
+		NonceStr:  nonceStr,
+		Package:   pkg,
+		SignType:  "HMAC-SHA256",
+		Sign:      strings.ToUpper(hex.EncodeToString(h.Sum(nil))),
+	}
+	return extraData, nil
 }
 
 // v3 鉴权请求Header

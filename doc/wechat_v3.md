@@ -22,8 +22,8 @@
 
 ```go
 import (
-"github.com/go-pay/gopay/pkg/xlog"
-"github.com/go-pay/gopay/wechat/v3"
+    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay/wechat/v3"
 )
 
 // NewClientV3 初始化微信客户端 v3
@@ -33,8 +33,8 @@ import (
 // privateKey：私钥 apiclient_key.pem 读取后的内容
 client, err = wechat.NewClientV3(MchId, SerialNo, APIv3Key, PrivateKey)
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 
 // 设置微信平台API证书和序列号（推荐开启自动验签，无需手动设置证书公钥等信息）
@@ -43,8 +43,8 @@ return
 // 启用自动同步返回验签，并定时更新微信平台API证书（开启自动验签时，无需单独设置微信平台API证书和序列号）
 err = client.AutoVerifySign()
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 
 // 自定义配置http请求接收返回结果body大小，默认 10MB
@@ -123,22 +123,22 @@ jsapi, err := client.PaySignOfJSAPI("appid", "prepayid")
 
 ```go
 import (
-"github.com/go-pay/gopay/wechat/v3"
-"github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay/wechat/v3"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 wxRsp, err := client.V3TransactionJsapi(bm)
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 
 pkMap := client.WxPublicKeyMap()
 // wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKeyMap() 获取，然后根据 signInfo.HeaderSerial 获取相应的公钥
 err = wechat.V3VerifySignByPK(wxRsp.SignInfo.HeaderTimestamp, wxRsp.SignInfo.HeaderNonce, wxRsp.SignInfo.SignBody, wxRsp.SignInfo.HeaderSignature, pkMap[wxRsp.SignInfo.HeaderSerial])
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 ```
 
@@ -146,14 +146,14 @@ return
 
 ```go
 import (
-"github.com/go-pay/gopay/wechat/v3"
-"github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay/wechat/v3"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 notifyReq, err := wechat.V3ParseNotify()
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 
 // 获取微信平台证书
@@ -161,8 +161,8 @@ certMap := client.WxPublicKeyMap()
 // 验证异步通知的签名
 err = notifyReq.VerifySignByPKMap(certMap)
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 
 // ====↓↓↓====异步通知应答====↓↓↓====
@@ -200,7 +200,7 @@ result, err := notifyReq.DecryptRefundCipherText(apiV3Key)
 
 ```go
 import (
-"github.com/go-pay/gopay/wechat/v3"
+    "github.com/go-pay/gopay/wechat/v3"
 )
 
 // 获取微信平台证书和序列号信息，推荐使用后者
