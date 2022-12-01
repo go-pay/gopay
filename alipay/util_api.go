@@ -44,20 +44,28 @@ func (a *Client) SystemOauthToken(ctx context.Context, bm gopay.BodyMap) (aliRsp
 	if bm.GetString("code") == util.NULL && bm.GetString("refresh_token") == util.NULL {
 		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
 	}
-	err = bm.CheckEmptyError("grant_type")
-	if err != nil {
+	if err = bm.CheckEmptyError("grant_type"); err != nil {
 		return nil, err
 	}
-
+	var (
+		bs  []byte
+		aat string
+	)
 	if a.AppCertSN != util.NULL {
 		bm.Set("app_cert_sn", a.AppCertSN)
 	}
 	if a.AliPayRootCertSN != util.NULL {
 		bm.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
 	}
-
-	var bs []byte
-	if bs, err = systemOauthToken(ctx, a.AppId, a.privateKey, bm, "alipay.system.oauth.token", a.IsProd, a.SignType); err != nil {
+	// default use app_auth_token
+	if a.AppAuthToken != util.NULL {
+		aat = a.AppAuthToken
+	}
+	// if user set app_auth_token in body_map, use this
+	if bmAt := bm.GetString("app_auth_token"); bmAt != util.NULL {
+		aat = bmAt
+	}
+	if bs, err = systemOauthToken(ctx, a.AppId, a.privateKey, bm, "alipay.system.oauth.token", a.IsProd, a.SignType, aat); err != nil {
 		return nil, err
 	}
 	aliRsp = new(SystemOauthTokenResponse)

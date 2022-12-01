@@ -3,6 +3,7 @@
    (1) 微信V3：新增小程序调起支付分所需要的支付参数方法：client.PaySignOfAppletScore()。
    (2) 微信V3：异步通知解析方法接收BodySize大小调至5MB。
    (3) 支付宝：统一收单交易退款接口，response补充接收字段。
+   (4) 支付宝：alipay.SystemOauthToken() 接口增加可变参数 AppAuthToken 字段，如需要时可传。
 
 版本号：Release 1.5.86
 修改记录：
