@@ -136,6 +136,13 @@ type CancelUnclaimedPayoutItemRsp struct {
 	Response      *PayoutItemDetail `json:"response,omitempty"`
 }
 
+type InvoiceNumberGenerateRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *InvoiceNumber `json:"response,omitempty"`
+}
+
 // ==================================分割==================================
 
 type Patch struct {
@@ -599,4 +606,8 @@ type BillingDetail struct {
 	UsageType   string  `json:"usage_type"`
 	CreateTime  string  `json:"create_time"`
 	Links       []*Link `json:"links"`
+}
+
+type InvoiceNumber struct {
+	InvoiceNumber string `json:"invoice_number"`
 }

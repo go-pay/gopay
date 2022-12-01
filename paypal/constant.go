@@ -30,7 +30,6 @@ const (
 	paymentCaptureRefund    = "/v2/payments/captures/%s/refund"            // capture_id 支付捕获退款 POST
 	paymentRefundDetail     = "/v2/payments/refunds/%s"                    // refund_id 支付退款详情 GET
 
-
 	// 支出相关
 	createBatchPayout         = "/v1/payments/payouts"                // 创建批量支出 POST
 	showPayoutBatchDetail     = "/v1/payments/payouts/%s"             // payout_batch_id 获取批量支出详情 GET
@@ -40,4 +39,24 @@ const (
 	// 订阅相关
 	subscriptionCreate = "/v1/billing/plans" // 创建订阅 POST
 
+	// 发票 Invoices 相关
+	generateInvoiceNumber      = "/v2/invoicing/generate-next-invoice-number" // 生成发票号码 POST
+	invoiceList                = "/v2/invoicing/invoices"                     // 获取发票列表 GET
+	createDraftInvoice         = "/v2/invoicing/invoices"                     // 创建拟发票 POST
+	deleteInvoice              = "/v2/invoicing/invoices/%s"                  // invoice_id 删除发票 DELETE
+	fullyUpdateInvoice         = "/v2/invoicing/invoices/%s"                  // invoice_id 全量更新发票 PUT
+	showInvoiceDetail          = "/v2/invoicing/invoices/%s"                  // invoice_id 获取发票详情 GET
+	cancelSentInvoice          = "/v2/invoicing/invoices/%s/cancel"           // invoice_id 取消已发送发票 POST
+	generateInvoiceQRCode      = "/v2/invoicing/invoices/%s/generate-qr-code" // invoice_id 生成发票二维码 POST
+	recordPaymentForInvoice    = "/v2/invoicing/invoices/%s/payments"         // invoice_id 记录发票付款 POST
+	deleteExternalPayment      = "/v2/invoicing/invoices/%s/payments/%s"      // invoice_id,transaction_id 删除额外支付 DELETE
+	recordRefundForInvoice     = "/v2/invoicing/invoices/%s/refunds"          // invoice_id 记录发票退款 POST
+	deleteExternalRefund       = "/v2/invoicing/invoices/%s/refunds/%s"       // invoice_id,transaction_id 删除额外退款 DELETE
+	sendInvoiceReminder        = "/v2/invoicing/invoices/%s/remind"           // invoice_id 发送发票提醒 POST
+	sendInvoice                = "/v2/invoicing/invoices/%s/send"             // invoice_id 发送发票 POST
+	searchInvoice              = "/v2/invoicing/search-invoices"              // 搜索发票 POST
+	invoiceTemplateList        = "/v2/invoicing/templates"                    // 获取发票模板列表 GET
+	createInvoiceTemplate      = "/v2/invoicing/templates"                    // 创建发票模板 POST
+	deleteInvoiceTemplate      = "/v2/invoicing/templates/%s"                 // template_id 删除发票模板 DELETE
+	fullyUpdateInvoiceTemplate = "/v2/invoicing/templates/%s"                 // template_id 全量更新发票模板 PUT
 )
