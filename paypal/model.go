@@ -147,6 +147,13 @@ type InvoiceListRsp struct {
 	Code          int            `json:"-"`
 	Error         string         `json:"-"`
 	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *InvoiceList   `json:"response,omitempty"`
+}
+
+type InvoiceCreateRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
 	Response      *Invoice       `json:"response,omitempty"`
 }
 
@@ -642,14 +649,14 @@ type InvoiceNumber struct {
 	InvoiceNumber string `json:"invoice_number"`
 }
 
-type Invoice struct {
-	TotalItems int            `json:"total_items"`
-	TotalPages int            `json:"total_pages"`
-	Items      []*InvoiceItem `json:"items"`
-	Links      []*Link        `json:"links,omitempty"`
+type InvoiceList struct {
+	TotalItems int        `json:"total_items"`
+	TotalPages int        `json:"total_pages"`
+	Items      []*Invoice `json:"items"`
+	Links      []*Link    `json:"links,omitempty"`
 }
 
-type InvoiceItem struct {
+type Invoice struct {
 	Id                   string                 `json:"id"`
 	ParentId             string                 `json:"parent_id,omitempty"`
 	Status               string                 `json:"status"`
