@@ -210,13 +210,22 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 		bodyBs          []byte
 	)
 	if bm != nil {
-		aat := bm.GetString("app_auth_token")
-		bm.Remove("app_auth_token")
-		if bodyBs, err = json.Marshal(bm); err != nil {
-			return nil, fmt.Errorf("json.Marshal：%w", err)
+		_, has := notRemoveAppAuthToken[method]
+		if has {
+			if bodyBs, err = json.Marshal(bm); err != nil {
+				return nil, fmt.Errorf("json.Marshal：%w", err)
+			}
+			bizContent = string(bodyBs)
+			bm.Remove("app_auth_token")
+		} else {
+			aat := bm.GetString("app_auth_token")
+			bm.Remove("app_auth_token")
+			if bodyBs, err = json.Marshal(bm); err != nil {
+				return nil, fmt.Errorf("json.Marshal：%w", err)
+			}
+			bizContent = string(bodyBs)
+			bm.Set("app_auth_token", aat)
 		}
-		bizContent = string(bodyBs)
-		bm.Set("app_auth_token", aat)
 	}
 	// 处理公共参数
 	param, err := a.pubParamsHandle(bm, method, bizContent, authToken...)
