@@ -131,3 +131,30 @@ func (c *Client) doPayPalPatch(ctx context.Context, patchs []*Patch, path string
 	}
 	return res, bs, nil
 }
+
+func (c *Client) doPayPalDelete(ctx context.Context, path string) (res *http.Response, bs []byte, err error) {
+	var url = baseUrlProd + path
+	if !c.IsProd {
+		url = baseUrlSandbox + path
+	}
+	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
+	authHeader := AuthorizationPrefixBearer + c.AccessToken
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("PayPal_Url: %s", url)
+		xlog.Debugf("PayPal_Authorization: %s", authHeader)
+	}
+	httpClient.Header.Add(HeaderAuthorization, authHeader)
+	httpClient.Header.Add("Accept", "*/*")
+	res, bs, err = httpClient.Type(xhttp.TypeJSON).Patch(url).EndBytes(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("PayPal_Response: %d > %s", res.StatusCode, string(bs))
+		xlog.Debugf("PayPal_Headers: %#v", res.Header)
+	}
+	return res, bs, nil
+}
