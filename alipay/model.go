@@ -261,9 +261,9 @@ type OauthTokenInfo struct {
 	AlipayUserId  string `json:"alipay_user_id,omitempty"`
 	UnionId       string `json:"union_id,omitempty"`
 	AccessToken   string `json:"access_token,omitempty"`
-	ExpiresIn     string `json:"expires_in,omitempty"`
+	ExpiresIn     int64  `json:"expires_in,omitempty"`
 	RefreshToken  string `json:"refresh_token,omitempty"`
-	ReExpiresIn   string `json:"re_expires_in,omitempty"`
+	ReExpiresIn   int64  `json:"re_expires_in,omitempty"`
 	AuthStart     string `json:"auth_start,omitempty"`
 	AuthTokenType string `json:"auth_token_type,omitempty"`
 }
