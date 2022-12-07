@@ -157,6 +157,55 @@ type InvoiceCreateRsp struct {
 	Response      *Invoice       `json:"response,omitempty"`
 }
 
+type InvoiceUpdateRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Invoice       `json:"response,omitempty"`
+}
+
+type InvoiceDetailRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Invoice       `json:"response,omitempty"`
+}
+
+type InvoiceGenerateQRCodeRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *QRCodeBase64  `json:"response,omitempty"`
+}
+
+type InvoicePaymentRsp struct {
+	Code          int             `json:"-"`
+	Error         string          `json:"-"`
+	ErrorResponse *ErrorResponse  `json:"-"`
+	Response      *InvoicePayment `json:"response,omitempty"`
+}
+
+type InvoiceRefundRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *InvoiceRefund `json:"response,omitempty"`
+}
+
+type InvoiceSendRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *InvoiceSend   `json:"response,omitempty"`
+}
+
+type InvoiceSearchRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *InvoiceSearch `json:"response,omitempty"`
+}
+
 // ==================================分割==================================
 
 type Patch struct {
@@ -792,4 +841,27 @@ type RefundDetail struct {
 	RefundDate string  `json:"refund_date"`
 	RefundId   string  `json:"refund_id"`
 	Type       string  `json:"type"`
+}
+
+type QRCodeBase64 struct {
+	Base64Image string
+}
+
+type InvoicePayment struct {
+	PaymentId string `json:"payment_id"`
+}
+
+type InvoiceRefund struct {
+	RefundId string `json:"refund_id"`
+}
+
+type InvoiceSend struct {
+	Links []*Link `json:"links"`
+}
+
+type InvoiceSearch struct {
+	Items      []*Invoice `json:"items"`
+	Links      []*Link    `json:"links"`
+	TotalItems int        `json:"total_items"`
+	TotalPages int        `json:"total_pages"`
 }
