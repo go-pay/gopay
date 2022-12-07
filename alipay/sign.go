@@ -337,21 +337,18 @@ func VerifySignWithCert(aliPayPublicKeyCert, notifyBean interface{}) (ok bool, e
 	default:
 		return false, errors.New("aliPayPublicKeyCert type assert error")
 	}
-	var (
-		bodySign     string
-		bodySignType string
-		signData     string
-		bm           = make(gopay.BodyMap)
-	)
-	if reflect.ValueOf(notifyBean).Kind() == reflect.Map {
-		if bm, ok = notifyBean.(gopay.BodyMap); ok {
-			bodySign = bm.GetString("sign")
-			bodySignType = bm.GetString("sign_type")
-			bm.Remove("sign")
-			bm.Remove("sign_type")
-			signData = bm.EncodeAliPaySignParams()
+	var bm gopay.BodyMap
+
+	switch notifyBean.(type) {
+	case map[string]interface{}:
+		m := notifyBean.(map[string]interface{})
+		bm = make(gopay.BodyMap, len(m))
+		for key, val := range m {
+			bm[key] = val
 		}
-	} else {
+	case gopay.BodyMap:
+		bm = notifyBean.(gopay.BodyMap)
+	default:
 		bs, err := json.Marshal(notifyBean)
 		if err != nil {
 			return false, fmt.Errorf("json.Marshal：%w", err)
@@ -359,12 +356,12 @@ func VerifySignWithCert(aliPayPublicKeyCert, notifyBean interface{}) (ok bool, e
 		if err = json.Unmarshal(bs, &bm); err != nil {
 			return false, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 		}
-		bodySign = bm.GetString("sign")
-		bodySignType = bm.GetString("sign_type")
-		bm.Remove("sign")
-		bm.Remove("sign_type")
-		signData = bm.EncodeAliPaySignParams()
 	}
+	bodySign := bm.GetString("sign")
+	bodySignType := bm.GetString("sign_type")
+	bm.Remove("sign")
+	bm.Remove("sign_type")
+	signData := bm.EncodeAliPaySignParams()
 	if err = verifySignCert(signData, bodySign, bodySignType, aliPayPublicKeyCert); err != nil {
 		return false, err
 	}
