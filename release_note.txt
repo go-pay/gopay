@@ -1,3 +1,8 @@
+版本号：Release 1.5.88
+修改记录：
+   (1) PayPal：新增 invoice 相关接口。
+   (2) gopay：更新 mod 包，优化部分方法。
+
 版本号：Release 1.5.87
 修改记录：
    (1) 微信V3：新增小程序调起支付分所需要的支付参数方法：client.PaySignOfAppletScore()。
