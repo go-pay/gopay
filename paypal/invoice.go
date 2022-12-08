@@ -38,8 +38,8 @@ func (c *Client) InvoiceNumberGenerate(ctx context.Context, invoiceNumber string
 // 发票列表（List invoices）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/invoicing/v2/#invoices_list
-func (c *Client) InvoiceList(ctx context.Context, bm gopay.BodyMap) (ppRsp *InvoiceListRsp, err error) {
-	uri := invoiceList + "?" + bm.EncodeURLParams()
+func (c *Client) InvoiceList(ctx context.Context, query gopay.BodyMap) (ppRsp *InvoiceListRsp, err error) {
+	uri := invoiceList + "?" + query.EncodeURLParams()
 	res, bs, err := c.doPayPalGet(ctx, uri)
 	if err != nil {
 		return nil, err
@@ -61,8 +61,8 @@ func (c *Client) InvoiceList(ctx context.Context, bm gopay.BodyMap) (ppRsp *Invo
 // 创建虚拟发票（Create draft invoice）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/invoicing/v2/#invoices_create
-func (c *Client) InvoiceCreate(ctx context.Context, bm gopay.BodyMap) (ppRsp *InvoiceCreateRsp, err error) {
-	res, bs, err := c.doPayPalPost(ctx, bm, createDraftInvoice)
+func (c *Client) InvoiceCreate(ctx context.Context, body gopay.BodyMap) (ppRsp *InvoiceCreateRsp, err error) {
+	res, bs, err := c.doPayPalPost(ctx, body, createDraftInvoice)
 	if err != nil {
 		return nil, err
 	}
@@ -374,6 +374,99 @@ func (c *Client) InvoiceSearch(ctx context.Context, page, pageSize int, totalReq
 	}
 	ppRsp = &InvoiceSearchRsp{Code: Success}
 	ppRsp.Response = new(InvoiceSearch)
+	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusOK {
+		ppRsp.Code = res.StatusCode
+		ppRsp.Error = string(bs)
+		ppRsp.ErrorResponse = new(ErrorResponse)
+		_ = json.Unmarshal(bs, ppRsp.ErrorResponse)
+	}
+	return ppRsp, nil
+}
+
+// 发票模板列表（List templates）
+// Code = 0 is success
+// 文档：https://developer.paypal.com/docs/api/invoicing/v2/#templates_list
+func (c *Client) InvoiceTemplateList(ctx context.Context, query gopay.BodyMap) (ppRsp *InvoiceTemplateListRsp, err error) {
+	uri := invoiceTemplateList + "?" + query.EncodeURLParams()
+	res, bs, err := c.doPayPalGet(ctx, uri)
+	if err != nil {
+		return nil, err
+	}
+	ppRsp = &InvoiceTemplateListRsp{Code: Success}
+	ppRsp.Response = new(InvoiceTemplate)
+	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusOK {
+		ppRsp.Code = res.StatusCode
+		ppRsp.Error = string(bs)
+		ppRsp.ErrorResponse = new(ErrorResponse)
+		_ = json.Unmarshal(bs, ppRsp.ErrorResponse)
+	}
+	return ppRsp, nil
+}
+
+// 创建发票模板（Create template）
+// Code = 0 is success
+// 文档：https://developer.paypal.com/docs/api/invoicing/v2/#templates_create
+func (c *Client) InvoiceTemplateCreate(ctx context.Context, body gopay.BodyMap) (ppRsp *InvoiceTemplateCreateRsp, err error) {
+	res, bs, err := c.doPayPalPost(ctx, body, createInvoiceTemplate)
+	if err != nil {
+		return nil, err
+	}
+	ppRsp = &InvoiceTemplateCreateRsp{Code: Success}
+	ppRsp.Response = new(Template)
+	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusCreated {
+		ppRsp.Code = res.StatusCode
+		ppRsp.Error = string(bs)
+		ppRsp.ErrorResponse = new(ErrorResponse)
+		_ = json.Unmarshal(bs, ppRsp.ErrorResponse)
+	}
+	return ppRsp, nil
+}
+
+// 删除发票模板（Delete template）
+// Code = 0 is success
+// 文档：https://developer.paypal.com/docs/api/invoicing/v2/#templates_delete
+func (c *Client) InvoiceTemplateDelete(ctx context.Context, templateId string) (ppRsp *EmptyRsp, err error) {
+	if templateId == gopay.NULL {
+		return nil, errors.New("template_id is empty")
+	}
+	url := fmt.Sprintf(deleteInvoiceTemplate, templateId)
+	res, bs, err := c.doPayPalDelete(ctx, url)
+	if err != nil {
+		return nil, err
+	}
+	ppRsp = &EmptyRsp{Code: Success}
+	if res.StatusCode != http.StatusNoContent {
+		ppRsp.Code = res.StatusCode
+		ppRsp.Error = string(bs)
+		ppRsp.ErrorResponse = new(ErrorResponse)
+		_ = json.Unmarshal(bs, ppRsp.ErrorResponse)
+	}
+	return ppRsp, nil
+}
+
+// 更新发票模板（Fully update template）
+// Code = 0 is success
+// 文档：https://developer.paypal.com/docs/api/invoicing/v2/#templates_update
+func (c *Client) InvoiceTemplateUpdate(ctx context.Context, templateId string, body gopay.BodyMap) (ppRsp *InvoiceTemplateUpdateRsp, err error) {
+	if templateId == gopay.NULL {
+		return nil, errors.New("template_id is empty")
+	}
+	url := fmt.Sprintf(fullyUpdateInvoiceTemplate, templateId)
+	res, bs, err := c.doPayPalPut(ctx, body, url)
+	if err != nil {
+		return nil, err
+	}
+	ppRsp = &InvoiceTemplateUpdateRsp{Code: Success}
+	ppRsp.Response = new(Template)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}

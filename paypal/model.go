@@ -206,6 +206,27 @@ type InvoiceSearchRsp struct {
 	Response      *InvoiceSearch `json:"response,omitempty"`
 }
 
+type InvoiceTemplateListRsp struct {
+	Code          int              `json:"-"`
+	Error         string           `json:"-"`
+	ErrorResponse *ErrorResponse   `json:"-"`
+	Response      *InvoiceTemplate `json:"response,omitempty"`
+}
+
+type InvoiceTemplateCreateRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Template      `json:"response,omitempty"`
+}
+
+type InvoiceTemplateUpdateRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Template      `json:"response,omitempty"`
+}
+
 // ==================================分割==================================
 
 type Patch struct {
@@ -864,4 +885,53 @@ type InvoiceSearch struct {
 	Links      []*Link    `json:"links"`
 	TotalItems int        `json:"total_items"`
 	TotalPages int        `json:"total_pages"`
+}
+
+type InvoiceTemplate struct {
+	Addresses []*Address     `json:"addresses"`
+	Emails    string         `json:"emails"`
+	Links     []*Link        `json:"links"`
+	Phones    []*PhoneDetail `json:"phones"`
+	Templates []*Template    `json:"templates"`
+}
+
+type Template struct {
+	Id               string           `json:"id"`
+	Name             string           `json:"name"`
+	DefaultTemplate  bool             `json:"default_template"`
+	StandardTemplate bool             `json:"standard_template"`
+	Links            []*Link          `json:"links"`
+	Settings         *TemplateSetting `json:"settings"`
+	TemplateInfo     *TemplateInfo    `json:"template_info"`
+	UnitOfMeasure    string           `json:"unit_of_measure"`
+}
+
+type TemplateSetting struct {
+	TemplateItemSettings     []*TemplateItemSetting     `json:"template_item_settings"`
+	TemplateSubtotalSettings []*TemplateSubtotalSetting `json:"template_subtotal_settings"`
+}
+
+type TemplateItemSetting struct {
+	FieldName         string             `json:"field_name"`
+	DisplayPreference *DisplayPreference `json:"display_preference"`
+}
+
+type DisplayPreference struct {
+	Hidden bool `json:"hidden"`
+}
+
+type TemplateSubtotalSetting struct {
+	FieldName         string             `json:"field_name"`
+	DisplayPreference *DisplayPreference `json:"display_preference"`
+}
+
+type TemplateInfo struct {
+	AdditionalRecipients []*AdditionalRecipient `json:"additional_recipients,omitempty"`
+	Amount               *Amount                `json:"amount"`
+	Configuration        *Configuration         `json:"configuration,omitempty"`
+	Detail               *InvoiceDetail         `json:"detail"`
+	DueAmount            *Amount                `json:"due_amount"`
+	Invoicer             *Invoicer              `json:"invoicer"`
+	Items                []*Item                `json:"items,omitempty"`
+	PrimaryRecipients    []*RecipientInfo       `json:"primary_recipients,omitempty"`
 }
