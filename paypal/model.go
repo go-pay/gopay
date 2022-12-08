@@ -136,6 +136,97 @@ type CancelUnclaimedPayoutItemRsp struct {
 	Response      *PayoutItemDetail `json:"response,omitempty"`
 }
 
+type InvoiceNumberGenerateRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *InvoiceNumber `json:"response,omitempty"`
+}
+
+type InvoiceListRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *InvoiceList   `json:"response,omitempty"`
+}
+
+type InvoiceCreateRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Invoice       `json:"response,omitempty"`
+}
+
+type InvoiceUpdateRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Invoice       `json:"response,omitempty"`
+}
+
+type InvoiceDetailRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Invoice       `json:"response,omitempty"`
+}
+
+type InvoiceGenerateQRCodeRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *QRCodeBase64  `json:"response,omitempty"`
+}
+
+type InvoicePaymentRsp struct {
+	Code          int             `json:"-"`
+	Error         string          `json:"-"`
+	ErrorResponse *ErrorResponse  `json:"-"`
+	Response      *InvoicePayment `json:"response,omitempty"`
+}
+
+type InvoiceRefundRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *InvoiceRefund `json:"response,omitempty"`
+}
+
+type InvoiceSendRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *InvoiceSend   `json:"response,omitempty"`
+}
+
+type InvoiceSearchRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *InvoiceSearch `json:"response,omitempty"`
+}
+
+type InvoiceTemplateListRsp struct {
+	Code          int              `json:"-"`
+	Error         string           `json:"-"`
+	ErrorResponse *ErrorResponse   `json:"-"`
+	Response      *InvoiceTemplate `json:"response,omitempty"`
+}
+
+type InvoiceTemplateCreateRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Template      `json:"response,omitempty"`
+}
+
+type InvoiceTemplateUpdateRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Template      `json:"response,omitempty"`
+}
+
 // ==================================分割==================================
 
 type Patch struct {
@@ -243,12 +334,25 @@ type Card struct {
 }
 
 type Address struct {
-	AddressLine1 string `json:"address_line_1"`
-	AddressLine2 string `json:"address_line_2"`
-	AdminArea1   string `json:"admin_area_1"`
-	AdminArea2   string `json:"admin_area_2"`
-	PostalCode   string `json:"postal_code"`
-	CountryCode  string `json:"country_code"`
+	AddressLine1   string          `json:"address_line_1"`
+	AddressLine2   string          `json:"address_line_2"`
+	AddressLine3   string          `json:"address_line_3"`
+	AddressDetails *AddressDetails `json:"address_details,omitempty"`
+	AdminArea1     string          `json:"admin_area_1"`
+	AdminArea2     string          `json:"admin_area_2"`
+	AdminArea3     string          `json:"admin_area_3"`
+	AdminArea4     string          `json:"admin_area_4"`
+	PostalCode     string          `json:"postal_code"`
+	CountryCode    string          `json:"country_code"`
+}
+
+type AddressDetails struct {
+	BuildingName    string `json:"building_name"`
+	DeliveryService string `json:"delivery_service"`
+	StreetName      string `json:"street_name"`
+	StreetNumber    string `json:"street_number"`
+	StreetType      string `json:"street_type"`
+	SubBuilding     string `json:"sub_building"`
 }
 
 type AuthenticationResult struct {
@@ -313,13 +417,22 @@ type PlatformFee struct {
 }
 
 type Item struct {
-	Name        string  `json:"name,omitempty"`
-	UnitAmount  *Amount `json:"unit_amount,omitempty"`
-	Tax         *Amount `json:"tax,omitempty"`
-	Quantity    string  `json:"quantity,omitempty"`
-	Description string  `json:"description,omitempty"`
-	Sku         string  `json:"sku,omitempty"`
-	Category    string  `json:"category,omitempty"`
+	Id            string    `json:"id,omitempty"`
+	Name          string    `json:"name,omitempty"`
+	UnitAmount    *Amount   `json:"unit_amount,omitempty"`
+	Tax           *Amount   `json:"tax,omitempty"`
+	Quantity      string    `json:"quantity,omitempty"`
+	Description   string    `json:"description,omitempty"`
+	Sku           string    `json:"sku,omitempty"`
+	Category      string    `json:"category,omitempty"`
+	ItemDate      string    `json:"item_date,omitempty"`
+	Discount      *Discount `json:"discount,omitempty"`
+	UnitOfMeasure string    `json:"unit_of_measure,omitempty"`
+}
+
+type Discount struct {
+	Amount  *Amount `json:"amount,omitempty"`
+	Percent string  `json:"percent"`
 }
 
 type Shipping struct {
@@ -329,12 +442,13 @@ type Shipping struct {
 }
 
 type Name struct {
-	Prefix     string `json:"prefix,omitempty"`
-	GivenName  string `json:"given_name,omitempty"`
-	Surname    string `json:"surname,omitempty"`
-	MiddleName string `json:"middle_name,omitempty"`
-	Suffix     string `json:"suffix,omitempty"`
-	FullName   string `json:"full_name,omitempty"`
+	Prefix            string `json:"prefix,omitempty"`
+	GivenName         string `json:"given_name,omitempty"`
+	Surname           string `json:"surname,omitempty"`
+	MiddleName        string `json:"middle_name,omitempty"`
+	Suffix            string `json:"suffix,omitempty"`
+	FullName          string `json:"full_name,omitempty"`
+	AlternateFullName string `json:"alternate_full_name,omitempty"`
 }
 
 type Phone struct {
@@ -599,4 +713,225 @@ type BillingDetail struct {
 	UsageType   string  `json:"usage_type"`
 	CreateTime  string  `json:"create_time"`
 	Links       []*Link `json:"links"`
+}
+
+type InvoiceNumber struct {
+	InvoiceNumber string `json:"invoice_number"`
+}
+
+type InvoiceList struct {
+	TotalItems int        `json:"total_items"`
+	TotalPages int        `json:"total_pages"`
+	Items      []*Invoice `json:"items"`
+	Links      []*Link    `json:"links,omitempty"`
+}
+
+type Invoice struct {
+	Id                   string                 `json:"id"`
+	ParentId             string                 `json:"parent_id,omitempty"`
+	Status               string                 `json:"status"`
+	Detail               *InvoiceDetail         `json:"detail"`
+	Invoicer             *Invoicer              `json:"invoicer"`
+	Amount               *Amount                `json:"amount"`
+	DueAmount            *Amount                `json:"due_amount"`
+	AdditionalRecipients []*AdditionalRecipient `json:"additional_recipients,omitempty"`
+	Configuration        *Configuration         `json:"configuration,omitempty"`
+	Gratuity             *Amount                `json:"gratuity,omitempty"`
+	Items                []*Item                `json:"items,omitempty"`
+	Links                []*Link                `json:"links,omitempty"`
+	Payments             []*InvoicePayments     `json:"payments,omitempty"`
+	PrimaryRecipients    []*RecipientInfo       `json:"primary_recipients,omitempty"`
+	Refunds              []*InvoiceRefunds      `json:"refunds,omitempty"`
+}
+
+type InvoiceDetail struct {
+	InvoiceNumber      string        `json:"invoice_number"`
+	Reference          string        `json:"reference"`
+	TermsAndConditions string        `json:"terms_and_conditions,omitempty"`
+	InvoiceDate        string        `json:"invoice_date"`
+	CurrencyCode       string        `json:"currency_code"`
+	Note               string        `json:"note"`
+	Term               string        `json:"term"`
+	Memo               string        `json:"memo"`
+	Attachments        []*Attachment `json:"attachments"`
+	PaymentTerm        *PaymentItem  `json:"payment_term"`
+	Metadata           *Metadata     `json:"metadata"`
+}
+
+type Attachment struct {
+	Id           string `json:"id"`
+	ContentType  string `json:"content_type"`
+	ReferenceUrl string `json:"reference_url"`
+	Size         string `json:"size"`
+	CreateTime   string `json:"create_time"`
+}
+
+type PaymentItem struct {
+	TermType string `json:"term_type"`
+	DueDate  string `json:"due_date"`
+}
+
+type Metadata struct {
+	CreateTime       string `json:"create_time"`
+	CreatedBy        string `json:"created_by,omitempty"`
+	LastUpdateTime   string `json:"last_update_time,omitempty"`
+	LastUpdatedBy    string `json:"last_updated_by,omitempty"`
+	CancelTime       string `json:"cancel_time,omitempty"`
+	CancelledBy      string `json:"cancelled_by,omitempty"`
+	CreatedByFlow    string `json:"created_by_flow,omitempty"`
+	FirstSentTime    string `json:"first_sent_time,omitempty"`
+	InvoicerViewUrl  string `json:"invoicer_view_url,omitempty"`
+	LastSentBy       string `json:"last_sent_by,omitempty"`
+	LastSentTime     string `json:"last_sent_time,omitempty"`
+	RecipientViewUrl string `json:"recipient_view_url,omitempty"`
+}
+
+type Invoicer struct {
+	AdditionalNotes string `json:"additional_notes,omitempty"`
+	EmailAddress    string `json:"email_address,omitempty"`
+	LogoUrl         string `json:"logo_url,omitempty"`
+	TaxId           string `json:"tax_id,omitempty"`
+	Website         string `json:"website,omitempty"`
+}
+
+type AdditionalRecipient struct {
+	EmailAddress string `json:"email_address"`
+}
+
+type Configuration struct {
+	AllowTip                   bool            `json:"allow_tip"`
+	PartialPayment             *PartialPayment `json:"partial_payment"`
+	TaxCalculatedAfterDiscount bool            `json:"tax_calculated_after_discount"`
+	TaxInclusive               bool            `json:"tax_inclusive"`
+	TemplateId                 string          `json:"template_id"`
+}
+
+type PartialPayment struct {
+	AllowPartialPayment bool    `json:"allow_partial_payment"`
+	MinimumAmount       *Amount `json:"minimum_amount"`
+}
+
+type InvoicePayments struct {
+	PaidAmount   *Amount          `json:"paid_amount"`
+	Transactions []*PaymentDetail `json:"transactions"`
+}
+
+type PaymentDetail struct {
+	Method       string              `json:"method"`
+	Amount       *Amount             `json:"amount"`
+	Note         string              `json:"note"`
+	PaymentDate  string              `json:"payment_date"`
+	PaymentId    string              `json:"payment_id"`
+	Type         string              `json:"type"`
+	ShippingInfo *ContactInformation `json:"shipping_info"`
+}
+
+type ContactInformation struct {
+	BusinessName string   `json:"business_name"`
+	Address      *Address `json:"address"`
+	Name         *Name    `json:"name"`
+}
+
+type RecipientInfo struct {
+	BillingInfo  *BillingInfo        `json:"billing_info"`
+	ShippingInfo *ContactInformation `json:"shipping_info"`
+}
+
+type BillingInfo struct {
+	AdditionalInfo string         `json:"additional_info"`
+	EmailAddress   string         `json:"email_address"`
+	Language       string         `json:"language"`
+	Phones         []*PhoneDetail `json:"phones"`
+}
+
+type PhoneDetail struct {
+	CountryCode     string `json:"country_code"`
+	NationalNumber  string `json:"national_number"`
+	ExtensionNumber string `json:"extension_number"`
+	PhoneType       string `json:"phone_type"`
+}
+
+type InvoiceRefunds struct {
+	RefundAmount *Amount         `json:"refund_amount"`
+	Transactions []*RefundDetail `json:"transactions"`
+}
+
+type RefundDetail struct {
+	Method     string  `json:"method"`
+	Amount     *Amount `json:"amount"`
+	RefundDate string  `json:"refund_date"`
+	RefundId   string  `json:"refund_id"`
+	Type       string  `json:"type"`
+}
+
+type QRCodeBase64 struct {
+	Base64Image string
+}
+
+type InvoicePayment struct {
+	PaymentId string `json:"payment_id"`
+}
+
+type InvoiceRefund struct {
+	RefundId string `json:"refund_id"`
+}
+
+type InvoiceSend struct {
+	Links []*Link `json:"links"`
+}
+
+type InvoiceSearch struct {
+	Items      []*Invoice `json:"items"`
+	Links      []*Link    `json:"links"`
+	TotalItems int        `json:"total_items"`
+	TotalPages int        `json:"total_pages"`
+}
+
+type InvoiceTemplate struct {
+	Addresses []*Address     `json:"addresses"`
+	Emails    string         `json:"emails"`
+	Links     []*Link        `json:"links"`
+	Phones    []*PhoneDetail `json:"phones"`
+	Templates []*Template    `json:"templates"`
+}
+
+type Template struct {
+	Id               string           `json:"id"`
+	Name             string           `json:"name"`
+	DefaultTemplate  bool             `json:"default_template"`
+	StandardTemplate bool             `json:"standard_template"`
+	Links            []*Link          `json:"links"`
+	Settings         *TemplateSetting `json:"settings"`
+	TemplateInfo     *TemplateInfo    `json:"template_info"`
+	UnitOfMeasure    string           `json:"unit_of_measure"`
+}
+
+type TemplateSetting struct {
+	TemplateItemSettings     []*TemplateItemSetting     `json:"template_item_settings"`
+	TemplateSubtotalSettings []*TemplateSubtotalSetting `json:"template_subtotal_settings"`
+}
+
+type TemplateItemSetting struct {
+	FieldName         string             `json:"field_name"`
+	DisplayPreference *DisplayPreference `json:"display_preference"`
+}
+
+type DisplayPreference struct {
+	Hidden bool `json:"hidden"`
+}
+
+type TemplateSubtotalSetting struct {
+	FieldName         string             `json:"field_name"`
+	DisplayPreference *DisplayPreference `json:"display_preference"`
+}
+
+type TemplateInfo struct {
+	AdditionalRecipients []*AdditionalRecipient `json:"additional_recipients,omitempty"`
+	Amount               *Amount                `json:"amount"`
+	Configuration        *Configuration         `json:"configuration,omitempty"`
+	Detail               *InvoiceDetail         `json:"detail"`
+	DueAmount            *Amount                `json:"due_amount"`
+	Invoicer             *Invoicer              `json:"invoicer"`
+	Items                []*Item                `json:"items,omitempty"`
+	PrimaryRecipients    []*RecipientInfo       `json:"primary_recipients,omitempty"`
 }
