@@ -859,18 +859,18 @@ type AuthTokenApp struct {
 	UserId          string   `json:"user_id,omitempty"`
 	AuthAppId       string   `json:"auth_app_id,omitempty"`
 	AppAuthToken    string   `json:"app_auth_token,omitempty"`
-	ExpiresIn       string   `json:"expires_in,omitempty"`
+	ExpiresIn       int      `json:"expires_in,omitempty"`
 	AppRefreshToken string   `json:"app_refresh_token,omitempty"`
-	ReExpiresIn     string   `json:"re_expires_in,omitempty"`
+	ReExpiresIn     int      `json:"re_expires_in,omitempty"`
 	Tokens          []*Token `json:"tokens,omitempty"`
 }
 
 type Token struct {
 	AuthAppId       string `json:"auth_app_id,omitempty"`
 	AppAuthToken    string `json:"app_auth_token,omitempty"`
-	ExpiresIn       string `json:"expires_in,omitempty"`
+	ExpiresIn       int    `json:"expires_in,omitempty"`
 	AppRefreshToken string `json:"app_refresh_token,omitempty"`
-	ReExpiresIn     string `json:"re_expires_in,omitempty"`
+	ReExpiresIn     int    `json:"re_expires_in,omitempty"`
 	UserId          string `json:"user_id,omitempty"`
 }
 
