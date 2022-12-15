@@ -209,7 +209,7 @@ func (c *Client) InvoiceGenerateQRCode(ctx context.Context, invoiceId string, bo
 	return ppRsp, nil
 }
 
-// 发票付款记录（Generate QR code）
+// 发票付款记录（Record payment for invoice）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/invoicing/v2/#invoices_payments
 func (c *Client) InvoicePaymentRecord(ctx context.Context, invoiceId string, body gopay.BodyMap) (ppRsp *InvoicePaymentRsp, err error) {
