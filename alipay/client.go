@@ -261,6 +261,42 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 	}
 }
 
+// 保持和官方 SDK 命名方式一致
+func (a *Client) PageExecute(ctx context.Context, bm gopay.BodyMap, method string, authToken ...string) (bs string, err error) {
+	var (
+		bizContent string
+		bodyBs     []byte
+	)
+	if bm != nil {
+		_, has := notRemoveAppAuthToken[method]
+		if has {
+			if bodyBs, err = json.Marshal(bm); err != nil {
+				return "", fmt.Errorf("json.Marshal：%w", err)
+			}
+			bizContent = string(bodyBs)
+			bm.Remove("app_auth_token")
+		} else {
+			aat := bm.GetString("app_auth_token")
+			bm.Remove("app_auth_token")
+			if bodyBs, err = json.Marshal(bm); err != nil {
+				return "", fmt.Errorf("json.Marshal：%w", err)
+			}
+			bizContent = string(bodyBs)
+			bm.Set("app_auth_token", aat)
+		}
+	}
+	// 处理公共参数
+	param, err := a.pubParamsHandle(bm, method, bizContent, authToken...)
+	if err != nil {
+		return "", err
+	}
+
+	if !a.IsProd {
+		return sandboxBaseUrl + "?" + param, nil
+	}
+	return baseUrl + "?" + param, nil
+}
+
 // 公共参数处理
 func (a *Client) pubParamsHandle(bm gopay.BodyMap, method, bizContent string, authToken ...string) (param string, err error) {
 	pubBody := make(gopay.BodyMap)

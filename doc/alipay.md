@@ -285,6 +285,7 @@ xlog.Infof("%+v", phone)
     * 身份认证开始认证（获取认证链接）: `client.UserCertifyOpenCertify()`
     * 身份认证记录查询: `client.UserCertifyOpenQuery()`
     * 支付宝个人协议页面签约接口: `client.UserAgreementPageSign()`
+    * 支付宝个人协议页面签约接口(App 专用,生成唤醒签约页面链接): `client.UserAgreementPageSignInApp()`
     * 支付宝个人代扣协议解约接口: `client.UserAgreementPageUnSign()`
     * 支付宝个人代扣协议查询接口: `client.UserAgreementQuery()`
     * 周期性扣款协议执行计划修改接口: `client.UserAgreementExecutionplanModify()`
