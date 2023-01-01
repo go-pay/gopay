@@ -262,7 +262,7 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 }
 
 // 保持和官方 SDK 命名方式一致
-func (a *Client) PageExecute(ctx context.Context, bm gopay.BodyMap, method string, authToken ...string) (bs string, err error) {
+func (a *Client) pageExecute(ctx context.Context, bm gopay.BodyMap, method string, authToken ...string) (bs string, err error) {
 	var (
 		bizContent string
 		bodyBs     []byte

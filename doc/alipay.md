@@ -30,8 +30,8 @@ import (
 //    isProd：是否是正式环境
 client, err := alipay.NewClient("2016091200494382", privateKey, false)
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 
 // 自定义配置http请求接收返回结果body大小，默认 10MB
