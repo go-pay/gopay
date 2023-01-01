@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
+	"strings"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
@@ -107,6 +109,35 @@ func (a *Client) UserAgreementPageSign(ctx context.Context, bm gopay.BodyMap) (r
 		return "", err
 	}
 	return string(bs), nil
+}
+
+// alipay.user.agreement.page.sign(APP 支付宝个人协议页面签约接口)
+// 文档地址：https://opendocs.alipay.com/open/00a05b#%E9%80%9A%E8%BF%87%20App%20%E5%94%A4%E8%B5%B7%E6%94%AF%E4%BB%98%E5%AE%9D%E7%9A%84%E7%AD%BE%E7%BA%A6%E9%A1%B5%E9%9D%A2
+func (a *Client) UserAgreementPageSignInApp(ctx context.Context, bm gopay.BodyMap) (ret string, err error) {
+	err = bm.CheckEmptyError("personal_product_code")
+	if err != nil {
+		return util.NULL, err
+	}
+
+	var bs string
+	// 参考官方示例
+	// pageExecute get方式，生成url
+	if bs, err = a.PageExecute(ctx, bm, "alipay.user.agreement.page.sign"); err != nil {
+		return "", err
+	}
+
+	// / 生成的url地址去除 http://openapi.alipay.com/gateway.do
+	replaceUrl := baseUrl + "?"
+	if !a.IsProd {
+		replaceUrl = sandboxBaseUrl + "?"
+	}
+	signParams := strings.Replace(bs, replaceUrl, "", 1)
+
+	// 该链接里面的 APPID 为固定值，不可修改）
+	// 生成唤起客户端。把signParams使用 UTF-8 字符集整体做一次 encode
+	link := "alipays://platformapi/startapp?appId=60000157&appClearTop=false&startMultApp=YES&sign_params=" + url.QueryEscape(signParams)
+
+	return link, nil
 }
 
 // alipay.user.agreement.unsign(支付宝个人代扣协议解约接口)

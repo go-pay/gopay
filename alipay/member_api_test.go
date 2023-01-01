@@ -122,6 +122,41 @@ func TestUserAgreementTransfer(t *testing.T) {
 	xlog.Debug("aliRsp:", *aliRsp)
 }
 
+func TestUserAgreementPageSignInApp(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("personal_product_code", "CYCLE_PAY_AUTH_P")
+	bm.Set("product_code", "CYCLE_PAY_AUTH")
+	bm.Set("sign_scene", "INDUSTRY|EDU")
+	bm.Set("agreement_effect_type", "DIRECT")
+	bm.Set("notify_url", "https://yt-api.t.ergedd.com/api/v1/sign_notify/alipay")
+	bm.Set("external_agreement_no", "9bAduAd8uvkkU9GrCCw4jYCi64GOYiPI")
+
+	bm.SetBodyMap("period_rule_params", func(bm gopay.BodyMap) {
+		bm.Set("period_type", "MONTH")
+		bm.Set("period", 1)
+		bm.Set("execute_time", "2023-01-01")
+		bm.Set("single_amount", 0.01)
+	})
+	bm.SetBodyMap("access_params", func(ab gopay.BodyMap) {
+		ab.Set("channel", "ALIPAYAPP")
+	})
+
+	// 发起请求
+	link, err := client.UserAgreementPageSignInApp(ctx, bm)
+	xlog.Info(err)
+	if err != nil {
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
+		return
+	}
+
+	xlog.Debug("aliRsp:", link)
+}
+
 func TestUserTwostageCommonUse(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
