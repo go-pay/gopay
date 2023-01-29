@@ -1,3 +1,9 @@
+版本号：Release 1.5.89
+修改记录：
+   (1) alipay：新增 client.OpenAuthTokenAppInviteCreate()，ISV向商户发起应用授权邀约。
+   (1) PayPal：新增 invoice 相关接口。
+   (2) gopay：更新 mod 包，优化部分方法。
+
 版本号：Release 1.5.88
 修改记录：
    (1) PayPal：新增 invoice 相关接口。

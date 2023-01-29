@@ -270,14 +270,14 @@ type OauthTokenInfo struct {
 
 // ===================================================
 type UserInfoShareResponse struct {
-	Response     *UserInfoShare `json:"alipay_user_info_share_response"`
-	AlipayCertSn string         `json:"alipay_cert_sn,omitempty"`
-	SignData     string         `json:"-"`
-	Sign         string         `json:"sign"`
+	Response      *UserInfoShare `json:"alipay_user_info_share_response"`
+	ErrorResponse *ErrorResponse `json:"error_response,omitempty"`
+	AlipayCertSn  string         `json:"alipay_cert_sn,omitempty"`
+	SignData      string         `json:"-"`
+	Sign          string         `json:"sign"`
 }
 
 type UserInfoShare struct {
-	ErrorResponse
 	UserId             string `json:"user_id,omitempty"`
 	Avatar             string `json:"avatar,omitempty"`
 	Province           string `json:"province,omitempty"`
@@ -872,6 +872,19 @@ type Token struct {
 	AppRefreshToken string `json:"app_refresh_token,omitempty"`
 	ReExpiresIn     int    `json:"re_expires_in,omitempty"`
 	UserId          string `json:"user_id,omitempty"`
+}
+
+// ===================================================
+type OpenAuthTokenAppInviteCreateResponse struct {
+	Response     *OpenAuthTokenAppInviteCreate `json:"alipay_open_auth_appauth_invite_create_response"`
+	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
+	SignData     string                        `json:"-"`
+	Sign         string                        `json:"sign"`
+}
+
+type OpenAuthTokenAppInviteCreate struct {
+	ErrorResponse
+	TaskPageUrl string `json:"task_page_url,omitempty"`
 }
 
 // ===================================================
@@ -2192,4 +2205,23 @@ type Receiver struct {
 	Type    string `json:"type"`
 	Account string `json:"account"`
 	Memo    string `json:"memo"`
+}
+
+// ===================================================
+type OpenAppApiQueryResponse struct {
+	Response     *OpenAppApiQuery `json:"alipay_open_app_api_query_response"`
+	AlipayCertSn string           `json:"alipay_cert_sn,omitempty"`
+	SignData     string           `json:"-"`
+	Sign         string           `json:"sign"`
+}
+
+type OpenAppApiQuery struct {
+	ErrorResponse
+	Apis []*Apis `json:"apis"`
+}
+
+type Apis struct {
+	ApiName     string `json:"api_name,omitempty"`
+	FieldName   string `json:"field_name,omitempty"`
+	PackageCode string `json:"package_code,omitempty"`
 }
