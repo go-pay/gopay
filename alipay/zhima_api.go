@@ -201,7 +201,7 @@ func (a *Client) ZhimaMerchantZmgoCumulateSync(ctx context.Context, bm gopay.Bod
 }
 
 // zhima.merchant.zmgo.cumulate.query(商家芝麻GO累计数据查询接口)
-// 文档地址：https://opendocs.alipay.com/apis/01ooeo
+// 文档地址：https://opendocs.alipay.com/open/03ui2q
 func (a *Client) ZhimaMerchantZmgoCumulateQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaMerchantZmgoCumulateQueryRsp, err error) {
 	err = bm.CheckEmptyError("agreement_id", "user_id", "provider_pid")
 	if err != nil {
@@ -247,7 +247,7 @@ func (a *Client) ZhimaCreditPeZmgoBizoptClose(ctx context.Context, bm gopay.Body
 }
 
 // zhima.credit.pe.zmgo.settle.refund(芝麻GO结算退款接口)
-// 文档地址：https://opendocs.alipay.com/apis/01rhsf
+// 文档地址：https://opendocs.alipay.com/open/03ub1e
 func (a *Client) ZhimaCreditPeZmgoSettleRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoSettleRefundRsp, err error) {
 	err = bm.CheckEmptyError("agreement_id", "partner_id", "alipay_user_id", "refund_amount", "out_request_no")
 	if err != nil {
@@ -270,7 +270,7 @@ func (a *Client) ZhimaCreditPeZmgoSettleRefund(ctx context.Context, bm gopay.Bod
 }
 
 // zhima.credit.pe.zmgo.preorder.create(芝麻GO签约预创单)
-// 文档地址：https://opendocs.alipay.com/apis/01rhsk
+// 文档地址：https://opendocs.alipay.com/open/03ujao
 func (a *Client) ZhimaCreditPeZmgoPreorderCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoPreorderCreateRsp, err error) {
 	err = bm.CheckEmptyError("partner_id", "template_id", "out_request_no", "biz_time")
 	if err != nil {
@@ -293,7 +293,7 @@ func (a *Client) ZhimaCreditPeZmgoPreorderCreate(ctx context.Context, bm gopay.B
 }
 
 // zhima.credit.pe.zmgo.agreement.unsign(芝麻GO协议解约)
-// 文档地址：https://opendocs.alipay.com/apis/01rium
+// 文档地址：https://opendocs.alipay.com/open/03ub1g
 func (a *Client) ZhimaCreditPeZmgoAgreementUnsign(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoAgreementUnsignRsp, err error) {
 	err = bm.CheckEmptyError("partner_id", "agreement_id")
 	if err != nil {
@@ -316,7 +316,7 @@ func (a *Client) ZhimaCreditPeZmgoAgreementUnsign(ctx context.Context, bm gopay.
 }
 
 // zhima.credit.pe.zmgo.agreement.query(芝麻Go协议查询接口)
-// 文档地址：https://opendocs.alipay.com/apis/01rqcy
+// 文档地址：https://opendocs.alipay.com/open/03utv3
 func (a *Client) ZhimaCreditPeZmgoAgreementQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoAgreementQueryRsp, err error) {
 	err = bm.CheckEmptyError("agreement_id", "alipay_user_id")
 	if err != nil {

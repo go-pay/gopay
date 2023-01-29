@@ -102,7 +102,7 @@ func (a *Client) UserInfoAuth(ctx context.Context, bm gopay.BodyMap) (html []byt
 }
 
 // alipay.user.certify.open.initialize(身份认证初始化服务)
-// 文档地址：https://opendocs.alipay.com/apis/api_2/alipay.user.certify.open.initialize
+// 文档地址：https://opendocs.alipay.com/open/02ahjy
 func (a *Client) UserCertifyOpenInit(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserCertifyOpenInitResponse, err error) {
 	err = bm.CheckEmptyError("outer_order_no", "biz_code", "identity_param", "merchant_config")
 	if err != nil {
@@ -125,8 +125,7 @@ func (a *Client) UserCertifyOpenInit(ctx context.Context, bm gopay.BodyMap) (ali
 }
 
 // alipay.user.certify.open.certify(身份认证开始认证)
-// API文档地址：https://opendocs.alipay.com/apis/api_2/alipay.user.certify.open.certify
-// 产品文档地址：https://opendocs.alipay.com/open/20181012100420932508/quickstart
+// API文档地址：https://opendocs.alipay.com/open/02ahk0
 func (a *Client) UserCertifyOpenCertify(ctx context.Context, bm gopay.BodyMap) (certifyUrl string, err error) {
 	err = bm.CheckEmptyError("certify_id")
 	if err != nil {
@@ -141,7 +140,7 @@ func (a *Client) UserCertifyOpenCertify(ctx context.Context, bm gopay.BodyMap) (
 }
 
 // alipay.user.certify.open.query(身份认证记录查询)
-// 文档地址：https://opendocs.alipay.com/apis/api_2/alipay.user.certify.open.query
+// 文档地址：https://opendocs.alipay.com/open/02ahjw
 func (a *Client) UserCertifyOpenQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserCertifyOpenQueryResponse, err error) {
 	err = bm.CheckEmptyError("certify_id")
 	if err != nil {
