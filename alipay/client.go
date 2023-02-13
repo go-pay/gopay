@@ -123,7 +123,7 @@ func (a *Client) RequestParam(bm gopay.BodyMap, method string) (string, error) {
 
 	// check sign
 	if bm.GetString("sign") == "" {
-		sign, err = GetRsaSign(bm, bm.GetString("sign_type"), a.privateKey)
+		sign, err = a.getRsaSign(bm, bm.GetString("sign_type"), a.privateKey)
 		if err != nil {
 			return "", fmt.Errorf("GetRsaSign Error: %w", err)
 		}
@@ -171,7 +171,7 @@ func (a *Client) doAliPaySelf(ctx context.Context, bm gopay.BodyMap, method stri
 	a.checkPublicParam(bm)
 	// check sign
 	if bm.GetString("sign") == "" {
-		sign, err = GetRsaSign(bm, bm.GetString("sign_type"), a.privateKey)
+		sign, err = a.getRsaSign(bm, bm.GetString("sign_type"), a.privateKey)
 		if err != nil {
 			return nil, fmt.Errorf("GetRsaSign Error: %w", err)
 		}
@@ -350,7 +350,7 @@ func (a *Client) pubParamsHandle(bm gopay.BodyMap, method, bizContent string, au
 		pubBody.Set("biz_content", bizContent)
 	}
 	// sign
-	sign, err := GetRsaSign(pubBody, pubBody.GetString("sign_type"), a.privateKey)
+	sign, err := a.getRsaSign(pubBody, pubBody.GetString("sign_type"), a.privateKey)
 	if err != nil {
 		return "", fmt.Errorf("GetRsaSign Error: %w", err)
 	}
@@ -444,7 +444,7 @@ func (a *Client) FileRequest(ctx context.Context, bm gopay.BodyMap, file *util.F
 	if bodyStr != util.NULL {
 		pubBody.Set("biz_content", bodyStr)
 	}
-	sign, err := GetRsaSign(pubBody, pubBody.GetString("sign_type"), a.privateKey)
+	sign, err := a.getRsaSign(pubBody, pubBody.GetString("sign_type"), a.privateKey)
 	if err != nil {
 		return nil, fmt.Errorf("GetRsaSign Error: %w", err)
 	}

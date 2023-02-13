@@ -247,6 +247,9 @@ const (
 	v3BankSearchCityList      = "/v3/capital/capitallhh/areas/provinces/%d/cities"          // province_code 查询城市列表 GET
 	v3BankSearchBranchList    = "/v3/capital/capitallhh/banks/%s/branches"                  // bank_alias_code 查询支行列表 GET
 
+	// 扣款服务-直连模式（其他相关接口在v2接口中）
+	v3EntrustPayNotify = "/v3/papay/contracts/%s/notify" // contract_id 预扣费通知 POST
+
 	// 特约商户进件申请单状态
 	ApplyStateEditing       = "APPLYMENT_STATE_EDITTING"        // 编辑中
 	ApplyStateAuditing      = "APPLYMENT_STATE_AUDITING"        // 审核中

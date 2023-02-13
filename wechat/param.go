@@ -18,6 +18,7 @@ import (
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/go-pay/gopay/pkg/xlog"
 	"golang.org/x/crypto/pkcs12"
 )
 
@@ -201,6 +202,22 @@ func GetReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign stri
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 }
 
+// 获取微信支付正式环境Sign值
+func (w *Client) getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
+	var h hash.Hash
+	if signType == SignType_HMAC_SHA256 {
+		h = hmac.New(sha256.New, []byte(apiKey))
+	} else {
+		h = md5.New()
+	}
+	signParams := bm.EncodeWeChatSignParams(apiKey)
+	if w.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_Request_SignStr: %s", signParams)
+	}
+	h.Write([]byte(signParams))
+	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
+}
+
 // 获取微信支付沙箱环境Sign值
 func GetSandBoxSign(ctx context.Context, mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
 	var (
@@ -212,6 +229,25 @@ func GetSandBoxSign(ctx context.Context, mchId, apiKey string, bm gopay.BodyMap)
 	}
 	h = md5.New()
 	h.Write([]byte(bm.EncodeWeChatSignParams(sandBoxApiKey)))
+	sign = strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
+	return
+}
+
+// 获取微信支付沙箱环境Sign值
+func (w *Client) getSandBoxSign(ctx context.Context, mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
+	var (
+		sandBoxApiKey string
+		h             hash.Hash
+	)
+	if sandBoxApiKey, err = getSanBoxKey(ctx, mchId, util.RandomString(32), apiKey, SignType_MD5); err != nil {
+		return
+	}
+	h = md5.New()
+	signParams := bm.EncodeWeChatSignParams(sandBoxApiKey)
+	if w.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_Request_SignStr: %s", signParams)
+	}
+	h.Write([]byte(signParams))
 	sign = strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 	return
 }

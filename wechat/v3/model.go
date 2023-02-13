@@ -996,7 +996,14 @@ type BankSearchBranchListRsp struct {
 	Error    string            `json:"-"`
 }
 
-// ==================================分割==================================
+type EntrustPayNotifyRsp struct {
+	Code     int               `json:"-"`
+	SignInfo *SignInfo         `json:"-"`
+	Response *BankSearchBranch `json:"response,omitempty"`
+	Error    string            `json:"-"`
+}
+
+// =========================================================分割=========================================================
 
 type JSAPIPayParams struct {
 	AppId     string `json:"appId"`
