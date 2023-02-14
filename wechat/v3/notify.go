@@ -212,7 +212,7 @@ func (v *V3NotifyReq) VerifySignByPK(wxPublicKey *rsa.PublicKey) (err error) {
 // 异步通知验签
 // wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKeyMap() 获取
 func (v *V3NotifyReq) VerifySignByPKMap(wxPublicKeyMap map[string]*rsa.PublicKey) (err error) {
-	if v.SignInfo != nil && wxPublicKeyMap != nil {
+	if v.SignInfo != nil && wxPublicKeyMap != nil && wxPublicKeyMap[v.SignInfo.HeaderSerial] != nil {
 		return V3VerifySignByPK(v.SignInfo.HeaderTimestamp, v.SignInfo.HeaderNonce, v.SignInfo.SignBody, v.SignInfo.HeaderSignature, wxPublicKeyMap[v.SignInfo.HeaderSerial])
 	}
 	return errors.New("verify notify sign, bug SignInfo or wxPublicKeyMap is nil")
