@@ -1082,6 +1082,8 @@ type UserAgreementQuery struct {
 	ZmOpenId            string `json:"zm_open_id,omitempty"`
 	ExternalLogonId     string `json:"external_logon_id,omitempty"`
 	CreditAuthMode      string `json:"credit_auth_mode,omitempty"`
+	LastDeductTime      string `json:"last_deduct_time,omitempty"`
+	NextDeductTime      string `json:"next_deduct_time,omitempty"`
 }
 
 // ===================================================
