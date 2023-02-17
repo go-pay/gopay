@@ -74,7 +74,7 @@ func TestClient_UserInfoAuth(t *testing.T) {
 		Set("state", "init")
 
 	// 发起请求
-	aliRsp, err := client.UserInfoAuth(ctx, bm)
+	html, err := client.UserInfoAuth(ctx, bm)
 	if err != nil {
 		if bizErr, ok := IsBizError(err); ok {
 			xlog.Errorf("%+v", bizErr)
@@ -83,7 +83,7 @@ func TestClient_UserInfoAuth(t *testing.T) {
 		}
 		return
 	}
-	xlog.Debug("aliRsp:", *aliRsp)
+	xlog.Debugf("html: %s", string(html))
 }
 
 func TestClient_UserInfoShare(t *testing.T) {
