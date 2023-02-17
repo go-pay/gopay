@@ -1079,12 +1079,12 @@ type UserAgreementQueryRsp struct {
 
 type UserAgreementQuery struct {
 	ErrorResponse
+	PrincipalId         string `json:"principal_id"`
 	ValidTime           string `json:"valid_time"`
 	AlipayLogonId       string `json:"alipay_logon_id"`
 	InvalidTime         string `json:"invalid_time"`
 	PricipalType        string `json:"pricipal_type"`
 	DeviceId            string `json:"device_id,omitempty"`
-	PrincipalId         string `json:"principal_id"`
 	SignScene           string `json:"sign_scene"`
 	AgreementNo         string `json:"agreement_no"`
 	ThirdPartyType      string `json:"third_party_type"`
@@ -1095,6 +1095,9 @@ type UserAgreementQuery struct {
 	ZmOpenId            string `json:"zm_open_id,omitempty"`
 	ExternalLogonId     string `json:"external_logon_id,omitempty"`
 	CreditAuthMode      string `json:"credit_auth_mode,omitempty"`
+	SingleQuota         string `json:"single_quota,omitempty"`
+	LastDeductTime      string `json:"last_deduct_time,omitempty"`
+	NextDeductTime      string `json:"next_deduct_time,omitempty"`
 }
 
 // ===================================================
