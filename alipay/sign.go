@@ -162,7 +162,40 @@ func GetRsaSign(bm gopay.BodyMap, signType string, privateKey *rsa.PrivateKey) (
 		h = sha256.New()
 		hashs = crypto.SHA256
 	}
-	if _, err = h.Write([]byte(bm.EncodeAliPaySignParams())); err != nil {
+	signParams := bm.EncodeAliPaySignParams()
+	if _, err = h.Write([]byte(signParams)); err != nil {
+		return
+	}
+	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, privateKey, hashs, h.Sum(nil)); err != nil {
+		return util.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
+	}
+	sign = base64.StdEncoding.EncodeToString(encryptedBytes)
+	return
+}
+
+func (a *Client) getRsaSign(bm gopay.BodyMap, signType string, privateKey *rsa.PrivateKey) (sign string, err error) {
+	var (
+		h              hash.Hash
+		hashs          crypto.Hash
+		encryptedBytes []byte
+	)
+
+	switch signType {
+	case RSA:
+		h = sha1.New()
+		hashs = crypto.SHA1
+	case RSA2:
+		h = sha256.New()
+		hashs = crypto.SHA256
+	default:
+		h = sha256.New()
+		hashs = crypto.SHA256
+	}
+	signParams := bm.EncodeAliPaySignParams()
+	if a.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Alipay_Request_SignStr: %s", signParams)
+	}
+	if _, err = h.Write([]byte(signParams)); err != nil {
 		return
 	}
 	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, privateKey, hashs, h.Sum(nil)); err != nil {
