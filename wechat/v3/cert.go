@@ -158,6 +158,8 @@ func (c *ClientV3) WxPublicKeyMap() (wxPublicKeyMap map[string]*rsa.PublicKey) {
 	return wxPublicKeyMap
 }
 
+//  获取证书Map集并选择最新的有效证书序列号（默认RSA证书）
+// 文档说明：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/wechatpay5_1.shtml
 func (c *ClientV3) GetAndSelectNewestCert(certType ...CertType) (serialNo string, snCertMap map[string]string, err error) {
 	certs, err := c.getPlatformCerts(certType...)
 	if err != nil {
@@ -219,6 +221,7 @@ func (c *ClientV3) GetAndSelectNewestCertRSA() (serialNo string, snCertMap map[s
 }
 
 // 获取证书Map集并选择最新的有效SM2证书序列号
+// 文档：https://pay.weixin.qq.com/docs/merchant/development/shangmi/key-and-certificate.html
 func (c *ClientV3) GetAndSelectNewestCertSM2() (serialNo string, snCertMap map[string]string, err error) {
 	return c.GetAndSelectNewestCert(CertTypeSM2)
 }
