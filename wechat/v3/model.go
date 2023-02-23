@@ -1,6 +1,10 @@
 package wechat
 
+// 微信支付分订单类型：1-微信订单号，2-商户订单号，3-微信侧回跳到商户前端时用于查单的单据查询id（查询支付分订单中会使用）
 type OrderNoType uint8
+
+// 微信证书类型：RSA、SM2
+type CertType string
 
 type PlatformCertRsp struct {
 	Code  int                 `json:"-"`

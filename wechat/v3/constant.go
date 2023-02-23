@@ -3,6 +3,11 @@ package wechat
 const (
 	Success     = 0
 	SignTypeRSA = "RSA"
+	SignTypeSM2 = "SM2"
+
+	CertTypeALL CertType = "ALL"
+	CertTypeRSA CertType = "RSA"
+	CertTypeSM2 CertType = "SM2"
 
 	MethodGet           = "GET"
 	MethodPost          = "POST"
@@ -50,7 +55,7 @@ const (
 
 	// 退款
 	v3DomesticRefund      = "/v3/refund/domestic/refunds"    // 申请退款
-	v3DomesticRefundQuery = "/v3/refund/domestic/refunds/%s" // 查询单笔退款
+	v3DomesticRefundQuery = "/v3/refund/domestic/refunds/%s" // out_refund_no 查询单笔退款
 
 	// 账单
 	v3TradeBill             = "/v3/bill/tradebill"                 // 申请交易账单 GET
@@ -98,8 +103,10 @@ const (
 	v3GuideUpdate = "/v3/smartguide/guides/%s"        // guide_id 服务人员信息更新 PATCH
 
 	// 智慧商圈
-	v3BusinessPointsSync      = "/v3/businesscircle/points/notify"          // 商圈积分同步 POST
-	v3BusinessAuthPointsQuery = "/v3/businesscircle/user-authorizations/%s" // openid 商圈积分授权查询 GET
+	v3BusinessPointsSync        = "/v3/businesscircle/points/notify"                 // 商圈积分同步 POST
+	v3BusinessAuthPointsQuery   = "/v3/businesscircle/user-authorizations/%s"        // openid 商圈积分授权查询 GET
+	v3BusinessPointsStatusQuery = "/v3/businesscircle/users/%s/points/commit_status" // openid 商圈会员待积分状态查询 GET
+	v3BusinessParkingSync       = "/v3/businesscircle/parkings"                      // 商圈会员停车状态同步 POST
 
 	// 代金券
 	v3FavorBatchCreate        = "/v3/marketing/favor/coupon-stocks"         // 创建代金券批次 POST
