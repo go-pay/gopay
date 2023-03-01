@@ -352,6 +352,14 @@ type BusinessAuthPointsQueryRsp struct {
 	Error    string                   `json:"-"`
 }
 
+// 商圈会员待积分状态查询 Rsp
+type BusinessPointsStatusQueryRsp struct {
+	Code     int                        `json:"-"`
+	SignInfo *SignInfo                  `json:"-"`
+	Response *BusinessPointsStatusQuery `json:"response,omitempty"`
+	Error    string                     `json:"-"`
+}
+
 // 发起批量转账 Rsp
 type TransferRsp struct {
 	Code     int       `json:"-"`
@@ -1007,6 +1015,34 @@ type EntrustPayNotifyRsp struct {
 	Error    string            `json:"-"`
 }
 
+type VehicleParkingQueryRsp struct {
+	Code     int                  `json:"-"`
+	SignInfo *SignInfo            `json:"-"`
+	Response *VehicleParkingQuery `json:"response,omitempty"`
+	Error    string               `json:"-"`
+}
+
+type VehicleParkingInRsp struct {
+	Code     int               `json:"-"`
+	SignInfo *SignInfo         `json:"-"`
+	Response *VehicleParkingIn `json:"response,omitempty"`
+	Error    string            `json:"-"`
+}
+
+type VehicleParkingFeeRsp struct {
+	Code     int                `json:"-"`
+	SignInfo *SignInfo          `json:"-"`
+	Response *VehicleParkingFee `json:"response,omitempty"`
+	Error    string             `json:"-"`
+}
+
+type VehicleParkingOrderRsp struct {
+	Code     int                  `json:"-"`
+	SignInfo *SignInfo            `json:"-"`
+	Response *VehicleParkingOrder `json:"response,omitempty"`
+	Error    string               `json:"-"`
+}
+
 // =========================================================分割=========================================================
 
 type JSAPIPayParams struct {
@@ -1094,12 +1130,14 @@ type H5Url struct {
 }
 
 type Payer struct {
-	Openid string `json:"openid"` // 用户在直连商户appid下的唯一标识
+	Openid    string `json:"openid"`               // 用户在直连商户appid下的唯一标识
+	SubOpenid string `json:"sub_openid,omitempty"` // 用户在sub_appid下的标识
 }
 
 type Amount struct {
 	Total         int    `json:"total,omitempty"`          // 订单总金额，单位为分
 	PayerTotal    int    `json:"payer_total,omitempty"`    // 用户支付金额，单位为分
+	DiscountTotal int    `json:"discount_total,omitempty"` // 订单折扣
 	Currency      string `json:"currency,omitempty"`       // CNY：人民币，境内商户号仅支持人民币
 	PayerCurrency string `json:"payer_currency,omitempty"` // 用户支付币种
 }
@@ -1762,6 +1800,10 @@ type BusinessAuthPointsQuery struct {
 	AuthorizeState  string `json:"authorize_state"`            // 顾客授权商圈积分结果：UNAUTHORIZED：未授权，AUTHORIZED：已授权，DEAUTHORIZED：已取消授权
 	AuthorizeTime   string `json:"authorize_time,omitempty"`   // 顾客成功授权商圈积分的时间
 	DeauthorizeTime string `json:"deauthorize_time,omitempty"` // 顾客关闭授权商圈积分的时间
+}
+
+type BusinessPointsStatusQuery struct {
+	PointsCommitStatus string `json:"points_commit_status"` // 顾客关闭授权商圈积分的时间
 }
 
 type Transfer struct {
@@ -2760,4 +2802,79 @@ type BankSearchBranch struct {
 type BankBranchInfo struct {
 	BankBranchName string `json:"bank_branch_name"` // 开户银行支行名称
 	BankBranchId   string `json:"bank_branch_id"`   // 开户银行支行联行号
+}
+
+type VehicleParkingQuery struct {
+	PlateNumber     string `json:"plate_number"` // 车牌号，仅包括省份+车牌，不包括特殊字符。
+	PlateColor      string `json:"plate_color"`  // 车牌颜色，BLUE：蓝色，GREEN：绿色，YELLOW：黄色，BLACK：黑色，WHITE：白色，LIMEGREEN：黄绿色
+	ServiceOpenTime string `json:"service_open_time,omitempty"`
+	Openid          string `json:"openid"`
+	ServiceState    string `json:"service_state"`
+}
+
+type VehicleParkingIn struct {
+	Id           string `json:"id"`
+	OutParkingNo string `json:"out_parking_no"` // 商户入场id
+	PlateNumber  string `json:"plate_number"`   // 车牌号，仅包括省份+车牌，不包括特殊字符。
+	PlateColor   string `json:"plate_color"`    // 车牌颜色，BLUE：蓝色，GREEN：绿色，YELLOW：黄色，BLACK：黑色，WHITE：白色，LIMEGREEN：黄绿色
+	StartTime    string `json:"start_time"`     // 入场时间
+	ParkingName  string `json:"parking_name"`   // 所在停车位车场的名称
+	FreeDuration int    `json:"free_duration"`  // 停车场的免费停车时长，单位为秒
+	State        string `json:"state"`
+	BlockReason  string `json:"block_reason"`
+}
+
+type VehicleParkingFee struct {
+	Appid                 string             `json:"appid"`
+	SubAppid              string             `json:"sub_appid,omitempty"`
+	SpMchid               string             `json:"sp_mchid"`
+	SubMchid              string             `json:"sub_mchid,omitempty"`
+	Description           string             `json:"description"`
+	CreateTime            string             `json:"create_time"`
+	OutTradeNo            string             `json:"out_trade_no"`
+	TransactionId         string             `json:"transaction_id"`
+	TradeState            string             `json:"trade_state"`
+	TradeStateDescription string             `json:"trade_state_description"`
+	SuccessTime           string             `json:"success_time"`
+	BankType              string             `json:"bank_type"`
+	UserRepaid            string             `json:"user_repaid"`
+	Attach                string             `json:"attach"`
+	TradeScene            string             `json:"trade_scene"`
+	ParkingInfo           *ParkingInfo       `json:"parking_info"`
+	Payer                 *Payer             `json:"payer"`
+	Amount                *Amount            `json:"amount"`
+	PromotionDetail       []*PromotionDetail `json:"promotion_detail,omitempty"` // 优惠功能，享受优惠时返回该字段
+}
+
+type ParkingInfo struct {
+	ParkingId        string `json:"parking_id"`        // 停车入场id
+	PlateNumber      string `json:"plate_number"`      // 车牌号，仅包括省份+车牌，不包括特殊字符。
+	PlateColor       string `json:"plate_color"`       // 车牌颜色，BLUE：蓝色，GREEN：绿色，YELLOW：黄色，BLACK：黑色，WHITE：白色，LIMEGREEN：黄绿色
+	StartTime        string `json:"start_time"`        // 入场时间
+	EndTime          string `json:"end_time"`          // 出场时间
+	ParkingName      string `json:"parking_name"`      // 所在停车位车场的名称
+	ChargingDuration int    `json:"charging_duration"` // 计费的时间长，单位为秒
+	DeviceId         string `json:"device_id"`         // 停车场设备id
+}
+
+type VehicleParkingOrder struct {
+	Appid                 string             `json:"appid"`
+	SubAppid              string             `json:"sub_appid,omitempty"`
+	SpMchid               string             `json:"sp_mchid"`
+	SubMchid              string             `json:"sub_mchid,omitempty"`
+	Description           string             `json:"description"`
+	CreateTime            string             `json:"create_time"`
+	OutTradeNo            string             `json:"out_trade_no"`
+	TransactionId         string             `json:"transaction_id"`
+	TradeState            string             `json:"trade_state"`
+	TradeStateDescription string             `json:"trade_state_description"`
+	SuccessTime           string             `json:"success_time"`
+	BankType              string             `json:"bank_type"`
+	UserRepaid            string             `json:"user_repaid"`
+	Attach                string             `json:"attach"`
+	TradeScene            string             `json:"trade_scene"`
+	ParkingInfo           *ParkingInfo       `json:"parking_info"`
+	Payer                 *Payer             `json:"payer"`
+	Amount                *Amount            `json:"amount"`
+	PromotionDetail       []*PromotionDetail `json:"promotion_detail,omitempty"` // 优惠功能，享受优惠时返回该字段
 }

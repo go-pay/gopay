@@ -291,8 +291,13 @@ wechat.V3DecryptScoreNotifyCipherText()
 * <font color='#07C160' size='4'>智慧商圈</font>
     * 商圈积分同步：`client.V3BusinessPointsSync()`
     * 商圈积分授权查询：`client.V3BusinessAuthPointsQuery()`
+    * 商圈会员待积分状态查询：`client.V3BusinessPointsStatusQuery()`
+    * 商圈会员停车状态同步：`client.V3BusinessParkingSync()`
 * <font color='#07C160' size='4'>微信支付分停车服务</font>
-    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_8_1.shtml)
+    * 查询车牌服务开通信息：`client.V3VehicleParkingQuery()`
+    * 创建停车入场：`client.V3VehicleParkingIn()`
+    * 扣费受理：`client.V3VehicleParkingFee()`
+    * 查询订单：`client.V3VehicleParkingOrder()`
 * <font color='#07C160' size='4'>代金券</font>
     * 创建代金券批次：`client.V3FavorBatchCreate()`
     * 激活代金券批次：`client.V3FavorBatchStart()`

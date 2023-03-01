@@ -108,6 +108,12 @@ const (
 	v3BusinessPointsStatusQuery = "/v3/businesscircle/users/%s/points/commit_status" // openid 商圈会员待积分状态查询 GET
 	v3BusinessParkingSync       = "/v3/businesscircle/parkings"                      // 商圈会员停车状态同步 POST
 
+	// 微信支付分停车服务
+	v3VehicleParkingQuery = "/v3/vehicle/parking/services/find"        // 查询车牌服务开通信息 GET
+	v3VehicleParkingIn    = "/v3/vehicle/parking/parkings"             // 创建停车入场 POST
+	v3VehicleParkingFee   = "/v3/vehicle/transactions/parking"         // 扣费受理 POST
+	v3VehicleParkingOrder = "/v3/vehicle/transactions/out-trade-no/%s" // out_trade_no 查询订单 GET
+
 	// 代金券
 	v3FavorBatchCreate        = "/v3/marketing/favor/coupon-stocks"         // 创建代金券批次 POST
 	v3FavorBatchStart         = "/v3/marketing/favor/stocks/%s/start"       // stock_id 激活代金券批次 POST
