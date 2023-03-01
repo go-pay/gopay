@@ -431,7 +431,12 @@ wechat.V3DecryptScoreNotifyCipherText()
 ### 微信v3公共 API
 
 * `wechat.GetPlatformCerts()` => 获取微信平台证书公钥
-* `client.GetAndSelectNewestCert()` => 获取并选择最新的有效证书
+* `wechat.GetPlatformRSACerts()` => 获取平台RSA证书列表
+* `wechat.GetPlatformSM2Certs()` => 获取国密平台证书
+* `client.GetAndSelectNewestCert()` => 获取证书Map集并选择最新的有效证书序列号（默认RSA证书）
+* `client.GetAndSelectNewestCertRSA()` => 获取证书Map集并选择最新的有效RSA证书序列号
+* `client.GetAndSelectNewestCertSM2()` => 获取证书Map集并选择最新的有效SM2证书序列号
+* `client.GetAndSelectNewestCertALL()` => 获取证书Map集并选择最新的有效RSA+SM2证书序列号
 * `client.WxPublicKey()` => 获取最新的有效证书
 * `client.WxPublicKeyMap()` => 获取有效证书 Map
 * `wechat.V3ParseNotify()` => 解析微信回调请求的参数到 V3NotifyReq 结构体
