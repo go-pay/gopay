@@ -34,5 +34,5 @@ func UserInfoAuth() {
 		xlog.Error("err:", err)
 		return
 	}
-	xlog.Debug("aliRsp:", *aliRsp)
+	xlog.Debug("aliRsp:", aliRsp)
 }
