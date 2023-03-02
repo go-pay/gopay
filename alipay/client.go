@@ -229,7 +229,9 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 	}
 	// 处理公共参数
 	param, err := a.pubParamsHandle(bm, method, bizContent, authToken...)
-
+	if err != nil {
+		return nil, err
+	}
 	switch method {
 	case "alipay.trade.app.pay", "alipay.fund.auth.order.app.freeze":
 		return []byte(param), nil

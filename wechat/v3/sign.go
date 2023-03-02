@@ -164,9 +164,7 @@ func (c *ClientV3) authorization(method, path string, bm gopay.BodyMap) (string,
 	if bm != nil {
 		jb = bm.JsonBody()
 	}
-	if strings.HasSuffix(path, "?") {
-		path = path[:len(path)-1]
-	}
+	path = strings.TrimSuffix(path, "?")
 	ts := util.Int642String(timestamp)
 	_str := method + "\n" + path + "\n" + ts + "\n" + nonceStr + "\n" + jb + "\n"
 	if c.DebugSwitch == gopay.DebugOn {
