@@ -31,7 +31,7 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        os: [ ubuntu-latest, centos-latest, macos-latest, alpine-latest ]
+        os: [ ubuntu-latest, macos-latest ]
         go: [ '1.18', '1.19', '1.20' ]
     runs-on: ${{ matrix.os }}
     steps:
