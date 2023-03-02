@@ -39,7 +39,6 @@ const (
 	entrustQuery                = "/papay/querycontract"                              // 查询签约关系
 	entrustApplyPay             = "/pay/pappayapply"                                  // 申请扣款
 	entrustDelete               = "/papay/deletecontract"                             // 申请解约
-	entrustQueryOrder           = "/pay/paporderquery"                                // 查询扣款订单
 	profitSharing               = "/secapi/pay/profitsharing"                         // 请求单次分账
 	multiProfitSharing          = "/secapi/pay/multiprofitsharing"                    // 请求多次分账
 	profitSharingQuery          = "/pay/profitsharingquery"                           // 查询分账结果

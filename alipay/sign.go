@@ -372,15 +372,14 @@ func VerifySignWithCert(aliPayPublicKeyCert, notifyBean interface{}) (ok bool, e
 	}
 	var bm gopay.BodyMap
 
-	switch notifyBean.(type) {
+	switch nb := notifyBean.(type) {
 	case map[string]interface{}:
-		m := notifyBean.(map[string]interface{})
-		bm = make(gopay.BodyMap, len(m))
-		for key, val := range m {
+		bm = make(gopay.BodyMap, len(nb))
+		for key, val := range nb {
 			bm[key] = val
 		}
 	case gopay.BodyMap:
-		bm = notifyBean.(gopay.BodyMap)
+		bm = nb
 	default:
 		bs, err := json.Marshal(notifyBean)
 		if err != nil {
