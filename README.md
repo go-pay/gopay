@@ -12,7 +12,8 @@
 [![Go](https://github.com/go-pay/gopay/actions/workflows/go.yml/badge.svg)](https://github.com/go-pay/gopay/actions/workflows/go.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/go-pay/gopay)](https://github.com/go-pay/gopay/releases)
 [![License](https://img.shields.io/github/license/go-pay/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
-[![GoDoc](https://tokei.rs/b1/github.com/go-pay/gopay)](https://github.com/go-pay/gopay)
+![GoPay](https://img.shields.io/badge/GoPay-Wechat%20%7C%20Alipay%20%7C%20Paypal%20%7C%20QQ%20%7C%20Apple-blue)
+[![Go Report Card](https://goreportcard.com/badge/github.com/go-pay/gopay)](https://goreportcard.com/report/github.com/go-pay/gopay)
 
 ---
 
