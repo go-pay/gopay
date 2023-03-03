@@ -19,9 +19,9 @@ var (
 	ctx               = context.Background()
 	client            *ClientV3
 	err               error
-	MchId             = ""
-	APIv3Key          = ""
-	SerialNo          = ""
+	MchId             = "1604896569"
+	APIv3Key          = "j7XthyAeqmeKPNjECOEd60YVG1Knwr3Y"
+	SerialNo          = "298A5BA7E00AF6E71579E81D9CB1AC7037A51471"
 	PrivateKeyContent = `-----BEGIN PRIVATE KEY-----
 MIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQDV523KVXZaaZI3
 WxQiaz0J8o8nxAYsxBjrfcaKPnLo+r5uFME7GPV+4UHEZWG6ZogJ87yBt8L4IV8q
@@ -75,13 +75,13 @@ func TestMain(m *testing.M) {
 	}
 
 	// 打开Debug开关，输出日志
-	client.DebugSwitch = gopay.DebugOff
+	client.DebugSwitch = gopay.DebugOn
 
 	os.Exit(m.Run())
 }
 
 func TestGetPlatformCertsWithoutClient(t *testing.T) {
-	certs, err := GetPlatformCerts(ctx, MchId, APIv3Key, SerialNo, PrivateKeyContent)
+	certs, err := GetPlatformCerts(ctx, MchId, APIv3Key, SerialNo, PrivateKeyContent, CertTypeALL)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -99,7 +99,7 @@ func TestGetPlatformCertsWithoutClient(t *testing.T) {
 }
 
 func TestGetAndSelectNewestCert(t *testing.T) {
-	serialNo, snCertMap, err := client.GetAndSelectNewestCert()
+	serialNo, snCertMap, err := client.GetAndSelectNewestCert(CertTypeALL)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -139,7 +139,7 @@ func TestV3Jsapi(t *testing.T) {
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
 	bm := make(gopay.BodyMap)
-	bm.Set("appid", "appid").
+	bm.Set("appid", "wx52a25f196830f677").
 		Set("description", "测试Jsapi支付商品").
 		Set("out_trade_no", tradeNo).
 		Set("time_expire", expire).
@@ -215,7 +215,7 @@ func TestV3Native(t *testing.T) {
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
 	bm := make(gopay.BodyMap)
-	bm.Set("appid", "wx52xxxxxxxxxxx").
+	bm.Set("appid", "wx52a25f196830f677").
 		Set("description", "测试Native支付商品").
 		Set("out_trade_no", tradeNo).
 		Set("time_expire", expire).
@@ -231,7 +231,7 @@ func TestV3Native(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response.CodeUrl)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
