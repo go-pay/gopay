@@ -75,7 +75,7 @@ func TestMain(m *testing.M) {
 	}
 
 	// 打开Debug开关，输出日志
-	client.DebugSwitch = gopay.DebugOn
+	client.DebugSwitch = gopay.DebugOff
 
 	os.Exit(m.Run())
 }
