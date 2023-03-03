@@ -10,6 +10,7 @@
 [![Golang](https://img.shields.io/badge/golang-1.18-brightgreen.svg)](https://golang.google.cn)
 [![GoDoc](https://img.shields.io/badge/doc-pkg.go.dev-informational.svg)](https://pkg.go.dev/github.com/go-pay/gopay)
 [![Go](https://github.com/go-pay/gopay/actions/workflows/go.yml/badge.svg)](https://github.com/go-pay/gopay/actions/workflows/go.yml)
+[![Qodana](https://github.com/go-pay/gopay/actions/workflows/code_quality.yml/badge.svg)](https://github.com/go-pay/gopay/actions/workflows/code_quality.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/go-pay/gopay)](https://github.com/go-pay/gopay/releases)
 [![License](https://img.shields.io/github/license/go-pay/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Go Report Card](https://goreportcard.com/badge/github.com/go-pay/gopay)](https://goreportcard.com/report/github.com/go-pay/gopay)
