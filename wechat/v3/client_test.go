@@ -19,9 +19,9 @@ var (
 	ctx               = context.Background()
 	client            *ClientV3
 	err               error
-	MchId             = "1604896569"
-	APIv3Key          = "j7XthyAeqmeKPNjECOEd60YVG1Knwr3Y"
-	SerialNo          = "298A5BA7E00AF6E71579E81D9CB1AC7037A51471"
+	MchId             = ""
+	APIv3Key          = ""
+	SerialNo          = ""
 	PrivateKeyContent = `-----BEGIN PRIVATE KEY-----
 MIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQDV523KVXZaaZI3
 WxQiaz0J8o8nxAYsxBjrfcaKPnLo+r5uFME7GPV+4UHEZWG6ZogJ87yBt8L4IV8q
