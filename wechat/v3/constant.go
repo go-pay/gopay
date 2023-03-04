@@ -3,6 +3,11 @@ package wechat
 const (
 	Success     = 0
 	SignTypeRSA = "RSA"
+	SignTypeSM2 = "SM2"
+
+	CertTypeALL CertType = "ALL"
+	CertTypeRSA CertType = "RSA"
+	CertTypeSM2 CertType = "SM2"
 
 	MethodGet           = "GET"
 	MethodPost          = "POST"
@@ -50,7 +55,7 @@ const (
 
 	// 退款
 	v3DomesticRefund      = "/v3/refund/domestic/refunds"    // 申请退款
-	v3DomesticRefundQuery = "/v3/refund/domestic/refunds/%s" // 查询单笔退款
+	v3DomesticRefundQuery = "/v3/refund/domestic/refunds/%s" // out_refund_no 查询单笔退款
 
 	// 账单
 	v3TradeBill             = "/v3/bill/tradebill"                 // 申请交易账单 GET
@@ -98,8 +103,16 @@ const (
 	v3GuideUpdate = "/v3/smartguide/guides/%s"        // guide_id 服务人员信息更新 PATCH
 
 	// 智慧商圈
-	v3BusinessPointsSync      = "/v3/businesscircle/points/notify"          // 商圈积分同步 POST
-	v3BusinessAuthPointsQuery = "/v3/businesscircle/user-authorizations/%s" // openid 商圈积分授权查询 GET
+	v3BusinessPointsSync        = "/v3/businesscircle/points/notify"                 // 商圈积分同步 POST
+	v3BusinessAuthPointsQuery   = "/v3/businesscircle/user-authorizations/%s"        // openid 商圈积分授权查询 GET
+	v3BusinessPointsStatusQuery = "/v3/businesscircle/users/%s/points/commit_status" // openid 商圈会员待积分状态查询 GET
+	v3BusinessParkingSync       = "/v3/businesscircle/parkings"                      // 商圈会员停车状态同步 POST
+
+	// 微信支付分停车服务
+	v3VehicleParkingQuery = "/v3/vehicle/parking/services/find"        // 查询车牌服务开通信息 GET
+	v3VehicleParkingIn    = "/v3/vehicle/parking/parkings"             // 创建停车入场 POST
+	v3VehicleParkingFee   = "/v3/vehicle/transactions/parking"         // 扣费受理 POST
+	v3VehicleParkingOrder = "/v3/vehicle/transactions/out-trade-no/%s" // out_trade_no 查询订单 GET
 
 	// 代金券
 	v3FavorBatchCreate        = "/v3/marketing/favor/coupon-stocks"         // 创建代金券批次 POST
@@ -246,6 +259,9 @@ const (
 	v3BankSearchProvinceList  = "/v3/capital/capitallhh/areas/provinces"                    // 查询省份列表 GET
 	v3BankSearchCityList      = "/v3/capital/capitallhh/areas/provinces/%d/cities"          // province_code 查询城市列表 GET
 	v3BankSearchBranchList    = "/v3/capital/capitallhh/banks/%s/branches"                  // bank_alias_code 查询支行列表 GET
+
+	// 扣款服务-直连模式（其他相关接口在v2接口中）
+	v3EntrustPayNotify = "/v3/papay/contracts/%s/notify" // contract_id 预扣费通知 POST
 
 	// 特约商户进件申请单状态
 	ApplyStateEditing       = "APPLYMENT_STATE_EDITTING"        // 编辑中

@@ -162,7 +162,40 @@ func GetRsaSign(bm gopay.BodyMap, signType string, privateKey *rsa.PrivateKey) (
 		h = sha256.New()
 		hashs = crypto.SHA256
 	}
-	if _, err = h.Write([]byte(bm.EncodeAliPaySignParams())); err != nil {
+	signParams := bm.EncodeAliPaySignParams()
+	if _, err = h.Write([]byte(signParams)); err != nil {
+		return
+	}
+	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, privateKey, hashs, h.Sum(nil)); err != nil {
+		return util.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
+	}
+	sign = base64.StdEncoding.EncodeToString(encryptedBytes)
+	return
+}
+
+func (a *Client) getRsaSign(bm gopay.BodyMap, signType string, privateKey *rsa.PrivateKey) (sign string, err error) {
+	var (
+		h              hash.Hash
+		hashs          crypto.Hash
+		encryptedBytes []byte
+	)
+
+	switch signType {
+	case RSA:
+		h = sha1.New()
+		hashs = crypto.SHA1
+	case RSA2:
+		h = sha256.New()
+		hashs = crypto.SHA256
+	default:
+		h = sha256.New()
+		hashs = crypto.SHA256
+	}
+	signParams := bm.EncodeAliPaySignParams()
+	if a.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Alipay_Request_SignStr: %s", signParams)
+	}
+	if _, err = h.Write([]byte(signParams)); err != nil {
 		return
 	}
 	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, privateKey, hashs, h.Sum(nil)); err != nil {
@@ -337,21 +370,17 @@ func VerifySignWithCert(aliPayPublicKeyCert, notifyBean interface{}) (ok bool, e
 	default:
 		return false, errors.New("aliPayPublicKeyCert type assert error")
 	}
-	var (
-		bodySign     string
-		bodySignType string
-		signData     string
-		bm           = make(gopay.BodyMap)
-	)
-	if reflect.ValueOf(notifyBean).Kind() == reflect.Map {
-		if bm, ok = notifyBean.(gopay.BodyMap); ok {
-			bodySign = bm.GetString("sign")
-			bodySignType = bm.GetString("sign_type")
-			bm.Remove("sign")
-			bm.Remove("sign_type")
-			signData = bm.EncodeAliPaySignParams()
+	var bm gopay.BodyMap
+
+	switch nb := notifyBean.(type) {
+	case map[string]interface{}:
+		bm = make(gopay.BodyMap, len(nb))
+		for key, val := range nb {
+			bm[key] = val
 		}
-	} else {
+	case gopay.BodyMap:
+		bm = nb
+	default:
 		bs, err := json.Marshal(notifyBean)
 		if err != nil {
 			return false, fmt.Errorf("json.Marshal：%w", err)
@@ -359,12 +388,12 @@ func VerifySignWithCert(aliPayPublicKeyCert, notifyBean interface{}) (ok bool, e
 		if err = json.Unmarshal(bs, &bm); err != nil {
 			return false, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 		}
-		bodySign = bm.GetString("sign")
-		bodySignType = bm.GetString("sign_type")
-		bm.Remove("sign")
-		bm.Remove("sign_type")
-		signData = bm.EncodeAliPaySignParams()
 	}
+	bodySign := bm.GetString("sign")
+	bodySignType := bm.GetString("sign_type")
+	bm.Remove("sign")
+	bm.Remove("sign_type")
+	signData := bm.EncodeAliPaySignParams()
 	if err = verifySignCert(signData, bodySign, bodySignType, aliPayPublicKeyCert); err != nil {
 		return false, err
 	}

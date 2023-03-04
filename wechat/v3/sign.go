@@ -42,6 +42,9 @@ func V3VerifySign(timestamp, nonce, signBody, sign, wxPubKeyContent string) (err
 // 微信V3 版本验签（同步）
 // wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKeyMap() 获取，然后根据 signInfo.HeaderSerial 获取相应的公钥
 func V3VerifySignByPK(timestamp, nonce, signBody, sign string, wxPublicKey *rsa.PublicKey) (err error) {
+	if wxPublicKey == nil || wxPublicKey.N == nil {
+		return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, "wxPublicKey is nil")
+	}
 	str := timestamp + "\n" + nonce + "\n" + signBody + "\n"
 	signBytes, _ := base64.StdEncoding.DecodeString(sign)
 
@@ -164,9 +167,7 @@ func (c *ClientV3) authorization(method, path string, bm gopay.BodyMap) (string,
 	if bm != nil {
 		jb = bm.JsonBody()
 	}
-	if strings.HasSuffix(path, "?") {
-		path = path[:len(path)-1]
-	}
+	path = strings.TrimSuffix(path, "?")
 	ts := util.Int642String(timestamp)
 	_str := method + "\n" + path + "\n" + ts + "\n" + nonceStr + "\n" + jb + "\n"
 	if c.DebugSwitch == gopay.DebugOn {

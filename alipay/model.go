@@ -15,6 +15,13 @@ const (
 	UTF8                      = "utf-8"
 )
 
+var (
+	//不需要处理AppAuthToken的方法
+	notRemoveAppAuthToken = map[string]bool{
+		"alipay.open.auth.token.app.query": true,
+	}
+)
+
 type PKCSType uint8
 
 // Deprecated
@@ -254,23 +261,23 @@ type OauthTokenInfo struct {
 	AlipayUserId  string `json:"alipay_user_id,omitempty"`
 	UnionId       string `json:"union_id,omitempty"`
 	AccessToken   string `json:"access_token,omitempty"`
-	ExpiresIn     string `json:"expires_in,omitempty"`
+	ExpiresIn     int    `json:"expires_in,omitempty"`
 	RefreshToken  string `json:"refresh_token,omitempty"`
-	ReExpiresIn   string `json:"re_expires_in,omitempty"`
+	ReExpiresIn   int    `json:"re_expires_in,omitempty"`
 	AuthStart     string `json:"auth_start,omitempty"`
 	AuthTokenType string `json:"auth_token_type,omitempty"`
 }
 
 // ===================================================
 type UserInfoShareResponse struct {
-	Response     *UserInfoShare `json:"alipay_user_info_share_response"`
-	AlipayCertSn string         `json:"alipay_cert_sn,omitempty"`
-	SignData     string         `json:"-"`
-	Sign         string         `json:"sign"`
+	Response      *UserInfoShare `json:"alipay_user_info_share_response"`
+	ErrorResponse *ErrorResponse `json:"error_response,omitempty"`
+	AlipayCertSn  string         `json:"alipay_cert_sn,omitempty"`
+	SignData      string         `json:"-"`
+	Sign          string         `json:"sign"`
 }
 
 type UserInfoShare struct {
-	ErrorResponse
 	UserId             string `json:"user_id,omitempty"`
 	Avatar             string `json:"avatar,omitempty"`
 	Province           string `json:"province,omitempty"`
@@ -852,19 +859,51 @@ type AuthTokenApp struct {
 	UserId          string   `json:"user_id,omitempty"`
 	AuthAppId       string   `json:"auth_app_id,omitempty"`
 	AppAuthToken    string   `json:"app_auth_token,omitempty"`
-	ExpiresIn       string   `json:"expires_in,omitempty"`
+	ExpiresIn       int      `json:"expires_in,omitempty"`
 	AppRefreshToken string   `json:"app_refresh_token,omitempty"`
-	ReExpiresIn     string   `json:"re_expires_in,omitempty"`
+	ReExpiresIn     int      `json:"re_expires_in,omitempty"`
 	Tokens          []*Token `json:"tokens,omitempty"`
 }
 
 type Token struct {
 	AuthAppId       string `json:"auth_app_id,omitempty"`
 	AppAuthToken    string `json:"app_auth_token,omitempty"`
-	ExpiresIn       string `json:"expires_in,omitempty"`
+	ExpiresIn       int    `json:"expires_in,omitempty"`
 	AppRefreshToken string `json:"app_refresh_token,omitempty"`
-	ReExpiresIn     string `json:"re_expires_in,omitempty"`
+	ReExpiresIn     int    `json:"re_expires_in,omitempty"`
 	UserId          string `json:"user_id,omitempty"`
+}
+
+// ===================================================
+type OpenAuthTokenAppInviteCreateResponse struct {
+	Response     *OpenAuthTokenAppInviteCreate `json:"alipay_open_auth_appauth_invite_create_response"`
+	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
+	SignData     string                        `json:"-"`
+	Sign         string                        `json:"sign"`
+}
+
+type OpenAuthTokenAppInviteCreate struct {
+	ErrorResponse
+	TaskPageUrl string `json:"task_page_url,omitempty"`
+}
+
+// ===================================================
+type OpenAuthTokenAppQueryResponse struct {
+	Response     *AuthTokenAppQuery `json:"alipay_open_auth_token_app_query_response"`
+	AlipayCertSn string             `json:"alipay_cert_sn,omitempty"`
+	SignData     string             `json:"-"`
+	Sign         string             `json:"sign"`
+}
+
+type AuthTokenAppQuery struct {
+	ErrorResponse
+	UserId      string   `json:"user_id"`      //授权商户的user_id
+	AuthAppId   string   `json:"auth_app_id"`  //授权商户的appid
+	ExpiresIn   int      `json:"expires_in"`   //应用授权令牌失效时间，单位到秒
+	AuthMethods []string `json:"auth_methods"` //当前app_auth_token的授权接口列表
+	AuthStart   string   `json:"auth_start"`   //授权生效时间
+	AuthEnd     string   `json:"auth_end"`     //授权失效时间
+	Status      string   `json:"status"`       //valid：有效状态；invalid：无效状态
 }
 
 // ===================================================
@@ -1040,12 +1079,12 @@ type UserAgreementQueryRsp struct {
 
 type UserAgreementQuery struct {
 	ErrorResponse
+	PrincipalId         string `json:"principal_id"`
 	ValidTime           string `json:"valid_time"`
 	AlipayLogonId       string `json:"alipay_logon_id"`
 	InvalidTime         string `json:"invalid_time"`
 	PricipalType        string `json:"pricipal_type"`
 	DeviceId            string `json:"device_id,omitempty"`
-	PrincipalId         string `json:"principal_id"`
 	SignScene           string `json:"sign_scene"`
 	AgreementNo         string `json:"agreement_no"`
 	ThirdPartyType      string `json:"third_party_type"`
@@ -1056,6 +1095,9 @@ type UserAgreementQuery struct {
 	ZmOpenId            string `json:"zm_open_id,omitempty"`
 	ExternalLogonId     string `json:"external_logon_id,omitempty"`
 	CreditAuthMode      string `json:"credit_auth_mode,omitempty"`
+	SingleQuota         string `json:"single_quota,omitempty"`
+	LastDeductTime      string `json:"last_deduct_time,omitempty"`
+	NextDeductTime      string `json:"next_deduct_time,omitempty"`
 }
 
 // ===================================================
@@ -2166,4 +2208,23 @@ type Receiver struct {
 	Type    string `json:"type"`
 	Account string `json:"account"`
 	Memo    string `json:"memo"`
+}
+
+// ===================================================
+type OpenAppApiQueryResponse struct {
+	Response     *OpenAppApiQuery `json:"alipay_open_app_api_query_response"`
+	AlipayCertSn string           `json:"alipay_cert_sn,omitempty"`
+	SignData     string           `json:"-"`
+	Sign         string           `json:"sign"`
+}
+
+type OpenAppApiQuery struct {
+	ErrorResponse
+	Apis []*Apis `json:"apis"`
+}
+
+type Apis struct {
+	ApiName     string `json:"api_name,omitempty"`
+	FieldName   string `json:"field_name,omitempty"`
+	PackageCode string `json:"package_code,omitempty"`
 }

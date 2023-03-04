@@ -10,21 +10,15 @@ platform:
   arch: amd64
 
 steps:
-  - name: helloworld
+  - name: ci_1.18
     pull: if-not-exists
-    image: hello-world
-
-  - name: ci_1.16
-    pull: if-not-exists
-    image: golang:1.16
+    image: golang:1.18
     environment:
       GO111MODULE: "on"
       GOPROXY: "https://goproxy.cn,direct"
       GOSUMDB: "off"
       CGO_ENABLED: "0"
       GOOS: "linux"
-    depends_on:
-      - helloworld
     commands:
       - go version
       - go env

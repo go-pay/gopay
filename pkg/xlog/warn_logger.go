@@ -12,30 +12,30 @@ type WarnLogger struct {
 	once   sync.Once
 }
 
-func (i *WarnLogger) LogOut(col *ColorType, format *string, v ...interface{}) {
-	i.once.Do(func() {
-		i.init()
+func (w *WarnLogger) LogOut(col *ColorType, format *string, v ...interface{}) {
+	w.once.Do(func() {
+		w.init()
 	})
 	if Level >= WarnLevel {
 		if col != nil {
 			if format != nil {
-				i.logger.Output(3, string(*col)+fmt.Sprintf(*format, v...)+string(Reset))
+				_ = w.logger.Output(3, string(*col)+fmt.Sprintf(*format, v...)+string(Reset))
 				return
 			}
-			i.logger.Output(3, string(*col)+fmt.Sprintln(v...)+string(Reset))
+			_ = w.logger.Output(3, string(*col)+fmt.Sprintln(v...)+string(Reset))
 			return
 		}
 		if format != nil {
-			i.logger.Output(3, fmt.Sprintf(*format, v...))
+			_ = w.logger.Output(3, fmt.Sprintf(*format, v...))
 			return
 		}
-		i.logger.Output(3, fmt.Sprintln(v...))
+		_ = w.logger.Output(3, fmt.Sprintln(v...))
 	}
 }
 
-func (i *WarnLogger) init() {
+func (w *WarnLogger) init() {
 	if Level == 0 {
 		Level = DebugLevel
 	}
-	i.logger = log.New(os.Stdout, "[WARN] >> ", log.Lmsgprefix|log.Lshortfile|log.Ldate|log.Lmicroseconds)
+	w.logger = log.New(os.Stdout, "[WARN] >> ", log.Lmsgprefix|log.Lshortfile|log.Ldate|log.Lmicroseconds)
 }

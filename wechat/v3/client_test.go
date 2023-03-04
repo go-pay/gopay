@@ -81,7 +81,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetPlatformCertsWithoutClient(t *testing.T) {
-	certs, err := GetPlatformCerts(ctx, MchId, APIv3Key, SerialNo, PrivateKeyContent)
+	certs, err := GetPlatformCerts(ctx, MchId, APIv3Key, SerialNo, PrivateKeyContent, CertTypeALL)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -99,7 +99,7 @@ func TestGetPlatformCertsWithoutClient(t *testing.T) {
 }
 
 func TestGetAndSelectNewestCert(t *testing.T) {
-	serialNo, snCertMap, err := client.GetAndSelectNewestCert()
+	serialNo, snCertMap, err := client.GetAndSelectNewestCert(CertTypeALL)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -139,7 +139,7 @@ func TestV3Jsapi(t *testing.T) {
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
 	bm := make(gopay.BodyMap)
-	bm.Set("appid", "appid").
+	bm.Set("appid", "wx52a25f196830f677").
 		Set("description", "测试Jsapi支付商品").
 		Set("out_trade_no", tradeNo).
 		Set("time_expire", expire).
@@ -215,7 +215,7 @@ func TestV3Native(t *testing.T) {
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
 	bm := make(gopay.BodyMap)
-	bm.Set("appid", "wx52xxxxxxxxxxx").
+	bm.Set("appid", "wx52a25f196830f677").
 		Set("description", "测试Native支付商品").
 		Set("out_trade_no", tradeNo).
 		Set("time_expire", expire).
@@ -231,7 +231,7 @@ func TestV3Native(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response.CodeUrl)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
