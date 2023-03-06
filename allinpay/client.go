@@ -112,7 +112,9 @@ func (c *Client) pubParamsHandle(bm gopay.BodyMap) (param string, err error) {
 func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs []byte, err error) {
 
 	param, err := c.pubParamsHandle(bm)
-
+	if err != nil {
+		return nil, err
+	}
 	httpClient := xhttp.NewClient()
 	url := baseUrl
 	if !c.isProd {
