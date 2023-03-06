@@ -6,9 +6,11 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+
 	"github.com/go-pay/gopay"
 )
 
+// verifySign 验证响应签名
 func (c *Client) verifySign(bs []byte) (err error) {
 	bm := gopay.BodyMap{}
 	if err := json.Unmarshal(bs, &bm); err != nil {

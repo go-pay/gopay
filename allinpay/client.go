@@ -9,26 +9,32 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"hash"
+
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/gopay/pkg/xpem"
 	"github.com/go-pay/gopay/pkg/xrsa"
-	"hash"
 )
 
 type Client struct {
-	orgId      string
-	CusId      string
-	AppId      string
-	SignType   string
+	orgId      string //集团/代理编号 可为空
+	CusId      string //实际交易商户号
+	AppId      string //平台分配的APPID
+	SignType   string //签名类型
 	isProd     bool
-	privateKey *rsa.PrivateKey
-	publicKey  *rsa.PublicKey // 支付宝证书公钥内容 alipayCertPublicKey_RSA2.crt
+	privateKey *rsa.PrivateKey //商户的RSA私钥
+	publicKey  *rsa.PublicKey  // 通联的公钥
 }
 
-func NewClient(cusId, appId, privateKey, publicKey string) (*Client, error) {
-
+// NewClient 初始化通联客户端
+// cusId: 实际交易商户号
+// appid：平台分配的APPID
+// privateKey：商户的RSA私钥
+// publicKey：通联的公钥
+// isProd：是否是正式环境
+func NewClient(cusId, appId, privateKey, publicKey string, isProd bool) (*Client, error) {
 	prk, err := xpem.DecodePrivateKey([]byte(xrsa.FormatAlipayPrivateKey(privateKey)))
 	if err != nil {
 		return nil, err
@@ -41,28 +47,25 @@ func NewClient(cusId, appId, privateKey, publicKey string) (*Client, error) {
 		CusId:      cusId,
 		AppId:      appId,
 		SignType:   RSA,
-		isProd:     true,
+		isProd:     isProd,
 		privateKey: prk,
 		publicKey:  puk,
 	}, nil
 }
+
+// SetOrgId 集团/代理商商户号（因orgid非必填）因此单开方法
 func (c *Client) SetOrgId(id string) *Client {
 	c.orgId = id
 	return c
 }
 
-func (c *Client) SwitchEnv(b bool) *Client {
-	c.isProd = b
-	return c
-}
-
+// getRsaSign 获取签名字符串
 func (c *Client) getRsaSign(bm gopay.BodyMap, signType string, privateKey *rsa.PrivateKey) (sign string, err error) {
 	var (
 		h              hash.Hash
 		hashs          crypto.Hash
 		encryptedBytes []byte
 	)
-
 	switch signType {
 	case RSA:
 		h = sha1.New()
@@ -84,12 +87,13 @@ func (c *Client) getRsaSign(bm gopay.BodyMap, signType string, privateKey *rsa.P
 	return
 }
 
-// 公共参数处理
+// pubParamsHandle 公共参数处理
 func (c *Client) pubParamsHandle(bm gopay.BodyMap) (param string, err error) {
 	bm.Set("cusid", c.CusId).
 		Set("appid", c.AppId).
 		Set("signtype", c.SignType)
 
+	//集团/代理商商户号
 	if c.orgId != util.NULL {
 		bm.Set("orgid", c.orgId)
 	}
@@ -99,18 +103,18 @@ func (c *Client) pubParamsHandle(bm gopay.BodyMap) (param string, err error) {
 	}
 	bm.Set("randomstr", util.RandomString(20))
 
-	sign, err := c.getRsaSign(bm, bm.GetString("sign_type"), c.privateKey)
+	sign, err := c.getRsaSign(bm, bm.GetString("signtype"), c.privateKey)
 	if err != nil {
 		return "", fmt.Errorf("GetRsaSign Error: %w", err)
 	}
 	bm.Set("sign", sign)
 	param = bm.EncodeURLParams()
-
 	return
 }
 
+// doPost 发起请求
 func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs []byte, err error) {
-
+	//公参处理
 	param, err := c.pubParamsHandle(bm)
 	if err != nil {
 		return nil, err
