@@ -35,10 +35,65 @@ const (
 	PayTypeNumH5 = "S01"
 )
 
-type RespBase struct {
+const (
+	payPath    = "/unitorder/pay"
+	scanQrPath = "/unitorder/scanqrpay"
+	queryPath  = "/tranx/query"
+	refundPath = "/tranx/refund"
+	cancelPath = "/tranx/cancel"
+)
+
+type RspBase struct {
 	RetCode string `json:"retcode"`
 	RetMsg  string `json:"retmsg"`
 	Sign    string `json:"sign"`
 	Cusid   string `json:"cusid"`
 	Appid   string `json:"appid"`
 }
+
+type (
+	PayRsp struct {
+		RspBase
+		Trxid     string `json:"trxid"`
+		ChnlTrxId string `json:"chnltrxid"`
+		Reqsn     string `json:"reqsn"`
+		RandomStr string `json:"randomstr"`
+		TrxStatus string `json:"trxstatus"`
+		FinTime   string `json:"fintime"`
+		ErrMsg    string `json:"errmsg"`
+		PayInfo   string `json:"payinfo"`
+	}
+
+	ScanPayRsp struct {
+		RspBase
+		Trxid     string `json:"trxid"`
+		ChnlTrxId string `json:"chnltrxid"`
+		Reqsn     string `json:"reqsn"`
+		TrxStatus string `json:"trxstatus"`
+		Acct      string `json:"acct"`
+		TrxCode   string `json:"trxcode"`
+		FinTime   string `json:"fintime"`
+		ErrMsg    string `json:"errmsg"`
+		RandomStr string `json:"randomstr"`
+		InitAmt   string `json:"initamt"`
+		TrxAmt    string `json:"trxamt"`
+		Fee       string `json:"fee"`
+		Cmid      string `json:"cmid"`
+		Chnlid    string `json:"chnlid"`
+		ChnlData  string `json:"chnldata"`
+		AcctType  string `json:"accttype"`
+	}
+
+	RefundRsp struct {
+		RspBase
+		Trxid     string `json:"trxid"`
+		Reqsn     string `json:"reqsn"`
+		TrxStatus string `json:"trxstatus"`
+		FinTime   string `json:"fintime"`
+		ErrMsg    string `json:"errmsg"`
+		Fee       string `json:"fee"`
+		TrxCode   string `json:"trxCode"`
+		RandomStr string `json:"randomstr"`
+		ChnlTrxId string `json:"chnltrxid"`
+	}
+)

@@ -2,10 +2,11 @@ package allinpay
 
 import (
 	"context"
-	"github.com/go-pay/gopay/allinpay/cert"
-	"github.com/go-pay/gopay/pkg/xlog"
 	"os"
 	"testing"
+
+	"github.com/go-pay/gopay/allinpay/cert"
+	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 var (
@@ -22,7 +23,7 @@ func TestMain(m *testing.M) {
 	//    appid：应用ID
 	//    privateKey：应用私钥，支持PKCS1和PKCS8
 	//    isProd：是否是正式环境
-	client, err = NewClient(cert.CusId, cert.AppId, cert.PrivateKey, cert.PublicKey)
+	client, err = NewClient(cert.CusId, cert.AppId, cert.PrivateKey, cert.PublicKey, false)
 	if err != nil {
 		xlog.Error(err)
 		return

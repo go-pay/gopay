@@ -9,12 +9,13 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"hash"
+
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/gopay/pkg/xpem"
 	"github.com/go-pay/gopay/pkg/xrsa"
-	"hash"
 )
 
 type Client struct {
@@ -27,7 +28,7 @@ type Client struct {
 	publicKey  *rsa.PublicKey // 支付宝证书公钥内容 alipayCertPublicKey_RSA2.crt
 }
 
-func NewClient(cusId, appId, privateKey, publicKey string) (*Client, error) {
+func NewClient(cusId, appId, privateKey, publicKey string, isProd bool) (*Client, error) {
 
 	prk, err := xpem.DecodePrivateKey([]byte(xrsa.FormatAlipayPrivateKey(privateKey)))
 	if err != nil {
@@ -41,18 +42,13 @@ func NewClient(cusId, appId, privateKey, publicKey string) (*Client, error) {
 		CusId:      cusId,
 		AppId:      appId,
 		SignType:   RSA,
-		isProd:     true,
+		isProd:     isProd,
 		privateKey: prk,
 		publicKey:  puk,
 	}, nil
 }
 func (c *Client) SetOrgId(id string) *Client {
 	c.orgId = id
-	return c
-}
-
-func (c *Client) SwitchEnv(b bool) *Client {
-	c.isProd = b
 	return c
 }
 
