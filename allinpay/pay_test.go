@@ -9,6 +9,7 @@ import (
 
 func TestClient_ScanPay(t *testing.T) {
 	// 扫码支付
+	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("trxamt", "1").
 		Set("reqsn", "larry01").
@@ -18,7 +19,7 @@ func TestClient_ScanPay(t *testing.T) {
 				Set("termno", "00000001")
 		}).
 		Set("authcode", "131104796948096102")
-
+	// 创建订单
 	resp, err := client.ScanPay(ctx, bm)
 	xlog.Debugf("allRsp:%+v", resp)
 	if err != nil {
@@ -38,14 +39,14 @@ func TestClient_Query(t *testing.T) {
 }
 
 func TestClient_Refund(t *testing.T) {
-	// 订单退款
+	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("trxamt", "1").
 		Set("reqsn", "relarry01").
 		Set("remark", "支付测试退款").
 		Set("oldreqsn", "larry01")
 
-	// 创建订单
+	// 退款
 	resp, err := client.Refund(ctx, bm)
 	xlog.Debugf("allRsp:%+v", resp)
 	if err != nil {
@@ -53,6 +54,7 @@ func TestClient_Refund(t *testing.T) {
 		return
 	}
 }
+
 func TestClient_Cancel(t *testing.T) {
 	// 订单退款
 	bm := make(gopay.BodyMap)
@@ -61,7 +63,7 @@ func TestClient_Cancel(t *testing.T) {
 		Set("remark", "支付测试取消").
 		Set("oldreqsn", "larry01")
 
-	// 创建订单
+	// 取消订单
 	resp, err := client.Cancel(ctx, bm)
 	xlog.Debugf("allRsp:%+v", resp)
 	if err != nil {
@@ -69,8 +71,9 @@ func TestClient_Cancel(t *testing.T) {
 		return
 	}
 }
+
 func TestClient_Close(t *testing.T) {
-	// 订单退款
+	// 订单关闭
 	bm := make(gopay.BodyMap)
 	bm.Set("oldreqsn", "larry01")
 	// 创建订单

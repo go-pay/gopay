@@ -11,7 +11,7 @@ type BizErr struct {
 }
 
 // bizErrCheck 检查返回码是否为SUCCESS 否则返回一个BizErr
-func bizErrCheck(resp RespBase) error {
+func bizErrCheck(resp RspBase) error {
 	if resp.RetCode != "SUCCESS" {
 		return &BizErr{
 			Code: resp.RetCode,

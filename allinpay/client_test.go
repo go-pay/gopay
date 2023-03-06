@@ -16,7 +16,6 @@ var (
 )
 
 func TestMain(m *testing.M) {
-
 	// 初始化通联客户端
 	// cusId: 实际交易商户号
 	// appid：平台分配的APPID

@@ -92,7 +92,6 @@ func (c *Client) pubParamsHandle(bm gopay.BodyMap) (param string, err error) {
 	bm.Set("cusid", c.CusId).
 		Set("appid", c.AppId).
 		Set("signtype", c.SignType)
-
 	//集团/代理商商户号
 	if c.orgId != util.NULL {
 		bm.Set("orgid", c.orgId)
@@ -114,7 +113,6 @@ func (c *Client) pubParamsHandle(bm gopay.BodyMap) (param string, err error) {
 
 // doPost 发起请求
 func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs []byte, err error) {
-	//公参处理
 	param, err := c.pubParamsHandle(bm)
 	if err != nil {
 		return nil, err

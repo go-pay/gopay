@@ -37,8 +37,7 @@ const (
 	PayTypeNumH5 = "S01"
 )
 
-// RespBase 通联通用响应
-type RespBase struct {
+type RspBase struct {
 	RetCode string `json:"retcode"`
 	RetMsg  string `json:"retmsg"`
 	Sign    string `json:"sign"`
@@ -47,8 +46,8 @@ type RespBase struct {
 }
 
 // PayResp 通用支付响应
-type PayResp struct {
-	RespBase
+type PayRsp struct {
+	RspBase
 	Trxid     string `json:"trxid"`
 	ChnlTrxId string `json:"chnltrxid"`
 	Reqsn     string `json:"reqsn"`
@@ -60,8 +59,8 @@ type PayResp struct {
 }
 
 // ScanPayResp 扫码支付、订单查询响应
-type ScanPayResp struct {
-	RespBase
+type ScanPayRsp struct {
+	RspBase
 	Trxid     string `json:"trxid"`
 	ChnlTrxId string `json:"chnltrxid"`
 	Reqsn     string `json:"reqsn"`
@@ -81,8 +80,8 @@ type ScanPayResp struct {
 }
 
 // RefundResp 退款响应
-type RefundResp struct {
-	RespBase
+type RefundRsp struct {
+	RspBase
 	Trxid     string `json:"trxid"`
 	Reqsn     string `json:"reqsn"`
 	TrxStatus string `json:"trxstatus"`
@@ -95,7 +94,7 @@ type RefundResp struct {
 }
 
 // CloseResp 关闭响应
-type CloseResp struct {
-	RespBase
+type CloseRsp struct {
+	RspBase
 	TrxStatus string `json:"trxstatus"`
 }
