@@ -1,6 +1,9 @@
 ## 通联支付
 
-> 通联支付 的文档
+
+- 通联支付：[官方文档中心](https://aipboss.allinpay.com/know/devhelp/index.php)
+
+
 
 > 具体API使用介绍，请参考`gopay/allinpay/client_test.go`,`gopay/allinpay/pay_test.go` 等xxx_test.go
 

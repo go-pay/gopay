@@ -19,17 +19,17 @@ import (
 )
 
 type Client struct {
-	orgId      string //集团/代理编号 可为空
-	CusId      string //实际交易商户号
-	AppId      string //平台分配的APPID
-	SignType   string //签名类型
-	isProd     bool
-	privateKey *rsa.PrivateKey //商户的RSA私钥
+	orgId      string          // 集团/代理编号 可为空
+	CusId      string          // 实际交易商户号
+	AppId      string          // 平台分配的APPID
+	SignType   string          // 签名类型
+	isProd     bool            // 是否正式环境
+	privateKey *rsa.PrivateKey // 商户的RSA私钥
 	publicKey  *rsa.PublicKey  // 通联的公钥
 }
 
 // NewClient 初始化通联客户端
-// cusId: 实际交易商户号
+// cusId：实际交易商户号
 // appid：平台分配的APPID
 // privateKey：商户的RSA私钥
 // publicKey：通联的公钥
