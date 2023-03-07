@@ -1,3 +1,7 @@
+版本号：Release 1.5.91
+修改记录：
+   (1) 通联支付：新增通联支付对接。实现基本支付及其他接口。
+
 版本号：Release 1.5.90
 修改记录：
    (1) 微信V3：新增 client.V3BusinessPointsStatusQuery()，商圈会员待积分状态查询。
