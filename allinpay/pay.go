@@ -26,6 +26,10 @@ func (c *Client) Pay(ctx context.Context, bm gopay.BodyMap) (rsp *PayRsp, err er
 	if err := bizErrCheck(rsp.RspBase); err != nil {
 		return nil, err
 	}
+	rsp = new(PayRsp)
+	if err = json.Unmarshal(bs, rsp); err != nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
 	return rsp, c.verifySign(bs)
 }
 
@@ -70,7 +74,9 @@ func (c *Client) Query(ctx context.Context, orderType string, no string) (rsp *S
 		return nil, err
 	}
 	return rsp, nil
-} // Refund 统一退款接口 https://aipboss.allinpay.com/know/devhelp/main.php?pid=15#mid=838
+}
+
+// Refund 统一退款接口 https://aipboss.allinpay.com/know/devhelp/main.php?pid=15#mid=838
 func (c *Client) Refund(ctx context.Context, bm gopay.BodyMap) (rsp *RefundRsp, err error) {
 	err = bm.CheckEmptyError("reqsn", "trxamt")
 	if err != nil {
@@ -107,6 +113,25 @@ func (c *Client) Cancel(ctx context.Context, bm gopay.BodyMap) (rsp *RefundRsp, 
 		return nil, err
 	}
 	rsp = new(RefundRsp)
+	if err = json.Unmarshal(bs, rsp); err != nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err := bizErrCheck(rsp.RspBase); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// Close 订单关闭 https://aipboss.allinpay.com/know/devhelp/main.php?pid=15#mid=424
+func (c *Client) Close(ctx context.Context, bm gopay.BodyMap) (rsp *CloseRsp, err error) {
+	if bm.GetString("oldreqsn") == util.NULL && bm.GetString("oldtrxid") == util.NULL {
+		return nil, fmt.Errorf("[%w], %v", gopay.MissParamErr, "oldreqsn和oldtrxid必填其一")
+	}
+	var bs []byte
+	if bs, err = c.doPost(ctx, closePath, bm); err != nil {
+		return nil, err
+	}
+	rsp = new(CloseRsp)
 	if err = json.Unmarshal(bs, rsp); err != nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
