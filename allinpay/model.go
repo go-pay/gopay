@@ -8,9 +8,9 @@ const (
 	RSA = "RSA"
 	SM2 = "SM2"
 
-	//OrderTypeReqSN 商家自由订单号
+	// OrderTypeReqSN 商家自由订单号
 	OrderTypeReqSN = "reqsn"
-	//OrderTypeTrxId 通联生产支付号
+	// OrderTypeTrxId 通联生产支付号
 	OrderTypeTrxId = "trxid"
 
 	// PayTypeWXScan 微信扫码支付
@@ -45,7 +45,7 @@ type RspBase struct {
 	Appid   string `json:"appid"`
 }
 
-// PayResp 通用支付响应
+// PayRsp 通用支付响应
 type PayRsp struct {
 	RspBase
 	Trxid     string `json:"trxid"`
@@ -58,7 +58,7 @@ type PayRsp struct {
 	PayInfo   string `json:"payinfo"`
 }
 
-// ScanPayResp 扫码支付、订单查询响应
+// ScanPayRsp 扫码支付、订单查询响应
 type ScanPayRsp struct {
 	RspBase
 	Trxid     string `json:"trxid"`
@@ -79,7 +79,7 @@ type ScanPayRsp struct {
 	AcctType  string `json:"accttype"`
 }
 
-// RefundResp 退款响应
+// RefundRsp 退款响应
 type RefundRsp struct {
 	RspBase
 	Trxid     string `json:"trxid"`
@@ -93,7 +93,7 @@ type RefundRsp struct {
 	ChnlTrxId string `json:"chnltrxid"`
 }
 
-// CloseResp 关闭响应
+// CloseRsp 关闭响应
 type CloseRsp struct {
 	RspBase
 	TrxStatus string `json:"trxstatus"`
