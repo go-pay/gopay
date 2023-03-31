@@ -186,8 +186,8 @@ func (a *Client) UserAgreementPageSignInApp(ctx context.Context, bm gopay.BodyMa
 
 	var bs string
 	// 参考官方示例
-	// pageExecute get方式，生成url
-	if bs, err = a.pageExecute(ctx, bm, "alipay.user.agreement.page.sign"); err != nil {
+	// PageExecute get方式，生成url
+	if bs, err = a.PageExecute(ctx, bm, "alipay.user.agreement.page.sign"); err != nil {
 		return "", err
 	}
 
