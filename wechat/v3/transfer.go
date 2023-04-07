@@ -293,12 +293,6 @@ func (c *ClientV3) V3PartnerTransferMerchantDetail(ctx context.Context, outBatch
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// Deprecated
-// 推荐直接使用 client.V3TransferMerchantDetail() 方法
-func (c *ClientV3) V3TransferMerchantDetailQuery(ctx context.Context, outBatchNo, outDetailNo string) (*TransferMerchantDetailRsp, error) {
-	return c.V3TransferMerchantDetail(ctx, outBatchNo, outDetailNo)
-}
-
 // 转账电子回单申请受理API
 // Code = 0 is success
 // 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter4_3_7.shtml
