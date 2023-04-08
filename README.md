@@ -1,4 +1,4 @@
-<div align=center><img width="240" height="240" alt="Logo was Loading Faild!" src="https://raw.githubusercontent.com/go-pay/gopay/main/logo.png"/></div>
+<div align=center><img width="240" height="240" alt="Logo was Loading Faild!" src="logo.png"/></div>
 
 # GoPay
 
@@ -72,9 +72,9 @@ func main() {
 * 承接各类业务外包项目开发（前端+后端，架构设计->系统开发->部署运营），行业经验丰富，费用合理，有需要的加微信联系。
 
 QQ群：
-<img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/qq_gopay.png"/>
+<img width="280" height="280" src=".github/qq_gopay.png"/>
 加微信拉群：
-<img width="280" height="280" src="https://raw.githubusercontent.com/go-pay/gopay/main/wechat_jerry.png"/>
+<img width="280" height="280" src=".github/wechat_jerry.png"/>
 
 ---
 
@@ -82,8 +82,8 @@ QQ群：
 
 ## 赞赏多少是您的心意，感谢支持！
 
-微信赞赏码： <img width="200" height="200" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang.png"/>
-支付宝赞助码： <img width="200" height="200" src="https://raw.githubusercontent.com/go-pay/gopay/main/zanshang_zfb.png"/>
+微信赞赏码： <img width="200" height="200" src=".github/zanshang.png"/>
+支付宝赞助码： <img width="200" height="200" src=".github/zanshang_zfb.png"/>
 
 ## 鸣谢
 
