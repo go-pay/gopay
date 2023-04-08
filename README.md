@@ -85,6 +85,8 @@ QQ群：
 微信赞赏码： <img width="200" height="200" src=".github/zanshang.png"/>
 支付宝赞助码： <img width="200" height="200" src=".github/zanshang_zfb.png"/>
 
+---
+
 <br>
 
 ## 鸣谢
