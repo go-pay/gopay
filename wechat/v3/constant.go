@@ -163,16 +163,17 @@ const (
 	v3GoldPlanCloseAdShow  = "/v3/goldplan/merchants/close-advertising-show"          // 关闭广告展示 POST
 
 	// 消费者投诉2.0
-	v3ComplaintList               = "/v3/merchant-service/complaints-v2"                         // 查询投诉单列表 GET
-	v3ComplaintDetail             = "/v3/merchant-service/complaints-v2/%s"                      // 查询投诉单详情 GET
-	v3ComplaintNegotiationHistory = "/v3/merchant-service/complaints-v2/%s/negotiation-historys" // 查询投诉协商历史 GET
-	v3ComplaintNotifyUrlCreate    = "/v3/merchant-service/complaint-notifications"               // 创建投诉通知回调地址 POST
-	v3ComplaintNotifyUrlQuery     = "/v3/merchant-service/complaint-notifications"               // 查询投诉通知回调地址 GET
-	v3ComplaintNotifyUrlUpdate    = "/v3/merchant-service/complaint-notifications"               // 查询投诉通知回调地址 PUT
-	v3ComplaintNotifyUrlDelete    = "/v3/merchant-service/complaint-notifications"               // 删除投诉通知回调地址 DELETE
-	v3ComplaintResponse           = "/v3/merchant-service/complaints-v2/%s/response"             // 提交回复 POST
-	v3ComplaintComplete           = "/v3/merchant-service/complaints-v2/%s/complete"             // 反馈处理完成 POST
-	v3ComplaintUploadImage        = "/v3/merchant-service/images/upload"                         // 商户上传反馈图片 POST
+	v3ComplaintList                 = "/v3/merchant-service/complaints-v2"                           // 查询投诉单列表 GET
+	v3ComplaintDetail               = "/v3/merchant-service/complaints-v2/%s"                        // complaint_id 查询投诉单详情 GET
+	v3ComplaintNegotiationHistory   = "/v3/merchant-service/complaints-v2/%s/negotiation-historys"   // complaint_id 查询投诉协商历史 GET
+	v3ComplaintNotifyUrlCreate      = "/v3/merchant-service/complaint-notifications"                 // 创建投诉通知回调地址 POST
+	v3ComplaintNotifyUrlQuery       = "/v3/merchant-service/complaint-notifications"                 // 查询投诉通知回调地址 GET
+	v3ComplaintNotifyUrlUpdate      = "/v3/merchant-service/complaint-notifications"                 // 查询投诉通知回调地址 PUT
+	v3ComplaintNotifyUrlDelete      = "/v3/merchant-service/complaint-notifications"                 // 删除投诉通知回调地址 DELETE
+	v3ComplaintResponse             = "/v3/merchant-service/complaints-v2/%s/response"               // complaint_id 回复用户 POST
+	v3ComplaintComplete             = "/v3/merchant-service/complaints-v2/%s/complete"               // complaint_id 反馈处理完成 POST
+	v3ComplaintUploadImage          = "/v3/merchant-service/images/upload"                           // 商户上传反馈图片 POST
+	v3ComplaintUpdateRefundProgress = "/v3/merchant-service/complaints-v2/%s/update-refund-progress" // complaint_id 更新退款审批结果 POST
 
 	// 分账（服务商）
 	v3ProfitShareOrder           = "/v3/profitsharing/orders"                  // 请求分账 POST

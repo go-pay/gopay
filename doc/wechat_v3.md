@@ -356,6 +356,7 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 删除投诉通知回调地址：`client.V3ComplaintNotifyUrlDelete()`
     * 提交回复：`client.V3ComplaintResponse()`
     * 反馈处理完成：`client.V3ComplaintComplete()`
+    * 更新退款审批结果：`client.V3ComplaintUpdateRefundProgress()`
     * 商户上传反馈图片：`client.V3ComplaintUploadImage()`
 * <font color='#07C160' size='4'>其他能力</font>
     * 图片上传：`client.V3MediaUploadImage()`

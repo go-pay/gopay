@@ -229,7 +229,7 @@ func (c *ClientV3) V3ComplaintDetail(ctx context.Context, complaintId string) (w
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 提交回复API
+// 回复用户API
 // Code = 0 is success
 // 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_14.shtml
 // 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_14.shtml
@@ -258,6 +258,29 @@ func (c *ClientV3) V3ComplaintResponse(ctx context.Context, complaintId string, 
 // 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_15.shtml
 func (c *ClientV3) V3ComplaintComplete(ctx context.Context, complaintId string, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
 	url := fmt.Sprintf(v3ComplaintComplete, complaintId)
+	authorization, err := c.authorization(MethodPost, url, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(ctx, bm, url, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &EmptyRsp{Code: Success, SignInfo: si}
+	if res.StatusCode != http.StatusNoContent {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 更新退款审批结果
+// Code = 0 is success
+// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_19.shtml
+// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_19.shtml
+func (c *ClientV3) V3ComplaintUpdateRefundProgress(ctx context.Context, complaintId string, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
+	url := fmt.Sprintf(v3ComplaintUpdateRefundProgress, complaintId)
 	authorization, err := c.authorization(MethodPost, url, bm)
 	if err != nil {
 		return nil, err
