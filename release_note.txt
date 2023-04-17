@@ -3,7 +3,8 @@
    (1) 微信V3：新增 client.V3ComplaintUpdateRefundProgress()，更新退款审批结果。
    (2) 微信V3：查询投诉单列表/详情，返回新增字段。
    (3) 微信V3：拆分model文件内结构体至不同文件内。
-   (3) 微信V3：删除 client.V3TransferMerchantDetailQuery()，请更换 client.V3TransferMerchantDetail()
+   (4) 微信V3：删除 client.V3TransferMerchantDetailQuery()，请更换 client.V3TransferMerchantDetail()
+   (5) 支付宝：拆分model文件内结构体至不同文件内。
 
 版本号：Release 1.5.91
 修改记录：
