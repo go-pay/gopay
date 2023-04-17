@@ -18,6 +18,7 @@ func (a *Client) TradeCustomsDeclare(ctx context.Context, bm gopay.BodyMap) (ali
 		return nil, err
 	}
 	var bs []byte
+
 	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.customs.declare"); err != nil {
 		return nil, err
 	}
