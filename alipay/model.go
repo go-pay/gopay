@@ -819,6 +819,7 @@ type FundAccountQueryResponse struct {
 type FundAccountQuery struct {
 	ErrorResponse
 	AvailableAmount string       `json:"available_amount,omitempty"`
+	FreezeAmount    string       `json:"freeze_amount,omitempty"`
 	ExtCardInfo     *ExtCardInfo `json:"ext_card_info,omitempty"`
 }
 
