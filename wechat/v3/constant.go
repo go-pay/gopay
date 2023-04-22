@@ -279,7 +279,7 @@ const (
 	ApplySettlementAccountTypePrivate  = "ACCOUNT_TYPE_PRIVATE"  // 经营者个人银行卡
 
 	//结算账号修改模式
-	ApplySettlementModifyModeAsync = "MODIFY_MODE_ASYNC" //手里模式
+	ApplySettlementModifyModeAsync = "MODIFY_MODE_ASYNC" //受理模式
 
 	// 特约商户结算账号汇款验证结果
 	ApplySettlementVerifying     = "VERIFYING"      // 系统汇款验证中，商户可发起提现尝试
