@@ -19,14 +19,15 @@ type Client struct {
 	MchId       string
 	ApiKey      string
 	IsProd      bool
+	bodySize    int // http response body size(MB), default is 10MB
 	DebugSwitch gopay.DebugSwitch
 	certificate *tls.Certificate
 	mu          sync.RWMutex
 }
 
 // 初始化QQ客户端（正式环境）
-//	mchId：商户ID
-//	ApiKey：API秘钥值
+// mchId：商户ID
+// ApiKey：API秘钥值
 func NewClient(mchId, apiKey string) (client *Client) {
 	return &Client{
 		MchId:       mchId,
@@ -35,16 +36,23 @@ func NewClient(mchId, apiKey string) (client *Client) {
 	}
 }
 
+// SetBodySize 设置http response body size(MB)
+func (q *Client) SetBodySize(sizeMB int) {
+	if sizeMB > 0 {
+		q.bodySize = sizeMB
+	}
+}
+
 // 向QQ发送Post请求，对于本库未提供的QQ API，可自行实现，通过此方法发送请求
-//	bm：请求参数的BodyMap
-//	url：完整url地址，例如：https://qpay.qq.com/cgi-bin/pay/qpay_unified_order.cgi
-//	tlsConfig：tls配置，如无需证书请求，传nil
+// bm：请求参数的BodyMap
+// url：完整url地址，例如：https://qpay.qq.com/cgi-bin/pay/qpay_unified_order.cgi
+// tlsConfig：tls配置，如无需证书请求，传nil
 func (q *Client) PostQQAPISelf(ctx context.Context, bm gopay.BodyMap, url string, tlsConfig *tls.Config) (bs []byte, err error) {
 	return q.doQQ(ctx, bm, url, tlsConfig)
 }
 
 // 提交付款码支付
-//	文档地址：https://qpay.qq.com/buss/wiki/1/1122
+// 文档地址：https://qpay.qq.com/buss/wiki/1/1122
 func (q *Client) MicroPay(ctx context.Context, bm gopay.BodyMap) (qqRsp *MicroPayResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "device_info", "auth_code")
 	if err != nil {
@@ -57,13 +65,13 @@ func (q *Client) MicroPay(ctx context.Context, bm gopay.BodyMap) (qqRsp *MicroPa
 	}
 	qqRsp = new(MicroPayResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
 
 // 撤销订单
-//	文档地址：https://qpay.qq.com/buss/wiki/1/1125
+// 文档地址：https://qpay.qq.com/buss/wiki/1/1125
 func (q *Client) Reverse(ctx context.Context, bm gopay.BodyMap) (qqRsp *ReverseResponse, err error) {
 	err = bm.CheckEmptyError("sub_mch_id", "nonce_str", "out_trade_no", "op_user_id", "op_user_passwd")
 	if err != nil {
@@ -75,13 +83,13 @@ func (q *Client) Reverse(ctx context.Context, bm gopay.BodyMap) (qqRsp *ReverseR
 	}
 	qqRsp = new(ReverseResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
 
 // 统一下单
-//	文档地址：https://qpay.qq.com/buss/wiki/38/1203
+// 文档地址：https://qpay.qq.com/buss/wiki/38/1203
 func (q *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (qqRsp *UnifiedOrderResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "trade_type", "notify_url")
 	if err != nil {
@@ -93,13 +101,13 @@ func (q *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (qqRsp *Uni
 	}
 	qqRsp = new(UnifiedOrderResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
 
 // 订单查询
-//	文档地址：https://qpay.qq.com/buss/wiki/38/1205
+// 文档地址：https://qpay.qq.com/buss/wiki/38/1205
 func (q *Client) OrderQuery(ctx context.Context, bm gopay.BodyMap) (qqRsp *OrderQueryResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str")
 	if err != nil {
@@ -114,13 +122,13 @@ func (q *Client) OrderQuery(ctx context.Context, bm gopay.BodyMap) (qqRsp *Order
 	}
 	qqRsp = new(OrderQueryResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
 
 // 关闭订单
-//	文档地址：https://qpay.qq.com/buss/wiki/38/1206
+// 文档地址：https://qpay.qq.com/buss/wiki/38/1206
 func (q *Client) CloseOrder(ctx context.Context, bm gopay.BodyMap) (qqRsp *CloseOrderResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_trade_no")
 	if err != nil {
@@ -132,14 +140,14 @@ func (q *Client) CloseOrder(ctx context.Context, bm gopay.BodyMap) (qqRsp *Close
 	}
 	qqRsp = new(CloseOrderResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
 
 // 申请退款
-//	注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 nil，否则，3证书Path均不可空
-//	文档地址：https://qpay.qq.com/buss/wiki/38/1207
+// 注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 nil，否则，3证书Path均不可空
+// 文档地址：https://qpay.qq.com/buss/wiki/38/1207
 func (q *Client) Refund(ctx context.Context, bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (qqRsp *RefundResponse, err error) {
 	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
@@ -161,13 +169,13 @@ func (q *Client) Refund(ctx context.Context, bm gopay.BodyMap, certFilePath, key
 	}
 	qqRsp = new(RefundResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
 
 // 退款查询
-//	文档地址：https://qpay.qq.com/buss/wiki/38/1208
+// 文档地址：https://qpay.qq.com/buss/wiki/38/1208
 func (q *Client) RefundQuery(ctx context.Context, bm gopay.BodyMap) (qqRsp *RefundQueryResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str")
 	if err != nil {
@@ -182,13 +190,13 @@ func (q *Client) RefundQuery(ctx context.Context, bm gopay.BodyMap) (qqRsp *Refu
 	}
 	qqRsp = new(RefundQueryResponse)
 	if err = xml.Unmarshal(bs, qqRsp); err != nil {
-		return nil, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return qqRsp, nil
 }
 
 // 交易账单
-//	文档地址：https://qpay.qq.com/buss/wiki/38/1209
+// 文档地址：https://qpay.qq.com/buss/wiki/38/1209
 func (q *Client) StatementDown(ctx context.Context, bm gopay.BodyMap) (qqRsp string, err error) {
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "bill_type")
 	if err != nil {
@@ -206,7 +214,7 @@ func (q *Client) StatementDown(ctx context.Context, bm gopay.BodyMap) (qqRsp str
 }
 
 // 资金账单
-//	文档地址：https://qpay.qq.com/buss/wiki/38/3089
+// 文档地址：https://qpay.qq.com/buss/wiki/38/3089
 func (q *Client) AccRoll(ctx context.Context, bm gopay.BodyMap) (qqRsp string, err error) {
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "acc_type")
 	if err != nil {
@@ -239,6 +247,9 @@ func (q *Client) doQQ(ctx context.Context, bm gopay.BodyMap, url string, tlsConf
 	}
 
 	httpClient := xhttp.NewClient()
+	if q.bodySize > 0 {
+		httpClient.SetBodySize(q.bodySize)
+	}
 	if tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
 	}
@@ -275,7 +286,12 @@ func (q *Client) doQQGet(ctx context.Context, bm gopay.BodyMap, url, signType st
 	}
 	param := bm.EncodeURLParams()
 	url = url + "?" + param
-	res, bs, err := xhttp.NewClient().Get(url).EndBytes(ctx)
+
+	httpClient := xhttp.NewClient()
+	if q.bodySize > 0 {
+		httpClient.SetBodySize(q.bodySize)
+	}
+	res, bs, err := httpClient.Get(url).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -304,6 +320,9 @@ func (q *Client) doQQRed(ctx context.Context, bm gopay.BodyMap, url string, tlsC
 	httpClient := xhttp.NewClient()
 	if tlsConfig != nil {
 		httpClient.SetTLSConfig(tlsConfig)
+	}
+	if q.bodySize > 0 {
+		httpClient.SetBodySize(q.bodySize)
 	}
 	if q.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("QQ_Request: %s", bm.JsonBody())

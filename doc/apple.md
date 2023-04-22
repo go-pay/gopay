@@ -1,5 +1,6 @@
 ## Apple
-### Apple Pay 支付校验收据
+
+## Apple Pay 支付校验收据
 
 * [苹果校验收据文档](https://developer.apple.com/documentation/appstorereceipts/verifyreceipt)
 
@@ -9,7 +10,7 @@
 
 ---
 
-### 校验示例
+#### 校验示例
 
 ```go
 import (
@@ -38,21 +39,21 @@ if rsp.Receipt != nil {
 > 苹果支付服务服务端通知数据解析
 > 对应App下 `[App 信息] --> [App Store 服务器通知]  --> [版本 2]` 配置对应的服务器地址,支付状态发生变化时Apple 将通过POST请求推送消息至配置的地址
 
-### 示例
+#### 示例
 
 - 请参考 `notification_v2_test.go`
 
 ```go
 import (
-"github.com/go-pay/gopay/apple"
-"github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay/apple"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // decode signedPayload
 payload, err := apple.DecodeSignedPayload(signedPayload)
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 xlog.Debugf("payload.NotificationType: %s", payload.NotificationType)
 xlog.Debugf("payload.Subtype: %s", payload.Subtype)
@@ -62,77 +63,82 @@ xlog.Debugf("payload.Data: %+v", payload.Data)
 bs1, _ := json.Marshal(payload)
 xlog.Color(xlog.RedBright).Info(string(bs1))
 /*
-	{
-	    "notificationType":"DID_RENEW",
-	    "subtype":"",
-	    "notificationUUID":"469bf30e-7715-4f9f-aae3-a7bfc12aea77",
-	    "notificationVersion":"",
-	    "data":{
-	        "appAppleId":0,
-	        "bundleId":"com.audaos.audarecorder",
-	        "bundleVersion":"7",
-	        "environment":"Sandbox",
-	        "signedRenewalInfo":"xxxxxxxxxx",
-	        "signedTransactionInfo":"xxxxxxxxxxx"
-	    }
-	}
+   {
+       "notificationType":"DID_RENEW",
+       "subtype":"",
+       "notificationUUID":"469bf30e-7715-4f9f-aae3-a7bfc12aea77",
+       "notificationVersion":"",
+       "data":{
+           "appAppleId":0,
+           "bundleId":"com.audaos.audarecorder",
+           "bundleVersion":"7",
+           "environment":"Sandbox",
+           "signedRenewalInfo":"xxxxxxxxxx",
+           "signedTransactionInfo":"xxxxxxxxxxx"
+       }
+   }
 */
 
 // decode renewalInfo
 renewalInfo, err := payload.DecodeRenewalInfo()
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 xlog.Debugf("data.renewalInfo: %+v", renewalInfo)
 bs, _ := json.Marshal(renewalInfo)
 xlog.Color(xlog.GreenBright).Info(string(bs))
 /*
-	{
-	    "autoRenewProductId":"com.audaos.audarecorder.vip.m2",
-	    "autoRenewStatus":1,
-	    "expirationIntent":0,
-	    "gracePeriodExpiresDate":0,
-	    "isInBillingRetryPeriod":false,
-	    "offerIdentifier":"",
-	    "offerType":0,
-	    "originalTransactionId":"2000000000842607",
-	    "priceIncreaseStatus":0,
-	    "productId":"com.audaos.audarecorder.vip.m2",
-	    "signedDate":1646387008228
-	}
+   {
+       "autoRenewProductId":"com.audaos.audarecorder.vip.m2",
+       "autoRenewStatus":1,
+       "expirationIntent":0,
+       "gracePeriodExpiresDate":0,
+       "isInBillingRetryPeriod":false,
+       "offerIdentifier":"",
+       "offerType":0,
+       "originalTransactionId":"2000000000842607",
+       "priceIncreaseStatus":0,
+       "productId":"com.audaos.audarecorder.vip.m2",
+       "signedDate":1646387008228
+   }
 */
 
 // decode transactionInfo
 transactionInfo, err := payload.DecodeTransactionInfo()
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 xlog.Debugf("data.transactionInfo: %+v", transactionInfo)
 bs2, _ := json.Marshal(transactionInfo)
 xlog.Color(xlog.YellowBright).Info(string(bs2))
 /*
-	{
-	    "appAccountToken":"",
-	    "bundleId":"com.audaos.audarecorder",
-	    "expiresDate":1646387196000,
-	    "inAppOwnershipType":"PURCHASED",
-	    "isUpgraded":false,
-	    "offerIdentifier":"",
-	    "offerType":0,
-	    "originalPurchaseDate":1646046037000,
-	    "originalTransactionId":"2000000000842607",
-	    "productId":"com.audaos.audarecorder.vip.m2",
-	    "purchaseDate":1646387016000,
-	    "quantity":1,
-	    "revocationDate":0,
-	    "revocationReason":"",
-	    "signedDate":1646387008254,
-	    "subscriptionGroupIdentifier":"20929536",
-	    "transactionId":"2000000004047119",
-	    "type":"Auto-Renewable Subscription",
-	    "webOrderLineItemId":"2000000000302832"
-	}
+{
+    "appAccountToken":"",
+    "bundleId":"com.audaos.audarecorder",
+    "expiresDate":1646387196000,
+    "inAppOwnershipType":"PURCHASED",
+    "isUpgraded":false,
+    "offerIdentifier":"",
+    "offerType":0,
+    "originalPurchaseDate":1646046037000,
+    "originalTransactionId":"2000000000842607",
+    "productId":"com.audaos.audarecorder.vip.m2",
+    "purchaseDate":1646387016000,
+    "quantity":1,
+    "revocationDate":0,
+    "revocationReason":"",
+    "signedDate":1646387008254,
+    "subscriptionGroupIdentifier":"20929536",
+    "transactionId":"2000000004047119",
+    "type":"Auto-Renewable Subscription",
+    "webOrderLineItemId":"2000000000302832"
+}
 */
 ```
+
+### App Store Server API
+
+* `apple.GetTransactionHistory()` => Get Transaction History
+* `apple.GetAllSubscriptionStatuses()` => GetAllSubscriptionStatuses

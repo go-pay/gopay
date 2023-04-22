@@ -17,7 +17,11 @@ func TestClient_SystemOauthToken(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.SystemOauthToken(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.SystemOauthToken(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -34,7 +38,29 @@ func TestClient_OpenAuthTokenApp(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.OpenAuthTokenApp(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.OpenAuthTokenApp(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestClient_OpenAuthTokenAppQuery(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	bm.Set("app_auth_token", "202212BB9e1cd0c2e0ab489393aa2570ec4faX87")
+
+	// 发起请求
+	aliRsp, err := client.OpenAuthTokenAppQuery(ctx, bm)
+	if err != nil {
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -48,19 +74,27 @@ func TestClient_UserInfoAuth(t *testing.T) {
 		Set("state", "init")
 
 	// 发起请求
-	aliRsp, err := client.UserInfoAuth(ctx, bm)
+	html, err := client.UserInfoAuth(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.UserInfoAuth(%+v),error:%+v", bm, err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
-	xlog.Debug("aliRsp:", *aliRsp)
+	xlog.Debugf("html: %s", string(html))
 }
 
 func TestClient_UserInfoShare(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserInfoShare(ctx, "auth_token")
 	if err != nil {
-		xlog.Errorf("client.UserInfoShare(),error:%+v", err)
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
@@ -81,7 +115,7 @@ func TestClient_PublicCertDownload(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.PublicCertDownload(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.UserInfoShare(),error:%+v", err)
+		//xlog.Errorf("client.UserInfoShare(),error:%+v", err)
 		return
 	}
 	xlog.Debugf("aliRsp.Response.AlipayCertContent:\n %s", aliRsp.Response.AlipayCertContent)

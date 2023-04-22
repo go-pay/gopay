@@ -29,6 +29,9 @@ client := wechat.NewClient("wxdaa2ab9ef87b5497", mchId, apiKey, false)
 // 打开Debug开关，输出请求日志，默认关闭
 client.DebugSwitch = gopay.DebugOn
 
+// 自定义配置http请求接收返回结果body大小，默认 10MB
+client.SetBodySize() // 没有特殊需求，可忽略此配置
+
 // 设置国家：不设置默认 中国国内
 //    wechat.China：中国国内
 //    wechat.China2：中国国内备用

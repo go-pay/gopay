@@ -8,17 +8,17 @@ import (
 	"github.com/go-pay/gopay/pkg/util"
 )
 
-//	AppId	  string `json:"app_id"`	  //支付宝分配给开发者的应用ID
-//	Method	 string `json:"method"`	  //接口名称
-//	Format	 string `json:"format"`	  //仅支持 JSON
-//	ReturnUrl  string `json:"return_url"`  //HTTP/HTTPS开头字符串
-//	Charset	string `json:"charset"`	 //请求使用的编码格式，如utf-8,gbk,gb2312等，推荐使用 utf-8
-//	SignType   string `json:"sign_type"`   //商户生成签名字符串所使用的签名算法类型，目前支持RSA2和RSA，推荐使用 RSA2
-//	Sign	   string `json:"sign"`		//商户请求参数的签名串
-//	Timestamp  string `json:"timestamp"`   //发送请求的时间，格式"yyyy-MM-dd HH:mm:ss"
-//	Version	string `json:"version"`	 //调用的接口版本，固定为：1.0
-//	NotifyUrl  string `json:"notify_url"`  //支付宝服务器主动通知商户服务器里指定的页面http/https路径。
-//	BizContent string `json:"biz_content"` //业务请求参数的集合，最大长度不限，除公共参数外所有请求参数都必须放在这个参数中传递，具体参照各产品快速接入文档
+// AppId   string `json:"app_id"`   //支付宝分配给开发者的应用ID
+// Method  string `json:"method"`   //接口名称
+// Format  string `json:"format"`   //仅支持 JSON
+// ReturnUrl  string `json:"return_url"`  //HTTP/HTTPS开头字符串
+// Charset string `json:"charset"`  //请求使用的编码格式，如utf-8,gbk,gb2312等，推荐使用 utf-8
+// SignType   string `json:"sign_type"`   //商户生成签名字符串所使用的签名算法类型，目前支持RSA2和RSA，推荐使用 RSA2
+// Sign    string `json:"sign"`  //商户请求参数的签名串
+// Timestamp  string `json:"timestamp"`   //发送请求的时间，格式"yyyy-MM-dd HH:mm:ss"
+// Version string `json:"version"`  //调用的接口版本，固定为：1.0
+// NotifyUrl  string `json:"notify_url"`  //支付宝服务器主动通知商户服务器里指定的页面http/https路径。
+// BizContent string `json:"biz_content"` //业务请求参数的集合，最大长度不限，除公共参数外所有请求参数都必须放在这个参数中传递，具体参照各产品快速接入文档
 
 type RoyaltyDetailInfoPojo struct {
 	RoyaltyType  string `json:"royalty_type,omitempty"`
@@ -49,7 +49,7 @@ func (a *Client) SetLocation(name string) (client *Client) {
 // Deprecated
 // 推荐使用 client.SetCertSnByContent() 或 client.SetCertSnByPath()
 // 设置 应用公钥证书SN
-//	appCertSN：应用公钥证书SN，通过 alipay.GetCertSN() 获取
+// appCertSN：应用公钥证书SN，通过 alipay.GetCertSN() 获取
 func (a *Client) SetAppCertSN(appCertSN string) (client *Client) {
 	a.AppCertSN = appCertSN
 	return a
@@ -58,7 +58,7 @@ func (a *Client) SetAppCertSN(appCertSN string) (client *Client) {
 // Deprecated
 // 推荐使用 client.SetCertSnByContent() 或 client.SetCertSnByPath()
 // 设置 支付宝公钥证书SN
-//	aliPayPublicCertSN：支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
+// aliPayPublicCertSN：支付宝公钥证书SN，通过 alipay.GetCertSN() 获取
 func (a *Client) SetAliPayPublicCertSN(aliPayPublicCertSN string) (client *Client) {
 	a.AliPayPublicCertSN = aliPayPublicCertSN
 	return a
@@ -67,16 +67,16 @@ func (a *Client) SetAliPayPublicCertSN(aliPayPublicCertSN string) (client *Clien
 // Deprecated
 // 推荐使用 client.SetCertSnByContent() 或 client.SetCertSnByPath()
 // 设置 支付宝CA根证书SN
-//	aliPayRootCertSN：支付宝CA根证书SN，通过 alipay.GetRootCertSN() 获取
+// aliPayRootCertSN：支付宝CA根证书SN，通过 alipay.GetRootCertSN() 获取
 func (a *Client) SetAliPayRootCertSN(aliPayRootCertSN string) (client *Client) {
 	a.AliPayRootCertSN = aliPayRootCertSN
 	return a
 }
 
 // 通过应用公钥证书路径设置 app_cert_sn、alipay_root_cert_sn、alipay_cert_sn
-//	appCertPath：应用公钥证书路径
-//	aliPayRootCertPath：支付宝根证书文件路径
-//	aliPayPublicCertPath：支付宝公钥证书文件路径
+// appCertPath：应用公钥证书路径
+// aliPayRootCertPath：支付宝根证书文件路径
+// aliPayPublicCertPath：支付宝公钥证书文件路径
 func (a *Client) SetCertSnByPath(appCertPath, aliPayRootCertPath, aliPayPublicCertPath string) (err error) {
 	appCertSn, err := GetCertSN(appCertPath)
 	if err != nil {
@@ -97,9 +97,9 @@ func (a *Client) SetCertSnByPath(appCertPath, aliPayRootCertPath, aliPayPublicCe
 }
 
 // 通过应用公钥证书内容设置 app_cert_sn、alipay_root_cert_sn、alipay_cert_sn
-//	appCertContent：应用公钥证书文件内容
-//	aliPayRootCertContent：支付宝根证书文件内容
-//	aliPayPublicCertContent：支付宝公钥证书文件内容
+// appCertContent：应用公钥证书文件内容
+// aliPayRootCertContent：支付宝根证书文件内容
+// aliPayPublicCertContent：支付宝公钥证书文件内容
 func (a *Client) SetCertSnByContent(appCertContent, aliPayRootCertContent, aliPayPublicCertContent []byte) (err error) {
 	appCertSn, err := GetCertSN(appCertContent)
 	if err != nil {

@@ -12,7 +12,7 @@ import (
 )
 
 // 获取AccessToken（Get an access token）
-//	文档：https://developer.paypal.com/docs/api/reference/get-an-access-token
+// 文档：https://developer.paypal.com/docs/api/reference/get-an-access-token
 func (c *Client) GetAccessToken() (token *AccessToken, err error) {
 	var (
 		baseUrl = baseUrlProd

@@ -27,22 +27,28 @@ import (
 )
 
 // NewClientV3 初始化微信客户端 v3
-//	mchid：商户ID 或者服务商模式的 sp_mchid
-// 	serialNo：商户证书的证书序列号
-//	apiV3Key：apiV3Key，商户平台获取
-//	privateKey：私钥 apiclient_key.pem 读取后的内容
+// mchid：商户ID 或者服务商模式的 sp_mchid
+// serialNo：商户证书的证书序列号
+// apiV3Key：apiV3Key，商户平台获取
+// privateKey：私钥 apiclient_key.pem 读取后的内容
 client, err = wechat.NewClientV3(MchId, SerialNo, APIv3Key, PrivateKey)
 if err != nil {
     xlog.Error(err)
     return
 }
 
-// 启用自动同步返回验签，并定时更新微信平台API证书
+// 设置微信平台API证书和序列号（推荐开启自动验签，无需手动设置证书公钥等信息）
+//client.SetPlatformCert([]byte(""), "")
+
+// 启用自动同步返回验签，并定时更新微信平台API证书（开启自动验签时，无需单独设置微信平台API证书和序列号）
 err = client.AutoVerifySign()
 if err != nil {
     xlog.Error(err)
     return
 }
+
+// 自定义配置http请求接收返回结果body大小，默认 10MB
+client.SetBodySize() // 没有特殊需求，可忽略此配置
 
 // 打开Debug开关，输出日志，默认是关闭的
 client.DebugSwitch = gopay.DebugOn
@@ -81,6 +87,11 @@ if err != nil {
     xlog.Error(err)
     return
 }
+if wxRsp.Code == Success {
+    xlog.Debugf("wxRsp: %#v", wxRsp.Response)
+    return
+}
+xlog.Errorf("wxRsp:%s", wxRsp.Error)
 ```
 
 ### 3、下单后，获取微信小程序支付、APP支付、JSAPI支付所需要的 pay sign
@@ -100,7 +111,7 @@ app, err := client.PaySignOfApp("appid", "prepayid")
 jsapi, err := client.PaySignOfJSAPI("appid", "prepayid")
 ```
 
-### 4、同步返回参数验签Sign、异步通知参数解析和验签Sign、异步通知返回
+### 4、同步请求返回验签Sign、异步通知参数解析+验签Sign+回执、敏感信息加/解密
 
 > 异步通知请求参数需要先解析，解析出来的结构体或BodyMap再验签（此处需要注意，`http.Request.Body` 只能解析一次，如果需要解析前调试，请处理好Body复用问题）
 
@@ -108,7 +119,7 @@ jsapi, err := client.PaySignOfJSAPI("appid", "prepayid")
 
 [Echo Web框架](https://github.com/labstack/echo)
 
-- 同步返回验签，手动验签（如已开启自动验签，则无需手动验签操作）
+- ~~同步返回验签，手动验签~~（推荐开启自动验签，则无需手动验签操作）
 
 ```go
 import (
@@ -121,15 +132,17 @@ if err != nil {
     xlog.Error(err)
     return
 }
-// wxPublicKey 通过 client.WxPublicKey() 获取
-err = wechat.V3VerifySignByPK(wxRsp.SignInfo.HeaderTimestamp, wxRsp.SignInfo.HeaderNonce, wxRsp.SignInfo.SignBody, wxRsp.SignInfo.HeaderSignature, wxPublicKey)
+
+pkMap := client.WxPublicKeyMap()
+// wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKeyMap() 获取，然后根据 signInfo.HeaderSerial 获取相应的公钥
+err = wechat.V3VerifySignByPK(wxRsp.SignInfo.HeaderTimestamp, wxRsp.SignInfo.HeaderNonce, wxRsp.SignInfo.SignBody, wxRsp.SignInfo.HeaderSignature, pkMap[wxRsp.SignInfo.HeaderSerial])
 if err != nil {
     xlog.Error(err)
     return
 }
 ```
 
-- 异步通知验签 及 敏感参数解密
+- 异步通知解析、验签、回执
 
 ```go
 import (
@@ -143,22 +156,16 @@ if err != nil {
     return
 }
 
-// wxPublicKey 通过 client.WxPublicKey() 获取
-err = notifyReq.VerifySignByPK(wxPublicKey)
+// 获取微信平台证书
+certMap := client.WxPublicKeyMap()
+// 验证异步通知的签名
+err = notifyReq.VerifySignByPKMap(certMap)
 if err != nil {
     xlog.Error(err)
     return
 }
 
-// ========异步通知敏感信息解密========
-// 普通支付通知解密
-result, err := notifyReq.DecryptCipherText(apiV3Key)
-// 合单支付通知解密
-result, err := notifyReq.DecryptCombineCipherText(apiV3Key)
-// 退款通知解密
-result, err := notifyReq.DecryptRefundCipherText(apiV3Key)
-
-// ========异步通知应答========
+// ====↓↓↓====异步通知应答====↓↓↓====
 // 退款通知http应答码为200且返回状态码为SUCCESS才会当做商户接收成功，否则会重试。
 // 注意：重试过多会导致微信支付端积压过多通知而堵塞，影响其他正常通知。
 
@@ -167,6 +174,26 @@ c.JSON(http.StatusOK, &wechat.V3NotifyRsp{Code: gopay.SUCCESS, Message: "成功"
 
 // 此写法是 echo 框架返回微信的写法
 return c.JSON(http.StatusOK, &wechat.V3NotifyRsp{Code: gopay.SUCCESS, Message: "成功"})
+```
+
+- 敏感信息加/解密
+
+```go
+// ====↓↓↓====入参、出参加解密====↓↓↓====
+
+// 敏感信息加密
+client.V3EncryptText()
+// 敏感信息解密
+client.V3DecryptText()
+
+// ====↓↓↓====异步通知参数解密====↓↓↓====
+
+// 普通支付通知解密
+result, err := notifyReq.DecryptCipherText(apiV3Key)
+// 合单支付通知解密
+result, err := notifyReq.DecryptCombineCipherText(apiV3Key)
+// 退款通知解密
+result, err := notifyReq.DecryptRefundCipherText(apiV3Key)
 ```
 
 ### 5、微信v3 公共API（仅部分说明）
@@ -230,9 +257,11 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 申请资金账单：`client.V3BillFundFlowBill()`
     * 申请特约商户资金账单：`client.V3BillEcommerceFundFlowBill()`
     * 下载账单：`client.V3BillDownLoadBill()`
-* <font color='#07C160' size='4'>提现（服务商）</font>
-    * 特约商户余额提现：`client.V3Withdraw()`
-    * 查询特约商户提现状态：`client.V3WithdrawStatus()`
+* <font color='#07C160' size='4'>提现（服务商、电商）</font>
+    * 特约商户余额提现/二级商户预约提现：`client.V3Withdraw()`
+    * 查询特约商户提现状态/二级商户查询预约提现状态：`client.V3WithdrawStatus()`
+    * 电商平台预约提现：`client.V3EcommerceWithdraw()`
+    * 电商平台查询预约提现状态：`client.V3EcommerceWithdrawStatus()`
     * 按日下载提现异常文件：`client.V3WithdrawDownloadErrBill()`
 * <font color='#07C160' size='4'>微信支付分（公共API）</font>
     * 创建支付分订单：`client.V3ScoreOrderCreate()`
@@ -262,8 +291,13 @@ wechat.V3DecryptScoreNotifyCipherText()
 * <font color='#07C160' size='4'>智慧商圈</font>
     * 商圈积分同步：`client.V3BusinessPointsSync()`
     * 商圈积分授权查询：`client.V3BusinessAuthPointsQuery()`
+    * 商圈会员待积分状态查询：`client.V3BusinessPointsStatusQuery()`
+    * 商圈会员停车状态同步：`client.V3BusinessParkingSync()`
 * <font color='#07C160' size='4'>微信支付分停车服务</font>
-    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_8_1.shtml)
+    * 查询车牌服务开通信息：`client.V3VehicleParkingQuery()`
+    * 创建停车入场：`client.V3VehicleParkingIn()`
+    * 扣费受理：`client.V3VehicleParkingFee()`
+    * 查询订单：`client.V3VehicleParkingOrder()`
 * <font color='#07C160' size='4'>代金券</font>
     * 创建代金券批次：`client.V3FavorBatchCreate()`
     * 激活代金券批次：`client.V3FavorBatchStart()`
@@ -322,13 +356,14 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 删除投诉通知回调地址：`client.V3ComplaintNotifyUrlDelete()`
     * 提交回复：`client.V3ComplaintResponse()`
     * 反馈处理完成：`client.V3ComplaintComplete()`
+    * 更新退款审批结果：`client.V3ComplaintUpdateRefundProgress()`
     * 商户上传反馈图片：`client.V3ComplaintUploadImage()`
 * <font color='#07C160' size='4'>其他能力</font>
     * 图片上传：`client.V3MediaUploadImage()`
     * 视频上传：`client.V3MediaUploadVideo()`
     * 图片上传（营销专用）：`client.V3FavorMediaUploadImage()`
-* <font color='#07C160' size='4'>批量转账（直连商户）</font>
-    * 发起批量转账：`client.V3Transfer()`
+* <font color='#07C160' size='4'>商家转账到零钱（直连商户）</font>
+    * 发起商家转账：`client.V3Transfer()`
     * 微信批次单号查询批次单：`client.V3TransferQuery()`
     * 微信明细单号查询明细单：`client.V3TransferDetail()`
     * 商家批次单号查询批次单：`client.V3TransferMerchantQuery()`
@@ -337,14 +372,15 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 查询转账电子回单：`client.V3TransferReceiptQuery()`
     * 转账明细电子回单受理：`client.V3TransferDetailReceipt()`
     * 查询转账明细电子回单受理结果：`client.V3TransferDetailReceiptQuery()`
-* <font color='#07C160' size='4'>批量转账（服务商）</font>
+* <font color='#07C160' size='4'>转账（服务商）</font>
     * 发起批量转账：`client.V3PartnerTransfer()`
     * 微信批次单号查询批次单：`client.V3PartnerTransferQuery()`
     * 微信明细单号查询明细单：`client.V3PartnerTransferDetail()`
     * 商家批次单号查询批次单：`client.V3PartnerTransferMerchantQuery()`
     * 商家明细单号查询明细单：`client.V3PartnerTransferMerchantDetail()`
 * <font color='#07C160' size='4'>余额查询</font>
-    * 查询特约商户账户实时余额（服务商）：`client.V3EcommerceBalance()`
+    * 查询特约商户账户实时余额：`client.V3EcommerceBalance()`
+    * 查询二级商户账户日终余额：`client.V3EcommerceDayBalance()`
     * 查询账户实时余额：`client.V3MerchantBalance()`
     * 查询账户日终余额：`client.V3MerchantDayBalance()`
 * <font color='#07C160' size='4'>来账识别</font>
@@ -396,10 +432,16 @@ wechat.V3DecryptScoreNotifyCipherText()
 ### 微信v3公共 API
 
 * `wechat.GetPlatformCerts()` => 获取微信平台证书公钥
-* `client.GetAndSelectNewestCert()` => 获取并选择最新的有效证书
-* `wechat.V3VerifySignByPK()` => 微信V3 同步验签（推荐直接打开自动验签功能）
+* `wechat.GetPlatformRSACerts()` => 获取平台RSA证书列表
+* `wechat.GetPlatformSM2Certs()` => 获取国密平台证书
+* `client.GetAndSelectNewestCert()` => 获取证书Map集并选择最新的有效证书序列号（默认RSA证书）
+* `client.GetAndSelectNewestCertRSA()` => 获取证书Map集并选择最新的有效RSA证书序列号
+* `client.GetAndSelectNewestCertSM2()` => 获取证书Map集并选择最新的有效SM2证书序列号
+* `client.GetAndSelectNewestCertALL()` => 获取证书Map集并选择最新的有效RSA+SM2证书序列号
+* `client.WxPublicKey()` => 获取最新的有效证书
+* `client.WxPublicKeyMap()` => 获取有效证书 Map
 * `wechat.V3ParseNotify()` => 解析微信回调请求的参数到 V3NotifyReq 结构体
-* `notify.VerifySignByPK()` => 微信V3 异步通知验签
+* `notify.VerifySignByPKMap()` => 微信V3 异步通知验签
 * `client.V3EncryptText()` => 敏感参数信息加密
 * `client.V3DecryptText()` =>  敏感参数信息解密
 * `wechat.V3EncryptText()` => 敏感参数信息加密

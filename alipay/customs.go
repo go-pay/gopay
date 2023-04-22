@@ -11,23 +11,23 @@ import (
 )
 
 // alipay.trade.customs.declare(统一收单报关接口)
-//	文档地址：https://opendocs.alipay.com/apis/api_29/alipay.trade.customs.declare
+// 文档地址：https://opendocs.alipay.com/apis/api_29/alipay.trade.customs.declare
 func (a *Client) TradeCustomsDeclare(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCustomsDeclareRsp, err error) {
 	err = bm.CheckEmptyError("out_request_no", "trade_no", "merchant_customs_code", "merchant_customs_name", "amount", "customs_place")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
+
 	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.customs.declare"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(TradeCustomsDeclareRsp)
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, err
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
-		info := aliRsp.Response
-		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
@@ -35,7 +35,7 @@ func (a *Client) TradeCustomsDeclare(ctx context.Context, bm gopay.BodyMap) (ali
 }
 
 // alipay.acquire.customs(报关接口)
-//	文档地址：https://opendocs.alipay.com/pre-open/01x3kh
+// 文档地址：https://opendocs.alipay.com/pre-open/01x3kh
 func (a *Client) AcquireCustoms(ctx context.Context, bm gopay.BodyMap) (aliRspBs []byte, err error) {
 	err = bm.CheckEmptyError("partner", "out_request_no", "trade_no", "merchant_customs_code", "amount", "customs_place", "merchant_customs_name")
 	if err != nil {
@@ -49,7 +49,7 @@ func (a *Client) AcquireCustoms(ctx context.Context, bm gopay.BodyMap) (aliRspBs
 }
 
 // alipay.overseas.acquire.customs.query(报关查询接口)
-//	文档地址：https://opendocs.alipay.com/pre-open/01x3ki
+// 文档地址：https://opendocs.alipay.com/pre-open/01x3ki
 func (a *Client) AcquireCustomsQuery(ctx context.Context, bm gopay.BodyMap) (aliRspBs []byte, err error) {
 	err = bm.CheckEmptyError("partner", "out_request_nos")
 	if err != nil {
@@ -69,7 +69,7 @@ func (a *Client) doAliPayCustoms(ctx context.Context, bm gopay.BodyMap, service 
 	bm.Remove("sign_type")
 	bm.Remove("sign")
 
-	sign, err := GetRsaSign(bm, RSA, a.privateKey)
+	sign, err := a.getRsaSign(bm, RSA, a.privateKey)
 	if err != nil {
 		return nil, fmt.Errorf("GetRsaSign Error: %v", err)
 	}

@@ -4,7 +4,6 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/xml"
-	"fmt"
 	"testing"
 
 	"github.com/go-pay/gopay/pkg/xlog"
@@ -19,13 +18,13 @@ func TestBodyMap_CheckParamsNull(t *testing.T) {
 
 	err := bm.CheckEmptyError("name", "age", "phone")
 	if err != nil {
-		xlog.Errorf("bm.CheckEmptyError():error:%+v", err)
+		xlog.Errorf("bm.CheckEmptyError(),err: %+v", err)
 		return
 	}
 	h := sha1.New()
 	h.Write([]byte("golang"))
 	bs := h.Sum(nil)
-	_signature := fmt.Sprintf("%s", hex.EncodeToString(bs))
+	_signature := hex.EncodeToString(bs)
 	xlog.Info(_signature) // 771e417b9dcae54aead2f3cbbbff340787bc462f
 	// 771e417b9dcae54aead2f3cbbbff340787bc462f
 }

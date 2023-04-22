@@ -5,6 +5,7 @@ import (
 	"crypto/rsa"
 	"fmt"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/go-pay/gopay"
@@ -21,18 +22,24 @@ type ClientV3 struct {
 	SerialNo    string
 	WxSerialNo  string
 	autoSign    bool
+	bodySize    int // http response body size(MB), default is 10MB
+	rwMu        sync.RWMutex
 	privateKey  *rsa.PrivateKey
 	wxPublicKey *rsa.PublicKey
 	ctx         context.Context
 	DebugSwitch gopay.DebugSwitch
+	SnCertMap   map[string]*rsa.PublicKey // key: serial_no
 }
 
 // NewClientV3 初始化微信客户端 V3
-//	mchid：商户ID 或者服务商模式的 sp_mchid
-// 	serialNo：商户API证书的证书序列号
-//	ApiV3Key：APIv3Key，商户平台获取
-//	privateKey：商户API证书下载后，私钥 apiclient_key.pem 读取后的字符串内容
+// mchid：商户ID 或者服务商模式的 sp_mchid
+// serialNo：商户API证书的证书序列号
+// apiV3Key：APIv3Key，商户平台获取
+// privateKey：商户API证书下载后，私钥 apiclient_key.pem 读取后的字符串内容
 func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3, err error) {
+	if mchid == util.NULL || serialNo == util.NULL || apiV3Key == util.NULL || privateKey == util.NULL {
+		return nil, gopay.MissWechatInitParamErr
+	}
 	priKey, err := xpem.DecodePrivateKey([]byte(privateKey))
 	if err != nil {
 		return nil, err
@@ -49,27 +56,46 @@ func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3
 }
 
 // AutoVerifySign 开启请求完自动验签功能（默认不开启，推荐开启）
-//	开启自动验签，自动开启每12小时一次轮询，请求最新证书操作
-func (c *ClientV3) AutoVerifySign() (err error) {
-	wxPk, wxSerialNo, err := c.GetAndSelectNewestCert()
+// 开启自动验签，自动开启每12小时一次轮询，请求最新证书操作
+func (c *ClientV3) AutoVerifySign(autoRefresh ...bool) (err error) {
+	wxSerialNo, certMap, err := c.GetAndSelectNewestCert()
 	if err != nil {
 		return err
 	}
-	// decode cert
-	pubKey, err := xpem.DecodePublicKey([]byte(wxPk))
-	if err != nil {
-		return err
+	if len(c.SnCertMap) <= 0 {
+		c.SnCertMap = make(map[string]*rsa.PublicKey)
 	}
-	c.wxPublicKey = pubKey
+	for sn, cert := range certMap {
+		// decode cert
+		pubKey, err := xpem.DecodePublicKey([]byte(cert))
+		if err != nil {
+			return err
+		}
+		c.SnCertMap[sn] = pubKey
+	}
 	c.WxSerialNo = wxSerialNo
+	c.wxPublicKey = c.SnCertMap[wxSerialNo]
+	if len(autoRefresh) == 1 && !autoRefresh[0] {
+		return
+	}
 	c.autoSign = true
 	go c.autoCheckCertProc()
 	return
 }
 
+// SetBodySize 设置http response body size(MB)
+func (c *ClientV3) SetBodySize(sizeMB int) {
+	if sizeMB > 0 {
+		c.bodySize = sizeMB
+	}
+}
+
 func (c *ClientV3) doProdPostWithHeader(ctx context.Context, headerMap map[string]string, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
@@ -103,6 +129,9 @@ func (c *ClientV3) doProdPostWithHeader(ctx context.Context, headerMap map[strin
 func (c *ClientV3) doProdPost(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
@@ -133,6 +162,9 @@ func (c *ClientV3) doProdPost(ctx context.Context, bm gopay.BodyMap, path, autho
 func (c *ClientV3) doProdGet(ctx context.Context, uri, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + uri
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_Url: %s", url)
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
@@ -163,6 +195,9 @@ func (c *ClientV3) doProdGet(ctx context.Context, uri, authorization string) (re
 func (c *ClientV3) doProdPut(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
@@ -193,6 +228,9 @@ func (c *ClientV3) doProdPut(ctx context.Context, bm gopay.BodyMap, path, author
 func (c *ClientV3) doProdDelete(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
@@ -223,6 +261,9 @@ func (c *ClientV3) doProdDelete(ctx context.Context, bm gopay.BodyMap, path, aut
 func (c *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.GetString("meta"))
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)
@@ -253,6 +294,9 @@ func (c *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, path, a
 func (c *ClientV3) doProdPatch(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
 	httpClient := xhttp.NewClient()
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_V3_RequestBody: %s", bm.JsonBody())
 		xlog.Debugf("Wechat_V3_Authorization: %s", authorization)

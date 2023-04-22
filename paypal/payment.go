@@ -11,8 +11,8 @@ import (
 )
 
 // 支付授权详情（Show details for authorized payment）
-//	Code = 0 is success
-//	文档：https://developer.paypal.com/docs/api/payments/v2/#authorizations_get
+// Code = 0 is success
+// 文档：https://developer.paypal.com/docs/api/payments/v2/#authorizations_get
 func (c *Client) PaymentAuthorizeDetail(ctx context.Context, authorizationId string) (ppRsp *PaymentAuthorizeDetailRsp, err error) {
 	if authorizationId == gopay.NULL {
 		return nil, errors.New("authorization_id is empty")
@@ -25,7 +25,7 @@ func (c *Client) PaymentAuthorizeDetail(ctx context.Context, authorizationId str
 	ppRsp = &PaymentAuthorizeDetailRsp{Code: Success}
 	ppRsp.Response = new(PaymentAuthorizeDetail)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
@@ -37,8 +37,8 @@ func (c *Client) PaymentAuthorizeDetail(ctx context.Context, authorizationId str
 }
 
 // 重新授权支付授权（Reauthorize authorized payment）
-//	Note：This request is currently not supported for Partner use cases.
-//	文档：https://developer.paypal.com/docs/api/payments/v2/#authorizations_reauthorize
+// Note：This request is currently not supported for Partner use cases.
+// 文档：https://developer.paypal.com/docs/api/payments/v2/#authorizations_reauthorize
 func (c *Client) PaymentReauthorize(ctx context.Context, authorizationId string, bm gopay.BodyMap) (ppRsp *PaymentReauthorizeRsp, err error) {
 	if authorizationId == gopay.NULL {
 		return nil, errors.New("authorization_id is empty")
@@ -51,7 +51,7 @@ func (c *Client) PaymentReauthorize(ctx context.Context, authorizationId string,
 	ppRsp = &PaymentReauthorizeRsp{Code: Success}
 	ppRsp.Response = new(PaymentAuthorizeDetail)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusCreated {
 		ppRsp.Code = res.StatusCode
@@ -63,8 +63,8 @@ func (c *Client) PaymentReauthorize(ctx context.Context, authorizationId string,
 }
 
 // 作废支付授权（Void authorized payment）
-//	Code = 0 is success
-//	文档：https://developer.paypal.com/docs/api/payments/v2/#authorizations_void
+// Code = 0 is success
+// 文档：https://developer.paypal.com/docs/api/payments/v2/#authorizations_void
 func (c *Client) PaymentAuthorizeVoid(ctx context.Context, authorizationId string) (ppRsp *EmptyRsp, err error) {
 	if authorizationId == gopay.NULL {
 		return nil, errors.New("authorization_id is empty")
@@ -85,8 +85,8 @@ func (c *Client) PaymentAuthorizeVoid(ctx context.Context, authorizationId strin
 }
 
 // 支付授权捕获（Capture authorized payment）
-//	Code = 0 is success
-//	文档：https://developer.paypal.com/docs/api/payments/v2/#authorizations_capture
+// Code = 0 is success
+// 文档：https://developer.paypal.com/docs/api/payments/v2/#authorizations_capture
 func (c *Client) PaymentAuthorizeCapture(ctx context.Context, authorizationId string, bm gopay.BodyMap) (ppRsp *PaymentAuthorizeCaptureRsp, err error) {
 	if authorizationId == gopay.NULL {
 		return nil, errors.New("authorization_id is empty")
@@ -99,7 +99,7 @@ func (c *Client) PaymentAuthorizeCapture(ctx context.Context, authorizationId st
 	ppRsp = &PaymentAuthorizeCaptureRsp{Code: Success}
 	ppRsp.Response = new(PaymentAuthorizeCapture)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusCreated {
 		ppRsp.Code = res.StatusCode
@@ -111,8 +111,8 @@ func (c *Client) PaymentAuthorizeCapture(ctx context.Context, authorizationId st
 }
 
 // 支付捕获详情（Show captured payment details）
-//	Code = 0 is success
-//	文档：https://developer.paypal.com/docs/api/payments/v2/#captures_get
+// Code = 0 is success
+// 文档：https://developer.paypal.com/docs/api/payments/v2/#captures_get
 func (c *Client) PaymentCaptureDetail(ctx context.Context, captureId string) (ppRsp *PaymentCaptureDetailRsp, err error) {
 	if captureId == gopay.NULL {
 		return nil, errors.New("capture_id is empty")
@@ -125,7 +125,7 @@ func (c *Client) PaymentCaptureDetail(ctx context.Context, captureId string) (pp
 	ppRsp = &PaymentCaptureDetailRsp{Code: Success}
 	ppRsp.Response = new(PaymentAuthorizeCapture)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
@@ -137,8 +137,8 @@ func (c *Client) PaymentCaptureDetail(ctx context.Context, captureId string) (pp
 }
 
 // 支付捕获退款（Refund captured payment）
-//	Code = 0 is success
-//	文档：https://developer.paypal.com/docs/api/payments/v2/#captures_refund
+// Code = 0 is success
+// 文档：https://developer.paypal.com/docs/api/payments/v2/#captures_refund
 func (c *Client) PaymentCaptureRefund(ctx context.Context, captureId string, bm gopay.BodyMap) (ppRsp *PaymentCaptureRefundRsp, err error) {
 	if captureId == gopay.NULL {
 		return nil, errors.New("capture_id is empty")
@@ -151,7 +151,7 @@ func (c *Client) PaymentCaptureRefund(ctx context.Context, captureId string, bm 
 	ppRsp = &PaymentCaptureRefundRsp{Code: Success}
 	ppRsp.Response = new(PaymentCaptureRefund)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusCreated {
 		ppRsp.Code = res.StatusCode
@@ -163,8 +163,8 @@ func (c *Client) PaymentCaptureRefund(ctx context.Context, captureId string, bm 
 }
 
 // 支付退款详情（Show refund details）
-//	Code = 0 is success
-//	文档：https://developer.paypal.com/docs/api/payments/v2/#refunds_get
+// Code = 0 is success
+// 文档：https://developer.paypal.com/docs/api/payments/v2/#refunds_get
 func (c *Client) PaymentRefundDetail(ctx context.Context, refundId string) (ppRsp *PaymentRefundDetailRsp, err error) {
 	if refundId == gopay.NULL {
 		return nil, errors.New("refund_id is empty")
@@ -177,7 +177,7 @@ func (c *Client) PaymentRefundDetail(ctx context.Context, refundId string) (ppRs
 	ppRsp = &PaymentRefundDetailRsp{Code: Success}
 	ppRsp.Response = new(PaymentCaptureRefund)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode

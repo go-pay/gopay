@@ -17,6 +17,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 )
 
@@ -25,8 +26,9 @@ type Client struct {
 	Transport        *http.Transport
 	Header           http.Header
 	Timeout          time.Duration
-	url              string
 	Host             string
+	bodySize         int // body size limit(MB), default is 10MB
+	url              string
 	method           string
 	requestType      RequestType
 	FormString       string
@@ -50,6 +52,7 @@ func NewClient() (client *Client) {
 		},
 		Transport:     nil,
 		Header:        make(http.Header),
+		bodySize:      10, // default is 10MB
 		requestType:   TypeJSON,
 		unmarshalType: string(TypeJSON),
 	}
@@ -73,6 +76,12 @@ func (c *Client) SetTimeout(timeout time.Duration) (client *Client) {
 
 func (c *Client) SetHost(host string) (client *Client) {
 	c.Host = host
+	return c
+}
+
+// set body size (MB), default is 10MB
+func (c *Client) SetBodySize(sizeMB int) (client *Client) {
+	c.bodySize = sizeMB
 	return c
 }
 
@@ -119,7 +128,7 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 	}
 	bs, err := json.Marshal(v)
 	if err != nil {
-		c.err = fmt.Errorf("json.Marshal(%+v)：%w", v, err)
+		c.err = fmt.Errorf("[%w]: %v, value: %v", gopay.MarshalErr, err, v)
 		return c
 	}
 	switch c.requestType {
@@ -128,7 +137,7 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
 		body := make(map[string]interface{})
 		if err = json.Unmarshal(bs, &body); err != nil {
-			c.err = fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), body, err)
+			c.err = fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 			return c
 		}
 		c.FormString = FormatURLParam(body)
@@ -144,7 +153,7 @@ func (c *Client) SendBodyMap(bm map[string]interface{}) (client *Client) {
 	case TypeJSON:
 		bs, err := json.Marshal(bm)
 		if err != nil {
-			c.err = fmt.Errorf("json.Marshal(%+v)：%w", bm, err)
+			c.err = fmt.Errorf("[%w]: %v, value: %v", gopay.MarshalErr, err, bm)
 			return c
 		}
 		c.jsonByte = bs
@@ -162,7 +171,7 @@ func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client
 	case TypeJSON:
 		bs, err := json.Marshal(bm)
 		if err != nil {
-			c.err = fmt.Errorf("json.Marshal(%+v)：%w", bm, err)
+			c.err = fmt.Errorf("[%w]: %v, value: %v", gopay.MarshalErr, err, bm)
 			return c
 		}
 		c.jsonByte = bs
@@ -198,13 +207,13 @@ func (c *Client) EndStruct(ctx context.Context, v interface{}) (res *http.Respon
 	case string(TypeJSON):
 		err = json.Unmarshal(bs, &v)
 		if err != nil {
-			return nil, fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), v, err)
+			return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 		}
 		return res, nil
 	case string(TypeXML):
 		err = xml.Unmarshal(bs, &v)
 		if err != nil {
-			return nil, fmt.Errorf("xml.Unmarshal(%s, %+v)：%w", string(bs), v, err)
+			return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 		}
 		return res, nil
 	default:
@@ -304,7 +313,7 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 			return err
 		}
 		defer res.Body.Close()
-		bs, err = ioutil.ReadAll(io.LimitReader(res.Body, int64(5<<20))) // default 5MB change the size you want
+		bs, err = ioutil.ReadAll(io.LimitReader(res.Body, int64(c.bodySize<<20))) // default 10MB change the size you want
 		if err != nil {
 			return err
 		}

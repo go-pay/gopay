@@ -1,7 +1,7 @@
 package apple
 
 // VerifyRequest 校验请求体
-// 	https://developer.apple.com/documentation/appstorereceipts/requestbody
+// https://developer.apple.com/documentation/appstorereceipts/requestbody
 type VerifyRequest struct {
 	// Receipt app解析出的票据信息
 	Receipt string `json:"receipt-data"`
@@ -14,7 +14,7 @@ type VerifyRequest struct {
 }
 
 // VerifyResponse 校验响应体
-// 	https://developer.apple.com/documentation/appstorereceipts/responsebody
+// https://developer.apple.com/documentation/appstorereceipts/responsebody
 type VerifyResponse struct {
 	// Environment is which the receipt was generated. Possible values: Sandbox, Production
 	Environment string `json:"environment"`
@@ -35,56 +35,56 @@ type VerifyResponse struct {
 	Receipt *Receipt `json:"receipt,omitempty"`
 
 	// Status either 0 if the receipt is valid, or a status code if there is an error. The status code reflects the status of the app receipt as a whole. See status for possible status codes and descriptions.
-	// 	=0时就表示校验成功
+	// =0时就表示校验成功
 	Status int `json:"status"`
 }
 
 // LatestReceiptInfo
-// 	https://developer.apple.com/documentation/appstorereceipts/responsebody/latest_receipt_info
+// https://developer.apple.com/documentation/appstorereceipts/responsebody/latest_receipt_info
 type LatestReceiptInfo struct {
 	// The time Apple customer support canceled a transaction, in a date-time format similar to the ISO 8601. This field is only present for refunded transactions.
 	CancellationDate string `json:"cancellation_date"`
 
 	// The time Apple customer support canceled a transaction, or the time an auto-renewable subscription plan was upgraded, in UNIX epoch time format, in milliseconds. This field is only present for refunded transactions. Use this time format for processing dates.
-	// 	https://developer.apple.com/documentation/appstorereceipts/cancellation_date_ms
+	// https://developer.apple.com/documentation/appstorereceipts/cancellation_date_ms
 	CancellationDateTimestamp string `json:"cancellation_date_ms"`
 
 	// The time Apple customer support canceled a transaction, in the Pacific Time zone. This field is only present for refunded transactions.
 	CancellationDatePST string `json:"cancellation_date_pst"`
 
 	// The reason for a refunded transaction. When a customer cancels a transaction, the App Store gives them a refund and provides a value for this key. A value of “1” indicates that the customer canceled their transaction due to an actual or perceived issue within your app. A value of “0” indicates that the transaction was canceled for another reason; for example, if the customer made the purchase accidentally.
-	// 	Possible values: 1, 0
+	// Possible values: 1, 0
 	CancellationReason string `json:"cancellation_reason"`
 
 	// The time a subscription expires or when it will renew, in a date-time format similar to the ISO 8601.
 	ExpiresDate string `json:"expires_date"`
 
 	// The time a subscription expires or when it will renew, in UNIX epoch time format, in milliseconds. Use this time format for processing dates.
-	// 	https://developer.apple.com/documentation/appstorereceipts/expires_date_ms
+	// https://developer.apple.com/documentation/appstorereceipts/expires_date_ms
 	ExpiresDateTimestamp string `json:"expires_date_ms"`
 
 	// The time a subscription expires or when it will renew, in the Pacific Time zone.
 	ExpiresDatePST string `json:"expires_date_pst"`
 
 	// A value that indicates whether the user is the purchaser of the product, or is a family member with access to the product through Family Sharing.
-	// 	https://developer.apple.com/documentation/appstorereceipts/in_app_ownership_type
+	// https://developer.apple.com/documentation/appstorereceipts/in_app_ownership_type
 	InAppOwnershipType string `json:"in_app_ownership_type"`
 
 	// An indicator of whether an auto-renewable subscription is in the introductory price period.
-	// 	Possible values: true, false
+	// Possible values: true, false
 	IsInIntroOfferPeriod string `json:"is_in_intro_offer_period"`
 
 	// An indicator of whether a subscription is in the free trial period.
-	// 	https://developer.apple.com/documentation/appstorereceipts/is_trial_period
+	// https://developer.apple.com/documentation/appstorereceipts/is_trial_period
 	IsTrialPeriod string `json:"is_trial_period"`
 
 	// An indicator that a subscription has been canceled due to an upgrade. This field is only present for upgrade transactions.
-	//	Value: true
+	// Value: true
 	IsUpgraded string `json:"is_upgraded"`
 
 	// The reference name of a subscription offer that you configured in App Store Connect. This field is present when a customer redeemed a subscription offer code. For more information about offer codes
-	// 	https://help.apple.com/app-store-connect/#/dev6a098e4b1
-	// 	https://developer.apple.com/documentation/storekit/original_api_for_in-app_purchase/subscriptions_and_offers/implementing_offer_codes_in_your_app
+	// https://help.apple.com/app-store-connect/#/dev6a098e4b1
+	// https://developer.apple.com/documentation/storekit/original_api_for_in-app_purchase/subscriptions_and_offers/implementing_offer_codes_in_your_app
 	OfferCodeRefName string `json:"offer_code_ref_name"`
 
 	// The time of the original app purchase, in a date-time format similar to ISO 8601.
@@ -97,14 +97,14 @@ type LatestReceiptInfo struct {
 	OriginalPurchaseDatePST string `json:"original_purchase_date_pst"`
 
 	// The transaction identifier of the original purchase.
-	// 	https://developer.apple.com/documentation/appstorereceipts/original_transaction_id
+	// https://developer.apple.com/documentation/appstorereceipts/original_transaction_id
 	OriginalTransactionId string `json:"original_transaction_id"`
 
 	// The unique identifier of the product purchased. You provide this value when creating the product in App Store Connect, and it corresponds to the productIdentifier property of the SKPayment object stored in the transaction’s payment property.
 	ProductId string `json:"product_id"`
 
 	// The identifier of the subscription offer redeemed by the user.
-	// 	https://developer.apple.com/documentation/appstorereceipts/promotional_offer_id
+	// https://developer.apple.com/documentation/appstorereceipts/promotional_offer_id
 	PromotionalOfferId string `json:"promotional_offer_id"`
 
 	// The time the App Store charged the user’s account for a purchased or restored product, or the time the App Store charged the user’s account for a subscription purchase or renewal after a lapse, in a date-time format similar to ISO 8601.
@@ -120,7 +120,7 @@ type LatestReceiptInfo struct {
 	Quantity string `json:"quantity"`
 
 	// The identifier of the subscription group to which the subscription belongs. The value for this field is identical to the subscriptionGroupIdentifier property in SKProduct.
-	// 	https://developer.apple.com/documentation/storekit/skproduct/2981047-subscriptiongroupidentifier
+	// https://developer.apple.com/documentation/storekit/skproduct/2981047-subscriptiongroupidentifier
 	SubscriptionGroupIdentifier string `json:"subscription_group_identifier"`
 
 	// A unique identifier for purchase events across devices, including subscription-renewal events. This value is the primary key for identifying subscription purchases.
@@ -134,17 +134,17 @@ type LatestReceiptInfo struct {
 }
 
 // PendingRenewalInfo
-// 	https://developer.apple.com/documentation/appstorereceipts/responsebody/pending_renewal_info
+// https://developer.apple.com/documentation/appstorereceipts/responsebody/pending_renewal_info
 type PendingRenewalInfo struct {
 	// The value for this key corresponds to the productIdentifier property of the product that the customer’s subscription renews.
 	AutoRenewProductId string `json:"auto_renew_product_id"`
 
 	// The current renewal status for the auto-renewable subscription.
-	// 	https://developer.apple.com/documentation/appstorereceipts/auto_renew_status
+	// https://developer.apple.com/documentation/appstorereceipts/auto_renew_status
 	AutoRenewStatus string `json:"auto_renew_status"`
 
 	// The reason a subscription expired. This field is only present for a receipt that contains an expired auto-renewable subscription.
-	// 	https://developer.apple.com/documentation/appstorereceipts/expiration_intent
+	// https://developer.apple.com/documentation/appstorereceipts/expiration_intent
 	ExpirationIntent string `json:"expiration_intent"`
 
 	// The time at which the grace period for subscription renewals expires, in a date-time format similar to the ISO 8601.
@@ -157,31 +157,31 @@ type PendingRenewalInfo struct {
 	GracePeriodExpiresDatePST string `json:"grace_period_expires_date_pst"`
 
 	// A flag that indicates Apple is attempting to renew an expired subscription automatically. This field is only present if an auto-renewable subscription is in the billing retry state.
-	// 	https://developer.apple.com/documentation/appstorereceipts/is_in_billing_retry_period
+	// https://developer.apple.com/documentation/appstorereceipts/is_in_billing_retry_period
 	IsInBillingRetryPeriod string `json:"is_in_billing_retry_period"`
 
 	// The reference name of a subscription offer that you configured in App Store Connect. This field is present when a customer redeemed a subscription offer code
-	// 	https://developer.apple.com/documentation/appstorereceipts/offer_code_ref_name
+	// https://developer.apple.com/documentation/appstorereceipts/offer_code_ref_name
 	OfferCodeRefName string `json:"offer_code_ref_name"`
 
 	// The transaction identifier of the original purchase.
 	OriginalTransactionId string `json:"original_transaction_id"`
 
 	// The price consent status for a subscription price increase. This field is only present if the customer was notified of the price increase. The default value is "0" and changes to "1" if the customer consents.
-	// 	Possible values: 1, 0
+	// Possible values: 1, 0
 	PriceConsentStatus string `json:"price_consent_status"`
 
 	// The unique identifier of the product purchased. You provide this value when creating the product in App Store Connect, and it corresponds to the productIdentifier property of the SKPayment object stored in the transaction's payment property.
-	// 	https://developer.apple.com/documentation/storekit/skpayment
+	// https://developer.apple.com/documentation/storekit/skpayment
 	ProductId string `json:"product_id"`
 
 	// The identifier of the promotional offer for an auto-renewable subscription that the user redeemed. You provide this value in the Promotional Offer Identifier field when you create the promotional offer in App Store Connect.
-	// 	https://developer.apple.com/documentation/appstorereceipts/promotional_offer_id
+	// https://developer.apple.com/documentation/appstorereceipts/promotional_offer_id
 	Promotionalofferid string `json:"promotional_offer_id"`
 }
 
 // Receipt is the decoded version of the encoded receipt data sent with the request to the App Store
-// 	https://developer.apple.com/documentation/appstorereceipts/responsebody/receipt
+// https://developer.apple.com/documentation/appstorereceipts/responsebody/receipt
 type Receipt struct {
 	// See app_item_id.
 	AdamId int64 `json:"adam_id"`
@@ -241,7 +241,7 @@ type Receipt struct {
 	ReceiptCreationDatePST string `json:"receipt_creation_date_pst"`
 
 	// The type of receipt generated. The value corresponds to the environment in which the app or VPP purchase was made.
-	// 	Possible values: Production, ProductionVPP, ProductionSandbox, ProductionVPPSandbox
+	//  Possible values: Production, ProductionVPP, ProductionSandbox, ProductionVPPSandbox
 	ReceiptType string `json:"receipt_type"`
 
 	// The time the request to the verifyReceipt endpoint was processed and the response was generated, in a date-time format similar to ISO 8601.
@@ -257,39 +257,39 @@ type Receipt struct {
 	VersionExternalIdentifier int64 `json:"version_external_identifier"`
 }
 
-//  InApp is the in-app purchase receipt fields for all in-app purchase transactions.
-// 	https://developer.apple.com/documentation/appstorereceipts/responsebody/receipt/in_app
+// InApp is the in-app purchase receipt fields for all in-app purchase transactions.
+// https://developer.apple.com/documentation/appstorereceipts/responsebody/receipt/in_app
 type InApp struct {
 	// The time the App Store refunded a transaction or revoked it from family sharing, in a date-time format similar to the ISO 8601. This field is present only for refunded or revoked transactions.
 	CancellationDate string `json:"cancellation_date"`
 
 	// The time the App Store refunded a transaction or revoked it from family sharing, in UNIX epoch time format, in milliseconds. This field is present only for refunded or revoked transactions. Use this time format for processing dates. The time the App Store refunded a transaction or revoked it from family sharing, in UNIX epoch time format, in milliseconds. This field is present only for refunded or revoked transactions. Use this time format for processing dates.
-	// 	https://developer.apple.com/documentation/appstorereceipts/cancellation_date_ms
+	// https://developer.apple.com/documentation/appstorereceipts/cancellation_date_ms
 	CancellationDateTimestamp string `json:"cancellation_date_ms"`
 
 	// The time Apple customer support canceled a transaction, in the Pacific Time zone. This field is only present for refunded transactions.
 	CancellationDatePST string `json:"cancellation_date_pst"`
 
 	// The reason for a refunded transaction. When a customer cancels a transaction, the App Store gives them a refund and provides a value for this key. A value of “1” indicates that the customer canceled their transaction due to an actual or perceived issue within your app. A value of “0” indicates that the transaction was canceled for another reason; for example, if the customer made the purchase accidentally.
-	// 	Possible values: 1, 0
+	// Possible values: 1, 0
 	CancellationReason string `json:"cancellation_reason"`
 
 	// The time a subscription expires or when it will renew, in a date-time format similar to the ISO 8601.
 	ExpiresDate string `json:"expires_date"`
 
 	// The time a subscription expires or when it will renew, in UNIX epoch time format, in milliseconds. Use this time format for processing dates.
-	// 	https://developer.apple.com/documentation/appstorereceipts/expires_date_ms
+	// https://developer.apple.com/documentation/appstorereceipts/expires_date_ms
 	ExpiresDateTimestamp string `json:"expires_date_ms"`
 
 	// The time a subscription expires or when it will renew, in the Pacific Time zone.
 	ExpiresDatePST string `json:"expires_date_pst"`
 
 	// An indicator of whether an auto-renewable subscription is in the introductory price period.
-	// 	https://developer.apple.com/documentation/appstorereceipts/is_in_intro_offer_period
+	// https://developer.apple.com/documentation/appstorereceipts/is_in_intro_offer_period
 	IsInIntroOfferPeriod string `json:"is_in_intro_offer_period"`
 
 	// An indication of whether a subscription is in the free trial period.
-	// 	https://developer.apple.com/documentation/appstorereceipts/is_trial_period
+	// https://developer.apple.com/documentation/appstorereceipts/is_trial_period
 	IsTrialPeriod string `json:"is_trial_period"`
 
 	// The time of the original in-app purchase, in a date-time format similar to ISO 8601.
@@ -302,14 +302,14 @@ type InApp struct {
 	OriginalPurchaseDatePST string `json:"original_purchase_date_pst"`
 
 	// The transaction identifier of the original purchase.
-	// 	https://developer.apple.com/documentation/appstorereceipts/original_transaction_id
+	// https://developer.apple.com/documentation/appstorereceipts/original_transaction_id
 	OriginalTransactionId string `json:"original_transaction_id"`
 
 	// The unique identifier of the product purchased. You provide this value when creating the product in App Store Connect, and it corresponds to the productIdentifier property of the SKPayment object stored in the transaction's payment property.
 	ProductId string `json:"product_id"`
 
 	// The identifier of the subscription offer redeemed by the user.
-	// 	https://developer.apple.com/documentation/appstorereceipts/promotional_offer_id
+	// https://developer.apple.com/documentation/appstorereceipts/promotional_offer_id
 	PromotionalOfferId string `json:"promotional_offer_id"`
 
 	// The time the App Store charged the user's account for a purchased or restored product, or the time the App Store charged the user’s account for a subscription purchase or renewal after a lapse, in a date-time format similar to ISO 8601.

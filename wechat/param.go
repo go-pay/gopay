@@ -18,14 +18,15 @@ import (
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/go-pay/gopay/pkg/xlog"
 	"golang.org/x/crypto/pkcs12"
 )
 
 type Country int
 
 // 设置支付国家（默认：中国国内）
-//	根据支付地区情况设置国家
-//	country：<China：中国国内，China2：中国国内（冗灾方案），SoutheastAsia：东南亚，Other：其他国家>
+// 根据支付地区情况设置国家
+// country：<China：中国国内，China2：中国国内（冗灾方案），SoutheastAsia：东南亚，Other：其他国家>
 func (w *Client) SetCountry(country Country) (client *Client) {
 	w.mu.Lock()
 	switch country {
@@ -45,33 +46,33 @@ func (w *Client) SetCountry(country Country) (client *Client) {
 }
 
 // 添加微信pem证书文件路径
-//	certFilePath：apiclient_cert.pem 文件路径
-//	keyFilePath：apiclient_key.pem 文件路径
+// certFilePath：apiclient_cert.pem 文件路径
+// keyFilePath：apiclient_key.pem 文件路径
 func (w *Client) AddCertPemFilePath(certFilePath, keyFilePath string) (err error) {
 	return w.addCertFileContentOrPath(certFilePath, keyFilePath, nil)
 }
 
 // 添加微信pkcs12证书文件路径
-//	pkcs12FilePath：apiclient_cert.p12 文件路径
+// pkcs12FilePath：apiclient_cert.p12 文件路径
 func (w *Client) AddCertPkcs12FilePath(pkcs12FilePath string) (err error) {
 	return w.addCertFileContentOrPath(nil, nil, pkcs12FilePath)
 }
 
 // 添加微信pem证书内容[]byte
-//	certFileContent：apiclient_cert.pem 证书内容[]byte
-//	keyFileContent：apiclient_key.pem 证书内容[]byte
+// certFileContent：apiclient_cert.pem 证书内容[]byte
+// keyFileContent：apiclient_key.pem 证书内容[]byte
 func (w *Client) AddCertPemFileContent(certFileContent, keyFileContent []byte) (err error) {
 	return w.addCertFileContentOrPath(certFileContent, keyFileContent, nil)
 }
 
 // 添加微信pkcs12证书内容[]byte
-//	p12FileContent：apiclient_cert.p12 证书内容[]byte
+// p12FileContent：apiclient_cert.p12 证书内容[]byte
 func (w *Client) AddCertPkcs12FileContent(p12FileContent []byte) (err error) {
 	return w.addCertFileContentOrPath(nil, nil, p12FileContent)
 }
 
 // 添加微信证书文件 Path 路径或证书内容
-//	注意：只传pem证书或只传pkcs12证书均可，无需3个证书全传
+// 注意：只传pem证书或只传pkcs12证书均可，无需3个证书全传
 func (w *Client) addCertFileContentOrPath(certFile, keyFile, pkcs12File interface{}) (err error) {
 	if err = checkCertFilePathOrContent(certFile, keyFile, pkcs12File); err != nil {
 		return
@@ -201,6 +202,22 @@ func GetReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign stri
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 }
 
+// 获取微信支付正式环境Sign值
+func (w *Client) getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
+	var h hash.Hash
+	if signType == SignType_HMAC_SHA256 {
+		h = hmac.New(sha256.New, []byte(apiKey))
+	} else {
+		h = md5.New()
+	}
+	signParams := bm.EncodeWeChatSignParams(apiKey)
+	if w.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_Request_SignStr: %s", signParams)
+	}
+	h.Write([]byte(signParams))
+	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
+}
+
 // 获取微信支付沙箱环境Sign值
 func GetSandBoxSign(ctx context.Context, mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
 	var (
@@ -212,6 +229,25 @@ func GetSandBoxSign(ctx context.Context, mchId, apiKey string, bm gopay.BodyMap)
 	}
 	h = md5.New()
 	h.Write([]byte(bm.EncodeWeChatSignParams(sandBoxApiKey)))
+	sign = strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
+	return
+}
+
+// 获取微信支付沙箱环境Sign值
+func (w *Client) getSandBoxSign(ctx context.Context, mchId, apiKey string, bm gopay.BodyMap) (sign string, err error) {
+	var (
+		sandBoxApiKey string
+		h             hash.Hash
+	)
+	if sandBoxApiKey, err = getSanBoxKey(ctx, mchId, util.RandomString(32), apiKey, SignType_MD5); err != nil {
+		return
+	}
+	h = md5.New()
+	signParams := bm.EncodeWeChatSignParams(sandBoxApiKey)
+	if w.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Wechat_Request_SignStr: %s", signParams)
+	}
+	h.Write([]byte(signParams))
 	sign = strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 	return
 }

@@ -63,6 +63,10 @@ func TestMain(m *testing.M) {
 		xlog.Error(err)
 		return
 	}
+
+	// 设置微信平台证书和序列号，如开启自动验签，请忽略此步骤
+	//client.SetPlatformCert([]byte(""), "")
+
 	// 启用自动同步返回验签，并定时更新微信平台API证书
 	err = client.AutoVerifySign()
 	if err != nil {
@@ -77,7 +81,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetPlatformCertsWithoutClient(t *testing.T) {
-	certs, err := GetPlatformCerts(ctx, MchId, APIv3Key, SerialNo, PrivateKeyContent)
+	certs, err := GetPlatformCerts(ctx, MchId, APIv3Key, SerialNo, PrivateKeyContent, CertTypeALL)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -95,13 +99,14 @@ func TestGetPlatformCertsWithoutClient(t *testing.T) {
 }
 
 func TestGetAndSelectNewestCert(t *testing.T) {
-	cert, serialNo, err := client.GetAndSelectNewestCert()
+	serialNo, snCertMap, err := client.GetAndSelectNewestCert(CertTypeALL)
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
 	xlog.Infof("WxSerialNo: %s", serialNo)
-	xlog.Infof("WxContent: \n%s", cert)
+	xlog.Infof("snCertMap: %v", snCertMap)
+	xlog.Infof("WxContent: \n%s", snCertMap[serialNo])
 }
 
 func TestV3VerifySignByPK(t *testing.T) {
@@ -134,6 +139,43 @@ func TestV3Jsapi(t *testing.T) {
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
 	bm := make(gopay.BodyMap)
+	bm.Set("appid", "wx52a25f196830f677").
+		Set("description", "测试Jsapi支付商品").
+		Set("out_trade_no", tradeNo).
+		Set("time_expire", expire).
+		Set("notify_url", "https://www.fmm.ink").
+		SetBodyMap("amount", func(bm gopay.BodyMap) {
+			bm.Set("total", 1).
+				Set("currency", "CNY")
+		}).
+		SetBodyMap("payer", func(bm gopay.BodyMap) {
+			bm.Set("openid", "asdas")
+		})
+	//text, err := client.V3EncryptText("张三")
+	//if err != nil {
+	//	xlog.Errorf("client.V3EncryptText(),err:%+v", err)
+	//	err = nil
+	//}
+	//xlog.Debugf("加密text: %s", text)
+
+	wxRsp, err := client.V3TransactionJsapi(ctx, bm)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
+}
+
+func TestV3PartnerJsapi(t *testing.T) {
+	tradeNo := util.RandomString(32)
+	xlog.Debug("tradeNo:", tradeNo)
+	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
+
+	bm := make(gopay.BodyMap)
 	bm.Set("sp_appid", "sp_appid").
 		Set("sp_mchid", "sp_mchid").
 		Set("sub_mchid", "sub_mchid").
@@ -155,13 +197,13 @@ func TestV3Jsapi(t *testing.T) {
 	//}
 	//xlog.Debugf("加密text: %s", text)
 
-	wxRsp, err := client.V3TransactionJsapi(ctx, bm)
+	wxRsp, err := client.V3PartnerTransactionJsapi(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
@@ -173,7 +215,7 @@ func TestV3Native(t *testing.T) {
 	expire := time.Now().Add(10 * time.Minute).Format(time.RFC3339)
 
 	bm := make(gopay.BodyMap)
-	bm.Set("appid", "wx52xxxxxxxxxxx").
+	bm.Set("appid", "wx52a25f196830f677").
 		Set("description", "测试Native支付商品").
 		Set("out_trade_no", tradeNo).
 		Set("time_expire", expire).
@@ -189,7 +231,7 @@ func TestV3Native(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response.CodeUrl)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
@@ -220,7 +262,7 @@ func TestV3PartnerNative(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
@@ -276,7 +318,7 @@ func TestV3QueryOrder(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
@@ -306,7 +348,7 @@ func TestV3BillTradeBill(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
@@ -323,7 +365,7 @@ func TestV3BillFundFlowBill(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
@@ -368,8 +410,11 @@ func TestV3ProfitSharingOrder(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debugf("wxRsp: %#v", wxRsp)
-	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
 }
 
 func TestV3ProfitSharingAddReceiver(t *testing.T) {
@@ -384,8 +429,11 @@ func TestV3ProfitSharingAddReceiver(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debugf("wxRsp: %#v", wxRsp)
-	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
 }
 
 func TestV3ProfitSharingDeleteReceiver(t *testing.T) {
@@ -399,8 +447,11 @@ func TestV3ProfitSharingDeleteReceiver(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debugf("wxRsp: %#v", wxRsp)
-	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
 }
 
 func TestV3ProfitSharingQuery(t *testing.T) {
@@ -411,8 +462,11 @@ func TestV3ProfitSharingQuery(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debugf("wxRsp: %#v", wxRsp)
-	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
 }
 
 func TestV3ProfitSharingUnfreeze(t *testing.T) {
@@ -425,8 +479,11 @@ func TestV3ProfitSharingUnfreeze(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debugf("wxRsp: %#v", wxRsp)
-	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
 }
 
 func TestV3ProfitSharingUnsplitQuery(t *testing.T) {
@@ -435,8 +492,11 @@ func TestV3ProfitSharingUnsplitQuery(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debugf("wxRsp: %#v", wxRsp)
-	xlog.Debugf("wxRsp.Response:%#v", wxRsp.Response)
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
 }
 
 func TestClientV3_V3MediaUploadImage(t *testing.T) {
@@ -462,7 +522,7 @@ func TestClientV3_V3MediaUploadImage(t *testing.T) {
 		return
 	}
 	if wxRsp.Code == Success {
-		xlog.Debugf("wxRsp: %#v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
 		return
 	}
 	xlog.Errorf("wxRsp:%s", wxRsp.Error)
@@ -512,7 +572,7 @@ func TestV3GoldPlanFilterManage(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debugf("wxRsp: %#v", wxRsp)
+	xlog.Debugf("wxRsp: %+v", wxRsp)
 }
 
 func TestV3Withdraw(t *testing.T) {
@@ -526,12 +586,15 @@ func TestV3Withdraw(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debugf("wxRsp: %#v", wxRsp)
-	xlog.Debugf("wxRsp.Response: %#v", wxRsp.Response)
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
 }
 
 func TestV3BankSearchBank(t *testing.T) {
-	encryptText, err := client.V3EncryptText("6213123456781234")
+	encryptText, err := client.V3EncryptText("6214832172305216")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -541,6 +604,23 @@ func TestV3BankSearchBank(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Debugf("wxRsp: %#v", wxRsp)
-	xlog.Debugf("wxRsp.Response: %#v", wxRsp.Response)
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response.Data[0])
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
+}
+
+func TestV3MerchantDayBalance(t *testing.T) {
+	wxRsp, err := client.V3MerchantDayBalance(ctx, "BASIC", "2022-04-17")
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	if wxRsp.Code == Success {
+		xlog.Debugf("wxRsp: %+v", wxRsp.Response)
+		return
+	}
+	xlog.Errorf("wxRsp:%s", wxRsp.Error)
 }

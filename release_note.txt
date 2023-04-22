@@ -1,3 +1,114 @@
+版本号：Release 1.5.92
+修改记录：
+   (1) 微信V3：新增 client.V3ComplaintUpdateRefundProgress()，更新退款审批结果。
+   (2) 微信V3：查询投诉单列表/详情，返回新增字段。
+   (3) 微信V3：拆分model文件内结构体至不同文件内。
+   (4) 微信V3：删除 client.V3TransferMerchantDetailQuery()，请更换 client.V3TransferMerchantDetail()
+   (5) 支付宝：拆分model文件内结构体至不同文件内。
+
+版本号：Release 1.5.91
+修改记录：
+   (1) 通联支付：新增通联支付对接。实现基本支付及其他接口。
+
+版本号：Release 1.5.90
+修改记录：
+   (1) 微信V3：新增 client.V3BusinessPointsStatusQuery()，商圈会员待积分状态查询。
+   (2) 微信V3：新增 client.V3BusinessParkingSync()，商圈会员停车状态同步。
+   (3) 微信V3：新增 国密 支持。
+   (4) 微信V3：新增 微信支付分停车服务 相关接口。
+
+版本号：Release 1.5.89
+修改记录：
+   (1) 微信V2：新增 签约、扣款服务 相关接口。
+   (2) 微信V3：新增 预扣款通知 接口。
+   (3) gopay：debug 模式下，增加签名字符串的输出，更新 mod 包，优化部分方法。
+   (4) alipay：新增 client.OpenAuthTokenAppInviteCreate()，ISV向商户发起应用授权邀约。
+   (5) PayPal：新增 invoice 相关接口。
+
+版本号：Release 1.5.88
+修改记录：
+   (1) PayPal：新增 invoice 相关接口。
+   (2) gopay：更新 mod 包，优化部分方法。
+   (3) alipay：修改过期时间字段类型为 int。
+
+版本号：Release 1.5.87
+修改记录：
+   (1) 微信V3：新增小程序调起支付分所需要的支付参数方法：client.PaySignOfAppletScore()。
+   (2) 微信V3：异步通知解析方法接收BodySize大小调至5MB。
+   (3) 支付宝：统一收单交易退款接口，response补充接收字段。
+   (4) 支付宝：alipay.SystemOauthToken() 接口增加可变参数 AppAuthToken 字段，如需要时可传。
+
+版本号：Release 1.5.86
+修改记录：
+   (1) 微信V3：优化异步验签方法，v3NotifyReq.VerifySignByPKMap()，通过证书Map自动选择相应的证书验签。
+   (2) 微信V3：微信平台证书获取方法变更，client.WxPublicKey() 获取最新微信平台证书；client.WxPublicKeyMap()，获取微信平台证书Map。
+   (3) 支付宝：修复 app_auth_token 的问题。
+
+版本号：Release 1.5.85
+修改记录：
+   (1) 微信V3：修复自动验签的bug
+
+版本号：Release 1.5.84
+修改记录：
+   (1) 微信V3：优化微信平台证书的获取和选择
+   (2) gopay：新增 retry 工具类包
+
+版本号：Release 1.5.83
+修改记录：
+   (1) alipay：新增商家分账相关接口
+   (2) alipay：更新部分注释上的接口文档地址。
+
+版本号：Release 1.5.82
+修改记录：
+   (1) gopay：xhttp库增加BodySize的自定义化设置，各支付渠道 Client 增加 client.SetBodySize() 方法。
+   (2) gopay：xlog 支持自定义实现接口。
+   (3) apple：修改结构体字段 `revocationReason` 类型。
+
+版本号：Release 1.5.81
+修改记录：
+   (1) 微信V3：签名方法，统一判断请求时path后缀是否为 ?，修复当bm为nil时的签名错误问题。
+   (2) QQ：增加了异常结果处理。
+   (3) 支付宝：补充了部分接口的回执参数。
+
+版本号：Release 1.5.80
+修改记录：
+   (1) PayPal：增加payout相关的v1接口
+   (2) PayPal：部分接口返回参数补齐
+
+版本号：Release 1.5.79
+修改记录：
+   (1) PayPal：增加订阅相关的v1接口
+   (2) 微信V3：更新部分接口上注释的文档地址
+   (3) 支付宝：接口请求中，如下公共参数（version、return_url、notify_url、app_auth_token）支持 BodyMap 中此次请求自定义设置
+
+版本号：Release 1.5.78
+修改记录：
+   (1) 微信V3：V3EcommerceBalance() 缺失参数补充
+   (2) 微信V3：新增 client.V3EcommerceDayBalance() 方法，电商平台预约提现
+   (3) 微信V3：修复 银行列表获取相关接口，路由修正
+   (4) 微信V3：修复 client.V3BankSearchBank() 接口，私钥解密出错的问题
+
+版本号：Release 1.5.77
+修改记录：
+   (1) 微信V3：V3EcommerceRefundQueryById()、V3EcommerceRefundQueryByNo()，缺失参数补充
+   (2) 微信V3：新增 client.V3EcommerceWithdraw() 方法，电商平台预约提现
+   (3) 微信V3：新增 client.V3EcommerceWithdrawStatus() 方法，电商平台查询预约提现状态
+
+版本号：Release 1.5.76
+修改记录：
+   (1) gopay：大量优化error处理和返回，统一部分通用错误到 error.go 中
+   (2) 支付宝：新增 alipay.IsBizError()，判断并捕获业务错误
+   (3) 微信、支付宝：优化部分 error 返回格式以及透传，优化参数校验返回
+
+版本号：Release 1.5.75
+修改记录：
+   (1) 微信V3：client.V3Apply4SubModifySettlement()，sub_mchid 问题处理
+   (2) 微信V3：微信分账接收方，model参数补充添加 detail_id
+   (3) PayPal：注释中接口文档地址更新
+   (4) PayPal：新增 client.OrderConfirm()，订单确认
+   (5) PayPal：OrderDetail、Capture、Payer、Name 等结构体，遗漏参数补充
+   (6) gopay：pkg/xtime/parse_format.go，优化 DurationToUnit() 方法，int -> int64
+
 版本号：Release 1.5.74
 修改记录：
    (1) gopay：一些小改动，util.GetRandomString() -> util.RandomString()

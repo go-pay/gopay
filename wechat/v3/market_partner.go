@@ -10,9 +10,9 @@ import (
 )
 
 // 建立合作关系
-//	Code = 0 is success
-//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_5_1.shtml
-//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_5_1.shtml
+// Code = 0 is success
+// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_5_1.shtml
+// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_5_1.shtml
 func (c *ClientV3) V3PartnershipsBuild(ctx context.Context, idempotencyKey string, bm gopay.BodyMap) (wxRsp *PartnershipsBuildRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3PartnershipsBuild, bm)
 	if err != nil {
@@ -25,7 +25,7 @@ func (c *ClientV3) V3PartnershipsBuild(ctx context.Context, idempotencyKey strin
 	wxRsp = &PartnershipsBuildRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(PartnershipsBuild)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -36,9 +36,9 @@ func (c *ClientV3) V3PartnershipsBuild(ctx context.Context, idempotencyKey strin
 }
 
 // 终止合作关系
-//	Code = 0 is success
-//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_5_2.shtml
-//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_5_2.shtml
+// Code = 0 is success
+// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_5_2.shtml
+// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_5_2.shtml
 func (c *ClientV3) V3PartnershipsTerminate(ctx context.Context, idempotencyKey string, bm gopay.BodyMap) (wxRsp *PartnershipsTerminateRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3PartnershipsTerminate, bm)
 	if err != nil {
@@ -51,7 +51,7 @@ func (c *ClientV3) V3PartnershipsTerminate(ctx context.Context, idempotencyKey s
 	wxRsp = &PartnershipsTerminateRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(PartnershipsTerminate)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
@@ -62,9 +62,9 @@ func (c *ClientV3) V3PartnershipsTerminate(ctx context.Context, idempotencyKey s
 }
 
 // 查询合作关系列表
-//	Code = 0 is success
-//	商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_5_3.shtml
-//	服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_5_3.shtml
+// Code = 0 is success
+// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_5_3.shtml
+// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter9_5_3.shtml
 func (c *ClientV3) V3PartnershipsList(ctx context.Context, bm gopay.BodyMap) (wxRsp *PartnershipsListRsp, err error) {
 	uri := v3PartnershipsList + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -78,7 +78,7 @@ func (c *ClientV3) V3PartnershipsList(ctx context.Context, bm gopay.BodyMap) (wx
 	wxRsp = &PartnershipsListRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(PartnershipsList)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
