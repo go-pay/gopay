@@ -220,11 +220,12 @@ const (
 	v3EcommerceIncomeRecord = "/v3/merchantfund/partner/income-records"  // 特约商户银行来账查询 GET
 
 	// 服务商-特约商户进件
-	v3Apply4SubSubmit              = "/v3/applyment4sub/applyment/"                     // 提交申请单 POST
-	v3Apply4SubQueryByBusinessCode = "/v3/applyment4sub/applyment/business_code/%s"     // business_code 通过业务申请编号查询申请状态 GET
-	v3Apply4SubQueryByApplyId      = "/v3/applyment4sub/applyment/applyment_id/%s"      // applyment_id 通过申请单号查询申请状态 GET
-	v3Apply4SubModifySettlement    = "/v3/apply4sub/sub_merchants/%s/modify-settlement" // sub_mchid 修改结算账号 POST
-	v3Apply4SubQuerySettlement     = "/v3/apply4sub/sub_merchants/%s/settlement"        // sub_mchid 查询结算账户 GET
+	v3Apply4SubSubmit               = "/v3/applyment4sub/applyment/"                     // 提交申请单 POST
+	v3Apply4SubQueryByBusinessCode  = "/v3/applyment4sub/applyment/business_code/%s"     // business_code 通过业务申请编号查询申请状态 GET
+	v3Apply4SubQueryByApplyId       = "/v3/applyment4sub/applyment/applyment_id/%s"      // applyment_id 通过申请单号查询申请状态 GET
+	v3Apply4SubModifySettlement     = "/v3/apply4sub/sub_merchants/%s/modify-settlement" // sub_mchid 修改结算账号 POST
+	v3Apply4SubQuerySettlement      = "/v3/apply4sub/sub_merchants/%s/settlement"        // sub_mchid 查询结算账户 GET
+	v3Apply4SubMerchantsApplication = "/v3/apply4sub/sub_merchants/%s/application/%s"    // sub_mchid、application_no 查询结算账户修改申请状态
 
 	// 电商收付通（商户进件）
 	v3EcommerceApply          = "/v3/ecommerce/applyments/"                  // 二级商户进件 POST
@@ -276,6 +277,9 @@ const (
 	// 特约商户结算账号类型
 	ApplySettlementAccountTypeBusiness = "ACCOUNT_TYPE_BUSINESS" // 对公银行账户
 	ApplySettlementAccountTypePrivate  = "ACCOUNT_TYPE_PRIVATE"  // 经营者个人银行卡
+
+	//结算账号修改模式
+	ApplySettlementModifyModeAsync = "MODIFY_MODE_ASYNC" //受理模式
 
 	// 特约商户结算账号汇款验证结果
 	ApplySettlementVerifying     = "VERIFYING"      // 系统汇款验证中，商户可发起提现尝试
