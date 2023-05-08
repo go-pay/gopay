@@ -17,6 +17,8 @@ type NotifyRequest struct {
 	SignType           string `xml:"sign_type,omitempty" json:"sign_type,omitempty"`
 	Openid             string `xml:"openid,omitempty" json:"openid,omitempty"`
 	IsSubscribe        string `xml:"is_subscribe,omitempty" json:"is_subscribe,omitempty"`
+	SubOpenid          string `xml:"sub_openid,omitempty" json:"sub_openid,omitempty"`
+	SubIsSubscribe     string `xml:"sub_is_subscribe,omitempty" json:"sub_is_subscribe,omitempty"`
 	TradeType          string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
 	BankType           string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
 	TotalFee           string `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
@@ -74,6 +76,8 @@ type QueryOrderResponse struct {
 	DeviceInfo         string `xml:"device_info,omitempty" json:"device_info,omitempty"`
 	Openid             string `xml:"openid,omitempty" json:"openid,omitempty"`
 	IsSubscribe        string `xml:"is_subscribe,omitempty" json:"is_subscribe,omitempty"`
+	SubOpenid          string `xml:"sub_openid,omitempty" json:"sub_openid,omitempty"`
+	SubIsSubscribe     string `xml:"sub_is_subscribe,omitempty" json:"sub_is_subscribe,omitempty"`
 	TradeType          string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
 	TradeState         string `xml:"trade_state,omitempty" json:"trade_state,omitempty"`
 	BankType           string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
@@ -259,6 +263,8 @@ type MicropayResponse struct {
 	ErrCodeDes         string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
 	Openid             string `xml:"openid,omitempty" json:"openid,omitempty"`
 	IsSubscribe        string `xml:"is_subscribe,omitempty" json:"is_subscribe,omitempty"`
+	SubOpenid          string `xml:"sub_openid,omitempty" json:"sub_openid,omitempty"`
+	SubIsSubscribe     string `xml:"sub_is_subscribe,omitempty" json:"sub_is_subscribe,omitempty"`
 	TradeType          string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
 	BankType           string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
 	FeeType            string `xml:"fee_type,omitempty" json:"fee_type,omitempty"`
