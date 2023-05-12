@@ -3,7 +3,7 @@ package alipay
 const (
 	// URL
 	baseUrl            = "https://openapi.alipay.com/gateway.do"
-	sandboxBaseUrl     = "https://openapi.alipaydev.com/gateway.do"
+	sandboxBaseUrl     = "https://openapi-sandbox.dl.alipaydev.com/gateway.do"
 	baseUrlUtf8        = "https://openapi.alipay.com/gateway.do?charset=utf-8"
 	sandboxBaseUrlUtf8 = "https://openapi.alipaydev.com/gateway.do?charset=utf-8"
 
