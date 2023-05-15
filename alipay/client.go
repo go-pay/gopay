@@ -38,7 +38,7 @@ type Client struct {
 // 注意：如果使用支付宝公钥证书验签，请设置 支付宝根证书SN（client.SetAlipayRootCertSN()）、应用公钥证书SN（client.SetAppCertSN()）
 // appid：应用ID
 // privateKey：应用私钥，支持PKCS1和PKCS8
-// isProd：是否是正式环境
+// isProd：是否是正式环境，沙箱环境请选择新版沙箱应用。
 func NewClient(appid, privateKey string, isProd bool) (client *Client, err error) {
 	if appid == util.NULL || privateKey == util.NULL {
 		return nil, gopay.MissAlipayInitParamErr

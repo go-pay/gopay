@@ -8,9 +8,9 @@
 
 - 支付宝官方文档：[官方文档](https://openhome.alipay.com/docCenter/docCenter.htm)
 
-- 支付宝RSA秘钥生成文档：[生成RSA密钥](https://opendocs.alipay.com/open/291/105971) （推荐使用 RSA2）
+- 支付宝RSA秘钥生成文档：[生成RSA密钥](https://opendocs.alipay.com/common/02kipl) （推荐使用 RSA2）
 
-- 沙箱环境使用说明：[文档地址](https://opendocs.alipay.com/open/200/105311)
+- 沙箱环境(新) 使用说明：[新版沙箱文档](https://opendocs.alipay.com/common/05yvy1)
 
 ---
 
@@ -25,9 +25,9 @@ import (
 )
 
 // 初始化支付宝客户端
-//    appid：应用ID
-//    privateKey：应用私钥，支持PKCS1和PKCS8
-//    isProd：是否是正式环境
+// appid：应用ID
+// privateKey：应用私钥，支持PKCS1和PKCS8
+// isProd：是否是正式环境，沙箱环境请选择新版沙箱应用。
 client, err := alipay.NewClient("2016091200494382", privateKey, false)
 if err != nil {
     xlog.Error(err)
@@ -144,14 +144,14 @@ import (
 )
 
 // 解析异步通知的参数
-//    req：*http.Request
+// req：*http.Request
 notifyReq, err = alipay.ParseNotifyToBodyMap(c.Request)     // c.Request 是 gin 框架的写法
 if err != nil {
     xlog.Error(err)
     return
 }
  或
-//    value：url.Values
+// value：url.Values
 notifyReq, err = alipay.ParseNotifyByURLValues()
 if err != nil {
     xlog.Error(err)
@@ -168,8 +168,8 @@ ok, err = alipay.VerifySignWithCert("alipayCertPublicKey_RSA2.crt content", noti
 err = notifyReq.Unmarshal(ptr)
 
 // ====异步通知，返回支付宝平台的信息====
-//    文档：https://opendocs.alipay.com/open/203/105286
-//    程序执行完后必须打印输出“success”（不包含引号）。如果商户反馈给支付宝的字符不是success这7个字符，支付宝服务器会不断重发通知，直到超过24小时22分钟。一般情况下，25小时以内完成8次通知（通知的间隔频率一般是：4m,10m,10m,1h,2h,6h,15h）
+// 文档：https://opendocs.alipay.com/open/203/105286
+// 程序执行完后必须打印输出“success”（不包含引号）。如果商户反馈给支付宝的字符不是success这7个字符，支付宝服务器会不断重发通知，直到超过24小时22分钟。一般情况下，25小时以内完成8次通知（通知的间隔频率一般是：4m,10m,10m,1h,2h,6h,15h）
 
 // 此写法是 gin 框架返回支付宝的写法
 c.String(http.StatusOK, "%s", "success")
@@ -193,10 +193,10 @@ import (
 )
 
 // 换取授权访问令牌（默认使用utf-8，RSA2）
-//    appId：应用ID
-//    privateKey：应用私钥，支持PKCS1和PKCS8
-//    grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
-//    codeOrToken：支付宝授权码或refresh_token
+// appId：应用ID
+// privateKey：应用私钥，支持PKCS1和PKCS8
+// grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
+// codeOrToken：支付宝授权码或refresh_token
 rsp, err := alipay.SystemOauthToken(appId, privateKey, grantType, codeOrToken)
 if err != nil {
     xlog.Error(err)
@@ -204,12 +204,12 @@ if err != nil {
 }
 
 // 解密支付宝开放数据带到指定结构体
-//    以小程序获取手机号为例
+// 以小程序获取手机号为例
 phone := new(alipay.UserPhone)
 // 解密支付宝开放数据
-//    encryptedData:包括敏感数据在内的完整用户信息的加密数据
-//    secretKey:AES密钥，支付宝管理平台配置
-//    beanPtr:需要解析到的结构体指针
+// encryptedData:包括敏感数据在内的完整用户信息的加密数据
+// secretKey:AES密钥，支付宝管理平台配置
+// beanPtr:需要解析到的结构体指针
 err := alipay.DecryptOpenDataToStruct(encryptedData, secretKey, phone)
 xlog.Infof("%+v", phone)
 ```
