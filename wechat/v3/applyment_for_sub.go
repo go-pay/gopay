@@ -183,7 +183,7 @@ func (c *ClientV3) V3Apply4SubQuerySettlement(ctx context.Context, subMchId stri
 
 // 查询结算账户修改申请状态 API
 // Code = 0 is success
-// 文档：https://pay.weixin.qq.com/docs/partner/apis/modify-settlement/sub-merchants/modify-settlement.html
+// 文档：https://pay.weixin.qq.com/docs/partner/apis/modify-settlement/sub-merchants/get-application.html
 func (c *ClientV3) V3Apply4SubMerchantsApplication(ctx context.Context, subMchId, applicationNo string) (*V3Apply4SubMerchantsApplicationRsp, error) {
 	uri := fmt.Sprintf(v3Apply4SubMerchantsApplication, subMchId, applicationNo)
 	authorization, err := c.authorization(MethodGet, uri, nil)

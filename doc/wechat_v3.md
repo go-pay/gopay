@@ -391,7 +391,9 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 查询申请单状态（BusinessCode）：`client.V3Apply4SubQueryByBusinessCode()`
     * 查询申请单状态（ApplyId）：`client.V3Apply4SubQueryByApplyId()`
     * 修改结算账号：`client.V3Apply4SubModifySettlement()`
+    * 修改结算账号(新)：`client.V3AsyncApply4SubModifySettlement()`
     * 查询结算账户：`client.V3Apply4SubQuerySettlement()`
+    * 查询结算账户修改申请状态：`client.V3Apply4SubMerchantsApplication()`
 * <font color='#07C160' size='4'>点金计划（服务商）</font>
     * 点金计划管理：`client.V3GoldPlanManage()`
     * 商家小票管理：`client.V3GoldPlanBillManage()`
