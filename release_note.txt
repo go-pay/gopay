@@ -1,7 +1,9 @@
 版本号：Release 1.5.93
 修改记录：
    (1) 微信V2：服务商模式下，付款码支付response新增 sub_openid、sub_is_subscribe 字段。
-   (2) 支付宝：沙箱模式网关URL替换升级成新版，沙箱调试时请跳转至新版沙箱应用。
+   (2) 微信V3：新增 client.V3AsyncApply4SubModifySettlement()，(新)修改结算账户。
+   (3) 微信V3：新增 client.V3Apply4SubMerchantsApplication()，查询结算账户修改申请状态。
+   (4) 支付宝：沙箱模式网关URL替换升级成新版，沙箱调试时请跳转至新版沙箱应用。
 
 版本号：Release 1.5.92
 修改记录：
