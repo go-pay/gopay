@@ -77,6 +77,29 @@ func (a *Client) TradeRelationBatchQuery(ctx context.Context, bm gopay.BodyMap) 
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
+// alipay.trade.settle.confirm(统一收单确认结算接口)
+// 文档地址：https://opendocs.alipay.com/open/028xqy
+func (a *Client) TradeSettleConfirm(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeSettleConfirmResponse, err error) {
+	err = bm.CheckEmptyError("out_request_no", "trade_no")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.settle.confirm"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(TradeSettleConfirmResponse)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
 // alipay.trade.order.settle(统一收单交易结算接口)
 // 文档地址：https://opendocs.alipay.com/open/02j2bt
 func (a *Client) TradeOrderSettle(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeOrderSettleResponse, err error) {

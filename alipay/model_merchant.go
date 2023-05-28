@@ -21,6 +21,13 @@ type TradeRelationBatchQueryResponse struct {
 	Sign         string                   `json:"sign"`
 }
 
+type TradeSettleConfirmResponse struct {
+	Response     *TradeOrderSettle `json:"alipay_trade_settle_confirm_response"`
+	AlipayCertSn string            `json:"alipay_cert_sn,omitempty"`
+	SignData     string            `json:"-"`
+	Sign         string            `json:"sign"`
+}
+
 type TradeOrderSettleResponse struct {
 	Response     *TradeOrderSettle `json:"alipay_trade_order_settle_response"`
 	AlipayCertSn string            `json:"alipay_cert_sn,omitempty"`
