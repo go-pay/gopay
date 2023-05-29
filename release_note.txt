@@ -1,3 +1,7 @@
+版本号：Release 1.5.94
+修改记录：
+   (1) 支付宝：新增 client.TradeSettleConfirm()，统一收单确认结算接口。
+
 版本号：Release 1.5.93
 修改记录：
    (1) 微信V2：服务商模式下，付款码支付response新增 sub_openid、sub_is_subscribe 字段。

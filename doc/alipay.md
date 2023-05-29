@@ -384,6 +384,7 @@ xlog.Infof("%+v", phone)
   * 分账关系解绑接口：`client.TradeRelationUnbind()`
   * 分账关系查询接口：`client.TradeRelationBatchQuery()`
   * 统一收单交易结算接口：`client.TradeOrderSettle()`
+  * 统一收单确认结算接口：`client.TradeSettleConfirm()`
   * 交易分账查询接口：`client.TradeOrderSettleQuery()`
 
 ### 支付宝公共 API
