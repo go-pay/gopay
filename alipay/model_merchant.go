@@ -86,6 +86,7 @@ type RoyaltyDetail struct {
 	TransInType   string `json:"trans_in_type"`
 	Amount        string `json:"amount"`
 	State         string `json:"state"`
+	DetailId      string `json:"detail_id"`
 	ErrorCode     string `json:"error_code"`
 	ErrorDesc     string `json:"error_desc"`
 }
