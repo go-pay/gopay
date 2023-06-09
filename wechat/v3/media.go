@@ -6,16 +6,17 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 	"net/http"
 	"net/url"
+
+	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/pkg/util"
 )
 
 // 图片资源下载
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_18.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_18.shtml
+// 商户文档：https://pay.wechatpay.cn/docs/merchant/apis/consumer-complaint/image/download-pictures.html
+// 服务商文档：https://pay.wechatpay.cn/docs/partner/apis/consumer-complaint/image/download-pictures.html
 func (c *ClientV3) V3MediaDownloadImage(ctx context.Context, mediaUrl string) (resBody *bytes.Buffer, err error) {
 	urlInfo, err := url.Parse(mediaUrl)
 	if err != nil {
@@ -25,14 +26,14 @@ func (c *ClientV3) V3MediaDownloadImage(ctx context.Context, mediaUrl string) (r
 	if err != nil {
 		return nil, err
 	}
-
 	res, si, bs, err := c.doProdGet(ctx, urlInfo.RequestURI(), authorization)
-	defer res.Body.Close()
-
-	resBody = bytes.NewBuffer(bs)
+	if err != nil {
+		return nil, err
+	}
 	if res.StatusCode != http.StatusOK {
 		return nil, errors.New(string(bs))
 	}
+	resBody = bytes.NewBuffer(bs)
 	return resBody, c.verifySyncSign(si)
 }
 
