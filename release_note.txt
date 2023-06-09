@@ -1,6 +1,8 @@
 版本号：Release 1.5.94
 修改记录：
    (1) 支付宝：新增 client.TradeSettleConfirm()，统一收单确认结算接口。
+   (2) 微信V3：新增 client.V3MediaDownloadImage()，图片下载
+   (3) 微信V3：修正 查询投诉单协商历史 返回结构提结构
 
 版本号：Release 1.5.93
 修改记录：
