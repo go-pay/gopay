@@ -20,7 +20,7 @@ func main() {
 	client.SetCharset("utf-8").
 		SetSignType(alipay.RSA2).
 		SetNotifyUrl("http://crm.deepic.cn/ali/pay/notify")
-	client.SetCertSnByPath("./appCertPublicKey_2021002103640726.crt", "./alipayRootCert.crt", "./alipayCertPublicKey_RSA2.crt")
+	client.SetCertSnByPath("./appPublicCert.crt", "./alipayRootCert.crt", "./alipayPublicCert.crt")
 
 	//请求参数
 	bm := gopay.BodyMap{}

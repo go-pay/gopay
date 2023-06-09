@@ -41,13 +41,13 @@ func TestMain(m *testing.M) {
 		SetNotifyUrl("https://www.fmm.ink")
 
 	// 自动同步验签（只支持证书模式）
-	// 传入 alipayCertPublicKey_RSA2.crt 内容
+	// 传入 支付宝公钥证书 alipayPublicCert.crt 内容
 	client.AutoVerifySign(cert.AlipayPublicContentRSA2)
 
 	// 传入证书内容
 	err := client.SetCertSnByContent(cert.AppPublicContent, cert.AlipayRootContent, cert.AlipayPublicContentRSA2)
 	// 传入证书文件路径
-	//err := client.SetCertSnByPath("cert/appCertPublicKey_2021000117673683.crt", "cert/alipayRootCert.crt", "cert/alipayCertPublicKey_RSA2.crt")
+	//err := client.SetCertSnByPath("cert/appPublicCert.crt", "cert/alipayRootCert.crt", "cert/alipayPublicCert.crt")
 	if err != nil {
 		xlog.Debug("SetCertSn:", err)
 		return
@@ -72,21 +72,6 @@ func TestClient_PostAliPayAPISelfV2(t *testing.T) {
 
 	aliPsp := new(TradePrecreateResponse)
 	err := client.PostAliPayAPISelfV2(ctx, bm, "alipay.trade.precreate", aliPsp)
-	if err != nil {
-		xlog.Error(err)
-		return
-	}
-	xlog.Debug(aliPsp.Response)
-}
-
-func TestClient_PostAliPayAPISelf(t *testing.T) {
-	bm := make(gopay.BodyMap)
-	bm.Set("subject", "预创建创建订单")
-	bm.Set("out_trade_no", util.RandomString(32))
-	bm.Set("total_amount", "100")
-
-	aliPsp := new(TradePrecreateResponse)
-	err := client.PostAliPayAPISelf(ctx, bm, "alipay.trade.precreate", aliPsp)
 	if err != nil {
 		xlog.Error(err)
 		return

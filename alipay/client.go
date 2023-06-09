@@ -28,7 +28,7 @@ type Client struct {
 	IsProd             bool
 	bodySize           int // http response body size(MB), default is 10MB
 	privateKey         *rsa.PrivateKey
-	aliPayPublicKey    *rsa.PublicKey // 支付宝证书公钥内容 alipayCertPublicKey_RSA2.crt
+	aliPayPublicKey    *rsa.PublicKey // 支付宝证书公钥内容 alipayPublicCert.crt
 	autoSign           bool
 	DebugSwitch        gopay.DebugSwitch
 	location           *time.Location
