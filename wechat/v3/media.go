@@ -1,14 +1,40 @@
 package wechat
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"net/http"
-
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
+	"net/http"
+	"net/url"
 )
+
+// 图片资源下载
+// Code = 0 is success
+// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_18.shtml
+// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_18.shtml
+func (c *ClientV3) V3MediaDownloadImage(ctx context.Context, mediaUrl string) (resBody *bytes.Buffer, err error) {
+	urlInfo, err := url.Parse(mediaUrl)
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := c.authorization(MethodGet, urlInfo.RequestURI(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res, si, bs, err := c.doProdGet(ctx, urlInfo.RequestURI(), authorization)
+	defer res.Body.Close()
+
+	resBody = bytes.NewBuffer(bs)
+	if res.StatusCode != http.StatusOK {
+		return nil, errors.New(string(bs))
+	}
+	return resBody, c.verifySyncSign(si)
+}
 
 // 图片上传API
 // 注意：图片不能超过2MB

@@ -115,13 +115,13 @@ type ComplaintNegotiationHistory struct {
 }
 
 type ComplaintNegotiationHistoryItem struct {
-	ComplaintMediaList []*ComplaintMediaList `json:"complaint_media_list,omitempty"` // 投诉资料列表
-	LogId              string                `json:"log_id"`                         // 操作流水号
-	Operator           string                `json:"operator"`                       // 当前投诉协商记录的操作人
-	OperateTime        string                `json:"operate_time"`                   // 当前投诉协商记录的操作时间
-	OperateType        string                `json:"operate_type"`                   // 当前投诉协商记录的操作类型
-	OperateDetails     string                `json:"operate_details"`                // 当前投诉协商记录的具体内容
-	ImageList          []string              `json:"image_list"`                     // 当前投诉协商记录提交的图片凭证（url格式），最多返回4张图片，url有效时间为1小时。如未查询到协商历史图片凭证，则返回空数组。
+	ComplaintMediaList *ComplaintMediaList `json:"complaint_media_list,omitempty"` // 投诉资料列表
+	LogId              string              `json:"log_id"`                         // 操作流水号
+	Operator           string              `json:"operator"`                       // 当前投诉协商记录的操作人
+	OperateTime        string              `json:"operate_time"`                   // 当前投诉协商记录的操作时间
+	OperateType        string              `json:"operate_type"`                   // 当前投诉协商记录的操作类型
+	OperateDetails     string              `json:"operate_details"`                // 当前投诉协商记录的具体内容
+	ImageList          []string            `json:"image_list"`                     // 当前投诉协商记录提交的图片凭证（url格式），最多返回4张图片，url有效时间为1小时。如未查询到协商历史图片凭证，则返回空数组。
 }
 
 type ComplaintNotifyUrl struct {
