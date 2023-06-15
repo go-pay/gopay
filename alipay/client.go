@@ -210,7 +210,67 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 		bodyBs          []byte
 	)
 	if bm != nil {
-		_, has := notRemoveAppAuthToken[method]
+		_, has := appAuthTokenInBizContent[method]
+		if has {
+			if bodyBs, err = json.Marshal(bm); err != nil {
+				return nil, fmt.Errorf("json.Marshal：%w", err)
+			}
+			bizContent = string(bodyBs)
+			bm.Remove("app_auth_token")
+		} else {
+			aat := bm.GetString("app_auth_token")
+			bm.Remove("app_auth_token")
+			if bodyBs, err = json.Marshal(bm); err != nil {
+				return nil, fmt.Errorf("json.Marshal：%w", err)
+			}
+			bizContent = string(bodyBs)
+			bm.Set("app_auth_token", aat)
+		}
+	}
+	// 处理公共参数
+	param, err := a.pubParamsHandle(bm, method, bizContent, authToken...)
+	if err != nil {
+		return nil, err
+	}
+	switch method {
+	case "alipay.trade.app.pay", "alipay.fund.auth.order.app.freeze":
+		return []byte(param), nil
+	case "alipay.trade.wap.pay", "alipay.trade.page.pay", "alipay.user.certify.open.certify":
+		if !a.IsProd {
+			return []byte(sandboxBaseUrl + "?" + param), nil
+		}
+		return []byte(baseUrl + "?" + param), nil
+	default:
+		httpClient := xhttp.NewClient()
+		if a.bodySize > 0 {
+			httpClient.SetBodySize(a.bodySize)
+		}
+		url = baseUrlUtf8
+		if !a.IsProd {
+			url = sandboxBaseUrlUtf8
+		}
+		res, bs, err := httpClient.Type(xhttp.TypeForm).Post(url).SendString(param).EndBytes(ctx)
+		if err != nil {
+			return nil, err
+		}
+		if a.DebugSwitch == gopay.DebugOn {
+			xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		}
+		if res.StatusCode != 200 {
+			return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+		}
+		return bs, nil
+	}
+}
+
+// 向支付宝发送请求
+func (a *Client) DoAliPayPure(ctx context.Context, bm gopay.BodyMap, method string, authToken ...string) (bs []byte, err error) {
+	var (
+		bizContent, url string
+		bodyBs          []byte
+	)
+	if bm != nil {
+		_, has := appAuthTokenInBizContent[method]
 		if has {
 			if bodyBs, err = json.Marshal(bm); err != nil {
 				return nil, fmt.Errorf("json.Marshal：%w", err)
@@ -264,13 +324,13 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 }
 
 // 保持和官方 SDK 命名方式一致
-func (a *Client) PageExecute(ctx context.Context, bm gopay.BodyMap, method string, authToken ...string) (bs string, err error) {
+func (a *Client) PageExecute(ctx context.Context, bm gopay.BodyMap, method string, authToken ...string) (url string, err error) {
 	var (
 		bizContent string
 		bodyBs     []byte
 	)
 	if bm != nil {
-		_, has := notRemoveAppAuthToken[method]
+		_, has := appAuthTokenInBizContent[method]
 		if has {
 			if bodyBs, err = json.Marshal(bm); err != nil {
 				return "", fmt.Errorf("json.Marshal：%w", err)

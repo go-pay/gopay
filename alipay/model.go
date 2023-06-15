@@ -19,7 +19,7 @@ const (
 
 var (
 	//不需要处理AppAuthToken的方法
-	notRemoveAppAuthToken = map[string]bool{
+	appAuthTokenInBizContent = map[string]bool{
 		"alipay.open.auth.token.app.query": true,
 	}
 )
