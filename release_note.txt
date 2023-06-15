@@ -1,3 +1,7 @@
+版本号：Release 1.5.95
+修改记录：
+   (1) 支付宝：新增 client.DoAliPayPure()。支付宝http请求方法。
+
 版本号：Release 1.5.94
 修改记录：
    (1) 支付宝：新增 client.TradeSettleConfirm()，统一收单确认结算接口。
