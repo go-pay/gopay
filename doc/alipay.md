@@ -50,14 +50,14 @@ SetReturnUrl("https://www.fmm.ink").            // 设置返回URL
     SetAppAuthToken()                           // 设置第三方应用授权
 
 // 自动同步验签（只支持证书模式）
-// 传入 alipayCertPublicKey_RSA2.crt 内容
-client.AutoVerifySign([]byte("alipayCertPublicKey_RSA2 bytes"))
+// 传入 alipayPublicCert.crt 内容
+client.AutoVerifySign([]byte("alipayPublicCert.crt bytes"))
 
 // 公钥证书模式，需要传入证书，以下两种方式二选一
 // 证书路径
-err := client.SetCertSnByPath("appCertPublicKey.crt", "alipayRootCert.crt", "alipayCertPublicKey_RSA2.crt")
+err := client.SetCertSnByPath("appPublicCert.crt", "alipayRootCert.crt", "alipayPublicCert.crt")
 // 证书内容
-err := client.SetCertSnByContent("appCertPublicKey bytes", "alipayRootCert bytes", "alipayCertPublicKey_RSA2 bytes")
+err := client.SetCertSnByContent("appPublicCert.crt bytes", "alipayRootCert bytes", "alipayPublicCert.crt bytes")
 ```
 
 ### 2、API 方法调用及入参
@@ -130,7 +130,7 @@ if err != nil {
 ok, err := alipay.VerifySyncSign(aliPayPublicKey, aliRsp.SignData, aliRsp.Sign)
 
 // 公钥证书模式验签
-//    aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayCertPublicKey_RSA2.crt 或文件内容[]byte
+//    aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayPublicCert.crt 或文件内容[]byte
 //    signData：待验签参数，aliRsp.SignData
 //    sign：待验签sign，aliRsp.Sign
 ok, err := alipay.VerifySyncSignWithCert(aliPayPublicKeyCert, aliRsp.SignData, aliRsp.Sign)
@@ -162,7 +162,7 @@ if err != nil {
 ok, err = alipay.VerifySign(aliPayPublicKey, notifyReq)
 
 // 支付宝异步通知验签（公钥证书模式）
-ok, err = alipay.VerifySignWithCert("alipayCertPublicKey_RSA2.crt content", notifyReq)
+ok, err = alipay.VerifySignWithCert("alipayPublicCert.crt content", notifyReq)
 
 // 如果需要，可将 BodyMap 内数据，Unmarshal 到指定结构体指针 ptr
 err = notifyReq.Unmarshal(ptr)

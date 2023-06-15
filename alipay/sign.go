@@ -56,7 +56,7 @@ A：开发者上传自己的应用公钥证书后，开放平台会为开发者�
 */
 
 // GetCertSN 获取证书序列号SN
-// certPathOrData x509证书文件路径(appCertPublicKey.crt、alipayCertPublicKey_RSA2.crt) 或证书 buffer
+// certPathOrData x509证书文件路径(appPublicCert.crt、alipayPublicCert.crt) 或证书 buffer
 // 返回 sn：证书序列号(app_cert_sn、alipay_cert_sn)
 // 返回 err：error 信息
 func GetCertSN(certPathOrData interface{}) (sn string, err error) {
@@ -259,7 +259,7 @@ func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error)
 
 // VerifySyncSignWithCert 支付宝同步返回验签（公钥证书模式）
 // 注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 不支持同步返回验签
-// aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayCertPublicKey_RSA2.crt 或文件内容[]byte
+// aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayPublicCert.crt 或文件内容[]byte
 // signData：待验签参数，aliRsp.SignData
 // sign：待验签sign，aliRsp.Sign
 // 返回参数ok：是否验签通过
@@ -352,7 +352,7 @@ func VerifySign(alipayPublicKey string, notifyBean interface{}) (ok bool, err er
 
 // 支付宝异步通知验签（公钥证书模式）
 // 注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
-// aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayCertPublicKey_RSA2.crt 或文件内容[]byte
+// aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayPublicCert.crt 或文件内容[]byte
 // notifyBean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
 // 返回参数ok：是否验签通过
 // 返回参数err：错误信息

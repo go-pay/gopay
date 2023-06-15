@@ -83,7 +83,7 @@ func TestVerifySignWithCert(t *testing.T) {
 	bm.Set("seller_id", "2088102119685838")
 	bm.Set("notify_id", "4a91b7a78a503640467525113fb7d8bg8e")
 	// filePath
-	filepath := "/cert/alipayCertPublicKey_RSA2.crt"
+	filepath := "/cert/alipayPublicCert.crt"
 	ok, err := VerifySignWithCert(filepath, bm)
 	if err != nil {
 		xlog.Errorf("VerifySignWithCert(%+v),error:%+v", bm, err)
@@ -105,13 +105,13 @@ func TestVerifySignWithCert(t *testing.T) {
 }
 
 func TestGetCertSN(t *testing.T) {
-	sn, err := GetCertSN("cert/alipayCertPublicKey_RSA2.crt")
+	sn, err := GetCertSN("cert/alipayPublicCert.crt")
 	if err != nil {
 		xlog.Errorf("GetCertSN(),error:%+v", err)
 		return
 	}
 	xlog.Debug(sn)
-	pubKeyPath := "cert/appCertPublicKey.crt"
+	pubKeyPath := "cert/appPublicCert.crt"
 	sn, err = GetCertSN(pubKeyPath)
 	if err != nil {
 		xlog.Errorf("GetCertSN(),error:%+v", err)

@@ -177,8 +177,8 @@ func (c *ClientV3) V3ComplaintList(ctx context.Context, bm gopay.BodyMap) (wxRsp
 
 // 查询投诉协商历史API
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_12.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_12.shtml
+// 商户文档：https://pay.wechatpay.cn/docs/merchant/apis/consumer-complaint/complaints/query-negotiation-history-v2.html
+// 服务商文档：https://pay.wechatpay.cn/docs/partner/apis/consumer-complaint/complaints/query-negotiation-history-v2.html
 func (c *ClientV3) V3ComplaintNegotiationHistory(ctx context.Context, complaintId string, bm gopay.BodyMap) (wxRsp *ComplaintNegotiationHistoryRsp, err error) {
 	uri := fmt.Sprintf(v3ComplaintNegotiationHistory, complaintId) + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)

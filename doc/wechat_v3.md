@@ -362,6 +362,7 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 图片上传：`client.V3MediaUploadImage()`
     * 视频上传：`client.V3MediaUploadVideo()`
     * 图片上传（营销专用）：`client.V3FavorMediaUploadImage()`
+    * 图片下载：`client.V3MediaDownloadImage()`
 * <font color='#07C160' size='4'>商家转账到零钱（直连商户）</font>
     * 发起商家转账：`client.V3Transfer()`
     * 微信批次单号查询批次单：`client.V3TransferQuery()`
