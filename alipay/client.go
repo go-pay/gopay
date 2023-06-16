@@ -264,7 +264,7 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 }
 
 // 向支付宝发送请求
-func (a *Client) DoAliPayPure(ctx context.Context, bm gopay.BodyMap, method string, authToken ...string) (bs []byte, err error) {
+func (a *Client) DoAliPay(ctx context.Context, bm gopay.BodyMap, method string, authToken ...string) (bs []byte, err error) {
 	var (
 		bizContent, url string
 		bodyBs          []byte
