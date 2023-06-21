@@ -83,13 +83,17 @@ const (
 	v3ScorePermissionOpenidTerminate = "/v3/payscore/permissions/openid/%s/terminate"             // openid 解除用户授权记录（openid） POST
 
 	// 微信支付分（公共API）
-	v3ScoreOrderCreate   = "/v3/payscore/serviceorder"             // 创建支付分订单 POST
-	v3ScoreOrderQuery    = "/v3/payscore/serviceorder"             // 查询支付分订单 GET
-	v3ScoreOrderCancel   = "/v3/payscore/serviceorder/%s/cancel"   // out_trade_no 取消支付分订单 POST
-	v3ScoreOrderModify   = "/v3/payscore/serviceorder/%s/modify"   // out_trade_no 修改订单金额 POST
-	v3ScoreOrderComplete = "/v3/payscore/serviceorder/%s/complete" // out_trade_no 完结支付分订单 POST
-	v3ScoreOrderPay      = "/v3/payscore/serviceorder/%s/pay"      // out_trade_no 商户发起催收扣款 POST
-	v3ScoreOrderSync     = "/v3/payscore/serviceorder/%s/sync"     // out_trade_no 同步服务订单信息 POST
+	v3ScoreOrderCreate          = "/v3/payscore/serviceorder"                     // 创建支付分订单 POST
+	v3ScoreOrderQuery           = "/v3/payscore/serviceorder"                     // 查询支付分订单 GET
+	v3ScoreOrderCancel          = "/v3/payscore/serviceorder/%s/cancel"           // out_trade_no 取消支付分订单 POST
+	v3ScoreOrderModify          = "/v3/payscore/serviceorder/%s/modify"           // out_trade_no 修改订单金额 POST
+	v3ScoreOrderComplete        = "/v3/payscore/serviceorder/%s/complete"         // out_trade_no 完结支付分订单 POST
+	v3ScoreOrderPay             = "/v3/payscore/serviceorder/%s/pay"              // out_trade_no 商户发起催收扣款 POST
+	v3ScoreOrderSync            = "/v3/payscore/serviceorder/%s/sync"             // out_trade_no 同步服务订单信息 POST
+	v3ScoreOrderPartnerCreate   = "/v3/payscore/partner/serviceorder"             // 服务商模式创建支付分订单
+	v3ScoreOrderPartnerQuery    = "/v3/payscore/partner/serviceorder"             // 服务商模式查询支付分订单
+	v3ScoreOrderPartnerCancel   = "/v3/payscore/partner/serviceorder/%s/cancel"   // 服务商模式取消支付分订单
+	v3ScoreOrderPartnerComplete = "/v3/payscore/partner/serviceorder/%s/complete" // 服务商模式完结支付分订单
 
 	// 微信先享卡
 	v3CardPre     = "/v3/discount-card/cards"                     // 预受理领卡请求 POST
