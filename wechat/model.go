@@ -1,86 +1,5 @@
 package wechat
 
-const (
-	// 境外国家地区
-	China         Country = 1 // 中国国内
-	China2        Country = 2 // 中国国内（冗灾方案）
-	SoutheastAsia Country = 3 // 东南亚
-	Other         Country = 4 // 其他国家
-
-	// URL
-	baseUrlCh  = "https://api.mch.weixin.qq.com/"   // 中国国内
-	baseUrlCh2 = "https://api2.mch.weixin.qq.com/"  // 中国国内
-	baseUrlHk  = "https://apihk.mch.weixin.qq.com/" // 东南亚
-	baseUrlUs  = "https://apius.mch.weixin.qq.com/" // 其他
-
-	// 正式
-	microPay                    = "pay/micropay"                                      // 提交付款码支付
-	unifiedOrder                = "pay/unifiedorder"                                  // 统一下单
-	orderQuery                  = "pay/orderquery"                                    // 查询订单
-	closeOrder                  = "pay/closeorder"                                    // 关闭订单
-	refund                      = "secapi/pay/refund"                                 // 申请退款
-	reverse                     = "secapi/pay/reverse"                                // 撤销订单
-	refundQuery                 = "pay/refundquery"                                   // 查询退款
-	downloadBill                = "pay/downloadbill"                                  // 下载对账单
-	downloadFundFlow            = "pay/downloadfundflow"                              // 下载资金账单
-	report                      = "payitil/report"                                    // 交易保障
-	batchQueryComment           = "billcommentsp/batchquerycomment"                   // 拉取订单评价数据
-	transfers                   = "mmpaymkttransfers/promotion/transfers"             // 企业付款（企业向微信用户个人付款）
-	getTransferInfo             = "mmpaymkttransfers/gettransferinfo"                 // 查询企业付款
-	sendCashRed                 = "mmpaymkttransfers/sendredpack"                     // 发放现金红包
-	sendAppletRed               = "mmpaymkttransfers/sendminiprogramhb"               // 发放小程序红包
-	sendGroupCashRed            = "mmpaymkttransfers/sendgroupredpack"                // 发放裂变红包
-	getRedRecord                = "mmpaymkttransfers/gethbinfo"                       // 查询红包记录
-	authCodeToOpenid            = "tools/authcodetoopenid"                            // 授权码查询openid
-	entrustPublic               = "papay/entrustweb"                                  // 公众号纯签约
-	entrustApp                  = "papay/preentrustweb"                               // APP纯签约
-	entrustH5                   = "papay/h5entrustweb"                                // H5纯签约
-	entrustPaying               = "pay/contractorder"                                 // 支付中签约
-	entrustQuery                = "papay/querycontract"                               // 查询签约关系
-	entrustApplyPay             = "pay/pappayapply"                                   // 申请扣款
-	entrustDelete               = "papay/deletecontract"                              // 申请解约
-	entrustQueryOrder           = "pay/paporderquery"                                 // 查询扣款订单
-	profitSharing               = "secapi/pay/profitsharing"                          // 请求单次分账
-	multiProfitSharing          = "secapi/pay/multiprofitsharing"                     // 请求多次分账
-	profitSharingQuery          = "pay/profitsharingquery"                            // 查询分账结果
-	profitSharingAddReceiver    = "pay/profitsharingaddreceiver"                      // 添加分账接收方
-	profitSharingRemoveReceiver = "pay/profitsharingremovereceiver"                   // 删除分账接收方
-	profitSharingFinish         = "secapi/pay/profitsharingfinish"                    // 完结分账
-	profitSharingReturn         = "secapi/pay/profitsharingreturn"                    // 分账退回
-	profitSharingReturnQuery    = "pay/profitsharingreturnquery"                      // 分账回退结果查询
-	payBank                     = "mmpaysptrans/pay_bank"                             // 企业付款到银行卡API
-	queryBank                   = "mmpaysptrans/query_bank"                           // 查询企业付款到银行卡API
-	getPublicKey                = "https://fraud.mch.weixin.qq.com/risk/getpublickey" // 获取RSA加密公钥API
-
-	// 海关自助清关
-	customsDeclareOrder   = "cgi-bin/mch/customs/customdeclareorder"        // 订单附加信息提交
-	customsDeclareQuery   = "cgi-bin/mch/customs/customdeclarequery"        // 订单附加信息查询
-	customsReDeclareOrder = "cgi-bin/mch/newcustoms/customdeclareredeclare" // 订单附加信息重推
-
-	// SanBox
-	sandboxGetSignKey   = "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
-	sandboxMicroPay     = "sandboxnew/pay/micropay"
-	sandboxUnifiedOrder = "sandboxnew/pay/unifiedorder"
-	sandboxOrderQuery   = "sandboxnew/pay/orderquery"
-	sandboxCloseOrder   = "sandboxnew/pay/closeorder"
-	sandboxRefund       = "sandboxnew/pay/refund"
-	sandboxReverse      = "sandboxnew/pay/reverse"
-	sandboxRefundQuery  = "sandboxnew/pay/refundquery"
-	sandboxDownloadBill = "sandboxnew/pay/downloadbill"
-	sandboxReport       = "sandboxnew/payitil/report"
-
-	// 支付类型
-	TradeType_Mini   = "JSAPI"  // 小程序支付
-	TradeType_JsApi  = "JSAPI"  // JSAPI支付
-	TradeType_App    = "APP"    // app支付
-	TradeType_H5     = "MWEB"   // H5支付
-	TradeType_Native = "NATIVE" // Native支付
-
-	// 签名方式
-	SignType_MD5         = "MD5"
-	SignType_HMAC_SHA256 = "HMAC-SHA256"
-)
-
 // Notify
 type NotifyRequest struct {
 	ReturnCode         string `xml:"return_code,omitempty" json:"return_code,omitempty"`
@@ -98,6 +17,8 @@ type NotifyRequest struct {
 	SignType           string `xml:"sign_type,omitempty" json:"sign_type,omitempty"`
 	Openid             string `xml:"openid,omitempty" json:"openid,omitempty"`
 	IsSubscribe        string `xml:"is_subscribe,omitempty" json:"is_subscribe,omitempty"`
+	SubOpenid          string `xml:"sub_openid,omitempty" json:"sub_openid,omitempty"`
+	SubIsSubscribe     string `xml:"sub_is_subscribe,omitempty" json:"sub_is_subscribe,omitempty"`
 	TradeType          string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
 	BankType           string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
 	TotalFee           string `xml:"total_fee,omitempty" json:"total_fee,omitempty"`
@@ -155,6 +76,8 @@ type QueryOrderResponse struct {
 	DeviceInfo         string `xml:"device_info,omitempty" json:"device_info,omitempty"`
 	Openid             string `xml:"openid,omitempty" json:"openid,omitempty"`
 	IsSubscribe        string `xml:"is_subscribe,omitempty" json:"is_subscribe,omitempty"`
+	SubOpenid          string `xml:"sub_openid,omitempty" json:"sub_openid,omitempty"`
+	SubIsSubscribe     string `xml:"sub_is_subscribe,omitempty" json:"sub_is_subscribe,omitempty"`
 	TradeType          string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
 	TradeState         string `xml:"trade_state,omitempty" json:"trade_state,omitempty"`
 	BankType           string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
@@ -340,6 +263,8 @@ type MicropayResponse struct {
 	ErrCodeDes         string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
 	Openid             string `xml:"openid,omitempty" json:"openid,omitempty"`
 	IsSubscribe        string `xml:"is_subscribe,omitempty" json:"is_subscribe,omitempty"`
+	SubOpenid          string `xml:"sub_openid,omitempty" json:"sub_openid,omitempty"`
+	SubIsSubscribe     string `xml:"sub_is_subscribe,omitempty" json:"sub_is_subscribe,omitempty"`
 	TradeType          string `xml:"trade_type,omitempty" json:"trade_type,omitempty"`
 	BankType           string `xml:"bank_type,omitempty" json:"bank_type,omitempty"`
 	FeeType            string `xml:"fee_type,omitempty" json:"fee_type,omitempty"`
@@ -467,6 +392,55 @@ type EntrustPayingResponse struct {
 	ContractDisplayAccount string `xml:"contract_display_account,omitempty" json:"contract_display_account,omitempty"`
 	MwebUrl                string `xml:"mweb_url,omitempty" json:"mweb_url,omitempty"`
 	OutTradeNo             string `xml:"out_trade_no,omitempty" json:"out_trade_no,omitempty"`
+}
+
+type EntrustApplyPayResponse struct {
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode    string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	Appid      string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId      string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	NonceStr   string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	Sign       string `xml:"sign,omitempty" json:"sign,omitempty"`
+}
+
+type EntrustDeleteResponse struct {
+	ReturnCode   string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg    string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode   string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode      string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes   string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	Appid        string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId        string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	Sign         string `xml:"sign,omitempty" json:"sign,omitempty"`
+	PlanId       string `xml:"plan_id,omitempty" json:"plan_id,omitempty"`
+	ContractId   string `xml:"contract_id,omitempty" json:"contract_id,omitempty"`
+	ContractCode string `xml:"contract_code,omitempty" json:"contract_code,omitempty"`
+}
+
+type EntrustQueryResponse struct {
+	ReturnCode                string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg                 string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode                string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode                   string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes                string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	Appid                     string `xml:"appid,omitempty" json:"appid,omitempty"`
+	MchId                     string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	Sign                      string `xml:"sign,omitempty" json:"sign,omitempty"`
+	RequestSerial             string `xml:"request_serial,omitempty" json:"request_serial,omitempty"`
+	PlanId                    string `xml:"plan_id,omitempty" json:"plan_id,omitempty"`
+	ContractId                string `xml:"contract_id,omitempty" json:"contract_id,omitempty"`
+	ContractCode              string `xml:"contract_code,omitempty" json:"contract_code,omitempty"`
+	ContractDisplayAccount    string `xml:"contract_display_account,omitempty" json:"contract_display_account,omitempty"`
+	ContractState             string `xml:"contract_state,omitempty" json:"contract_state,omitempty"`
+	ContractSignedTime        string `xml:"contract_signed_time,omitempty" json:"contract_signed_time,omitempty"`
+	ContractExpiredTime       string `xml:"contract_expired_time,omitempty" json:"contract_expired_time,omitempty"`
+	ContractTerminatedTime    string `xml:"contract_terminated_time,omitempty" json:"contract_terminated_time,omitempty"`
+	ContractTerminationMode   string `xml:"contract_termination_mode,omitempty" json:"contract_termination_mode,omitempty"`
+	ContractTerminationRemark string `xml:"contract_termination_remark,omitempty" json:"contract_termination_remark,omitempty"`
+	Openid                    string `xml:"openid,omitempty" json:"openid,omitempty"`
 }
 
 type getSignKeyResponse struct {

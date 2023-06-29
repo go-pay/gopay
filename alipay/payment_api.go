@@ -339,29 +339,6 @@ func (a *Client) PcreditHuabeiAuthSettleApply(ctx context.Context, bm gopay.Body
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
-// alipay.commerce.transport.nfccard.send(NFC用户卡信息同步)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.commerce.transport.nfccard.send
-func (a *Client) CommerceTransportNfccardSend(ctx context.Context, bm gopay.BodyMap) (aliRsp *CommerceTransportNfccardSendRsp, err error) {
-	err = bm.CheckEmptyError("issue_org_no", "card_no", "card_status")
-	if err != nil {
-		return nil, err
-	}
-	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.commerce.transport.nfccard.send"); err != nil {
-		return nil, err
-	}
-	aliRsp = new(CommerceTransportNfccardSendRsp)
-	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
-		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
-	}
-	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
-		return aliRsp, err
-	}
-	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
-	aliRsp.SignData = signData
-	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
-}
-
 // alipay.data.dataservice.ad.data.query(广告投放数据查询)
 // 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.data.dataservice.ad.data.query
 func (a *Client) DataDataserviceAdDataQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *DataDataserviceAdDataQueryRsp, err error) {
@@ -385,29 +362,6 @@ func (a *Client) DataDataserviceAdDataQuery(ctx context.Context, bm gopay.BodyMa
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
-// alipay.commerce.air.callcenter.trade.apply(航司电话订票待申请接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.commerce.air.callcenter.trade.apply
-func (a *Client) CommerceAirCallcenterTradeApply(ctx context.Context, bm gopay.BodyMap) (aliRsp *CommerceAirCallcenterTradeApplyRsp, err error) {
-	err = bm.CheckEmptyError("scene_code", "op_code", "channel", "target_id", "target_id_type", "trade_apply_params")
-	if err != nil {
-		return nil, err
-	}
-	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.commerce.air.callcenter.trade.apply"); err != nil {
-		return nil, err
-	}
-	aliRsp = new(CommerceAirCallcenterTradeApplyRsp)
-	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
-		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
-	}
-	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
-		return aliRsp, err
-	}
-	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
-	aliRsp.SignData = signData
-	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
-}
-
 // mybank.payment.trade.order.create(网商银行全渠道收单业务订单创建)
 // 文档地址：https://opendocs.alipay.com/apis/api_1/mybank.payment.trade.order.create
 func (a *Client) PaymentTradeOrderCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *PaymentTradeOrderCreateRsp, err error) {
@@ -420,52 +374,6 @@ func (a *Client) PaymentTradeOrderCreate(ctx context.Context, bm gopay.BodyMap) 
 		return nil, err
 	}
 	aliRsp = new(PaymentTradeOrderCreateRsp)
-	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
-		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
-	}
-	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
-		return aliRsp, err
-	}
-	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
-	aliRsp.SignData = signData
-	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
-}
-
-// alipay.commerce.operation.gamemarketing.benefit.apply(申请权益发放)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.commerce.operation.gamemarketing.benefit.apply
-func (a *Client) CommerceBenefitApply(ctx context.Context, bm gopay.BodyMap) (aliRsp *CommerceBenefitApplyRsp, err error) {
-	err = bm.CheckEmptyError("activity_code", "trade_no", "user_account", "platform")
-	if err != nil {
-		return nil, err
-	}
-	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.commerce.operation.gamemarketing.benefit.apply"); err != nil {
-		return nil, err
-	}
-	aliRsp = new(CommerceBenefitApplyRsp)
-	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
-		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
-	}
-	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
-		return aliRsp, err
-	}
-	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
-	aliRsp.SignData = signData
-	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
-}
-
-// alipay.commerce.operation.gamemarketing.benefit.verify(权益核销)
-// 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.commerce.operation.gamemarketing.benefit.verify
-func (a *Client) CommerceBenefitVerify(ctx context.Context, bm gopay.BodyMap) (aliRsp *CommerceBenefitVerifyRsp, err error) {
-	err = bm.CheckEmptyError("activity_code", "voucher_code", "user_account", "trade_no")
-	if err != nil {
-		return nil, err
-	}
-	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.commerce.operation.gamemarketing.benefit.verify"); err != nil {
-		return nil, err
-	}
-	aliRsp = new(CommerceBenefitVerifyRsp)
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}

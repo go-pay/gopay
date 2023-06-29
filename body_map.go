@@ -112,7 +112,7 @@ func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error)
 	}
 	for k := range bm {
 		if v := bm.GetString(k); v != NULL {
-			e.Encode(xmlMapMarshal{XMLName: xml.Name{Local: k}, Value: v})
+			_ = e.Encode(xmlMapMarshal{XMLName: xml.Name{Local: k}, Value: v})
 		}
 	}
 	return e.EncodeToken(start.End())

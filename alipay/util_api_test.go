@@ -48,15 +48,13 @@ func TestClient_OpenAuthTokenApp(t *testing.T) {
 	xlog.Debug("aliRsp:", *aliRsp)
 }
 
-func TestClient_UserInfoAuth(t *testing.T) {
+func TestClient_OpenAuthTokenAppQuery(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
-	// 接口权限值，目前只支持auth_user和auth_base两个值。具体说明看文档介绍
-	bm.Set("scopes", []string{"auth_user"}).
-		Set("state", "init")
+	bm.Set("app_auth_token", "202212BB9e1cd0c2e0ab489393aa2570ec4faX87")
 
 	// 发起请求
-	aliRsp, err := client.UserInfoAuth(ctx, bm)
+	aliRsp, err := client.OpenAuthTokenAppQuery(ctx, bm)
 	if err != nil {
 		if bizErr, ok := IsBizError(err); ok {
 			xlog.Errorf("%+v", bizErr)
@@ -66,6 +64,26 @@ func TestClient_UserInfoAuth(t *testing.T) {
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestClient_UserInfoAuth(t *testing.T) {
+	// 请求参数
+	bm := make(gopay.BodyMap)
+	// 接口权限值，目前只支持auth_user和auth_base两个值。具体说明看文档介绍
+	bm.Set("scopes", []string{"auth_user"}).
+		Set("state", "init")
+
+	// 发起请求
+	html, err := client.UserInfoAuth(ctx, bm)
+	if err != nil {
+		if bizErr, ok := IsBizError(err); ok {
+			xlog.Errorf("%+v", bizErr)
+			// do something
+			return
+		}
+		return
+	}
+	xlog.Debugf("html: %s", string(html))
 }
 
 func TestClient_UserInfoShare(t *testing.T) {

@@ -12,7 +12,8 @@ import (
 )
 
 // 统一下单
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_1.shtml
+// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
+// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi_sl.php?chapter=9_1
 func (w *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *UnifiedOrderResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "notify_url", "trade_type")
 	if err != nil {
@@ -36,7 +37,8 @@ func (w *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Uni
 }
 
 // 提交付款码支付
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter4_1.shtml
+// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
+// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/micropay_sl.php?chapter=9_10&index=1
 func (w *Client) Micropay(ctx context.Context, bm gopay.BodyMap) (wxRsp *MicropayResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "auth_code")
 	if err != nil {
@@ -60,7 +62,8 @@ func (w *Client) Micropay(ctx context.Context, bm gopay.BodyMap) (wxRsp *Micropa
 }
 
 // 查询订单
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_2.shtml
+// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
+// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi_sl.php?chapter=9_2
 func (w *Client) QueryOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *QueryOrderResponse, resBm gopay.BodyMap, err error) {
 	err = bm.CheckEmptyError("nonce_str")
 	if err != nil {
@@ -90,7 +93,8 @@ func (w *Client) QueryOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Query
 }
 
 // 关闭订单
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_3.shtml
+// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_3
+// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi_sl.php?chapter=9_3
 func (w *Client) CloseOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *CloseOrderResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_trade_no")
 	if err != nil {
@@ -114,7 +118,8 @@ func (w *Client) CloseOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Close
 
 // 申请退款
 // 注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_4.shtml
+// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
+// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi_sl.php?chapter=9_4
 func (w *Client) Refund(ctx context.Context, bm gopay.BodyMap) (wxRsp *RefundResponse, resBm gopay.BodyMap, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_refund_no", "total_fee", "refund_fee")
 	if err != nil {
@@ -150,7 +155,8 @@ func (w *Client) Refund(ctx context.Context, bm gopay.BodyMap) (wxRsp *RefundRes
 }
 
 // 查询退款
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_5.shtml
+// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_5
+// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi_sl.php?chapter=9_5
 func (w *Client) QueryRefund(ctx context.Context, bm gopay.BodyMap) (wxRsp *QueryRefundResponse, resBm gopay.BodyMap, err error) {
 	err = bm.CheckEmptyError("nonce_str")
 	if err != nil {
@@ -181,7 +187,8 @@ func (w *Client) QueryRefund(ctx context.Context, bm gopay.BodyMap) (wxRsp *Quer
 
 // 撤销订单
 // 注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter4_3.shtml
+// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3
+// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/micropay_sl.php?chapter=9_11&index=3
 func (w *Client) Reverse(ctx context.Context, bm gopay.BodyMap) (wxRsp *ReverseResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_trade_no")
 	if err != nil {

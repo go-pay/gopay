@@ -42,9 +42,9 @@ func TestClient_TradeCreate(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("subject", "创建订单").
-		Set("buyer_id", "2088802095984694").
+		Set("buyer_id", "2088722003236450").
 		Set("out_trade_no", util.RandomString(32)).
-		Set("total_amount", "0.01")
+		Set("total_amount", "100.10")
 
 	// 创建订单
 	aliRsp, err := client.TradeCreate(ctx, bm)
@@ -148,7 +148,7 @@ func TestClient_TradePay(t *testing.T) {
 }
 
 func TestClient_TradeQuery(t *testing.T) {
-	const outTradeNo = "Xdhxpe4bI5hhXAldhkMiGTZ03Jm9V6V0"
+	const outTradeNo = "GZ201909081743431443"
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("out_trade_no", outTradeNo)

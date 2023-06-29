@@ -115,9 +115,14 @@ func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap
 // grantType：值为 authorization_code 时，代表用code换取；值为 refresh_token 时，代表用refresh_token换取，传空默认code换取
 // codeOrToken：支付宝授权码或refresh_token
 // signType：签名方式 RSA 或 RSA2，默认 RSA2
+// appAuthToken：可选参数，三方授权令牌
 // 文档：https://opendocs.alipay.com/apis/api_9/alipay.system.oauth.token
-func SystemOauthToken(ctx context.Context, appId string, privateKey, grantType, codeOrToken, signType string) (rsp *SystemOauthTokenResponse, err error) {
+func SystemOauthToken(ctx context.Context, appId string, privateKey, grantType, codeOrToken, signType string, appAuthToken ...string) (rsp *SystemOauthTokenResponse, err error) {
 	key := xrsa.FormatAlipayPrivateKey(privateKey)
+	aat := ""
+	if len(appAuthToken) > 0 {
+		aat = appAuthToken[0]
+	}
 	priKey, err := xpem.DecodePrivateKey([]byte(key))
 	if err != nil {
 		return nil, err
@@ -135,7 +140,7 @@ func SystemOauthToken(ctx context.Context, appId string, privateKey, grantType, 
 		bm.Set("grant_type", "authorization_code")
 		bm.Set("code", codeOrToken)
 	}
-	if bs, err = systemOauthToken(ctx, appId, priKey, bm, "alipay.system.oauth.token", true, signType); err != nil {
+	if bs, err = systemOauthToken(ctx, appId, priKey, bm, "alipay.system.oauth.token", true, signType, aat); err != nil {
 		return
 	}
 	rsp = new(SystemOauthTokenResponse)
@@ -149,7 +154,7 @@ func SystemOauthToken(ctx context.Context, appId string, privateKey, grantType, 
 }
 
 // systemOauthToken 向支付宝发送请求
-func systemOauthToken(ctx context.Context, appId string, privateKey *rsa.PrivateKey, bm gopay.BodyMap, method string, isProd bool, signType string) (bs []byte, err error) {
+func systemOauthToken(ctx context.Context, appId string, privateKey *rsa.PrivateKey, bm gopay.BodyMap, method string, isProd bool, signType, appAuthToken string) (bs []byte, err error) {
 	bm.Set("app_id", appId)
 	bm.Set("method", method)
 	bm.Set("format", "JSON")
@@ -161,6 +166,9 @@ func systemOauthToken(ctx context.Context, appId string, privateKey *rsa.Private
 	}
 	bm.Set("timestamp", time.Now().Format(util.TimeLayout))
 	bm.Set("version", "1.0")
+	if appAuthToken != util.NULL {
+		bm.Set("app_auth_token", appAuthToken)
+	}
 	var (
 		sign    string
 		baseUrl = baseUrlUtf8

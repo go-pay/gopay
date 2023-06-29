@@ -100,6 +100,9 @@ func (c Client) CancelUnclaimedPayoutItem(ctx context.Context, payoutItemId stri
 	}
 	url := fmt.Sprintf(cancelUnclaimedPayoutItem, payoutItemId)
 	res, bs, err := c.doPayPalPost(ctx, nil, url)
+	if err != nil {
+		return nil, err
+	}
 	ppRsp = &CancelUnclaimedPayoutItemRsp{Code: Success}
 	ppRsp.Response = new(PayoutItemDetail)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {

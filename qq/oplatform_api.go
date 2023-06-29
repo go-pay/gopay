@@ -102,8 +102,8 @@ func GetOpenId(ctx context.Context, accessToken string, lang ...string) (openid 
 	if err != nil {
 		return nil, err
 	}
-	bs = bytes.TrimLeft(bs, "callback(")
-	bs = bytes.TrimRight(bs, ");")
+	bs = bytes.ReplaceAll(bs, []byte("callback("), []byte(""))
+	bs = bytes.ReplaceAll(bs, []byte(");"), []byte(""))
 	err = json.Unmarshal(bs, openid)
 	if err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, bs)

@@ -1,8 +1,65 @@
+版本号：Release 1.5.95
+修改记录：
+   (1) 支付宝：新增 client.DoAliPay()。支付宝http请求方法。
+
+版本号：Release 1.5.94
+修改记录：
+   (1) 支付宝：新增 client.TradeSettleConfirm()，统一收单确认结算接口。
+   (2) 微信V3：新增 client.V3MediaDownloadImage()，图片下载
+   (3) 微信V3：修正 查询投诉单协商历史 返回结构提结构
+
+版本号：Release 1.5.93
+修改记录：
+   (1) 微信V2：服务商模式下，付款码支付response新增 sub_openid、sub_is_subscribe 字段。
+   (2) 微信V3：新增 client.V3AsyncApply4SubModifySettlement()，(新)修改结算账户。
+   (3) 微信V3：新增 client.V3Apply4SubMerchantsApplication()，查询结算账户修改申请状态。
+   (4) 支付宝：沙箱模式网关URL替换升级成新版，沙箱调试时请跳转至新版沙箱应用。
+
+版本号：Release 1.5.92
+修改记录：
+   (1) 微信V3：新增 client.V3ComplaintUpdateRefundProgress()，更新退款审批结果。
+   (2) 微信V3：查询投诉单列表/详情，返回新增字段。
+   (3) 微信V3：拆分model文件内结构体至不同文件内。
+   (4) 微信V3：删除 client.V3TransferMerchantDetailQuery()，请更换 client.V3TransferMerchantDetail()
+   (5) 支付宝：拆分model文件内结构体至不同文件内。
+
+版本号：Release 1.5.91
+修改记录：
+   (1) 通联支付：新增通联支付对接，实现基本支付及其他接口。
+
+版本号：Release 1.5.90
+修改记录：
+   (1) 微信V3：新增 client.V3BusinessPointsStatusQuery()，商圈会员待积分状态查询。
+   (2) 微信V3：新增 client.V3BusinessParkingSync()，商圈会员停车状态同步。
+   (3) 微信V3：新增 国密 支持。
+   (4) 微信V3：新增 微信支付分停车服务 相关接口。
+
+版本号：Release 1.5.89
+修改记录：
+   (1) 微信V2：新增 签约、扣款服务 相关接口。
+   (2) 微信V3：新增 预扣款通知 接口。
+   (3) gopay：debug 模式下，增加签名字符串的输出，更新 mod 包，优化部分方法。
+   (4) alipay：新增 client.OpenAuthTokenAppInviteCreate()，ISV向商户发起应用授权邀约。
+   (5) PayPal：新增 invoice 相关接口。
+
+版本号：Release 1.5.88
+修改记录：
+   (1) PayPal：新增 invoice 相关接口。
+   (2) gopay：更新 mod 包，优化部分方法。
+   (3) alipay：修改过期时间字段类型为 int。
+
+版本号：Release 1.5.87
+修改记录：
+   (1) 微信V3：新增小程序调起支付分所需要的支付参数方法：client.PaySignOfAppletScore()。
+   (2) 微信V3：异步通知解析方法接收BodySize大小调至5MB。
+   (3) 支付宝：统一收单交易退款接口，response补充接收字段。
+   (4) 支付宝：alipay.SystemOauthToken() 接口增加可变参数 AppAuthToken 字段，如需要时可传。
+
 版本号：Release 1.5.86
 修改记录：
-   (1) 微信V3：新增优化异步验签方法，client.WxPublicKeyMap()，v3NotifyReq.VerifySignByPKMap()。
-   (2) 支付宝：修复 app_auth_token 的问题。
-   (3) apple：新增接口，Get Transaction History，GetAllSubscriptionStatuses，未真实场景测试。
+   (1) 微信V3：优化异步验签方法，v3NotifyReq.VerifySignByPKMap()，通过证书Map自动选择相应的证书验签。
+   (2) 微信V3：微信平台证书获取方法变更，client.WxPublicKey() 获取最新微信平台证书；client.WxPublicKeyMap()，获取微信平台证书Map。
+   (3) 支付宝：修复 app_auth_token 的问题。
 
 版本号：Release 1.5.85
 修改记录：

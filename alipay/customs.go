@@ -18,6 +18,7 @@ func (a *Client) TradeCustomsDeclare(ctx context.Context, bm gopay.BodyMap) (ali
 		return nil, err
 	}
 	var bs []byte
+
 	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.customs.declare"); err != nil {
 		return nil, err
 	}
@@ -68,7 +69,7 @@ func (a *Client) doAliPayCustoms(ctx context.Context, bm gopay.BodyMap, service 
 	bm.Remove("sign_type")
 	bm.Remove("sign")
 
-	sign, err := GetRsaSign(bm, RSA, a.privateKey)
+	sign, err := a.getRsaSign(bm, RSA, a.privateKey)
 	if err != nil {
 		return nil, fmt.Errorf("GetRsaSign Error: %v", err)
 	}

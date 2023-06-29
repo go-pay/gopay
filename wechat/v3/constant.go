@@ -3,6 +3,11 @@ package wechat
 const (
 	Success     = 0
 	SignTypeRSA = "RSA"
+	SignTypeSM2 = "SM2"
+
+	CertTypeALL CertType = "ALL"
+	CertTypeRSA CertType = "RSA"
+	CertTypeSM2 CertType = "SM2"
 
 	MethodGet           = "GET"
 	MethodPost          = "POST"
@@ -50,7 +55,7 @@ const (
 
 	// 退款
 	v3DomesticRefund      = "/v3/refund/domestic/refunds"    // 申请退款
-	v3DomesticRefundQuery = "/v3/refund/domestic/refunds/%s" // 查询单笔退款
+	v3DomesticRefundQuery = "/v3/refund/domestic/refunds/%s" // out_refund_no 查询单笔退款
 
 	// 账单
 	v3TradeBill             = "/v3/bill/tradebill"                 // 申请交易账单 GET
@@ -98,8 +103,16 @@ const (
 	v3GuideUpdate = "/v3/smartguide/guides/%s"        // guide_id 服务人员信息更新 PATCH
 
 	// 智慧商圈
-	v3BusinessPointsSync      = "/v3/businesscircle/points/notify"          // 商圈积分同步 POST
-	v3BusinessAuthPointsQuery = "/v3/businesscircle/user-authorizations/%s" // openid 商圈积分授权查询 GET
+	v3BusinessPointsSync        = "/v3/businesscircle/points/notify"                 // 商圈积分同步 POST
+	v3BusinessAuthPointsQuery   = "/v3/businesscircle/user-authorizations/%s"        // openid 商圈积分授权查询 GET
+	v3BusinessPointsStatusQuery = "/v3/businesscircle/users/%s/points/commit_status" // openid 商圈会员待积分状态查询 GET
+	v3BusinessParkingSync       = "/v3/businesscircle/parkings"                      // 商圈会员停车状态同步 POST
+
+	// 微信支付分停车服务
+	v3VehicleParkingQuery = "/v3/vehicle/parking/services/find"        // 查询车牌服务开通信息 GET
+	v3VehicleParkingIn    = "/v3/vehicle/parking/parkings"             // 创建停车入场 POST
+	v3VehicleParkingFee   = "/v3/vehicle/transactions/parking"         // 扣费受理 POST
+	v3VehicleParkingOrder = "/v3/vehicle/transactions/out-trade-no/%s" // out_trade_no 查询订单 GET
 
 	// 代金券
 	v3FavorBatchCreate        = "/v3/marketing/favor/coupon-stocks"         // 创建代金券批次 POST
@@ -150,16 +163,17 @@ const (
 	v3GoldPlanCloseAdShow  = "/v3/goldplan/merchants/close-advertising-show"          // 关闭广告展示 POST
 
 	// 消费者投诉2.0
-	v3ComplaintList               = "/v3/merchant-service/complaints-v2"                         // 查询投诉单列表 GET
-	v3ComplaintDetail             = "/v3/merchant-service/complaints-v2/%s"                      // 查询投诉单详情 GET
-	v3ComplaintNegotiationHistory = "/v3/merchant-service/complaints-v2/%s/negotiation-historys" // 查询投诉协商历史 GET
-	v3ComplaintNotifyUrlCreate    = "/v3/merchant-service/complaint-notifications"               // 创建投诉通知回调地址 POST
-	v3ComplaintNotifyUrlQuery     = "/v3/merchant-service/complaint-notifications"               // 查询投诉通知回调地址 GET
-	v3ComplaintNotifyUrlUpdate    = "/v3/merchant-service/complaint-notifications"               // 查询投诉通知回调地址 PUT
-	v3ComplaintNotifyUrlDelete    = "/v3/merchant-service/complaint-notifications"               // 删除投诉通知回调地址 DELETE
-	v3ComplaintResponse           = "/v3/merchant-service/complaints-v2/%s/response"             // 提交回复 POST
-	v3ComplaintComplete           = "/v3/merchant-service/complaints-v2/%s/complete"             // 反馈处理完成 POST
-	v3ComplaintUploadImage        = "/v3/merchant-service/images/upload"                         // 商户上传反馈图片 POST
+	v3ComplaintList                 = "/v3/merchant-service/complaints-v2"                           // 查询投诉单列表 GET
+	v3ComplaintDetail               = "/v3/merchant-service/complaints-v2/%s"                        // complaint_id 查询投诉单详情 GET
+	v3ComplaintNegotiationHistory   = "/v3/merchant-service/complaints-v2/%s/negotiation-historys"   // complaint_id 查询投诉协商历史 GET
+	v3ComplaintNotifyUrlCreate      = "/v3/merchant-service/complaint-notifications"                 // 创建投诉通知回调地址 POST
+	v3ComplaintNotifyUrlQuery       = "/v3/merchant-service/complaint-notifications"                 // 查询投诉通知回调地址 GET
+	v3ComplaintNotifyUrlUpdate      = "/v3/merchant-service/complaint-notifications"                 // 查询投诉通知回调地址 PUT
+	v3ComplaintNotifyUrlDelete      = "/v3/merchant-service/complaint-notifications"                 // 删除投诉通知回调地址 DELETE
+	v3ComplaintResponse             = "/v3/merchant-service/complaints-v2/%s/response"               // complaint_id 回复用户 POST
+	v3ComplaintComplete             = "/v3/merchant-service/complaints-v2/%s/complete"               // complaint_id 反馈处理完成 POST
+	v3ComplaintUploadImage          = "/v3/merchant-service/images/upload"                           // 商户上传反馈图片 POST
+	v3ComplaintUpdateRefundProgress = "/v3/merchant-service/complaints-v2/%s/update-refund-progress" // complaint_id 更新退款审批结果 POST
 
 	// 分账（服务商）
 	v3ProfitShareOrder           = "/v3/profitsharing/orders"                  // 请求分账 POST
@@ -206,11 +220,12 @@ const (
 	v3EcommerceIncomeRecord = "/v3/merchantfund/partner/income-records"  // 特约商户银行来账查询 GET
 
 	// 服务商-特约商户进件
-	v3Apply4SubSubmit              = "/v3/applyment4sub/applyment/"                     // 提交申请单 POST
-	v3Apply4SubQueryByBusinessCode = "/v3/applyment4sub/applyment/business_code/%s"     // business_code 通过业务申请编号查询申请状态 GET
-	v3Apply4SubQueryByApplyId      = "/v3/applyment4sub/applyment/applyment_id/%s"      // applyment_id 通过申请单号查询申请状态 GET
-	v3Apply4SubModifySettlement    = "/v3/apply4sub/sub_merchants/%s/modify-settlement" // sub_mchid 修改结算账号 POST
-	v3Apply4SubQuerySettlement     = "/v3/apply4sub/sub_merchants/%s/settlement"        // sub_mchid 查询结算账户 GET
+	v3Apply4SubSubmit               = "/v3/applyment4sub/applyment/"                     // 提交申请单 POST
+	v3Apply4SubQueryByBusinessCode  = "/v3/applyment4sub/applyment/business_code/%s"     // business_code 通过业务申请编号查询申请状态 GET
+	v3Apply4SubQueryByApplyId       = "/v3/applyment4sub/applyment/applyment_id/%s"      // applyment_id 通过申请单号查询申请状态 GET
+	v3Apply4SubModifySettlement     = "/v3/apply4sub/sub_merchants/%s/modify-settlement" // sub_mchid 修改结算账号 POST
+	v3Apply4SubQuerySettlement      = "/v3/apply4sub/sub_merchants/%s/settlement"        // sub_mchid 查询结算账户 GET
+	v3Apply4SubMerchantsApplication = "/v3/apply4sub/sub_merchants/%s/application/%s"    // sub_mchid、application_no 查询结算账户修改申请状态
 
 	// 电商收付通（商户进件）
 	v3EcommerceApply          = "/v3/ecommerce/applyments/"                  // 二级商户进件 POST
@@ -247,6 +262,9 @@ const (
 	v3BankSearchCityList      = "/v3/capital/capitallhh/areas/provinces/%d/cities"          // province_code 查询城市列表 GET
 	v3BankSearchBranchList    = "/v3/capital/capitallhh/banks/%s/branches"                  // bank_alias_code 查询支行列表 GET
 
+	// 扣款服务-直连模式（其他相关接口在v2接口中）
+	v3EntrustPayNotify = "/v3/papay/contracts/%s/notify" // contract_id 预扣费通知 POST
+
 	// 特约商户进件申请单状态
 	ApplyStateEditing       = "APPLYMENT_STATE_EDITTING"        // 编辑中
 	ApplyStateAuditing      = "APPLYMENT_STATE_AUDITING"        // 审核中
@@ -259,6 +277,9 @@ const (
 	// 特约商户结算账号类型
 	ApplySettlementAccountTypeBusiness = "ACCOUNT_TYPE_BUSINESS" // 对公银行账户
 	ApplySettlementAccountTypePrivate  = "ACCOUNT_TYPE_PRIVATE"  // 经营者个人银行卡
+
+	//结算账号修改模式
+	ApplySettlementModifyModeAsync = "MODIFY_MODE_ASYNC" //受理模式
 
 	// 特约商户结算账号汇款验证结果
 	ApplySettlementVerifying     = "VERIFYING"      // 系统汇款验证中，商户可发起提现尝试

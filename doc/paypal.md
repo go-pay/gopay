@@ -4,7 +4,7 @@
 
 - 已实现API列表附录：[API List](https://github.com/go-pay/gopay/blob/main/doc/paypal.md#%E9%99%84%E5%BD%95)
 
-- PayPal官方文档：[Official Document](https://developer.paypal.com/docs/api/overview)
+- PayPal官方文档：[Official Document](https://developer.paypal.com/api/rest)
 
 ---
 
@@ -12,15 +12,15 @@
 
 ```go
 import (
-"github.com/go-pay/gopay/paypal"
-"github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay/paypal"
+    "github.com/go-pay/gopay/pkg/xlog"
 )
 
 // 初始化PayPal支付客户端
 client, err := paypal.NewClient(Clientid, Secret, false)
 if err != nil {
-xlog.Error(err)
-return
+    xlog.Error(err)
+    return
 }
 
 // 自定义配置http请求接收返回结果body大小，默认 10MB
@@ -114,6 +114,25 @@ if ppRsp.Code != paypal.Success {
 
 * <font color='#003087' size='4'>AccessToken</font>
     * 获取AccessToken（Get AccessToken）：`client.GetAccessToken()`
+* <font color='#003087' size='4'>发票</font>
+	* 生成发票号码（Generate invoice number）：`client.InvoiceNumberGenerate()`
+	* 发票列表（List invoices）：`client.InvoiceList()`
+	* 创建虚拟发票（Create draft invoice）：`client.InvoiceCreate()`
+	* 删除发票（Delete invoice）：`client.InvoiceDelete()`
+	* 更新发票（Fully update invoice）：`client.InvoiceUpdate()`
+	* 获取发票详情（Show invoice details）：`client.InvoiceDetail()`
+	* 生成发票二维码（Generate QR code）：`client.InvoiceGenerateQRCode()`
+	* 发票付款记录（Record payment for invoice）：`client.InvoicePaymentRecord()`
+	* 发票付款删除（Delete external payment）：`client.InvoicePaymentDelete()`
+	* 发票退款记录（Record refund for invoice）：`client.InvoiceRefundRecord()`
+	* 发票退款删除（Delete external refund）：`client.InvoiceRefundDelete()`
+	* 发送发票提醒（Send invoice reminder）：`client.InvoiceSendRemind()`
+	* 发送发票（Send invoice）：`client.InvoiceSend()`
+	* 发票搜索（Search for invoices）：`client.InvoiceSearch()`
+	* 发票模板列表（List templates）：`client.InvoiceTemplateList()`
+	* 创建发票模板（Create template）：`client.InvoiceTemplateCreate()`
+	* 删除发票模板（Delete template）：`client.InvoiceTemplateDelete()`
+	* 更新发票模板（Fully update template）：`client.InvoiceTemplateUpdate()`
 * <font color='#003087' size='4'>订单</font>
     * 创建订单（Create order）：`client.CreateOrder()`
     * 订单详情（Show order details）：`client.OrderDetail()`
@@ -129,13 +148,11 @@ if ppRsp.Code != paypal.Success {
     * 支付捕获详情（Show captured payment details）：`client.PaymentCaptureDetail()`
     * 支付捕获退款（Refund captured payment）：`client.PaymentCaptureRefund()`
     * 支付退款详情（Show refund details）：`client.PaymentRefundDetail()`
-
 * <font color='#003087' size='4'>支出</font>
     * 创建批量支出（Create batch payout）：`client.CreateBatchPayout()`
     * 批量支出详情（Show payout batch details）：`client.ShowPayoutBatchDetails()`
     * 批量支出项目详情（Show Payout Item Details）：`client.ShowPayoutItemDetails()`
     * 取消批量支付中收款人无PayPal账号的项目（Cancel Unclaimed Payout Item）：`client.CancelUnclaimedPayoutItem()`
-
 * <font color='#003087' size='4'>订阅</font>
     * 创建订阅计划（Create plan）：`client.CreateBillingPlan()`
 
