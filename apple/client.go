@@ -1,29 +1,16 @@
 package apple
 
 import (
-	"context"
-	"crypto/rsa"
-	"sync"
-
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xpem"
 )
 
 // Client AppleClient
 type Client struct {
-	Mchid       string
-	ApiV3Key    []byte
-	SerialNo    string
-	WxSerialNo  string
-	autoSign    bool
-	bodySize    int // http response body size(MB), default is 10MB
-	rwMu        sync.RWMutex
-	privateKey  *rsa.PrivateKey
-	wxPublicKey *rsa.PublicKey
-	ctx         context.Context
-	DebugSwitch gopay.DebugSwitch
-	SnCertMap   map[string]*rsa.PublicKey // key: serial_no
+	IssuerId        string // 从 AppStore Connect 获得的 Issuer Id
+	BundleId        string // app包名
+	AppleKeyId      string // 内购密钥id
+	ApplePrivateKey string // 内购密钥.p8文件内容
 }
 
 // NewClient 初始化Apple客户端
@@ -35,17 +22,7 @@ func NewClient(mchid, serialNo, apiV3Key, privateKey string) (client *Client, er
 	if mchid == util.NULL || serialNo == util.NULL || apiV3Key == util.NULL || privateKey == util.NULL {
 		return nil, gopay.MissWechatInitParamErr
 	}
-	priKey, err := xpem.DecodePrivateKey([]byte(privateKey))
-	if err != nil {
-		return nil, err
-	}
-	client = &Client{
-		Mchid:       mchid,
-		SerialNo:    serialNo,
-		ApiV3Key:    []byte(apiV3Key),
-		privateKey:  priKey,
-		ctx:         context.Background(),
-		DebugSwitch: gopay.DebugOff,
-	}
+
+	client = &Client{}
 	return client, nil
 }

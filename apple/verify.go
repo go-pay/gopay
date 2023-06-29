@@ -14,6 +14,7 @@ const (
 	UrlProd = "https://buy.itunes.apple.com/verifyReceipt"
 )
 
+// Deprecated
 // VerifyReceipt 请求APP Store 校验支付请求,实际测试时发现这个文档介绍的返回信息只有那个status==0表示成功可以用，其他的返回信息跟文档对不上
 // url：取 UrlProd 或 UrlSandbox
 // pwd：苹果APP秘钥，https://help.apple.com/app-store-connect/#/devf341c0f01
