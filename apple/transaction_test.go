@@ -13,14 +13,7 @@ func TestGetTransactionHistory(t *testing.T) {
 		"sort": "ASCENDING",
 	}
 	originalTransactionId := "2000000184445477"
-	rsp, err := GetTransactionHistory(ctx, &SignConfig{
-		IssuerID:   "xxxxxxx-b6d3-44da-a777-xxxxxx",
-		BundleID:   "com.xxxxxxx.xxxxx",
-		AppleKeyID: "xxxxxxxxx",
-		ApplePrivateKey: `-----BEGIN PRIVATE KEY-----
-xxxx
------END PRIVATE KEY-----`,
-	}, originalTransactionId, bm, true)
+	rsp, err := client.GetTransactionHistory(ctx, originalTransactionId, bm)
 	if err != nil {
 		xlog.Error(err)
 		return

@@ -3,10 +3,11 @@ package apple
 import (
 	"context"
 	"crypto/ecdsa"
+	"net/http"
+
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
-	"net/http"
 )
 
 // Client AppleClient
