@@ -30,7 +30,7 @@ func (d *LastTransactionsItem) DecodeRenewalInfo() (ri *RenewalInfo, err error) 
 	if err != nil {
 		return nil, err
 	}
-	return
+	return ri, nil
 }
 
 func (d *LastTransactionsItem) DecodeTransactionInfo() (ti *TransactionInfo, err error) {
@@ -42,5 +42,5 @@ func (d *LastTransactionsItem) DecodeTransactionInfo() (ti *TransactionInfo, err
 	if err != nil {
 		return nil, err
 	}
-	return
+	return ti, nil
 }

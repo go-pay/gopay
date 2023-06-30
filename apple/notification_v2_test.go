@@ -60,6 +60,7 @@ func TestDecodeSignedPayload(t *testing.T) {
 		{
 		    "autoRenewProductId":"com.audaos.audarecorder.vip.m2",
 		    "autoRenewStatus":1,
+		    "environment":"Sandbox",
 		    "expirationIntent":0,
 		    "gracePeriodExpiresDate":0,
 		    "isInBillingRetryPeriod":false,
@@ -68,9 +69,11 @@ func TestDecodeSignedPayload(t *testing.T) {
 		    "originalTransactionId":"2000000000842607",
 		    "priceIncreaseStatus":0,
 		    "productId":"com.audaos.audarecorder.vip.m2",
+		    "recentSubscriptionStartDate":0,
 		    "signedDate":1646387008228
 		}
 	*/
+
 	// decode transactionInfo
 	transactionInfo, err := payload.DecodeTransactionInfo()
 	if err != nil {
@@ -84,6 +87,7 @@ func TestDecodeSignedPayload(t *testing.T) {
 		{
 		    "appAccountToken":"",
 		    "bundleId":"com.audaos.audarecorder",
+		    "environment":"Sandbox",
 		    "expiresDate":1646387196000,
 		    "inAppOwnershipType":"PURCHASED",
 		    "isUpgraded":false,
@@ -95,7 +99,7 @@ func TestDecodeSignedPayload(t *testing.T) {
 		    "purchaseDate":1646387016000,
 		    "quantity":1,
 		    "revocationDate":0,
-		    "revocationReason":"",
+		    "revocationReason":0,
 		    "signedDate":1646387008254,
 		    "subscriptionGroupIdentifier":"20929536",
 		    "transactionId":"2000000004047119",

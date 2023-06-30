@@ -9,10 +9,10 @@ import (
 	"github.com/go-pay/gopay"
 )
 
-// GetAllSubscriptionStatuses Get All Subscription Statuses
-// Doc: https://developer.apple.com/documentation/appstoreserverapi/get_all_subscription_statuses
-func (c *Client) GetAllSubscriptionStatuses(ctx context.Context, transactionId string) (rsp *AllSubscriptionStatusesRsp, err error) {
-	path := fmt.Sprintf(getAllSubscriptionStatuses, transactionId)
+// SendConsumptionInformation Send Consumption Information
+// Doc: https://developer.apple.com/documentation/appstoreserverapi/send_consumption_information
+func (c *Client) SendConsumptionInformation(ctx context.Context, transactionId string, bm gopay.BodyMap) (rsp *TransactionHistoryRsp, err error) {
+	path := fmt.Sprintf(sendConsumptionInformation, transactionId) + "?" + bm.EncodeURLParams()
 	res, bs, err := c.doRequestGet(ctx, path)
 	if err != nil {
 		return nil, err
@@ -20,7 +20,7 @@ func (c *Client) GetAllSubscriptionStatuses(ctx context.Context, transactionId s
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("http.stauts_coud = %d", res.StatusCode)
 	}
-	rsp = &AllSubscriptionStatusesRsp{}
+	rsp = &TransactionHistoryRsp{}
 	if err = json.Unmarshal(bs, rsp); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
