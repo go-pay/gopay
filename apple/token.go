@@ -57,13 +57,11 @@ func generatingToken(ctx context.Context, signConfig *SignConfig) (string, error
 // ParseECPrivateKeyFromPEM parses a PEM encoded Elliptic Curve Private Key Structure
 func ParseECPrivateKeyFromPEM(key []byte) (*ecdsa.PrivateKey, error) {
 	var err error
-
 	// Parse PEM block
 	var block *pem.Block
 	if block, _ = pem.Decode(key); block == nil {
 		return nil, errors.New("ErrKeyMustBePEMEncoded")
 	}
-
 	// Parse the key
 	var parsedKey interface{}
 	if parsedKey, err = x509.ParseECPrivateKey(block.Bytes); err != nil {
@@ -71,12 +69,9 @@ func ParseECPrivateKeyFromPEM(key []byte) (*ecdsa.PrivateKey, error) {
 			return nil, err
 		}
 	}
-
-	var pkey *ecdsa.PrivateKey
-	var ok bool
-	if pkey, ok = parsedKey.(*ecdsa.PrivateKey); !ok {
+	pkey, ok := parsedKey.(*ecdsa.PrivateKey)
+	if !ok {
 		return nil, errors.New("ErrNotECPrivateKey")
 	}
-
 	return pkey, nil
 }

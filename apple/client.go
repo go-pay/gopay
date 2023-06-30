@@ -1,28 +1,38 @@
 package apple
 
 import (
+	"crypto/ecdsa"
+
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 )
 
 // Client AppleClient
 type Client struct {
-	IssuerId        string // 从 AppStore Connect 获得的 Issuer Id
-	BundleId        string // app包名
-	AppleKeyId      string // 内购密钥id
-	ApplePrivateKey string // 内购密钥.p8文件内容
+	iss        string // Your issuer ID from the Keys page in App Store Connect (Ex: "57246542-96fe-1a63-e053-0824d011072a")
+	bid        string // Your app’s bundle ID (Ex: “com.example.testbundleid2021”)
+	kid        string // Your private key ID from App Store Connect (Ex: 2X9R4HXF34)
+	privateKey *ecdsa.PrivateKey
 }
 
 // NewClient 初始化Apple客户端
-// mchid：商户ID 或者服务商模式的 sp_mchid
-// serialNo：商户API证书的证书序列号
-// apiV3Key：APIv3Key，商户平台获取
-// privateKey：商户API证书下载后，私钥 apiclient_key.pem 读取后的字符串内容
-func NewClient(mchid, serialNo, apiV3Key, privateKey string) (client *Client, err error) {
-	if mchid == util.NULL || serialNo == util.NULL || apiV3Key == util.NULL || privateKey == util.NULL {
-		return nil, gopay.MissWechatInitParamErr
+// iss：issuer ID
+// bid：bundle ID
+// kid：private key ID
+// privateKey：私钥文件读取后的字符串内容
+func NewClient(iss, bid, kid, privateKey string) (client *Client, err error) {
+	if iss == util.NULL || bid == util.NULL || kid == util.NULL || privateKey == util.NULL {
+		return nil, gopay.MissAppleInitParamErr
 	}
-
-	client = &Client{}
+	ecPrivateKey, err := ParseECPrivateKeyFromPEM([]byte(privateKey))
+	if err != nil {
+		return nil, err
+	}
+	client = &Client{
+		iss:        iss,
+		bid:        bid,
+		kid:        kid,
+		privateKey: ecPrivateKey,
+	}
 	return client, nil
 }
