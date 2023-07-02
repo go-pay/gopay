@@ -3,6 +3,7 @@ package apple
 import "fmt"
 
 type AllSubscriptionStatusesRsp struct {
+	StatusCodeErr
 	AppAppleId  int                                `json:"appAppleId"`
 	BundleId    string                             `json:"bundleId"`
 	Environment string                             `json:"environment"`

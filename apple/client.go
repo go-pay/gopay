@@ -75,7 +75,25 @@ func (c *Client) doRequestPost(ctx context.Context, path string, bm gopay.BodyMa
 	}
 	cli := xhttp.NewClient()
 	cli.Header.Set("Authorization", "Bearer "+token)
-	res, bs, err = cli.Type(xhttp.TypeJSON).Get(uri).EndBytes(ctx)
+	res, bs, err = cli.Type(xhttp.TypeJSON).Post(uri).SendBodyMap(bm).EndBytes(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+	return res, bs, nil
+}
+
+func (c *Client) doRequestPut(ctx context.Context, path string, bm gopay.BodyMap) (res *http.Response, bs []byte, err error) {
+	uri := hostUrl + path
+	if !c.isProd {
+		uri = sandBoxHostUrl + path
+	}
+	token, err := c.generatingToken()
+	if err != nil {
+		return nil, nil, err
+	}
+	cli := xhttp.NewClient()
+	cli.Header.Set("Authorization", "Bearer "+token)
+	res, bs, err = cli.Type(xhttp.TypeJSON).Put(uri).SendBodyMap(bm).EndBytes(ctx)
 	if err != nil {
 		return nil, nil, err
 	}

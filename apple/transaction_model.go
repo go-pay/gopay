@@ -10,6 +10,7 @@ type SignedTransaction string
 
 // Doc: HistoryResponse https://developer.apple.com/documentation/appstoreserverapi/historyresponse
 type TransactionHistoryRsp struct {
+	StatusCodeErr
 	AppAppleId         int                 `json:"appAppleId"`
 	BundleId           string              `json:"bundleId"`
 	Environment        string              `json:"environment"`
@@ -53,6 +54,7 @@ func (s *SignedTransaction) DecodeSignedTransaction() (ti *TransactionsItem, err
 
 // Doc: https://developer.apple.com/documentation/appstoreserverapi/transactioninforesponse
 type TransactionInfoRsp struct {
+	StatusCodeErr
 	SignedTransactionInfo string `json:"signedTransactionInfo"`
 }
 

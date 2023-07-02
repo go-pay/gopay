@@ -15,4 +15,13 @@ const (
 
 	// Send Consumption Information
 	sendConsumptionInformation = "/inApps/v1/transactions/consumption/%s" // transactionId
+
+	// Look Up Order ID
+	lookUpOrderID = "/inApps/v1/lookup/%s" // orderId
+
+	// Get Subscription Status
+	getRefundHistory = "/inApps/v2/refund/lookup/%s" // transactionId
+
+	// Get Notification History
+	getNotificationHistory = "/inApps/v1/notifications/history"
 )

@@ -1,7 +1,12 @@
 package apple
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
+	"net/http"
+
+	"github.com/go-pay/gopay"
 )
 
 // rootPEM is from `openssl x509 -inform der -in AppleRootCA-G3.cer -out apple_root.pem`
@@ -34,4 +39,26 @@ func DecodeSignedPayload(signedPayload string) (payload *NotificationV2Payload, 
 		return nil, err
 	}
 	return
+}
+
+// GetNotificationHistory Get Notification History
+// rsp.NotificationHistory[x].SignedPayload use apple.DecodeSignedPayload() to decode
+// Doc: https://developer.apple.com/documentation/appstoreserverapi/get_notification_history
+func (c *Client) GetNotificationHistory(ctx context.Context, paginationToken string, bm gopay.BodyMap) (rsp *NotificationHistoryRsp, err error) {
+	path := getNotificationHistory + "?paginationToken=" + paginationToken
+	res, bs, err := c.doRequestPost(ctx, path, bm)
+	if err != nil {
+		return nil, err
+	}
+	rsp = &NotificationHistoryRsp{}
+	if err = json.Unmarshal(bs, rsp); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode == http.StatusOK {
+		return rsp, nil
+	}
+	if err = statusCodeErrCheck(rsp.StatusCodeErr); err != nil {
+		return rsp, err
+	}
+	return rsp, nil
 }

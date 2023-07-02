@@ -11,11 +11,15 @@ func TestGetAllSubscriptionStatuses(t *testing.T) {
 
 	rsp, err := client.GetAllSubscriptionStatuses(ctx, originalTransactionId)
 	if err != nil {
-		xlog.Error(err)
+		if statusErr, ok := IsStatusCodeError(err); ok {
+			xlog.Errorf("%+v", statusErr)
+			// do something
+			return
+		}
+		xlog.Errorf("client.GetAllSubscriptionStatuses(),err:%+v", err)
 		return
 	}
 	/**
-	response body:
 	{
 		"appAppleId":0,
 		"bundleId":"Com.VoiceRecording.Telephone",

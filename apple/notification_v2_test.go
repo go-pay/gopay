@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xlog"
 )
 
@@ -107,4 +108,33 @@ func TestDecodeSignedPayload(t *testing.T) {
 		    "webOrderLineItemId":"2000000000302832"
 		}
 	*/
+}
+
+func TestGetNotificationHistory(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("startDate", 1646387008228).
+		Set("endDate", 1646387008228).
+		Set("notificationType", 1)
+	// ...
+
+	// 发起请求
+	rsp, err := client.GetNotificationHistory(ctx, "xxx", bm)
+	if err != nil {
+		if statusErr, ok := IsStatusCodeError(err); ok {
+			xlog.Errorf("%+v", statusErr)
+			// do something
+			return
+		}
+		xlog.Errorf("client.GetNotificationHistory(),err:%+v", err)
+		return
+	}
+	for _, v := range rsp.NotificationHistory {
+		payload, err := DecodeSignedPayload(v.SignedPayload)
+		if err != nil {
+			xlog.Errorf("DecodeSignedPayload(),err:+v", err)
+			continue
+		}
+		xlog.Infof("payload: %+v", payload)
+		// do something others
+	}
 }

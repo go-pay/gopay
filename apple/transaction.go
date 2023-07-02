@@ -17,12 +17,15 @@ func (c *Client) GetTransactionHistory(ctx context.Context, transactionId string
 	if err != nil {
 		return nil, err
 	}
-	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("http.stauts_coud = %d", res.StatusCode)
-	}
 	rsp = &TransactionHistoryRsp{}
 	if err = json.Unmarshal(bs, rsp); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode == http.StatusOK {
+		return rsp, nil
+	}
+	if err = statusCodeErrCheck(rsp.StatusCodeErr); err != nil {
+		return rsp, err
 	}
 	return rsp, nil
 }
@@ -35,12 +38,15 @@ func (c *Client) GetTransactionInfo(ctx context.Context, transactionId string) (
 	if err != nil {
 		return nil, err
 	}
-	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("http.stauts_coud = %d", res.StatusCode)
-	}
 	rsp = &TransactionInfoRsp{}
 	if err = json.Unmarshal(bs, rsp); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode == http.StatusOK {
+		return rsp, nil
+	}
+	if err = statusCodeErrCheck(rsp.StatusCodeErr); err != nil {
+		return rsp, err
 	}
 	return rsp, nil
 }
