@@ -20,7 +20,7 @@ var (
 
 func TestMain(m *testing.M) {
 	xlog.Level = xlog.DebugLevel
-	// 初始化通联客户端
+	// 初始化客户端
 	// iss：issuer ID
 	// bid：bundle ID
 	// kid：private key ID
