@@ -7,32 +7,46 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/xhttp"
 )
 
-// GetTransactionHistory
+// GetTransactionHistory Get Transaction History
 // Doc: https://developer.apple.com/documentation/appstoreserverapi/get_transaction_history
-func GetTransactionHistory(ctx context.Context, signConfig *SignConfig, originalTransactionId string, bm gopay.BodyMap, sandbox bool) (rsp *TransactionHistoryRsp, err error) {
-	uri := hostUrl + fmt.Sprintf(getTransactionHistory, originalTransactionId) + "?" + bm.EncodeURLParams()
-	if sandbox {
-		uri = sandBoxHostUrl + fmt.Sprintf(getTransactionHistory, originalTransactionId) + "?" + bm.EncodeURLParams()
-	}
-	token, err := generatingToken(ctx, signConfig)
+func (c *Client) GetTransactionHistory(ctx context.Context, transactionId string, bm gopay.BodyMap) (rsp *TransactionHistoryRsp, err error) {
+	path := fmt.Sprintf(getTransactionHistory, transactionId) + "?" + bm.EncodeURLParams()
+	res, bs, err := c.doRequestGet(ctx, path)
 	if err != nil {
 		return nil, err
-	}
-	cli := xhttp.NewClient()
-	cli.Header.Set("Authorization", "Bearer "+token)
-	res, bs, err := cli.Type(xhttp.TypeJSON).Get(uri).EndBytes(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("http.stauts_coud = %d", res.StatusCode)
 	}
 	rsp = &TransactionHistoryRsp{}
 	if err = json.Unmarshal(bs, rsp); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
-	return
+	if res.StatusCode == http.StatusOK {
+		return rsp, nil
+	}
+	if err = statusCodeErrCheck(rsp.StatusCodeErr); err != nil {
+		return rsp, err
+	}
+	return rsp, nil
+}
+
+// GetTransactionInfo Get Transaction Info
+// Doc: https://developer.apple.com/documentation/appstoreserverapi/get_transaction_info
+func (c *Client) GetTransactionInfo(ctx context.Context, transactionId string) (rsp *TransactionInfoRsp, err error) {
+	path := fmt.Sprintf(getTransactionInfo, transactionId)
+	res, bs, err := c.doRequestGet(ctx, path)
+	if err != nil {
+		return nil, err
+	}
+	rsp = &TransactionInfoRsp{}
+	if err = json.Unmarshal(bs, rsp); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode == http.StatusOK {
+		return rsp, nil
+	}
+	if err = statusCodeErrCheck(rsp.StatusCodeErr); err != nil {
+		return rsp, err
+	}
+	return rsp, nil
 }

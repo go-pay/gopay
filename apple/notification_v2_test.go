@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xlog"
 )
 
@@ -60,6 +61,7 @@ func TestDecodeSignedPayload(t *testing.T) {
 		{
 		    "autoRenewProductId":"com.audaos.audarecorder.vip.m2",
 		    "autoRenewStatus":1,
+		    "environment":"Sandbox",
 		    "expirationIntent":0,
 		    "gracePeriodExpiresDate":0,
 		    "isInBillingRetryPeriod":false,
@@ -68,9 +70,11 @@ func TestDecodeSignedPayload(t *testing.T) {
 		    "originalTransactionId":"2000000000842607",
 		    "priceIncreaseStatus":0,
 		    "productId":"com.audaos.audarecorder.vip.m2",
+		    "recentSubscriptionStartDate":0,
 		    "signedDate":1646387008228
 		}
 	*/
+
 	// decode transactionInfo
 	transactionInfo, err := payload.DecodeTransactionInfo()
 	if err != nil {
@@ -84,6 +88,7 @@ func TestDecodeSignedPayload(t *testing.T) {
 		{
 		    "appAccountToken":"",
 		    "bundleId":"com.audaos.audarecorder",
+		    "environment":"Sandbox",
 		    "expiresDate":1646387196000,
 		    "inAppOwnershipType":"PURCHASED",
 		    "isUpgraded":false,
@@ -95,7 +100,7 @@ func TestDecodeSignedPayload(t *testing.T) {
 		    "purchaseDate":1646387016000,
 		    "quantity":1,
 		    "revocationDate":0,
-		    "revocationReason":"",
+		    "revocationReason":0,
 		    "signedDate":1646387008254,
 		    "subscriptionGroupIdentifier":"20929536",
 		    "transactionId":"2000000004047119",
@@ -103,4 +108,33 @@ func TestDecodeSignedPayload(t *testing.T) {
 		    "webOrderLineItemId":"2000000000302832"
 		}
 	*/
+}
+
+func TestGetNotificationHistory(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("startDate", 1646387008228).
+		Set("endDate", 1646387008228).
+		Set("notificationType", 1)
+	// ...
+
+	// 发起请求
+	rsp, err := client.GetNotificationHistory(ctx, "xxx", bm)
+	if err != nil {
+		if statusErr, ok := IsStatusCodeError(err); ok {
+			xlog.Errorf("%+v", statusErr)
+			// do something
+			return
+		}
+		xlog.Errorf("client.GetNotificationHistory(),err:%+v", err)
+		return
+	}
+	for _, v := range rsp.NotificationHistory {
+		payload, err := DecodeSignedPayload(v.SignedPayload)
+		if err != nil {
+			xlog.Errorf("DecodeSignedPayload(),err:+v", err)
+			continue
+		}
+		xlog.Infof("payload: %+v", payload)
+		// do something others
+	}
 }

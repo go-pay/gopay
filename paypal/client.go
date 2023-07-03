@@ -11,7 +11,7 @@ import (
 	"github.com/go-pay/gopay/pkg/xlog"
 )
 
-// Client PayPal支付客
+// Client PayPal支付客户端
 type Client struct {
 	Clientid    string
 	Secret      string

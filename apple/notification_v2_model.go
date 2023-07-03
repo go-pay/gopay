@@ -138,3 +138,20 @@ type TransactionInfo struct {
 	Type                        string `json:"type"`
 	WebOrderLineItemId          string `json:"webOrderLineItemId"`
 }
+
+type NotificationHistoryRsp struct {
+	StatusCodeErr
+	HasMore             bool                `json:"hasMore"`
+	PaginationToken     string              `json:"paginationToken"`
+	NotificationHistory []*NotificationItem `json:"notificationHistory"`
+}
+
+type NotificationItem struct {
+	SendAttempts  []*SendAttemptItem `json:"sendAttempts"`
+	SignedPayload string             `json:"signedPayload"`
+}
+
+type SendAttemptItem struct {
+	AttemptDate       int64  `json:"attemptDate"`
+	SendAttemptResult string `json:"sendAttemptResult"`
+}

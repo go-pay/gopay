@@ -8,9 +8,9 @@ import (
 
 type SignedTransaction string
 
-// TransactionHistoryRsp
 // Doc: HistoryResponse https://developer.apple.com/documentation/appstoreserverapi/historyresponse
 type TransactionHistoryRsp struct {
+	StatusCodeErr
 	AppAppleId         int                 `json:"appAppleId"`
 	BundleId           string              `json:"bundleId"`
 	Environment        string              `json:"environment"`
@@ -49,5 +49,23 @@ func (s *SignedTransaction) DecodeSignedTransaction() (ti *TransactionsItem, err
 	if err != nil {
 		return nil, err
 	}
-	return
+	return ti, nil
+}
+
+// Doc: https://developer.apple.com/documentation/appstoreserverapi/transactioninforesponse
+type TransactionInfoRsp struct {
+	StatusCodeErr
+	SignedTransactionInfo string `json:"signedTransactionInfo"`
+}
+
+func (t *TransactionInfoRsp) DecodeSignedTransaction() (ti *TransactionsItem, err error) {
+	if t.SignedTransactionInfo == "" {
+		return nil, fmt.Errorf("signedTransactionInfo is empty")
+	}
+	ti = &TransactionsItem{}
+	_, err = ExtractClaims(t.SignedTransactionInfo, ti)
+	if err != nil {
+		return nil, err
+	}
+	return ti, nil
 }

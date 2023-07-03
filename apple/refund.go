@@ -4,20 +4,19 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"net/http"
-
 	"github.com/go-pay/gopay"
+	"net/http"
 )
 
-// GetAllSubscriptionStatuses Get All Subscription Statuses
-// Doc: https://developer.apple.com/documentation/appstoreserverapi/get_all_subscription_statuses
-func (c *Client) GetAllSubscriptionStatuses(ctx context.Context, transactionId string) (rsp *AllSubscriptionStatusesRsp, err error) {
-	path := fmt.Sprintf(getAllSubscriptionStatuses, transactionId)
+// GetRefundHistory Get Refund History
+// Doc: https://developer.apple.com/documentation/appstoreserverapi/get_refund_history
+func (c *Client) GetRefundHistory(ctx context.Context, transactionId, revision string) (rsp *RefundHistoryRsp, err error) {
+	path := fmt.Sprintf(getRefundHistory, transactionId) + "?revision=" + revision
 	res, bs, err := c.doRequestGet(ctx, path)
 	if err != nil {
 		return nil, err
 	}
-	rsp = &AllSubscriptionStatusesRsp{}
+	rsp = &RefundHistoryRsp{}
 	if err = json.Unmarshal(bs, rsp); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}

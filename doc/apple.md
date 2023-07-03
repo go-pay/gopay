@@ -1,6 +1,32 @@
 ## Apple
 
-## Apple Pay 支付校验收据
+- App Store Server API：[官方文档](https://developer.apple.com/documentation/appstoreserverapi)
+
+### 初始化Apple客户端
+
+> 具体介绍，请参考 `gopay/apple/client_test.go`
+
+```go
+import (
+    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/gopay/apple"
+)
+
+// 初始化通联客户端
+// iss：issuer ID
+// bid：bundle ID
+// kid：private key ID
+// privateKey：私钥文件读取后的字符串内容
+// isProd：是否是正式环境
+client, err = NewClient(iss, bid, kid, "privateKey", false)
+if err != nil {
+    xlog.Error(err)
+    return
+}
+```
+
+
+### Apple Pay 支付校验收据
 
 * [苹果校验收据文档](https://developer.apple.com/documentation/appstorereceipts/verifyreceipt)
 
@@ -138,7 +164,18 @@ xlog.Color(xlog.YellowBright).Info(string(bs2))
 */
 ```
 
-### App Store Server API
+### App Store Server API Client Function
 
-* `apple.GetTransactionHistory()` => Get Transaction History
-* `apple.GetAllSubscriptionStatuses()` => GetAllSubscriptionStatuses
+* `client.GetTransactionInfo()` => Get Transaction Info
+* `client.GetTransactionHistory()` => Get Transaction History
+* `client.GetAllSubscriptionStatuses()` => GetAllSubscriptionStatuses
+* `client.SendConsumptionInformation()` => Send Consumption Information
+* `client.GetNotificationHistory()` => Get Notification History
+* `client.LookUpOrderId()` => Look Up Order ID
+* `client.GetRefundHistory()` => Get Refund History
+
+### Apple Function
+
+* `apple.VerifyReceipt()` => 验证支付凭证
+* `apple.ExtractClaims()` => 解析signedPayload
+* `apple.DecodeSignedPayload()` => 解析notification signedPayload

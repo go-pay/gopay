@@ -9,20 +9,17 @@ import (
 func TestGetAllSubscriptionStatuses(t *testing.T) {
 	originalTransactionId := "2000000184445477"
 
-	rsp, err := GetAllSubscriptionStatuses(ctx, &SignConfig{
-		IssuerID:   "xxxxxxx-b6d3-44da-a777-xxxxxx",
-		BundleID:   "com.xxxxxxx.xxxxx",
-		AppleKeyID: "xxxxxxxxx",
-		ApplePrivateKey: `-----BEGIN PRIVATE KEY-----
-xxxx
------END PRIVATE KEY-----`,
-	}, originalTransactionId, true)
+	rsp, err := client.GetAllSubscriptionStatuses(ctx, originalTransactionId)
 	if err != nil {
-		xlog.Error(err)
+		if statusErr, ok := IsStatusCodeError(err); ok {
+			xlog.Errorf("%+v", statusErr)
+			// do something
+			return
+		}
+		xlog.Errorf("client.GetAllSubscriptionStatuses(),err:%+v", err)
 		return
 	}
 	/**
-	response body:
 	{
 		"appAppleId":0,
 		"bundleId":"Com.VoiceRecording.Telephone",
