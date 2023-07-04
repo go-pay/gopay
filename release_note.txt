@@ -1,6 +1,7 @@
 版本号：Release 1.5.95
 修改记录：
    (1) 支付宝：新增 client.DoAliPay()。支付宝http请求方法。
+   (2) Apple：苹果SDK client 化。新增多个 App Store Server API。client 模式为做严格测试（无测试信息key等信息）
 
 版本号：Release 1.5.94
 修改记录：
