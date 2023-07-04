@@ -7,32 +7,39 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 
 	"github.com/go-pay/gopay/pkg/jwt"
 )
 
 // ExtractClaims 解析jws格式数据
-func ExtractClaims(signedPayload string, tran jwt.Claims) (interface{}, error) {
+// signedPayload：jws格式数据
+// tran：指针类型的结构体，用于接收解析后的数据
+func ExtractClaims(signedPayload string, tran jwt.Claims) (err error) {
+	valueOf := reflect.ValueOf(tran)
+	if valueOf.Kind() != reflect.Ptr {
+		return errors.New("tran must be ptr struct")
+	}
 	tokenStr := signedPayload
 	rootCertStr, err := extractHeaderByIndex(tokenStr, 2)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	intermediaCertStr, err := extractHeaderByIndex(tokenStr, 1)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if err = verifyCert(rootCertStr, intermediaCertStr); err != nil {
-		return nil, err
+		return err
 	}
 	_, err = jwt.ParseWithClaims(tokenStr, tran, func(token *jwt.Token) (interface{}, error) {
 		return extractPublicKeyFromToken(tokenStr)
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return tran, nil
+	return nil
 }
 
 // Per doc: https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.6

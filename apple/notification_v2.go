@@ -34,8 +34,7 @@ func DecodeSignedPayload(signedPayload string) (payload *NotificationV2Payload, 
 		return nil, fmt.Errorf("signedPayload is empty")
 	}
 	payload = &NotificationV2Payload{}
-	_, err = ExtractClaims(signedPayload, payload)
-	if err != nil {
+	if err = ExtractClaims(signedPayload, payload); err != nil {
 		return nil, err
 	}
 	return

@@ -27,8 +27,7 @@ func (d *LastTransactionsItem) DecodeRenewalInfo() (ri *RenewalInfo, err error) 
 		return nil, fmt.Errorf("SignedRenewalInfo is empty")
 	}
 	ri = &RenewalInfo{}
-	_, err = ExtractClaims(d.SignedRenewalInfo, ri)
-	if err != nil {
+	if err = ExtractClaims(d.SignedRenewalInfo, ri); err != nil {
 		return nil, err
 	}
 	return ri, nil
@@ -39,8 +38,7 @@ func (d *LastTransactionsItem) DecodeTransactionInfo() (ti *TransactionInfo, err
 		return nil, fmt.Errorf("signedTransactionInfo is empty")
 	}
 	ti = &TransactionInfo{}
-	_, err = ExtractClaims(d.SignedTransactionInfo, ti)
-	if err != nil {
+	if err = ExtractClaims(d.SignedTransactionInfo, ti); err != nil {
 		return nil, err
 	}
 	return ti, nil

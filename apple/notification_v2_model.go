@@ -64,8 +64,7 @@ func (d *NotificationV2Payload) DecodeRenewalInfo() (ri *RenewalInfo, err error)
 		return nil, fmt.Errorf("data.signedRenewalInfo is empty")
 	}
 	ri = &RenewalInfo{}
-	_, err = ExtractClaims(d.Data.SignedRenewalInfo, ri)
-	if err != nil {
+	if err = ExtractClaims(d.Data.SignedRenewalInfo, ri); err != nil {
 		return nil, err
 	}
 	return
@@ -79,8 +78,7 @@ func (d *NotificationV2Payload) DecodeTransactionInfo() (ti *TransactionInfo, er
 		return nil, fmt.Errorf("data.signedTransactionInfo is empty")
 	}
 	ti = &TransactionInfo{}
-	_, err = ExtractClaims(d.Data.SignedTransactionInfo, ti)
-	if err != nil {
+	if err = ExtractClaims(d.Data.SignedTransactionInfo, ti); err != nil {
 		return nil, err
 	}
 	return
@@ -135,8 +133,11 @@ type TransactionInfo struct {
 	SignedDate                  int64  `json:"signedDate"` // Auto-Renewable Subscription: An auto-renewable subscription.  Non-Consumable: A non-consumable in-app purchase.  Consumable: A consumable in-app purchase.  Non-Renewing Subscription: A non-renewing subcription.
 	SubscriptionGroupIdentifier string `json:"subscriptionGroupIdentifier"`
 	TransactionId               string `json:"transactionId"`
+	TransactionReason           string `json:"transactionReason"`
 	Type                        string `json:"type"`
 	WebOrderLineItemId          string `json:"webOrderLineItemId"`
+	Storefront                  string `json:"storefront"`
+	StorefrontId                string `json:"storefrontId"`
 }
 
 type NotificationHistoryRsp struct {

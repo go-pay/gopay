@@ -45,8 +45,7 @@ func (s *SignedTransaction) DecodeSignedTransaction() (ti *TransactionsItem, err
 		return nil, fmt.Errorf("signedTransactions is empty")
 	}
 	ti = &TransactionsItem{}
-	_, err = ExtractClaims(string(*s), ti)
-	if err != nil {
+	if err = ExtractClaims(string(*s), ti); err != nil {
 		return nil, err
 	}
 	return ti, nil
@@ -63,8 +62,7 @@ func (t *TransactionInfoRsp) DecodeSignedTransaction() (ti *TransactionsItem, er
 		return nil, fmt.Errorf("signedTransactionInfo is empty")
 	}
 	ti = &TransactionsItem{}
-	_, err = ExtractClaims(t.SignedTransactionInfo, ti)
-	if err != nil {
+	if err = ExtractClaims(t.SignedTransactionInfo, ti); err != nil {
 		return nil, err
 	}
 	return ti, nil

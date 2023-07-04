@@ -13,7 +13,7 @@ func ParseECPrivateKeyFromPEM(key []byte) (*ecdsa.PrivateKey, error) {
 	// Parse PEM block
 	var block *pem.Block
 	if block, _ = pem.Decode(key); block == nil {
-		return nil, errors.New("ErrKeyMustBePEMEncoded")
+		return nil, errors.New("decode private key error")
 	}
 	// Parse the key
 	var parsedKey interface{}
@@ -24,7 +24,7 @@ func ParseECPrivateKeyFromPEM(key []byte) (*ecdsa.PrivateKey, error) {
 	}
 	pkey, ok := parsedKey.(*ecdsa.PrivateKey)
 	if !ok {
-		return nil, errors.New("ErrNotECPrivateKey")
+		return nil, errors.New("private key must be ECP private key")
 	}
 	return pkey, nil
 }
