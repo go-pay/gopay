@@ -14,8 +14,8 @@ var (
 	client   *Client
 	ctx      = context.Background()
 	err      error
-	Clientid = "AQH4MMv6pFY9HChKHZYmphzJrtbMM-9Vh1ETzoe5W-koYBuk-xSnmjY_dMBCwmmBOczNHtmenCRSgbU4"
-	Secret   = "EMV4AUd59OWVQWpAcVvUgtDvwIn50pcAZmdNE-5zR6iBPHijqGmbELcY9ruvK7_FGIlHcGQNR3_rICbZ"
+	Clientid = ""
+	Secret   = ""
 )
 
 func TestMain(m *testing.M) {
