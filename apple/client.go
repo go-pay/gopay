@@ -42,6 +42,7 @@ func NewClient(iss, bid, kid, privateKey string, isProd bool) (client *Client, e
 		bid:        bid,
 		kid:        kid,
 		privateKey: ecPrivateKey,
+		isProd:     isProd,
 	}
 	return client, nil
 }
