@@ -1,5 +1,7 @@
 package paypal
 
+import "encoding/json"
+
 type AccessToken struct {
 	Scope       string `json:"scope"`
 	AccessToken string `json:"access_token"`
@@ -934,4 +936,18 @@ type TemplateInfo struct {
 	Invoicer             *Invoicer              `json:"invoicer"`
 	Items                []*Item                `json:"items,omitempty"`
 	PrimaryRecipients    []*RecipientInfo       `json:"primary_recipients,omitempty"`
+}
+
+type VerifyWebhookSignatureRequest struct {
+	AuthAlgo         string          `json:"auth_algo,omitempty"`
+	CertURL          string          `json:"cert_url,omitempty"`
+	TransmissionID   string          `json:"transmission_id,omitempty"`
+	TransmissionSig  string          `json:"transmission_sig,omitempty"`
+	TransmissionTime string          `json:"transmission_time,omitempty"`
+	WebhookID        string          `json:"webhook_id,omitempty"`
+	Event            json.RawMessage `json:"webhook_event,omitempty"`
+}
+
+type VerifyWebhookResponse struct {
+	VerificationStatus string `json:"verification_status,omitempty"`
 }
