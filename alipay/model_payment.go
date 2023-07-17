@@ -200,7 +200,7 @@ type TradeQuery struct {
 }
 
 type TradeSettleInfo struct {
-	TradeSettleDetailList []TradeSettleDetail `json:"trade_settle_detail_list,omitempty"`
+	TradeSettleDetailList []*TradeSettleDetail `json:"trade_settle_detail_list,omitempty"`
 }
 
 type TradeSettleDetail struct {
