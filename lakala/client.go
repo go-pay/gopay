@@ -18,7 +18,7 @@ import (
 type Client struct {
 	ctx            context.Context   // 上下文
 	PartnerCode    string            // partner_code:商户编码，由4~6位大写字母或数字构成
-	CredentialCode string            // credential_code:系统为商户分配的开发校验码，请妥善保管，不要在公开场合泄露
+	credentialCode string            // credential_code:系统为商户分配的开发校验码，请妥善保管，不要在公开场合泄露
 	WxAppid        string            // 微信appid，微信通道要求必填
 	bodySize       int               // http response body size(MB), default is 10MB
 	IsProd         bool              // 是否生产环境
@@ -26,6 +26,10 @@ type Client struct {
 }
 
 // NewClient 初始化lakala户端
+// wxAppid: 微信appid，微信通道要求必填
+// partnerCode: 商户编码，由4~6位大写字母或数字构成
+// credentialCode: 系统为商户分配的开发校验码，请妥善保管，不要在公开场合泄露
+// isProd: 是否生产环境
 func NewClient(wxAppid, partnerCode, credentialCode string, isProd bool) (client *Client, err error) {
 	if partnerCode == util.NULL || credentialCode == util.NULL {
 		return nil, gopay.MissLakalaInitParamErr
@@ -34,7 +38,7 @@ func NewClient(wxAppid, partnerCode, credentialCode string, isProd bool) (client
 		ctx:            context.Background(),
 		WxAppid:        wxAppid,
 		PartnerCode:    partnerCode,
-		CredentialCode: credentialCode,
+		credentialCode: credentialCode,
 		IsProd:         isProd,
 		DebugSwitch:    gopay.DebugOff,
 	}
@@ -48,7 +52,7 @@ func (c *Client) SetBodySize(sizeMB int) {
 	}
 }
 
-// pubParamsHandle 公共参数处理 Query Params
+// 公共参数处理 Query Params
 func (c *Client) pubParamsHandle() (param string, err error) {
 	bm := make(gopay.BodyMap)
 	bm.Set("time", time.Now().UnixMilli())
@@ -80,7 +84,7 @@ func (c *Client) getRsaSign(bm gopay.BodyMap) (sign string, err error) {
 		partnerCode    = c.PartnerCode
 		ts             = bm.Get("time")
 		nonceStr       = bm.Get("nonce_str")
-		credentialCode = c.CredentialCode
+		credentialCode = c.credentialCode
 	)
 	if ts == "" || nonceStr == "" {
 		return "", fmt.Errorf("签名缺少必要的参数")
@@ -93,30 +97,13 @@ func (c *Client) getRsaSign(bm gopay.BodyMap) (sign string, err error) {
 }
 
 // PUT 发起请求
-func (c *Client) NewHttpClient() (httpClient *xhttp.Client, err error) {
-	bm := make(gopay.BodyMap)
-	httpClient, err = c.NewHttpClientParams(bm)
-	return
-}
-
-// GET 发起请求
-func (c *Client) NewHttpClientParams(params gopay.BodyMap) (httpClient *xhttp.Client, err error) {
-	httpClient = xhttp.NewClient()
+func (c *Client) doPut(ctx context.Context, path string, bm gopay.BodyMap) (bs []byte, err error) {
+	httpClient := xhttp.NewClient().Type(xhttp.TypeJSON)
 	if c.bodySize > 0 {
 		httpClient.SetBodySize(c.bodySize)
 	}
 	httpClient.Header.Add("Content-Type", "application/json")
 	httpClient.Header.Add("Accept", "application/json")
-	httpClient.Type(xhttp.TypeJSON)
-	return
-}
-
-// PUT 发起请求
-func (c *Client) doPut(ctx context.Context, path string, bm gopay.BodyMap) (bs []byte, err error) {
-	httpClient, err := c.NewHttpClient()
-	if err != nil {
-		return nil, err
-	}
 	var url = baseUrlProd + path
 	param, err := c.pubParamsHandle()
 	if err != nil {
@@ -135,10 +122,12 @@ func (c *Client) doPut(ctx context.Context, path string, bm gopay.BodyMap) (bs [
 
 // GET 发起请求
 func (c *Client) doGetParams(ctx context.Context, path string, params gopay.BodyMap) (res *http.Response, bs []byte, err error) {
-	httpClient, err := c.NewHttpClientParams(params)
-	if err != nil {
-		return nil, nil, err
+	httpClient := xhttp.NewClient().Type(xhttp.TypeJSON)
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
 	}
+	httpClient.Header.Add("Content-Type", "application/json")
+	httpClient.Header.Add("Accept", "application/json")
 	var url = baseUrlProd + path
 	res, bs, err = httpClient.Get(url).EndBytes(ctx)
 	if err != nil {
@@ -148,15 +137,21 @@ func (c *Client) doGetParams(ctx context.Context, path string, params gopay.Body
 }
 
 // GET 发起请求
-func (c *Client) doGet(ctx context.Context, path string) (bs []byte, err error) {
-	httpClient, err := c.NewHttpClient()
-	if err != nil {
-		return nil, err
+func (c *Client) doGet(ctx context.Context, path, queryParams string) (bs []byte, err error) {
+	httpClient := xhttp.NewClient().Type(xhttp.TypeJSON)
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
 	}
+	httpClient.Header.Add("Content-Type", "application/json")
+	httpClient.Header.Add("Accept", "application/json")
+
 	var url = baseUrlProd + path
 	param, err := c.pubParamsHandle()
 	if err != nil {
 		return nil, err
+	}
+	if queryParams != "" {
+		param = param + "&" + queryParams
 	}
 	uri := url + "?" + param
 	res, bs, err := httpClient.Get(uri).EndBytes(ctx)

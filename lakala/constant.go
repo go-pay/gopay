@@ -31,23 +31,19 @@ const (
 	// ----sdk_payment----
 
 	// ----CommonApi ----
-	// https://pay.lakala-japan.com/api/v1.0/gateway/partners/{partner_code}/channel_exchange_rate
-	rateUrl = "/api/v1.0/gateway/partners/%s/channel_exchange_rate"
-
-	// https://pay.lakala-japan.com/api/v1.0/gateway/partners/{partner_code}/encrypt
-	encryptUrl = "/api/v1.0/gateway/partners/%s/encrypt"
-
-	// https://pay.lakala-japan.com/api/v1.0/gateway/partners/{partner_code}/orders/{order_id}
-	getOrdersUrl = "/api/v1.0/gateway/partners/%s/orders/%s"
-
-	// https://pay.lakala-japan.com/api/v1.0/gateway/partners/{partner_code}/orders/{order_id}/refunds/{refund_id}
-	ordersRefundsUrl = "/api/v1.0/gateway/partners/%s/orders/%s/refunds/%s"
-	// ----CommonApi ----
+	getExchangeRate      = "/api/v1.0/gateway/partners/%s/channel_exchange_rate" // partner_code 获取当前汇率 GET
+	getEncrypt           = "/api/v1.0/gateway/partners/%s/encrypt"               // partner_code 获取加密密钥 GET
+	closeOrder           = "/api/v1.0/gateway/partners/%s/orders/%s/cancel"      // partner_code、order_id 关闭订单 PUT
+	getOrderStatus       = "/api/v1.0/gateway/partners/%s/orders/%s"             // partner_code、order_id 查询订单状态 GET
+	applyRefund          = "/api/v1.0/gateway/partners/%s/orders/%s/refunds/%s"  // partner_code、order_id、refund_id 申请退款 PUT
+	getRefundStatus      = "/api/v1.0/gateway/partners/%s/orders/%s/refunds/%s"  // partner_code、order_id、refund_id 查询退款状态 GET
+	queryOrderList       = "/api/v1.0/gateway/partners/%s/orders"                // partner_code 查看账单 GET
+	queryTransactionList = "/api/v1.0/gateway/partners/%s/transactions"          // partner_code 查看账单流水 GET
 )
 
 // 配置结构
 type Config struct {
-	PartnerCode    string `toml:"partnerCode"`    //partner_code:商户编码，由4~6位大写字母或数字构成
+	PartnerCode    string `toml:"PartnerCode"`    //partner_code:商户编码，由4~6位大写字母或数字构成
 	CredentialCode string `toml:"credentialCode"` //credential_code:系统为商户分配的开发校验码，请妥善保管，不要在公开场合泄露
 	AppId          string `toml:"appId"`          //微信appid，微信通道要求必填
 	IsProd         bool   `toml:"isProd"`         //是否正式环境,沙盒
