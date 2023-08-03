@@ -1,12 +1,11 @@
 package lakala
 
 import (
-	"context"
-	"github.com/go-pay/gopay/pkg/xlog"
 	"os"
 	"testing"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 var (
@@ -15,7 +14,6 @@ var (
 	wxAppid        = "wxdaa2ab9ef87b5497"
 	partnerCode    = "1368139502"
 	credentialCode = "GFDS8j98rewnmgl45wHTt980jg543wmg"
-	ctx            = context.Background()
 )
 
 func TestMain(m *testing.M) {
