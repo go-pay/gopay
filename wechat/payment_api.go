@@ -27,6 +27,7 @@ import (
 )
 
 // ParseNotifyToBodyMap 解析微信支付异步通知的结果到BodyMap（推荐）
+//
 //	req：*http.Request
 //	返回参数bm：Notify请求的参数
 //	返回参数err：错误信息
@@ -56,6 +57,7 @@ func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 }
 
 // ParseRefundNotify 解析微信退款异步通知的参数
+//
 //	req：*http.Request
 //	返回参数notifyReq：Notify请求的参数
 //	返回参数err：错误信息
@@ -70,6 +72,7 @@ func ParseRefundNotify(req *http.Request) (notifyReq *RefundNotifyRequest, err e
 }
 
 // DecryptRefundNotifyReqInfo 解密微信退款异步通知的加密数据
+//
 //	reqInfo：gopay.ParseRefundNotify() 方法获取的加密数据 req_info
 //	apiKey：API秘钥值
 //	返回参数refundNotify：RefundNotify请求的加密数据
@@ -124,6 +127,56 @@ func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNot
 	return
 }
 
+func DecryptRefundNotifyReqInfoToBodyMap(reqInfo, apiKey string) (resBm gopay.BodyMap, err error) {
+	if reqInfo == util.NULL || apiKey == util.NULL {
+		return nil, errors.New("reqInfo or apiKey is null")
+	}
+	var (
+		encryptionB, bs []byte
+		block           cipher.Block
+		blockSize       int
+	)
+	if encryptionB, err = base64.StdEncoding.DecodeString(reqInfo); err != nil {
+		return nil, err
+	}
+	h := md5.New()
+	h.Write([]byte(apiKey))
+	key := strings.ToLower(hex.EncodeToString(h.Sum(nil)))
+	if len(encryptionB)%aes.BlockSize != 0 {
+		return nil, errors.New("encryptedData is error")
+	}
+	if block, err = aes.NewCipher([]byte(key)); err != nil {
+		return nil, err
+	}
+	blockSize = block.BlockSize()
+
+	err = func(dst, src []byte) error {
+		if len(src)%blockSize != 0 {
+			return errors.New("crypto/cipher: input not full blocks")
+		}
+		if len(dst) < len(src) {
+			return errors.New("crypto/cipher: output smaller than input")
+		}
+		for len(src) > 0 {
+			block.Decrypt(dst, src[:blockSize])
+			src = src[blockSize:]
+			dst = dst[blockSize:]
+		}
+		return nil
+	}(encryptionB, encryptionB)
+	if err != nil {
+		return nil, err
+	}
+
+	bs = xaes.PKCS7UnPadding(encryptionB)
+
+	resBm = make(gopay.BodyMap)
+	if err = xml.Unmarshal(bs, &resBm); err != nil {
+		return nil, fmt.Errorf("xml.UnmarshalBodyMap(%s)：%w", string(bs), err)
+	}
+	return
+}
+
 type NotifyResponse struct {
 	ReturnCode string `xml:"return_code"`
 	ReturnMsg  string `xml:"return_msg"`
@@ -143,6 +196,7 @@ func (w *NotifyResponse) ToXmlString() (xmlStr string) {
 }
 
 // DecryptOpenDataToBodyMap 解密开放数据到 BodyMap
+//
 //	encryptedData：包括敏感数据在内的完整用户信息的加密数据，小程序获取到
 //	iv：加密算法的初始向量，小程序获取到
 //	sessionKey：会话密钥，通过  gopay.Code2Session() 方法获取到
@@ -180,6 +234,7 @@ func DecryptOpenDataToBodyMap(encryptedData, iv, sessionKey string) (bm gopay.Bo
 }
 
 // GetOpenIdByAuthCode 授权码查询openid(AccessToken:157字符)
+//
 //	appId:APPID
 //	mchId:商户号
 //	ApiKey:apiKey
