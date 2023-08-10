@@ -1,6 +1,7 @@
 package wechat
 
 import (
+	"context"
 	"os"
 	"testing"
 
@@ -55,7 +56,7 @@ func TestClient_AuthCodeToOpenId(t *testing.T) {
 	bm.Set("nonce_str", util.GetRandomString(32)).
 		Set("auth_code", "134753997737645794")
 
-	wxRsp, _, err := client.AuthCodeToOpenId(bm)
+	wxRsp, _, err := client.AuthCodeToOpenId(context.Background(), bm)
 	if err != nil {
 		xlog.Errorf("client.AuthCodeToOpenId(%+v),error:%+v", bm, err)
 		return

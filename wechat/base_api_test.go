@@ -111,7 +111,7 @@ func TestClient_CloseOrder(t *testing.T) {
 		Set("sign_type", SignType_MD5)
 
 	// 请求关闭订单，成功后得到结果
-	wxRsp, _, err := client.CloseOrder(context.Background(), bm)
+	wxRsp, _, _, err := client.CloseOrder(context.Background(), bm)
 	if err != nil {
 		xlog.Errorf("client.CloseOrder(%+v),error:%+v", bm, err)
 		return
