@@ -25,7 +25,7 @@ func CloseOrder() {
 		Set("sign_type", wechat.SignType_MD5)
 
 	// 请求关闭订单，成功后得到结果
-	wxRsp, _, _, err := client.CloseOrder(context.Background(), bm)
+	wxRsp, _, _, _, _, err := client.CloseOrder(context.Background(), bm)
 	if err != nil {
 		xlog.Error(err)
 		return

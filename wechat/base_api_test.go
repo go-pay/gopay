@@ -34,7 +34,7 @@ func TestClient_UnifiedOrder(t *testing.T) {
 		}) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
 
 	// 请求支付下单，成功后得到结果
-	wxRsp, _, _, err := client.UnifiedOrder(context.Background(), bm)
+	wxRsp, _, _, _, _, err := client.UnifiedOrder(context.Background(), bm)
 	if err != nil {
 		xlog.Errorf("client.UnifiedOrder(%+v),error:%+v", bm, err)
 		return
@@ -73,7 +73,7 @@ func TestClient_Micropay(t *testing.T) {
 		Set("sign_type", SignType_MD5)
 
 	// 请求支付，成功后得到结果
-	wxRsp, _, _, err := client.Micropay(context.Background(), bm)
+	wxRsp, _, _, _, _, err := client.Micropay(context.Background(), bm)
 	if err != nil {
 		xlog.Errorf("client.Micropay(%+v),error:%+v", bm, err)
 		return
@@ -94,13 +94,12 @@ func TestClient_QueryOrder(t *testing.T) {
 		Set("sign_type", SignType_MD5)
 
 	// 请求订单查询，成功后得到结果
-	wxRsp, resBm, _, err := client.QueryOrder(context.Background(), bm)
+	wxRsp, _, _, _, _, err := client.QueryOrder(context.Background(), bm)
 	if err != nil {
 		xlog.Errorf("client.QueryOrder(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("wxRsp：", *wxRsp)
-	xlog.Debug("resBm：", resBm)
 }
 
 func TestClient_CloseOrder(t *testing.T) {
@@ -111,7 +110,7 @@ func TestClient_CloseOrder(t *testing.T) {
 		Set("sign_type", SignType_MD5)
 
 	// 请求关闭订单，成功后得到结果
-	wxRsp, _, _, err := client.CloseOrder(context.Background(), bm)
+	wxRsp, _, _, _, _, err := client.CloseOrder(context.Background(), bm)
 	if err != nil {
 		xlog.Errorf("client.CloseOrder(%+v),error:%+v", bm, err)
 		return
@@ -134,13 +133,12 @@ func TestClient_Refund(t *testing.T) {
 
 	// 请求申请退款（沙箱环境下，证书路径参数可传空）
 	//    body：参数Body
-	wxRsp, resBm, _, err := client.Refund(context.Background(), bm)
+	wxRsp, _, _, _, _, err := client.Refund(context.Background(), bm)
 	if err != nil {
 		xlog.Errorf("client.Refund(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("wxRsp：", *wxRsp)
-	xlog.Debug("resBm：", resBm)
 }
 
 func TestClient_QueryRefund(t *testing.T) {
@@ -154,13 +152,13 @@ func TestClient_QueryRefund(t *testing.T) {
 		Set("refund_id", "97HiM5j6kGmM2fk7fYMc8MgKhPnEQ5Rk")*/
 
 	// 请求申请退款
-	wxRsp, resBm, _, err := client.QueryRefund(context.Background(), bm)
+	wxRsp, bs, _, _, _, err := client.QueryRefund(context.Background(), bm)
 	if err != nil {
 		xlog.Errorf("client.QueryRefund(%+v),error:%+v", bm, err)
 		return
 	}
 	xlog.Debug("wxRsp：", *wxRsp)
-	xlog.Debug("resBm：", resBm)
+	xlog.Debug("bs：", bs)
 }
 
 func TestClient_Reverse(t *testing.T) {

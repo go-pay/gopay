@@ -66,7 +66,7 @@ func Test_ProfitSharing(t *testing.T) {
 
 	bm.Set("receivers", string(bs))
 
-	wxRsp, _, err := client.ProfitSharing(bm)
+	wxRsp, _, _, _, _, err := client.ProfitSharing(bm)
 	if err != nil {
 		xlog.Errorf("client.ProfitSharingAddReceiver(%+v),error:%+v", bm, err)
 		return

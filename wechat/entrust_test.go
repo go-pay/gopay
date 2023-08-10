@@ -94,7 +94,7 @@ func TestClient_EntrustPaying(t *testing.T) {
 	//bm.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")
 
 	// 支付中签约
-	wxRsp, _, err := client.EntrustPaying(context.Background(), bm)
+	wxRsp, _, _, _, _, err := client.EntrustPaying(context.Background(), bm)
 	if err != nil {
 		xlog.Errorf("client.EntrustPaying(%+v),error:%+v", bm, err)
 		return
