@@ -34,7 +34,7 @@ func TestClient_UnifiedOrder(t *testing.T) {
 		}) /*.Set("openid", "o0Df70H2Q0fY8JXh1aFPIRyOBgu8")*/
 
 	// 请求支付下单，成功后得到结果
-	wxRsp, _, err := client.UnifiedOrder(context.Background(), bm)
+	wxRsp, _, _, err := client.UnifiedOrder(context.Background(), bm)
 	if err != nil {
 		xlog.Errorf("client.UnifiedOrder(%+v),error:%+v", bm, err)
 		return
@@ -73,7 +73,7 @@ func TestClient_Micropay(t *testing.T) {
 		Set("sign_type", SignType_MD5)
 
 	// 请求支付，成功后得到结果
-	wxRsp, _, err := client.Micropay(context.Background(), bm)
+	wxRsp, _, _, err := client.Micropay(context.Background(), bm)
 	if err != nil {
 		xlog.Errorf("client.Micropay(%+v),error:%+v", bm, err)
 		return

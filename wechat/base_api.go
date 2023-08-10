@@ -15,10 +15,10 @@ import (
 // 统一下单
 //
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_1.shtml
-func (w *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *UnifiedOrderResponse, header http.Header, err error) {
+func (w *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *UnifiedOrderResponse, resBm gopay.BodyMap, header http.Header, err error) {
 	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "notify_url", "trade_type")
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 	var bs []byte
 	if w.IsProd {
@@ -28,22 +28,26 @@ func (w *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Uni
 		bs, header, err = w.doSanBoxPost(ctx, bm, sandboxUnifiedOrder)
 	}
 	if err != nil {
-		return nil, header, err
+		return nil, nil, header, err
 	}
 	wxRsp = new(UnifiedOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
+		return nil, nil, header, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err)
 	}
-	return wxRsp, header, nil
+	resBm = make(gopay.BodyMap)
+	if err = xml.Unmarshal(bs, &resBm); err != nil {
+		return nil, nil, header, fmt.Errorf("xml.UnmarshalBodyMap(%s)：%w", string(bs), err)
+	}
+	return wxRsp, resBm, header, nil
 }
 
 // 提交付款码支付
 //
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter4_1.shtml
-func (w *Client) Micropay(ctx context.Context, bm gopay.BodyMap) (wxRsp *MicropayResponse, header http.Header, err error) {
+func (w *Client) Micropay(ctx context.Context, bm gopay.BodyMap) (wxRsp *MicropayResponse, resBm gopay.BodyMap, header http.Header, err error) {
 	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "auth_code")
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 	var bs []byte
 	if w.IsProd {
@@ -53,13 +57,17 @@ func (w *Client) Micropay(ctx context.Context, bm gopay.BodyMap) (wxRsp *Micropa
 		bs, header, err = w.doSanBoxPost(ctx, bm, sandboxMicroPay)
 	}
 	if err != nil {
-		return nil, header, err
+		return nil, nil, header, err
 	}
 	wxRsp = new(MicropayResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, header, fmt.Errorf("xml.Unmarshal(%s): %w", string(bs), err)
+		return nil, nil, header, fmt.Errorf("xml.Unmarshal(%s): %w", string(bs), err)
 	}
-	return wxRsp, header, nil
+	resBm = make(gopay.BodyMap)
+	if err = xml.Unmarshal(bs, &resBm); err != nil {
+		return nil, nil, header, fmt.Errorf("xml.UnmarshalBodyMap(%s)：%w", string(bs), err)
+	}
+	return wxRsp, resBm, header, nil
 }
 
 // 查询订单
