@@ -62,18 +62,24 @@ pus = append(pus, item)
 bm := make(gopay.BodyMap)
 bm.Set("intent", "CAPTURE").
 	Set("purchase_units", pus).
-	SetBodyMap("application_context", func(b gopay.BodyMap) {
-		b.Set("brand_name", "gopay").
-			Set("locale", "en-PT").
-			Set("return_url", "https://example.com/returnUrl").
-			Set("cancel_url", "https://example.com/cancelUrl")
+	SetBodyMap("payment_source", func(b gopay.BodyMap) {
+		b.SetBodyMap("paypal", func(bb gopay.BodyMap) {
+			bb.SetBodyMap("experience_context", func(bbb gopay.BodyMap) {
+				bbb.Set("brand_name", "gopay").
+					Set("locale", "en-US").
+					Set("shipping_preference", "NO_SHIPPING").
+					Set("user_action", "PAY_NOW").
+					Set("return_url", "http://xxx/return").
+					Set("cancel_url", "http://xxx/cancel")
+			})
+		})
 	})
 ppRsp, err := client.CreateOrder(ctx, bm)
 if err != nil {
 	xlog.Error(err)
 	return
 }
-if ppRsp.Code != paypal.Success {
+if ppRsp.Code != 200 {
 	// do something
 	return
 }
