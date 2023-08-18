@@ -161,6 +161,59 @@ func (c *Client) TransactionList(ctx context.Context, date string) (rsp *Transac
 	return rsp, nil
 }
 
+// 查看清算详情
+// 文档：https://payjp.lakala.com/docs/cn/#api-CommonApi-SettleLog
+func (c *Client) Settlements(ctx context.Context, date string) (rsp *SettlementsRsp, err error) {
+	bm := make(gopay.BodyMap)
+	bm.Set("date", date)
+	url := fmt.Sprintf(querySettlements, c.PartnerCode)
+	bs, err := c.doGet(ctx, url, bm.EncodeURLParams())
+	if err != nil {
+		return nil, err
+	}
+	rsp = new(SettlementsRsp)
+	err = json.Unmarshal(bs, rsp)
+	if err != nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	return rsp, nil
+}
+
+// 查询可用钱包
+// 文档：https://payjp.lakala.com/docs/cn/#api-CommonApi-ConsultPayment
+func (c *Client) ConsultPayment(ctx context.Context, bm gopay.BodyMap) (rsp *ConsultPaymentRsp, err error) {
+	if err = bm.CheckEmptyError("currency", "amount", "terminal_type"); err != nil {
+		return nil, err
+	}
+	url := fmt.Sprintf(queryConsultPayment, c.PartnerCode)
+	bs, err := c.doPost(ctx, url, bm)
+	if err != nil {
+		return nil, err
+	}
+	rsp = new(ConsultPaymentRsp)
+	err = json.Unmarshal(bs, rsp)
+	if err != nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	return rsp, nil
+}
+
+// 获取优惠券信息
+// 文档：https://payjp.lakala.com/docs/cn/#api-CommonApi-GetCoupon
+func (c *Client) GetCoupon(ctx context.Context, couponId string) (rsp *GetCouponRsp, err error) {
+	url := fmt.Sprintf(getCoupon, c.PartnerCode, couponId)
+	bs, err := c.doGet(ctx, url, "")
+	if err != nil {
+		return nil, err
+	}
+	rsp = new(GetCouponRsp)
+	err = json.Unmarshal(bs, rsp)
+	if err != nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	return rsp, nil
+}
+
 // 付款通知
 // 文档：https://payjp.lakala.com/docs/cn/#api-CommonApi-PayNotice
 func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) {

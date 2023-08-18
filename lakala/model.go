@@ -110,8 +110,51 @@ type Transaction struct {
 	InputAmount           int     `json:"input_amount,omitempty"`            // 订单输入金额，单位是货币最小单位
 	CustomerPaymentAmount int     `json:"customer_payment_amount,omitempty"` // 客户实际支付金额，单位是货币最小单位
 	SettleAmount          int     `json:"settle_amount,omitempty"`           // 结算金额，币种为JPY，单位是货币最小单位
+	SurchargeRate         string  `json:"surcharge_rate,omitempty"`          // 手续费费率(x%)
+	Surcharge             int     `json:"surcharge,omitempty"`               // 手续费金额，单位是JPY分
+	TransferAmount        int     `json:"transfer_amount,omitempty"`         // 打款金额，单位是JPY分
 	ExchangeRate          float64 `json:"exchange_rate,omitempty"`           // 使用汇率
 	Remark                string  `json:"remark,omitempty"`                  // 备注
+}
+
+type SettlementsRsp struct {
+	ErrorCode
+	SettleFrom       string         `json:"settle_from,omitempty"`
+	SettleTo         string         `json:"settle_to,omitempty"`
+	SettleDays       string         `json:"settle_days,omitempty"`
+	TransactionCount int            `json:"transaction_count,omitempty"` // 流水总条目
+	OrderCount       int            `json:"order_count,omitempty"`       // 付款单数
+	RefundCount      int            `json:"refund_count,omitempty"`      // 退款单数
+	TotalCredit      int            `json:"total_credit,omitempty"`
+	TotalDebit       int            `json:"total_debit,omitempty"`
+	TotalSurcharge   int            `json:"total_surcharge,omitempty"`
+	TotalTransfer    int            `json:"total_transfer,omitempty"`
+	Transactions     []*Transaction `json:"transactions,omitempty"` // 流水列表
+}
+
+type ConsultPaymentRsp struct {
+	ErrorCode
+	SubChannels []*SubChannel `json:"sub_channels,omitempty"`
+}
+
+type SubChannel struct {
+	SubChannel     string `json:"sub_channel,omitempty"`
+	SubChannelName string `json:"sub_channel_name,omitempty"`
+	Logo           string `json:"logo,omitempty"`
+}
+
+type GetCouponRsp struct {
+	Res           string `json:"res,omitempty"`
+	AvailableTime string `json:"available_time,omitempty"`
+	VoucherNum    string `json:"voucher_num,omitempty"`
+	EndTime       string `json:"end_time,omitempty"`
+	Discount      string `json:"discount,omitempty"`
+	Title         string `json:"title,omitempty"`
+	State         string `json:"state,omitempty"`
+	Type          string `json:"type,omitempty"`
+	IsValidNow    string `json:"is_valid_now,omitempty"`
+	AvailableWeek string `json:"available_week,omitempty"`
+	BeginAmount   string `json:"begin_amount,omitempty"`
 }
 
 type QRCodeRsp struct {

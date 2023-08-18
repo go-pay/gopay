@@ -120,6 +120,30 @@ func (c *Client) doPut(ctx context.Context, path string, bm gopay.BodyMap) (bs [
 	return bs, nil
 }
 
+// PUT 发起请求
+func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs []byte, err error) {
+	httpClient := xhttp.NewClient().Type(xhttp.TypeJSON)
+	if c.bodySize > 0 {
+		httpClient.SetBodySize(c.bodySize)
+	}
+	httpClient.Header.Add("Content-Type", "application/json")
+	httpClient.Header.Add("Accept", "application/json")
+	var url = baseUrlProd + path
+	param, err := c.pubParamsHandle()
+	if err != nil {
+		return nil, err
+	}
+	uri := url + "?" + param
+	res, bs, err := httpClient.Post(uri).SendBodyMap(bm).EndBytes(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if res.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	return bs, nil
+}
+
 // GET 发起请求
 func (c *Client) doGetParams(ctx context.Context, path string, params gopay.BodyMap) (res *http.Response, bs []byte, err error) {
 	httpClient := xhttp.NewClient().Type(xhttp.TypeJSON)

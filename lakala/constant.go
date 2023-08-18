@@ -39,6 +39,10 @@ const (
 	getRefundStatus      = "/api/v1.0/gateway/partners/%s/orders/%s/refunds/%s"  // partner_code、order_id、refund_id 查询退款状态 GET
 	queryOrderList       = "/api/v1.0/gateway/partners/%s/orders"                // partner_code 查看账单 GET
 	queryTransactionList = "/api/v1.0/gateway/partners/%s/transactions"          // partner_code 查看账单流水 GET
+	querySettlements     = "/api/v1.0/gateway/partners/%s/settlements"           // partner_code 查看清算详情 GET
+	queryConsultPayment  = "/api/v1.0/gateway/partners/%s/consult_payment"       // partner_code 查询可用钱包 POST
+	getCoupon            = "/api/v1.0/%s/coupon/%s"                              // partner_code、coupon_id 获取优惠券信息 GET
+
 )
 
 // 配置结构
