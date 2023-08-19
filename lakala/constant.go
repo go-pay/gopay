@@ -3,22 +3,45 @@ package lakala
 const (
 	baseUrlProd = "https://pay.lakala-japan.com" // 正式 URL
 
-	// ----qr_code----
-	newQrcode    = "/api/v1.0/gateway/partners/%s/orders/%s"        // partner_code、order_id 创建QRCode支付单 PUT
-	nativeQrcode = "/api/v1.0/gateway/partners/%s/native_orders/%s" // partner_code、order_id 创建Native QRCode支付单 PUT
-	qrcodePay    = "/api/v1.0/gateway/partners/%s/orders/%s/pay"    // partner_code、order_id QRCode支付跳转页 GET
+	// ----QRCode----
+	newQrcodeOrder       = "/api/v1.0/gateway/partners/%s/orders/%s"        // partner_code、order_id 创建QRCode支付单 PUT
+	newNativeQrcodeOrder = "/api/v1.0/gateway/partners/%s/native_orders/%s" // partner_code、order_id 创建Native QRCode支付单 PUT
+	qrcodePay            = "/api/v1.0/gateway/partners/%s/orders/%s/pay"    // partner_code、order_id QRCode支付跳转页 GET
 
-	// ----js_api----
-	newJSAPI           = "/api/v1.0/jsapi_gateway/partners/%s/orders/%s"          // partner_code、order_id 创建JSAPI订单 PUT
-	newNativeJSAPI     = "/api/v1.0/gateway/partners/%s/native_jsapi/%s"          // partner_code、order_id 创建Native JSAPI订单(offline) PUT
-	wechatJSAPIPay     = "/api/v1.0/wechat_jsapi_gateway/partners/%s_order_%s"    // partner_code、order_id 微信JSAPI支付跳转页 GET
-	alipayJSAPIPay     = "/api/v1.0/gateway/alipay/partners/%s/orders/%s/app_pay" // partner_code、order_id 支付宝JSAPI支付跳转页 GET
-	alipayPlusJSAPIPay = "/api/v1.0/alipay_connect/partners/%s/orders/%s/web_pay" // partner_code、order_id Alipay+JSAPI支付跳转页 GET
+	// ----JSAPI----
+	newJSAPIOrder       = "/api/v1.0/jsapi_gateway/partners/%s/orders/%s"          // partner_code、order_id 创建JSAPI订单 PUT
+	newNativeJSAPIOrder = "/api/v1.0/gateway/partners/%s/native_jsapi/%s"          // partner_code、order_id 创建Native JSAPI订单(offline) PUT
+	wechatJSAPIPay      = "/api/v1.0/wechat_jsapi_gateway/partners/%s_order_%s"    // partner_code、order_id 微信JSAPI支付跳转页 GET
+	alipayJSAPIPay      = "/api/v1.0/gateway/alipay/partners/%s/orders/%s/app_pay" // partner_code、order_id 支付宝JSAPI支付跳转页 GET
+	alipayPlusJSAPIPay  = "/api/v1.0/alipay_connect/partners/%s/orders/%s/web_pay" // partner_code、order_id Alipay+JSAPI支付跳转页 GET
 
-	// ----sdk_payment----
-	// https://pay.lakala-japan.com/api/v1.0/gateway/partners/{partner_code}/app_orders/{order_id}
-	appOrdersUrl = "/api/v1.0/gateway/partners/%s/app_orders/%s"
-	// ----sdk_payment----
+	// ----H5----
+	newH5Order      = "/api/v1.0/h5_payment/partners/%s/orders/%s"             // partner_code、order_id 创建H5支付单 PUT
+	h5Pay           = "/api/v1.0/h5_payment/partners/%s/orders/%s/pay"         // partner_code、order_id H5支付跳转页 GET
+	alipayPlusH5Pay = "/api/v1.0/alipay_connect/partners/%s/orders/%s/web_pay" // partner_code、order_id H5支付跳转页(Alipay+) GET
+
+	// ----小程序----
+	newMiniProgramOrder = "/api/v1.0/gateway/partners/%s/microapp_orders/%s" // partner_code、order_id 创建小程序订单 PUT
+
+	// ----RetailPay----
+	newRetailOrder       = "/api/v1.0/micropay/partners/%s/orders/%s"      // partner_code、order_id 创建线下支付订单 PUT
+	newRetailQrcodeOrder = "/api/v1.0/retail_qrcode/partners/%s/orders/%s" // partner_code、order_id 创建线下QRCode支付单 PUT
+
+	// ----WebGateway----
+	newWebGatewayOrder = "/api/v1.0/web_gateway/partners/%s/orders/%s" // partner_code、order_id 创建渠道Web网关订单 PUT
+
+	// ----SDKPayment----
+	newSDKPaymentOrder = "/api/v1.0/gateway/partners/%s/app_orders/%s" // partner_code、order_id 创建SDK订单(Online) PUT
+
+	// ----Custom----
+	createReportSingle   = "/api/v1.0/customs/partners/%s/customs_declare/reports/%s"                       // partner_code、partner_report_id 创建报关单（非拆单） PUT
+	createReportSeparate = "/api/v1.0/customs/partners/%s/customs_declare/reports/%s/sub_reports/%s"        // partner_code、partner_report_id、partner_sub_report_id 创建报关单（拆单） PUT
+	queryReportStatus    = "/api/v1.0/customs/partners/%s/customs_declare/reports/%s"                       // partner_code、partner_report_id 报关状态查询 GET
+	queryReportSubStatus = "/api/v1.0/customs/partners/%s/customs_declare/reports/%s/sub_reports/%s"        // partner_code、partner_report_id、partner_sub_report_id 报关子单状态查询 GET
+	modifyReportSingle   = "/api/v1.0/customs/partners/%s/customs_declare_modify/reports/%s"                // partner_code、partner_report_id 修改报关信息（非拆单） PUT
+	modifyReportSeparate = "/api/v1.0/customs/partners/%s/customs_declare_modify/reports/%s/sub_reports/%s" // partner_code、partner_report_id、partner_sub_report_id 修改报关信息（拆单） PUT
+	reSendReportSingle   = "/api/v1.0/customs/partners/%s/customs_redeclare/reports/%s"                     // partner_code、partner_report_id 重推报关（非拆单） PUT
+	modifyReportSub      = "/api/v1.0/customs/partners/%s/customs_redeclare/reports/%s/sub_reports/%s"      // partner_code、partner_report_id、partner_sub_report_id 报关单子单重推 PUT
 
 	// ----CommonApi ----
 	getExchangeRate      = "/api/v1.0/gateway/partners/%s/channel_exchange_rate" // partner_code 获取当前汇率 GET
