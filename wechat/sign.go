@@ -23,7 +23,7 @@ import (
 // bean：微信同步返回的结构体 wxRsp 或 异步通知解析的结构体 notifyReq，推荐通 BodyMap 验签
 // 返回参数ok：是否验签通过
 // 返回参数err：其他错误信息，不要根据 error 是否为空来判断验签正确与否，需再单独判断返回的 ok
-func VerifySign(apiKey, signType string, bean interface{}) (ok bool, err error) {
+func VerifySign(apiKey, signType string, bean any) (ok bool, err error) {
 	if bean == nil {
 		return false, errors.New("bean is nil")
 	}

@@ -34,7 +34,7 @@ type Client struct {
 	FormString       string
 	ContentType      string
 	unmarshalType    string
-	multipartBodyMap map[string]interface{}
+	multipartBodyMap map[string]any
 	jsonByte         []byte
 	err              error
 }
@@ -122,7 +122,7 @@ func (c *Client) Patch(url string) (client *Client) {
 	return c
 }
 
-func (c *Client) SendStruct(v interface{}) (client *Client) {
+func (c *Client) SendStruct(v any) (client *Client) {
 	if v == nil {
 		return c
 	}
@@ -135,7 +135,7 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 	case TypeJSON:
 		c.jsonByte = bs
 	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
-		body := make(map[string]interface{})
+		body := make(map[string]any)
 		if err = json.Unmarshal(bs, &body); err != nil {
 			c.err = fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 			return c
@@ -145,7 +145,7 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 	return c
 }
 
-func (c *Client) SendBodyMap(bm map[string]interface{}) (client *Client) {
+func (c *Client) SendBodyMap(bm map[string]any) (client *Client) {
 	if bm == nil {
 		return c
 	}
@@ -163,7 +163,7 @@ func (c *Client) SendBodyMap(bm map[string]interface{}) (client *Client) {
 	return c
 }
 
-func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client) {
+func (c *Client) SendMultipartBodyMap(bm map[string]any) (client *Client) {
 	if bm == nil {
 		return c
 	}
@@ -194,7 +194,7 @@ func (c *Client) SendString(encodeStr string) (client *Client) {
 	return c
 }
 
-func (c *Client) EndStruct(ctx context.Context, v interface{}) (res *http.Response, err error) {
+func (c *Client) EndStruct(ctx context.Context, v any) (res *http.Response, err error) {
 	res, bs, err := c.EndBytes(ctx)
 	if err != nil {
 		return nil, err
@@ -326,7 +326,7 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 	return res, bs, nil
 }
 
-func FormatURLParam(body map[string]interface{}) (urlParam string) {
+func FormatURLParam(body map[string]any) (urlParam string) {
 	var (
 		buf  strings.Builder
 		keys []string
@@ -353,7 +353,7 @@ func FormatURLParam(body map[string]interface{}) (urlParam string) {
 	return buf.String()[:buf.Len()-1]
 }
 
-func convertToString(v interface{}) (str string) {
+func convertToString(v any) (str string) {
 	if v == nil {
 		return ""
 	}

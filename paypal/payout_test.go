@@ -19,7 +19,7 @@ func TestCreateBatchPayout(t *testing.T) {
 		bm.Set("sender_batch_id", "2022060811140003").
 			Set("email_subject", "You have a payout!").
 			Set("email_message", "You have received a payout! Thanks for using our service!")
-	}).Set("items", []map[string]interface{}{
+	}).Set("items", []map[string]any{
 		{
 			"recipient_type": "EMAIL",
 			"amount": map[string]string{

@@ -82,7 +82,7 @@ func init() {
 
 // Implements the Verify method from SigningMethod
 // For this verify method, key must be an rsa.PublicKey struct
-func (m *SigningMethodRSAPSS) Verify(signingString, signature string, key interface{}) error {
+func (m *SigningMethodRSAPSS) Verify(signingString, signature string, key any) error {
 	var err error
 
 	// Decode the signature
@@ -116,7 +116,7 @@ func (m *SigningMethodRSAPSS) Verify(signingString, signature string, key interf
 
 // Implements the Sign method from SigningMethod
 // For this signing method, key must be an rsa.PrivateKey struct
-func (m *SigningMethodRSAPSS) Sign(signingString string, key interface{}) (string, error) {
+func (m *SigningMethodRSAPSS) Sign(signingString string, key any) (string, error) {
 	var rsaKey *rsa.PrivateKey
 
 	switch k := key.(type) {

@@ -11,7 +11,7 @@ import (
 type Time int64
 
 // Scan scan time.
-func (t *Time) Scan(src interface{}) (err error) {
+func (t *Time) Scan(src any) (err error) {
 	switch sc := src.(type) {
 	case time.Time:
 		if sc.IsZero() {

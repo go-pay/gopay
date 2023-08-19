@@ -36,7 +36,7 @@ func FormatURLParam(body gopay.BodyMap) (urlParam string) {
 // beanPtr:需要解析到的结构体指针
 // 文档：https://opendocs.alipay.com/mini/introduce/aes
 // 文档：https://opendocs.alipay.com/open/common/104567
-func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{}) (err error) {
+func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr any) (err error) {
 	if encryptedData == util.NULL || secretKey == util.NULL {
 		return errors.New("encryptedData or secretKey is null")
 	}
@@ -45,7 +45,7 @@ func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr interface{
 		return errors.New("传入参数类型必须是以指针形式")
 	}
 	if beanValue.Elem().Kind() != reflect.Struct {
-		return errors.New("传入interface{}必须是结构体")
+		return errors.New("传入any必须是结构体")
 	}
 	var (
 		block      cipher.Block

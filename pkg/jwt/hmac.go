@@ -46,7 +46,7 @@ func (m *SigningMethodHMAC) Alg() string {
 }
 
 // Verify the signature of HSXXX tokens.  Returns nil if the signature is valid.
-func (m *SigningMethodHMAC) Verify(signingString, signature string, key interface{}) error {
+func (m *SigningMethodHMAC) Verify(signingString, signature string, key any) error {
 	// Verify the key is the right type
 	keyBytes, ok := key.([]byte)
 	if !ok {
@@ -79,7 +79,7 @@ func (m *SigningMethodHMAC) Verify(signingString, signature string, key interfac
 
 // Implements the Sign method from SigningMethod for this signing method.
 // Key must be []byte
-func (m *SigningMethodHMAC) Sign(signingString string, key interface{}) (string, error) {
+func (m *SigningMethodHMAC) Sign(signingString string, key any) (string, error) {
 	if keyBytes, ok := key.([]byte); ok {
 		if !m.Hash.Available() {
 			return "", ErrHashUnavailable

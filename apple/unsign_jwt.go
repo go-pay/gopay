@@ -33,7 +33,7 @@ func ExtractClaims(signedPayload string, tran jwt.Claims) (err error) {
 	if err = verifyCert(rootCertStr, intermediaCertStr); err != nil {
 		return err
 	}
-	_, err = jwt.ParseWithClaims(tokenStr, tran, func(token *jwt.Token) (interface{}, error) {
+	_, err = jwt.ParseWithClaims(tokenStr, tran, func(token *jwt.Token) (any, error) {
 		return extractPublicKeyFromToken(tokenStr)
 	})
 	if err != nil {

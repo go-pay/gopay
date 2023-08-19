@@ -25,7 +25,7 @@ func (c *Client) generatingToken() (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
-	token.Header = map[string]interface{}{
+	token.Header = map[string]any{
 		"alg": "ES256",
 		"kid": c.kid,
 		"typ": "JWT",

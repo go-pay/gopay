@@ -12,7 +12,7 @@ type WarnLogger struct {
 	once   sync.Once
 }
 
-func (w *WarnLogger) LogOut(col *ColorType, format *string, v ...interface{}) {
+func (w *WarnLogger) LogOut(col *ColorType, format *string, v ...any) {
 	w.once.Do(func() {
 		w.init()
 	})

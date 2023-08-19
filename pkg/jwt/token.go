@@ -16,17 +16,17 @@ var TimeFunc = time.Now
 // the key for verification.  The function receives the parsed,
 // but unverified Token.  This allows you to use properties in the
 // Header of the token (such as `kid`) to identify which key to use.
-type Keyfunc func(*Token) (interface{}, error)
+type Keyfunc func(*Token) (any, error)
 
 // A JWT Token.  Different fields will be used depending on whether you're
 // creating or parsing/verifying a token.
 type Token struct {
-	Raw       string                 // The raw token.  Populated when you Parse a token
-	Method    SigningMethod          // The signing method used or to be used
-	Header    map[string]interface{} // The first segment of the token
-	Claims    Claims                 // The second segment of the token
-	Signature string                 // The third segment of the token.  Populated when you Parse a token
-	Valid     bool                   // Is the token valid?  Populated when you Parse/Verify a token
+	Raw       string         // The raw token.  Populated when you Parse a token
+	Method    SigningMethod  // The signing method used or to be used
+	Header    map[string]any // The first segment of the token
+	Claims    Claims         // The second segment of the token
+	Signature string         // The third segment of the token.  Populated when you Parse a token
+	Valid     bool           // Is the token valid?  Populated when you Parse/Verify a token
 }
 
 // Create a new Token.  Takes a signing method
@@ -36,7 +36,7 @@ func New(method SigningMethod) *Token {
 
 func NewWithClaims(method SigningMethod, claims Claims) *Token {
 	return &Token{
-		Header: map[string]interface{}{
+		Header: map[string]any{
 			"typ": "JWT",
 			"alg": method.Alg(),
 		},
@@ -46,7 +46,7 @@ func NewWithClaims(method SigningMethod, claims Claims) *Token {
 }
 
 // Get the complete, signed token
-func (t *Token) SignedString(key interface{}) (string, error) {
+func (t *Token) SignedString(key any) (string, error) {
 	var sig, sstr string
 	var err error
 	if sstr, err = t.SigningString(); err != nil {

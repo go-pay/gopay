@@ -5,9 +5,9 @@ import (
 	"errors"
 )
 
-// Claims type that uses the map[string]interface{} for JSON decoding
+// Claims type that uses the map[string]any for JSON decoding
 // This is the default claims type if you don't supply one
-type MapClaims map[string]interface{}
+type MapClaims map[string]any
 
 // VerifyAudience Compares the aud claim against cmp.
 // If required is false, this method will return true if the value matches or is unset
@@ -18,7 +18,7 @@ func (m MapClaims) VerifyAudience(cmp string, req bool) bool {
 		aud = append(aud, v)
 	case []string:
 		aud = v
-	case []interface{}:
+	case []any:
 		for _, a := range v {
 			vs, ok := a.(string)
 			if !ok {

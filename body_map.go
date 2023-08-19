@@ -12,11 +12,11 @@ import (
 	"github.com/go-pay/gopay/pkg/util"
 )
 
-type BodyMap map[string]interface{}
+type BodyMap map[string]any
 
 type xmlMapMarshal struct {
 	XMLName xml.Name
-	Value   interface{} `xml:",cdata"`
+	Value   any `xml:",cdata"`
 }
 
 type xmlMapUnmarshal struct {
@@ -25,7 +25,7 @@ type xmlMapUnmarshal struct {
 }
 
 // 设置参数
-func (bm BodyMap) Set(key string, value interface{}) BodyMap {
+func (bm BodyMap) Set(key string, value any) BodyMap {
 	bm[key] = value
 	return bm
 }
@@ -65,7 +65,7 @@ func (bm BodyMap) GetString(key string) string {
 }
 
 // 获取原始参数
-func (bm BodyMap) GetInterface(key string) interface{} {
+func (bm BodyMap) GetInterface(key string) any {
 	if bm == nil {
 		return nil
 	}
@@ -94,7 +94,7 @@ func (bm BodyMap) JsonBody() (jb string) {
 }
 
 // Unmarshal to struct or slice point
-func (bm BodyMap) Unmarshal(ptr interface{}) (err error) {
+func (bm BodyMap) Unmarshal(ptr any) (err error) {
 	bs, err := json.Marshal(bm)
 	if err != nil {
 		return err
@@ -226,7 +226,7 @@ func (bm BodyMap) CheckEmptyError(keys ...string) error {
 	return nil
 }
 
-func convertToString(v interface{}) (str string) {
+func convertToString(v any) (str string) {
 	if v == nil {
 		return NULL
 	}

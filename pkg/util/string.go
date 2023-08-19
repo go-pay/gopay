@@ -2,7 +2,7 @@ package util
 
 import "encoding/json"
 
-func ConvertToString(v interface{}) (str string) {
+func ConvertToString(v any) (str string) {
 	if v == nil {
 		return NULL
 	}

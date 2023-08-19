@@ -24,7 +24,7 @@ import (
 //	keyFilePath：apiclient_key.pem 路径
 //	pkcs12FilePath：apiclient_cert.p12 路径
 //	返回err
-func (q *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath interface{}) (err error) {
+func (q *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath any) (err error) {
 	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return err
 	}
@@ -47,12 +47,12 @@ func (q *Client) AddCertFileContent(certFileContent, keyFileContent, pkcs12FileC
 	return q.AddCertFilePath(certFileContent, keyFileContent, pkcs12FileContent)
 }
 
-func checkCertFilePathOrContent(certFile, keyFile, pkcs12File interface{}) error {
+func checkCertFilePathOrContent(certFile, keyFile, pkcs12File any) error {
 	if certFile == nil && keyFile == nil && pkcs12File == nil {
 		return nil
 	}
 	if certFile != nil && keyFile != nil {
-		files := map[string]interface{}{"certFile": certFile, "keyFile": keyFile}
+		files := map[string]any{"certFile": certFile, "keyFile": keyFile}
 		for varName, v := range files {
 			switch v := v.(type) {
 			case string:
@@ -108,7 +108,7 @@ func GetReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign stri
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 }
 
-func (q *Client) addCertConfig(certFile, keyFile, pkcs12File interface{}) (tlsConfig *tls.Config, err error) {
+func (q *Client) addCertConfig(certFile, keyFile, pkcs12File any) (tlsConfig *tls.Config, err error) {
 	if certFile == nil && keyFile == nil && pkcs12File == nil {
 		q.mu.RLock()
 		defer q.mu.RUnlock()

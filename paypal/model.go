@@ -230,10 +230,10 @@ type InvoiceTemplateUpdateRsp struct {
 // ==================================分割==================================
 
 type Patch struct {
-	Op    string      `json:"op"` // The possible values are: add、remove、replace、move、copy、test
-	Path  string      `json:"path,omitempty"`
-	Value interface{} `json:"value"` // The value to apply. The remove operation does not require a value.
-	From  string      `json:"from,omitempty"`
+	Op    string `json:"op"` // The possible values are: add、remove、replace、move、copy、test
+	Path  string `json:"path,omitempty"`
+	Value any    `json:"value"` // The value to apply. The remove operation does not require a value.
+	From  string `json:"from,omitempty"`
 }
 
 type OrderDetail struct {

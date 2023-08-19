@@ -49,7 +49,7 @@ func (m *SigningMethodRSA) Alg() string {
 
 // Implements the Verify method from SigningMethod
 // For this signing method, must be an *rsa.PublicKey structure.
-func (m *SigningMethodRSA) Verify(signingString, signature string, key interface{}) error {
+func (m *SigningMethodRSA) Verify(signingString, signature string, key any) error {
 	var err error
 
 	// Decode the signature
@@ -81,7 +81,7 @@ func (m *SigningMethodRSA) Verify(signingString, signature string, key interface
 
 // Implements the Sign method from SigningMethod
 // For this signing method, must be an *rsa.PrivateKey structure.
-func (m *SigningMethodRSA) Sign(signingString string, key interface{}) (string, error) {
+func (m *SigningMethodRSA) Sign(signingString string, key any) (string, error) {
 	var rsaKey *rsa.PrivateKey
 	var ok bool
 

@@ -59,7 +59,7 @@ A：开发者上传自己的应用公钥证书后，开放平台会为开发者�
 // certPathOrData x509证书文件路径(appPublicCert.crt、alipayPublicCert.crt) 或证书 buffer
 // 返回 sn：证书序列号(app_cert_sn、alipay_cert_sn)
 // 返回 err：error 信息
-func GetCertSN(certPathOrData interface{}) (sn string, err error) {
+func GetCertSN(certPathOrData any) (sn string, err error) {
 	var certData []byte
 	switch pathOrData := certPathOrData.(type) {
 	case string:
@@ -95,7 +95,7 @@ func GetCertSN(certPathOrData interface{}) (sn string, err error) {
 // rootCertPathOrData x509证书文件路径(alipayRootCert.crt) 或文件 buffer
 // 返回 sn：证书序列号(alipay_root_cert_sn)
 // 返回 err：error 信息
-func GetRootCertSN(rootCertPathOrData interface{}) (sn string, err error) {
+func GetRootCertSN(rootCertPathOrData any) (sn string, err error) {
 	var (
 		certData []byte
 		certEnd  = `-----END CERTIFICATE-----`
@@ -265,7 +265,7 @@ func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error)
 // 返回参数ok：是否验签通过
 // 返回参数err：错误信息
 // 验签文档：https://opendocs.alipay.com/open/200/106120
-func VerifySyncSignWithCert(alipayPublicKeyCert interface{}, signData, sign string) (ok bool, err error) {
+func VerifySyncSignWithCert(alipayPublicKeyCert any, signData, sign string) (ok bool, err error) {
 	switch alipayPublicKeyCert.(type) {
 	case string:
 		if alipayPublicKeyCert == util.NULL {
@@ -311,7 +311,7 @@ func (a *Client) autoVerifySignByCert(sign, signData string, signDataErr error) 
 // 返回参数ok：是否验签通过
 // 返回参数err：错误信息
 // 验签文档：https://opendocs.alipay.com/open/200/106120
-func VerifySign(alipayPublicKey string, notifyBean interface{}) (ok bool, err error) {
+func VerifySign(alipayPublicKey string, notifyBean any) (ok bool, err error) {
 	if alipayPublicKey == util.NULL || notifyBean == nil {
 		return false, errors.New("alipayPublicKey or notifyBean is nil")
 	}
@@ -357,7 +357,7 @@ func VerifySign(alipayPublicKey string, notifyBean interface{}) (ok bool, err er
 // 返回参数ok：是否验签通过
 // 返回参数err：错误信息
 // 验签文档：https://opendocs.alipay.com/open/200/106120
-func VerifySignWithCert(aliPayPublicKeyCert, notifyBean interface{}) (ok bool, err error) {
+func VerifySignWithCert(aliPayPublicKeyCert, notifyBean any) (ok bool, err error) {
 	if notifyBean == nil || aliPayPublicKeyCert == nil {
 		return false, errors.New("aliPayPublicKeyCert or notifyBean is nil")
 	}
@@ -373,7 +373,7 @@ func VerifySignWithCert(aliPayPublicKeyCert, notifyBean interface{}) (ok bool, e
 	var bm gopay.BodyMap
 
 	switch nb := notifyBean.(type) {
-	case map[string]interface{}:
+	case map[string]any:
 		bm = make(gopay.BodyMap, len(nb))
 		for key, val := range nb {
 			bm[key] = val
@@ -429,7 +429,7 @@ func verifySign(signData, sign, signType, alipayPublicKey string) (err error) {
 	return nil
 }
 
-func verifySignCert(signData, sign, signType string, alipayPublicKeyCert interface{}) (err error) {
+func verifySignCert(signData, sign, signType string, alipayPublicKeyCert any) (err error) {
 	var (
 		h     hash.Hash
 		hashs crypto.Hash

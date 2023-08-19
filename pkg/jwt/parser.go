@@ -43,7 +43,7 @@ func (p *Parser) ParseWithClaims(tokenString string, claims Claims, keyFunc Keyf
 	}
 
 	// Lookup key
-	var key interface{}
+	var key any
 	if keyFunc == nil {
 		// keyFunc was not provided.  short circuiting validation
 		return token, NewValidationError("no Keyfunc was provided.", ValidationErrorUnverifiable)

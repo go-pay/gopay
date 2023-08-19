@@ -73,7 +73,7 @@ func (w *Client) AddCertPkcs12FileContent(p12FileContent []byte) (err error) {
 
 // 添加微信证书文件 Path 路径或证书内容
 // 注意：只传pem证书或只传pkcs12证书均可，无需3个证书全传
-func (w *Client) addCertFileContentOrPath(certFile, keyFile, pkcs12File interface{}) (err error) {
+func (w *Client) addCertFileContentOrPath(certFile, keyFile, pkcs12File any) (err error) {
 	if err = checkCertFilePathOrContent(certFile, keyFile, pkcs12File); err != nil {
 		return
 	}
@@ -87,7 +87,7 @@ func (w *Client) addCertFileContentOrPath(certFile, keyFile, pkcs12File interfac
 	return
 }
 
-func (w *Client) addCertConfig(certFile, keyFile, pkcs12File interface{}) (tlsConfig *tls.Config, err error) {
+func (w *Client) addCertConfig(certFile, keyFile, pkcs12File any) (tlsConfig *tls.Config, err error) {
 	if certFile == nil && keyFile == nil && pkcs12File == nil {
 		w.mu.RLock()
 		defer w.mu.RUnlock()
@@ -150,12 +150,12 @@ func (w *Client) addCertConfig(certFile, keyFile, pkcs12File interface{}) (tlsCo
 	return nil, errors.New("cert files must all nil or all not nil")
 }
 
-func checkCertFilePathOrContent(certFile, keyFile, pkcs12File interface{}) error {
+func checkCertFilePathOrContent(certFile, keyFile, pkcs12File any) error {
 	if certFile == nil && keyFile == nil && pkcs12File == nil {
 		return nil
 	}
 	if certFile != nil && keyFile != nil {
-		files := map[string]interface{}{"certFile": certFile, "keyFile": keyFile}
+		files := map[string]any{"certFile": certFile, "keyFile": keyFile}
 		for varName, v := range files {
 			switch v := v.(type) {
 			case string:

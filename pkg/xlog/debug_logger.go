@@ -12,7 +12,7 @@ type DebugLogger struct {
 	once   sync.Once
 }
 
-func (d *DebugLogger) LogOut(col *ColorType, format *string, v ...interface{}) {
+func (d *DebugLogger) LogOut(col *ColorType, format *string, v ...any) {
 	d.once.Do(func() {
 		d.init()
 	})

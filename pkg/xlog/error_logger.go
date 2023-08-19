@@ -12,7 +12,7 @@ type ErrorLogger struct {
 	once   sync.Once
 }
 
-func (e *ErrorLogger) LogOut(col *ColorType, format *string, v ...interface{}) {
+func (e *ErrorLogger) LogOut(col *ColorType, format *string, v ...any) {
 	e.once.Do(func() {
 		e.init()
 	})

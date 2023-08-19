@@ -79,34 +79,34 @@ func Color(color ColorType) *ColorLogger {
 	return cl
 }
 
-func (l *ColorLogger) Info(args ...interface{}) {
+func (l *ColorLogger) Info(args ...any) {
 	l.i.LogOut(&l.Color, nil, args...)
 }
 
-func (l *ColorLogger) Infof(format string, args ...interface{}) {
+func (l *ColorLogger) Infof(format string, args ...any) {
 	l.i.LogOut(&l.Color, &format, args...)
 }
 
-func (l *ColorLogger) Debug(args ...interface{}) {
+func (l *ColorLogger) Debug(args ...any) {
 	l.d.LogOut(&l.Color, nil, args...)
 }
 
-func (l *ColorLogger) Debugf(format string, args ...interface{}) {
+func (l *ColorLogger) Debugf(format string, args ...any) {
 	l.d.LogOut(&l.Color, &format, args...)
 }
 
-func (l *ColorLogger) Warn(args ...interface{}) {
+func (l *ColorLogger) Warn(args ...any) {
 	l.w.LogOut(&l.Color, nil, args...)
 }
 
-func (l *ColorLogger) Warnf(format string, args ...interface{}) {
+func (l *ColorLogger) Warnf(format string, args ...any) {
 	l.w.LogOut(&l.Color, &format, args...)
 }
 
-func (l *ColorLogger) Error(args ...interface{}) {
+func (l *ColorLogger) Error(args ...any) {
 	l.e.LogOut(&l.Color, nil, args...)
 }
 
-func (l *ColorLogger) Errorf(format string, args ...interface{}) {
+func (l *ColorLogger) Errorf(format string, args ...any) {
 	l.e.LogOut(&l.Color, &format, args...)
 }

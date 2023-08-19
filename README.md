@@ -59,6 +59,11 @@ func main() {
 
 # 三、其他说明
 
+* 如需自定义Log输出，请调用以下方法设置自定义Logger，实现 `xlog.XLogger` 接口即可。
+    * `xlog.SetDebugLog()`
+    * `xlog.SetInfoLog()`
+    * `xlog.SetWarnLog()`
+    * `xlog.SetErrLog()`
 * 各支付方式接入，请仔细查看 `xxx_test.go` 使用方式
     * `gopay/wechat/v3/client_test.go`
     * `gopay/alipay/client_test.go`

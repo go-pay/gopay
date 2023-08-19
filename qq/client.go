@@ -148,7 +148,7 @@ func (q *Client) CloseOrder(ctx context.Context, bm gopay.BodyMap) (qqRsp *Close
 // 申请退款
 // 注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传空字符串 nil，否则，3证书Path均不可空
 // 文档地址：https://qpay.qq.com/buss/wiki/38/1207
-func (q *Client) Refund(ctx context.Context, bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (qqRsp *RefundResponse, err error) {
+func (q *Client) Refund(ctx context.Context, bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath any) (qqRsp *RefundResponse, err error) {
 	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}

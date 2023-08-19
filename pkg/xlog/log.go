@@ -19,39 +19,7 @@ var (
 )
 
 type XLogger interface {
-	LogOut(col *ColorType, format *string, args ...interface{})
-}
-
-func Info(args ...interface{}) {
-	infoLog.LogOut(nil, nil, args...)
-}
-
-func Infof(format string, args ...interface{}) {
-	infoLog.LogOut(nil, &format, args...)
-}
-
-func Debug(args ...interface{}) {
-	debugLog.LogOut(nil, nil, args...)
-}
-
-func Debugf(format string, args ...interface{}) {
-	debugLog.LogOut(nil, &format, args...)
-}
-
-func Warn(args ...interface{}) {
-	warnLog.LogOut(nil, nil, args...)
-}
-
-func Warnf(format string, args ...interface{}) {
-	warnLog.LogOut(nil, &format, args...)
-}
-
-func Error(args ...interface{}) {
-	errLog.LogOut(nil, nil, args...)
-}
-
-func Errorf(format string, args ...interface{}) {
-	errLog.LogOut(nil, &format, args...)
+	LogOut(col *ColorType, format *string, args ...any)
 }
 
 func SetDebugLog(logger XLogger) {
@@ -68,4 +36,36 @@ func SetWarnLog(logger XLogger) {
 
 func SetErrLog(logger XLogger) {
 	errLog = logger
+}
+
+func Info(args ...any) {
+	infoLog.LogOut(nil, nil, args...)
+}
+
+func Infof(format string, args ...any) {
+	infoLog.LogOut(nil, &format, args...)
+}
+
+func Debug(args ...any) {
+	debugLog.LogOut(nil, nil, args...)
+}
+
+func Debugf(format string, args ...any) {
+	debugLog.LogOut(nil, &format, args...)
+}
+
+func Warn(args ...any) {
+	warnLog.LogOut(nil, nil, args...)
+}
+
+func Warnf(format string, args ...any) {
+	warnLog.LogOut(nil, &format, args...)
+}
+
+func Error(args ...any) {
+	errLog.LogOut(nil, nil, args...)
+}
+
+func Errorf(format string, args ...any) {
+	errLog.LogOut(nil, &format, args...)
 }

@@ -17,7 +17,7 @@ import (
 // SendCashRed 创建现金红包
 // 注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
 // 文档：https://qpay.qq.com/buss/wiki/221/1220
-func (q *Client) SendCashRed(ctx context.Context, bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath interface{}) (qqRsp *SendCashRedResponse, err error) {
+func (q *Client) SendCashRed(ctx context.Context, bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath any) (qqRsp *SendCashRedResponse, err error) {
 	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return nil, err
 	}
