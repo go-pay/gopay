@@ -9,8 +9,6 @@ import (
 	"github.com/go-pay/gopay"
 )
 
-//
-
 // 创建H5支付单
 // 文档：https://payjp.lakala.com/docs/cn/#api-MobileH5-NewMobileH5Pay
 func (c *Client) CreateH5PayOrder(ctx context.Context, orderId string, bm gopay.BodyMap) (rsp *PaymentRsp, err error) {

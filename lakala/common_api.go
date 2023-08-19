@@ -216,7 +216,7 @@ func (c *Client) GetCoupon(ctx context.Context, couponId string) (rsp *GetCoupon
 
 // 付款通知
 // 文档：https://payjp.lakala.com/docs/cn/#api-CommonApi-PayNotice
-func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) {
+func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 	var buf bytes.Buffer
 	if _, err = buf.ReadFrom(req.Body); err != nil {
 		return nil, err

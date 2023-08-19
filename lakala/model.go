@@ -186,6 +186,37 @@ type RetailPayRsp struct {
 	ChannelErrorMessage string `json:"channel_error_message,omitempty"` // 渠道错误描述，订单提交失败、支付失败或已关闭时存在
 }
 
+type ReportRsp struct {
+	ErrorCode
+	Reports []*ReportSub `json:"reports,omitempty"`
+}
+
+type ReportSub struct {
+	ReportId                string `json:"report_id,omitempty"` // Lakala海关单号
+	PartnerReportId         string `json:"partner_report_id,omitempty"`
+	Status                  string `json:"status,omitempty"`
+	Channel                 string `json:"channel,omitempty"`
+	ChannelReportId         string `json:"channel_report_id,omitempty"`
+	PartnerSubReportId      string `json:"partner_sub_report_id,omitempty"`
+	ChannelSubReportId      string `json:"channel_sub_report_id,omitempty"`
+	Customs                 string `json:"customs,omitempty"`
+	MchCustomsNo            string `json:"mch_customs_no,omitempty"`
+	MchCustomsName          string `json:"mch_customs_name,omitempty"`
+	OrderId                 string `json:"order_id,omitempty"`
+	TransactionId           string `json:"transaction_id,omitempty"`
+	OrderCurrency           string `json:"order_currency,omitempty"`
+	OrderAmount             int    `json:"order_amount,omitempty"`
+	SubOrderFee             int    `json:"sub_order_fee,omitempty"`
+	SubProductFee           int    `json:"sub_product_fee,omitempty"`
+	SubTransportFee         int    `json:"sub_transport_fee,omitempty"`
+	CreationDate            string `json:"creation_date,omitempty"`
+	LastUpdateDate          string `json:"last_update_date,omitempty"`
+	VerifyDepartment        string `json:"verify_department,omitempty"`
+	VerifyDepartmentTradeId string `json:"verify_department_trade_id,omitempty"`
+	ErrorCode               string `json:"error_code,omitempty"`
+	ErrorMsg                string `json:"error_msg,omitempty"`
+}
+
 // CommonApi - 付款通知
 type NotifyRequest struct {
 	Time           string  `json:"time,omitempty"`             // UTC时间戳
