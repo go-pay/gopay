@@ -2,7 +2,7 @@
 
 # GoPay
 
-### 微信、支付宝、PayPal、QQ 的 Golang 版本SDK
+### 微信、支付宝、QQ、通联支付、拉卡拉、PayPal 的 Golang 版本SDK
 
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
 [![Github](https://img.shields.io/github/forks/go-pay/gopay?label=Fork&style=social)](https://github.com/go-pay/gopay/fork)
