@@ -3,27 +3,17 @@ package lakala
 const (
 	baseUrlProd = "https://pay.lakala-japan.com" // 正式 URL
 
-	//----qr_code----
-	// https://pay.lakala-japan.com/api/v1.0/gateway/partners/{partner_code}/orders/{order_id}
-	ordersUrl = "/api/v1.0/gateway/partners/%s/orders/%s"
-	// https://pay.lakala-japan.com/api/v1.0/gateway/partners/{partner_code}/native_orders/{order_id}
-	nativeOrdersUrl = "/api/v1.0/gateway/partners/%s/native_orders/%s"
-	// https://pay.lakala-japan.com/api/v1.0/gateway/partners/{partner_code}/orders/{order_id}/pay
-	orderspayUrl = "/api/v1.0/gateway/partners/%s/native_orders/%s"
-	//----qr_code----
+	// ----qr_code----
+	newQrcode    = "/api/v1.0/gateway/partners/%s/orders/%s"        // partner_code、order_id 创建QRCode支付单 PUT
+	nativeQrcode = "/api/v1.0/gateway/partners/%s/native_orders/%s" // partner_code、order_id 创建Native QRCode支付单 PUT
+	qrcodePay    = "/api/v1.0/gateway/partners/%s/orders/%s/pay"    // partner_code、order_id QRCode支付跳转页 GET
 
-	//----js_api----
-	// https://pay.lakala-japan.com/api/v1.0/jsapi_gateway/partners/{partner_code}/orders/{order_id}
-	jsApiUrl = "/api/v1.0/jsapi_gateway/partners/%s/orders/%s"
-	//https://pay.lakala-japan.com/api/v1.0/gateway/partners/{partner_code}/native_jsapi/{order_id}
-	jsApiNativeUrl = "/api/v1.0/gateway/partners/%s/native_jsapi/%s"
-	// https://pay.lakala-japan.com/api/v1.0/wechat_jsapi_gateway/partners/{partner_code}_order_{order_id}
-	jsApiWechatUrl = "/api/v1.0/wechat_jsapi_gateway/partners/%s_order_%s"
-	// https://pay.lakala-japan.com/api/v1.0/gateway/alipay/partners/{partner_code}/orders/{order_id}/app_pay
-	jsApiAppPayUrl = "/api/v1.0/jsapi_gateway/partners/%s/orders/%s/app_pay"
-	// https://pay.lakala-japan.com/api/v1.0/alipay_connect/partners/{partner_code}/orders/{order_id}/web_pay
-	jsApiWebPayUrl = "/api/v1.0/jsapi_gateway/partners/%s/orders/%s/web_pay"
 	// ----js_api----
+	newJSAPI           = "/api/v1.0/jsapi_gateway/partners/%s/orders/%s"          // partner_code、order_id 创建JSAPI订单 PUT
+	newNativeJSAPI     = "/api/v1.0/gateway/partners/%s/native_jsapi/%s"          // partner_code、order_id 创建Native JSAPI订单(offline) PUT
+	wechatJSAPIPay     = "/api/v1.0/wechat_jsapi_gateway/partners/%s_order_%s"    // partner_code、order_id 微信JSAPI支付跳转页 GET
+	alipayJSAPIPay     = "/api/v1.0/gateway/alipay/partners/%s/orders/%s/app_pay" // partner_code、order_id 支付宝JSAPI支付跳转页 GET
+	alipayPlusJSAPIPay = "/api/v1.0/alipay_connect/partners/%s/orders/%s/web_pay" // partner_code、order_id Alipay+JSAPI支付跳转页 GET
 
 	// ----sdk_payment----
 	// https://pay.lakala-japan.com/api/v1.0/gateway/partners/{partner_code}/app_orders/{order_id}

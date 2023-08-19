@@ -19,24 +19,21 @@ type Client struct {
 	ctx            context.Context   // 上下文
 	PartnerCode    string            // partner_code:商户编码，由4~6位大写字母或数字构成
 	credentialCode string            // credential_code:系统为商户分配的开发校验码，请妥善保管，不要在公开场合泄露
-	WxAppid        string            // 微信appid，微信通道要求必填
 	bodySize       int               // http response body size(MB), default is 10MB
 	IsProd         bool              // 是否生产环境
 	DebugSwitch    gopay.DebugSwitch // 调试开关，是否打印日志
 }
 
 // NewClient 初始化lakala户端
-// wxAppid: 微信appid，微信通道要求必填
 // partnerCode: 商户编码，由4~6位大写字母或数字构成
 // credentialCode: 系统为商户分配的开发校验码，请妥善保管，不要在公开场合泄露
 // isProd: 是否生产环境
-func NewClient(wxAppid, partnerCode, credentialCode string, isProd bool) (client *Client, err error) {
+func NewClient(partnerCode, credentialCode string, isProd bool) (client *Client, err error) {
 	if partnerCode == util.NULL || credentialCode == util.NULL {
 		return nil, gopay.MissLakalaInitParamErr
 	}
 	client = &Client{
 		ctx:            context.Background(),
-		WxAppid:        wxAppid,
 		PartnerCode:    partnerCode,
 		credentialCode: credentialCode,
 		IsProd:         isProd,
@@ -142,22 +139,6 @@ func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs 
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
 	}
 	return bs, nil
-}
-
-// GET 发起请求
-func (c *Client) doGetParams(ctx context.Context, path string, params gopay.BodyMap) (res *http.Response, bs []byte, err error) {
-	httpClient := xhttp.NewClient().Type(xhttp.TypeJSON)
-	if c.bodySize > 0 {
-		httpClient.SetBodySize(c.bodySize)
-	}
-	httpClient.Header.Add("Content-Type", "application/json")
-	httpClient.Header.Add("Accept", "application/json")
-	var url = baseUrlProd + path
-	res, bs, err = httpClient.Get(url).EndBytes(ctx)
-	if err != nil {
-		return nil, nil, err
-	}
-	return res, bs, nil
 }
 
 // GET 发起请求

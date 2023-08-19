@@ -158,19 +158,17 @@ type GetCouponRsp struct {
 }
 
 type QRCodeRsp struct {
-	Channel string `json:"channel,omitempty"` // 支付渠道 允许值: Alipay, Alipay+, Wechat, UnionPay
-
-	PartnerCode string `json:"partner_code,omitempty"` // 商户编码
-	FullName    string `json:"full_name,omitempty"`    // 商户注册全名
-	PartnerName string `json:"partner_name,omitempty"` // 商户名称
-
-	OrderId        string `json:"order_id,omitempty"`         //Lakala订单ID
-	PartnerOrderId string `json:"partner_order_id,omitempty"` //商户订单ID
-
-	CodeUrl   string `json:"code_url,omitempty"`   // 支付码链接，商户可以据此自行生成二维码
-	QrcodeImg string `json:"qrcode_img,omitempty"` // Base64封装的二维码图片，可直接作为img的src属性
-	PayUrl    string `json:"pay_url,omitempty"`    // 跳转URL
-
+	ErrorCode
+	Channel        string `json:"channel,omitempty"`          // 支付渠道 允许值: Alipay, Alipay+, Wechat, UnionPay
+	PartnerCode    string `json:"partner_code,omitempty"`     // 商户编码
+	FullName       string `json:"full_name,omitempty"`        // 商户注册全名
+	PartnerName    string `json:"partner_name,omitempty"`     // 商户名称
+	OrderId        string `json:"order_id,omitempty"`         // Lakala订单ID
+	PartnerOrderId string `json:"partner_order_id,omitempty"` // 商户订单ID
+	CodeUrl        string `json:"code_url,omitempty"`         // 支付码链接，商户可以据此自行生成二维码
+	QrcodeImg      string `json:"qrcode_img,omitempty"`       // Base64封装的二维码图片，可直接作为img的src属性
+	PayUrl         string `json:"pay_url,omitempty"`          // 跳转URL
+	SdkParams      string `json:"sdk_params,omitempty"`       // Native Jsapi支付所需参数(Json字符串)
 }
 
 type SdkParams struct { //调用SDK的参数字符串
@@ -203,10 +201,6 @@ type SDKPaymentRsp struct {
 	OrderId     string `json:"order_id,omitempty"`     //Lakala订单ID
 	ReturnCode  string `json:"return_code,omitempty"`  //执行结果
 }
-
-// CommonApi - 申请退款1.2.0
-
-// CommonApi - 查询订单状态1.2.0
 
 // CommonApi - 付款通知
 type NotifyRequest struct {
