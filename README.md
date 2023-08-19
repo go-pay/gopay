@@ -47,8 +47,9 @@ func main() {
 
 * #### [支付宝支付](https://github.com/go-pay/gopay/blob/main/doc/alipay.md)
 * #### [微信支付](https://github.com/go-pay/gopay/blob/main/doc/wechat_v3.md)
-* #### [通联支付](https://github.com/go-pay/gopay/blob/main/doc/allinpay.md)
 * #### [QQ支付](https://github.com/go-pay/gopay/blob/main/doc/qq.md)
+* #### [通联支付](https://github.com/go-pay/gopay/blob/main/doc/allinpay.md)
+* #### [拉卡拉支付](https://github.com/go-pay/gopay/blob/main/doc/lakala.md)
 * #### [Paypal支付](https://github.com/go-pay/gopay/blob/main/doc/paypal.md)
 * #### [Apple支付校验](https://github.com/go-pay/gopay/blob/main/doc/apple.md)
 
@@ -61,8 +62,9 @@ func main() {
 * 各支付方式接入，请仔细查看 `xxx_test.go` 使用方式
     * `gopay/wechat/v3/client_test.go`
     * `gopay/alipay/client_test.go`
-    * `gopay/allinpay/client_test.go`
     * `gopay/qq/client_test.go`
+    * `gopay/allinpay/client_test.go`
+    * `gopay/lakala/client_test.go`
     * `gopay/paypal/client_test.go`
     * `gopay/apple/verify_test.go`
     * 或 examples
