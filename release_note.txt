@@ -1,3 +1,9 @@
+版本号：Release 1.5.97
+修改记录：
+   (1) 支付宝：新增 client.TradeOrderOnSettleQuery()，分账剩余金额查询。
+   (2) 支付宝：新增 client.TradeRoyaltyRateQuery()，分账比例查询。
+   (3) 支付宝：更新部分结构体。
+
 版本号：Release 1.5.96
 修改记录：
    (1) 拉卡拉：新增拉卡拉支付。
