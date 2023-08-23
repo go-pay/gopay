@@ -182,6 +182,7 @@ type TradeQuery struct {
 	FundBillList        []*TradeFundBill `json:"fund_bill_list"`
 	StoreName           string           `json:"store_name,omitempty"`
 	BuyerUserId         string           `json:"buyer_user_id,omitempty"`
+	BuyerOpenId         string           `json:"buyer_open_id,omitempty"`
 	ChargeAmount        string           `json:"charge_amount,omitempty"`
 	ChargeFlags         string           `json:"charge_flags,omitempty"`
 	SettlementId        string           `json:"settlement_id,omitempty"`
