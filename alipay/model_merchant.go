@@ -42,6 +42,20 @@ type TradeOrderSettleQueryResponse struct {
 	Sign         string                 `json:"sign"`
 }
 
+type TradeOrderOnSettleQueryResponse struct {
+	Response     *TradeOrderOnSettleQuery `json:"alipay_trade_order_onsettle_query_response"`
+	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`
+	SignData     string                   `json:"-"`
+	Sign         string                   `json:"sign"`
+}
+
+type TradeRoyaltyRateQueryResponse struct {
+	Response     *TradeRoyaltyRateQuery `json:"alipay_trade_royalty_rate_query_response"`
+	AlipayCertSn string                 `json:"alipay_cert_sn,omitempty"`
+	SignData     string                 `json:"-"`
+	Sign         string                 `json:"sign"`
+}
+
 // =========================================================分割=========================================================
 
 type TradeRelationBind struct {
@@ -89,4 +103,15 @@ type RoyaltyDetail struct {
 	DetailId      string `json:"detail_id"`
 	ErrorCode     string `json:"error_code"`
 	ErrorDesc     string `json:"error_desc"`
+}
+
+type TradeOrderOnSettleQuery struct {
+	ErrorResponse
+	UnsettledAmount string `json:"unsettled_amount,omitempty"`
+}
+
+type TradeRoyaltyRateQuery struct {
+	ErrorResponse
+	UserId   string `json:"user_id,omitempty"`
+	MaxRatio string `json:"max_ratio,omitempty"`
 }

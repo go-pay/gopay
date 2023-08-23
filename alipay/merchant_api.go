@@ -145,3 +145,49 @@ func (a *Client) TradeOrderSettleQuery(ctx context.Context, bm gopay.BodyMap) (a
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+// alipay.trade.order.onsettle.query(分账剩余金额查询)
+// 文档地址：https://opendocs.alipay.com/open/d87dc009_alipay.trade.order.onsettle.query
+func (a *Client) TradeOrderOnSettleQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeOrderOnSettleQueryResponse, err error) {
+	err = bm.CheckEmptyError("trade_no")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.order.onsettle.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(TradeOrderOnSettleQueryResponse)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.trade.royalty.rate.query(分账比例查询)
+// 文档地址：https://opendocs.alipay.com/open/6f314ee9_alipay.trade.royalty.rate.query
+func (a *Client) TradeRoyaltyRateQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeRoyaltyRateQueryResponse, err error) {
+	err = bm.CheckEmptyError("out_request_no")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.royalty.rate.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(TradeRoyaltyRateQueryResponse)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
