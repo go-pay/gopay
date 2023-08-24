@@ -16,10 +16,10 @@ import (
 //
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter3_1.shtml
 func (w *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *UnifiedOrderResponse, bs []byte, url string, statusCode int, header http.Header, err error) {
-	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "notify_url", "trade_type")
-	if err != nil {
-		return nil, nil, "", 0, nil, err
-	}
+	// err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "notify_url", "trade_type")
+	// if err != nil {
+	// 	return nil, nil, "", 0, nil, err
+	// }
 	if w.IsProd {
 		bs, url, statusCode, header, err = w.doProdPost(ctx, bm, unifiedOrder, nil)
 	} else {
@@ -40,10 +40,10 @@ func (w *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Uni
 //
 //	文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/open/chapter4_1.shtml
 func (w *Client) Micropay(ctx context.Context, bm gopay.BodyMap) (wxRsp *MicropayResponse, bs []byte, url string, statusCode int, header http.Header, err error) {
-	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "auth_code")
-	if err != nil {
-		return nil, nil, "", 0, nil, err
-	}
+	// err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "auth_code")
+	// if err != nil {
+	// 	return nil, nil, "", 0, nil, err
+	// }
 	if w.IsProd {
 		bs, url, statusCode, header, err = w.doProdPost(ctx, bm, microPay, nil)
 	} else {
