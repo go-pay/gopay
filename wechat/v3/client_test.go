@@ -5,7 +5,6 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"encoding/hex"
-	"io/ioutil"
 	"os"
 	"testing"
 	"time"
@@ -381,9 +380,9 @@ func TestV3BillDownLoadBill(t *testing.T) {
 	xlog.Debugf("fileBytes:%v", fileBytes)
 
 	// 申请账单时采用 GZIP 压缩，返回 bytes 为压缩文件
-	//err = ioutil.WriteFile("bill.zip", fileBytes, 0666)
+	//err = os.WriteFile("bill.zip", fileBytes, 0666)
 	//if err != nil {
-	//	xlog.Error("ioutil.WriteFile:", err)
+	//	xlog.Error("os.WriteFile:", err)
 	//	return
 	//}
 }
@@ -501,7 +500,7 @@ func TestV3ProfitSharingUnsplitQuery(t *testing.T) {
 
 func TestClientV3_V3MediaUploadImage(t *testing.T) {
 	fileName := "logo.png"
-	fileContent, err := ioutil.ReadFile("../../logo.png")
+	fileContent, err := os.ReadFile("../../logo.png")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -530,7 +529,7 @@ func TestClientV3_V3MediaUploadImage(t *testing.T) {
 
 func TestClientV3_V3ComplaintUploadImage(t *testing.T) {
 	fileName := "logo.png"
-	fileContent, err := ioutil.ReadFile("../../logo.png")
+	fileContent, err := os.ReadFile("../../logo.png")
 	if err != nil {
 		xlog.Error(err)
 		return

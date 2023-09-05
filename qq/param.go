@@ -11,7 +11,7 @@ import (
 	"errors"
 	"fmt"
 	"hash"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/go-pay/gopay"
@@ -20,10 +20,10 @@ import (
 )
 
 // 添加QQ证书 Path 路径
-//	certFilePath：apiclient_cert.pem 路径
-//	keyFilePath：apiclient_key.pem 路径
-//	pkcs12FilePath：apiclient_cert.p12 路径
-//	返回err
+// certFilePath：apiclient_cert.pem 路径
+// keyFilePath：apiclient_key.pem 路径
+// pkcs12FilePath：apiclient_cert.p12 路径
+// 返回err
 func (q *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath any) (err error) {
 	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return err
@@ -39,10 +39,10 @@ func (q *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath any) 
 }
 
 // 添加QQ证书内容
-//	certFileContent：apiclient_cert.pem 内容
-//	keyFileContent：apiclient_key.pem 内容
-//	pkcs12FileContent：apiclient_cert.p12 内容
-//	返回err
+// certFileContent：apiclient_cert.pem 内容
+// keyFileContent：apiclient_key.pem 内容
+// pkcs12FileContent：apiclient_cert.p12 内容
+// 返回err
 func (q *Client) AddCertFileContent(certFileContent, keyFileContent, pkcs12FileContent []byte) (err error) {
 	return q.AddCertFilePath(certFileContent, keyFileContent, pkcs12FileContent)
 }
@@ -130,23 +130,23 @@ func (q *Client) addCertConfig(certFile, keyFile, pkcs12File any) (tlsConfig *tl
 		if _, ok := certFile.([]byte); ok {
 			certPem = certFile.([]byte)
 		} else {
-			certPem, err = ioutil.ReadFile(certFile.(string))
+			certPem, err = os.ReadFile(certFile.(string))
 		}
 		if _, ok := keyFile.([]byte); ok {
 			keyPem = keyFile.([]byte)
 		} else {
-			keyPem, err = ioutil.ReadFile(keyFile.(string))
+			keyPem, err = os.ReadFile(keyFile.(string))
 		}
 		if err != nil {
-			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
+			return nil, fmt.Errorf("os.ReadFile：%w", err)
 		}
 	} else if pkcs12File != nil {
 		var pfxData []byte
 		if _, ok := pkcs12File.([]byte); ok {
 			pfxData = pkcs12File.([]byte)
 		} else {
-			if pfxData, err = ioutil.ReadFile(pkcs12File.(string)); err != nil {
-				return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
+			if pfxData, err = os.ReadFile(pkcs12File.(string)); err != nil {
+				return nil, fmt.Errorf("os.ReadFile：%w", err)
 			}
 		}
 		blocks, err := pkcs12.ToPEM(pfxData, q.MchId)
