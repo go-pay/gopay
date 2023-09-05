@@ -386,6 +386,8 @@ xlog.Infof("%+v", phone)
   * 统一收单交易结算接口：`client.TradeOrderSettle()`
   * 统一收单确认结算接口：`client.TradeSettleConfirm()`
   * 交易分账查询接口：`client.TradeOrderSettleQuery()`
+  * 分账剩余金额查询：`client.TradeOrderOnSettleQuery()`
+  * 分账比例查询：`client.TradeRoyaltyRateQuery()`
 
 ### 支付宝公共 API
 

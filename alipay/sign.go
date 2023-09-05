@@ -15,7 +15,7 @@ import (
 	"errors"
 	"fmt"
 	"hash"
-	"io/ioutil"
+	"os"
 	"reflect"
 	"strings"
 
@@ -63,7 +63,7 @@ func GetCertSN(certPathOrData any) (sn string, err error) {
 	var certData []byte
 	switch pathOrData := certPathOrData.(type) {
 	case string:
-		certData, err = ioutil.ReadFile(pathOrData)
+		certData, err = os.ReadFile(pathOrData)
 		if err != nil {
 			return util.NULL, err
 		}
@@ -102,7 +102,7 @@ func GetRootCertSN(rootCertPathOrData any) (sn string, err error) {
 	)
 	switch pathOrData := rootCertPathOrData.(type) {
 	case string:
-		certData, err = ioutil.ReadFile(pathOrData)
+		certData, err = os.ReadFile(pathOrData)
 		if err != nil {
 			return util.NULL, err
 		}
@@ -436,7 +436,7 @@ func verifySignCert(signData, sign, signType string, alipayPublicKeyCert any) (e
 		bytes []byte
 	)
 	if v, ok := alipayPublicKeyCert.(string); ok {
-		if bytes, err = ioutil.ReadFile(v); err != nil {
+		if bytes, err = os.ReadFile(v); err != nil {
 			return fmt.Errorf("支付宝公钥文件读取失败: %w", err)
 		}
 	} else {

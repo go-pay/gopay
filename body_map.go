@@ -226,6 +226,20 @@ func (bm BodyMap) CheckEmptyError(keys ...string) error {
 	return nil
 }
 
+func (bm BodyMap) CheckNotAllEmptyError(keys ...string) error {
+	var emptyKeys []string
+	for _, k := range keys {
+		if v := bm.GetString(k); v == NULL {
+			emptyKeys = append(emptyKeys, k)
+		}
+	}
+	// if all key is empty, return error
+	if len(emptyKeys) == len(keys) {
+		return fmt.Errorf("[%w], %v", MissParamErr, strings.Join(emptyKeys, ", "))
+	}
+	return nil
+}
+
 func convertToString(v any) (str string) {
 	if v == nil {
 		return NULL

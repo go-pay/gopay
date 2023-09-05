@@ -1,7 +1,7 @@
 package alipay
 
 import (
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/go-pay/gopay"
@@ -91,7 +91,7 @@ func TestVerifySignWithCert(t *testing.T) {
 	}
 	xlog.Debug("VerifySignWithCert", "OK:", ok)
 	// fileByte
-	bts, err := ioutil.ReadFile(filepath)
+	bts, err := os.ReadFile(filepath)
 	if err != nil {
 		xlog.Errorf("VerifySignWithCert(%+v),error:%+v", bm, err)
 		return
@@ -118,7 +118,7 @@ func TestGetCertSN(t *testing.T) {
 		return
 	}
 	xlog.Debug(sn)
-	bts, _ := ioutil.ReadFile(pubKeyPath)
+	bts, _ := os.ReadFile(pubKeyPath)
 	sn, err = GetCertSN(bts)
 	if err != nil {
 		xlog.Errorf("GetCertSN(),error:%+v", err)
@@ -132,7 +132,7 @@ func TestGetCertSN(t *testing.T) {
 		return
 	}
 	xlog.Debug(sn)
-	bts, _ = ioutil.ReadFile(rootCrtPath)
+	bts, _ = os.ReadFile(rootCrtPath)
 	sn, err = GetRootCertSN(bts)
 	if err != nil {
 		xlog.Errorf("GetCertSN(),error:%+v", err)

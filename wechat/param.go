@@ -12,7 +12,7 @@ import (
 	"errors"
 	"fmt"
 	"hash"
-	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/go-pay/gopay"
@@ -109,23 +109,23 @@ func (w *Client) addCertConfig(certFile, keyFile, pkcs12File any) (tlsConfig *tl
 		if _, ok := certFile.([]byte); ok {
 			certPem = certFile.([]byte)
 		} else {
-			certPem, err = ioutil.ReadFile(certFile.(string))
+			certPem, err = os.ReadFile(certFile.(string))
 		}
 		if _, ok := keyFile.([]byte); ok {
 			keyPem = keyFile.([]byte)
 		} else {
-			keyPem, err = ioutil.ReadFile(keyFile.(string))
+			keyPem, err = os.ReadFile(keyFile.(string))
 		}
 		if err != nil {
-			return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
+			return nil, fmt.Errorf("os.ReadFile：%w", err)
 		}
 	} else if pkcs12File != nil {
 		var pfxData []byte
 		if _, ok := pkcs12File.([]byte); ok {
 			pfxData = pkcs12File.([]byte)
 		} else {
-			if pfxData, err = ioutil.ReadFile(pkcs12File.(string)); err != nil {
-				return nil, fmt.Errorf("ioutil.ReadFile：%w", err)
+			if pfxData, err = os.ReadFile(pkcs12File.(string)); err != nil {
+				return nil, fmt.Errorf("os.ReadFile：%w", err)
 			}
 		}
 		blocks, err := pkcs12.ToPEM(pfxData, w.MchId)

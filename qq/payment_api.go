@@ -11,7 +11,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"reflect"
 	"strings"
@@ -25,9 +24,9 @@ import (
 // 返回参数bm：Notify请求的参数
 // 返回参数err：错误信息
 func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
-	bs, err := ioutil.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
+	bs, err := io.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
 	if err != nil {
-		return nil, fmt.Errorf("ioutil.ReadAll：%w", err)
+		return nil, fmt.Errorf("io.ReadAll：%w", err)
 	}
 	bm = make(gopay.BodyMap)
 	if err = xml.Unmarshal(bs, &bm); err != nil {

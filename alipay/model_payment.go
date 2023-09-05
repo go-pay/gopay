@@ -160,44 +160,77 @@ type TradeCreate struct {
 
 type TradeQuery struct {
 	ErrorResponse
-	TradeNo             string           `json:"trade_no,omitempty"`
-	OutTradeNo          string           `json:"out_trade_no,omitempty"`
-	BuyerLogonId        string           `json:"buyer_logon_id,omitempty"`
-	TradeStatus         string           `json:"trade_status,omitempty"`
-	TotalAmount         string           `json:"total_amount,omitempty"`
-	TransCurrency       string           `json:"trans_currency,omitempty"`
-	SettleCurrency      string           `json:"settle_currency,omitempty"`
-	SettleAmount        string           `json:"settle_amount,omitempty"`
-	PayCurrency         string           `json:"pay_currency,omitempty"`
-	PayAmount           string           `json:"pay_amount,omitempty"`
-	SettleTransRate     string           `json:"settle_trans_rate,omitempty"`
-	TransPayRate        string           `json:"trans_pay_rate,omitempty"`
-	BuyerPayAmount      string           `json:"buyer_pay_amount,omitempty"`
-	PointAmount         string           `json:"point_amount,omitempty"`
-	InvoiceAmount       string           `json:"invoice_amount,omitempty"`
-	SendPayDate         string           `json:"send_pay_date,omitempty"`
-	ReceiptAmount       string           `json:"receipt_amount,omitempty"`
-	StoreId             string           `json:"store_id,omitempty"`
-	TerminalId          string           `json:"terminal_id,omitempty"`
-	FundBillList        []*TradeFundBill `json:"fund_bill_list"`
-	StoreName           string           `json:"store_name,omitempty"`
-	BuyerUserId         string           `json:"buyer_user_id,omitempty"`
-	BuyerOpenId         string           `json:"buyer_open_id,omitempty"`
-	ChargeAmount        string           `json:"charge_amount,omitempty"`
-	ChargeFlags         string           `json:"charge_flags,omitempty"`
-	SettlementId        string           `json:"settlement_id,omitempty"`
-	TradeSettleInfo     *TradeSettleInfo `json:"trade_settle_info,omitempty"`
-	AuthTradePayMode    string           `json:"auth_trade_pay_mode,omitempty"`
-	BuyerUserType       string           `json:"buyer_user_type,omitempty"`
-	MdiscountAmount     string           `json:"mdiscount_amount,omitempty"`
-	DiscountAmount      string           `json:"discount_amount,omitempty"`
-	Subject             string           `json:"subject,omitempty"`
-	Body                string           `json:"body,omitempty"`
-	AlipaySubMerchantId string           `json:"alipay_sub_merchant_id,omitempty"`
-	ExtInfos            string           `json:"ext_infos,omitempty"`
-	HbFqPayInfo         *HbFqPayInfo     `json:"hb_fq_pay_info,omitempty"`
-	CreditPayMode       string           `json:"credit_pay_mode"`
-	CreditBizOrderId    string           `json:"credit_biz_order_id"`
+	TradeNo               string           `json:"trade_no,omitempty"`
+	OutTradeNo            string           `json:"out_trade_no,omitempty"`
+	BuyerLogonId          string           `json:"buyer_logon_id,omitempty"`
+	TradeStatus           string           `json:"trade_status,omitempty"`
+	TotalAmount           string           `json:"total_amount,omitempty"`
+	TransCurrency         string           `json:"trans_currency,omitempty"`
+	SettleCurrency        string           `json:"settle_currency,omitempty"`
+	SettleAmount          string           `json:"settle_amount,omitempty"`
+	PayCurrency           string           `json:"pay_currency,omitempty"`
+	PayAmount             string           `json:"pay_amount,omitempty"`
+	SettleTransRate       string           `json:"settle_trans_rate,omitempty"`
+	TransPayRate          string           `json:"trans_pay_rate,omitempty"`
+	BuyerPayAmount        string           `json:"buyer_pay_amount,omitempty"`
+	PointAmount           string           `json:"point_amount,omitempty"`
+	InvoiceAmount         string           `json:"invoice_amount,omitempty"`
+	SendPayDate           string           `json:"send_pay_date,omitempty"`
+	ReceiptAmount         string           `json:"receipt_amount,omitempty"`
+	StoreId               string           `json:"store_id,omitempty"`
+	TerminalId            string           `json:"terminal_id,omitempty"`
+	FundBillList          []*TradeFundBill `json:"fund_bill_list"`
+	StoreName             string           `json:"store_name,omitempty"`
+	BuyerUserId           string           `json:"buyer_user_id,omitempty"`
+	BuyerOpenId           string           `json:"buyer_open_id,omitempty"`
+	DiscountGoodsDetail   string           `json:"discount_goods_detail,omitempty"`
+	IndustrySepcDetail    string           `json:"industry_sepc_detail,omitempty"`
+	IndustrySepcDetailGov string           `json:"industry_sepc_detail_gov,omitempty"`
+	IndustrySepcDetailAcc string           `json:"industry_sepc_detail_acc,omitempty"`
+	ChargeAmount          string           `json:"charge_amount,omitempty"`
+	ChargeFlags           string           `json:"charge_flags,omitempty"`
+	SettlementId          string           `json:"settlement_id,omitempty"`
+	TradeSettleInfo       *TradeSettleInfo `json:"trade_settle_info,omitempty"`
+	AuthTradePayMode      string           `json:"auth_trade_pay_mode,omitempty"`
+	BuyerUserType         string           `json:"buyer_user_type,omitempty"`
+	MdiscountAmount       string           `json:"mdiscount_amount,omitempty"`
+	DiscountAmount        string           `json:"discount_amount,omitempty"`
+	Subject               string           `json:"subject,omitempty"`
+	Body                  string           `json:"body,omitempty"`
+	AlipaySubMerchantId   string           `json:"alipay_sub_merchant_id,omitempty"`
+	ExtInfos              string           `json:"ext_infos,omitempty"`
+	PassbackParams        string           `json:"passback_params,omitempty"`
+	HbFqPayInfo           *HbFqPayInfo     `json:"hb_fq_pay_info,omitempty"`
+	CreditPayMode         string           `json:"credit_pay_mode,omitempty"`
+	CreditBizOrderId      string           `json:"credit_biz_order_id,omitempty"`
+	HybAmount             string           `json:"hyb_amount,omitempty"`
+	BkagentRespInfo       *BkAgentRespInfo `json:"bkagent_resp_info,omitempty"`
+	ChargeInfoList        []*ChargeInfo    `json:"charge_info_list,omitempty"`
+	BizSettleMode         string           `json:"biz_settle_mode,omitempty"`
+}
+
+type BkAgentRespInfo struct {
+	BindtrxId        string `json:"bindtrx_id,omitempty"`
+	BindclrissrId    string `json:"bindclrissr_id,omitempty"`
+	BindpyeracctbkId string `json:"bindpyeracctbk_id,omitempty"`
+	BkpyeruserCode   string `json:"bkpyeruser_code,omitempty"`
+	EstterLocation   string `json:"estter_location,omitempty"`
+}
+
+type ChargeInfo struct {
+	ChargeFee               string    `json:"charge_fee,omitempty"`
+	OriginalChargeFee       string    `json:"original_charge_fee,omitempty"`
+	SwitchFeeRate           string    `json:"switch_fee_rate,omitempty"`
+	IsRatingOnTradeReceiver string    `json:"is_rating_on_trade_receiver,omitempty"`
+	IsRatingOnSwitch        string    `json:"is_rating_on_switch,omitempty"`
+	ChargeType              string    `json:"charge_type,omitempty"`
+	SubFeeDetailList        []*SubFee `json:"sub_fee_detail_list,omitempty"`
+}
+
+type SubFee struct {
+	ChargeFee         string `json:"charge_fee,omitempty"`
+	OriginalChargeFee string `json:"original_charge_fee,omitempty"`
+	SwitchFeeRate     string `json:"switch_fee_rate,omitempty"`
 }
 
 type TradeSettleInfo struct {

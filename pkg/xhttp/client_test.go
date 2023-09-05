@@ -2,7 +2,7 @@ package xhttp
 
 import (
 	"context"
-	"io/ioutil"
+	"os"
 	"testing"
 	"time"
 
@@ -12,9 +12,9 @@ import (
 )
 
 type HttpGet struct {
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	Data    any `json:"data,omitempty"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Data    any    `json:"data,omitempty"`
 }
 
 var ctx = context.Background()
@@ -40,7 +40,7 @@ func TestHttpGet(t *testing.T) {
 }
 
 func TestHttpUploadFile(t *testing.T) {
-	fileContent, err := ioutil.ReadFile("../../logo.png")
+	fileContent, err := os.ReadFile("../../logo.png")
 	if err != nil {
 		xlog.Error(err)
 		return
