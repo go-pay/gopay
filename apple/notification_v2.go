@@ -44,7 +44,12 @@ func DecodeSignedPayload(signedPayload string) (payload *NotificationV2Payload, 
 // rsp.NotificationHistory[x].SignedPayload use apple.DecodeSignedPayload() to decode
 // Doc: https://developer.apple.com/documentation/appstoreserverapi/get_notification_history
 func (c *Client) GetNotificationHistory(ctx context.Context, paginationToken string, bm gopay.BodyMap) (rsp *NotificationHistoryRsp, err error) {
-	path := getNotificationHistory + "?paginationToken=" + paginationToken
+	path := getNotificationHistory
+	// Note: Omit this parameter the first time you call this endpoint.
+	if paginationToken != "" {
+		path += "?paginationToken=" + paginationToken
+	}
+
 	res, bs, err := c.doRequestPost(ctx, path, bm)
 	if err != nil {
 		return nil, err
