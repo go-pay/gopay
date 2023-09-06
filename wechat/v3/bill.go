@@ -16,8 +16,6 @@ import (
 // 申请交易账单API
 // 注意：如 bill_date 为空，默认查前一天的
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_6.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_6.shtml
 func (c *ClientV3) V3BillTradeBill(ctx context.Context, bm gopay.BodyMap) (wxRsp *BillRsp, err error) {
 	if bm != nil {
 		if bm.GetString("bill_date") == util.NULL {
@@ -52,8 +50,6 @@ func (c *ClientV3) V3BillTradeBill(ctx context.Context, bm gopay.BodyMap) (wxRsp
 // 申请资金账单API
 // 注意：如 bill_date 为空，默认查前一天的
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_7.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_7.shtml
 func (c *ClientV3) V3BillFundFlowBill(ctx context.Context, bm gopay.BodyMap) (wxRsp *BillRsp, err error) {
 	if bm != nil {
 		if bm.GetString("bill_date") == util.NULL {
@@ -88,7 +84,6 @@ func (c *ClientV3) V3BillFundFlowBill(ctx context.Context, bm gopay.BodyMap) (wx
 // 申请特约商户资金账单API
 // 注意：如 bill_date 为空，默认查前一天的
 // Code = 0 is success
-// 文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_17.shtml
 func (c *ClientV3) V3BillEcommerceFundFlowBill(ctx context.Context, bm gopay.BodyMap) (wxRsp *EcommerceFundFlowBillRsp, err error) {
 	if bm != nil {
 		if bm.GetString("bill_date") == util.NULL {
@@ -129,7 +124,6 @@ func (c *ClientV3) V3BillEcommerceFundFlowBill(ctx context.Context, bm gopay.Bod
 // 申请单个子商户资金账单API
 // 注意：如 bill_date 为空，默认查前一天的
 // Code = 0 is success
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_12.shtml
 func (c *ClientV3) V3BillSubFundFlowBill(ctx context.Context, bm gopay.BodyMap) (wxRsp *BillRsp, err error) {
 	if bm != nil {
 		if bm.GetString("bill_date") == util.NULL {
@@ -163,8 +157,6 @@ func (c *ClientV3) V3BillSubFundFlowBill(ctx context.Context, bm gopay.BodyMap) 
 
 // 下载账单API
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_8.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter4_1_8.shtml
 func (c *ClientV3) V3BillDownLoadBill(ctx context.Context, downloadUrl string) (fileBytes []byte, err error) {
 	if downloadUrl == gopay.NULL {
 		return nil, errors.New("invalid download url")

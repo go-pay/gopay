@@ -104,6 +104,24 @@ type AppletScoreExtraData struct {
 	Sign      string `json:"sign"`
 }
 
+type JSAPIScoreQuery struct {
+	MchId     string `json:"mch_id"`
+	Package   string `json:"package"`
+	TimeStamp string `json:"timestamp"`
+	NonceStr  string `json:"nonce_str"`
+	SignType  string `json:"sign_type"`
+	Sign      string `json:"sign"`
+}
+
+type APPScoreQuery struct {
+	MchId     string `json:"mch_id"`
+	Package   string `json:"package"`
+	TimeStamp string `json:"timestamp"`
+	NonceStr  string `json:"nonce_str"`
+	SignType  string `json:"sign_type"`
+	Sign      string `json:"sign"`
+}
+
 // ==================================分割==================================
 
 type SignInfo struct {

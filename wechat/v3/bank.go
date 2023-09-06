@@ -14,7 +14,6 @@ import (
 // 获取对私银行卡号开户银行
 // 注意：accountNo 需此方法加密：client.V3EncryptText()
 // Code = 0 is success
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter11_2_1.shtml
 func (c *ClientV3) V3BankSearchBank(ctx context.Context, accountNo string) (wxRsp *BankSearchBankRsp, err error) {
 	uri := v3BankSearchBank + "?account_number=" + url.QueryEscape(accountNo)
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -40,7 +39,6 @@ func (c *ClientV3) V3BankSearchBank(ctx context.Context, accountNo string) (wxRs
 
 // 查询支持个人业务的银行列表
 // Code = 0 is success
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter11_2_2.shtml
 func (c *ClientV3) V3BankSearchPersonalList(ctx context.Context, limit, offset int) (wxRsp *BankSearchPersonalListRsp, err error) {
 	if limit == 0 {
 		limit = 20
@@ -69,7 +67,6 @@ func (c *ClientV3) V3BankSearchPersonalList(ctx context.Context, limit, offset i
 
 // 查询支持对公业务的银行列表
 // Code = 0 is success
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter11_2_3.shtml
 func (c *ClientV3) V3BankSearchCorporateList(ctx context.Context, limit, offset int) (wxRsp *BankSearchCorporateListRsp, err error) {
 	if limit == 0 {
 		limit = 20
@@ -98,7 +95,6 @@ func (c *ClientV3) V3BankSearchCorporateList(ctx context.Context, limit, offset 
 
 // 查询省份列表
 // Code = 0 is success
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter11_2_4.shtml
 func (c *ClientV3) V3BankSearchProvinceList(ctx context.Context) (wxRsp *BankSearchProvinceListRsp, err error) {
 	authorization, err := c.authorization(MethodGet, v3BankSearchProvinceList, nil)
 	if err != nil {
@@ -123,7 +119,6 @@ func (c *ClientV3) V3BankSearchProvinceList(ctx context.Context) (wxRsp *BankSea
 
 // 查询城市列表
 // Code = 0 is success
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter11_2_5.shtml
 func (c *ClientV3) V3BankSearchCityList(ctx context.Context, provinceCode int) (wxRsp *BankSearchCityListRsp, err error) {
 	url := fmt.Sprintf(v3BankSearchCityList, provinceCode)
 	authorization, err := c.authorization(MethodGet, url, nil)
@@ -149,7 +144,6 @@ func (c *ClientV3) V3BankSearchCityList(ctx context.Context, provinceCode int) (
 
 // 查询支行列表
 // Code = 0 is success
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter11_2_6.shtml
 func (c *ClientV3) V3BankSearchBranchList(ctx context.Context, bankAliasCode string, cityCode, limit, offset int) (wxRsp *BankSearchBranchListRsp, err error) {
 	if limit == 0 {
 		limit = 20

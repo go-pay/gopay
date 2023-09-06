@@ -12,8 +12,6 @@ import (
 
 // 创建投诉通知回调地址API
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_2.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_2.shtml
 func (c *ClientV3) V3ComplaintNotifyUrlCreate(ctx context.Context, url string) (wxRsp *ComplaintNotifyUrlRsp, err error) {
 	bm := make(gopay.BodyMap)
 	bm.Set("url", url)
@@ -40,8 +38,6 @@ func (c *ClientV3) V3ComplaintNotifyUrlCreate(ctx context.Context, url string) (
 
 // 查询投诉通知回调地址API
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_3.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_3.shtml
 func (c *ClientV3) V3ComplaintNotifyUrlQuery(ctx context.Context) (wxRsp *ComplaintNotifyUrlRsp, err error) {
 	authorization, err := c.authorization(MethodGet, v3ComplaintNotifyUrlQuery, nil)
 	if err != nil {
@@ -66,8 +62,6 @@ func (c *ClientV3) V3ComplaintNotifyUrlQuery(ctx context.Context) (wxRsp *Compla
 
 // 更新投诉通知回调地址API
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_4.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_4.shtml
 func (c *ClientV3) V3ComplaintNotifyUrlUpdate(ctx context.Context, url string) (wxRsp *ComplaintNotifyUrlRsp, err error) {
 	bm := make(gopay.BodyMap)
 	bm.Set("url", url)
@@ -94,8 +88,6 @@ func (c *ClientV3) V3ComplaintNotifyUrlUpdate(ctx context.Context, url string) (
 
 // 删除投诉通知回调地址API
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_5.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_5.shtml
 func (c *ClientV3) V3ComplaintNotifyUrlDelete(ctx context.Context) (wxRsp *EmptyRsp, err error) {
 	authorization, err := c.authorization(MethodDelete, v3ComplaintNotifyUrlDelete, nil)
 	if err != nil {
@@ -117,8 +109,6 @@ func (c *ClientV3) V3ComplaintNotifyUrlDelete(ctx context.Context) (wxRsp *Empty
 // 商户上传反馈图片API
 // 注意：图片不能超过2MB
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_10.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_10.shtml
 func (c *ClientV3) V3ComplaintUploadImage(ctx context.Context, fileName, fileSha256 string, img *util.File) (wxRsp *MediaUploadRsp, err error) {
 	bmFile := make(gopay.BodyMap)
 	bmFile.Set("filename", fileName).Set("sha256", fileSha256)
@@ -150,8 +140,6 @@ func (c *ClientV3) V3ComplaintUploadImage(ctx context.Context, fileName, fileSha
 
 // 查询投诉单列表API
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_11.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_11.shtml
 func (c *ClientV3) V3ComplaintList(ctx context.Context, bm gopay.BodyMap) (wxRsp *ComplaintListRsp, err error) {
 	uri := v3ComplaintList + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -177,8 +165,6 @@ func (c *ClientV3) V3ComplaintList(ctx context.Context, bm gopay.BodyMap) (wxRsp
 
 // 查询投诉协商历史API
 // Code = 0 is success
-// 商户文档：https://pay.wechatpay.cn/docs/merchant/apis/consumer-complaint/complaints/query-negotiation-history-v2.html
-// 服务商文档：https://pay.wechatpay.cn/docs/partner/apis/consumer-complaint/complaints/query-negotiation-history-v2.html
 func (c *ClientV3) V3ComplaintNegotiationHistory(ctx context.Context, complaintId string, bm gopay.BodyMap) (wxRsp *ComplaintNegotiationHistoryRsp, err error) {
 	uri := fmt.Sprintf(v3ComplaintNegotiationHistory, complaintId) + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -204,8 +190,6 @@ func (c *ClientV3) V3ComplaintNegotiationHistory(ctx context.Context, complaintI
 
 // 查询投诉单详情API
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_13.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_13.shtml
 func (c *ClientV3) V3ComplaintDetail(ctx context.Context, complaintId string) (wxRsp *ComplaintDetailRsp, err error) {
 	url := fmt.Sprintf(v3ComplaintDetail, complaintId)
 	authorization, err := c.authorization(MethodGet, url, nil)
@@ -231,8 +215,6 @@ func (c *ClientV3) V3ComplaintDetail(ctx context.Context, complaintId string) (w
 
 // 回复用户API
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_14.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_14.shtml
 func (c *ClientV3) V3ComplaintResponse(ctx context.Context, complaintId string, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
 	url := fmt.Sprintf(v3ComplaintResponse, complaintId)
 	authorization, err := c.authorization(MethodPost, url, bm)
@@ -254,8 +236,6 @@ func (c *ClientV3) V3ComplaintResponse(ctx context.Context, complaintId string, 
 
 // 反馈处理完成API
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_15.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_15.shtml
 func (c *ClientV3) V3ComplaintComplete(ctx context.Context, complaintId string, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
 	url := fmt.Sprintf(v3ComplaintComplete, complaintId)
 	authorization, err := c.authorization(MethodPost, url, bm)
@@ -277,8 +257,6 @@ func (c *ClientV3) V3ComplaintComplete(ctx context.Context, complaintId string, 
 
 // 更新退款审批结果
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter10_2_19.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter10_2_19.shtml
 func (c *ClientV3) V3ComplaintUpdateRefundProgress(ctx context.Context, complaintId string, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
 	url := fmt.Sprintf(v3ComplaintUpdateRefundProgress, complaintId)
 	authorization, err := c.authorization(MethodPost, url, bm)

@@ -57,7 +57,7 @@ func V3VerifySignByPK(timestamp, nonce, signBody, sign string, wxPublicKey *rsa.
 }
 
 // PaySignOfJSAPI 获取 JSAPI 支付所需要的参数
-// 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_4.shtml
+// 文档：https://pay.weixin.qq.com/docs/merchant/apis/jsapi-payment/jsapi-transfer-payment.html
 func (c *ClientV3) PaySignOfJSAPI(appid, prepayid string) (jsapi *JSAPIPayParams, err error) {
 	ts := util.Int642String(time.Now().Unix())
 	nonceStr := util.RandomString(32)
@@ -81,7 +81,7 @@ func (c *ClientV3) PaySignOfJSAPI(appid, prepayid string) (jsapi *JSAPIPayParams
 }
 
 // PaySignOfApp 获取 App 支付所需要的参数
-// 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_4.shtml
+// 文档：https://pay.weixin.qq.com/docs/merchant/apis/in-app-payment/app-transfer-payment.html
 func (c *ClientV3) PaySignOfApp(appid, prepayid string) (app *AppPayParams, err error) {
 	ts := util.Int642String(time.Now().Unix())
 	nonceStr := util.RandomString(32)
@@ -105,7 +105,7 @@ func (c *ClientV3) PaySignOfApp(appid, prepayid string) (app *AppPayParams, err 
 }
 
 // PaySignOfApplet 获取 小程序 支付所需要的参数
-// 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_4.shtml
+// 文档：https://pay.weixin.qq.com/docs/merchant/apis/mini-program-payment/mini-transfer-payment.html
 func (c *ClientV3) PaySignOfApplet(appid, prepayid string) (applet *AppletParams, err error) {
 	jsapi, err := c.PaySignOfJSAPI(appid, prepayid)
 	if err != nil {
@@ -122,8 +122,78 @@ func (c *ClientV3) PaySignOfApplet(appid, prepayid string) (applet *AppletParams
 	return applet, nil
 }
 
-// PaySignOfAppletScore 获取 小程序调起支付分 所需要的 ExtraData
-// 文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter6_1_13.shtml
+// PaySignOfAppScore 获取 APP调起支付分 接口，query属性中的sign
+// 文档：https://pay.weixin.qq.com/docs/merchant/apis/weixin-pay-score/app-confirm.html
+func (c *ClientV3) PaySignOfAppScore(mchId, pkg string) (query *APPScoreQuery, err error) {
+	var (
+		buffer   strings.Builder
+		h        hash.Hash
+		ts       = util.Int642String(time.Now().Unix())
+		nonceStr = util.RandomString(32)
+	)
+	buffer.WriteString("mch_id=")
+	buffer.WriteString(mchId)
+	buffer.WriteString("&nonce_str=")
+	buffer.WriteString(nonceStr)
+	buffer.WriteString("&package=")
+	buffer.WriteString(pkg)
+	buffer.WriteString("&sign_type=HMAC-SHA256")
+	buffer.WriteString("&timestamp=")
+	buffer.WriteString(ts)
+	buffer.WriteString("&key=")
+	buffer.WriteString(string(c.ApiV3Key))
+
+	h = hmac.New(sha256.New, c.ApiV3Key)
+	h.Write([]byte(buffer.String()))
+
+	query = &APPScoreQuery{
+		MchId:     mchId,
+		TimeStamp: ts,
+		NonceStr:  nonceStr,
+		Package:   pkg,
+		SignType:  "HMAC-SHA256",
+		Sign:      strings.ToUpper(hex.EncodeToString(h.Sum(nil))),
+	}
+	return query, nil
+}
+
+// PaySignOfJSAPIScore 获取 JSAPI调起支付分 接口，queryString属性中的sign
+// 文档：https://pay.weixin.qq.com/docs/merchant/apis/weixin-pay-score/jsapi-confirm.html
+func (c *ClientV3) PaySignOfJSAPIScore(mchId, pkg string) (queryString *JSAPIScoreQuery, err error) {
+	var (
+		buffer   strings.Builder
+		h        hash.Hash
+		ts       = util.Int642String(time.Now().Unix())
+		nonceStr = util.RandomString(32)
+	)
+	buffer.WriteString("mch_id=")
+	buffer.WriteString(mchId)
+	buffer.WriteString("&nonce_str=")
+	buffer.WriteString(nonceStr)
+	buffer.WriteString("&package=")
+	buffer.WriteString(pkg)
+	buffer.WriteString("&sign_type=HMAC-SHA256")
+	buffer.WriteString("&timestamp=")
+	buffer.WriteString(ts)
+	buffer.WriteString("&key=")
+	buffer.WriteString(string(c.ApiV3Key))
+
+	h = hmac.New(sha256.New, c.ApiV3Key)
+	h.Write([]byte(buffer.String()))
+
+	queryString = &JSAPIScoreQuery{
+		MchId:     mchId,
+		TimeStamp: ts,
+		NonceStr:  nonceStr,
+		Package:   pkg,
+		SignType:  "HMAC-SHA256",
+		Sign:      strings.ToUpper(hex.EncodeToString(h.Sum(nil))),
+	}
+	return queryString, nil
+}
+
+// PaySignOfAppletScore 获取 小程序调起支付分 接口，extraData属性中的sign
+// 文档：https://pay.weixin.qq.com/docs/merchant/apis/weixin-pay-score/applets-confirm.html
 func (c *ClientV3) PaySignOfAppletScore(mchId, pkg string) (extraData *AppletScoreExtraData, err error) {
 	var (
 		buffer   strings.Builder

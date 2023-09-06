@@ -11,8 +11,6 @@ import (
 
 // 商圈积分同步
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_6_2.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_6_2.shtml
 func (c *ClientV3) V3BusinessPointsSync(ctx context.Context, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3BusinessPointsSync, bm)
 	if err != nil {
@@ -35,8 +33,6 @@ func (c *ClientV3) V3BusinessPointsSync(ctx context.Context, bm gopay.BodyMap) (
 // Code = 0 is success
 // openid：path 参数
 // bm：query 参数
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_6_4.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_6_4.shtml
 func (c *ClientV3) V3BusinessAuthPointsQuery(ctx context.Context, openid string, bm gopay.BodyMap) (*BusinessAuthPointsQueryRsp, error) {
 	uri := fmt.Sprintf(v3BusinessAuthPointsQuery, openid) + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -64,8 +60,6 @@ func (c *ClientV3) V3BusinessAuthPointsQuery(ctx context.Context, openid string,
 // Code = 0 is success
 // openid：path 参数
 // bm：query 参数
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_6_7.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_6_7.shtml
 func (c *ClientV3) V3BusinessPointsStatusQuery(ctx context.Context, openid string, bm gopay.BodyMap) (*BusinessPointsStatusQueryRsp, error) {
 	uri := fmt.Sprintf(v3BusinessPointsStatusQuery, openid) + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -91,8 +85,6 @@ func (c *ClientV3) V3BusinessPointsStatusQuery(ctx context.Context, openid strin
 
 // 商圈会员停车状态同步
 // Code = 0 is success
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter8_6_5.shtml
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter8_6_5.shtml
 func (c *ClientV3) V3BusinessParkingSync(ctx context.Context, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3BusinessParkingSync, bm)
 	if err != nil {

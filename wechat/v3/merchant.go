@@ -12,8 +12,6 @@ import (
 // 查询特约商户账户实时余额、查询二级商户账户实时余额
 // Code = 0 is success
 // 注意：服务商时，bm参数传 nil
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_11.shtml
-// 电商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter7_7_1.shtml
 func (c *ClientV3) V3EcommerceBalance(ctx context.Context, subMchid string, bm gopay.BodyMap) (*EcommerceBalanceRsp, error) {
 	url := fmt.Sprintf(v3EcommerceBalance, subMchid) + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, url, nil)
@@ -41,7 +39,6 @@ func (c *ClientV3) V3EcommerceBalance(ctx context.Context, subMchid string, bm g
 // 查询二级商户账户日终余额
 // date示例值：2019-08-17
 // Code = 0 is success
-// 电商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter7_7_2.shtml
 func (c *ClientV3) V3EcommerceDayBalance(ctx context.Context, subMchid, date string) (*EcommerceBalanceRsp, error) {
 	uri := fmt.Sprintf(v3EcommerceDayBalance, subMchid) + "?date=" + date
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -68,8 +65,6 @@ func (c *ClientV3) V3EcommerceDayBalance(ctx context.Context, subMchid, date str
 
 // 查询账户实时余额
 // Code = 0 is success
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_12.shtml
-// 电商平台：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter7_7_3.shtml
 func (c *ClientV3) V3MerchantBalance(ctx context.Context, accountType string) (*MerchantBalanceRsp, error) {
 	url := fmt.Sprintf(v3MerchantBalance, accountType)
 	authorization, err := c.authorization(MethodGet, url, nil)
@@ -97,8 +92,6 @@ func (c *ClientV3) V3MerchantBalance(ctx context.Context, accountType string) (*
 // 查询账户日终余额
 // date示例值：2019-08-17
 // Code = 0 is success
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_13.shtml
-// 电商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/apis/chapter7_7_4.shtml
 func (c *ClientV3) V3MerchantDayBalance(ctx context.Context, accountType, date string) (*MerchantBalanceRsp, error) {
 	uri := fmt.Sprintf(v3MerchantDayBalance, accountType) + "?date=" + date
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -125,7 +118,6 @@ func (c *ClientV3) V3MerchantDayBalance(ctx context.Context, accountType, date s
 
 // 特约商户银行来账查询API
 // Code = 0 is success
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_19.shtml
 func (c *ClientV3) V3EcommerceIncomeRecord(ctx context.Context, bm gopay.BodyMap) (*PartnerIncomeRecordRsp, error) {
 	uri := v3EcommerceIncomeRecord + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
@@ -152,7 +144,6 @@ func (c *ClientV3) V3EcommerceIncomeRecord(ctx context.Context, bm gopay.BodyMap
 
 // 商户/服务商银行来账查询API
 // Code = 0 is success
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_20.shtml
 func (c *ClientV3) V3MerchantIncomeRecord(ctx context.Context, bm gopay.BodyMap) (*MerchantIncomeRecordRsp, error) {
 	uri := v3MerchantIncomeRecord + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
