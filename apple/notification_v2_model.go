@@ -109,6 +109,7 @@ type RenewalInfo struct {
 	PriceIncreaseStatus         int64  `json:"priceIncreaseStatus"` // 0: The customer hasn’t responded to the subscription price increase. 1:The customer consented to the subscription price increase.
 	ProductId                   string `json:"productId"`
 	RecentSubscriptionStartDate int64  `json:"recentSubscriptionStartDate"`
+	RenewalDate                 int64  `json:"renewalDate,omitempty"` // The UNIX time, in milliseconds, that the most recent auto-renewable subscription purchase expires.
 	SignedDate                  int64  `json:"signedDate"`
 }
 
