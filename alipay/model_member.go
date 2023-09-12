@@ -146,6 +146,7 @@ type UserAlipaypointBudgetlibQueryRsp struct {
 
 type OauthTokenInfo struct {
 	UserId        string `json:"user_id,omitempty"`
+	OpenId        string `json:"open_id,omitempty"`
 	AlipayUserId  string `json:"alipay_user_id,omitempty"`
 	UnionId       string `json:"union_id,omitempty"`
 	AccessToken   string `json:"access_token,omitempty"`
@@ -158,6 +159,7 @@ type OauthTokenInfo struct {
 
 type UserInfoShare struct {
 	UserId             string `json:"user_id,omitempty"`
+	OpenId             string `json:"open_id,omitempty"`
 	Avatar             string `json:"avatar,omitempty"`
 	Province           string `json:"province,omitempty"`
 	City               string `json:"city,omitempty"`
@@ -184,6 +186,7 @@ type UserCertifyOpenQuery struct {
 type UserAgreementQuery struct {
 	ErrorResponse
 	PrincipalId         string `json:"principal_id"`
+	PrincipalOpenId     string `json:"principal_open_id,omitempty"`
 	ValidTime           string `json:"valid_time"`
 	AlipayLogonId       string `json:"alipay_logon_id"`
 	InvalidTime         string `json:"invalid_time"`
@@ -223,6 +226,7 @@ type UserAgreementTransfer struct {
 type UserTwostageCommonUse struct {
 	ErrorResponse
 	UserId           string              `json:"user_id,omitempty"`
+	OpenId           string              `json:"open_id,omitempty"`
 	UserIdentityInfo []*UserIdentityInfo `json:"user_identity_info,omitempty"`
 }
 

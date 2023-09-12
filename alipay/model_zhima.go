@@ -176,6 +176,7 @@ type ZhimaCreditPeZmgoCumulationSync struct {
 	OutBizNo     string `json:"out_biz_no,omitempty"`
 	AagreementNo string `json:"aagreement_no,omitempty"`
 	UserId       string `json:"user_id,omitempty"`
+	OpenId       string `json:"open_id,omitempty"`
 	FailReason   string `json:"fail_reason,omitempty"`
 }
 
@@ -215,6 +216,7 @@ type CumulateDataDetail struct {
 type ZhimaCreditPeZmgoBizoptClose struct {
 	ErrorResponse
 	UserId       string `json:"user_id"`
+	OpenId       string `json:"open_id,omitempty"`
 	BizOptNo     string `json:"biz_opt_no,omitempty"`
 	PartnerId    string `json:"partner_id"`
 	OutRequestNo string `json:"out_request_no"`
@@ -247,6 +249,7 @@ type ZhimaCreditPeZmgoAgreementQuery struct {
 	AgreementId     string `json:"agreement_id"`
 	AgreementName   string `json:"agreement_name"`
 	AlipayUserId    string `json:"alipay_user_id"`
+	OpenId          string `json:"open_id,omitempty"`
 	AgreementStatus string `json:"agreement_status"`
 }
 

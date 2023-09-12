@@ -185,6 +185,7 @@ type FundAuthOrderFreeze struct {
 	Amount       string `json:"amount,omitempty"`
 	Status       string `json:"status,omitempty"`
 	PayerUserId  string `json:"payer_user_id,omitempty"`
+	PayerOpenId  string `json:"payer_open_id,omitempty"`
 	PayerLogonId string `json:"payer_logon_id,omitempty"`
 	GmtTrans     string `json:"gmt_trans,omitempty"`
 }
@@ -222,6 +223,7 @@ type FundAuthOperationDetailQuery struct {
 	OrderTitle              string `json:"order_title,omitempty"`
 	PayerLogonId            string `json:"payer_logon_id,omitempty"`
 	PayerUserId             string `json:"payer_user_id,omitempty"`
+	PayerOpenId             string `json:"payer_open_id,omitempty"`
 	ExtraParam              string `json:"extra_param,omitempty"`
 	OperationId             string `json:"operation_id,omitempty"`
 	OutRequestNo            string `json:"out_request_no,omitempty"`

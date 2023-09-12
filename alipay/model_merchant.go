@@ -74,9 +74,12 @@ type TradeRelationBatchQuery struct {
 }
 
 type Receiver struct {
-	Type    string `json:"type"`
-	Account string `json:"account"`
-	Memo    string `json:"memo"`
+	Type          string `json:"type,omitempty"`
+	Account       string `json:"account,omitempty"`
+	AccountOpenId string `json:"account_open_id,omitempty"`
+	Memo          string `json:"memo,omitempty"`
+	LoginName     string `json:"login_name,omitempty"`
+	BindLoginName string `json:"bind_login_name,omitempty"`
 }
 
 type TradeOrderSettle struct {
@@ -92,17 +95,19 @@ type TradeOrderSettleQuery struct {
 }
 
 type RoyaltyDetail struct {
-	OperationType string `json:"operation_type"`
-	ExecuteDt     string `json:"execute_dt"`
-	TransOut      string `json:"trans_out"`
-	TransOutType  string `json:"trans_out_type"`
-	TransIn       string `json:"trans_in"`
-	TransInType   string `json:"trans_in_type"`
-	Amount        string `json:"amount"`
-	State         string `json:"state"`
-	DetailId      string `json:"detail_id"`
-	ErrorCode     string `json:"error_code"`
-	ErrorDesc     string `json:"error_desc"`
+	OperationType  string `json:"operation_type"`
+	ExecuteDt      string `json:"execute_dt"`
+	TransOut       string `json:"trans_out"`
+	TransOutType   string `json:"trans_out_type"`
+	TransOutOpenId string `json:"trans_out_open_id"`
+	TransIn        string `json:"trans_in"`
+	TransInType    string `json:"trans_in_type"`
+	TransInOpenId  string `json:"trans_in_open_id"`
+	Amount         string `json:"amount"`
+	State          string `json:"state"`
+	DetailId       string `json:"detail_id"`
+	ErrorCode      string `json:"error_code"`
+	ErrorDesc      string `json:"error_desc"`
 }
 
 type TradeOrderOnSettleQuery struct {

@@ -114,6 +114,7 @@ type TradePay struct {
 	FundBillList        []*TradeFundBill `json:"fund_bill_list"`
 	StoreName           string           `json:"store_name,omitempty"`
 	BuyerUserId         string           `json:"buyer_user_id,omitempty"`
+	BuyerOpenId         string           `json:"buyer_open_id,omitempty"`
 	DiscountGoodsDetail string           `json:"discount_goods_detail,omitempty"`
 	AsyncPaymentMode    string           `json:"async_payment_mode,omitempty"`
 	VoucherDetailList   []*VoucherDetail `json:"voucher_detail_list"`
@@ -278,6 +279,7 @@ type TradeRefund struct {
 	RefundDetailItemList         []*TradeFundBill       `json:"refund_detail_item_list,omitempty"`
 	StoreName                    string                 `json:"store_name,omitempty"`
 	BuyerUserId                  string                 `json:"buyer_user_id,omitempty"`
+	BuyerOpenId                  string                 `json:"buyer_open_id,omitempty"`
 	SendBackFee                  string                 `json:"send_back_fee,omitempty"`
 	OpenId                       string                 `json:"open_id,omitempty"`
 	RefundCurrency               string                 `json:"refund_currency,omitempty"`
@@ -344,6 +346,7 @@ type TradeOrderInfoSync struct {
 	TradeNo     string `json:"trade_no"`
 	OutTradeNo  string `json:"out_trade_no"`
 	BuyerUserId string `json:"buyer_user_id"`
+	BuyerOpenId string `json:"buyer_open_id,omitempty"`
 }
 
 type TradeAdvanceConsult struct {

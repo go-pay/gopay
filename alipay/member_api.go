@@ -163,7 +163,7 @@ func (a *Client) UserCertifyOpenQuery(ctx context.Context, bm gopay.BodyMap) (al
 }
 
 // alipay.user.agreement.page.sign(支付宝个人协议页面签约接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_2/alipay.user.agreement.page.sign
+// 文档地址：https://opendocs.alipay.com/open/8bccfa0b_alipay.user.agreement.page.sign
 func (a *Client) UserAgreementPageSign(ctx context.Context, bm gopay.BodyMap) (ret string, err error) {
 	err = bm.CheckEmptyError("personal_product_code")
 	if err != nil {
@@ -205,7 +205,7 @@ func (a *Client) UserAgreementPageSignInApp(ctx context.Context, bm gopay.BodyMa
 }
 
 // alipay.user.agreement.unsign(支付宝个人代扣协议解约接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_2/alipay.user.agreement.page.unsign
+// 文档地址：https://opendocs.alipay.com/open/b841da1f_alipay.user.agreement.unsign
 func (a *Client) UserAgreementPageUnSign(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserAgreementPageUnSignRsp, err error) {
 	var bs []byte
 	if bs, err = a.doAliPay(ctx, bm, "alipay.user.agreement.unsign"); err != nil {
@@ -224,7 +224,7 @@ func (a *Client) UserAgreementPageUnSign(ctx context.Context, bm gopay.BodyMap) 
 }
 
 // alipay.user.agreement.query(支付宝个人代扣协议查询接口)
-// 文档地址：https://opendocs.alipay.com/apis/api_2/alipay.user.agreement.query
+// 文档地址：https://opendocs.alipay.com/open/3dab71bc_alipay.user.agreement.query
 func (a *Client) UserAgreementQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserAgreementQueryRsp, err error) {
 	var bs []byte
 	if bs, err = a.doAliPay(ctx, bm, "alipay.user.agreement.query"); err != nil {
