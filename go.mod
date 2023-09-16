@@ -1,4 +1,4 @@
-module github.com/go-pay/gopay
+module github.com/elegantm/gopay
 
 go 1.18
 
