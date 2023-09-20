@@ -27,7 +27,7 @@ func TestDecodeSignedPayload(t *testing.T) {
 	xlog.Debugf("payload.NotificationType: %s", payload.NotificationType)
 	xlog.Debugf("payload.Subtype: %s", payload.Subtype)
 	xlog.Debugf("payload.NotificationUUID: %s", payload.NotificationUUID)
-	xlog.Debugf("payload.NotificationVersion: %s", payload.NotificationVersion)
+	xlog.Debugf("payload.Version: %s", payload.Version)
 	xlog.Debugf("payload.Data: %+v", payload.Data)
 	bs1, _ := json.Marshal(payload)
 	xlog.Color(xlog.RedBright).Info(string(bs1))
