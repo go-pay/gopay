@@ -52,7 +52,7 @@ type NotificationV2Payload struct {
 	NotificationType    string `json:"notificationType"`
 	Subtype             string `json:"subtype"`
 	NotificationUUID    string `json:"notificationUUID"`
-	NotificationVersion string `json:"notificationVersion"`
+	Version             string `json:"version"`
 	Data                *Data  `json:"data"`
 }
 
