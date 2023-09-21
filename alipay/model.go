@@ -205,7 +205,7 @@ type DataBillBalanceQuery struct {
 
 // ===================================================
 type DataBillAccountLogQueryResponse struct {
-	Response     *DataBillAccountLogQuery `json:"alipay_data_bill_balance_query_response"`
+	Response     *DataBillAccountLogQuery `json:"alipay_data_bill_accountlog_query_response"`
 	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`
 	SignData     string                   `json:"-"`
 	Sign         string                   `json:"sign"`
