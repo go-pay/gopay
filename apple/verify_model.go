@@ -13,6 +13,16 @@ type VerifyRequest struct {
 	ExcludeOldTranscations bool `json:"exclude-old-transactions"`
 }
 
+// VerifyRequest 校验请求体  没有密钥的
+// https://developer.apple.com/documentation/appstorereceipts/requestbody
+type VerifyRequestNoPassword struct {
+	// Receipt app解析出的票据信息
+	Receipt string `json:"receipt-data"`
+
+	// ExcludeOldTranscations Set this value to true for the response to include only the latest renewal transaction for any subscriptions. Use this field only for app receipts that contain auto-renewable subscriptions.
+	ExcludeOldTranscations bool `json:"exclude-old-transactions"`
+}
+
 // VerifyResponse 校验响应体
 // https://developer.apple.com/documentation/appstorereceipts/responsebody
 type VerifyResponse struct {
