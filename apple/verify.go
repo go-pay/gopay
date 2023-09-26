@@ -26,3 +26,19 @@ func VerifyReceipt(ctx context.Context, url, pwd, receipt string) (rsp *VerifyRe
 	}
 	return rsp, nil
 }
+
+// 非订阅类型不需要 Password
+// VerifyReceipt 请求APP Store 校验支付请求,实际测试时发现这个文档介绍的返回信息只有那个status==0表示成功可以用，其他的返回信息跟文档对不上
+// url：取 UrlProd 或 UrlSandbox
+// 文档：https://developer.apple.com/documentation/appstorereceipts/verifyreceipt
+func VerifyReceiptNoPassword(ctx context.Context, url, receipt string) (rsp *VerifyResponse, err error) {
+	req := &VerifyRequestNoPassword{Receipt: receipt}
+	rsp = new(VerifyResponse)
+	_, err = xhttp.NewClient().Type(xhttp.TypeJSON).Post(url).SendStruct(req).EndStruct(ctx, rsp)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+
