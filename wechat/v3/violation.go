@@ -13,7 +13,7 @@ import (
 // Code = 0 is success
 func (c *ClientV3) V3ViolationNotifyUrlCreate(ctx context.Context, url string) (wxRsp *ViolationNotifyUrlRsp, err error) {
 	bm := make(gopay.BodyMap)
-	bm.Set("url", url)
+	bm.Set("notify_url", url)
 	authorization, err := c.authorization(MethodPost, v3ViolationNotifyUrlCreate, bm)
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func (c *ClientV3) V3ViolationNotifyUrlQuery(ctx context.Context) (wxRsp *Violat
 // Code = 0 is success
 func (c *ClientV3) V3ViolationNotifyUrlUpdate(ctx context.Context, url string) (wxRsp *ViolationNotifyUrlRsp, err error) {
 	bm := make(gopay.BodyMap)
-	bm.Set("url", url)
+	bm.Set("notify_url", url)
 	authorization, err := c.authorization(MethodPut, v3ViolationNotifyUrlUpdate, bm)
 	if err != nil {
 		return nil, err
