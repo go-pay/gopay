@@ -33,7 +33,7 @@ func (w *Client) EntrustAppPre(ctx context.Context, bm gopay.BodyMap) (wxRsp *En
 	if err != nil {
 		return nil, err
 	}
-	bs, err := w.doProdPost(ctx, bm, entrustApp, nil)
+	bs, err := w.doProdPost(ctx, bm, entrustApp)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +72,7 @@ func (w *Client) EntrustPaying(ctx context.Context, bm gopay.BodyMap) (wxRsp *En
 	if err != nil {
 		return nil, err
 	}
-	bs, err := w.doProdPost(ctx, bm, entrustPaying, nil)
+	bs, err := w.doProdPost(ctx, bm, entrustPaying)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ func (w *Client) EntrustApplyPay(ctx context.Context, bm gopay.BodyMap) (wxRsp *
 	if err != nil {
 		return nil, err
 	}
-	bs, err := w.doProdPost(ctx, bm, entrustApplyPay, nil)
+	bs, err := w.doProdPost(ctx, bm, entrustApplyPay)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func (w *Client) EntrustDelete(ctx context.Context, bm gopay.BodyMap) (wxRsp *En
 	if err != nil {
 		return nil, err
 	}
-	bs, err := w.doProdPost(ctx, bm, entrustDelete, nil)
+	bs, err := w.doProdPost(ctx, bm, entrustDelete)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +126,7 @@ func (w *Client) EntrustQuery(ctx context.Context, bm gopay.BodyMap) (wxRsp *Ent
 	if err != nil {
 		return nil, err
 	}
-	bs, err := w.doProdPost(ctx, bm, entrustQuery, nil)
+	bs, err := w.doProdPost(ctx, bm, entrustQuery)
 	if err != nil {
 		return nil, err
 	}

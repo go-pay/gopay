@@ -34,12 +34,7 @@ func (w *Client) SendCashRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *Send
 		bm.Set("sign", sign)
 	}
 
-	tlsConfig, err := w.addCertConfig(nil, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	bs, err := w.doProdPostPure(ctx, bm, sendCashRed, tlsConfig)
+	bs, err := w.doProdPostPureTLS(ctx, bm, sendCashRed)
 	if err != nil {
 		return nil, err
 	}
@@ -71,12 +66,7 @@ func (w *Client) SendGroupCashRed(ctx context.Context, bm gopay.BodyMap) (wxRsp 
 		bm.Set("sign", sign)
 	}
 
-	tlsConfig, err := w.addCertConfig(nil, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	bs, err := w.doProdPostPure(ctx, bm, sendGroupCashRed, tlsConfig)
+	bs, err := w.doProdPostPureTLS(ctx, bm, sendGroupCashRed)
 	if err != nil {
 		return nil, err
 	}
@@ -108,12 +98,7 @@ func (w *Client) SendAppletRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *Se
 		bm.Set("sign", sign)
 	}
 
-	tlsConfig, err := w.addCertConfig(nil, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	bs, err := w.doProdPostPure(ctx, bm, sendAppletRed, tlsConfig)
+	bs, err := w.doProdPostPureTLS(ctx, bm, sendAppletRed)
 	if err != nil {
 		return nil, err
 	}
@@ -145,12 +130,7 @@ func (w *Client) QueryRedRecord(ctx context.Context, bm gopay.BodyMap) (wxRsp *Q
 		bm.Set("sign", sign)
 	}
 
-	tlsConfig, err := w.addCertConfig(nil, nil, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	bs, err := w.doProdPostPure(ctx, bm, getRedRecord, tlsConfig)
+	bs, err := w.doProdPostPureTLS(ctx, bm, getRedRecord)
 	if err != nil {
 		return nil, err
 	}

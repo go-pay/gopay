@@ -162,7 +162,7 @@ func GetOpenIdByAuthCode(ctx context.Context, appId, mchId, apiKey, authCode, no
 	bm.Set("sign", GetReleaseSign(apiKey, SignType_MD5, bm))
 
 	openIdRsp = new(OpenIdByAuthCodeRsp)
-	_, err = xhttp.NewClient().Type(xhttp.TypeXML).Post(url).SendString(GenerateXml(bm)).EndStruct(ctx, openIdRsp)
+	_, err = xhttp.NewClient().Req(xhttp.TypeXML).Post(url).SendString(GenerateXml(bm)).EndStruct(ctx, openIdRsp)
 	if err != nil {
 		return nil, err
 	}

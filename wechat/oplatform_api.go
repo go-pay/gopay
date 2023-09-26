@@ -21,7 +21,7 @@ import (
 func GetOauth2AccessToken(ctx context.Context, appId, appSecret, code string) (accessToken *Oauth2AccessToken, err error) {
 	accessToken = new(Oauth2AccessToken)
 	url := "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type=authorization_code"
-	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, accessToken)
+	_, err = xhttp.NewClient().Req().Get(url).EndStruct(ctx, accessToken)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func GetOauth2AccessToken(ctx context.Context, appId, appSecret, code string) (a
 func RefreshOauth2AccessToken(ctx context.Context, appId, refreshToken string) (accessToken *Oauth2AccessToken, err error) {
 	accessToken = new(Oauth2AccessToken)
 	url := "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=" + appId + "&grant_type=refresh_token&refresh_token=" + refreshToken
-	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, accessToken)
+	_, err = xhttp.NewClient().Req().Get(url).EndStruct(ctx, accessToken)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func RefreshOauth2AccessToken(ctx context.Context, appId, refreshToken string) (
 func CheckOauth2AccessToken(ctx context.Context, accessToken, openid string) (result *CheckAccessTokenRsp, err error) {
 	result = new(CheckAccessTokenRsp)
 	url := "https://api.weixin.qq.com/sns/auth?access_token=" + accessToken + "&openid=" + openid
-	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, result)
+	_, err = xhttp.NewClient().Req().Get(url).EndStruct(ctx, result)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func GetOauth2UserInfo(ctx context.Context, accessToken, openId string, lang ...
 	if len(lang) == 1 {
 		url += "&lang=" + lang[0]
 	}
-	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, userInfo)
+	_, err = xhttp.NewClient().Req().Get(url).EndStruct(ctx, userInfo)
 	if err != nil {
 		return nil, err
 	}

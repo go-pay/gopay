@@ -2,7 +2,6 @@ package wechat
 
 import (
 	"context"
-	"crypto/tls"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -21,7 +20,7 @@ func (w *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Uni
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doProdPost(ctx, bm, unifiedOrder, nil)
+		bs, err = w.doProdPost(ctx, bm, unifiedOrder)
 	} else {
 		bm.Set("total_fee", 101)
 		bs, err = w.doSanBoxPost(ctx, bm, sandboxUnifiedOrder)
@@ -46,7 +45,7 @@ func (w *Client) Micropay(ctx context.Context, bm gopay.BodyMap) (wxRsp *Micropa
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doProdPost(ctx, bm, microPay, nil)
+		bs, err = w.doProdPost(ctx, bm, microPay)
 	} else {
 		bm.Set("total_fee", 1)
 		bs, err = w.doSanBoxPost(ctx, bm, sandboxMicroPay)
@@ -74,7 +73,7 @@ func (w *Client) QueryOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Query
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doProdPost(ctx, bm, orderQuery, nil)
+		bs, err = w.doProdPost(ctx, bm, orderQuery)
 	} else {
 		bs, err = w.doSanBoxPost(ctx, bm, sandboxOrderQuery)
 	}
@@ -102,7 +101,7 @@ func (w *Client) CloseOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Close
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doProdPost(ctx, bm, closeOrder, nil)
+		bs, err = w.doProdPost(ctx, bm, closeOrder)
 	} else {
 		bs, err = w.doSanBoxPost(ctx, bm, sandboxCloseOrder)
 	}
@@ -129,14 +128,10 @@ func (w *Client) Refund(ctx context.Context, bm gopay.BodyMap) (wxRsp *RefundRes
 		return nil, nil, errors.New("out_trade_no and transaction_id are not allowed to be null at the same time")
 	}
 	var (
-		bs        []byte
-		tlsConfig *tls.Config
+		bs []byte
 	)
 	if w.IsProd {
-		if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
-			return nil, nil, err
-		}
-		bs, err = w.doProdPost(ctx, bm, refund, tlsConfig)
+		bs, err = w.doProdPostTLS(ctx, bm, refund)
 	} else {
 		bs, err = w.doSanBoxPost(ctx, bm, sandboxRefund)
 	}
@@ -167,7 +162,7 @@ func (w *Client) QueryRefund(ctx context.Context, bm gopay.BodyMap) (wxRsp *Quer
 	}
 	var bs []byte
 	if w.IsProd {
-		bs, err = w.doProdPost(ctx, bm, refundQuery, nil)
+		bs, err = w.doProdPost(ctx, bm, refundQuery)
 	} else {
 		bs, err = w.doSanBoxPost(ctx, bm, sandboxRefundQuery)
 	}
@@ -195,14 +190,10 @@ func (w *Client) Reverse(ctx context.Context, bm gopay.BodyMap) (wxRsp *ReverseR
 		return nil, err
 	}
 	var (
-		bs        []byte
-		tlsConfig *tls.Config
+		bs []byte
 	)
 	if w.IsProd {
-		if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
-			return nil, err
-		}
-		bs, err = w.doProdPost(ctx, bm, reverse, tlsConfig)
+		bs, err = w.doProdPostTLS(ctx, bm, reverse)
 	} else {
 		bs, err = w.doSanBoxPost(ctx, bm, sandboxReverse)
 	}

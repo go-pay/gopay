@@ -16,7 +16,7 @@ func (w *Client) CustomsDeclareOrder(ctx context.Context, bm gopay.BodyMap) (wxR
 		return nil, err
 	}
 	bm.Set("sign_type", SignType_MD5)
-	bs, err := w.doProdPost(ctx, bm, customsDeclareOrder, nil)
+	bs, err := w.doProdPost(ctx, bm, customsDeclareOrder)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (w *Client) CustomsDeclareQuery(ctx context.Context, bm gopay.BodyMap) (wxR
 		return nil, err
 	}
 	bm.Set("sign_type", SignType_MD5)
-	bs, err := w.doProdPost(ctx, bm, customsDeclareQuery, nil)
+	bs, err := w.doProdPost(ctx, bm, customsDeclareQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (w *Client) CustomsReDeclareOrder(ctx context.Context, bm gopay.BodyMap) (w
 		return nil, err
 	}
 	bm.Set("sign_type", SignType_MD5)
-	bs, err := w.doProdPost(ctx, bm, customsReDeclareOrder, nil)
+	bs, err := w.doProdPost(ctx, bm, customsReDeclareOrder)
 	if err != nil {
 		return nil, err
 	}

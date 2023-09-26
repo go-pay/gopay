@@ -77,27 +77,16 @@ func (w *Client) addCertFileContentOrPath(certFile, keyFile, pkcs12File any) (er
 	if err = checkCertFilePathOrContent(certFile, keyFile, pkcs12File); err != nil {
 		return
 	}
-	var config *tls.Config
-	if config, err = w.addCertConfig(certFile, keyFile, pkcs12File); err != nil {
+	config, err := w.addCertConfig(certFile, keyFile, pkcs12File)
+	if err != nil {
 		return
 	}
-	w.mu.Lock()
-	w.Certificate = &config.Certificates[0]
-	w.mu.Unlock()
+	w.tlsHc = xhttp.NewClient().SetTLSConfig(config)
 	return
 }
 
 func (w *Client) addCertConfig(certFile, keyFile, pkcs12File any) (tlsConfig *tls.Config, err error) {
 	if certFile == nil && keyFile == nil && pkcs12File == nil {
-		w.mu.RLock()
-		defer w.mu.RUnlock()
-		if w.Certificate != nil {
-			tlsConfig = &tls.Config{
-				Certificates:       []tls.Certificate{*w.Certificate},
-				InsecureSkipVerify: true,
-			}
-			return tlsConfig, nil
-		}
 		return nil, errors.New("cert parse failed or nil")
 	}
 
@@ -272,7 +261,7 @@ func getSanBoxSignKey(ctx context.Context, mchId, nonceStr, sign string) (key st
 	reqs.Set("sign", sign)
 
 	keyResponse := new(getSignKeyResponse)
-	_, err = xhttp.NewClient().Type(xhttp.TypeXML).Post(sandboxGetSignKey).SendString(GenerateXml(reqs)).EndStruct(ctx, keyResponse)
+	_, err = xhttp.NewClient().Req(xhttp.TypeXML).Post(sandboxGetSignKey).SendString(GenerateXml(reqs)).EndStruct(ctx, keyResponse)
 	if err != nil {
 		return util.NULL, err
 	}
