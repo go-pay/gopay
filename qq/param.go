@@ -113,16 +113,16 @@ func (q *Client) getReleaseSign(apiKey string, signType string, bm gopay.BodyMap
 		xlog.Debugf("QQ_Request_SignStr: %s", signParams)
 	}
 	var h hash.Hash
-	q.mu.Lock()
-	defer func() {
-		h.Reset()
-		q.mu.Unlock()
-	}()
 	if signType == SignType_HMAC_SHA256 {
 		h = q.sha256Hash
 	} else {
 		h = q.md5Hash
 	}
+	q.mu.Lock()
+	defer func() {
+		h.Reset()
+		q.mu.Unlock()
+	}()
 	h.Write([]byte(signParams))
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 }

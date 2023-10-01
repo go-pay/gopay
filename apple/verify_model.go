@@ -7,7 +7,7 @@ type VerifyRequest struct {
 	Receipt string `json:"receipt-data"`
 
 	// Password App的秘钥
-	Password string `json:"password"`
+	Password string `json:"password,omitempty"`
 
 	// ExcludeOldTranscations Set this value to true for the response to include only the latest renewal transaction for any subscriptions. Use this field only for app receipts that contain auto-renewable subscriptions.
 	ExcludeOldTranscations bool `json:"exclude-old-transactions"`

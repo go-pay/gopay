@@ -198,16 +198,16 @@ func (w *Client) getReleaseSign(apiKey string, signType string, bm gopay.BodyMap
 		xlog.Debugf("Wechat_Request_SignStr: %s", signParams)
 	}
 	var h hash.Hash
-	w.mu.Lock()
-	defer func() {
-		h.Reset()
-		w.mu.Unlock()
-	}()
 	if signType == SignType_HMAC_SHA256 {
 		h = w.sha256Hash
 	} else {
 		h = w.md5Hash
 	}
+	w.mu.Lock()
+	defer func() {
+		h.Reset()
+		w.mu.Unlock()
+	}()
 	h.Write([]byte(signParams))
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 }

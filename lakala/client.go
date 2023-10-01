@@ -26,6 +26,7 @@ type Client struct {
 	DebugSwitch    gopay.DebugSwitch // 调试开关，是否打印日志
 	hc             *xhttp.Client
 	sha256Hash     hash.Hash
+	mu             sync.Mutex
 }
 
 // NewClient 初始化lakala户端
@@ -88,16 +89,15 @@ func (c *Client) getRsaSign(bm gopay.BodyMap) (sign string, err error) {
 		ts             = bm.Get("time")
 		nonceStr       = bm.Get("nonce_str")
 		credentialCode = c.credentialCode
-		mu             sync.Mutex
 	)
 	if ts == "" || nonceStr == "" {
 		return "", fmt.Errorf("签名缺少必要的参数")
 	}
 	validStr := fmt.Sprintf("%v&%v&%v&%v", partnerCode, ts, nonceStr, credentialCode)
-	mu.Lock()
+	c.mu.Lock()
 	defer func() {
 		c.sha256Hash.Reset()
-		mu.Unlock()
+		c.mu.Unlock()
 	}()
 	c.sha256Hash.Write([]byte(validStr))
 	sign = strings.ToLower(hex.EncodeToString(c.sha256Hash.Sum(nil)))

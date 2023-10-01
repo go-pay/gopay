@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"hash"
+	"sync"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
@@ -26,6 +27,9 @@ type Client struct {
 	isProd     bool            // 是否正式环境
 	privateKey *rsa.PrivateKey // 商户的RSA私钥
 	publicKey  *rsa.PublicKey  // 通联的公钥
+	hc         *xhttp.Client
+	mu         sync.Mutex
+	sha1Hash   hash.Hash
 }
 
 // NewClient 初始化通联客户端
@@ -50,6 +54,8 @@ func NewClient(cusId, appId, privateKey, publicKey string, isProd bool) (*Client
 		isProd:     isProd,
 		privateKey: prk,
 		publicKey:  puk,
+		hc:         xhttp.NewClient(),
+		sha1Hash:   sha1.New(),
 	}, nil
 }
 
@@ -62,25 +68,25 @@ func (c *Client) SetOrgId(id string) *Client {
 // getRsaSign 获取签名字符串
 func (c *Client) getRsaSign(bm gopay.BodyMap, signType string, privateKey *rsa.PrivateKey) (sign string, err error) {
 	var (
-		h              hash.Hash
 		hashs          crypto.Hash
 		encryptedBytes []byte
 	)
 	switch signType {
 	case RSA:
-		h = sha1.New()
 		hashs = crypto.SHA1
 	case SM2:
 		return "", errors.New("暂不支持SM2加密")
 	default:
-		h = sha1.New()
 		hashs = crypto.SHA1
 	}
 	signParams := bm.EncodeAliPaySignParams()
-	if _, err = h.Write([]byte(signParams)); err != nil {
-		return
-	}
-	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, privateKey, hashs, h.Sum(nil)); err != nil {
+	c.mu.Lock()
+	defer func() {
+		c.sha1Hash.Reset()
+		c.mu.Unlock()
+	}()
+	c.sha1Hash.Write([]byte(signParams))
+	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, privateKey, hashs, c.sha1Hash.Sum(nil)); err != nil {
 		return util.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
 	}
 	sign = base64.StdEncoding.EncodeToString(encryptedBytes)
@@ -117,12 +123,11 @@ func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs 
 	if err != nil {
 		return nil, err
 	}
-	httpClient := xhttp.NewClient()
 	url := baseUrl
 	if !c.isProd {
 		url = sandboxBaseUrl
 	}
-	res, bs, err := httpClient.Type(xhttp.TypeForm).Post(url + path).SendString(param).EndBytes(ctx)
+	res, bs, err := c.hc.Req(xhttp.TypeForm).Post(url + path).SendString(param).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
