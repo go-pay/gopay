@@ -1,10 +1,10 @@
 package alipay
 
 import (
-	"context"
 	"crypto/rsa"
 	"crypto/sha1"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"hash"
@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/pkg/aes"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/gopay/pkg/xlog"
@@ -30,7 +31,8 @@ type Client struct {
 	SignType           string
 	AppAuthToken       string
 	IsProd             bool
-	bodySize           int // http response body size(MB), default is 10MB
+	aesKey             string // biz_content 加密的 AES KEY
+	ivKey              []byte
 	privateKey         *rsa.PrivateKey
 	aliPayPublicKey    *rsa.PublicKey // 支付宝证书公钥内容 alipayPublicCert.crt
 	autoSign           bool
@@ -91,18 +93,10 @@ func (a *Client) SetBodySize(sizeMB int) {
 	}
 }
 
-// Deprecated
-// 推荐使用 PostAliPayAPISelfV2()
-// 示例：请参考 client_test.go 的 TestClient_PostAliPayAPISelf() 方法
-func (a *Client) PostAliPayAPISelf(ctx context.Context, bm gopay.BodyMap, method string, aliRsp any) (err error) {
-	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, method); err != nil {
-		return err
-	}
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return err
-	}
-	return nil
+// SetAESKey 设置 biz_content 的AES加密key，设置此参数默认开启 biz_content 参数加密
+func (a *Client) SetAESKey(aesKey string) {
+	a.aesKey = aesKey
+	a.ivKey = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 }
 
 // Deprecated
@@ -197,7 +191,20 @@ func (a *Client) pubParamsHandle(bm gopay.BodyMap, method, bizContent string, au
 		pubBody.Set("auth_token", authToken[0])
 	}
 	if bizContent != util.NULL {
-		pubBody.Set("biz_content", bizContent)
+		if a.aesKey == util.NULL {
+			pubBody.Set("biz_content", bizContent)
+		} else {
+			// AES Encrypt biz_content
+			encryptBizContent, err := a.encryptBizContent(bizContent)
+			if err != nil {
+				return "", fmt.Errorf("EncryptBizContent Error: %w", err)
+			}
+			if a.DebugSwitch == gopay.DebugOn {
+				xlog.Debugf("Alipay_Origin_BizContent: %s", bizContent)
+				xlog.Debugf("Alipay_Encrypt_BizContent: %s", encryptBizContent)
+			}
+			pubBody.Set("biz_content", encryptBizContent)
+		}
 	}
 	// sign
 	sign, err := a.getRsaSign(pubBody, pubBody.GetString("sign_type"))
@@ -241,4 +248,12 @@ func (a *Client) checkPublicParam(bm gopay.BodyMap) {
 	if bm.GetString("app_auth_token") == "" && a.AppAuthToken != util.NULL {
 		bm.Set("app_auth_token", a.AppAuthToken)
 	}
+}
+
+func (a *Client) encryptBizContent(originData string) (string, error) {
+	encryptData, err := aes.CBCEncrypt([]byte(originData), []byte(a.aesKey), a.ivKey)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(encryptData), nil
 }

@@ -34,8 +34,7 @@ func FormatURLParam(body gopay.BodyMap) (urlParam string) {
 // encryptedData:包括敏感数据在内的完整用户信息的加密数据
 // secretKey:AES密钥，支付宝管理平台配置
 // beanPtr:需要解析到的结构体指针
-// 文档：https://opendocs.alipay.com/mini/introduce/aes
-// 文档：https://opendocs.alipay.com/open/common/104567
+// 文档：https://opendocs.alipay.com/common/02mse3
 func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr any) (err error) {
 	if encryptedData == util.NULL || secretKey == util.NULL {
 		return errors.New("encryptedData or secretKey is null")
@@ -76,8 +75,7 @@ func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr any) (err 
 // DecryptOpenDataToBodyMap 解密支付宝开放数据到 BodyMap
 // encryptedData:包括敏感数据在内的完整用户信息的加密数据
 // secretKey:AES密钥，支付宝管理平台配置
-// 文档：https://opendocs.alipay.com/mini/introduce/aes
-// 文档：https://opendocs.alipay.com/open/common/104567
+// 文档：https://opendocs.alipay.com/common/02mse3
 func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap, err error) {
 	if encryptedData == util.NULL || secretKey == util.NULL {
 		return nil, errors.New("encryptedData or secretKey is null")

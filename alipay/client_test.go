@@ -42,6 +42,9 @@ func TestMain(m *testing.M) {
 		SetReturnUrl("https://www.fmm.ink").
 		SetNotifyUrl("https://www.fmm.ink")
 
+	// 设置biz_content加密KEY，设置此参数默认开启加密（目前未测试成功）
+	//client.SetAESKey("KvKUTqSVZX2fUgmxnFyMaQ==")
+
 	// 自动同步验签（只支持证书模式）
 	// 传入 支付宝公钥证书 alipayPublicCert.crt 内容
 	client.AutoVerifySign(cert.AlipayPublicContentRSA2)
