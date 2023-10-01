@@ -175,6 +175,12 @@ const (
 	v3ComplaintUploadImage          = "/v3/merchant-service/images/upload"                           // 商户上传反馈图片 POST
 	v3ComplaintUpdateRefundProgress = "/v3/merchant-service/complaints-v2/%s/update-refund-progress" // complaint_id 更新退款审批结果 POST
 
+	// 商户平台处置通知
+	v3ViolationNotifyUrlCreate = "/v3/merchant-risk-manage/violation-notifications" // 创建商户违规通知回调地址 POST
+	v3ViolationNotifyUrlQuery  = "/v3/merchant-risk-manage/violation-notifications" // 查询商户违规通知回调地址 GET
+	v3ViolationNotifyUrlUpdate = "/v3/merchant-risk-manage/violation-notifications" // 查询商户违规通知回调地址 PUT
+	v3ViolationNotifyUrlDelete = "/v3/merchant-risk-manage/violation-notifications" // 删除商户违规通知回调地址 DELETE
+
 	// 分账（服务商）
 	v3ProfitShareOrder           = "/v3/profitsharing/orders"                  // 请求分账 POST
 	v3ProfitShareQuery           = "/v3/profitsharing/orders/%s"               // 查询分账结果 GET
