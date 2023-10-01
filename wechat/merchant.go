@@ -2,7 +2,6 @@ package wechat
 
 import (
 	"context"
-	"crypto/tls"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -24,15 +23,10 @@ func (w *Client) Transfer(ctx context.Context, bm gopay.BodyMap) (wxRsp *Transfe
 	bm.Set("mch_appid", w.AppId)
 	bm.Set("mchid", w.MchId)
 	var (
-		tlsConfig *tls.Config
-		url       = baseUrlCh + transfers
+		url = baseUrlCh + transfers
 	)
-	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
-		return nil, err
-	}
 	bm.Set("sign", w.getReleaseSign(w.ApiKey, SignType_MD5, bm))
 
-	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Req(xhttp.TypeXML)
 	if w.BaseURL != util.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + transfers
@@ -42,7 +36,7 @@ func (w *Client) Transfer(ctx context.Context, bm gopay.BodyMap) (wxRsp *Transfe
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, err := httpClient.Post(url).SendString(req).EndBytes(ctx)
+	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -70,15 +64,10 @@ func (w *Client) GetTransferInfo(ctx context.Context, bm gopay.BodyMap) (wxRsp *
 	bm.Set("appid", w.AppId)
 	bm.Set("mch_id", w.MchId)
 	var (
-		tlsConfig *tls.Config
-		url       = baseUrlCh + getTransferInfo
+		url = baseUrlCh + getTransferInfo
 	)
-	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
-		return nil, err
-	}
 	bm.Set("sign", w.getReleaseSign(w.ApiKey, SignType_MD5, bm))
 
-	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Req(xhttp.TypeXML)
 	if w.BaseURL != util.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + getTransferInfo
@@ -88,7 +77,7 @@ func (w *Client) GetTransferInfo(ctx context.Context, bm gopay.BodyMap) (wxRsp *
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, err := httpClient.Post(url).SendString(req).EndBytes(ctx)
+	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -118,15 +107,10 @@ func (w *Client) PayBank(ctx context.Context, bm gopay.BodyMap) (wxRsp *PayBankR
 	}
 	bm.Set("mch_id", w.MchId)
 	var (
-		tlsConfig *tls.Config
-		url       = baseUrlCh + payBank
+		url = baseUrlCh + payBank
 	)
-	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
-		return nil, err
-	}
 	bm.Set("sign", w.getReleaseSign(w.ApiKey, SignType_MD5, bm))
 
-	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Req(xhttp.TypeXML)
 	if w.BaseURL != util.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + payBank
@@ -136,7 +120,7 @@ func (w *Client) PayBank(ctx context.Context, bm gopay.BodyMap) (wxRsp *PayBankR
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, err := httpClient.Post(url).SendString(req).EndBytes(ctx)
+	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -162,15 +146,10 @@ func (w *Client) QueryBank(ctx context.Context, bm gopay.BodyMap) (wxRsp *QueryB
 	}
 	bm.Set("mch_id", w.MchId)
 	var (
-		tlsConfig *tls.Config
-		url       = baseUrlCh + queryBank
+		url = baseUrlCh + queryBank
 	)
-	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
-		return nil, err
-	}
 	bm.Set("sign", w.getReleaseSign(w.ApiKey, SignType_MD5, bm))
 
-	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Req(xhttp.TypeXML)
 	if w.BaseURL != util.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + queryBank
@@ -180,7 +159,7 @@ func (w *Client) QueryBank(ctx context.Context, bm gopay.BodyMap) (wxRsp *QueryB
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, err := httpClient.Post(url).SendString(req).EndBytes(ctx)
+	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -206,20 +185,15 @@ func (w *Client) GetRSAPublicKey(ctx context.Context, bm gopay.BodyMap) (wxRsp *
 	}
 	bm.Set("mch_id", w.MchId)
 	var (
-		tlsConfig *tls.Config
-		url       = getPublicKey
+		url = getPublicKey
 	)
-	if tlsConfig, err = w.addCertConfig(nil, nil, nil); err != nil {
-		return nil, err
-	}
 	bm.Set("sign", w.getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm))
 
-	httpClient := xhttp.NewClient().SetTLSConfig(tlsConfig).Req(xhttp.TypeXML)
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	res, bs, err := httpClient.Post(url).SendString(req).EndBytes(ctx)
+	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}

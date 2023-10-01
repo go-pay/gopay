@@ -16,6 +16,7 @@ import (
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/gopay/pkg/xlog"
 	"golang.org/x/crypto/pkcs12"
 )
 
@@ -28,13 +29,11 @@ func (q *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath any) 
 	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return err
 	}
-	var config *tls.Config
-	if config, err = q.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
+	config, err := q.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
+	if err != nil {
 		return
 	}
-	q.mu.Lock()
-	q.certificate = &config.Certificates[0]
-	q.mu.Unlock()
+	q.tlsHc.SetTLSConfig(config)
 	return nil
 }
 
@@ -88,7 +87,7 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File any) error {
 }
 
 // 生成请求XML的Body体
-func generateXml(bm gopay.BodyMap) (reqXml string) {
+func GenerateXml(bm gopay.BodyMap) (reqXml string) {
 	bs, err := xml.Marshal(bm)
 	if err != nil {
 		return util.NULL
@@ -108,17 +107,28 @@ func GetReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign stri
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 }
 
+func (q *Client) getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
+	signParams := bm.EncodeWeChatSignParams(apiKey)
+	if q.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("QQ_Request_SignStr: %s", signParams)
+	}
+	var h hash.Hash
+	q.mu.Lock()
+	defer func() {
+		h.Reset()
+		q.mu.Unlock()
+	}()
+	if signType == SignType_HMAC_SHA256 {
+		h = q.sha256Hash
+	} else {
+		h = q.md5Hash
+	}
+	h.Write([]byte(signParams))
+	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
+}
+
 func (q *Client) addCertConfig(certFile, keyFile, pkcs12File any) (tlsConfig *tls.Config, err error) {
 	if certFile == nil && keyFile == nil && pkcs12File == nil {
-		q.mu.RLock()
-		defer q.mu.RUnlock()
-		if q.certificate != nil {
-			tlsConfig = &tls.Config{
-				Certificates:       []tls.Certificate{*q.certificate},
-				InsecureSkipVerify: true,
-			}
-			return tlsConfig, nil
-		}
 		return nil, errors.New("cert parse failed")
 	}
 

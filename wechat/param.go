@@ -81,7 +81,7 @@ func (w *Client) addCertFileContentOrPath(certFile, keyFile, pkcs12File any) (er
 	if err != nil {
 		return
 	}
-	w.tlsHc = xhttp.NewClient().SetTLSConfig(config)
+	w.tlsHc.SetTLSConfig(config)
 	return
 }
 
@@ -193,15 +193,20 @@ func GetReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign stri
 
 // 获取微信支付正式环境Sign值
 func (w *Client) getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
-	var h hash.Hash
-	if signType == SignType_HMAC_SHA256 {
-		h = hmac.New(sha256.New, []byte(apiKey))
-	} else {
-		h = md5.New()
-	}
 	signParams := bm.EncodeWeChatSignParams(apiKey)
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request_SignStr: %s", signParams)
+	}
+	var h hash.Hash
+	w.mu.Lock()
+	defer func() {
+		h.Reset()
+		w.mu.Unlock()
+	}()
+	if signType == SignType_HMAC_SHA256 {
+		h = w.sha256Hash
+	} else {
+		h = w.md5Hash
 	}
 	h.Write([]byte(signParams))
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))

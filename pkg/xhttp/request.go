@@ -160,7 +160,9 @@ func (r *Request) EndBytes(ctx context.Context) (res *http.Response, bs []byte, 
 				body = strings.NewReader(string(r.jsonByte))
 			}
 		case TypeForm, TypeFormData, TypeUrlencoded:
-			body = strings.NewReader(r.formString)
+			if r.formString != "" {
+				body = strings.NewReader(r.formString)
+			}
 		case TypeMultipartFormData:
 			for k, v := range r.multipartBodyMap {
 				// file 参数
@@ -183,7 +185,9 @@ func (r *Request) EndBytes(ctx context.Context) (res *http.Response, bs []byte, 
 			_ = bw.Close()
 			r.Header.Set("Content-Type", bw.FormDataContentType())
 		case TypeXML:
-			body = strings.NewReader(r.formString)
+			if r.formString != "" {
+				body = strings.NewReader(r.formString)
+			}
 		default:
 			return nil, nil, errors.New("Request type Error ")
 		}

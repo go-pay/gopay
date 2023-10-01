@@ -5,13 +5,16 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"hash"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 // Client lakala
@@ -19,9 +22,10 @@ type Client struct {
 	ctx            context.Context   // 上下文
 	PartnerCode    string            // partner_code:商户编码，由4~6位大写字母或数字构成
 	credentialCode string            // credential_code:系统为商户分配的开发校验码，请妥善保管，不要在公开场合泄露
-	bodySize       int               // http response body size(MB), default is 10MB
 	IsProd         bool              // 是否生产环境
 	DebugSwitch    gopay.DebugSwitch // 调试开关，是否打印日志
+	hc             *xhttp.Client
+	sha256Hash     hash.Hash
 }
 
 // NewClient 初始化lakala户端
@@ -38,6 +42,8 @@ func NewClient(partnerCode, credentialCode string, isProd bool) (client *Client,
 		credentialCode: credentialCode,
 		IsProd:         isProd,
 		DebugSwitch:    gopay.DebugOff,
+		hc:             xhttp.NewClient(),
+		sha256Hash:     sha256.New(),
 	}
 	return client, nil
 }
@@ -45,7 +51,7 @@ func NewClient(partnerCode, credentialCode string, isProd bool) (client *Client,
 // SetBodySize 设置http response body size(MB)
 func (c *Client) SetBodySize(sizeMB int) {
 	if sizeMB > 0 {
-		c.bodySize = sizeMB
+		c.hc.SetBodySize(sizeMB)
 	}
 }
 
@@ -82,32 +88,38 @@ func (c *Client) getRsaSign(bm gopay.BodyMap) (sign string, err error) {
 		ts             = bm.Get("time")
 		nonceStr       = bm.Get("nonce_str")
 		credentialCode = c.credentialCode
+		mu             sync.Mutex
 	)
 	if ts == "" || nonceStr == "" {
 		return "", fmt.Errorf("签名缺少必要的参数")
 	}
 	validStr := fmt.Sprintf("%v&%v&%v&%v", partnerCode, ts, nonceStr, credentialCode)
-	h := sha256.New()
-	h.Write([]byte(validStr))
-	sign = strings.ToLower(hex.EncodeToString(h.Sum(nil)))
+	mu.Lock()
+	defer func() {
+		c.sha256Hash.Reset()
+		mu.Unlock()
+	}()
+	c.sha256Hash.Write([]byte(validStr))
+	sign = strings.ToLower(hex.EncodeToString(c.sha256Hash.Sum(nil)))
 	return
 }
 
 // PUT 发起请求
 func (c *Client) doPut(ctx context.Context, path string, bm gopay.BodyMap) (bs []byte, err error) {
-	httpClient := xhttp.NewClient().Type(xhttp.TypeJSON)
-	if c.bodySize > 0 {
-		httpClient.SetBodySize(c.bodySize)
-	}
-	httpClient.Header.Add("Content-Type", "application/json")
-	httpClient.Header.Add("Accept", "application/json")
 	var url = baseUrlProd + path
 	param, err := c.pubParamsHandle()
 	if err != nil {
 		return nil, err
 	}
+	req := c.hc.Req()
+	req.Header.Add("Accept", "application/json")
 	uri := url + "?" + param
-	res, bs, err := httpClient.Put(uri).SendBodyMap(bm).EndBytes(ctx)
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Lakala_Url: %s", uri)
+		xlog.Debugf("Lakala_Req_Body: %s", bm.JsonBody())
+		xlog.Debugf("Lakala_Req_Headers: %#v", req.Header)
+	}
+	res, bs, err := req.Put(uri).SendBodyMap(bm).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -119,19 +131,20 @@ func (c *Client) doPut(ctx context.Context, path string, bm gopay.BodyMap) (bs [
 
 // PUT 发起请求
 func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs []byte, err error) {
-	httpClient := xhttp.NewClient().Type(xhttp.TypeJSON)
-	if c.bodySize > 0 {
-		httpClient.SetBodySize(c.bodySize)
-	}
-	httpClient.Header.Add("Content-Type", "application/json")
-	httpClient.Header.Add("Accept", "application/json")
 	var url = baseUrlProd + path
 	param, err := c.pubParamsHandle()
 	if err != nil {
 		return nil, err
 	}
+	req := c.hc.Req()
+	req.Header.Add("Accept", "application/json")
 	uri := url + "?" + param
-	res, bs, err := httpClient.Post(uri).SendBodyMap(bm).EndBytes(ctx)
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Lakala_Url: %s", uri)
+		xlog.Debugf("Lakala_Req_Body: %s", bm.JsonBody())
+		xlog.Debugf("Lakala_Req_Headers: %#v", req.Header)
+	}
+	res, bs, err := req.Post(uri).SendBodyMap(bm).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -143,13 +156,6 @@ func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs 
 
 // GET 发起请求
 func (c *Client) doGet(ctx context.Context, path, queryParams string) (bs []byte, err error) {
-	httpClient := xhttp.NewClient().Type(xhttp.TypeJSON)
-	if c.bodySize > 0 {
-		httpClient.SetBodySize(c.bodySize)
-	}
-	httpClient.Header.Add("Content-Type", "application/json")
-	httpClient.Header.Add("Accept", "application/json")
-
 	var url = baseUrlProd + path
 	param, err := c.pubParamsHandle()
 	if err != nil {
@@ -158,8 +164,14 @@ func (c *Client) doGet(ctx context.Context, path, queryParams string) (bs []byte
 	if queryParams != "" {
 		param = param + "&" + queryParams
 	}
+	req := c.hc.Req()
+	req.Header.Add("Accept", "application/json")
 	uri := url + "?" + param
-	res, bs, err := httpClient.Get(uri).EndBytes(ctx)
+	if c.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Lakala_Url: %s", uri)
+		xlog.Debugf("Lakala_Req_Headers: %#v", req.Header)
+	}
+	res, bs, err := req.Get(uri).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}

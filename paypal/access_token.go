@@ -24,24 +24,24 @@ func (c *Client) GetAccessToken() (token *AccessToken, err error) {
 	url = baseUrl + getAccessToken
 	// Authorization
 	authHeader := AuthorizationPrefixBasic + base64.StdEncoding.EncodeToString([]byte(c.Clientid+":"+c.Secret))
-	// Request
-	httpClient := xhttp.NewClient()
-	httpClient.Header.Add(HeaderAuthorization, authHeader)
-	httpClient.Header.Add("Accept", "*/*")
+	req := c.hc.Req(xhttp.TypeForm)
+	req.Header.Add(HeaderAuthorization, authHeader)
+	req.Header.Add("Accept", "*/*")
 	// Body
 	bm := make(gopay.BodyMap)
 	bm.Set("grant_type", "client_credentials")
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("PayPal_RequestBody: %s", bm.JsonBody())
-		xlog.Debugf("PayPal_Authorization: %s", authHeader)
+		xlog.Debugf("PayPal_Url: %s", url)
+		xlog.Debugf("PayPal_Req_Body: %s", bm.JsonBody())
+		xlog.Debugf("PayPal_Req_Headers: %#v", req.Header)
 	}
-	res, bs, err := httpClient.Type(xhttp.TypeForm).Post(url).SendBodyMap(bm).EndBytes(c.ctx)
+	res, bs, err := req.Post(url).SendBodyMap(bm).EndBytes(c.ctx)
 	if err != nil {
 		return nil, err
 	}
 	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("PayPal_Response: %d > %s", res.StatusCode, string(bs))
-		xlog.Debugf("PayPal_Headers: %#v", res.Header)
+		xlog.Debugf("PayPal_Rsp_Headers: %#v", res.Header)
 	}
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)

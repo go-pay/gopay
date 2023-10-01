@@ -2,10 +2,14 @@ package wechat
 
 import (
 	"context"
+	"crypto/hmac"
+	"crypto/md5"
+	"crypto/sha256"
 	"crypto/tls"
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"hash"
 	"strings"
 	"sync"
 
@@ -22,10 +26,11 @@ type Client struct {
 	BaseURL     string
 	IsProd      bool
 	DebugSwitch gopay.DebugSwitch
-	//Certificate *tls.Certificate
-	mu    sync.RWMutex
-	hc    *xhttp.Client
-	tlsHc *xhttp.Client
+	mu          sync.RWMutex
+	sha256Hash  hash.Hash
+	md5Hash     hash.Hash
+	hc          *xhttp.Client
+	tlsHc       *xhttp.Client
 }
 
 // 初始化微信客户端 V2
@@ -40,7 +45,10 @@ func NewClient(appId, mchId, apiKey string, isProd bool) (client *Client) {
 		ApiKey:      apiKey,
 		IsProd:      isProd,
 		DebugSwitch: gopay.DebugOff,
+		sha256Hash:  hmac.New(sha256.New, []byte(apiKey)),
+		md5Hash:     md5.New(),
 		hc:          xhttp.NewClient(),
+		tlsHc:       xhttp.NewClient(),
 	}
 }
 
@@ -190,7 +198,6 @@ func (w *Client) doSanBoxPost(ctx context.Context, bm gopay.BodyMap, path string
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	w.mu.RLock()
 	res, bs, err := w.hc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
@@ -267,8 +274,6 @@ func (w *Client) doProdPost(ctx context.Context, bm gopay.BodyMap, path string) 
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	w.mu.Lock()
-	defer w.mu.Unlock()
 	res, bs, err := w.hc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
@@ -304,8 +309,6 @@ func (w *Client) doProdPostTLS(ctx context.Context, bm gopay.BodyMap, path strin
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request: %s", req)
 	}
-	w.mu.Lock()
-	defer w.mu.Unlock()
 	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
@@ -387,13 +390,12 @@ func (w *Client) doProdGet(ctx context.Context, bm gopay.BodyMap, path, signType
 	if w.BaseURL != util.NULL {
 		url = w.BaseURL + path
 	}
-
 	if w.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Wechat_Request: %s", bm.JsonBody())
 	}
 	param := bm.EncodeURLParams()
-	url = url + "?" + param
-	res, bs, err := w.hc.Req().Get(url).EndBytes(ctx)
+	uri := url + "?" + param
+	res, bs, err := w.hc.Req(xhttp.TypeXML).Get(uri).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
