@@ -356,6 +356,11 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 反馈处理完成：`client.V3ComplaintComplete()`
     * 更新退款审批结果：`client.V3ComplaintUpdateRefundProgress()`
     * 商户上传反馈图片：`client.V3ComplaintUploadImage()`
+* <font color='#07C160' size='4'>商户平台处置通知</font>
+    * 创建商户违规通知回调回调地址：`client.V3ViolationNotifyUrlCreate()`
+    * 查询商户违规通知回调回调地址：`client.V3ViolationNotifyUrlQuery()`
+    * 更新商户违规通知回调回调地址：`client.V3ViolationNotifyUrlUpdate()`
+    * 删除商户违规通知回调回调地址：`client.V3ViolationNotifyUrlDelete()`
 * <font color='#07C160' size='4'>其他能力</font>
     * 图片上传：`client.V3MediaUploadImage()`
     * 视频上传：`client.V3MediaUploadVideo()`
