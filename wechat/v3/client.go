@@ -20,7 +20,6 @@ type ClientV3 struct {
 	SerialNo    string
 	WxSerialNo  string
 	autoSign    bool
-	bodySize    int // http response body size(MB), default is 10MB
 	rwMu        sync.RWMutex
 	sha256Hash  hash.Hash
 	hc          *xhttp.Client
