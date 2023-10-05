@@ -2,13 +2,11 @@ package xhttp
 
 import (
 	"context"
-	"os"
-	"testing"
-	"time"
-
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xlog"
+	"os"
+	"testing"
 )
 
 type HttpGet struct {
@@ -21,9 +19,8 @@ var ctx = context.Background()
 
 func TestHttpGet(t *testing.T) {
 	client := NewClient()
-	client.Timeout = 10 * time.Second
 	// test
-	_, bs, err := client.Get("http://www.baidu.com").EndBytes(ctx)
+	_, bs, err := client.Req().Get("http://www.baidu.com").EndBytes(ctx)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -54,10 +51,9 @@ func TestHttpUploadFile(t *testing.T) {
 	}).SetFormFile("image", &util.File{Name: "logo.png", Content: fileContent})
 
 	client := NewClient()
-	client.Timeout = 10 * time.Second
 
 	rsp := new(HttpGet)
-	_, err = client.Type(TypeMultipartFormData).
+	_, err = client.Req(TypeMultipartFormData).
 		Post("http://localhost:2233/admin/v1/oss/uploadImage").
 		SendMultipartBodyMap(bm).
 		EndStruct(ctx, rsp)

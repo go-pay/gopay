@@ -68,12 +68,12 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 	authorization := Authorization + ` mchid="` + mchid + `",nonce_str="` + nonceStr + `",timestamp="` + ts + `",serial_no="` + serialNo + `",signature="` + sign + `"`
 	// Request
 	var url = v3BaseUrlCh + uri
-	httpClient := xhttp.NewClient()
-	httpClient.Header.Add(HeaderAuthorization, authorization)
-	httpClient.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
-	httpClient.Header.Add(HeaderSerial, serialNo)
-	httpClient.Header.Add("Accept", "*/*")
-	res, bs, err := httpClient.Type(xhttp.TypeJSON).Get(url).EndBytes(ctx)
+	hc := xhttp.NewClient().Req()
+	hc.Header.Add(HeaderAuthorization, authorization)
+	hc.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
+	hc.Header.Add(HeaderSerial, serialNo)
+	hc.Header.Add("Accept", "application/json")
+	res, bs, err := hc.Get(url).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}

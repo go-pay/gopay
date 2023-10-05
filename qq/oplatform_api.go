@@ -79,7 +79,7 @@ func GetAccessToken(ctx context.Context, appId, appSecret, code, redirectUri str
 	accessToken = new(AccessToken)
 	url := "https://graph.qq.com/oauth2.0/token?client_id=" + appId + "&client_secret=" + appSecret + "&code=" + code + "&redirect_uri=" + redirectUri + "&fmt=json" + "&grant_type=authorization_code"
 
-	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, accessToken)
+	_, err = xhttp.NewClient().Req().Get(url).EndStruct(ctx, accessToken)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func GetOpenId(ctx context.Context, accessToken string, lang ...string) (openid 
 	if len(lang) == 1 {
 		url += "&lang=" + lang[0]
 	}
-	_, bs, err := xhttp.NewClient().Get(url).EndBytes(ctx)
+	_, bs, err := xhttp.NewClient().Req().Get(url).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +124,7 @@ func GetUserInfo(ctx context.Context, accessToken, openId string, oauthConsumerK
 	if len(lang) == 1 {
 		url += "&lang=" + lang[0]
 	}
-	_, err = xhttp.NewClient().Get(url).EndStruct(ctx, userInfo)
+	_, err = xhttp.NewClient().Req().Get(url).EndStruct(ctx, userInfo)
 	if err != nil {
 		return nil, err
 	}

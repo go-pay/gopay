@@ -17,20 +17,13 @@ import (
 // SendCashRed 创建现金红包
 // 注意：如已使用client.AddCertFilePath()添加过证书，参数certFilePath、keyFilePath、pkcs12FilePath全传 nil，否则，3证书Path均不可空
 // 文档：https://qpay.qq.com/buss/wiki/221/1220
-func (q *Client) SendCashRed(ctx context.Context, bm gopay.BodyMap, certFilePath, keyFilePath, pkcs12FilePath any) (qqRsp *SendCashRedResponse, err error) {
-	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
-		return nil, err
-	}
+func (q *Client) SendCashRed(ctx context.Context, bm gopay.BodyMap) (qqRsp *SendCashRedResponse, err error) {
 	err = bm.CheckEmptyError("charset", "nonce_str", "mch_billno", "mch_name", "re_openid",
 		"total_amount", "total_num", "wishing", "act_name", "icon_id", "min_value", "max_value")
 	if err != nil {
 		return nil, err
 	}
-	tlsConfig, err := q.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
-	if err != nil {
-		return nil, err
-	}
-	bs, err := q.doQQRed(ctx, bm, createCashRed, tlsConfig)
+	bs, err := q.doQQRed(ctx, bm, createCashRed)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +58,7 @@ func (q *Client) QueryRedInfo(ctx context.Context, bm gopay.BodyMap) (qqRsp *Que
 	if err != nil {
 		return nil, err
 	}
-	bs, err := q.doQQRed(ctx, bm, queryRedInfo, nil)
+	bs, err := q.doQQRed(ctx, bm, queryRedInfo)
 	if err != nil {
 		return nil, err
 	}
