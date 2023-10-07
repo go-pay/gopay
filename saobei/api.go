@@ -1,4 +1,4 @@
-package allinpay
+package saobei
 
 const (
 	// payPath 小程序支付接口

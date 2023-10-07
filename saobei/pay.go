@@ -1,4 +1,6 @@
-package allinpay
+package saobei
+
+// 支付2.0接口
 
 import (
 	"context"
