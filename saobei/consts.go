@@ -17,7 +17,7 @@ const (
 	//ResultCodeFail 业务结果:02 失败
 	ResultCodeFail = "02"
 	//ResultCodePaying 业务结果:03 支付中
-	ResultCodePaying = "01"
+	ResultCodePaying = "03"
 
 	//TradeStatusSuccess 交易订单状态:支付成功
 	TradeStatusSuccess = "SUCCESS"
