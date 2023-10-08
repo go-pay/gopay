@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/md5"
 	"fmt"
+	"github.com/go-pay/gopay/pkg/xlog"
 	"hash"
 	"sync"
 
@@ -66,6 +67,9 @@ func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs 
 	if err != nil {
 		return nil, err
 	}
+
+	xlog.Debugf("saobeiParam:%+v", param.JsonBody())
+
 	url := baseUrl
 	if !c.isProd {
 		url = sandboxBaseUrl
