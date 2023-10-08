@@ -1,11 +1,5 @@
 package saobei
 
-const (
-	// URL
-	baseUrl        = ""
-	sandboxBaseUrl = "http://test2.lcsw.cn:8117/lcsw"
-)
-
 type RspBase struct {
 	ReturnCode string `json:"return_code"` //响应码：01成功 ，02失败，响应码仅代表通信状态，不代表业务结果
 	ReturnMsg  string `json:"return_msg"`  //返回信息提示，“退款成功”、“订单不存在”等

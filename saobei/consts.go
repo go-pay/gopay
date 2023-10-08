@@ -1,6 +1,9 @@
 package saobei
 
 const (
+	baseUrl        = "https://pay.lcsw.cn/lcsw"
+	sandboxBaseUrl = "http://test2.lcsw.cn:8117/lcsw"
+
 	//PayTypeWX 支付方式:微信
 	PayTypeWX = "010"
 	//PayTypeAli 支付方式:支付宝
