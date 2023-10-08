@@ -47,7 +47,7 @@ func (c *Client) BarcodePay(ctx context.Context, bm gopay.BodyMap) (rsp *Barcode
 	if err := bizErrCheck(rsp.RspBase); err != nil {
 		return nil, err
 	}
-	return rsp, c.verifySign(bs)
+	return rsp, nil
 }
 
 // Query 支付查询 https://help.lcsw.cn/xrmpic/tisnldchblgxohfl/rinsc3#title-node18
