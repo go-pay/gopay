@@ -11,6 +11,10 @@
 ### 支付2.0接口 
 > 请参考`gopay/saobei/pay_test.go`,
 * 小程序支付接口(暂无账号为测试可用性)：`client.MiniPay()`
+* 付款码支付 `client.BarcodePay()`
+* 支付查询  `client.Query()`
+* 退款申请 `client.Refund()`
+* 退款订单查询 `client.QueryRefund()`
 
 ### 资金接口
 > 请参考`gopay/saobei/merchant_test.go`,
