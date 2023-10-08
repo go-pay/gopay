@@ -91,7 +91,7 @@ func (c *Client) Refund(ctx context.Context, bm gopay.BodyMap) (rsp *RefundRsp, 
 }
 
 // QueryRefund 退款订单查询 https://help.lcsw.cn/xrmpic/tisnldchblgxohfl/rinsc3#title-node22
-func (c *Client) QueryRefund(ctx context.Context, bm gopay.BodyMap) (rsp *QueryRsp, err error) {
+func (c *Client) QueryRefund(ctx context.Context, bm gopay.BodyMap) (rsp *QueryRefundRsp, err error) {
 	err = bm.CheckEmptyError("pay_type", "terminal_trace", "terminal_time")
 	if err != nil {
 		return nil, err
@@ -100,7 +100,7 @@ func (c *Client) QueryRefund(ctx context.Context, bm gopay.BodyMap) (rsp *QueryR
 	if bs, err = c.doPost(ctx, queryRefundPath, bm); err != nil {
 		return nil, err
 	}
-	rsp = new(QueryRsp)
+	rsp = new(QueryRefundRsp)
 	if err = json.Unmarshal(bs, rsp); err != nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}

@@ -116,24 +116,31 @@ type RefundRsp struct {
 	OutRefundNo               string `json:"out_refund_no"`                //平台唯一退款单号
 }
 
-//// RefundRsp 退款申请
-//type RefundRsp struct {
-//	RspBase
-//	PayType       string `json:"pay_type"`       //支付方式，010微信，020支付宝
-//	MerchantName  string `json:"merchant_name"`  //商户名称
-//	MerchantNo    string `json:"merchant_no"`    //商户号
-//	TerminalId    string `json:"terminal_id"`    //终端号
-//	DeviceNo      string `json:"device_no"`      //商户终端设备号(商户自定义，如门店编号),必须在平台已配置过
-//	TerminalTrace string `json:"terminal_trace"` //终端流水号，商户系统的订单号，系统原样返回
-//	TerminalTime  string `json:"terminal_time"`  //终端交易时间，yyyyMMddHHmmss，全局统一时间格式，系统原样返回
-//
-//	RefundFee                 string `json:"refund_fee"`                   //退款金额，单位分
-//	RefundReceiptFee          string `json:"refund_receipt_fee"`           //退商家应结算金额,单位分
-//	RefundBuyerPayFee         string `json:"refund_buyer_pay_fee"`         //退买家实付金额（分）
-//	RefundPlatformDiscountFee string `json:"refund_platform_discount_fee"` //退平台优惠金额（分）
-//	RefundMerchantDiscountFee string `json:"refund_merchant_discount_fee"` //退商家优惠金额（分）
-//	RefundPromotionDetail     string `json:"refund_promotion_detail"`      //退优惠明细，详情见
-//	EndTime                   string `json:"end_time"`                     //退款完成时间，yyyyMMddHHmmss，全局统一时间格式
-//	OutTradeNo                string `json:"out_trade_no"`                 //平台唯一订单号
-//	OutRefundNo               string `json:"out_refund_no"`                //平台唯一退款单号
-//}
+// QueryRefundRsp 退款订单查询
+type QueryRefundRsp struct {
+	RspBase
+	PayType       string `json:"pay_type"`       //支付方式，010微信，020支付宝
+	MerchantName  string `json:"merchant_name"`  //商户名称
+	MerchantNo    string `json:"merchant_no"`    //商户号
+	TerminalId    string `json:"terminal_id"`    //终端号
+	DeviceNo      string `json:"device_no"`      //商户终端设备号(商户自定义，如门店编号),必须在平台已配置过
+	TerminalTrace string `json:"terminal_trace"` //终端流水号，商户系统的订单号，系统原样返回
+	TerminalTime  string `json:"terminal_time"`  //终端交易时间，yyyyMMddHHmmss，全局统一时间格式，系统原样返回
+
+	RefundFee                 string `json:"refund_fee"`                   //退款金额，单位分
+	RefundReceiptFee          string `json:"refund_receipt_fee"`           //退商家应结算金额,单位分
+	RefundBuyerPayFee         string `json:"refund_buyer_pay_fee"`         //退买家实付金额（分）
+	RefundPlatformDiscountFee string `json:"refund_platform_discount_fee"` //退平台优惠金额（分）
+	RefundMerchantDiscountFee string `json:"refund_merchant_discount_fee"` //退商家优惠金额（分）
+	RefundPromotionDetail     string `json:"refund_promotion_detail"`      //退优惠明细，详情见
+	EndTime                   string `json:"end_time"`                     //退款完成时间，yyyyMMddHHmmss，全局统一时间格式
+	OutRefundNo               string `json:"out_refund_no"`                //平台唯一退款单号
+	OutTradeNo                string `json:"out_trade_no"`                 //平台唯一订单号
+	TradeState                string `json:"trade_state"`                  //交易订单状态，SUCCESS支付成功，REFUND转入退款，NOTPAY未支付，CLOSED已关闭，USERPAYING用户支付中，REVOKED已撤销，NOPAY未支付支付超时，PAYERROR支付失败
+	ChannelTradeNo            string `json:"channel_trade_no"`             //通道订单号，微信订单号、支付宝订单号等
+	ChannelOrderNo            string `json:"channel_order_no"`             //银行渠道订单号，微信支付时显示在支付成功页面的条码，可用作扫码查询和扫码退款时匹配
+	UserId                    string `json:"user_id"`                      //退款方用户id，“微信openid”、“支付宝账户”、“qq号”等
+	Attach                    string `json:"attach"`                       //附加数据,原样返回
+	PayTrace                  string `json:"pay_trace"`                    //退款终端流水号
+	PayTime                   string `json:"pay_time"`                     //退款终端交易时间
+}
