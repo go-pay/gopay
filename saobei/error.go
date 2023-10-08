@@ -18,12 +18,12 @@ func bizErrCheck(resp RspBase) error {
 			Msg:  resp.ReturnMsg,
 		}
 	}
-	if resp.ResultCode != "01" {
-		return &BizErr{
-			Code: resp.ResultCode,
-			Msg:  resp.ReturnMsg,
-		}
-	}
+	//if resp.ResultCode != "01" {
+	//	return &BizErr{
+	//		Code: resp.ResultCode,
+	//		Msg:  resp.ReturnMsg,
+	//	}
+	//}
 	return nil
 }
 
