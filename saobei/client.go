@@ -4,9 +4,11 @@ import (
 	"context"
 	"crypto/md5"
 	"fmt"
-	"github.com/go-pay/gopay/pkg/xlog"
 	"hash"
 	"sync"
+
+	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/gopay/pkg/xlog"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
@@ -50,10 +52,18 @@ func NewClient(instNo, key, merchantNo, terminalId, accessToken string, isProd b
 
 // pubParamsHandle 公共参数处理
 func (c *Client) pubParamsHandle(bm gopay.BodyMap) gopay.BodyMap {
-	bm.Set("pay_ver", c.payVer).
-		Set("service_id", c.serviceId).
-		Set("merchant_no", c.merchantNo).
-		Set("terminal_id", c.terminalId)
+	if ver := bm.GetString("pay_ver"); ver != util.NULL {
+		bm.Set("pay_ver", c.payVer)
+	}
+	if v := bm.GetString("service_id"); v != util.NULL {
+		bm.Set("service_id", c.serviceId)
+	}
+	if v := bm.GetString("merchant_no"); v != util.NULL {
+		bm.Set("merchant_no", c.merchantNo)
+	}
+	if v := bm.GetString("terminal_id"); v != util.NULL {
+		bm.Set("terminal_id", c.terminalId)
+	}
 	sign := c.getRsaSign(bm)
 
 	bm.Set("key_sign", sign)
