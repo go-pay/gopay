@@ -60,19 +60,37 @@ func (c *Client) SetBodySize(sizeMB int) (client *Client) {
 }
 
 func (c *Client) Req(typeStr ...RequestType) *Request {
-	tp := TypeJSON
-	if len(typeStr) == 1 {
+	var (
+		reqTp = TypeJSON // default
+		resTp = TypeJSON // default
+		tLen  = len(typeStr)
+	)
+	switch {
+	case tLen == 1:
 		tpp := typeStr[0]
 		if _, ok := types[tpp]; ok {
-			tp = tpp
+			reqTp = tpp
+			// default resTp = reqTp
+			resTp = tpp
+		}
+	case tLen > 1:
+		// first param is request type
+		tpp := typeStr[0]
+		if _, ok := types[tpp]; ok {
+			reqTp = tpp
+		}
+		// second param is response data type
+		stpp := typeStr[1]
+		if _, ok := types[stpp]; ok {
+			resTp = stpp
 		}
 	}
 	r := &Request{
 		client:        c,
 		Header:        make(http.Header),
-		requestType:   tp,
-		unmarshalType: string(tp),
+		requestType:   reqTp,
+		unmarshalType: string(resTp),
 	}
-	r.Header.Set("Content-Type", types[tp])
+	r.Header.Set("Content-Type", types[reqTp])
 	return r
 }
