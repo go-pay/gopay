@@ -284,7 +284,7 @@ func (w *Client) doProdPost(ctx context.Context, bm gopay.BodyMap, path string) 
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
 	}
-	if strings.Contains(string(bs), "HTML") || strings.Contains(string(bs), "html") {
+	if strings.Contains(string(bs), "<HTML") || strings.Contains(string(bs), "<html") {
 		return nil, errors.New(string(bs))
 	}
 	return bs, nil
@@ -319,7 +319,7 @@ func (w *Client) doProdPostTLS(ctx context.Context, bm gopay.BodyMap, path strin
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
 	}
-	if strings.Contains(string(bs), "HTML") || strings.Contains(string(bs), "html") {
+	if strings.Contains(string(bs), "<HTML") || strings.Contains(string(bs), "<html") {
 		return nil, errors.New(string(bs))
 	}
 	return bs, nil
@@ -344,7 +344,7 @@ func (w *Client) doProdPostPure(ctx context.Context, bm gopay.BodyMap, path stri
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
 	}
-	if strings.Contains(string(bs), "HTML") || strings.Contains(string(bs), "html") {
+	if strings.Contains(string(bs), "<HTML") || strings.Contains(string(bs), "<html") {
 		return nil, errors.New(string(bs))
 	}
 	return bs, nil
@@ -369,7 +369,7 @@ func (w *Client) doProdPostPureTLS(ctx context.Context, bm gopay.BodyMap, path s
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
 	}
-	if strings.Contains(string(bs), "HTML") || strings.Contains(string(bs), "html") {
+	if strings.Contains(string(bs), "<HTML") || strings.Contains(string(bs), "<html") {
 		return nil, errors.New(string(bs))
 	}
 	return bs, nil
@@ -405,7 +405,7 @@ func (w *Client) doProdGet(ctx context.Context, bm gopay.BodyMap, path, signType
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
 	}
-	if strings.Contains(string(bs), "HTML") || strings.Contains(string(bs), "html") {
+	if strings.Contains(string(bs), "<HTML") || strings.Contains(string(bs), "<html") {
 		return nil, errors.New(string(bs))
 	}
 	return bs, nil
