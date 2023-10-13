@@ -3,6 +3,8 @@
    (1) 支付宝：新增 client.TradeOrderOnSettleQuery()，分账剩余金额查询。
    (2) 支付宝：新增 client.TradeRoyaltyRateQuery()，分账比例查询。
    (3) 支付宝：更新部分结构体，增加 open_id 相关字段。
+   (4) 扫呗：新增扫呗支付方式。
+   (5) gopay：xhttp库升级改造。
 
 版本号：Release 1.5.96
 修改记录：
