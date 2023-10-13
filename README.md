@@ -52,6 +52,7 @@ func main() {
 * #### [拉卡拉支付](https://github.com/go-pay/gopay/blob/main/doc/lakala.md)
 * #### [Paypal支付](https://github.com/go-pay/gopay/blob/main/doc/paypal.md)
 * #### [Apple支付校验](https://github.com/go-pay/gopay/blob/main/doc/apple.md)
+* #### [扫呗支付](https://github.com/go-pay/gopay/blob/main/doc/saobei.md)
 
 ---
 
