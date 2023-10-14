@@ -14,7 +14,7 @@ type BizErr struct {
 
 // bizErrCheck 检查业务码是否为10000 否则返回一个BizErr
 func bizErrCheck(errRsp ErrorResponse) error {
-	if errRsp.Code != "10000" {
+	if errRsp.Code != "10000" && errRsp.Code != "10003" {
 		return &BizErr{
 			Code:    errRsp.Code,
 			Msg:     errRsp.Msg,
