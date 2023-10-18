@@ -25,7 +25,7 @@ func (a *Client) TradePay(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeP
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+	if err = bizErrCheckTradePay(aliRsp.Response.ErrorResponse); err != nil {
 		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
