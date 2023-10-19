@@ -3,8 +3,6 @@ package wechat
 import (
 	"context"
 	"crypto/rsa"
-	"crypto/sha256"
-	"hash"
 	"sync"
 
 	"github.com/go-pay/gopay"
@@ -21,7 +19,6 @@ type ClientV3 struct {
 	WxSerialNo  string
 	autoSign    bool
 	rwMu        sync.RWMutex
-	sha256Hash  hash.Hash
 	hc          *xhttp.Client
 	privateKey  *rsa.PrivateKey
 	wxPublicKey *rsa.PublicKey
@@ -48,7 +45,6 @@ func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3
 		SerialNo:    serialNo,
 		ApiV3Key:    []byte(apiV3Key),
 		privateKey:  priKey,
-		sha256Hash:  sha256.New(),
 		ctx:         context.Background(),
 		DebugSwitch: gopay.DebugOff,
 		hc:          xhttp.NewClient(),

@@ -182,25 +182,22 @@ func (a *Client) getRsaSign(bm gopay.BodyMap, signType string) (sign string, err
 
 	switch signType {
 	case RSA:
-		h = a.sha1Hash
+		h = sha1.New()
 		hashs = crypto.SHA1
 	case RSA2:
-		h = a.sha256Hash
+		h = sha256.New()
 		hashs = crypto.SHA256
 	default:
-		h = a.sha256Hash
+		h = sha256.New()
 		hashs = crypto.SHA256
 	}
 	signParams := bm.EncodeAliPaySignParams()
 	if a.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Alipay_Request_SignStr: %s", signParams)
 	}
-	a.mu.Lock()
-	defer func() {
-		h.Reset()
-		a.mu.Unlock()
-	}()
-	h.Write([]byte(signParams))
+	if _, err = h.Write([]byte(signParams)); err != nil {
+		return
+	}
 	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, a.privateKey, hashs, h.Sum(nil)); err != nil {
 		return util.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
 	}

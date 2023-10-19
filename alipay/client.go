@@ -2,13 +2,9 @@ package alipay
 
 import (
 	"crypto/rsa"
-	"crypto/sha1"
-	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"hash"
-	"sync"
 	"time"
 
 	"github.com/go-pay/gopay"
@@ -39,9 +35,6 @@ type Client struct {
 	DebugSwitch        gopay.DebugSwitch
 	location           *time.Location
 	hc                 *xhttp.Client
-	sha1Hash           hash.Hash
-	sha256Hash         hash.Hash
-	mu                 sync.Mutex
 }
 
 // 初始化支付宝客户端
@@ -66,8 +59,6 @@ func NewClient(appid, privateKey string, isProd bool) (client *Client, err error
 		privateKey:  priKey,
 		DebugSwitch: gopay.DebugOff,
 		hc:          xhttp.NewClient(),
-		sha1Hash:    sha1.New(),
-		sha256Hash:  sha256.New(),
 	}
 	return client, nil
 }
