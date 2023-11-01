@@ -47,6 +47,7 @@
    (2) 微信V3：新增 client.V3BusinessParkingSync()，商圈会员停车状态同步。
    (3) 微信V3：新增 国密 支持。
    (4) 微信V3：新增 微信支付分停车服务 相关接口。
+   (5) gopay：go mod 版本升级到 go1.18。
 
 版本号：Release 1.5.89
 修改记录：
