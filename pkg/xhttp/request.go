@@ -24,8 +24,8 @@ type Request struct {
 	jsonByte         []byte
 	url              string
 	method           string
-	requestType      RequestType
-	unmarshalType    string
+	requestType      string
+	responseType     string
 	multipartBodyMap map[string]any
 	err              error
 }
@@ -74,7 +74,7 @@ func (r *Request) SendStruct(v any) (c *Request) {
 	switch r.requestType {
 	case TypeJSON:
 		r.jsonByte = bs
-	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
+	case TypeXML, TypeFormData:
 		body := make(map[string]any)
 		if err = json.Unmarshal(bs, &body); err != nil {
 			r.err = fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), body, err)
@@ -97,7 +97,7 @@ func (r *Request) SendBodyMap(bm map[string]any) (client *Request) {
 			return r
 		}
 		r.jsonByte = bs
-	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
+	case TypeXML, TypeFormData:
 		r.formString = FormatURLParam(bm)
 	}
 	return r
@@ -115,7 +115,7 @@ func (r *Request) SendMultipartBodyMap(bm map[string]any) (client *Request) {
 			return r
 		}
 		r.jsonByte = bs
-	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
+	case TypeXML, TypeFormData:
 		r.formString = FormatURLParam(bm)
 	case TypeMultipartFormData:
 		r.multipartBodyMap = bm
@@ -128,7 +128,7 @@ func (r *Request) SendString(encodeStr string) (client *Request) {
 	switch r.requestType {
 	case TypeJSON:
 		r.jsonByte = []byte(encodeStr)
-	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
+	case TypeXML, TypeFormData:
 		r.formString = encodeStr
 	}
 	return r
@@ -159,7 +159,7 @@ func (r *Request) EndBytes(ctx context.Context) (res *http.Response, bs []byte, 
 			if r.jsonByte != nil {
 				body = strings.NewReader(string(r.jsonByte))
 			}
-		case TypeForm, TypeFormData, TypeUrlencoded:
+		case TypeFormData:
 			if r.formString != "" {
 				body = strings.NewReader(r.formString)
 			}
@@ -222,7 +222,7 @@ func (r *Request) EndStruct(ctx context.Context, v any) (res *http.Response, err
 		return res, fmt.Errorf("StatusCode(%d) != 200", res.StatusCode)
 	}
 
-	switch r.unmarshalType {
+	switch r.responseType {
 	case string(TypeJSON):
 		err = json.Unmarshal(bs, &v)
 		if err != nil {
@@ -236,7 +236,7 @@ func (r *Request) EndStruct(ctx context.Context, v any) (res *http.Response, err
 		}
 		return res, nil
 	default:
-		return nil, errors.New("unmarshalType Type Wrong")
+		return nil, errors.New("responseType Type Wrong")
 	}
 }
 

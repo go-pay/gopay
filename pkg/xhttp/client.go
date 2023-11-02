@@ -12,9 +12,8 @@ type Client struct {
 	bodySize   int // body size limit(MB), default is 10MB
 }
 
-// NewClient , default tls.Config{InsecureSkipVerify: true}
-func NewClient() (client *Client) {
-	client = &Client{
+func defaultClient() *Client {
+	return &Client{
 		HttpClient: &http.Client{
 			Timeout: 60 * time.Second,
 			Transport: &http.Transport{
@@ -35,7 +34,11 @@ func NewClient() (client *Client) {
 		},
 		bodySize: 10, // default is 10MB
 	}
-	return client
+}
+
+// NewClient , default tls.Config{InsecureSkipVerify: true}
+func NewClient() (client *Client) {
+	return defaultClient()
 }
 
 func (c *Client) SetTransport(transport *http.Transport) (client *Client) {
@@ -59,38 +62,43 @@ func (c *Client) SetBodySize(sizeMB int) (client *Client) {
 	return c
 }
 
-func (c *Client) Req(typeStr ...RequestType) *Request {
+// typeStr is request type and response type
+// default is TypeJSON
+// first param is request type
+// second param is response data type
+func (c *Client) Req(typeStr ...string) *Request {
 	var (
-		reqTp = TypeJSON // default
-		resTp = TypeJSON // default
+		reqTp = TypeJSON    // default
+		resTp = ResTypeJSON // default
 		tLen  = len(typeStr)
 	)
 	switch {
 	case tLen == 1:
 		tpp := typeStr[0]
-		if _, ok := types[tpp]; ok {
+		if _, ok := _ReqContentTypeMap[tpp]; ok {
 			reqTp = tpp
-			// default resTp = reqTp
-			resTp = tpp
 		}
 	case tLen > 1:
 		// first param is request type
 		tpp := typeStr[0]
-		if _, ok := types[tpp]; ok {
+		if _, ok := _ReqContentTypeMap[tpp]; ok {
 			reqTp = tpp
 		}
 		// second param is response data type
 		stpp := typeStr[1]
-		if _, ok := types[stpp]; ok {
+		if _, ok := _ResTypeMap[stpp]; ok {
 			resTp = stpp
 		}
 	}
-	r := &Request{
-		client:        c,
-		Header:        make(http.Header),
-		requestType:   reqTp,
-		unmarshalType: string(resTp),
+	if c == nil {
+		c = defaultClient()
 	}
-	r.Header.Set("Content-Type", types[reqTp])
+	r := &Request{
+		client:       c,
+		Header:       make(http.Header),
+		requestType:  reqTp,
+		responseType: resTp,
+	}
+	r.Header.Set("Content-Type", _ReqContentTypeMap[reqTp])
 	return r
 }

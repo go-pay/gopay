@@ -1,26 +1,31 @@
 package xhttp
 
-type RequestType string
-
 const (
-	GET                               = "GET"
-	POST                              = "POST"
-	PUT                               = "PUT"
-	DELETE                            = "DELETE"
-	PATCH                             = "PATCH"
-	TypeJSON              RequestType = "json"
-	TypeXML               RequestType = "xml"
-	TypeUrlencoded        RequestType = "urlencoded"
-	TypeForm              RequestType = "form"
-	TypeFormData          RequestType = "form-data"
-	TypeMultipartFormData RequestType = "multipart-form-data"
+	GET    = "GET"
+	POST   = "POST"
+	PUT    = "PUT"
+	DELETE = "DELETE"
+	PATCH  = "PATCH"
+
+	ResTypeJSON = "application/json"
+	ResTypeXML  = "application/xml"
+
+	TypeJSON              = "json"
+	TypeXML               = "xml"
+	TypeFormData          = "form-data"
+	TypeMultipartFormData = "multipart-form-data"
 )
 
-var types = map[RequestType]string{
-	TypeJSON:              "application/json",
-	TypeXML:               "application/xml",
-	TypeUrlencoded:        "application/x-www-form-urlencoded",
-	TypeForm:              "application/x-www-form-urlencoded",
-	TypeFormData:          "application/x-www-form-urlencoded",
-	TypeMultipartFormData: "multipart/form-data",
-}
+var (
+	_ReqContentTypeMap = map[string]string{
+		TypeJSON:              "application/json",
+		TypeXML:               "application/xml",
+		TypeFormData:          "application/x-www-form-urlencoded",
+		TypeMultipartFormData: "multipart/form-data",
+	}
+
+	_ResTypeMap = map[string]string{
+		ResTypeJSON: "json",
+		ResTypeXML:  "xml",
+	}
+)
