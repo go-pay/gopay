@@ -223,13 +223,13 @@ func (r *Request) EndStruct(ctx context.Context, v any) (res *http.Response, err
 	}
 
 	switch r.responseType {
-	case string(TypeJSON):
+	case ResTypeJSON:
 		err = json.Unmarshal(bs, &v)
 		if err != nil {
 			return nil, fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), v, err)
 		}
 		return res, nil
-	case string(TypeXML):
+	case ResTypeXML:
 		err = xml.Unmarshal(bs, &v)
 		if err != nil {
 			return nil, fmt.Errorf("xml.Unmarshal(%s, %+v)：%w", string(bs), v, err)

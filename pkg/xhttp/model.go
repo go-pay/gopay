@@ -7,8 +7,8 @@ const (
 	DELETE = "DELETE"
 	PATCH  = "PATCH"
 
-	ResTypeJSON = "application/json"
-	ResTypeXML  = "application/xml"
+	ResTypeJSON = "json"
+	ResTypeXML  = "xml"
 
 	TypeJSON              = "json"
 	TypeXML               = "xml"
@@ -25,7 +25,7 @@ var (
 	}
 
 	_ResTypeMap = map[string]string{
-		ResTypeJSON: "json",
-		ResTypeXML:  "xml",
+		ResTypeJSON: "application/json",
+		ResTypeXML:  "application/xml",
 	}
 )
