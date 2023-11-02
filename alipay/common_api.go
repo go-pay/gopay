@@ -178,7 +178,7 @@ func systemOauthToken(ctx context.Context, appId string, privateKey *rsa.Private
 	if !isProd {
 		baseUrl = sandboxBaseUrlUtf8
 	}
-	_, bs, err = xhttp.NewClient().Req(xhttp.TypeForm).Post(baseUrl).SendString(bm.EncodeURLParams()).EndBytes(ctx)
+	_, bs, err = xhttp.NewClient().Req(xhttp.TypeFormData).Post(baseUrl).SendString(bm.EncodeURLParams()).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -218,7 +218,7 @@ func MonitorHeartbeatSyn(ctx context.Context, appId string, privateKey, signType
 	}
 	bm.Set("sign", sign)
 
-	_, bs, err = xhttp.NewClient().Req(xhttp.TypeForm).Post(baseUrlUtf8).SendString(bm.EncodeURLParams()).EndBytes(ctx)
+	_, bs, err = xhttp.NewClient().Req(xhttp.TypeFormData).Post(baseUrlUtf8).SendString(bm.EncodeURLParams()).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
