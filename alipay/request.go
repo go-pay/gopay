@@ -136,7 +136,7 @@ func (a *Client) doAliPaySelf(ctx context.Context, bm gopay.BodyMap, method stri
 	} else {
 		url = sandboxBaseUrlUtf8
 	}
-	res, bs, err := a.hc.Req(xhttp.TypeForm).Post(url).SendString(bm.EncodeURLParams()).EndBytes(ctx)
+	res, bs, err := a.hc.Req(xhttp.TypeFormData).Post(url).SendString(bm.EncodeURLParams()).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -191,7 +191,7 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 		if !a.IsProd {
 			url = sandboxBaseUrlUtf8
 		}
-		res, bs, err := a.hc.Req(xhttp.TypeForm).Post(url).SendString(param).EndBytes(ctx)
+		res, bs, err := a.hc.Req(xhttp.TypeFormData).Post(url).SendString(param).EndBytes(ctx)
 		if err != nil {
 			return nil, err
 		}
@@ -247,7 +247,7 @@ func (a *Client) DoAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 		if !a.IsProd {
 			url = sandboxBaseUrlUtf8
 		}
-		res, bs, err := a.hc.Req(xhttp.TypeForm).Post(url).SendString(param).EndBytes(ctx)
+		res, bs, err := a.hc.Req(xhttp.TypeFormData).Post(url).SendString(param).EndBytes(ctx)
 		if err != nil {
 			return nil, err
 		}
