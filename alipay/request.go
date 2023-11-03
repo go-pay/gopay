@@ -43,60 +43,44 @@ func (a *Client) PostAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, meth
 // 其中file为file请求字段名称，data为其他请求参数（key为文件名，value为文件内容）
 func (a *Client) PostFormAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, method string, aliRsp any) (err error) {
 	var (
-		aat string
+		url  string
+		sign string
 	)
-	pubBody := make(gopay.BodyMap)
-	formData := make(gopay.BodyMap)
 	if bm != nil {
-		aat = bm.GetString("app_auth_token")
-		bm.Remove("app_auth_token")
 		for k, v := range bm {
-			if file, ok := v.(*util.File); ok {
-				bm.Remove(k)
-				formData.SetFormFile(k, file)
+			if _, ok := v.(*util.File); ok {
+				continue
 			} else {
-				formData.Set(k, v)
+				// 对form内容字段进行加密
+				str := bm.GetString(k)
+				bm.Remove(k)
+				if signedData, err := a.getStrRsaSign(str, bm.GetString("sign_type")); err == nil {
+					bm.Set(k, signedData)
+				}
 			}
 		}
 	}
-	pubBody.Set("app_id", a.AppId).
-		Set("method", method).
-		Set("format", "JSON").
-		Set("charset", a.Charset).
-		Set("sign_type", a.SignType).
-		Set("version", "1.0").
-		Set("scene", "SYNC_ORDER").
-		Set("timestamp", time.Now().Format(util.TimeLayout))
-
-	if a.AppCertSN != util.NULL {
-		pubBody.Set("app_cert_sn", a.AppCertSN)
+	bm.Set("method", method)
+	// check public parameter
+	a.checkPublicParam(bm)
+	// check sign
+	if bm.GetString("sign") == "" {
+		sign, err = a.getRsaSign(bm, bm.GetString("sign_type"))
+		if err != nil {
+			return fmt.Errorf("GetRsaSign Error: %w", err)
+		}
+		bm.Set("sign", sign)
 	}
-	if a.AliPayRootCertSN != util.NULL {
-		pubBody.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
-	}
-	if a.location != nil {
-		pubBody.Set("timestamp", time.Now().In(a.location).Format(util.TimeLayout))
-	}
-	//fmt.Println("notify,", pubBody.JsonBody())
-	if a.AppAuthToken != util.NULL {
-		pubBody.Set("app_auth_token", a.AppAuthToken)
-	}
-	if aat != util.NULL {
-		pubBody.Set("app_auth_token", aat)
-	}
-	sign, err := a.getRsaSign(pubBody, pubBody.GetString("sign_type"))
-	if err != nil {
-		return fmt.Errorf("GetRsaSign Error: %w", err)
-	}
-	pubBody.Set("sign", sign)
 	if a.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Alipay_Request: %s", pubBody.JsonBody())
+		xlog.Debugf("Alipay_Request: %s", bm.JsonBody())
 	}
-	param := pubBody.EncodeURLParams()
-	url := baseUrlUtf8 + "&" + param
-	bm.Reset()
+	if a.IsProd {
+		url = baseUrlUtf8
+	} else {
+		url = sandboxBaseUrlUtf8
+	}
 	res, bs, err := a.hc.Req(xhttp.TypeMultipartFormData).Post(url).
-		SendMultipartBodyMap(formData).EndBytes(ctx)
+		SendMultipartBodyMap(bm).EndBytes(ctx)
 	if err != nil {
 		return nil
 	}

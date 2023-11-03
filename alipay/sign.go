@@ -205,6 +205,36 @@ func (a *Client) getRsaSign(bm gopay.BodyMap, signType string) (sign string, err
 	return
 }
 
+func (a *Client) getStrRsaSign(signParams string, signType string) (sign string, err error) {
+	var (
+		h              hash.Hash
+		hashs          crypto.Hash
+		encryptedBytes []byte
+	)
+	switch signType {
+	case RSA:
+		h = sha1.New()
+		hashs = crypto.SHA1
+	case RSA2:
+		h = sha256.New()
+		hashs = crypto.SHA256
+	default:
+		h = sha256.New()
+		hashs = crypto.SHA256
+	}
+	if a.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Alipay_Request_SignStr: %s", signParams)
+	}
+	if _, err = h.Write([]byte(signParams)); err != nil {
+		return
+	}
+	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, a.privateKey, hashs, h.Sum(nil)); err != nil {
+		return util.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
+	}
+	sign = base64.StdEncoding.EncodeToString(encryptedBytes)
+	return
+}
+
 // =============================== 获取SignData ===============================
 
 // 需注意的是，公钥签名模式和公钥证书签名模式的不同之处
