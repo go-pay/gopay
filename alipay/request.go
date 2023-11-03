@@ -46,9 +46,12 @@ func (a *Client) PostFormAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, 
 		url  string
 		sign string
 	)
+	fm := make(gopay.BodyMap)
 	if bm != nil {
 		for k, v := range bm {
 			if _, ok := v.(*util.File); ok {
+				fm.Set(k, v)
+				bm.Remove(k)
 				continue
 			} else {
 				// 对form内容字段进行加密
@@ -63,13 +66,17 @@ func (a *Client) PostFormAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, 
 	bm.Set("method", method)
 	// check public parameter
 	a.checkPublicParam(bm)
-	// check sign
+	// check sign, 需要先移除文件字段
 	if bm.GetString("sign") == "" {
 		sign, err = a.getRsaSign(bm, bm.GetString("sign_type"))
 		if err != nil {
 			return fmt.Errorf("GetRsaSign Error: %w", err)
 		}
 		bm.Set("sign", sign)
+	}
+	// 增加文件字段
+	for k, v := range fm {
+		bm.Set(k, v)
 	}
 	if a.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Alipay_Request: %s", bm.JsonBody())
