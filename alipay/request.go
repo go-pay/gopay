@@ -37,6 +37,81 @@ func (a *Client) PostAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, meth
 	return nil
 }
 
+// FormAliPayAPISelfV2 用于支付宝带有文件上传的接口自行实现方法
+// 注意：最新版本的支付宝接口，对于文件的上传已统一改为通过formData上传
+// 请求form格式如下： {file: "fileData", "data": BodyMap{"key": "value"}}
+// 其中file为file请求字段名称，data为其他请求参数（key为文件名，value为文件内容）
+func (a *Client) PostFormAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, method string, aliRsp any) (err error) {
+	var (
+		aat string
+	)
+	pubBody := make(gopay.BodyMap)
+	formData := make(gopay.BodyMap)
+	if bm != nil {
+		aat = bm.GetString("app_auth_token")
+		bm.Remove("app_auth_token")
+		for k, v := range bm {
+			if file, ok := v.(*util.File); ok {
+				bm.Remove(k)
+				formData.SetFormFile(k, file)
+			} else {
+				formData.Set(k, v)
+			}
+		}
+	}
+	pubBody.Set("app_id", a.AppId).
+		Set("method", method).
+		Set("format", "JSON").
+		Set("charset", a.Charset).
+		Set("sign_type", a.SignType).
+		Set("version", "1.0").
+		Set("scene", "SYNC_ORDER").
+		Set("timestamp", time.Now().Format(util.TimeLayout))
+
+	if a.AppCertSN != util.NULL {
+		pubBody.Set("app_cert_sn", a.AppCertSN)
+	}
+	if a.AliPayRootCertSN != util.NULL {
+		pubBody.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
+	}
+	if a.location != nil {
+		pubBody.Set("timestamp", time.Now().In(a.location).Format(util.TimeLayout))
+	}
+	//fmt.Println("notify,", pubBody.JsonBody())
+	if a.AppAuthToken != util.NULL {
+		pubBody.Set("app_auth_token", a.AppAuthToken)
+	}
+	if aat != util.NULL {
+		pubBody.Set("app_auth_token", aat)
+	}
+	sign, err := a.getRsaSign(pubBody, pubBody.GetString("sign_type"))
+	if err != nil {
+		return fmt.Errorf("GetRsaSign Error: %w", err)
+	}
+	pubBody.Set("sign", sign)
+	if a.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Alipay_Request: %s", pubBody.JsonBody())
+	}
+	param := pubBody.EncodeURLParams()
+	url := baseUrlUtf8 + "&" + param
+	bm.Reset()
+	res, bs, err := a.hc.Req(xhttp.TypeMultipartFormData).Post(url).
+		SendMultipartBodyMap(formData).EndBytes(ctx)
+	if err != nil {
+		return nil
+	}
+	if a.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+	}
+	if res.StatusCode != 200 {
+		return fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return err
+	}
+	return nil
+}
+
 // 向支付宝发送自定义请求
 func (a *Client) doAliPaySelf(ctx context.Context, bm gopay.BodyMap, method string) (bs []byte, err error) {
 	var (
