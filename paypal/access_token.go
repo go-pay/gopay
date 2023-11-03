@@ -24,7 +24,7 @@ func (c *Client) GetAccessToken() (token *AccessToken, err error) {
 	url = baseUrl + getAccessToken
 	// Authorization
 	authHeader := AuthorizationPrefixBasic + base64.StdEncoding.EncodeToString([]byte(c.Clientid+":"+c.Secret))
-	req := c.hc.Req(xhttp.TypeForm)
+	req := c.hc.Req(xhttp.TypeFormData)
 	req.Header.Add(HeaderAuthorization, authHeader)
 	req.Header.Add("Accept", "*/*")
 	// Body
