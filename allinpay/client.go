@@ -127,7 +127,7 @@ func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs 
 	if !c.isProd {
 		url = sandboxBaseUrl
 	}
-	res, bs, err := c.hc.Req(xhttp.TypeForm).Post(url + path).SendString(param).EndBytes(ctx)
+	res, bs, err := c.hc.Req(xhttp.TypeFormData).Post(url + path).SendString(param).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
