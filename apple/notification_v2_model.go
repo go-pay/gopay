@@ -49,11 +49,11 @@ type NotificationV2Req struct {
 // https://developer.apple.com/documentation/appstoreservernotifications/responsebodyv2decodedpayload
 type NotificationV2Payload struct {
 	jwt.StandardClaims
-	NotificationType    string `json:"notificationType"`
-	Subtype             string `json:"subtype"`
-	NotificationUUID    string `json:"notificationUUID"`
-	Version             string `json:"version"`
-	Data                *Data  `json:"data"`
+	NotificationType string `json:"notificationType"`
+	Subtype          string `json:"subtype"`
+	NotificationUUID string `json:"notificationUUID"`
+	Version          string `json:"version"`
+	Data             *Data  `json:"data"`
 }
 
 func (d *NotificationV2Payload) DecodeRenewalInfo() (ri *RenewalInfo, err error) {
@@ -118,27 +118,30 @@ type TransactionInfo struct {
 	jwt.StandardClaims
 	AppAccountToken             string `json:"appAccountToken"`
 	BundleId                    string `json:"bundleId"`
+	Currency                    string `json:"currency"`
 	Environment                 string `json:"environment"`
 	ExpiresDate                 int64  `json:"expiresDate"`
 	InAppOwnershipType          string `json:"inAppOwnershipType"` // FAMILY_SHARED  PURCHASED
 	IsUpgraded                  bool   `json:"isUpgraded"`
+	OfferDiscountType           string `json:"offerDiscountType"`
 	OfferIdentifier             string `json:"offerIdentifier"`
 	OfferType                   int64  `json:"offerType"` // 1:An introductory offer. 2:A promotional offer. 3:An offer with a subscription offer code.
 	OriginalPurchaseDate        int64  `json:"originalPurchaseDate"`
 	OriginalTransactionId       string `json:"originalTransactionId"`
+	Price                       int64  `json:"price"`
 	ProductId                   string `json:"productId"`
 	PurchaseDate                int64  `json:"purchaseDate"`
 	Quantity                    int64  `json:"quantity"`
 	RevocationDate              int64  `json:"revocationDate"`
 	RevocationReason            int    `json:"revocationReason"`
 	SignedDate                  int64  `json:"signedDate"` // Auto-Renewable Subscription: An auto-renewable subscription.  Non-Consumable: A non-consumable in-app purchase.  Consumable: A consumable in-app purchase.  Non-Renewing Subscription: A non-renewing subcription.
+	Storefront                  string `json:"storefront"`
+	StorefrontId                string `json:"storefrontId"`
 	SubscriptionGroupIdentifier string `json:"subscriptionGroupIdentifier"`
 	TransactionId               string `json:"transactionId"`
 	TransactionReason           string `json:"transactionReason"`
 	Type                        string `json:"type"`
 	WebOrderLineItemId          string `json:"webOrderLineItemId"`
-	Storefront                  string `json:"storefront"`
-	StorefrontId                string `json:"storefrontId"`
 }
 
 type NotificationHistoryRsp struct {
