@@ -10,19 +10,21 @@ import (
 
 // Client PayPal支付客户端
 type Client struct {
-	Clientid    string
-	Secret      string
-	Appid       string
-	AccessToken string
-	ExpiresIn   int
-	IsProd      bool
-	ctx         context.Context
-	DebugSwitch gopay.DebugSwitch
-	hc          *xhttp.Client
+	Clientid       string
+	Secret         string
+	Appid          string
+	AccessToken    string
+	ExpiresIn      int
+	IsProd         bool
+	ctx            context.Context
+	DebugSwitch    gopay.DebugSwitch
+	hc             *xhttp.Client
+	BaseUrlProd    string
+	BaseUrlSandbox string
 }
 
 // NewClient 初始化PayPal支付客户端
-func NewClient(clientid, secret string, isProd bool) (client *Client, err error) {
+func NewClient(clientid, secret string, isProd bool, specBaseUrlProd, specBaseUrlSandbox string) (client *Client, err error) {
 	if clientid == util.NULL || secret == util.NULL {
 		return nil, gopay.MissPayPalInitParamErr
 	}
@@ -37,6 +39,16 @@ func NewClient(clientid, secret string, isProd bool) (client *Client, err error)
 	_, err = client.GetAccessToken()
 	if err != nil {
 		return nil, err
+	}
+	if specBaseUrlProd != "" {
+		client.BaseUrlProd = specBaseUrlProd
+	} else {
+		client.BaseUrlProd = baseUrlProd
+	}
+	if specBaseUrlSandbox != "" {
+		client.BaseUrlSandbox = specBaseUrlSandbox
+	} else {
+		client.BaseUrlSandbox = baseUrlSandbox
 	}
 	return client, nil
 }

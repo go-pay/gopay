@@ -15,11 +15,11 @@ import (
 // 文档：https://developer.paypal.com/docs/api/reference/get-an-access-token
 func (c *Client) GetAccessToken() (token *AccessToken, err error) {
 	var (
-		baseUrl = baseUrlProd
+		baseUrl = c.BaseUrlProd
 		url     string
 	)
 	if !c.IsProd {
-		baseUrl = baseUrlSandbox
+		baseUrl = c.BaseUrlSandbox
 	}
 	url = baseUrl + getAccessToken
 	// Authorization

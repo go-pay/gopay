@@ -19,7 +19,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	client, err = NewClient(Clientid, Secret, false)
+	client, err = NewClient(Clientid, Secret, false, "", "")
 	if err != nil {
 		xlog.Error(err)
 		return
