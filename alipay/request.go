@@ -37,32 +37,30 @@ func (a *Client) PostAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, meth
 	return nil
 }
 
-// FormAliPayAPISelfV2 用于支付宝带有文件上传的接口自行实现方法
+// PostFileAliPayAPISelfV2 用于支付宝带有文件上传的接口自行实现方法
 // 注意：最新版本的支付宝接口，对于文件的上传已统一改为通过formData上传
 // 请求form格式如下： {file: "fileData", "data": BodyMap{"key": "value"}}
 // 其中file为file请求字段名称，data为其他请求参数（key为文件名，value为文件内容）
-func (a *Client) PostFormAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, method string, aliRsp any) (err error) {
+func (a *Client) PostFileAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, method string, aliRsp any) (err error) {
 	var (
 		url  string
 		sign string
 	)
 	fm := make(gopay.BodyMap)
-	if bm != nil {
-		for k, v := range bm {
-			if _, ok := v.(*util.File); ok {
-				fm.Set(k, v)
-				bm.Remove(k)
-				continue
-			} else {
-				// 对form内容字段进行加密
-				str := bm.GetString(k)
-				bm.Remove(k)
-				if signedData, err := a.getStrRsaSign(str, bm.GetString("sign_type")); err == nil {
-					bm.Set(k, signedData)
-				}
-			}
+	for k, v := range bm {
+		if _, ok := v.(*util.File); ok {
+			fm.Set(k, v)
+			bm.Remove(k)
+			continue
+		}
+		// 对form内容字段进行加密
+		str := bm.GetString(k)
+		bm.Remove(k)
+		if signedData, err := a.getStrRsaSign(str, bm.GetString("sign_type")); err == nil {
+			bm.Set(k, signedData)
 		}
 	}
+
 	bm.Set("method", method)
 	// check public parameter
 	a.checkPublicParam(bm)

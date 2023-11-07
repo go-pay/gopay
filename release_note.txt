@@ -1,3 +1,9 @@
+版本号：Release 1.5.98
+修改记录：
+   (1) 支付宝：PR新增 client.PostFileAliPayAPISelfV2()，文件上传自定义方法（未做验证，不知道是否好用）。
+   (2)
+   (3)
+
 版本号：Release 1.5.97
 修改记录：
    (1) 支付宝：新增 client.TradeOrderOnSettleQuery()，分账剩余金额查询。
