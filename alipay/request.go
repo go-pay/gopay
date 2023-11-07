@@ -37,6 +37,72 @@ func (a *Client) PostAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, meth
 	return nil
 }
 
+// FormAliPayAPISelfV2 用于支付宝带有文件上传的接口自行实现方法
+// 注意：最新版本的支付宝接口，对于文件的上传已统一改为通过formData上传
+// 请求form格式如下： {file: "fileData", "data": BodyMap{"key": "value"}}
+// 其中file为file请求字段名称，data为其他请求参数（key为文件名，value为文件内容）
+func (a *Client) PostFormAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, method string, aliRsp any) (err error) {
+	var (
+		url  string
+		sign string
+	)
+	fm := make(gopay.BodyMap)
+	if bm != nil {
+		for k, v := range bm {
+			if _, ok := v.(*util.File); ok {
+				fm.Set(k, v)
+				bm.Remove(k)
+				continue
+			} else {
+				// 对form内容字段进行加密
+				str := bm.GetString(k)
+				bm.Remove(k)
+				if signedData, err := a.getStrRsaSign(str, bm.GetString("sign_type")); err == nil {
+					bm.Set(k, signedData)
+				}
+			}
+		}
+	}
+	bm.Set("method", method)
+	// check public parameter
+	a.checkPublicParam(bm)
+	// check sign, 需要先移除文件字段
+	if bm.GetString("sign") == "" {
+		sign, err = a.getRsaSign(bm, bm.GetString("sign_type"))
+		if err != nil {
+			return fmt.Errorf("GetRsaSign Error: %w", err)
+		}
+		bm.Set("sign", sign)
+	}
+	// 增加文件字段
+	for k, v := range fm {
+		bm.Set(k, v)
+	}
+	if a.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Alipay_Request: %s", bm.JsonBody())
+	}
+	if a.IsProd {
+		url = baseUrlUtf8
+	} else {
+		url = sandboxBaseUrlUtf8
+	}
+	res, bs, err := a.hc.Req(xhttp.TypeMultipartFormData).Post(url).
+		SendMultipartBodyMap(bm).EndBytes(ctx)
+	if err != nil {
+		return nil
+	}
+	if a.DebugSwitch == gopay.DebugOn {
+		xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+	}
+	if res.StatusCode != 200 {
+		return fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return err
+	}
+	return nil
+}
+
 // 向支付宝发送自定义请求
 func (a *Client) doAliPaySelf(ctx context.Context, bm gopay.BodyMap, method string) (bs []byte, err error) {
 	var (
