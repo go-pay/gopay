@@ -42,7 +42,7 @@ func NewClient(clientid, secret string, isProd bool) (client *Client, err error)
 	}
 	// 在到期结束前的一半时间内，自动刷新token
 	go func(token *AccessToken) {
-		ticker := time.NewTicker(time.Duration(token.ExpiresIn / 2))
+		ticker := time.NewTicker(time.Duration(token.ExpiresIn/2) * time.Second)
 		for {
 			select {
 			case <-ticker.C:
