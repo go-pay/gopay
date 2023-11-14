@@ -53,12 +53,6 @@ func (a *Client) PostFileAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, 
 			bm.Remove(k)
 			continue
 		}
-		// 对form内容字段进行加密
-		str := bm.GetString(k)
-		bm.Remove(k)
-		if signedData, err := a.getStrRsaSign(str, bm.GetString("sign_type")); err == nil {
-			bm.Set(k, signedData)
-		}
 	}
 
 	bm.Set("method", method)
