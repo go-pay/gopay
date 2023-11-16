@@ -2,8 +2,6 @@ package paypal
 
 import (
 	"context"
-	"github.com/go-pay/gopay/pkg/xlog"
-	"time"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/util"
@@ -36,26 +34,12 @@ func NewClient(clientid, secret string, isProd bool) (client *Client, err error)
 		DebugSwitch: gopay.DebugOff,
 		hc:          xhttp.NewClient(),
 	}
-	token, err := client.GetAccessToken()
+	_, err = client.GetAccessToken()
 	if err != nil {
 		return nil, err
 	}
-	// 在到期结束前的一半时间内，自动刷新token
-	go func(token *AccessToken) {
-		ticker := time.NewTicker(time.Duration(token.ExpiresIn/2) * time.Second)
-		for {
-			select {
-			case <-ticker.C:
-				tokenNew, err := client.GetAccessToken()
-				if err != nil {
-					xlog.Errorf("PayPal GetAccessToken Error: %s", err.Error())
-					continue
-				}
-				client.AccessToken = tokenNew.AccessToken
-			}
-		}
-	}(token)
-
+	// 自动刷新Token
+	go client.goAuthRefreshToken()
 	return client, nil
 }
 

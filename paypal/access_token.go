@@ -5,11 +5,39 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"runtime"
+	"time"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/pkg/retry"
 	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/gopay/pkg/xlog"
 )
+
+func (c *Client) goAuthRefreshToken() {
+	defer func() {
+		if r := recover(); r != nil {
+			buf := make([]byte, 64<<10)
+			buf = buf[:runtime.Stack(buf, false)]
+			xlog.Errorf("paypal_goAuthRefreshToken: panic recovered: %s\n%s", r, buf)
+		}
+	}()
+	for {
+		time.Sleep(time.Duration(c.ExpiresIn/2) * time.Second)
+		err := retry.Retry(func() error {
+			_, err := c.GetAccessToken()
+			if err != nil {
+				return err
+			}
+			return nil
+		}, 3, time.Second)
+		if err != nil {
+			xlog.Errorf("PayPal GetAccessToken Error: %s", err.Error())
+		}
+	}
+}
+
+// =====================================================================================================================
 
 // 获取AccessToken（Get an access token）
 // 文档：https://developer.paypal.com/docs/api/reference/get-an-access-token
