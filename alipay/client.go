@@ -38,7 +38,7 @@ type Client struct {
 }
 
 // 初始化支付宝客户端
-// 注意：如果使用支付宝公钥证书验签，请设置 支付宝根证书SN（client.SetAlipayRootCertSN()）、应用公钥证书SN（client.SetAppCertSN()）
+// 注意：如果使用支付宝公钥证书验签，请使用 client.SetCertSnByContent() 或 client.SetCertSnByPath() 设置 应用公钥证书、支付宝公钥证书、支付宝根证书
 // appid：应用ID
 // privateKey：应用私钥，支持PKCS1和PKCS8
 // isProd：是否是正式环境，沙箱环境请选择新版沙箱应用。
