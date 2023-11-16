@@ -2,7 +2,7 @@
 修改记录：
    (1) 支付宝：PR新增 client.PostFileAliPayAPISelfV2()，文件上传自定义方法（未做验证，不知道是否好用）。
    (2) Apple：更新部分结构体字段。
-   (3)
+   (3) PayPal：增加Token的自动刷新功能。
 
 版本号：Release 1.5.97
 修改记录：
