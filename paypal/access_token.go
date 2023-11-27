@@ -43,11 +43,11 @@ func (c *Client) goAuthRefreshToken() {
 // 文档：https://developer.paypal.com/docs/api/reference/get-an-access-token
 func (c *Client) GetAccessToken() (token *AccessToken, err error) {
 	var (
-		baseUrl = baseUrlProd
+		baseUrl = c.baseUrlProd
 		url     string
 	)
 	if !c.IsProd {
-		baseUrl = baseUrlSandbox
+		baseUrl = c.baseUrlSandbox
 	}
 	url = baseUrl + getAccessToken
 	// Authorization
