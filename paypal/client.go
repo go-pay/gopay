@@ -19,8 +19,8 @@ type Client struct {
 	ctx            context.Context
 	DebugSwitch    gopay.DebugSwitch
 	hc             *xhttp.Client
-	BaseUrlProd    string
-	BaseUrlSandbox string
+	baseUrlProd    string
+	baseUrlSandbox string
 }
 
 // NewClient 初始化PayPal支付客户端
@@ -35,8 +35,8 @@ func NewClient(clientid, secret string, isProd bool) (client *Client, err error)
 		ctx:            context.Background(),
 		DebugSwitch:    gopay.DebugOff,
 		hc:             xhttp.NewClient(),
-		BaseUrlProd:    baseUrlProd,
-		BaseUrlSandbox: baseUrlSandbox,
+		baseUrlProd:    baseUrlProd,
+		baseUrlSandbox: baseUrlSandbox,
 	}
 	_, err = client.GetAccessToken()
 	if err != nil {
@@ -54,10 +54,10 @@ func (c *Client) SetBodySize(sizeMB int) {
 	}
 }
 
-// SetBaseUrl 设置指定的BaseUrl
+// SetProxyUrl 设置代理 Url
 // 使用场景：
 // 	1. 大陆直接调用 PayPal 接口响应较慢，可以在第三地例如硅谷部署代理服务器来加速请求
-func (c *Client) SetBaseUrl(specBaseUrlProd, specBaseUrlSandbox string) {
-	c.BaseUrlProd = specBaseUrlProd
-	c.BaseUrlSandbox = specBaseUrlSandbox
+func (c *Client) SetProxyUrl(proxyUrlProd, proxyUrlSandbox string) {
+	c.baseUrlProd = proxyUrlProd
+	c.baseUrlSandbox = proxyUrlSandbox
 }

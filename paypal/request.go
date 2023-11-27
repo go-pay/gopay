@@ -10,9 +10,9 @@ import (
 )
 
 func (c *Client) doPayPalGet(ctx context.Context, uri string) (res *http.Response, bs []byte, err error) {
-	var url = c.BaseUrlProd + uri
+	var url = c.baseUrlProd + uri
 	if !c.IsProd {
-		url = c.BaseUrlSandbox + uri
+		url = c.baseUrlSandbox + uri
 	}
 	req := c.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, AuthorizationPrefixBearer+c.AccessToken)
@@ -33,9 +33,9 @@ func (c *Client) doPayPalGet(ctx context.Context, uri string) (res *http.Respons
 }
 
 func (c *Client) doPayPalPost(ctx context.Context, bm gopay.BodyMap, path string) (res *http.Response, bs []byte, err error) {
-	var url = c.BaseUrlProd + path
+	var url = c.baseUrlProd + path
 	if !c.IsProd {
-		url = c.BaseUrlSandbox + path
+		url = c.baseUrlSandbox + path
 	}
 	req := c.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, AuthorizationPrefixBearer+c.AccessToken)
@@ -57,9 +57,9 @@ func (c *Client) doPayPalPost(ctx context.Context, bm gopay.BodyMap, path string
 }
 
 func (c *Client) doPayPalPut(ctx context.Context, bm gopay.BodyMap, path string) (res *http.Response, bs []byte, err error) {
-	var url = c.BaseUrlProd + path
+	var url = c.baseUrlProd + path
 	if !c.IsProd {
-		url = c.BaseUrlSandbox + path
+		url = c.baseUrlSandbox + path
 	}
 	req := c.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, AuthorizationPrefixBearer+c.AccessToken)
@@ -81,9 +81,9 @@ func (c *Client) doPayPalPut(ctx context.Context, bm gopay.BodyMap, path string)
 }
 
 func (c *Client) doPayPalPatch(ctx context.Context, patchs []*Patch, path string) (res *http.Response, bs []byte, err error) {
-	var url = c.BaseUrlProd + path
+	var url = c.baseUrlProd + path
 	if !c.IsProd {
-		url = c.BaseUrlSandbox + path
+		url = c.baseUrlSandbox + path
 	}
 	req := c.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, AuthorizationPrefixBearer+c.AccessToken)
@@ -106,9 +106,9 @@ func (c *Client) doPayPalPatch(ctx context.Context, patchs []*Patch, path string
 }
 
 func (c *Client) doPayPalDelete(ctx context.Context, path string) (res *http.Response, bs []byte, err error) {
-	var url = c.BaseUrlProd + path
+	var url = c.baseUrlProd + path
 	if !c.IsProd {
-		url = c.BaseUrlSandbox + path
+		url = c.baseUrlSandbox + path
 	}
 	req := c.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, AuthorizationPrefixBearer+c.AccessToken)
