@@ -23,8 +23,10 @@ type Client struct {
 	baseUrlSandbox string
 }
 
+type Option func(*Client)
+
 // NewClient 初始化PayPal支付客户端
-func NewClient(clientid, secret string, isProd bool) (client *Client, err error) {
+func NewClient(clientid, secret string, isProd bool, options ...Option) (client *Client, err error) {
 	if clientid == util.NULL || secret == util.NULL {
 		return nil, gopay.MissPayPalInitParamErr
 	}
@@ -38,6 +40,9 @@ func NewClient(clientid, secret string, isProd bool) (client *Client, err error)
 		baseUrlProd:    baseUrlProd,
 		baseUrlSandbox: baseUrlSandbox,
 	}
+	for _, option := range options {
+		option(client)
+	}
 	_, err = client.GetAccessToken()
 	if err != nil {
 		return nil, err
@@ -45,6 +50,14 @@ func NewClient(clientid, secret string, isProd bool) (client *Client, err error)
 	// 自动刷新Token
 	go client.goAuthRefreshToken()
 	return client, nil
+}
+
+// WithProxyUrl 设置代理 Url
+func WithProxyUrl(proxyUrlProd, proxyUrlSandbox string) Option {
+	return func(c *Client) {
+		c.baseUrlProd = proxyUrlProd
+		c.baseUrlSandbox = proxyUrlSandbox
+	}
 }
 
 // SetBodySize 设置http response body size(MB)
