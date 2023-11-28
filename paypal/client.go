@@ -52,6 +52,7 @@ func NewClient(clientid, secret string, isProd bool, options ...Option) (client 
 	return client, nil
 }
 
+// WithProxyUrl 设置代理 Url
 func WithProxyUrl(proxyUrlProd, proxyUrlSandbox string) Option {
 	return func(c *Client) {
 		c.baseUrlProd = proxyUrlProd
