@@ -195,7 +195,6 @@ func (c *ClientV3) V3ScoreOrderPartnerCreate(ctx context.Context, bm gopay.BodyM
 	if err != nil {
 		return nil, err
 	}
-
 	wxRsp := &ScoreOrderPartnerCreateRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(ScoreOrderPartnerCreate)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -206,7 +205,6 @@ func (c *ClientV3) V3ScoreOrderPartnerCreate(ctx context.Context, bm gopay.BodyM
 		wxRsp.Error = string(bs)
 		return wxRsp, nil
 	}
-
 	return wxRsp, c.verifySyncSign(si)
 }
 
@@ -277,7 +275,6 @@ func (c *ClientV3) V3ScoreOrderPartnerQuery(ctx context.Context, orderNoType Ord
 		wxRsp.Error = string(bs)
 		return wxRsp, nil
 	}
-
 	return wxRsp, c.verifySyncSign(si)
 }
 
@@ -333,7 +330,6 @@ func (c *ClientV3) V3ScoreOrderPartnerCancel(ctx context.Context, subMchid, trad
 		wxRsp.Error = string(bs)
 		return wxRsp, nil
 	}
-
 	return wxRsp, c.verifySyncSign(si)
 }
 
@@ -406,7 +402,6 @@ func (c *ClientV3) V3ScoreOrderPartnerComplete(ctx context.Context, tradeNo stri
 		wxRsp.Error = string(bs)
 		return wxRsp, nil
 	}
-
 	return wxRsp, c.verifySyncSign(si)
 }
 
