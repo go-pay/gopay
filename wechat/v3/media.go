@@ -10,7 +10,6 @@ import (
 	"net/url"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // 图片资源下载
@@ -38,7 +37,7 @@ func (c *ClientV3) V3MediaDownloadImage(ctx context.Context, mediaUrl string) (r
 // 图片上传API
 // 注意：图片不能超过2MB
 // Code = 0 is success
-func (c *ClientV3) V3MediaUploadImage(ctx context.Context, fileName, fileSha256 string, img *util.File) (wxRsp *MediaUploadRsp, err error) {
+func (c *ClientV3) V3MediaUploadImage(ctx context.Context, fileName, fileSha256 string, img *gopay.File) (wxRsp *MediaUploadRsp, err error) {
 	bmFile := make(gopay.BodyMap)
 	bmFile.Set("filename", fileName).Set("sha256", fileSha256)
 	authorization, err := c.authorization(MethodPost, v3MediaUploadImage, bmFile)
@@ -70,7 +69,7 @@ func (c *ClientV3) V3MediaUploadImage(ctx context.Context, fileName, fileSha256 
 // 视频上传API
 // 注意：媒体视频只支持avi、wmv、mpeg、mp4、mov、mkv、flv、f4v、m4v、rmvb格式，文件大小不能超过5M。
 // Code = 0 is success
-func (c *ClientV3) V3MediaUploadVideo(ctx context.Context, fileName, fileSha256 string, img *util.File) (wxRsp *MediaUploadRsp, err error) {
+func (c *ClientV3) V3MediaUploadVideo(ctx context.Context, fileName, fileSha256 string, img *gopay.File) (wxRsp *MediaUploadRsp, err error) {
 	bmFile := make(gopay.BodyMap)
 	bmFile.Set("filename", fileName).Set("sha256", fileSha256)
 	authorization, err := c.authorization(MethodPost, v3MediaUploadVideo, bmFile)

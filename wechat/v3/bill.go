@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/xtime"
 )
 
 // 申请交易账单API
@@ -18,9 +18,9 @@ import (
 // Code = 0 is success
 func (c *ClientV3) V3BillTradeBill(ctx context.Context, bm gopay.BodyMap) (wxRsp *BillRsp, err error) {
 	if bm != nil {
-		if bm.GetString("bill_date") == util.NULL {
+		if bm.GetString("bill_date") == gopay.NULL {
 			now := time.Now()
-			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(util.DateLayout)
+			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(xtime.DateLayout)
 			bm.Set("bill_date", yesterday)
 		}
 	}
@@ -52,9 +52,9 @@ func (c *ClientV3) V3BillTradeBill(ctx context.Context, bm gopay.BodyMap) (wxRsp
 // Code = 0 is success
 func (c *ClientV3) V3BillFundFlowBill(ctx context.Context, bm gopay.BodyMap) (wxRsp *BillRsp, err error) {
 	if bm != nil {
-		if bm.GetString("bill_date") == util.NULL {
+		if bm.GetString("bill_date") == gopay.NULL {
 			now := time.Now()
-			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(util.DateLayout)
+			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(xtime.DateLayout)
 			bm.Set("bill_date", yesterday)
 		}
 	}
@@ -86,15 +86,15 @@ func (c *ClientV3) V3BillFundFlowBill(ctx context.Context, bm gopay.BodyMap) (wx
 // Code = 0 is success
 func (c *ClientV3) V3BillEcommerceFundFlowBill(ctx context.Context, bm gopay.BodyMap) (wxRsp *EcommerceFundFlowBillRsp, err error) {
 	if bm != nil {
-		if bm.GetString("bill_date") == util.NULL {
+		if bm.GetString("bill_date") == gopay.NULL {
 			now := time.Now()
-			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(util.DateLayout)
+			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(xtime.DateLayout)
 			bm.Set("bill_date", yesterday)
 		}
-		if bm.GetString("account_type") == util.NULL {
+		if bm.GetString("account_type") == gopay.NULL {
 			bm.Set("account_type", "ALL")
 		}
-		if bm.GetString("algorithm") == util.NULL {
+		if bm.GetString("algorithm") == gopay.NULL {
 			bm.Set("algorithm", "AEAD_AES_256_GCM")
 		}
 	}
@@ -126,9 +126,9 @@ func (c *ClientV3) V3BillEcommerceFundFlowBill(ctx context.Context, bm gopay.Bod
 // Code = 0 is success
 func (c *ClientV3) V3BillSubFundFlowBill(ctx context.Context, bm gopay.BodyMap) (wxRsp *BillRsp, err error) {
 	if bm != nil {
-		if bm.GetString("bill_date") == util.NULL {
+		if bm.GetString("bill_date") == gopay.NULL {
 			now := time.Now()
-			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(util.DateLayout)
+			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(xtime.DateLayout)
 			bm.Set("bill_date", yesterday)
 		}
 	}

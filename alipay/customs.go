@@ -6,8 +6,8 @@ import (
 	"fmt"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/xhttp"
+	"github.com/go-pay/xlog"
 )
 
 // alipay.trade.customs.declare(统一收单报关接口)

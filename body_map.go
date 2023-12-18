@@ -8,8 +8,6 @@ import (
 	"net/url"
 	"sort"
 	"strings"
-
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 type BodyMap map[string]any
@@ -22,6 +20,11 @@ type xmlMapMarshal struct {
 type xmlMapUnmarshal struct {
 	XMLName xml.Name
 	Value   string `xml:",cdata"`
+}
+
+type File struct {
+	Name    string `json:"name"`
+	Content []byte `json:"content"`
 }
 
 // 设置参数
@@ -38,7 +41,7 @@ func (bm BodyMap) SetBodyMap(key string, value func(b BodyMap)) BodyMap {
 }
 
 // 设置 FormFile
-func (bm BodyMap) SetFormFile(key string, file *util.File) BodyMap {
+func (bm BodyMap) SetFormFile(key string, file *File) BodyMap {
 	bm[key] = file
 	return bm
 }

@@ -8,13 +8,12 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // （服务商、电商模式）APP下单API
 // Code = 0 is success
 func (c *ClientV3) V3PartnerTransactionApp(ctx context.Context, bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
-	if bm.GetString("sp_mchid") == util.NULL {
+	if bm.GetString("sp_mchid") == gopay.NULL {
 		bm.Set("sp_mchid", c.Mchid)
 	}
 	authorization, err := c.authorization(MethodPost, v3ApiPartnerPayApp, bm)
@@ -41,7 +40,7 @@ func (c *ClientV3) V3PartnerTransactionApp(ctx context.Context, bm gopay.BodyMap
 // （服务商、电商模式）JSAPI/小程序下单API
 // Code = 0 is success
 func (c *ClientV3) V3PartnerTransactionJsapi(ctx context.Context, bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
-	if bm.GetString("sp_mchid") == util.NULL {
+	if bm.GetString("sp_mchid") == gopay.NULL {
 		bm.Set("sp_mchid", c.Mchid)
 	}
 	authorization, err := c.authorization(MethodPost, v3ApiPartnerJsapi, bm)
@@ -68,7 +67,7 @@ func (c *ClientV3) V3PartnerTransactionJsapi(ctx context.Context, bm gopay.BodyM
 // （服务商、电商模式）Native下单API
 // Code = 0 is success
 func (c *ClientV3) V3PartnerTransactionNative(ctx context.Context, bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
-	if bm.GetString("sp_mchid") == util.NULL {
+	if bm.GetString("sp_mchid") == gopay.NULL {
 		bm.Set("sp_mchid", c.Mchid)
 	}
 	authorization, err := c.authorization(MethodPost, v3ApiPartnerNative, bm)
@@ -95,7 +94,7 @@ func (c *ClientV3) V3PartnerTransactionNative(ctx context.Context, bm gopay.Body
 // （服务商模式）H5下单API
 // Code = 0 is success
 func (c *ClientV3) V3PartnerTransactionH5(ctx context.Context, bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
-	if bm.GetString("sp_mchid") == util.NULL {
+	if bm.GetString("sp_mchid") == gopay.NULL {
 		bm.Set("sp_mchid", c.Mchid)
 	}
 	authorization, err := c.authorization(MethodPost, v3ApiPartnerH5, bm)

@@ -8,9 +8,8 @@ import (
 	"sync"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/xhttp"
+	"github.com/go-pay/xlog"
 )
 
 type Client struct {
@@ -51,16 +50,16 @@ func NewClient(instNo, key, merchantNo, terminalId, accessToken string, isProd b
 
 // pubParamsHandle 公共参数处理
 func (c *Client) pubParamsHandle(bm gopay.BodyMap) gopay.BodyMap {
-	if ver := bm.GetString("pay_ver"); ver == util.NULL {
+	if ver := bm.GetString("pay_ver"); ver == gopay.NULL {
 		bm.Set("pay_ver", c.payVer)
 	}
-	if v := bm.GetString("service_id"); v == util.NULL {
+	if v := bm.GetString("service_id"); v == gopay.NULL {
 		bm.Set("service_id", c.serviceId)
 	}
-	if v := bm.GetString("merchant_no"); v == util.NULL {
+	if v := bm.GetString("merchant_no"); v == gopay.NULL {
 		bm.Set("merchant_no", c.merchantNo)
 	}
-	if v := bm.GetString("terminal_id"); v == util.NULL {
+	if v := bm.GetString("terminal_id"); v == gopay.NULL {
 		bm.Set("terminal_id", c.terminalId)
 	}
 	sign := c.getRsaSign(bm)

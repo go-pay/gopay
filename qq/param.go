@@ -15,8 +15,7 @@ import (
 	"strings"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/xlog"
 	"golang.org/x/crypto/pkcs12"
 )
 
@@ -55,7 +54,7 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File any) error {
 		for varName, v := range files {
 			switch v := v.(type) {
 			case string:
-				if v == util.NULL {
+				if v == gopay.NULL {
 					return fmt.Errorf("%s is empty", varName)
 				}
 			case []byte:
@@ -70,7 +69,7 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File any) error {
 	} else if pkcs12File != nil {
 		switch pkcs12File := pkcs12File.(type) {
 		case string:
-			if pkcs12File == util.NULL {
+			if pkcs12File == gopay.NULL {
 				return errors.New("pkcs12File is empty")
 			}
 		case []byte:
@@ -90,7 +89,7 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File any) error {
 func GenerateXml(bm gopay.BodyMap) (reqXml string) {
 	bs, err := xml.Marshal(bm)
 	if err != nil {
-		return util.NULL
+		return gopay.NULL
 	}
 	return string(bs)
 }

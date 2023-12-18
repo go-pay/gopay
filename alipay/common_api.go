@@ -13,12 +13,12 @@ import (
 	"reflect"
 	"time"
 
+	xaes "github.com/go-pay/crypto/aes"
+	"github.com/go-pay/crypto/xpem"
+	"github.com/go-pay/crypto/xrsa"
 	"github.com/go-pay/gopay"
-	xaes "github.com/go-pay/gopay/pkg/aes"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xpem"
-	"github.com/go-pay/gopay/pkg/xrsa"
+	"github.com/go-pay/xhttp"
+	"github.com/go-pay/xtime"
 )
 
 // 格式化请求URL参数
@@ -36,7 +36,7 @@ func FormatURLParam(body gopay.BodyMap) (urlParam string) {
 // beanPtr:需要解析到的结构体指针
 // 文档：https://opendocs.alipay.com/common/02mse3
 func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr any) (err error) {
-	if encryptedData == util.NULL || secretKey == util.NULL {
+	if encryptedData == gopay.NULL || secretKey == gopay.NULL {
 		return errors.New("encryptedData or secretKey is null")
 	}
 	beanValue := reflect.ValueOf(beanPtr)
@@ -77,7 +77,7 @@ func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr any) (err 
 // secretKey:AES密钥，支付宝管理平台配置
 // 文档：https://opendocs.alipay.com/common/02mse3
 func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap, err error) {
-	if encryptedData == util.NULL || secretKey == util.NULL {
+	if encryptedData == gopay.NULL || secretKey == gopay.NULL {
 		return nil, errors.New("encryptedData or secretKey is null")
 	}
 	var (
@@ -157,14 +157,14 @@ func systemOauthToken(ctx context.Context, appId string, privateKey *rsa.Private
 	bm.Set("method", method)
 	bm.Set("format", "JSON")
 	bm.Set("charset", "utf-8")
-	if signType == util.NULL {
+	if signType == gopay.NULL {
 		bm.Set("sign_type", RSA2)
 	} else {
 		bm.Set("sign_type", signType)
 	}
-	bm.Set("timestamp", time.Now().Format(util.TimeLayout))
+	bm.Set("timestamp", time.Now().Format(xtime.TimeLayout))
 	bm.Set("version", "1.0")
-	if appAuthToken != util.NULL {
+	if appAuthToken != gopay.NULL {
 		bm.Set("app_auth_token", appAuthToken)
 	}
 	var (
@@ -204,12 +204,12 @@ func MonitorHeartbeatSyn(ctx context.Context, appId string, privateKey, signType
 	bm.Set("method", "monitor.heartbeat.syn")
 	bm.Set("format", "JSON")
 	bm.Set("charset", "utf-8")
-	if signType == util.NULL {
+	if signType == gopay.NULL {
 		bm.Set("sign_type", RSA2)
 	} else {
 		bm.Set("sign_type", signType)
 	}
-	bm.Set("timestamp", time.Now().Format(util.TimeLayout))
+	bm.Set("timestamp", time.Now().Format(xtime.TimeLayout))
 	bm.Set("version", "1.0")
 
 	sign, err := GetRsaSign(bm, bm.GetString("sign_type"), priKey)

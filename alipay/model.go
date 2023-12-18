@@ -26,7 +26,6 @@ var (
 
 type PKCSType uint8
 
-// Deprecated
 type NotifyRequest struct {
 	NotifyTime        string                 `json:"notify_time,omitempty"`
 	NotifyType        string                 `json:"notify_type,omitempty"`

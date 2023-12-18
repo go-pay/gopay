@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // alipay.fund.trans.uni.transfer(单笔转账接口)
@@ -175,7 +174,7 @@ func (a *Client) FundAuthOrderVoucherCreate(ctx context.Context, bm gopay.BodyMa
 func (a *Client) FundAuthOrderAppFreeze(ctx context.Context, bm gopay.BodyMap) (payParam string, err error) {
 	err = bm.CheckEmptyError("out_order_no", "out_request_no", "order_title", "amount", "product_code")
 	if err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	var bs []byte
 	if bs, err = a.doAliPay(ctx, bm, "alipay.fund.auth.order.app.freeze"); err != nil {

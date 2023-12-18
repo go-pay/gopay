@@ -11,7 +11,6 @@ import (
 	"fmt"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // SendCashRed 创建现金红包
@@ -45,7 +44,7 @@ func (q *Client) DownloadRedListFile(ctx context.Context, bm gopay.BodyMap) (qqR
 	}
 	bs, err := q.doQQGet(ctx, bm, redFileDown, SignType_MD5)
 	if err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	return string(bs), nil
 }

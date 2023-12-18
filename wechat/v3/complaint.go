@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // 创建投诉通知回调地址API
@@ -109,7 +108,7 @@ func (c *ClientV3) V3ComplaintNotifyUrlDelete(ctx context.Context) (wxRsp *Empty
 // 商户上传反馈图片API
 // 注意：图片不能超过2MB
 // Code = 0 is success
-func (c *ClientV3) V3ComplaintUploadImage(ctx context.Context, fileName, fileSha256 string, img *util.File) (wxRsp *MediaUploadRsp, err error) {
+func (c *ClientV3) V3ComplaintUploadImage(ctx context.Context, fileName, fileSha256 string, img *gopay.File) (wxRsp *MediaUploadRsp, err error) {
 	bmFile := make(gopay.BodyMap)
 	bmFile.Set("filename", fileName).Set("sha256", fileSha256)
 	authorization, err := c.authorization(MethodPost, v3ComplaintUploadImage, bmFile)

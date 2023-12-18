@@ -7,7 +7,6 @@ import (
 	"net/url"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // 解析支付宝支付异步通知的参数到BodyMap
@@ -88,7 +87,7 @@ func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) 
 	notifyReq.PassbackParams = req.Form.Get("passback_params")
 
 	billList := req.Form.Get("fund_bill_list")
-	if billList != util.NULL {
+	if billList != gopay.NULL {
 		bills := make([]*FundBillListInfo, 0)
 		if err = json.Unmarshal([]byte(billList), &bills); err != nil {
 			return nil, fmt.Errorf(`"fund_bill_list" json.Unmarshal(%s)：%w`, billList, err)
@@ -99,7 +98,7 @@ func ParseNotifyResult(req *http.Request) (notifyReq *NotifyRequest, err error) 
 	}
 
 	detailList := req.Form.Get("voucher_detail_list")
-	if detailList != util.NULL {
+	if detailList != gopay.NULL {
 		details := make([]*NotifyVoucherDetail, 0)
 		if err = json.Unmarshal([]byte(detailList), &details); err != nil {
 			return nil, fmt.Errorf(`"voucher_detail_list" json.Unmarshal(%s)：%w`, detailList, err)

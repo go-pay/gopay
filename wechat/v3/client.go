@@ -5,10 +5,9 @@ import (
 	"crypto/rsa"
 	"sync"
 
+	"github.com/go-pay/crypto/xpem"
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xpem"
+	"github.com/go-pay/xhttp"
 )
 
 // ClientV3 微信支付 V3
@@ -33,7 +32,7 @@ type ClientV3 struct {
 // apiV3Key：APIv3Key，商户平台获取
 // privateKey：商户API证书下载后，私钥 apiclient_key.pem 读取后的字符串内容
 func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3, err error) {
-	if mchid == util.NULL || serialNo == util.NULL || apiV3Key == util.NULL || privateKey == util.NULL {
+	if mchid == gopay.NULL || serialNo == gopay.NULL || apiV3Key == gopay.NULL || privateKey == gopay.NULL {
 		return nil, gopay.MissWechatInitParamErr
 	}
 	priKey, err := xpem.DecodePrivateKey([]byte(privateKey))

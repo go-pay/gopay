@@ -7,13 +7,12 @@ import (
 	"fmt"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // alipay.open.auth.token.app(换取应用授权令牌)
 // 文档地址：https://opendocs.alipay.com/isv/04h3uf
 func (a *Client) OpenAuthTokenApp(ctx context.Context, bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppResponse, err error) {
-	if bm.GetString("code") == util.NULL && bm.GetString("refresh_token") == util.NULL {
+	if bm.GetString("code") == gopay.NULL && bm.GetString("refresh_token") == gopay.NULL {
 		return nil, errors.New("code and refresh_token are not allowed to be null at the same time")
 	}
 	err = bm.CheckEmptyError("grant_type")

@@ -7,13 +7,12 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // 合单APP下单API
 // Code = 0 is success
 func (c *ClientV3) V3CombineTransactionApp(ctx context.Context, bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
-	if bm.GetString("combine_mchid") == util.NULL {
+	if bm.GetString("combine_mchid") == gopay.NULL {
 		bm.Set("combine_mchid", c.Mchid)
 	}
 	authorization, err := c.authorization(MethodPost, v3CombinePayApp, bm)
@@ -40,7 +39,7 @@ func (c *ClientV3) V3CombineTransactionApp(ctx context.Context, bm gopay.BodyMap
 // 合单JSAPI/小程序下单API
 // Code = 0 is success
 func (c *ClientV3) V3CombineTransactionJsapi(ctx context.Context, bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
-	if bm.GetString("combine_mchid") == util.NULL {
+	if bm.GetString("combine_mchid") == gopay.NULL {
 		bm.Set("combine_mchid", c.Mchid)
 	}
 	authorization, err := c.authorization(MethodPost, v3CombinePayJsapi, bm)
@@ -67,7 +66,7 @@ func (c *ClientV3) V3CombineTransactionJsapi(ctx context.Context, bm gopay.BodyM
 // 合单Native下单API
 // Code = 0 is success
 func (c *ClientV3) V3CombineTransactionNative(ctx context.Context, bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
-	if bm.GetString("combine_mchid") == util.NULL {
+	if bm.GetString("combine_mchid") == gopay.NULL {
 		bm.Set("combine_mchid", c.Mchid)
 	}
 	authorization, err := c.authorization(MethodPost, v3CombineNative, bm)
@@ -94,7 +93,7 @@ func (c *ClientV3) V3CombineTransactionNative(ctx context.Context, bm gopay.Body
 // 合单H5下单API
 // Code = 0 is success
 func (c *ClientV3) V3CombineTransactionH5(ctx context.Context, bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
-	if bm.GetString("combine_mchid") == util.NULL {
+	if bm.GetString("combine_mchid") == gopay.NULL {
 		bm.Set("combine_mchid", c.Mchid)
 	}
 	authorization, err := c.authorization(MethodPost, v3CombinePayH5, bm)

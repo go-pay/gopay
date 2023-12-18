@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/util/convert"
 )
 
 // 创建代金券批次
@@ -167,7 +167,7 @@ func (c *ClientV3) V3FavorMerchant(ctx context.Context, stockId, stockCreatorMch
 	if limit == 0 {
 		limit = 20
 	}
-	uri := fmt.Sprintf(v3FavorMerchant, stockId) + "?stock_creator_mchid=" + stockCreatorMchid + "&limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
+	uri := fmt.Sprintf(v3FavorMerchant, stockId) + "?stock_creator_mchid=" + stockCreatorMchid + "&limit=" + convert.Int2String(limit) + "&offset=" + convert.Int2String(offset)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -195,7 +195,7 @@ func (c *ClientV3) V3FavorItems(ctx context.Context, stockId, stockCreatorMchid 
 	if limit == 0 {
 		limit = 20
 	}
-	uri := fmt.Sprintf(v3FavorItems, stockId) + "?stock_creator_mchid=" + stockCreatorMchid + "&limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
+	uri := fmt.Sprintf(v3FavorItems, stockId) + "?stock_creator_mchid=" + stockCreatorMchid + "&limit=" + convert.Int2String(limit) + "&offset=" + convert.Int2String(offset)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err

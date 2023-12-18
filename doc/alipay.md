@@ -21,7 +21,7 @@
 ```go
 import (
     "github.com/go-pay/gopay/alipay"
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/xlog"
 )
 
 // 初始化支付宝客户端
@@ -192,7 +192,7 @@ return c.String(http.StatusOK, "success")
 ```go
 import (
     "github.com/go-pay/gopay/alipay"
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/xlog"
 )
 
 // 换取授权访问令牌（默认使用utf-8，RSA2）

@@ -3,7 +3,7 @@ package wechat
 import (
 	"testing"
 
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/xlog"
 )
 
 func TestDecryptRefundNotifyReqInfo(t *testing.T) {

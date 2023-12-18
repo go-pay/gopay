@@ -58,13 +58,13 @@ client.AddCertPkcs12FileContent()
 
 ```go
 import (
-    "github.com/go-pay/gopay/pkg/util"
+    "github.com/go-pay/util"
     "github.com/go-pay/gopay/wechat"
 )
 
 // 初始化 BodyMap
 bm := make(gopay.BodyMap)
-bm.Set("nonce_str", util.GetRandomString(32)).
+bm.Set("nonce_str", util.RandomString(32)).
     Set("body", "H5支付").
     Set("out_trade_no", number).
     Set("total_fee", 1).

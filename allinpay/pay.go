@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // Pay 统一支付接口 https://aipboss.allinpay.com/know/devhelp/main.php?pid=15#mid=88
@@ -82,7 +81,7 @@ func (c *Client) Refund(ctx context.Context, bm gopay.BodyMap) (rsp *RefundRsp, 
 	if err != nil {
 		return nil, err
 	}
-	if bm.GetString("oldreqsn") == util.NULL && bm.GetString("oldtrxid") == util.NULL {
+	if bm.GetString("oldreqsn") == gopay.NULL && bm.GetString("oldtrxid") == gopay.NULL {
 		return nil, fmt.Errorf("[%w], %v", gopay.MissParamErr, "oldreqsn和oldtrxid必填其一")
 	}
 	var bs []byte
@@ -105,7 +104,7 @@ func (c *Client) Cancel(ctx context.Context, bm gopay.BodyMap) (rsp *RefundRsp, 
 	if err != nil {
 		return nil, err
 	}
-	if bm.GetString("oldreqsn") == util.NULL && bm.GetString("oldtrxid") == util.NULL {
+	if bm.GetString("oldreqsn") == gopay.NULL && bm.GetString("oldtrxid") == gopay.NULL {
 		return nil, fmt.Errorf("[%w], %v", gopay.MissParamErr, "oldreqsn和oldtrxid必填其一")
 	}
 	var bs []byte
@@ -124,7 +123,7 @@ func (c *Client) Cancel(ctx context.Context, bm gopay.BodyMap) (rsp *RefundRsp, 
 
 // Close 订单关闭 https://aipboss.allinpay.com/know/devhelp/main.php?pid=15#mid=424
 func (c *Client) Close(ctx context.Context, bm gopay.BodyMap) (rsp *CloseRsp, err error) {
-	if bm.GetString("oldreqsn") == util.NULL && bm.GetString("oldtrxid") == util.NULL {
+	if bm.GetString("oldreqsn") == gopay.NULL && bm.GetString("oldtrxid") == gopay.NULL {
 		return nil, fmt.Errorf("[%w], %v", gopay.MissParamErr, "oldreqsn和oldtrxid必填其一")
 	}
 	var bs []byte

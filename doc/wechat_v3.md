@@ -20,7 +20,7 @@
 
 ```go
 import (
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/xlog"
     "github.com/go-pay/gopay/wechat/v3"
 )
 
@@ -122,7 +122,7 @@ jsapi, err := client.PaySignOfJSAPI("appid", "prepayid")
 ```go
 import (
     "github.com/go-pay/gopay/wechat/v3"
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/xlog"
 )
 
 wxRsp, err := client.V3TransactionJsapi(bm)
@@ -145,7 +145,7 @@ if err != nil {
 ```go
 import (
     "github.com/go-pay/gopay/wechat/v3"
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/xlog"
 )
 
 notifyReq, err := wechat.V3ParseNotify()

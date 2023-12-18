@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/xtime"
 )
 
 // 特约商户余额提现、二级商户预约提现
@@ -145,9 +145,9 @@ func (c *ClientV3) V3EcommerceWithdrawStatus(ctx context.Context, withdrawId, ou
 // 服务商文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter4_3_16.shtml
 func (c *ClientV3) V3WithdrawDownloadErrBill(ctx context.Context, bm gopay.BodyMap) (wxRsp *BillRsp, err error) {
 	if bm != nil {
-		if bm.GetString("bill_date") == util.NULL {
+		if bm.GetString("bill_date") == gopay.NULL {
 			now := time.Now()
-			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(util.DateLayout)
+			yesterday := time.Date(now.Year(), now.Month(), now.Day()-1, 0, 0, 0, 0, time.Local).Format(xtime.DateLayout)
 			bm.Set("bill_date", yesterday)
 		}
 		bm.Remove("bill_type")

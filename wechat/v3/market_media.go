@@ -7,13 +7,12 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // 图片上传（营销专用）
 // 注意：图片不能超过2MB
 // Code = 0 is success
-func (c *ClientV3) V3FavorMediaUploadImage(ctx context.Context, fileName, fileSha256 string, img *util.File) (wxRsp *MarketMediaUploadRsp, err error) {
+func (c *ClientV3) V3FavorMediaUploadImage(ctx context.Context, fileName, fileSha256 string, img *gopay.File) (wxRsp *MarketMediaUploadRsp, err error) {
 	bmFile := make(gopay.BodyMap)
 	bmFile.Set("filename", fileName).Set("sha256", fileSha256)
 	authorization, err := c.authorization(MethodPost, v3FavorMediaUploadImage, bmFile)
