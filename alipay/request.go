@@ -7,28 +7,28 @@ import (
 	"time"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/xhttp"
+	"github.com/go-pay/xlog"
+	"github.com/go-pay/xtime"
 )
 
 // PostAliPayAPISelfV2 支付宝接口自行实现方法
 // 注意：biz_content 需要自行通过bm.SetBodyMap()设置，不设置则没有此参数
 // 示例：请参考 client_test.go 的 TestClient_PostAliPayAPISelfV2() 方法
-func (a *Client) PostAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, method string, aliRsp any) (err error) {
+func (a *Client) PostAliPayAPISelfV2(ctx context.Context, bodyMap gopay.BodyMap, method string, aliRsp any) (err error) {
 	var (
 		bs, bodyBs []byte
 	)
 	// check if there is biz_content
-	bz := bm.GetInterface("biz_content")
+	bz := bodyMap.GetInterface("biz_content")
 	if bzBody, ok := bz.(gopay.BodyMap); ok {
 		if bodyBs, err = json.Marshal(bzBody); err != nil {
 			return fmt.Errorf("json.Marshal(%v)：%w", bzBody, err)
 		}
-		bm.Set("biz_content", string(bodyBs))
+		bodyMap.Set("biz_content", string(bodyBs))
 	}
 
-	if bs, err = a.doAliPaySelf(ctx, bm, method); err != nil {
+	if bs, err = a.doAliPaySelf(ctx, bodyMap, method); err != nil {
 		return err
 	}
 	if err = json.Unmarshal(bs, aliRsp); err != nil {
@@ -48,7 +48,7 @@ func (a *Client) PostFileAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, 
 	)
 	fm := make(gopay.BodyMap)
 	for k, v := range bm {
-		if _, ok := v.(*util.File); ok {
+		if _, ok := v.(*gopay.File); ok {
 			fm.Set(k, v)
 			bm.Remove(k)
 			continue
@@ -281,7 +281,7 @@ func (a *Client) PageExecute(ctx context.Context, bm gopay.BodyMap, method strin
 }
 
 // 文件上传
-func (a *Client) FileRequest(ctx context.Context, bm gopay.BodyMap, file *util.File, method string) (bs []byte, err error) {
+func (a *Client) FileRequest(ctx context.Context, bm gopay.BodyMap, file *gopay.File, method string) (bs []byte, err error) {
 	var (
 		bodyStr string
 		bodyBs  []byte
@@ -303,32 +303,32 @@ func (a *Client) FileRequest(ctx context.Context, bm gopay.BodyMap, file *util.F
 		Set("sign_type", a.SignType).
 		Set("version", "1.0").
 		Set("scene", "SYNC_ORDER").
-		Set("timestamp", time.Now().Format(util.TimeLayout))
+		Set("timestamp", time.Now().Format(xtime.TimeLayout))
 
-	if a.AppCertSN != util.NULL {
+	if a.AppCertSN != gopay.NULL {
 		pubBody.Set("app_cert_sn", a.AppCertSN)
 	}
-	if a.AliPayRootCertSN != util.NULL {
+	if a.AliPayRootCertSN != gopay.NULL {
 		pubBody.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
 	}
-	if a.ReturnUrl != util.NULL {
+	if a.ReturnUrl != gopay.NULL {
 		pubBody.Set("return_url", a.ReturnUrl)
 	}
 	if a.location != nil {
-		pubBody.Set("timestamp", time.Now().In(a.location).Format(util.TimeLayout))
+		pubBody.Set("timestamp", time.Now().In(a.location).Format(xtime.TimeLayout))
 	}
-	if a.NotifyUrl != util.NULL { //如果返回url为空，传过来的返回url不为空
+	if a.NotifyUrl != gopay.NULL { //如果返回url为空，传过来的返回url不为空
 		//fmt.Println("url不为空？", a.NotifyUrl)
 		pubBody.Set("notify_url", a.NotifyUrl)
 	}
 	//fmt.Println("notify,", pubBody.JsonBody())
-	if a.AppAuthToken != util.NULL {
+	if a.AppAuthToken != gopay.NULL {
 		pubBody.Set("app_auth_token", a.AppAuthToken)
 	}
-	if aat != util.NULL {
+	if aat != gopay.NULL {
 		pubBody.Set("app_auth_token", aat)
 	}
-	if bodyStr != util.NULL {
+	if bodyStr != gopay.NULL {
 		pubBody.Set("biz_content", bodyStr)
 	}
 	sign, err := a.getRsaSign(pubBody, pubBody.GetString("sign_type"))

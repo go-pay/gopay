@@ -3,7 +3,7 @@ package apple
 import (
 	"testing"
 
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/xlog"
 )
 
 func TestLookUpOrderId(t *testing.T) {

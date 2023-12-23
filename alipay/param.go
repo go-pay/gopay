@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/gopay"
 )
 
 // AppId   string `json:"app_id"`   //支付宝分配给开发者的应用ID
@@ -133,7 +133,7 @@ func (a *Client) SetNotifyUrl(url string) (client *Client) {
 
 // 设置编码格式，如utf-8,gbk,gb2312等，默认推荐使用 utf-8
 func (a *Client) SetCharset(charset string) (client *Client) {
-	if charset != util.NULL {
+	if charset != gopay.NULL {
 		a.Charset = charset
 	}
 	return a
@@ -141,7 +141,7 @@ func (a *Client) SetCharset(charset string) (client *Client) {
 
 // 设置签名算法类型，目前支持RSA2和RSA，默认推荐使用 RSA2
 func (a *Client) SetSignType(signType string) (client *Client) {
-	if signType != util.NULL {
+	if signType != gopay.NULL {
 		a.SignType = signType
 	}
 	return a

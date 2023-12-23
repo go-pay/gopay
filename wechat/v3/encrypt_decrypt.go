@@ -9,16 +9,15 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/go-pay/crypto/aes"
+	"github.com/go-pay/crypto/xpem"
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/aes"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xpem"
 )
 
 // 敏感信息加密，默认使用最新的有效微信平台证书加密
 func (c *ClientV3) V3EncryptText(text string) (cipherText string, err error) {
 	if c.wxPublicKey == nil || c.WxSerialNo == "" {
-		return util.NULL, errors.New("WxPublicKey or WxSerialNo is null")
+		return gopay.NULL, errors.New("WxPublicKey or WxSerialNo is null")
 	}
 	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, c.wxPublicKey, []byte(text), nil)
 	if err != nil {

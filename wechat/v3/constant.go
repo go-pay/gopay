@@ -24,7 +24,8 @@ const (
 
 	Authorization = "WECHATPAY2-SHA256-RSA2048"
 
-	v3BaseUrlCh = "https://api.mch.weixin.qq.com" // 中国国内
+	v3BaseUrlCh       = "https://api.mch.weixin.qq.com"  // 中国国内
+	v3BaseUrlChBackup = "https://api2.mch.weixin.qq.com" // 中国国内
 
 	v3GetCerts = "/v3/certificates"
 	// 基础支付（直连模式）

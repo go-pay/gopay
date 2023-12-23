@@ -6,12 +6,11 @@ import (
 	"fmt"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // alipay.merchant.item.file.upload(商品文件上传接口)
 // 文档地址：https://opendocs.alipay.com/apis/api_4/alipay.merchant.item.file.upload
-func (a *Client) MerchantItemFileUpload(ctx context.Context, file *util.File) (aliRsp *MerchantItemFileUploadRsp, err error) {
+func (a *Client) MerchantItemFileUpload(ctx context.Context, file *gopay.File) (aliRsp *MerchantItemFileUploadRsp, err error) {
 	bm := make(gopay.BodyMap)
 	bm.Set("scene", "SYNC_ORDER") //素材固定值
 

@@ -19,11 +19,10 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/go-pay/crypto/xpem"
+	"github.com/go-pay/crypto/xrsa"
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xlog"
-	"github.com/go-pay/gopay/pkg/xpem"
-	"github.com/go-pay/gopay/pkg/xrsa"
+	"github.com/go-pay/xlog"
 )
 
 // 允许进行 sn 提取的证书签名算法
@@ -65,18 +64,18 @@ func GetCertSN(certPathOrData any) (sn string, err error) {
 	case string:
 		certData, err = os.ReadFile(pathOrData)
 		if err != nil {
-			return util.NULL, err
+			return gopay.NULL, err
 		}
 	case []byte:
 		certData = pathOrData
 	default:
-		return util.NULL, errors.New("certPathOrData 证书类型断言错误")
+		return gopay.NULL, errors.New("certPathOrData 证书类型断言错误")
 	}
 
 	if block, _ := pem.Decode(certData); block != nil {
 		cert, err := x509.ParseCertificate(block.Bytes)
 		if err != nil {
-			return util.NULL, err
+			return gopay.NULL, err
 		}
 		name := cert.Issuer.String()
 		serialNumber := cert.SerialNumber.String()
@@ -85,8 +84,8 @@ func GetCertSN(certPathOrData any) (sn string, err error) {
 		h.Write([]byte(serialNumber))
 		sn = hex.EncodeToString(h.Sum(nil))
 	}
-	if sn == util.NULL {
-		return util.NULL, errors.New("failed to get sn,please check your cert")
+	if sn == gopay.NULL {
+		return gopay.NULL, errors.New("failed to get sn,please check your cert")
 	}
 	return sn, nil
 }
@@ -104,12 +103,12 @@ func GetRootCertSN(rootCertPathOrData any) (sn string, err error) {
 	case string:
 		certData, err = os.ReadFile(pathOrData)
 		if err != nil {
-			return util.NULL, err
+			return gopay.NULL, err
 		}
 	case []byte:
 		certData = pathOrData
 	default:
-		return util.NULL, errors.New("rootCertPathOrData 断言异常")
+		return gopay.NULL, errors.New("rootCertPathOrData 断言异常")
 	}
 
 	pems := strings.Split(string(certData), certEnd)
@@ -127,15 +126,15 @@ func GetRootCertSN(rootCertPathOrData any) (sn string, err error) {
 			h := md5.New()
 			h.Write([]byte(name))
 			h.Write([]byte(serialNumber))
-			if sn == util.NULL {
+			if sn == gopay.NULL {
 				sn += hex.EncodeToString(h.Sum(nil))
 			} else {
 				sn += "_" + hex.EncodeToString(h.Sum(nil))
 			}
 		}
 	}
-	if sn == util.NULL {
-		return util.NULL, errors.New("failed to get sn,please check your cert")
+	if sn == gopay.NULL {
+		return gopay.NULL, errors.New("failed to get sn,please check your cert")
 	}
 	return sn, nil
 }
@@ -167,7 +166,7 @@ func GetRsaSign(bm gopay.BodyMap, signType string, privateKey *rsa.PrivateKey) (
 		return
 	}
 	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, privateKey, hashs, h.Sum(nil)); err != nil {
-		return util.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
+		return gopay.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
 	}
 	sign = base64.StdEncoding.EncodeToString(encryptedBytes)
 	return
@@ -199,7 +198,7 @@ func (a *Client) getRsaSign(bm gopay.BodyMap, signType string) (sign string, err
 		return
 	}
 	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, a.privateKey, hashs, h.Sum(nil)); err != nil {
-		return util.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
+		return gopay.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
 	}
 	sign = base64.StdEncoding.EncodeToString(encryptedBytes)
 	return
@@ -268,7 +267,7 @@ func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error)
 func VerifySyncSignWithCert(alipayPublicKeyCert any, signData, sign string) (ok bool, err error) {
 	switch alipayPublicKeyCert.(type) {
 	case string:
-		if alipayPublicKeyCert == util.NULL {
+		if alipayPublicKeyCert == gopay.NULL {
 			return false, errors.New("aliPayPublicKeyPath is null")
 		}
 	case []byte:
@@ -312,7 +311,7 @@ func (a *Client) autoVerifySignByCert(sign, signData string, signDataErr error) 
 // 返回参数err：错误信息
 // 验签文档：https://opendocs.alipay.com/open/200/106120
 func VerifySign(alipayPublicKey string, notifyBean any) (ok bool, err error) {
-	if alipayPublicKey == util.NULL || notifyBean == nil {
+	if alipayPublicKey == gopay.NULL || notifyBean == nil {
 		return false, errors.New("alipayPublicKey or notifyBean is nil")
 	}
 	var (
@@ -363,7 +362,7 @@ func VerifySignWithCert(aliPayPublicKeyCert, notifyBean any) (ok bool, err error
 	}
 	switch aliPayPublicKeyCert.(type) {
 	case string:
-		if aliPayPublicKeyCert == util.NULL {
+		if aliPayPublicKeyCert == gopay.NULL {
 			return false, errors.New("aliPayPublicKeyPath is null")
 		}
 	case []byte:

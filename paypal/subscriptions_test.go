@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/xlog"
 )
 
 func TestClient_CreateBillingPlan(t *testing.T) {

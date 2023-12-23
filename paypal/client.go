@@ -4,8 +4,7 @@ import (
 	"context"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/go-pay/xhttp"
 )
 
 // Client PayPal支付客户端
@@ -27,7 +26,7 @@ type Option func(*Client)
 
 // NewClient 初始化PayPal支付客户端
 func NewClient(clientid, secret string, isProd bool, options ...Option) (client *Client, err error) {
-	if clientid == util.NULL || secret == util.NULL {
+	if clientid == gopay.NULL || secret == gopay.NULL {
 		return nil, gopay.MissPayPalInitParamErr
 	}
 	client = &Client{

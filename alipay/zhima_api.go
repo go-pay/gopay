@@ -6,14 +6,13 @@ import (
 	"fmt"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // Deprecated
 // zhima.credit.score.get(查询芝麻用户的芝麻分)
 // 文档地址：https://opendocs.alipay.com/apis/api_8/zhima.credit.score.get
 func (a *Client) ZhimaCreditScoreGet(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditScoreGetResponse, err error) {
-	if bm.GetString("product_code") == util.NULL {
+	if bm.GetString("product_code") == gopay.NULL {
 		bm.Set("product_code", "w1010100100000000001")
 	}
 	err = bm.CheckEmptyError("transaction_id")
@@ -39,7 +38,7 @@ func (a *Client) ZhimaCreditScoreGet(ctx context.Context, bm gopay.BodyMap) (ali
 // zhima.credit.ep.scene.rating.initialize(芝麻企业信用信用评估初始化)
 // 文档地址：https://opendocs.alipay.com/apis/api_8/zhima.credit.ep.scene.rating.initialize
 func (a *Client) ZhimaCreditEpSceneRatingInitialize(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditEpSceneRatingInitializeRsp, err error) {
-	if bm.GetString("product_code") == util.NULL {
+	if bm.GetString("product_code") == gopay.NULL {
 		bm.Set("product_code", "w1010100100000000001")
 	}
 	err = bm.CheckEmptyError("credit_category", "out_order_no", "user_id")

@@ -15,15 +15,16 @@ import (
 	"sync"
 	"time"
 
+	"github.com/go-pay/crypto/aes"
+	"github.com/go-pay/crypto/xpem"
+	"github.com/go-pay/errgroup"
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/aes"
-	"github.com/go-pay/gopay/pkg/errgroup"
-	"github.com/go-pay/gopay/pkg/retry"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
-	"github.com/go-pay/gopay/pkg/xpem"
-	"github.com/go-pay/gopay/pkg/xtime"
+	"github.com/go-pay/util"
+	"github.com/go-pay/util/convert"
+	"github.com/go-pay/util/retry"
+	"github.com/go-pay/xhttp"
+	"github.com/go-pay/xlog"
+	"github.com/go-pay/xtime"
 )
 
 // 获取平台RSA证书列表（获取后自行保存使用，如需定期刷新功能，自行实现）
@@ -54,7 +55,7 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 
 	timestamp := time.Now().Unix()
 	nonceStr := util.RandomString(32)
-	ts := util.Int642String(timestamp)
+	ts := convert.Int642String(timestamp)
 	_str := MethodGet + "\n" + uri + "\n" + ts + "\n" + nonceStr + "\n" + jb + "\n"
 	// Sign
 	h := sha256.New()

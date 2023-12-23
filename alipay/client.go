@@ -7,13 +7,13 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/go-pay/crypto/aes"
+	"github.com/go-pay/crypto/xpem"
+	"github.com/go-pay/crypto/xrsa"
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/aes"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
-	"github.com/go-pay/gopay/pkg/xpem"
-	"github.com/go-pay/gopay/pkg/xrsa"
+	"github.com/go-pay/xhttp"
+	"github.com/go-pay/xlog"
+	"github.com/go-pay/xtime"
 )
 
 type Client struct {
@@ -43,7 +43,7 @@ type Client struct {
 // privateKey：应用私钥，支持PKCS1和PKCS8
 // isProd：是否是正式环境，沙箱环境请选择新版沙箱应用。
 func NewClient(appid, privateKey string, isProd bool) (client *Client, err error) {
-	if appid == util.NULL || privateKey == util.NULL {
+	if appid == gopay.NULL || privateKey == gopay.NULL {
 		return nil, gopay.MissAlipayInitParamErr
 	}
 	key := xrsa.FormatAlipayPrivateKey(privateKey)
@@ -141,48 +141,48 @@ func (a *Client) pubParamsHandle(bm gopay.BodyMap, method, bizContent string, au
 		Set("charset", a.Charset).
 		Set("sign_type", a.SignType).
 		Set("version", "1.0").
-		Set("timestamp", time.Now().Format(util.TimeLayout))
+		Set("timestamp", time.Now().Format(xtime.TimeLayout))
 
 	// version
-	if version := bm.GetString("version"); version != util.NULL {
+	if version := bm.GetString("version"); version != gopay.NULL {
 		pubBody.Set("version", version)
 	}
-	if a.AppCertSN != util.NULL {
+	if a.AppCertSN != gopay.NULL {
 		pubBody.Set("app_cert_sn", a.AppCertSN)
 	}
-	if a.AliPayRootCertSN != util.NULL {
+	if a.AliPayRootCertSN != gopay.NULL {
 		pubBody.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
 	}
 	// return_url
-	if a.ReturnUrl != util.NULL {
+	if a.ReturnUrl != gopay.NULL {
 		pubBody.Set("return_url", a.ReturnUrl)
 	}
-	if returnUrl := bm.GetString("return_url"); returnUrl != util.NULL {
+	if returnUrl := bm.GetString("return_url"); returnUrl != gopay.NULL {
 		pubBody.Set("return_url", returnUrl)
 	}
 	if a.location != nil {
-		pubBody.Set("timestamp", time.Now().In(a.location).Format(util.TimeLayout))
+		pubBody.Set("timestamp", time.Now().In(a.location).Format(xtime.TimeLayout))
 	}
 	// notify_url
-	if a.NotifyUrl != util.NULL {
+	if a.NotifyUrl != gopay.NULL {
 		pubBody.Set("notify_url", a.NotifyUrl)
 	}
-	if notifyUrl := bm.GetString("notify_url"); notifyUrl != util.NULL {
+	if notifyUrl := bm.GetString("notify_url"); notifyUrl != gopay.NULL {
 		pubBody.Set("notify_url", notifyUrl)
 	}
 	// default use app_auth_token
-	if a.AppAuthToken != util.NULL {
+	if a.AppAuthToken != gopay.NULL {
 		pubBody.Set("app_auth_token", a.AppAuthToken)
 	}
 	// if user set app_auth_token in body_map, use this
-	if aat := bm.GetString("app_auth_token"); aat != util.NULL {
+	if aat := bm.GetString("app_auth_token"); aat != gopay.NULL {
 		pubBody.Set("app_auth_token", aat)
 	}
 	if len(authToken) > 0 {
 		pubBody.Set("auth_token", authToken[0])
 	}
-	if bizContent != util.NULL {
-		if a.aesKey == util.NULL {
+	if bizContent != gopay.NULL {
+		if a.aesKey == gopay.NULL {
 			pubBody.Set("biz_content", bizContent)
 		} else {
 			// AES Encrypt biz_content
@@ -216,27 +216,27 @@ func (a *Client) checkPublicParam(bm gopay.BodyMap) {
 		Set("charset", a.Charset).
 		Set("sign_type", a.SignType).
 		Set("version", "1.0").
-		Set("timestamp", time.Now().Format(util.TimeLayout))
+		Set("timestamp", time.Now().Format(xtime.TimeLayout))
 
-	if bm.GetString("app_id") == "" && a.AppId != util.NULL {
+	if bm.GetString("app_id") == "" && a.AppId != gopay.NULL {
 		bm.Set("app_id", a.AppId)
 	}
-	if bm.GetString("app_cert_sn") == "" && a.AppCertSN != util.NULL {
+	if bm.GetString("app_cert_sn") == "" && a.AppCertSN != gopay.NULL {
 		bm.Set("app_cert_sn", a.AppCertSN)
 	}
-	if bm.GetString("alipay_root_cert_sn") == "" && a.AliPayRootCertSN != util.NULL {
+	if bm.GetString("alipay_root_cert_sn") == "" && a.AliPayRootCertSN != gopay.NULL {
 		bm.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
 	}
-	if bm.GetString("return_url") == "" && a.ReturnUrl != util.NULL {
+	if bm.GetString("return_url") == "" && a.ReturnUrl != gopay.NULL {
 		bm.Set("return_url", a.ReturnUrl)
 	}
 	if a.location != nil {
-		bm.Set("timestamp", time.Now().In(a.location).Format(util.TimeLayout))
+		bm.Set("timestamp", time.Now().In(a.location).Format(xtime.TimeLayout))
 	}
-	if bm.GetString("notify_url") == "" && a.NotifyUrl != util.NULL {
+	if bm.GetString("notify_url") == "" && a.NotifyUrl != gopay.NULL {
 		bm.Set("notify_url", a.NotifyUrl)
 	}
-	if bm.GetString("app_auth_token") == "" && a.AppAuthToken != util.NULL {
+	if bm.GetString("app_auth_token") == "" && a.AppAuthToken != gopay.NULL {
 		bm.Set("app_auth_token", a.AppAuthToken)
 	}
 }

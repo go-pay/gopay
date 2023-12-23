@@ -6,8 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/go-pay/xhttp"
 )
 
 // Client AppleClient
@@ -27,7 +26,7 @@ type Client struct {
 // privateKey：私钥文件读取后的字符串内容
 // isProd：是否是正式环境
 func NewClient(iss, bid, kid, privateKey string, isProd bool) (client *Client, err error) {
-	if iss == util.NULL || bid == util.NULL || kid == util.NULL || privateKey == util.NULL {
+	if iss == gopay.NULL || bid == gopay.NULL || kid == gopay.NULL || privateKey == gopay.NULL {
 		return nil, gopay.MissAppleInitParamErr
 	}
 	ecPrivateKey, err := ParseECPrivateKeyFromPEM([]byte(privateKey))

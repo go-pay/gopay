@@ -14,7 +14,7 @@ import (
 	"strings"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/util"
 )
 
 // VerifySign 微信同步返回参数验签或异步通知参数验签
@@ -176,7 +176,7 @@ func GetParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string) {
 		h        hash.Hash
 	)
 	signType = bm.GetString("sign_type")
-	if signType == util.NULL {
+	if signType == gopay.NULL {
 		bm.Set("sign_type", SignType_MD5)
 	}
 	if signType == SignType_HMAC_SHA256 {

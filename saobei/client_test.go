@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/go-pay/gopay/pkg/xlog"
 	"github.com/go-pay/gopay/saobei/cert"
+	"github.com/go-pay/xlog"
 )
 
 var (

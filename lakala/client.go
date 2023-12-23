@@ -12,9 +12,9 @@ import (
 	"time"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/util"
+	"github.com/go-pay/xhttp"
+	"github.com/go-pay/xlog"
 )
 
 // Client lakala
@@ -34,7 +34,7 @@ type Client struct {
 // credentialCode: 系统为商户分配的开发校验码，请妥善保管，不要在公开场合泄露
 // isProd: 是否生产环境
 func NewClient(partnerCode, credentialCode string, isProd bool) (client *Client, err error) {
-	if partnerCode == util.NULL || credentialCode == util.NULL {
+	if partnerCode == gopay.NULL || credentialCode == gopay.NULL {
 		return nil, gopay.MissLakalaInitParamErr
 	}
 	client = &Client{

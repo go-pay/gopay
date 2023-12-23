@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/xlog"
 )
 
 // 小程序支付接口
