@@ -94,7 +94,7 @@ func TestMarketingCampaignCashListQuery(t *testing.T) {
 func TestMarketingCampaignCashDetailQuery(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
-	bm.Set("crowd_no", "1")
+	bm.Set("crowd_no", "POYb84lfiKVdIfERAYsqPL_KQRIpfQbl47xfRmmPBlDMnSZ96O-zxUfKlHp5cxmx")
 
 	// 发起请求
 	aliRsp, err := client.MarketingCampaignCashDetailQuery(ctx, bm)

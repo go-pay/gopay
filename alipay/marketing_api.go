@@ -138,6 +138,7 @@ func (a *Client) MarketingCampaignCashDetailQuery(ctx context.Context, bm gopay.
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
+	fmt.Println(err)
 	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
 		return aliRsp, err
 	}
