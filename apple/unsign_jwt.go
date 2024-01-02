@@ -57,19 +57,16 @@ func (h header) certParse() (*x509.Certificate, *x509.Certificate, *x509.Certifi
 		return nil, nil, nil, errors.New("invalid x5c format")
 	}
 
-	fmt.Println("X5c.root")
 	root, err := certDecode(h.X5c[2])
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("failed to parse root certificate: %w", err)
 	}
 
-	fmt.Println("X5c.intermedia")
 	interCert, err := certDecode(h.X5c[1])
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("failed to parse intermedia certificate: %w", err)
 	}
 
-	fmt.Println("X5c.user")
 	userCert, err := certDecode(h.X5c[0])
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("failed to parse user certificate: %w", err)
@@ -80,6 +77,9 @@ func (h header) certParse() (*x509.Certificate, *x509.Certificate, *x509.Certifi
 
 func (h header) x5cCertVerify() (*ecdsa.PublicKey, error) {
 	_, i, u, err := h.certParse()
+	if err != nil {
+		return nil, err
+	}
 	var iPool = x509.NewCertPool()
 	iPool.AddCert(i)
 	opts := x509.VerifyOptions{
@@ -117,10 +117,10 @@ func x5cCertVerify(tokenStr string) (*ecdsa.PublicKey, error) {
 		return nil, err
 	}
 
-	header := &header{}
-	err = json.Unmarshal(headerByte, header)
+	h := &header{}
+	err = json.Unmarshal(headerByte, h)
 	if err != nil {
 		return nil, fmt.Errorf("invalid jwt.header: %w", err)
 	}
-	return header.x5cCertVerify()
+	return h.x5cCertVerify()
 }
