@@ -169,6 +169,10 @@ type UserInfoShare struct {
 	UserStatus         string `json:"user_status,omitempty"`
 	IsCertified        string `json:"is_certified,omitempty"`
 	Gender             string `json:"gender,omitempty"`
+	Cert_type	   string `json:"cert_type,omitempty"`
+	Cert_no	           string `json:"cert_no,omitempty"`	
+	Mobile	           string `json:"mobile,omitempty"`	
+	User_name	   string `json:"user_name,omitempty"`	
 }
 
 type UserCertifyOpenInit struct {
