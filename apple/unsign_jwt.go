@@ -38,8 +38,10 @@ type header struct {
 
 // 解析 x5c root intermedia user证书
 // Per doc: https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.6
-func (h header) certParse() (*x509.Certificate, *x509.Certificate, *x509.Certificate, error) {
-
+func (h *header) certParse() (*x509.Certificate, *x509.Certificate, *x509.Certificate, error) {
+	if len(h.X5c) != 3 {
+		return nil, nil, nil, errors.New("invalid x5c format")
+	}
 	var certDecode = func(certStr string) (*x509.Certificate, error) {
 		certBytes, err := base64.StdEncoding.DecodeString(certStr)
 		if err != nil {
@@ -49,33 +51,24 @@ func (h header) certParse() (*x509.Certificate, *x509.Certificate, *x509.Certifi
 		if err != nil {
 			return nil, fmt.Errorf("failed to parse certificate: %w", err)
 		}
-
-		return cert, err
+		return cert, nil
 	}
-
-	if len(h.X5c) != 3 {
-		return nil, nil, nil, errors.New("invalid x5c format")
-	}
-
 	root, err := certDecode(h.X5c[2])
 	if err != nil {
-		return nil, nil, nil, fmt.Errorf("failed to parse root certificate: %w", err)
+		return nil, nil, nil, fmt.Errorf("failed to decode root certificate: %w", err)
 	}
-
 	interCert, err := certDecode(h.X5c[1])
 	if err != nil {
-		return nil, nil, nil, fmt.Errorf("failed to parse intermedia certificate: %w", err)
+		return nil, nil, nil, fmt.Errorf("failed to decode intermedia certificate: %w", err)
 	}
-
 	userCert, err := certDecode(h.X5c[0])
 	if err != nil {
-		return nil, nil, nil, fmt.Errorf("failed to parse user certificate: %w", err)
+		return nil, nil, nil, fmt.Errorf("failed to decode user certificate: %w", err)
 	}
-
 	return root, interCert, userCert, nil
 }
 
-func (h header) x5cCertVerify() (*ecdsa.PublicKey, error) {
+func (h *header) x5cCertVerify() (*ecdsa.PublicKey, error) {
 	_, i, u, err := h.certParse()
 	if err != nil {
 		return nil, err
@@ -116,7 +109,6 @@ func x5cCertVerify(tokenStr string) (*ecdsa.PublicKey, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	h := &header{}
 	err = json.Unmarshal(headerByte, h)
 	if err != nil {
