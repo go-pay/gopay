@@ -248,3 +248,8 @@ func (a *Client) encryptBizContent(originData string) (string, error) {
 	}
 	return base64.StdEncoding.EncodeToString(encryptData), nil
 }
+
+// SetHttpClient 设置自定义的xhttp.Client
+func (a *Client) SetHttpClient(client *xhttp.Client) {
+	a.hc = client
+}
