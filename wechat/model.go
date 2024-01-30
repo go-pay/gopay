@@ -685,6 +685,33 @@ type ProfitSharingReturnResponse struct {
 	FinishTime        string `xml:"finish_time,omitempty" json:"finish_time,omitempty"`                 // 完成时间
 }
 
+// ProfitSharingOrderAmountQueryResponse 查询订单待分账金额响应结果
+type ProfitSharingOrderAmountQueryResponse struct {
+	ReturnCode    string `xml:"return_code,omitempty" json:"return_code,omitempty"`       // 返回状态码 SUCCESS/FAIL 此字段是通信标识，非交易标识
+	ErrCode       string `xml:"err_code,omitempty" json:"err_code,omitempty"`             // 错误代码
+	ErrorMsg      string `xml:"error_msg,omitempty" json:"error_msg,omitempty"`           // 返回信息 如果返回状态码为FAIL，则本字段存在，且为失败的错误信息
+	ErrCodeDes    string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`     // 错误代码描述
+	MchId         string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`                 //调用接口时提供的服务商户号
+	TransactionId string `xml:"transaction_id,omitempty" json:"transaction_id,omitempty"` //微信支付订单号
+	UnsplitAmount int    `xml:"unsplit_amount,omitempty" json:"unsplit_amount,omitempty"` //订单剩余待分金额，整数，单位为分
+	NonceStr      string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`           //微信返回的随机字符串
+	Sign          string `xml:"sign,omitempty" json:"sign,omitempty"`                     //微信返回的签名
+}
+
+// ProfitSharingReturnResponse 分账退回响应结果
+type ProfitSharingMerchanTratioQuery struct {
+	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`   // 返回状态码 SUCCESS/FAIL 此字段是通信标识，非交易标识
+	ErrCode    string `xml:"err_code,omitempty" json:"err_code,omitempty"`         // 错误代码
+	ErrorMsg   string `xml:"error_msg,omitempty" json:"error_msg,omitempty"`       // 返回信息 如果返回状态码为FAIL，则本字段存在，且为失败的错误信息
+	ErrCodeDes string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"` // 错误代码描述
+	MchId      string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`             //调用接口时提供的服务商户号
+	SubMchId   string `xml:"sub_mch_id,omitempty" json:"sub_mch_id,omitempty"`     //微信支付分配的子商户号，即分账的出资商户号。查询子商户号的设置的最大分账比例（普通分账）时返回此字段
+	BrandMchId string `xml:"brand_mch_id,omitempty" json:"brand_mch_id,omitempty"` //调用接口时提供的品牌主商户号。查询品牌主商户设置的全局分账比例（品牌分账）时返回此字段。
+	MaxRatio   int    `xml:"max_ratio,omitempty" json:"max_ratio,omitempty"`       //子商户允许服务商分账的最大比例，单位万分比，比如2000表示20%
+	NonceStr   string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`       //微信返回的随机字符串
+	Sign       string `xml:"sign,omitempty" json:"sign,omitempty"`                 //微信返回的签名
+}
+
 type PayBankResponse struct {
 	ReturnCode     string `xml:"return_code,omitempty" json:"return_code,omitempty"`
 	ReturnMsg      string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
