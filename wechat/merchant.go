@@ -341,6 +341,52 @@ func (w *Client) ProfitSharingFinish(ctx context.Context, bm gopay.BodyMap) (wxR
 	return wxRsp, nil
 }
 
+// 服务商可通过调用此接口查询订单剩余待分金额
+// 接口频率：30QPS
+// 微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation_sl.php?chapter=25_10&index=7
+func (w *Client) ProfitSharingOrderAmountQuery(ctx context.Context, bm gopay.BodyMap) (wxRsp *ProfitSharingOrderAmountQueryResponse, err error) {
+	err = bm.CheckEmptyError("mch_id", "transaction_id", "nonce_str")
+	if err != nil {
+		return nil, err
+	}
+
+	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	bm.Set("sign_type", SignType_HMAC_SHA256)
+	bs, err := w.doProdPostTLS(ctx, bm, profitSharingOrderAmountQuery)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = new(ProfitSharingOrderAmountQueryResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	return wxRsp, nil
+}
+
+// 服务商可以查询子商户设置的允许服务商分账的最大比例
+// 接口频率：30QPS
+// 微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation_sl.php?chapter=25_10&index=7
+func (w *Client) ProfitSharingMerchantRatioQuery(ctx context.Context, bm gopay.BodyMap) (wxRsp *ProfitSharingMerchanTratioQuery, err error) {
+	err = bm.CheckEmptyError("mch_id", "nonce_str")
+	if err != nil {
+		return nil, err
+	}
+	if (bm.GetString("sub_mch_id") == gopay.NULL) && (bm.GetString("brand_mch_id") == gopay.NULL) {
+		return nil, errors.New("param sub_mch_id and brand_mch_id can not be null at the same time")
+	}
+	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	bm.Set("sign_type", SignType_HMAC_SHA256)
+	bs, err := w.doProdPostTLS(ctx, bm, profitSharingMerchantRatioQuery)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = new(ProfitSharingMerchanTratioQuery)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	return wxRsp, nil
+}
+
 // 分账回退
 // 对订单进行退款时，如果订单已经分账，可以先调用此接口将指定的金额从分账接收方（仅限商户类型的分账接收方）回退给本商户，然后再退款。
 // 回退以原分账请求为依据，可以对分给分账接收方的金额进行多次回退，只要满足累计回退不超过该请求中分给接收方的金额。
