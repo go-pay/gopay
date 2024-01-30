@@ -366,7 +366,7 @@ func (w *Client) ProfitSharingOrderAmountQuery(ctx context.Context, bm gopay.Bod
 // 服务商可以查询子商户设置的允许服务商分账的最大比例
 // 接口频率：30QPS
 // 微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation_sl.php?chapter=25_10&index=7
-func (w *Client) ProfitSharingMerchantRatioQuery(ctx context.Context, bm gopay.BodyMap) (wxRsp *ProfitSharingMerchanTratioQuery, err error) {
+func (w *Client) ProfitSharingMerchantRatioQuery(ctx context.Context, bm gopay.BodyMap) (wxRsp *ProfitSharingMerchantRatioQuery, err error) {
 	err = bm.CheckEmptyError("mch_id", "nonce_str")
 	if err != nil {
 		return nil, err
@@ -380,7 +380,7 @@ func (w *Client) ProfitSharingMerchantRatioQuery(ctx context.Context, bm gopay.B
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = new(ProfitSharingMerchanTratioQuery)
+	wxRsp = new(ProfitSharingMerchantRatioQuery)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}

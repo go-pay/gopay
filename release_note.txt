@@ -1,8 +1,11 @@
 版本号：Release 1.5.100
 修改记录：
    (1) 支付宝：整理异步通知 NotifyRequest 结构体。
-   (2) gopay：依赖库整理拆分整理，go mod 版本升级到 go1.20。
-   (3) gopay：升级 1.5.100 版本需要伴随部分代码替换修改，谨慎升级。
+   (2) 微信V2：新增 client.ProfitSharingOrderAmountQuery()，查询订单待分账金额。
+   (3) 微信V2：新增 client.ProfitSharingMerchantRatioQuery()，查询最大分账比例。
+   (4) gopay：依赖库整理拆分整理，go mod 版本升级到 go1.20。
+   (5) gopay：升级 1.5.100 版本需要伴随部分代码替换修改，谨慎升级。
+   (6) gopay：优化一些已知问题。
 
 版本号：Release 1.5.99
 修改记录：
