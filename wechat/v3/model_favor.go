@@ -1,6 +1,5 @@
 package wechat
 
-
 // 创建代金券批次 Rsp
 type FavorBatchCreateRsp struct {
 	Code     int               `json:"-"`
@@ -87,6 +86,14 @@ type FavorRefundFlowDownloadRsp struct {
 	SignInfo *SignInfo          `json:"-"`
 	Response *FavorFlowDownload `json:"response,omitempty"`
 	Error    string             `json:"-"`
+}
+
+// 查询消息通知地址 Rsp
+type FavorCallbackUrlGetRsp struct {
+	Code     int                  `json:"-"`
+	SignInfo *SignInfo            `json:"-"`
+	Response *FavorCallbackUrlGet `json:"response,omitempty"`
+	Error    string               `json:"-"`
 }
 
 // 设置消息通知地址 Rsp
@@ -386,6 +393,11 @@ type FavorFlowDownload struct {
 	Url       string `json:"url"`        // 流水文件下载链接，30s内有效
 	HashValue string `json:"hash_value"` // 文件内容的哈希值，防止篡改
 	HashType  string `json:"hash_type"`  // 哈希算法类型，目前只支持sha1
+}
+
+type FavorCallbackUrlGet struct {
+	Mchid     string `json:"mchid"`      // 商户号
+	NotifyUrl string `json:"notify_url"` // 通知地址
 }
 
 type FavorCallbackUrl struct {

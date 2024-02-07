@@ -118,7 +118,7 @@ func (c *ClientV3) V3TransactionH5(ctx context.Context, bm gopay.BodyMap) (wxRsp
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 查询订单API
+// 商户订单号/微信支付订单号 查询订单
 // Code = 0 is success
 func (c *ClientV3) V3TransactionQueryOrder(ctx context.Context, orderNoType OrderNoType, orderNo string) (wxRsp *QueryOrderRsp, err error) {
 	var uri string

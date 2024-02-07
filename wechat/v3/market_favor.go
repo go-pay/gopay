@@ -292,6 +292,31 @@ func (c *ClientV3) V3FavorRefundFlowDownload(ctx context.Context, stockId string
 	return wxRsp, c.verifySyncSign(si)
 }
 
+// 查询消息通知地址
+// Code = 0 is success
+func (c *ClientV3) V3FavorCallbackUrl(ctx context.Context, mchid string) (wxRsp *FavorCallbackUrlGetRsp, err error) {
+	uri := v3FavorCallbackUrl + "?" + mchid
+	authorization, err := c.authorization(MethodGet, uri, nil)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &FavorCallbackUrlGetRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(FavorCallbackUrlGet)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
 // 设置消息通知地址
 // Code = 0 is success
 func (c *ClientV3) V3FavorCallbackUrlSet(ctx context.Context, bm gopay.BodyMap) (wxRsp *FavorCallbackUrlSetRsp, err error) {

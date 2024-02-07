@@ -61,7 +61,7 @@ func (c *ClientV3) V3PartnerTransfer(ctx context.Context, bm gopay.BodyMap) (*Tr
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 微信批次单号查询批次单API
+// 通过微信批次单号查询批次单
 // Code = 0 is success
 func (c *ClientV3) V3TransferQuery(ctx context.Context, batchId string, bm gopay.BodyMap) (*TransferQueryRsp, error) {
 	url := fmt.Sprintf(v3TransferQuery, batchId)
@@ -117,7 +117,7 @@ func (c *ClientV3) V3PartnerTransferQuery(ctx context.Context, batchId string, b
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 微信明细单号查询明细单API
+// 通过微信明细单号查询明细单
 // Code = 0 is success
 func (c *ClientV3) V3TransferDetail(ctx context.Context, batchId, detailId string) (*TransferDetailRsp, error) {
 	url := fmt.Sprintf(v3TransferDetail, batchId, detailId)
@@ -175,7 +175,7 @@ func (c *ClientV3) V3TransferDetailQuery(ctx context.Context, batchId, detailId 
 	return c.V3TransferDetail(ctx, batchId, detailId)
 }
 
-// 商家批次单号查询批次单API
+// 通过商家批次单号查询批次单
 // Code = 0 is success
 func (c *ClientV3) V3TransferMerchantQuery(ctx context.Context, outBatchNo string, bm gopay.BodyMap) (*TransferMerchantQueryRsp, error) {
 	url := fmt.Sprintf(v3TransferMerchantQuery, outBatchNo)
@@ -231,7 +231,7 @@ func (c *ClientV3) V3PartnerTransferMerchantQuery(ctx context.Context, outBatchN
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 商家明细单号查询明细单API
+// 通过商家明细单号查询明细单
 // Code = 0 is success
 func (c *ClientV3) V3TransferMerchantDetail(ctx context.Context, outBatchNo, outDetailNo string) (*TransferMerchantDetailRsp, error) {
 	url := fmt.Sprintf(v3TransferMerchantDetail, outBatchNo, outDetailNo)
@@ -283,7 +283,7 @@ func (c *ClientV3) V3PartnerTransferMerchantDetail(ctx context.Context, outBatch
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 转账电子回单申请受理API
+// 转账账单电子回单申请受理接口
 // Code = 0 is success
 func (c *ClientV3) V3TransferReceipt(ctx context.Context, outBatchNo string) (*TransferReceiptRsp, error) {
 	bm := make(gopay.BodyMap)
@@ -311,7 +311,7 @@ func (c *ClientV3) V3TransferReceipt(ctx context.Context, outBatchNo string) (*T
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 查询转账电子回单API
+// 查询转账账单电子回单接口
 // Code = 0 is success
 func (c *ClientV3) V3TransferReceiptQuery(ctx context.Context, outBatchNo string) (*TransferReceiptQueryRsp, error) {
 	url := fmt.Sprintf(v3TransferReceiptQuery, outBatchNo)

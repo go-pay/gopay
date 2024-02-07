@@ -9,7 +9,7 @@ import (
 	"github.com/go-pay/gopay"
 )
 
-// 申请退款API
+// 退款申请
 // Code = 0 is success
 func (c *ClientV3) V3Refund(ctx context.Context, bm gopay.BodyMap) (wxRsp *RefundRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3DomesticRefund, bm)
@@ -34,7 +34,33 @@ func (c *ClientV3) V3Refund(ctx context.Context, bm gopay.BodyMap) (wxRsp *Refun
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 查询单笔退款API
+// 发起异常退款
+// Code = 0 is success
+func (c *ClientV3) V3AbnormalRefund(ctx context.Context, refundId string, bm gopay.BodyMap) (wxRsp *RefundRsp, err error) {
+	uri := fmt.Sprintf(v3DomesticAbnormalRefund, refundId)
+	authorization, err := c.authorization(MethodPost, uri, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(ctx, bm, uri, authorization)
+	if err != nil {
+		return nil, err
+	}
+
+	wxRsp = &RefundRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(RefundOrderResponse)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 查询单笔退款（通过商户退款单号）
 // 注意：商户查询时，bm 可传 nil；服务商时，传相应query参数
 // Code = 0 is success
 func (c *ClientV3) V3RefundQuery(ctx context.Context, outRefundNo string, bm gopay.BodyMap) (wxRsp *RefundQueryRsp, err error) {
@@ -64,7 +90,7 @@ func (c *ClientV3) V3RefundQuery(ctx context.Context, outRefundNo string, bm gop
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 申请退款API
+// 申请退款
 // Code = 0 is success
 func (c *ClientV3) V3EcommerceRefund(ctx context.Context, bm gopay.BodyMap) (wxRsp *EcommerceRefundRsp, err error) {
 	authorization, err := c.authorization(MethodPost, v3CommerceRefund, bm)
@@ -89,7 +115,7 @@ func (c *ClientV3) V3EcommerceRefund(ctx context.Context, bm gopay.BodyMap) (wxR
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 通过微信支付退款单号查询退款API
+// 查询单笔退款（通过微信支付退款号）
 // Code = 0 is success
 func (c *ClientV3) V3EcommerceRefundQueryById(ctx context.Context, refundId string, bm gopay.BodyMap) (wxRsp *EcommerceRefundQueryRsp, err error) {
 	uri := fmt.Sprintf(v3CommerceRefundQueryById, refundId) + "?" + bm.EncodeURLParams()
@@ -115,7 +141,7 @@ func (c *ClientV3) V3EcommerceRefundQueryById(ctx context.Context, refundId stri
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 通过商户退款单号查询退款API
+// 查询单笔退款（通过商户退款单号）
 // Code = 0 is success
 func (c *ClientV3) V3EcommerceRefundQueryByNo(ctx context.Context, outRefundNo string, bm gopay.BodyMap) (wxRsp *EcommerceRefundQueryRsp, err error) {
 	uri := fmt.Sprintf(v3CommerceRefundQueryByNo, outRefundNo) + "?" + bm.EncodeURLParams()
