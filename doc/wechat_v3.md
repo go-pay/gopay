@@ -186,12 +186,15 @@ client.V3DecryptText()
 
 // ====↓↓↓====异步通知参数解密====↓↓↓====
 
+// 通用通知解密（推荐此方法）
+result, err := notifyReq.DecryptCipherTextToStruct(apiV3Key, objPtr)
 // 普通支付通知解密
-result, err := notifyReq.DecryptCipherText(apiV3Key)
+result, err := notifyReq.DecryptPayCipherText(apiV3Key)
 // 合单支付通知解密
 result, err := notifyReq.DecryptCombineCipherText(apiV3Key)
 // 退款通知解密
 result, err := notifyReq.DecryptRefundCipherText(apiV3Key)
+...
 ```
 
 ### 5、微信v3 公共API（仅部分说明）
@@ -212,11 +215,11 @@ wechat.V3EncryptText() 或 client.V3EncryptText()
 // 返回参数 敏感信息解密，推荐使用后者
 wechat.V3DecryptText() 或 client.V3DecryptText()
 
-// 回调通知敏感信息解密
-wechat.V3DecryptNotifyCipherText()
+// 回调通知 resource.ciphertext 敏感信息解密
+wechat.V3DecryptNotifyCipherTextToStruct()  // 推荐使用此方法
+wechat.V3DecryptPayNotifyCipherText()
 wechat.V3DecryptRefundNotifyCipherText()
 wechat.V3DecryptCombineNotifyCipherText()
-wechat.V3DecryptScoreNotifyCipherText()
 ...
 ```
 
@@ -231,7 +234,7 @@ wechat.V3DecryptScoreNotifyCipherText()
     * JSAPI/小程序下单：`client.V3TransactionJsapi()`
     * Native下单：`client.V3TransactionNative()`
     * H5下单：`client.V3TransactionH5()`
-    * 查询订单：`client.V3TransactionQueryOrder()`
+    * 商户订单号/微信支付订单号 查询订单：`client.V3TransactionQueryOrder()`
     * 关闭订单：`client.V3TransactionCloseOrder()`
 * <font color='#07C160' size='4'>基础支付（服务商）</font>
     * APP下单：`client.V3PartnerTransactionApp()`
@@ -241,16 +244,16 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 查询订单：`client.V3PartnerQueryOrder()`
     * 关闭订单：`client.V3PartnerCloseOrder()`
 * <font color='#07C160' size='4'>合单支付</font>
-    * 合单APP下单：`client.V3CombineTransactionApp()`
-    * 合单JSAPI/小程序下单：`client.V3CombineTransactionJsapi()`
-    * 合单Native下单：`client.V3CombineTransactionNative()`
-    * 合单H5下单：`client.V3CombineTransactionH5()`
+    * 合单下单-APP：`client.V3CombineTransactionApp()`
+    * 合单下单-JSAPI/小程序：`client.V3CombineTransactionJsapi()`
+    * 合单下单-NATIVE：`client.V3CombineTransactionNative()`
+    * 合单下单-H5：`client.V3CombineTransactionH5()`
     * 合单查询订单：`client.V3CombineQueryOrder()`
     * 合单关闭订单：`client.V3CombineCloseOrder()`
 * <font color='#07C160' size='4'>退款</font>
     * 申请退款：`client.V3Refund()`
-    * 查询单笔退款：`client.V3RefundQuery()`
-* <font color='#07C160' size='4'>账单</font>
+    * 查询单笔退款（通过商户退款单号）：`client.V3RefundQuery()`
+* <font color='#07C160' size='4'>资金/交易账单</font>
     * 申请交易账单：`client.V3BillTradeBill()`
     * 申请资金账单：`client.V3BillFundFlowBill()`
     * 申请特约商户资金账单：`client.V3BillEcommerceFundFlowBill()`
@@ -261,7 +264,7 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 电商平台预约提现：`client.V3EcommerceWithdraw()`
     * 电商平台查询预约提现状态：`client.V3EcommerceWithdrawStatus()`
     * 按日下载提现异常文件：`client.V3WithdrawDownloadErrBill()`
-* <font color='#07C160' size='4'>微信支付分（公共API）</font>
+* <font color='#07C160' size='4'>微信支付分（服务订单）</font>
     * 创建支付分订单：`client.V3ScoreOrderCreate()`
     * 查询支付分订单：`client.V3ScoreOrderQuery()`
     * 取消支付分订单：`client.V3ScoreOrderCancel()`
@@ -310,6 +313,7 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 根据商户号查用户的券：`client.V3FavorUserCoupons()`
     * 下载批次核销明细：`client.V3FavorUseFlowDownload()`
     * 下载批次退款明细：`client.V3FavorRefundFlowDownload()`
+    * 查询消息通知地址：`client.V3FavorCallbackUrl()`
     * 设置消息通知地址：`client.V3FavorCallbackUrlSet()`
 * <font color='#07C160' size='4'>商家券</font>
     * 创建商家券：`client.V3BusiFavorBatchCreate()`
@@ -334,7 +338,9 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 终止合作关系：`client.V3PartnershipsTerminate()`
     * 查询合作关系列表：`client.V3PartnershipsList()`
 * <font color='#07C160' size='4'>支付有礼</font>
-    * 待实现-[文档](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter9_7_2.shtml)
+    * 待实现-[文档](https://pay.weixin.qq.com/docs/merchant/apis/gift-activity/activity/create-full-send-act.html)
+* <font color='#07C160' size='4'>电子发票</font>
+    * 待实现-[文档](https://pay.weixin.qq.com/docs/merchant/apis/fapiao/fapiao-card-template/create-fapiao-card-template.html)
 * <font color='#07C160' size='4'>分账</font>
     * 请求分账：`client.V3ProfitShareOrder()`
     * 查询分账结果：`client.V3ProfitShareOrderQuery()`
@@ -356,6 +362,7 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 反馈处理完成：`client.V3ComplaintComplete()`
     * 更新退款审批结果：`client.V3ComplaintUpdateRefundProgress()`
     * 商户上传反馈图片：`client.V3ComplaintUploadImage()`
+    * 商户反馈图片请求：`client.V3ComplaintImage()`
 * <font color='#07C160' size='4'>商户平台处置通知</font>
     * 创建商户违规通知回调回调地址：`client.V3ViolationNotifyUrlCreate()`
     * 查询商户违规通知回调回调地址：`client.V3ViolationNotifyUrlQuery()`
@@ -366,14 +373,14 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 视频上传：`client.V3MediaUploadVideo()`
     * 图片上传（营销专用）：`client.V3FavorMediaUploadImage()`
     * 图片下载：`client.V3MediaDownloadImage()`
-* <font color='#07C160' size='4'>商家转账到零钱（直连商户）</font>
+* <font color='#07C160' size='4'>商家转账到零钱（商户）</font>
     * 发起商家转账：`client.V3Transfer()`
-    * 微信批次单号查询批次单：`client.V3TransferQuery()`
-    * 微信明细单号查询明细单：`client.V3TransferDetail()`
-    * 商家批次单号查询批次单：`client.V3TransferMerchantQuery()`
-    * 商家明细单号查询明细单：`client.V3TransferMerchantDetail()`
-    * 转账电子回单申请受理：`client.V3TransferReceipt()`
-    * 查询转账电子回单：`client.V3TransferReceiptQuery()`
+    * 通过微信批次单号查询批次单：`client.V3TransferQuery()`
+    * 通过微信明细单号查询明细单：`client.V3TransferDetail()`
+    * 通过商家批次单号查询批次单：`client.V3TransferMerchantQuery()`
+    * 通过商家明细单号查询明细单：`client.V3TransferMerchantDetail()`
+    * 转账账单电子回单申请受理接口：`client.V3TransferReceipt()`
+    * 查询转账账单电子回单接口：`client.V3TransferReceiptQuery()`
     * 转账明细电子回单受理：`client.V3TransferDetailReceipt()`
     * 查询转账明细电子回单受理结果：`client.V3TransferDetailReceiptQuery()`
 * <font color='#07C160' size='4'>转账（服务商）</font>
@@ -422,8 +429,8 @@ wechat.V3DecryptScoreNotifyCipherText()
     * 取消补差：`client.V3EcommerceSubsidiesCancel()`
 * <font color='#07C160' size='4'>电商收付通（退款）</font>
     * 申请退款：`client.V3EcommerceRefund()`
-    * 查询退款ById：`client.V3EcommerceRefundQueryById()`
-    * 查询退款ByNo：`client.V3EcommerceRefundQueryByNo()`
+    * 查询单笔退款（通过微信支付退款号）：`client.V3EcommerceRefundQueryById()`
+    * 查询单笔退款（通过商户退款单号）：`client.V3EcommerceRefundQueryByNo()`
     * 垫付退款回补：`client.V3EcommerceRefundAdvance()`
     * 查询垫付回补结果：`client.V3EcommerceRefundAdvanceResult()`
 * <font color='#07C160' size='4'>银行组件（服务商）</font>
@@ -452,10 +459,20 @@ wechat.V3DecryptScoreNotifyCipherText()
 * `client.V3DecryptText()` =>  敏感参数信息解密
 * `wechat.V3EncryptText()` => 敏感参数信息加密
 * `wechat.V3DecryptText()` =>  敏感参数信息解密
-* `wechat.V3DecryptNotifyCipherText()` => 解密 普通支付 回调中的加密信息
+* `wechat.V3DecryptNotifyCipherTextToStruct()` =>  解密 统一数据 到指针结构体对象（推荐统一使用此方法）
+* `wechat.V3DecryptNotifyCipherTextToBytes()` =>  解密 统一数据 到 []byte
+* `wechat.V3DecryptPayNotifyCipherText()` => 解密 普通支付 回调中的加密信息
+* `wechat.V3DecryptPartnerPayNotifyCipherText()` => 解密 服务商普通支付 回调中的加密信息
 * `wechat.V3DecryptRefundNotifyCipherText()` => 解密 普通退款 回调中的加密信息
 * `wechat.V3DecryptCombineNotifyCipherText()` => 解密 合单支付 回调中的加密信息
-* `wechat.V3DecryptScoreNotifyCipherText()` => 解密 支付分 回调中的加密信息
+* `wechat.V3DecryptScoreNotifyCipherText()` => 解密 支付分确认订单 回调中的加密信息
+* `wechat.V3DecryptScorePermissionNotifyCipherText()` => 解密 支付分开启/解除授权服务 回调中的加密信息
+* `wechat.V3DecryptBusifavorNotifyCipherText()` => 解密 领券事件 回调中的加密信息
+* `wechat.V3DecryptParkingInNotifyCipherText()` => 解密 停车入场状态变更 回调中的加密信息
+* `wechat.V3DecryptParkingPayNotifyCipherText()` => 解密 停车支付结果 回调中的加密信息
+* `wechat.V3DecryptCouponUseNotifyCipherText()` => 解密 代金券核销 回调中的加密信息
+* `wechat.V3DecryptInvoiceTitleNotifyCipherText()` => 解密 用户发票抬头填写完成 回调中的加密信息
+* `wechat.V3DecryptInvoiceNotifyCipherText()` => 解密 发票卡券作废/发票开具成功/发票冲红成功/发票插入用户卡包成功 回调中的加密信息
 * `client.PaySignOfJSAPI()` => 获取 JSAPI 支付 paySign
 * `client.PaySignOfApp()` => 获取 APP 支付 paySign
 * `client.PaySignOfApplet()` => 获取 小程序 支付 paySign

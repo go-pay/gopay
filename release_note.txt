@@ -1,3 +1,12 @@
+版本号：Release 1.5.101
+修改记录：
+   (1) 微信V3：新增 client.V3AbnormalRefund()，发起异常退款。
+   (2) 微信V3：新增 client.V3FavorCallbackUrl()，查询消息通知地址。
+   (3) 微信V3：新增 client.V3ComplaintImage()，商户反馈图片请求接口。
+   (4) 微信V3：修改 wechat.V3DecryptNotifyCipherText() -> wechat.V3DecryptPayNotifyCipherText()，解密 普通支付 回调中的加密信息
+   (5) 微信V3：修改 wechat.DecryptPartnerCipherText() -> wechat.DecryptPartnerPayCipherText()，解密 普通支付 回调中的加密信息
+   (6) 微信V3：新增 wechat.V3DecryptNotifyCipherTextToStruct()，解密 统一数据 到指针结构体对象。
+
 版本号：Release 1.5.100
 修改记录：
    (1) 支付宝：整理异步通知 NotifyRequest 结构体。
