@@ -49,8 +49,8 @@ SetReturnUrl("https://www.fmm.ink").            // 设置返回URL
     SetNotifyUrl("https://www.fmm.ink").        // 设置异步通知URL
     SetAppAuthToken()                           // 设置第三方应用授权
 
-// 设置biz_content加密KEY，设置此参数默认开启加密
-client.SetAESKey("1234567890123456")
+// 设置biz_content加密KEY，设置此参数默认开启加密（目前不可用，设置后会报错）
+//client.SetAESKey("1234567890123456")
 
 // 自动同步验签（只支持证书模式）
 // 传入 alipayPublicCert.crt 内容

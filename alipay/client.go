@@ -85,6 +85,7 @@ func (a *Client) SetBodySize(sizeMB int) {
 }
 
 // SetAESKey 设置 biz_content 的AES加密key，设置此参数默认开启 biz_content 参数加密
+// 注意：目前不可用，设置后会报错
 func (a *Client) SetAESKey(aesKey string) {
 	a.aesKey = aesKey
 	a.ivKey = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
