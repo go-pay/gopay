@@ -85,3 +85,8 @@ func (c *ClientV3) SetBodySize(sizeMB int) {
 		c.hc.SetBodySize(sizeMB)
 	}
 }
+
+// SetHttpClient 设置自定义的xhttp.Client
+func (c *ClientV3) SetHttpClient(client *xhttp.Client) {
+	c.hc = client
+}

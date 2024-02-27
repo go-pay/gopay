@@ -58,6 +58,16 @@ func (w *Client) SetBodySize(sizeMB int) {
 	}
 }
 
+// SetHttpClient 设置自定义的xhttp.Client
+func (w *Client) SetHttpClient(client *xhttp.Client) {
+	w.hc = client
+}
+
+// SetTLSHttpClient 设置自定义的xhttp.Client
+func (w *Client) SetTLSHttpClient(client *xhttp.Client) {
+	w.tlsHc = client
+}
+
 // 向微信发送Post请求，对于本库未提供的微信API，可自行实现，通过此方法发送请求
 // bm：请求参数的BodyMap
 // path：接口地址去掉baseURL的path，例如：url为https://api.mch.weixin.qq.com/pay/micropay，只需传 pay/micropay
