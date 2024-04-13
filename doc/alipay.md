@@ -225,37 +225,115 @@ xlog.Infof("%+v", phone)
 
 * 支付宝接口自行实现方法：`client.PostAliPayAPISelfV2()`
 * <font color='#027AFF' size='4'>支付产品</font>
+  * 当面付
+    * 付款码支付接口(商家扫用户付款码)：`client.TradePay()`
+    * 统一收单线下交易预创建接口(用户扫商品收款码)：`client.TradePrecreate()`
   * App支付
     * APP支付接口2.0(APP支付)：`client.TradeAppPay()`
   * 手机网站支付
     * 手机网站支付接口2.0(手机网站支付)：`client.TradeWapPay()`
   * 电脑网站支付
     * 统一收单下单并支付页面接口(电脑网站支付)：`client.TradePagePay()`
-  * 资金预授权
+  * 刷脸付
+    * 刷脸支付初始化接口：`client.ZolozAuthenticationSmilepayInitialize()`
+    * 查询刷脸结果信息接口：`client.ZolozAuthenticationCustomerFtokenQuery()`
+  * 预授权支付
     * 线上资金授权冻结接口：`client:FundAuthOrderAppFreeze()`
-    * 资金授权冻结接口：`client.FundAuthOrderFreeze()`
-    * 资金授权发码接口：`client.FundAuthOrderVoucherCreate()`
     * 资金授权操作查询接口：`client.FundAuthOperationDetailQuery()`
-    * 资金授权解冻接口：`client.FundAuthOrderUnfreeze()`
     * 资金授权撤销接口：`client.FundAuthOperationCancel()`
-  * 当面付
-    * 付款码支付接口(商家扫用户付款码)：`client.TradePay()`
-    * 统一收单线下交易预创建接口(用户扫商品收款码)：`client.TradePrecreate()`
-  * 统一收单交易创建接口：`client.TradeCreate()`
-  * 统一收单交易订单支付接口：TODO：https://opendocs.alipay.com/open/03vtew
-  * 统一收单线下交易查询: `client.TradeQuery()`
-  * 统一收单交易退款接口: `client.TradeRefund()`
-  * 统一收单交易退款查询: `client.TradeFastPayRefundQuery()`
-  * 统一收单交易关闭接口: `client.TradeClose()`
-  * 统一收单交易撤销接口: `client.TradeCancel()`
-  * ~~统一收单退款页面接口: `client.TradePageRefund()`~~
-  * 支付宝订单信息同步接口: `client.TradeOrderInfoSync()`
+    * 资金授权解冻接口：`client.FundAuthOrderUnfreeze()`
+    * 资金授权发码接口：`client.FundAuthOrderVoucherCreate()`
+    * 资金授权冻结接口：`client.FundAuthOrderFreeze()`
+  * 交易
+    * 统一收单交易创建接口：`client.TradeCreate()`
+    * 统一收单交易订单支付接口：TODO：https://opendocs.alipay.com/open/03vtew
+    * 统一收单线下交易查询: `client.TradeQuery()`
+    * 统一收单交易退款接口: `client.TradeRefund()`
+    * 统一收单交易退款查询: `client.TradeFastPayRefundQuery()`
+    * 统一收单交易关闭接口: `client.TradeClose()`
+    * 统一收单交易撤销接口: `client.TradeCancel()`
+    * 支付宝订单信息同步接口: `client.TradeOrderInfoSync()`
+  * 账单
+    * 查询对账单下载地址：`client.DataBillDownloadUrlQuery()`
+  * 商家分账
+    * 分账关系维护
+      * 分账关系绑定接口：`client.TradeRelationBind()`
+      * 分账关系解绑接口：`client.TradeRelationUnbind()`
+      * 分账关系查询接口：`client.TradeRelationBatchQuery()`
+    * 分账请求
+      * 统一收单交易结算接口：`client.TradeOrderSettle()`
+      * 统一收单确认结算接口：`client.TradeSettleConfirm()`
+    * 分账查询 
+      * 分账比例查询：`client.TradeRoyaltyRateQuery()`
+      * 分账剩余金额查询：`client.TradeOrderOnSettleQuery()`
+      * 交易分账查询接口：`client.TradeOrderSettleQuery()`
+  * 商家扣款
+    * 支付宝个人协议页面签约接口: `client.UserAgreementPageSign()`
+    * 支付宝个人协议页面签约接口(App 专用,生成唤醒签约页面链接): `client.UserAgreementPageSignInApp()`
+    * 支付宝个人代扣协议查询接口: `client.UserAgreementQuery()`
+    * 支付宝个人代扣协议解约接口: `client.UserAgreementPageUnSign()`
+    * 周期性扣款协议执行计划修改接口: `client.UserAgreementExecutionplanModify()`
+* <font color='#027AFF' size='4'>私域产品</font>
+  * 支付有礼
+    * 推广计划
+* <font color='#027AFF' size='4'>公域产品</font>
+  * 经营推广
+    * 推广计划
+      * 推广计划状态变更消息接口：`client.MarketingActivityDeliveryChanged()`
+      * 创建推广计划接口：`client.MarketingActivityDeliveryCreate()`
+      * 查询推广计划接口：`client.MarketingActivityDeliveryQuery()`
+      * 停止推广计划接口：`client.MarketingActivityDeliveryStop()` 
+      * 营销图片资源上传接口：`client.MarketingMaterialImageUpload()`
 * <font color='#027AFF' size='4'>营销产品</font>
-  * 创建现金活动接口：TODO：https://opendocs.alipay.com/open/029yy9
-  * 触发现金红包活动接口：TODO：https://opendocs.alipay.com/open/029yya
-  * 更改现金活动状态接口：TODO：https://opendocs.alipay.com/open/029yyb
-  * 现金活动列表查询接口：TODO：https://opendocs.alipay.com/open/02a1f9
-  * 现金活动详情查询接口：TODO：https://opendocs.alipay.com/open/02a1fa
+  * 支付券
+    * 创建支付券接口：TODO：https://opendocs.alipay.com/open/049d65
+    * 激活支付券接口：TODO：https://opendocs.alipay.com/open/049d66
+    * 查询支付券详情接口：TODO：https://opendocs.alipay.com/open/049d6g
+    * 修改支付券基本信息接口：TODO：https://opendocs.alipay.com/open/049d67
+    * 追加支付券预算接口：TODO：https://opendocs.alipay.com/open/049d68
+    * 停止支付券接口：TODO：https://opendocs.alipay.com/open/049d69
+    * 券活动创建通知接口：TODO：https://opendocs.alipay.com/open/049d6a
+    * 券活动修改通知接口：TODO：https://opendocs.alipay.com/open/049d6b
+    * 券活动停止通知接口：TODO：https://opendocs.alipay.com/open/049d6c
+    * 券活动预算追加通知接口：TODO：https://opendocs.alipay.com/open/049d6d
+  * 私域营销
+    * 条件查询活动列表接口：TODO：https://opendocs.alipay.com/open/04fgw9
+    * 活动领取咨询接口：TODO：https://opendocs.alipay.com/open/04fgwa
+    * 查询活动详情接口：TODO：https://opendocs.alipay.com/open/04fgwb
+    * 查询活动可用商户接口：TODO：https://opendocs.alipay.com/open/04fgwc
+    * 查询活动可用小程序接口：TODO：https://opendocs.alipay.com/open/04fgwd
+    * 查询活动可用门店接口：TODO：https://opendocs.alipay.com/open/04fgwe
+    * 查询活动适用商品接口：TODO：https://opendocs.alipay.com/open/04fgwf
+    * 条件查询用户券接口：TODO：https://opendocs.alipay.com/open/04fgwg
+    * 查询用户券详情接口：TODO：https://opendocs.alipay.com/open/04fgwh
+    * 订单优惠前置咨询接口：TODO：https://opendocs.alipay.com/open/04fgwi
+    * 券领取通知接口：TODO：https://opendocs.alipay.com/open/049d6f
+    * 券核销消息接口：TODO：https://opendocs.alipay.com/open/049d6e
+    * 券过期消息接口：TODO：https://opendocs.alipay.com/open/04fgwj
+  * 蚂蚁门店管理
+    * 蚂蚁店铺创建接口: `client.AntMerchantShopCreate()`
+    * 店铺保存审核通过消息接口：TODO：https://opendocs.alipay.com/open/04fgwm
+    * 店铺保存拒绝消息：TODO：https://opendocs.alipay.com/open/04fgwn
+    * 修改蚂蚁店铺接口: `client.AntMerchantShopModify()`
+    * 商户申请单查询接口: `client.AntMerchantOrderQuery()`
+    * 店铺分页查询接口：TODO：https://opendocs.alipay.com/open/04fgwq
+    * 店铺查询接口：`client.AntMerchantShopQuery()`
+    * 蚂蚁店铺关闭接口：`client.AntMerchantShopClose()`
+    * 图片上传接口：TODO：https://opendocs.alipay.com/open/04fgwt
+    * 商户mcc信息查询接口：TODO：https://opendocs.alipay.com/open/04fgwu
+  * 商家券 2.0
+    * todo：白天继续整理：
+    * 
+    * 
+    * 
+    * 
+    * 
+    * 
+      * 创建现金活动接口：TODO：https://opendocs.alipay.com/open/029yy9
+      * 触发现金红包活动接口：TODO：https://opendocs.alipay.com/open/029yya
+      * 更改现金活动状态接口：TODO：https://opendocs.alipay.com/open/029yyb
+      * 现金活动列表查询接口：TODO：https://opendocs.alipay.com/open/02a1f9
+      * 现金活动详情查询接口：TODO：https://opendocs.alipay.com/open/02a1fa
 * <font color='#027AFF' size='4'>会员产品</font>
   * App支付宝登录
     * 换取授权访问令牌接口：`client.SystemOauthToken()`
@@ -337,12 +415,12 @@ xlog.Infof("%+v", phone)
   * 口碑凭证延期接口: `client.KoubeiTradeTicketTicketcodeDelay()`
   * 口碑凭证码查询: `client.KoubeiTradeTicketTicketcodeQuery()`
   * 口碑凭证码撤销核销: `client.KoubeiTradeTicketTicketcodeCancel()`
-  * 修改蚂蚁店铺: `client.AntMerchantShopModify()`
-  * 蚂蚁店铺创建: `client.AntMerchantShopCreate()`
+  * 
+  * 
   * 蚂蚁店铺创建咨询: `client.AntMerchantShopConsult()`
-  * 商户申请单查询: `client.AntMerchantOrderQuery()`
-  * 店铺查询接口: `client.AntMerchantShopQuery()`
-  * 蚂蚁店铺关闭: `client.AntMerchantShopClose()`
+  * 
+  * 
+  * 
   * 申请权益发放: `client.CommerceBenefitApply()`
   * 权益核销: `client.CommerceBenefitVerify()`
   * 还款账单查询: `client.TradeRepaybillQuery()`
@@ -351,11 +429,9 @@ xlog.Infof("%+v", phone)
   * 身份认证初始化服务接口: `client.UserCertifyOpenInit()`
   * 身份认证开始认证: `client.UserCertifyOpenCertify()`
 * <font color='#027AFF' size='4'>会员</font>
-  * 支付宝个人协议页面签约接口: `client.UserAgreementPageSign()`
-  * 支付宝个人协议页面签约接口(App 专用,生成唤醒签约页面链接): `client.UserAgreementPageSignInApp()`
-  * 支付宝个人代扣协议解约接口: `client.UserAgreementPageUnSign()`
-  * 支付宝个人代扣协议查询接口: `client.UserAgreementQuery()`
-  * 周期性扣款协议执行计划修改接口: `client.UserAgreementExecutionplanModify()`
+
+
+  
   * 协议由普通通用代扣协议产品转移到周期扣协议产品: `client.UserAgreementTransfer()`
   * 通用当面付二阶段接口: `client.UserTwostageCommonUse()`
   * 芝麻企业征信基于身份的协议授权: `client.UserAuthZhimaorgIdentityApply()`
@@ -380,17 +456,6 @@ xlog.Infof("%+v", phone)
   * 加入信用服务: `clinet.ZhimaCreditEpSceneAgreementUse()`
   * 取消信用服务: `client.ZhimaCreditEpSceneAgreementCancel()`
   * 信用服务履约同步(批量): `client.ZhimaCreditEpSceneFulfillmentlistSync()`
-* <font color='#027AFF' size='4'>对账</font>
-  * 查询对账单下载地址：`client.DataBillDownloadUrlQuery()`
-* <font color='#027AFF' size='4'>商家分账</font>
-  * 分账关系绑定接口：`client.TradeRelationBind()`
-  * 分账关系解绑接口：`client.TradeRelationUnbind()`
-  * 分账关系查询接口：`client.TradeRelationBatchQuery()`
-  * 统一收单交易结算接口：`client.TradeOrderSettle()`
-  * 统一收单确认结算接口：`client.TradeSettleConfirm()`
-  * 交易分账查询接口：`client.TradeOrderSettleQuery()`
-  * 分账剩余金额查询：`client.TradeOrderOnSettleQuery()`
-  * 分账比例查询：`client.TradeRoyaltyRateQuery()`
 
 ### 支付宝公共 API
 

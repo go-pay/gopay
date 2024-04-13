@@ -6,6 +6,26 @@
    (4) 微信V3：修改 wechat.V3DecryptNotifyCipherText() -> wechat.V3DecryptPayNotifyCipherText()，解密 普通支付 回调中的加密信息
    (5) 微信V3：修改 wechat.DecryptPartnerCipherText() -> wechat.DecryptPartnerPayCipherText()，解密 普通支付 回调中的加密信息
    (6) 微信V3：新增 wechat.V3DecryptNotifyCipherTextToStruct()，解密 统一数据 到指针结构体对象。
+   (7) gopay：golang.org/x/crypto v0.20.0 版本升级到 v0.22.0。
+   (8) 支付宝：新增 client.ZolozAuthenticationSmilepayInit()，刷脸支付初始化接口。
+   (9) 支付宝：新增 client.ZolozAuthenticationCustomerFtokenQuery()，查询刷脸结果信息接口。
+   (10) 支付宝：新增 client.MarketingActivityDeliveryChanged()，推广计划状态变更消息接口。
+   (11) 支付宝：新增 client.MarketingActivityDeliveryCreate()，创建推广计划接口。
+   (12) 支付宝：新增 client.MarketingActivityDeliveryQuery()，查询推广计划接口。
+   (13) 支付宝：新增 client.MarketingActivityDeliveryStop()，停止推广计划接口。
+   (14) 支付宝：新增 client.MarketingMaterialImageUpload()，营销图片资源上传接口。
+
+
+   (15) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。
+   (16) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。
+   (17) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。
+   (18) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。
+   (19) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。
+   (20) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。
+   (21) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。
+   (22) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。
+   (23) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。
+   (24) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。
 
 版本号：Release 1.5.100
 修改记录：

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/go-pay/gopay"
 )
@@ -138,9 +139,114 @@ func (a *Client) MarketingCampaignCashDetailQuery(ctx context.Context, bm gopay.
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	fmt.Println(err)
 	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
 		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.marketing.activity.delivery.changed(推广计划状态变更消息)
+// 文档地址：https://opendocs.alipay.com/open/85544608_alipay.marketing.activity.delivery.changed
+func (a *Client) MarketingActivityDeliveryChanged(ctx context.Context, bm gopay.BodyMap) (success bool, err error) {
+	err = bm.CheckEmptyError("event_time", "delivery_id", "delivery_status", "delivery_error_msg", "delivery_booth_code")
+	if err != nil {
+		return false, err
+	}
+	bs, err := a.doAliPay(ctx, bm, "alipay.marketing.activity.delivery.changed")
+	if err != nil {
+		return false, err
+	}
+	if strings.Contains(string(bs), "success") {
+		return true, nil
+	}
+	return
+}
+
+// alipay.marketing.activity.delivery.stop(停止推广计划)
+// 文档地址：https://opendocs.alipay.com/open/39c69f03_alipay.marketing.activity.delivery.stop
+func (a *Client) MarketingActivityDeliveryStop(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityDeliveryStopRsp, err error) {
+	err = bm.CheckEmptyError("delivery_id", "out_biz_no", "merchant_access_mode")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.delivery.stop"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingActivityDeliveryStopRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.marketing.activity.delivery.query(查询推广计划)
+// 文档地址：https://opendocs.alipay.com/open/69c6d6c2_alipay.marketing.activity.delivery.query
+func (a *Client) MarketingActivityDeliveryQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityDeliveryQueryRsp, err error) {
+	err = bm.CheckEmptyError("delivery_id", "merchant_access_mode")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.delivery.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingActivityDeliveryQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.marketing.activity.delivery.create(创建推广计划)
+// 文档地址：https://opendocs.alipay.com/open/47498bf2_alipay.marketing.activity.delivery.create
+func (a *Client) MarketingActivityDeliveryCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityDeliveryCreateRsp, err error) {
+	err = bm.CheckEmptyError("delivery_booth_code", "out_biz_no", "delivery_base_info", "delivery_play_config", "delivery_target_rule", "merchant_access_mode")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.delivery.create"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingActivityDeliveryCreateRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.marketing.material.image.upload(营销图片资源上传接口)
+// 文档地址：https://opendocs.alipay.com/open/389b24b6_alipay.marketing.material.image.upload
+func (a *Client) MarketingMaterialImageUpload(ctx context.Context, bm gopay.BodyMap, file *gopay.File) (aliRsp *MarketingMaterialImageUploadRsp, err error) {
+	var bs []byte
+	if bs, err = a.FileRequest(ctx, bm, file, "alipay.marketing.material.image.upload"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingMaterialImageUploadRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData

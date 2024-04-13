@@ -317,11 +317,9 @@ func (a *Client) FileRequest(ctx context.Context, bm gopay.BodyMap, file *gopay.
 	if a.location != nil {
 		pubBody.Set("timestamp", time.Now().In(a.location).Format(xtime.TimeLayout))
 	}
-	if a.NotifyUrl != gopay.NULL { //如果返回url为空，传过来的返回url不为空
-		//fmt.Println("url不为空？", a.NotifyUrl)
+	if a.NotifyUrl != gopay.NULL {
 		pubBody.Set("notify_url", a.NotifyUrl)
 	}
-	//fmt.Println("notify,", pubBody.JsonBody())
 	if a.AppAuthToken != gopay.NULL {
 		pubBody.Set("app_auth_token", a.AppAuthToken)
 	}
