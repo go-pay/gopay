@@ -75,7 +75,7 @@ func (a *Client) TradeAppPay(ctx context.Context, bm gopay.BodyMap) (payParam st
 }
 
 // alipay.trade.wap.pay(手机网站支付接口2.0)
-// 文档地址：https://opendocs.alipay.com/open/02ivbs?scene=21&ref=api
+// 文档地址：https://opendocs.alipay.com/open/02ivbs
 func (a *Client) TradeWapPay(ctx context.Context, bm gopay.BodyMap) (payUrl string, err error) {
 	bm.Set("product_code", "QUICK_WAP_WAY")
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
