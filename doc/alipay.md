@@ -321,12 +321,32 @@ xlog.Infof("%+v", phone)
     * 蚂蚁店铺关闭接口：`client.AntMerchantShopClose()`
     * 图片上传接口：TODO：https://opendocs.alipay.com/open/04fgwt
     * 商户mcc信息查询接口：TODO：https://opendocs.alipay.com/open/04fgwu
+    * 店铺增加收单账号接口：TODO：https://opendocs.alipay.com/open/54b69b89_ant.merchant.expand.shop.receiptaccount.save
   * 商家券 2.0
-    * todo：白天继续整理：
-    * 
-    * 
-    * 
-    * 
+    * 创建商家券活动接口：TODO：https://opendocs.alipay.com/open/7ad3a7bf_alipay.marketing.activity.ordervoucher.create
+    * 同步商家券券码接口：TODO：https://opendocs.alipay.com/open/7ed0450d_alipay.marketing.activity.ordervoucher.codedeposit
+    * 券活动创建通知接口：TODO：https://opendocs.alipay.com/open/f28e36e2_alipay.marketing.activity.message.created
+    * 修改商家券活动基本信息接口：TODO：https://opendocs.alipay.com/open/528f83f6_alipay.marketing.activity.ordervoucher.modify
+    * 券活动修改通知接口：TODO：https://opendocs.alipay.com/open/f80939f9_alipay.marketing.activity.message.modified
+    * 停止商家券活动接口：TODO：https://opendocs.alipay.com/open/16803efe_alipay.marketing.activity.ordervoucher.stop
+    * 券活动停止通知接口：TODO：https://opendocs.alipay.com/open/a055ad21_alipay.marketing.activity.message.stopped
+    * 修改商家券活动发券数量上限接口：TODO：https://opendocs.alipay.com/open/4e2acff5_alipay.marketing.activity.ordervoucher.append
+    * 券活动预算追加通知接口：TODO：https://opendocs.alipay.com/open/d4697d94_alipay.marketing.activity.message.appended
+    * 活动领取咨询接口：TODO：https://opendocs.alipay.com/open/cdf2e908_alipay.marketing.activity.consult
+    * 同步券核销状态接口：TODO：https://opendocs.alipay.com/open/3ffce87f_alipay.marketing.activity.ordervoucher.use
+    * 取消券核销状态接口：TODO：https://opendocs.alipay.com/open/4682759b_alipay.marketing.activity.ordervoucher.refund
+    * 查询商家券活动接口：TODO：https://opendocs.alipay.com/open/51f5946e_alipay.marketing.activity.ordervoucher.query
+    * 查询活动详情接口：TODO：https://opendocs.alipay.com/open/f76b603f_alipay.marketing.activity.query
+    * 统计商家券券码数量接口：TODO：https://opendocs.alipay.com/open/f6e49e82_alipay.marketing.activity.ordervoucher.codecount
+    * 条件查询活动列表接口：TODO：https://opendocs.alipay.com/open/55aa8ee8_alipay.marketing.activity.batchquery
+    * 条件查询用户券接口：TODO：https://opendocs.alipay.com/open/300dff38_alipay.marketing.activity.user.batchqueryvoucher
+    * 查询用户券详情接口：TODO：https://opendocs.alipay.com/open/abffd3f6_alipay.marketing.activity.user.queryvoucher
+    * 券领取通知接口：TODO：https://opendocs.alipay.com/open/0ed08444_alipay.marketing.activity.message.received
+    * 券核销消息接口：TODO：https://opendocs.alipay.com/open/6a0f4680_alipay.marketing.activity.message.used
+    * 券过期消息接口：TODO：https://opendocs.alipay.com/open/ac03373c_alipay.marketing.activity.message.expired
+    * 查询活动可用小程序接口：TODO：https://opendocs.alipay.com/open/634212b2_alipay.marketing.activity.app.batchquery
+    * 查询活动可用门店接口：TODO：https://opendocs.alipay.com/open/cf4e0873_alipay.marketing.activity.shop.batchquery
+    * 查询活动适用商品接口：TODO：https://opendocs.alipay.com/open/1bee5767_alipay.marketing.activity.goods.batchquery
     * 
     * 
       * 创建现金活动接口：TODO：https://opendocs.alipay.com/open/029yy9
