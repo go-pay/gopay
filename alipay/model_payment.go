@@ -22,6 +22,13 @@ type TradeCreateResponse struct {
 	Sign         string       `json:"sign"`
 }
 
+type TradeOrderPayResponse struct {
+	Response     *TradeOrderPay `json:"alipay_trade_order_pay_response"`
+	AlipayCertSn string         `json:"alipay_cert_sn,omitempty"`
+	SignData     string         `json:"-"`
+	Sign         string         `json:"sign"`
+}
+
 type TradeQueryResponse struct {
 	Response     *TradeQuery `json:"alipay_trade_query_response"`
 	AlipayCertSn string      `json:"alipay_cert_sn,omitempty"`
@@ -155,8 +162,19 @@ type TradePrecreate struct {
 
 type TradeCreate struct {
 	ErrorResponse
-	TradeNo    string `json:"trade_no,omitempty"`
-	OutTradeNo string `json:"out_trade_no,omitempty"`
+	TradeNo    string `json:"trade_no"`
+	OutTradeNo string `json:"out_trade_no"`
+}
+
+type TradeOrderPay struct {
+	ErrorResponse
+	TradeNo           string `json:"trade_no"`
+	OutTradeNo        string `json:"out_trade_no"`
+	FulfillmentAmount string `json:"fulfillment_amount"`
+	OutRequestNo      string `json:"out_request_no"`
+	TotalAmount       string `json:"total_amount"`
+	GmtPayment        string `json:"gmt_payment"`
+	AsyncPaymentMode  string `json:"async_payment_mode"`
 }
 
 type TradeQuery struct {

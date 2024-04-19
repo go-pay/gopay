@@ -246,7 +246,7 @@ xlog.Infof("%+v", phone)
     * 资金授权冻结接口：`client.FundAuthOrderFreeze()`
   * 交易
     * 统一收单交易创建接口：`client.TradeCreate()`
-    * 统一收单交易订单支付接口：TODO：https://opendocs.alipay.com/open/03vtew
+    * 统一收单交易订单支付接口：`client.TradeOrderPay()`
     * 统一收单线下交易查询: `client.TradeQuery()`
     * 统一收单交易退款接口: `client.TradeRefund()`
     * 统一收单交易退款查询: `client.TradeFastPayRefundQuery()`
