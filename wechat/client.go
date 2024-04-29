@@ -231,10 +231,10 @@ func (w *Client) doProdPost(ctx context.Context, bm gopay.BodyMap, path string, 
 	} else {
 		url = baseUrlCh + path
 	}
-	if bm.GetString("appid") == util.NULL {
+	if bm.GetString("appid") == util.NULL && bm.GetString("combine_appid") == util.NULL {
 		bm.Set("appid", w.AppId)
 	}
-	if bm.GetString("mch_id") == util.NULL {
+	if bm.GetString("mch_id") == util.NULL && bm.GetString("combine_mch_id") == util.NULL {
 		bm.Set("mch_id", w.MchId)
 	}
 	if bm.GetString("sign") == util.NULL {
