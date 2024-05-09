@@ -493,11 +493,24 @@ type Capture struct {
 	Links                     []*Link                    `json:"links,omitempty"`
 	CreateTime                string                     `json:"create_time,omitempty"`
 	UpdateTime                string                     `json:"update_time,omitempty"`
+	InvoiceId                 string                     `json:"invoice_id,omitempty"`
+	CustomId                  string                     `json:"custom_id,omitempty"`
 }
 
 type Refund struct {
-	Status        string         `json:"status,omitempty"`
-	StatusDetails *StatusDetails `json:"status_details,omitempty"`
+	Id                      string                  `json:"id,omitempty"`
+	Status                  string                  `json:"status,omitempty"`
+	StatusDetails           *StatusDetails          `json:"status_details,omitempty"`
+	InvoiceId               string                  `json:"invoice_id,omitempty"`
+	CustomId                string                  `json:"custom_id,omitempty"`
+	AcquirerReferenceNumber string                  `json:"acquirer_reference_number,omitempty"`
+	NoteToPayer             string                  `json:"note_to_payer,omitempty"`
+	SellerPayableBreakdown  *SellerPayableBreakdown `json:"seller_payable_breakdown,omitempty"`
+	Links                   []*Link                 `json:"links,omitempty"`
+	Amount                  *Amount                 `json:"amount,omitempty"`
+	Payer                   *Payee                  `json:"payer,omitempty"`
+	CreateTime              string                  `json:"create_time,omitempty"`
+	UpdateTime              string                  `json:"update_time,omitempty"`
 }
 
 type Link struct {
