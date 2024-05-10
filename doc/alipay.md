@@ -286,30 +286,23 @@ xlog.Infof("%+v", phone)
       * 营销图片资源上传接口：`client.MarketingMaterialImageUpload()`
 * <font color='#027AFF' size='4'>营销产品</font>
   * 支付券
-    * 创建支付券接口：TODO：https://opendocs.alipay.com/open/049d65
-    * 激活支付券接口：TODO：https://opendocs.alipay.com/open/049d66
-    * 查询支付券详情接口：TODO：https://opendocs.alipay.com/open/049d6g
-    * 修改支付券基本信息接口：TODO：https://opendocs.alipay.com/open/049d67
-    * 追加支付券预算接口：TODO：https://opendocs.alipay.com/open/049d68
-    * 停止支付券接口：TODO：https://opendocs.alipay.com/open/049d69
-    * 券活动创建通知接口：TODO：https://opendocs.alipay.com/open/049d6a
-    * 券活动修改通知接口：TODO：https://opendocs.alipay.com/open/049d6b
-    * 券活动停止通知接口：TODO：https://opendocs.alipay.com/open/049d6c
-    * 券活动预算追加通知接口：TODO：https://opendocs.alipay.com/open/049d6d
+    * 创建支付券接口：`client.MarketingActivityVoucherCreate()`
+    * 激活支付券接口：`client.MarketingActivityVoucherPublish()`
+    * 查询支付券详情接口：`client.MarketingActivityVoucherQuery()`
+    * 修改支付券基本信息接口：`client.MarketingActivityVoucherModify()`
+    * 追加支付券预算接口：`client.MarketingActivityVoucherAppend()`
+    * 停止支付券接口：`client.MarketingActivityVoucherStop()`
   * 私域营销
-    * 条件查询活动列表接口：TODO：https://opendocs.alipay.com/open/04fgw9
-    * 活动领取咨询接口：TODO：https://opendocs.alipay.com/open/04fgwa
-    * 查询活动详情接口：TODO：https://opendocs.alipay.com/open/04fgwb
-    * 查询活动可用商户接口：TODO：https://opendocs.alipay.com/open/04fgwc
-    * 查询活动可用小程序接口：TODO：https://opendocs.alipay.com/open/04fgwd
-    * 查询活动可用门店接口：TODO：https://opendocs.alipay.com/open/04fgwe
-    * 查询活动适用商品接口：TODO：https://opendocs.alipay.com/open/04fgwf
-    * 条件查询用户券接口：TODO：https://opendocs.alipay.com/open/04fgwg
-    * 查询用户券详情接口：TODO：https://opendocs.alipay.com/open/04fgwh
-    * 订单优惠前置咨询接口：TODO：https://opendocs.alipay.com/open/04fgwi
-    * 券领取通知接口：TODO：https://opendocs.alipay.com/open/049d6f
-    * 券核销消息接口：TODO：https://opendocs.alipay.com/open/049d6e
-    * 券过期消息接口：TODO：https://opendocs.alipay.com/open/04fgwj
+    * 条件查询活动列表接口：`client.MarketingActivityBatchQuery()`
+    * 活动领取咨询接口：`client.MarketingActivityConsult()`
+    * 查询活动详情接口：`client.MarketingActivityQuery()`
+    * 查询活动可用商户接口：`client.MarketingActivityQueryMerchantBatchQuery()`
+    * 查询活动可用小程序接口：`client.MarketingActivityQueryAppBatchQuery()`
+    * 查询活动可用门店接口：`client.MarketingActivityQueryShopBatchQuery()`
+    * 查询活动适用商品接口：`client.MarketingActivityQueryGoodsBatchQuery()`
+    * 条件查询用户券接口：`client.MarketingActivityQueryUserBatchQueryVoucher()`
+    * 查询用户券详情接口：`client.MarketingActivityQueryUserQueryVoucher()`
+    * 订单优惠前置咨询接口：`client.MarketingCampaignOrderVoucherConsult()`
   * 蚂蚁门店管理
     * 蚂蚁店铺创建接口: `client.AntMerchantShopCreate()`
     * 店铺保存审核通过消息接口：TODO：https://opendocs.alipay.com/open/04fgwm
