@@ -319,16 +319,12 @@ xlog.Infof("%+v", phone)
     * 活动创建
       * 创建商家券活动接口：TODO：https://opendocs.alipay.com/open/7ad3a7bf_alipay.marketing.activity.ordervoucher.create
       * 同步商家券券码接口：TODO：https://opendocs.alipay.com/open/7ed0450d_alipay.marketing.activity.ordervoucher.codedeposit
-      * 券活动创建通知接口：TODO：https://opendocs.alipay.com/open/f28e36e2_alipay.marketing.activity.message.created
     * 活动修改
       * 修改商家券活动基本信息接口：TODO：https://opendocs.alipay.com/open/528f83f6_alipay.marketing.activity.ordervoucher.modify
-      * 券活动修改通知接口：TODO：https://opendocs.alipay.com/open/f80939f9_alipay.marketing.activity.message.modified
-    * 活动停止 
+    * 活动停止
       * 停止商家券活动接口：TODO：https://opendocs.alipay.com/open/16803efe_alipay.marketing.activity.ordervoucher.stop
-      * 券活动停止通知接口：TODO：https://opendocs.alipay.com/open/a055ad21_alipay.marketing.activity.message.stopped
-    * 预算追加 
+    * 预算追加
       * 修改商家券活动发券数量上限接口：TODO：https://opendocs.alipay.com/open/4e2acff5_alipay.marketing.activity.ordervoucher.append
-      * 券活动预算追加通知接口：TODO：https://opendocs.alipay.com/open/d4697d94_alipay.marketing.activity.message.appended
     * 活动发放
       * 活动领取咨询接口：TODO：https://opendocs.alipay.com/open/cdf2e908_alipay.marketing.activity.consult
     * 优惠券核销
@@ -341,9 +337,6 @@ xlog.Infof("%+v", phone)
       * 条件查询活动列表接口：TODO：https://opendocs.alipay.com/open/55aa8ee8_alipay.marketing.activity.batchquery
       * 条件查询用户券接口：TODO：https://opendocs.alipay.com/open/300dff38_alipay.marketing.activity.user.batchqueryvoucher
       * 查询用户券详情接口：TODO：https://opendocs.alipay.com/open/abffd3f6_alipay.marketing.activity.user.queryvoucher
-      * 券领取通知接口：TODO：https://opendocs.alipay.com/open/0ed08444_alipay.marketing.activity.message.received
-      * 券核销消息接口：TODO：https://opendocs.alipay.com/open/6a0f4680_alipay.marketing.activity.message.used
-      * 券过期消息接口：TODO：https://opendocs.alipay.com/open/ac03373c_alipay.marketing.activity.message.expired
       * 查询活动可用小程序接口：TODO：https://opendocs.alipay.com/open/634212b2_alipay.marketing.activity.app.batchquery
       * 查询活动可用门店接口：TODO：https://opendocs.alipay.com/open/cf4e0873_alipay.marketing.activity.shop.batchquery
       * 查询活动适用商品接口：TODO：https://opendocs.alipay.com/open/1bee5767_alipay.marketing.activity.goods.batchquery
@@ -372,8 +365,6 @@ xlog.Infof("%+v", phone)
     * 现金红包无线支付接口: `client.FundTransAppPay()`
     * 单笔转账接口：`client.FundTransUniTransfer()`
     * 转账业务单据查询接口：`client.FundTransCommonQuery()`
-    * 资金单据状态变更通知接口：TODO：https://opendocs.alipay.com/open/02byvf
-    * 资金退回成功通知接口：TODO：https://opendocs.alipay.com/open/02byvg
     * 资金退回接口: `client.FundTransRefund()`
   * 棋盘密云
     * 接口上传人群
@@ -436,12 +427,9 @@ xlog.Infof("%+v", phone)
   * 芝麻GO
     * 芝麻GO签约预创单接口：`client.ZhimaCreditPeZmgoPreorderCreate()`
     * 芝麻GO页面签约接口：TODO：https://opendocs.alipay.com/open/03u934
-    * 芝麻GO业务签约变更商户通知接口：TODO：https://opendocs.alipay.com/open/03ums1
     * 商家芝麻GO累计数据回传接口：`client.ZhimaMerchantZmgoCumulateSync()`
     * 商家芝麻GO累计数据查询接口：`client.ZhimaMerchantZmgoCumulateQuery()`
-    * 芝麻GO业务协议变更商户通知：TODO：https://opendocs.alipay.com/open/03up3c
     * 芝麻GO结算申请接口：TODO：https://opendocs.alipay.com/open/03usxk
-    * 芝麻GO业务结算变更商户通知接口：TODO：https://opendocs.alipay.com/open/03ub1d
     * 芝麻GO结算退款接口：`client.ZhimaCreditPeZmgoSettleRefund()`
     * 芝麻Go协议查询接口：`client.ZhimaCreditPeZmgoAgreementQuery()`
     * 芝麻GO协议解约接口：`client.ZhimaCreditPeZmgoAgreementUnsign()`
@@ -456,13 +444,11 @@ xlog.Infof("%+v", phone)
     * 服务开通
       * 信用服务开通/授权接口：TODO：https://opendocs.alipay.com/open/03uloz
       * 查询服务开通/授权信息接口：TODO：https://opendocs.alipay.com/open/03ulp0
-      * 服务开通/授权状态变更通知：TODO：https://opendocs.alipay.com/open/50885f82_zhima.credit.payafteruse.creditagreement.changed
     * 信用下单 
       * 芝麻先享信用服务下单（免用户确认场景）接口：TODO：https://opendocs.alipay.com/open/03ulpo
       * 芝麻先享信用服务下单（用户确认场景）接口：TODO：https://opendocs.alipay.com/open/03ulpp
       * 信用服务订单查询接口：TODO：https://opendocs.alipay.com/open/03vtet
       * 结束信用服务订单接口：TODO：https://opendocs.alipay.com/open/03vteu
-      * 芝麻先享信用服务订单状态变更通知接口：TODO：https://opendocs.alipay.com/open/6c3a11df_zhima.credit.payafteruse.creditbizorder.changed
   * 扣款
     * 统一收单交易订单支付接口：TODO：https://opendocs.alipay.com/open/2e81a85f_alipay.trade.order.pay
   * 芝麻免押
