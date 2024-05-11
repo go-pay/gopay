@@ -441,29 +441,29 @@ xlog.Infof("%+v", phone)
     * 芝麻GO支付下单链路签约确认: `client.ZhimaCreditPeZmgoPaysignConfirm()`
   * 芝麻先享
     * 服务开通
-      * 信用服务开通/授权接口：TODO：https://opendocs.alipay.com/open/03uloz
-      * 查询服务开通/授权信息接口：TODO：https://opendocs.alipay.com/open/03ulp0
+      * 信用服务开通/授权接口：`client.ZhimaCreditPayAfterUseAgreementSign()`
+      * 查询服务开通/授权信息接口：`client.ZhimaCreditPayAfterUseAgreementQuery()`
     * 信用下单 
-      * 芝麻先享信用服务下单（免用户确认场景）接口：TODO：https://opendocs.alipay.com/open/03ulpo
-      * 芝麻先享信用服务下单（用户确认场景）接口：TODO：https://opendocs.alipay.com/open/03ulpp
-      * 信用服务订单查询接口：TODO：https://opendocs.alipay.com/open/03vtet
-      * 结束信用服务订单接口：TODO：https://opendocs.alipay.com/open/03vteu
+      * 芝麻先享信用服务下单（免用户确认场景）接口：`client.ZhimaCreditPayAfterUseCreditBizOrder()`
+      * 芝麻先享信用服务下单（用户确认场景）接口：支付宝 SDK 实现
+      * 信用服务订单查询接口：`client.ZhimaCreditPayAfterUseCreditBizOrderQuery()`
+      * 结束信用服务订单接口：`client.ZhimaCreditPayAfterUseCreditBizOrderFinish()`
   * 扣款
-    * 统一收单交易订单支付接口：TODO：https://opendocs.alipay.com/open/2e81a85f_alipay.trade.order.pay
+    * 统一收单交易订单支付接口：`client.TradeOrderPay()`
   * 芝麻免押
     * 创建免押订单接口：`client:FundAuthOrderAppFreeze()` 
     * 完结免押订单接口：`client.FundAuthOrderUnfreeze()`
     * 查询免押订单接口：`client.FundAuthOperationDetailQuery()`
     * 取消免押订单接口：`client.FundAuthOperationCancel()`
   * 芝麻身份信息验证
-    * 信用服务开通/授权接口：TODO：https://opendocs.alipay.com/open/63612668_zhima.credit.payafteruse.creditagreement.sign
-    * 职得身份认证查询接口：TODO：https://opendocs.alipay.com/open/351177b5_zhima.customer.jobworth.authentication.query
+    * 信用服务开通/授权接口：`client.ZhimaCreditPayAfterUseAgreementSign()`
+    * 职得身份认证查询接口：`client.ZhimaCustomerJobworthAuthQuery()`
     * 职得工作证信息匹配度查询: `client.ZhimaCustomerJobworthAdapterQuery()`
     * 职得工作证外部渠道应用数据回流: `client.ZhimaCustomerJobworthSceneUse()`
-    * 身份验真预咨询服务接口：TODO：https://opendocs.alipay.com/open/16f72e43_zhima.customer.jobworth.authentication.preconsult
+    * 身份验真预咨询服务接口：`client.ZhimaCustomerJobworthAuthPreConsult()`
 * <font color='#027AFF' size='4'>安全产品</font>
   * 交易安全防护
-    * 商户数据同步：TODO：https://opendocs.alipay.com/open/02qth4
+    * 商户数据同步：`client.SecurityCustomerRiskSend()`
 * <font color='#027AFF' size='4'>其他产品</font>
   * 花芝轻会员结算申请: `client.PcreditHuabeiAuthSettleApply()`
   * NFC用户卡信息同步: `client.CommerceTransportNfccardSend()`

@@ -191,3 +191,26 @@ func (a *Client) TradeRoyaltyRateQuery(ctx context.Context, bm gopay.BodyMap) (a
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+// alipay.security.risk.customerrisk.send(商户数据同步)
+// 文档地址：https://opendocs.alipay.com/open/02qth4
+func (a *Client) SecurityCustomerRiskSend(ctx context.Context, bm gopay.BodyMap) (aliRsp *SecurityCustomerRiskSendRsp, err error) {
+	err = bm.CheckEmptyError("process_code", "trade_no")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.security.risk.customerrisk.send"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(SecurityCustomerRiskSendRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}

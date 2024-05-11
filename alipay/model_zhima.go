@@ -147,11 +147,53 @@ type ZhimaCustomerJobworthSceneUseRsp struct {
 	Sign         string                         `json:"sign"`
 }
 
+type ZhimaCustomerJobworthAuthQueryRsp struct {
+	Response     *ZhimaCustomerJobworthAuthQuery `json:"zhima_customer_jobworth_authentication_query_response"`
+	AlipayCertSn string                          `json:"alipay_cert_sn,omitempty"`
+	SignData     string                          `json:"-"`
+	Sign         string                          `json:"sign"`
+}
+
+type ZhimaCustomerJobworthAuthPreConsultRsp struct {
+	Response     *ZhimaCustomerJobworthAuthPreConsult `json:"zhima_customer_jobworth_authentication_preconsult_response"`
+	AlipayCertSn string                               `json:"alipay_cert_sn,omitempty"`
+	SignData     string                               `json:"-"`
+	Sign         string                               `json:"sign"`
+}
+
 type ZhimaCreditPeZmgoSettleApplyRsp struct {
 	Response     *ZhimaCreditPeZmgoSettleApply `json:"zhima_credit_pe_zmgo_settle_apply_response"`
 	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
 	SignData     string                        `json:"-"`
 	Sign         string                        `json:"sign"`
+}
+
+type ZhimaCreditPayAfterUseAgreementQueryRsp struct {
+	Response     *ZhimaCreditPayAfterUseAgreementQuery `json:"zhima_credit_payafteruse_creditagreement_query_response"`
+	AlipayCertSn string                                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                                `json:"-"`
+	Sign         string                                `json:"sign"`
+}
+
+type ZhimaCreditPayAfterUseCreditBizOrderRsp struct {
+	Response     *ZhimaCreditPayAfterUseCreditBizOrder `json:"zhima_credit_payafteruse_creditbizorder_order_response"`
+	AlipayCertSn string                                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                                `json:"-"`
+	Sign         string                                `json:"sign"`
+}
+
+type ZhimaCreditPayAfterUseCreditBizOrderQueryRsp struct {
+	Response     *ZhimaCreditPayAfterUseCreditBizOrderQuery `json:"zhima_credit_payafteruse_creditbizorder_query_response"`
+	AlipayCertSn string                                     `json:"alipay_cert_sn,omitempty"`
+	SignData     string                                     `json:"-"`
+	Sign         string                                     `json:"sign"`
+}
+
+type ZhimaCreditPayAfterUseCreditBizOrderFinishRsp struct {
+	Response     *ZhimaCreditPayAfterUseCreditBizOrderFinish `json:"zhima_credit_payafteruse_creditbizorder_finish_response"`
+	AlipayCertSn string                                      `json:"alipay_cert_sn,omitempty"`
+	SignData     string                                      `json:"-"`
+	Sign         string                                      `json:"sign"`
 }
 
 // =========================================================分割=========================================================
@@ -401,6 +443,21 @@ type ZhimaCustomerJobworthSceneUse struct {
 	ErrorResponse
 }
 
+type ZhimaCustomerJobworthAuthQuery struct {
+	ErrorResponse
+	IdentityResult        string `json:"identity_result"`
+	IdentityResultSkipUrl string `json:"identity_result_skip_url"`
+	TokenStatus           string `json:"token_status"`
+	UserId                string `json:"user_id"`
+	OpenId                string `json:"open_id"`
+}
+
+type ZhimaCustomerJobworthAuthPreConsult struct {
+	ErrorResponse
+	PreCheckSuccess bool   `json:"pre_check_success"`
+	Reason          string `json:"reason"`
+}
+
 type ZhimaCreditPeZmgoSettleApply struct {
 	ErrorResponse
 	OutRequestNo   string `json:"out_request_no"`
@@ -408,4 +465,40 @@ type ZhimaCreditPeZmgoSettleApply struct {
 	WithholdPlanNo string `json:"withhold_plan_no"`
 	SettleStatus   string `json:"settle_status"`
 	FailReason     string `json:"fail_reason"`
+}
+
+type ZhimaCreditPayAfterUseAgreementQuery struct {
+	ErrorResponse
+	OutAgreementNo    string `json:"out_agreement_no"`
+	AgreementStatus   string `json:"agreement_status"`
+	CreditAgreementId string `json:"credit_agreement_id"`
+	BizTime           string `json:"biz_time"`
+	ExtInfo           string `json:"ext_info"`
+	AlipayUserId      string `json:"alipay_user_id"`
+	OpenId            string `json:"open_id"`
+}
+
+type ZhimaCreditPayAfterUseCreditBizOrder struct {
+	ErrorResponse
+	OutOrderNo       string `json:"out_order_no"`
+	CreditBizOrderId string `json:"credit_biz_order_id"`
+}
+
+type ZhimaCreditPayAfterUseCreditBizOrderQuery struct {
+	ErrorResponse
+	CreditBizOrderId  string `json:"credit_biz_order_id"`
+	CreditAgreementId string `json:"credit_agreement_id"`
+	TotalAmount       string `json:"total_amount"`
+	CreateTime        string `json:"create_time"`
+	ZmServiceId       string `json:"zm_service_id"`
+	ProductCode       string `json:"product_code"`
+	OrderStatus       string `json:"order_status"`
+	TradeNo           string `json:"trade_no"`
+}
+
+type ZhimaCreditPayAfterUseCreditBizOrderFinish struct {
+	ErrorResponse
+	OutRequestNo     string `json:"out_request_no"`
+	CreditBizOrderId string `json:"credit_biz_order_id"`
+	OrderStatus      string `json:"order_status"`
 }
