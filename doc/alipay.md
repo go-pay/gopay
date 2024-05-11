@@ -414,9 +414,8 @@ xlog.Infof("%+v", phone)
   * 获取会员信息
     * 支付宝会员授权信息查询接口：`client.UserInfoShare()`
     * 换取授权访问令牌接口：`client.SystemOauthToken()`
-    * 用户授权取消消息接口：TODO：https://opendocs.alipay.com/open/b4f0d4cf_alipay.open.auth.userauth.cancelled
-    * 用户授权关系查询接口：TODO：https://opendocs.alipay.com/open/6b97edd1_alipay.open.auth.userauth.relationship.query
-    * 查询解除授权明细接口：TODO：https://opendocs.alipay.com/open/77e7fec5_alipay.user.deloauth.detail.query
+    * 用户授权关系查询接口：`client.UserAuthRelationshipQuery()`
+    * 查询解除授权明细接口：`client.UserDelOAuthDetailQuery()`
   * 支付宝身份验证
     * 身份认证记录查询: `client.UserCertifyOpenQuery()`
     * 身份认证初始化服务接口: `client.UserCertifyOpenInit()`
@@ -426,15 +425,15 @@ xlog.Infof("%+v", phone)
 * <font color='#027AFF' size='4'>信用产品</font>
   * 芝麻GO
     * 芝麻GO签约预创单接口：`client.ZhimaCreditPeZmgoPreorderCreate()`
-    * 芝麻GO页面签约接口：TODO：https://opendocs.alipay.com/open/03u934
+    * 芝麻GO页面签约接口：`client.ZhimaCreditPeZmgoSignApply()`
     * 商家芝麻GO累计数据回传接口：`client.ZhimaMerchantZmgoCumulateSync()`
     * 商家芝麻GO累计数据查询接口：`client.ZhimaMerchantZmgoCumulateQuery()`
-    * 芝麻GO结算申请接口：TODO：https://opendocs.alipay.com/open/03usxk
+    * 芝麻GO结算申请接口：`client.ZhimaCreditPeZmgoSettleApply()`
     * 芝麻GO结算退款接口：`client.ZhimaCreditPeZmgoSettleRefund()`
     * 芝麻Go协议查询接口：`client.ZhimaCreditPeZmgoAgreementQuery()`
     * 芝麻GO协议解约接口：`client.ZhimaCreditPeZmgoAgreementUnsign()`
-    * 商户创建芝麻GO模板接口：TODO：https://opendocs.alipay.com/open/03uq08
-    * 芝麻GO模板查询接口：TODO：https://opendocs.alipay.com/open/04m8ci
+    * 商户创建芝麻GO模板接口：`client.ZhimaMerchantZmgoTemplateCreate()`
+    * 芝麻GO模板查询接口：`client.ZhimaMerchantZmgoTemplateQuery()`
     * 芝麻GO用户数据回传: `client.ZhimaCreditPeZmgoCumulationSync()`
     * 芝麻GO签约关单: `client.ZhimaCreditPeZmgoBizoptClose()`
     * 芝麻GO解冻接口: `client.ZhimaCreditPeZmgoSettleUnfreeze()`

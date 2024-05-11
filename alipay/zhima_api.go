@@ -222,6 +222,75 @@ func (a *Client) ZhimaMerchantZmgoCumulateQuery(ctx context.Context, bm gopay.Bo
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
+// zhima.merchant.zmgo.template.create(商户创建芝麻GO模板接口)
+// 文档地址：https://opendocs.alipay.com/open/03uq08
+func (a *Client) ZhimaMerchantZmgoTemplateCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaMerchantZmgoTemplateCreateRsp, err error) {
+	err = bm.CheckEmptyError("basic_config", "right_config", "open_config", "settlement_config")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.merchant.zmgo.template.create"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaMerchantZmgoTemplateCreateRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// zhima.merchant.zmgo.template.query(芝麻GO模板查询)
+// 文档地址：https://opendocs.alipay.com/open/04m8ci
+func (a *Client) ZhimaMerchantZmgoTemplateQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaMerchantZmgoTemplateQueryRsp, err error) {
+	err = bm.CheckEmptyError("template_no", "partner_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.merchant.zmgo.template.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaMerchantZmgoTemplateQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// zhima.credit.pe.zmgo.settle.apply(芝麻GO结算申请)
+// 文档地址：https://opendocs.alipay.com/open/03usxk
+func (a *Client) ZhimaCreditPeZmgoSettleApply(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoSettleApplyRsp, err error) {
+	err = bm.CheckEmptyError("agreement_id", "partner_id", "out_request_no", "withhold_plan_no", "pay_amount")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.pe.zmgo.settle.apply"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPeZmgoSettleApplyRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
 // zhima.credit.pe.zmgo.bizopt.close(芝麻GO签约关单)
 // 文档地址：https://opendocs.alipay.com/apis/01qii3
 func (a *Client) ZhimaCreditPeZmgoBizoptClose(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoBizoptCloseRsp, err error) {
@@ -289,6 +358,21 @@ func (a *Client) ZhimaCreditPeZmgoPreorderCreate(ctx context.Context, bm gopay.B
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// zhima.credit.pe.zmgo.sign.apply(芝麻GO页面签约接口)
+// 文档地址：https://opendocs.alipay.com/open/03u934
+func (a *Client) ZhimaCreditPeZmgoSignApply(ctx context.Context, bm gopay.BodyMap) (orderStr string, err error) {
+	err = bm.CheckEmptyError("partner_id", "template_id", "out_request_no")
+	if err != nil {
+		return gopay.NULL, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.pe.zmgo.sign.apply"); err != nil {
+		return gopay.NULL, err
+	}
+	orderStr = string(bs)
+	return orderStr, nil
 }
 
 // zhima.credit.pe.zmgo.agreement.unsign(芝麻GO协议解约)

@@ -54,6 +54,52 @@ func (a *Client) SystemOauthToken(ctx context.Context, bm gopay.BodyMap) (aliRsp
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
+// alipay.open.auth.userauth.relationship.query(用户授权关系查询)
+// 文档地址：https://opendocs.alipay.com/open/6b97edd1_alipay.open.auth.userauth.relationship.query
+func (a *Client) UserAuthRelationshipQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserAuthRelationshipQueryRsp, err error) {
+	err = bm.CheckEmptyError("scopes")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.open.auth.userauth.relationship.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(UserAuthRelationshipQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.user.deloauth.detail.query(查询解除授权明细)
+// 文档地址：https://opendocs.alipay.com/open/77e7fec5_alipay.user.deloauth.detail.query
+func (a *Client) UserDelOAuthDetailQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserDelOAuthDetailQueryRsp, err error) {
+	err = bm.CheckEmptyError("date", "limit", "offset")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.user.deloauth.detail.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(UserDelOAuthDetailQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
 // alipay.user.info.share(支付宝会员授权信息查询接口)
 // body：此接口无需body参数
 // 文档地址：https://opendocs.alipay.com/open/02aild

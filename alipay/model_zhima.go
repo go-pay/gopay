@@ -63,6 +63,20 @@ type ZhimaMerchantZmgoCumulateQueryRsp struct {
 	Sign         string                          `json:"sign"`
 }
 
+type ZhimaMerchantZmgoTemplateCreateRsp struct {
+	Response     *ZhimaMerchantZmgoTemplateCreate `json:"zhima_merchant_zmgo_template_create_response"`
+	AlipayCertSn string                           `json:"alipay_cert_sn,omitempty"`
+	SignData     string                           `json:"-"`
+	Sign         string                           `json:"sign"`
+}
+
+type ZhimaMerchantZmgoTemplateQueryRsp struct {
+	Response     *ZhimaMerchantZmgoTemplateQuery `json:"zhima_merchant_zmgo_template_query_response"`
+	AlipayCertSn string                          `json:"alipay_cert_sn,omitempty"`
+	SignData     string                          `json:"-"`
+	Sign         string                          `json:"sign"`
+}
+
 type ZhimaCreditPeZmgoBizoptCloseRsp struct {
 	Response     *ZhimaCreditPeZmgoBizoptClose `json:"zhima_credit_pe_zmgo_bizopt_close_response"`
 	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
@@ -131,6 +145,13 @@ type ZhimaCustomerJobworthSceneUseRsp struct {
 	AlipayCertSn string                         `json:"alipay_cert_sn,omitempty"`
 	SignData     string                         `json:"-"`
 	Sign         string                         `json:"sign"`
+}
+
+type ZhimaCreditPeZmgoSettleApplyRsp struct {
+	Response     *ZhimaCreditPeZmgoSettleApply `json:"zhima_credit_pe_zmgo_settle_apply_response"`
+	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
+	SignData     string                        `json:"-"`
+	Sign         string                        `json:"sign"`
 }
 
 // =========================================================分割=========================================================
@@ -213,6 +234,102 @@ type CumulateDataDetail struct {
 	DiscountAmount string `json:"discount_amount,omitempty"`
 }
 
+type ZhimaMerchantZmgoTemplateCreate struct {
+	ErrorResponse
+	TemplateNo string `json:"template_no"`
+}
+
+type ZhimaMerchantZmgoTemplateQuery struct {
+	ErrorResponse
+	BasicConfig      *BasicConfig      `json:"basic_config"`
+	ObligationConfig *ObligationConfig `json:"obligation_config"`
+	RightConfig      *RightConfig      `json:"right_config"`
+	OpenConfig       *OpenConfig       `json:"open_config"`
+	SettlementConfig *SettlementConfig `json:"settlement_config"`
+	QuitConfig       *QuitConfig       `json:"quit_config"`
+	ExtConfig        *ExtConfig        `json:"ext_config"`
+}
+
+type BasicConfig struct {
+	TemplateName       string `json:"template_name"`
+	PartnerId          string `json:"partner_id"`
+	IsvPid             string `json:"isv_pid"`
+	BizType            string `json:"biz_type"`
+	OutBizNo           string `json:"out_biz_no"`
+	MerchantCustomLogo string `json:"merchant_custom_logo"`
+	Contact            string `json:"contact"`
+	TemplateNo         string `json:"template_no"`
+}
+
+type ObligationConfig struct {
+	ObligationTemplate         string `json:"obligation_template"`
+	ObligationTimes            string `json:"obligation_times"`
+	ObligationAmount           int    `json:"obligation_amount"`
+	PromiseTypeDesc            string `json:"promise_type_desc"`
+	BenefitUrl                 string `json:"benefit_url"`
+	TaskProgressRedirectSchema string `json:"task_progress_redirect_schema"`
+}
+
+type RightConfig struct {
+	CustomBenefitDesc                    string `json:"custom_benefit_desc"`
+	CustomSubBenefitDesc                 string `json:"custom_sub_benefit_desc"`
+	CumulativePreferentialRedirectSchema string `json:"cumulative_preferential_redirect_schema"`
+}
+
+type OpenConfig struct {
+	FreezeAmount              string `json:"freeze_amount"`
+	PeriodMode                string `json:"period_mode"`
+	PeriodTime                string `json:"period_time"`
+	AppointDate               string `json:"appoint_date"`
+	MinSignInterval           string `json:"min_sign_interval"`
+	SupportExpireDeferral     bool   `json:"support_expire_deferral"`
+	CustomOpenTipList         string `json:"custom_open_tip_list"`
+	CardColorScheme           string `json:"card_color_scheme"`
+	CustomOpenTips            string `json:"custom_open_tips"`
+	ShowSignSuccessPage       bool   `json:"show_sign_success_page"`
+	SignSuccessTaskButtonDesc string `json:"sign_success_task_button_desc"`
+	SignAgainSchema           string `json:"sign_again_schema"`
+	ApplyButtonDesc           string `json:"apply_button_desc"`
+}
+
+type SettlementConfig struct {
+	SettlementType                   string                   `json:"settlement_type"`
+	CustomFeeName                    string                   `json:"custom_fee_name"`
+	CycleFlexWithholdConfig          *CycleFlexWithholdConfig `json:"cycle_flex_withhold_config"`
+	FulfilltimesCustomSettlementPlan string                   `json:"fulfilltimes_custom_settlement_plan"`
+	ExpStopTimeMode                  string                   `json:"exp_stop_time_mode"`
+	ExpStopTime                      string                   `json:"exp_stop_time"`
+	ExpStopDelayDays                 int                      `json:"exp_stop_delay_days"`
+	CycleWithholdConfig              *CycleWithholdConfig     `json:"cycle_withhold_config"`
+}
+
+type CycleFlexWithholdConfig struct {
+	CycleFlexWithholdTotalPeriodCount int    `json:"cycle_flex_withhold_total_period_count"`
+	CycleFlexWithholdMaxPrice         int    `json:"cycle_flex_withhold_max_price"`
+	CycleFlexWithholdFeeName          string `json:"cycle_flex_withhold_fee_name"`
+}
+
+type CycleWithholdConfig struct {
+	WithholdMode                 string   `json:"withhold_mode"`
+	PeriodType                   string   `json:"period_type"`
+	Period                       string   `json:"period"`
+	SupportCycleWithholdHighMode bool     `json:"support_cycle_withhold_high_mode"`
+	DeductPlan                   []string `json:"deduct_plan"`
+	SupportExemptionPeriod       bool     `json:"support_exemption_period"`
+	ExemptionPeriod              string   `json:"exemption_period"`
+}
+
+type QuitConfig struct {
+	QuitType    string `json:"quit_type"`
+	QuitJumpUrl string `json:"quit_jump_url"`
+	QuitDesc    string `json:"quit_desc"`
+}
+
+type ExtConfig struct {
+	TextContentFillRuleId   string `json:"text_content_fill_rule_id"`
+	TextContentFillVariable string `json:"text_content_fill_variable"`
+}
+
 type ZhimaCreditPeZmgoBizoptClose struct {
 	ErrorResponse
 	UserId       string `json:"user_id"`
@@ -277,13 +394,18 @@ type ZhimaCreditPeZmgoPaysignConfirm struct {
 type ZhimaCustomerJobworthAdapterQuery struct {
 	ErrorResponse
 	AdapterScore string `json:"adapter_score,omitempty"`
-	SubCode      string `json:"sub_code,omitempty"`
-	SubMsg       string `json:"sub_msg,omitempty"`
 	Url          string `json:"url,omitempty"`
 }
 
 type ZhimaCustomerJobworthSceneUse struct {
 	ErrorResponse
-	SubCode string `json:"sub_code"`
-	SubMsg  string `json:"sub_msg"`
+}
+
+type ZhimaCreditPeZmgoSettleApply struct {
+	ErrorResponse
+	OutRequestNo   string `json:"out_request_no"`
+	AgreementId    string `json:"agreement_id"`
+	WithholdPlanNo string `json:"withhold_plan_no"`
+	SettleStatus   string `json:"settle_status"`
+	FailReason     string `json:"fail_reason"`
 }
