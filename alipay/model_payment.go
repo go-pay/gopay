@@ -253,6 +253,8 @@ type SubFee struct {
 }
 
 type TradeSettleInfo struct {
+	//trade_unsettled_amount｜剩余待结算金额
+	TradeUnsettledAmount  string               `json:"trade_unsettled_amount,omitempty"`
 	TradeSettleDetailList []*TradeSettleDetail `json:"trade_settle_detail_list,omitempty"`
 }
 
