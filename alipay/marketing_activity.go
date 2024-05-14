@@ -8,18 +8,18 @@ import (
 	"github.com/go-pay/gopay"
 )
 
-// alipay.trade.royalty.relation.bind(分账关系绑定)
-// 文档地址：https://opendocs.alipay.com/open/02c7hq
-func (a *Client) TradeRelationBind(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeRelationBindResponse, err error) {
-	err = bm.CheckEmptyError("receiver_list", "out_request_no")
+// alipay.marketing.activity.batchquery(条件查询活动列表)
+// 文档地址：https://opendocs.alipay.com/open/04fgw9
+func (a *Client) MarketingActivityBatchQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityBatchQueryRsp, err error) {
+	err = bm.CheckEmptyError("page_num", "page_size", "merchant_access_mode")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.royalty.relation.bind"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.batchquery"); err != nil {
 		return nil, err
 	}
-	aliRsp = new(TradeRelationBindResponse)
+	aliRsp = new(MarketingActivityBatchQueryRsp)
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
@@ -31,18 +31,18 @@ func (a *Client) TradeRelationBind(ctx context.Context, bm gopay.BodyMap) (aliRs
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
-// alipay.trade.royalty.relation.unbind(分账关系解绑)
-// 文档地址：https://opendocs.alipay.com/open/02c7hr
-func (a *Client) TradeRelationUnbind(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeRelationUnbindResponse, err error) {
-	err = bm.CheckEmptyError("receiver_list", "out_request_no")
+// alipay.marketing.activity.consult(活动领取咨询接口)
+// 文档地址：https://opendocs.alipay.com/open/04fgwa
+func (a *Client) MarketingActivityConsult(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityConsultRsp, err error) {
+	err = bm.CheckEmptyError("consult_activity_info_list", "merchant_access_mode")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.royalty.relation.unbind"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.consult"); err != nil {
 		return nil, err
 	}
-	aliRsp = new(TradeRelationUnbindResponse)
+	aliRsp = new(MarketingActivityConsultRsp)
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
@@ -54,18 +54,18 @@ func (a *Client) TradeRelationUnbind(ctx context.Context, bm gopay.BodyMap) (ali
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
-// alipay.trade.royalty.relation.batchquery(分账关系查询)
-// 文档地址：https://opendocs.alipay.com/open/02c7hs
-func (a *Client) TradeRelationBatchQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeRelationBatchQueryResponse, err error) {
-	err = bm.CheckEmptyError("out_request_no")
+// alipay.marketing.activity.query(查询活动详情)
+// 文档地址：https://opendocs.alipay.com/open/04fgwb
+func (a *Client) MarketingActivityQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityQueryRsp, err error) {
+	err = bm.CheckEmptyError("activity_id", "merchant_access_mode")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.royalty.relation.batchquery"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.query"); err != nil {
 		return nil, err
 	}
-	aliRsp = new(TradeRelationBatchQueryResponse)
+	aliRsp = new(MarketingActivityQueryRsp)
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
@@ -77,18 +77,18 @@ func (a *Client) TradeRelationBatchQuery(ctx context.Context, bm gopay.BodyMap) 
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
-// alipay.trade.settle.confirm(统一收单确认结算接口)
-// 文档地址：https://opendocs.alipay.com/open/028xqy
-func (a *Client) TradeSettleConfirm(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeSettleConfirmResponse, err error) {
-	err = bm.CheckEmptyError("out_request_no", "trade_no")
+// alipay.marketing.activity.merchant.batchquery(查询活动可用商户)
+// 文档地址：https://opendocs.alipay.com/open/04fgwc
+func (a *Client) MarketingActivityQueryMerchantBatchQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityQueryMerchantBatchQueryRsp, err error) {
+	err = bm.CheckEmptyError("activity_id", "page_num", "page_size")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.settle.confirm"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.merchant.batchquery"); err != nil {
 		return nil, err
 	}
-	aliRsp = new(TradeSettleConfirmResponse)
+	aliRsp = new(MarketingActivityQueryMerchantBatchQueryRsp)
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
@@ -100,18 +100,18 @@ func (a *Client) TradeSettleConfirm(ctx context.Context, bm gopay.BodyMap) (aliR
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
-// alipay.trade.order.settle(统一收单交易结算接口)
-// 文档地址：https://opendocs.alipay.com/open/02j2bt
-func (a *Client) TradeOrderSettle(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeOrderSettleResponse, err error) {
-	err = bm.CheckEmptyError("out_request_no", "trade_no", "royalty_parameters")
+// alipay.marketing.activity.app.batchquery(查询活动可用小程序)
+// 文档地址：https://opendocs.alipay.com/open/04fgwd
+func (a *Client) MarketingActivityQueryAppBatchQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityQueryAppBatchQueryRsp, err error) {
+	err = bm.CheckEmptyError("activity_id", "page_num", "page_size", "merchant_access_mode")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.order.settle"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.app.batchquery"); err != nil {
 		return nil, err
 	}
-	aliRsp = new(TradeOrderSettleResponse)
+	aliRsp = new(MarketingActivityQueryAppBatchQueryRsp)
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
@@ -123,18 +123,18 @@ func (a *Client) TradeOrderSettle(ctx context.Context, bm gopay.BodyMap) (aliRsp
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
-// alipay.trade.order.settle.query(交易分账查询接口)
-// 文档地址：https://opendocs.alipay.com/open/02pj6l
-func (a *Client) TradeOrderSettleQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeOrderSettleQueryResponse, err error) {
-	err = bm.CheckEmptyError("settle_no")
+// alipay.marketing.activity.shop.batchquery(查询活动可用门店)
+// 文档地址：https://opendocs.alipay.com/open/04fgwe
+func (a *Client) MarketingActivityQueryShopBatchQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityQueryShopBatchQueryRsp, err error) {
+	err = bm.CheckEmptyError("activity_id", "page_num", "page_size")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.order.settle.query"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.shop.batchquery"); err != nil {
 		return nil, err
 	}
-	aliRsp = new(TradeOrderSettleQueryResponse)
+	aliRsp = new(MarketingActivityQueryShopBatchQueryRsp)
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
@@ -146,18 +146,18 @@ func (a *Client) TradeOrderSettleQuery(ctx context.Context, bm gopay.BodyMap) (a
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
-// alipay.trade.order.onsettle.query(分账剩余金额查询)
-// 文档地址：https://opendocs.alipay.com/open/d87dc009_alipay.trade.order.onsettle.query
-func (a *Client) TradeOrderOnSettleQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeOrderOnSettleQueryResponse, err error) {
-	err = bm.CheckEmptyError("trade_no")
+// alipay.marketing.activity.goods.batchquery(查询活动适用商品)
+// 文档地址：https://opendocs.alipay.com/open/04fgwf
+func (a *Client) MarketingActivityQueryGoodsBatchQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityQueryGoodsBatchQueryRsp, err error) {
+	err = bm.CheckEmptyError("activity_id", "page_num", "page_size")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.order.onsettle.query"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.goods.batchquery"); err != nil {
 		return nil, err
 	}
-	aliRsp = new(TradeOrderOnSettleQueryResponse)
+	aliRsp = new(MarketingActivityQueryGoodsBatchQueryRsp)
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
@@ -169,18 +169,18 @@ func (a *Client) TradeOrderOnSettleQuery(ctx context.Context, bm gopay.BodyMap) 
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
-// alipay.trade.royalty.rate.query(分账比例查询)
-// 文档地址：https://opendocs.alipay.com/open/6f314ee9_alipay.trade.royalty.rate.query
-func (a *Client) TradeRoyaltyRateQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeRoyaltyRateQueryResponse, err error) {
-	err = bm.CheckEmptyError("out_request_no")
+// alipay.marketing.activity.user.batchqueryvoucher(条件查询用户券)
+// 文档地址：https://opendocs.alipay.com/open/04fgwg
+func (a *Client) MarketingActivityQueryUserBatchQueryVoucher(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityQueryUserBatchQueryVoucherRsp, err error) {
+	err = bm.CheckEmptyError("merchant_access_mode", "page_num", "page_size")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.royalty.rate.query"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.user.batchqueryvoucher"); err != nil {
 		return nil, err
 	}
-	aliRsp = new(TradeRoyaltyRateQueryResponse)
+	aliRsp = new(MarketingActivityQueryUserBatchQueryVoucherRsp)
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
@@ -192,18 +192,14 @@ func (a *Client) TradeRoyaltyRateQuery(ctx context.Context, bm gopay.BodyMap) (a
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
-// alipay.security.risk.customerrisk.send(商户数据同步)
-// 文档地址：https://opendocs.alipay.com/open/02qth4
-func (a *Client) SecurityCustomerRiskSend(ctx context.Context, bm gopay.BodyMap) (aliRsp *SecurityCustomerRiskSendRsp, err error) {
-	err = bm.CheckEmptyError("process_code", "trade_no")
-	if err != nil {
-		return nil, err
-	}
+// alipay.marketing.activity.user.queryvoucher(查询用户券详情)
+// 文档地址：https://opendocs.alipay.com/open/04fgwh
+func (a *Client) MarketingActivityQueryUserQueryVoucher(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityQueryUserQueryVoucherRsp, err error) {
 	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.security.risk.customerrisk.send"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.user.queryvoucher"); err != nil {
 		return nil, err
 	}
-	aliRsp = new(SecurityCustomerRiskSendRsp)
+	aliRsp = new(MarketingActivityQueryUserQueryVoucherRsp)
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}

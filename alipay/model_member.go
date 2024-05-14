@@ -142,6 +142,20 @@ type UserAlipaypointBudgetlibQueryRsp struct {
 	Sign         string                         `json:"sign"`
 }
 
+type UserAuthRelationshipQueryRsp struct {
+	Response     *UserAuthRelationshipQuery `json:"alipay_open_auth_userauth_relationship_query_response"`
+	AlipayCertSn string                     `json:"alipay_cert_sn,omitempty"`
+	SignData     string                     `json:"-"`
+	Sign         string                     `json:"sign"`
+}
+
+type UserDelOAuthDetailQueryRsp struct {
+	Response     *UserDelOAuthDetailQuery `json:"alipay_user_deloauth_detail_query_response"`
+	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`
+	SignData     string                   `json:"-"`
+	Sign         string                   `json:"sign"`
+}
+
 // =========================================================分割=========================================================
 
 type OauthTokenInfo struct {
@@ -169,10 +183,10 @@ type UserInfoShare struct {
 	UserStatus         string `json:"user_status,omitempty"`
 	IsCertified        string `json:"is_certified,omitempty"`
 	Gender             string `json:"gender,omitempty"`
-	Cert_type	   string `json:"cert_type,omitempty"`
-	Cert_no	           string `json:"cert_no,omitempty"`	
-	Mobile	           string `json:"mobile,omitempty"`	
-	User_name	   string `json:"user_name,omitempty"`	
+	Cert_type          string `json:"cert_type,omitempty"`
+	Cert_no            string `json:"cert_no,omitempty"`
+	Mobile             string `json:"mobile,omitempty"`
+	User_name          string `json:"user_name,omitempty"`
 }
 
 type UserCertifyOpenInit struct {
@@ -335,4 +349,20 @@ type UserAlipaypointBudgetlibQuery struct {
 	RemainAmount     int64  `json:"remain_amount"`
 	StartTime        string `json:"start_time"`
 	EndTime          string `json:"end_time"`
+}
+
+type UserAuthRelationshipQuery struct {
+	ErrorResponse
+	QueryDetail string `json:"query_detail"`
+}
+
+type UserDelOAuthDetailQuery struct {
+	ErrorResponse
+	Details []*DelOAuthDetail `json:"details"`
+}
+
+type DelOAuthDetail struct {
+	DelAuthTime string `json:"del_auth_time"`
+	UserId      string `json:"user_id"`
+	OpenId      string `json:"open_id"`
 }

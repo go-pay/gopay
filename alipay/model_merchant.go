@@ -56,6 +56,13 @@ type TradeRoyaltyRateQueryResponse struct {
 	Sign         string                 `json:"sign"`
 }
 
+type SecurityCustomerRiskSendRsp struct {
+	Response     *SecurityCustomerRiskSend `json:"alipay_security_risk_customerrisk_send_response"`
+	AlipayCertSn string                    `json:"alipay_cert_sn,omitempty"`
+	SignData     string                    `json:"-"`
+	Sign         string                    `json:"sign"`
+}
+
 // =========================================================分割=========================================================
 
 type TradeRelationBind struct {
@@ -119,4 +126,8 @@ type TradeRoyaltyRateQuery struct {
 	ErrorResponse
 	UserId   string `json:"user_id,omitempty"`
 	MaxRatio string `json:"max_ratio,omitempty"`
+}
+
+type SecurityCustomerRiskSend struct {
+	ErrorResponse
 }
