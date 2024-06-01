@@ -133,3 +133,32 @@ func (a *Client) AntMerchantShopClose(ctx context.Context, bm gopay.BodyMap) (al
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+// ant.merchant.expand.indirect.image.upload(图片上传)
+// bm参数中 image_content 可不传，file为必传参数
+// 文档地址：https://opendocs.alipay.com/open/04fgwt
+func (a *Client) AntMerchantExpandIndirectImageUpload(ctx context.Context, bm gopay.BodyMap, file *gopay.File) (aliRsp *AntMerchantExpandIndirectImageUploadRsp, err error) {
+	if file == nil {
+		return nil, fmt.Errorf("file is nil")
+	}
+	err = bm.CheckEmptyError("image_type")
+	if err != nil {
+		return nil, err
+	}
+	bm.Set("image_content", file)
+	var bs []byte
+	if bs, err = a.FileUploadRequest(ctx, bm, file, "ant.merchant.expand.indirect.image.upload"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(AntMerchantExpandIndirectImageUploadRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}

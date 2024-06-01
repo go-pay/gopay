@@ -14,9 +14,9 @@
    (12) 支付宝：新增 client.MarketingActivityDeliveryQuery()，查询推广计划接口。
    (13) 支付宝：新增 client.MarketingActivityDeliveryStop()，停止推广计划接口。
    (14) 支付宝：新增 client.MarketingMaterialImageUpload()，营销图片资源上传接口。
+   (15) 支付宝：新增 client.AntMerchantExpandIndirectImageUpload()，图片上传接口。
 
 
-   (15) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。
    (16) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。
    (17) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。
    (18) 支付宝：新增 client.ZolozAuthenticationCustomerSmilepayQuery()，刷脸支付初始化接口。

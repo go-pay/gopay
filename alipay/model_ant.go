@@ -42,6 +42,13 @@ type AntMerchantShopCloseRsp struct {
 	Sign         string                `json:"sign"`
 }
 
+type AntMerchantExpandIndirectImageUploadRsp struct {
+	Response     *AntMerchantExpandIndirectImageUpload `json:"ant_merchant_expand_indirect_image_upload_response"`
+	AlipayCertSn string                                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                                `json:"-"`
+	Sign         string                                `json:"sign"`
+}
+
 // =========================================================分割=========================================================
 
 type AntMerchantShopModify struct {
@@ -129,4 +136,9 @@ type AntMerchantShopQuery struct {
 
 type AntMerchantShopClose struct {
 	ErrorResponse
+}
+
+type AntMerchantExpandIndirectImageUpload struct {
+	ErrorResponse
+	ImageId string `json:"image_id"`
 }

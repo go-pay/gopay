@@ -312,7 +312,7 @@ xlog.Infof("%+v", phone)
     * 店铺分页查询接口：TODO：https://opendocs.alipay.com/open/04fgwq
     * 店铺查询接口：`client.AntMerchantShopQuery()`
     * 蚂蚁店铺关闭接口：`client.AntMerchantShopClose()`
-    * 图片上传接口：TODO：https://opendocs.alipay.com/open/04fgwt
+    * 图片上传接口：`client.AntMerchantExpandIndirectImageUpload()`
     * 商户mcc信息查询接口：TODO：https://opendocs.alipay.com/open/04fgwu
     * 店铺增加收单账号接口：TODO：https://opendocs.alipay.com/open/54b69b89_ant.merchant.expand.shop.receiptaccount.save
   * 商家券 2.0
