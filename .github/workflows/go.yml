@@ -26,7 +26,8 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.58
-          args: --verbose --skip=unused  # Add --skip=unused flag
+          args: --verbose
+          allow-unused: true
 
   test:
     needs: lint
