@@ -333,7 +333,7 @@ func (a *Client) FileUploadRequest(ctx context.Context, bm gopay.BodyMap, method
 		return nil, fmt.Errorf("GetRsaSign Error: %w", err)
 	}
 	// 文件签名完移除query params
-	for k, _ := range bm {
+	for k := range bm {
 		pubBody.Remove(k)
 	}
 	pubBody.Set("sign", sign)
