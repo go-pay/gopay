@@ -19,7 +19,7 @@ func (a *Client) MerchantItemFileUpload(ctx context.Context, file *gopay.File) (
 	bm.Set("file_content", file)  //素材固定值
 
 	var bs []byte
-	if bs, err = a.FileUploadRequest(ctx, bm, file, "alipay.merchant.item.file.upload"); err != nil {
+	if bs, err = a.FileUploadRequest(ctx, bm, "alipay.merchant.item.file.upload"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(MerchantItemFileUploadRsp)

@@ -281,7 +281,7 @@ func (a *Client) PageExecute(ctx context.Context, bm gopay.BodyMap, method strin
 }
 
 // 文件上传
-func (a *Client) FileUploadRequest(ctx context.Context, bm gopay.BodyMap, file *gopay.File, method string) (bs []byte, err error) {
+func (a *Client) FileUploadRequest(ctx context.Context, bm gopay.BodyMap, method string) (bs []byte, err error) {
 	var (
 		aat string
 	)
@@ -321,12 +321,19 @@ func (a *Client) FileUploadRequest(ctx context.Context, bm gopay.BodyMap, file *
 	if aat != gopay.NULL {
 		pubBody.Set("app_auth_token", aat)
 	}
+	// 文件也需要签名
+	for k, v := range bm {
+		pubBody.Set(k, v)
+	}
 	// sign
 	sign, err := a.getRsaSign(pubBody, pubBody.GetString("sign_type"))
 	if err != nil {
 		return nil, fmt.Errorf("GetRsaSign Error: %w", err)
 	}
-	//pubBody.Set("file_content", file.Content)
+	// 文件签名完移除query params
+	for k, _ := range bm {
+		pubBody.Remove(k)
+	}
 	pubBody.Set("sign", sign)
 	if a.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("Alipay_Request: %s", pubBody.JsonBody())

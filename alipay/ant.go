@@ -147,7 +147,7 @@ func (a *Client) AntMerchantExpandIndirectImageUpload(ctx context.Context, bm go
 	}
 	bm.Set("image_content", file)
 	var bs []byte
-	if bs, err = a.FileUploadRequest(ctx, bm, file, "ant.merchant.expand.indirect.image.upload"); err != nil {
+	if bs, err = a.FileUploadRequest(ctx, bm, "ant.merchant.expand.indirect.image.upload"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(AntMerchantExpandIndirectImageUploadRsp)

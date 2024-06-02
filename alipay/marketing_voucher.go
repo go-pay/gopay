@@ -20,7 +20,7 @@ func (a *Client) MarketingMaterialImageUpload(ctx context.Context, bm gopay.Body
 	}
 	bm.Set("file_content", file)
 	var bs []byte
-	if bs, err = a.FileUploadRequest(ctx, bm, file, "alipay.marketing.material.image.upload"); err != nil {
+	if bs, err = a.FileUploadRequest(ctx, bm, "alipay.marketing.material.image.upload"); err != nil {
 		return nil, err
 	}
 	aliRsp = new(MarketingMaterialImageUploadRsp)
