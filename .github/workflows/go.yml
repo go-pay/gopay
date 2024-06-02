@@ -26,8 +26,7 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           version: v1.58
-          args: --verbose
-          allow-unused: true
+          args: -v --disable=unused
 
   test:
     needs: lint
