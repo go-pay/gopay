@@ -23,12 +23,15 @@ func TestMerchantItemFileUpload(t *testing.T) {
 		return
 	}
 	f := &gopay.File{
-		Name:    "logo",
+		Name:    "logo.png",
 		Content: allBs,
 	}
-	aliRsp, err := client.MerchantItemFileUpload(ctx, f)
+	bm := make(gopay.BodyMap)
+	bm.Set("scene", "SYNC_ORDER") // 素材固定值
+	bm.SetFormFile("file_content", f)
+	aliRsp, err := client.MerchantItemFileUpload(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.AntMerchantExpandIndirectImageUpload(),error:%+v", err)
+		xlog.Errorf("client.MerchantItemFileUpload(),error:%+v", err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)

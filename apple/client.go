@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/xhttp"
+	"github.com/go-pay/gopay/pkg/xhttp"
 )
 
 // Client AppleClient

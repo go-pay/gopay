@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/xhttp"
+	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/xlog"
 	"github.com/go-pay/xtime"
 )
@@ -321,9 +321,11 @@ func (a *Client) FileUploadRequest(ctx context.Context, bm gopay.BodyMap, method
 	if aat != gopay.NULL {
 		pubBody.Set("app_auth_token", aat)
 	}
-	// 文件也需要签名
+	// 文件上传除文件外其他参数也需要签名
 	for k, v := range bm {
-		pubBody.Set(k, v)
+		if _, ok := v.(*gopay.File); !ok {
+			pubBody.Set(k, v)
+		}
 	}
 	// sign
 	sign, err := a.getRsaSign(pubBody, pubBody.GetString("sign_type"))
@@ -336,10 +338,9 @@ func (a *Client) FileUploadRequest(ctx context.Context, bm gopay.BodyMap, method
 	}
 	pubBody.Set("sign", sign)
 	if a.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Alipay_Request: %s", pubBody.JsonBody())
+		xlog.Debugf("Alipay_Query_Request: %s", pubBody.JsonBody())
 	}
-	param := pubBody.EncodeURLParams()
-	url := baseUrlUtf8 + "&" + param
+	url := baseUrlUtf8 + "&" + pubBody.EncodeURLParams()
 
 	res, bs, err := a.hc.Req(xhttp.TypeMultipartFormData).Post(url).
 		SendMultipartBodyMap(bm).EndBytes(ctx)

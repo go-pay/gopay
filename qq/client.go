@@ -14,7 +14,7 @@ import (
 	"sync"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/xhttp"
+	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/xlog"
 )
 

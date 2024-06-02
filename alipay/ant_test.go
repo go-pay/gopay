@@ -129,12 +129,13 @@ func TestAntMerchantExpandIndirectImageUpload(t *testing.T) {
 		return
 	}
 	f := &gopay.File{
-		Name:    "logo",
+		Name:    "logo.png",
 		Content: allBs,
 	}
 	bm := make(gopay.BodyMap)
 	bm.Set("image_type", "png")
-	aliRsp, err := client.AntMerchantExpandIndirectImageUpload(ctx, bm, f)
+	bm.SetFormFile("image_content", f)
+	aliRsp, err := client.AntMerchantExpandIndirectImageUpload(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.AntMerchantExpandIndirectImageUpload(),error:%+v", err)
 		return

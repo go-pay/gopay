@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/xhttp"
+	"github.com/go-pay/gopay/pkg/xhttp"
 )
 
 // Client PayPal支付客户端

@@ -10,7 +10,7 @@ package wechat
 import (
 	"context"
 
-	"github.com/go-pay/xhttp"
+	"github.com/go-pay/gopay/pkg/xhttp"
 )
 
 // GetOauth2AccessToken 微信第三方登录，code 换取 access_token

@@ -137,15 +137,11 @@ func (a *Client) AntMerchantShopClose(ctx context.Context, bm gopay.BodyMap) (al
 // ant.merchant.expand.indirect.image.upload(图片上传)
 // bm参数中 image_content 可不传，file为必传参数
 // 文档地址：https://opendocs.alipay.com/open/04fgwt
-func (a *Client) AntMerchantExpandIndirectImageUpload(ctx context.Context, bm gopay.BodyMap, file *gopay.File) (aliRsp *AntMerchantExpandIndirectImageUploadRsp, err error) {
-	if file == nil {
-		return nil, fmt.Errorf("file is nil")
-	}
-	err = bm.CheckEmptyError("image_type")
+func (a *Client) AntMerchantExpandIndirectImageUpload(ctx context.Context, bm gopay.BodyMap) (aliRsp *AntMerchantExpandIndirectImageUploadRsp, err error) {
+	err = bm.CheckEmptyError("image_type", "image_content")
 	if err != nil {
 		return nil, err
 	}
-	bm.Set("image_content", file)
 	var bs []byte
 	if bs, err = a.FileUploadRequest(ctx, bm, "ant.merchant.expand.indirect.image.upload"); err != nil {
 		return nil, err

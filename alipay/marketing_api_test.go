@@ -121,15 +121,15 @@ func TestMarketingMaterialImageUpload(t *testing.T) {
 		return
 	}
 	f := &gopay.File{
-		Name:    "logo",
+		Name:    "logo.png",
 		Content: allBs,
 	}
 	bm := make(gopay.BodyMap)
 	bm.Set("file_key", "PROMO_VOUCHER_IMAGE").
-		Set("merchant_access_mode", "SELF_MODE")
-	aliRsp, err := client.MarketingMaterialImageUpload(ctx, bm, f)
+		SetFormFile("file_content", f)
+	aliRsp, err := client.MarketingMaterialImageUpload(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.AntMerchantExpandIndirectImageUpload(),error:%+v", err)
+		xlog.Errorf("client.MarketingMaterialImageUpload(),error:%+v", err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)

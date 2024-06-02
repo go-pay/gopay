@@ -19,10 +19,10 @@ import (
 	"github.com/go-pay/crypto/xpem"
 	"github.com/go-pay/errgroup"
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/util"
 	"github.com/go-pay/util/convert"
 	"github.com/go-pay/util/retry"
-	"github.com/go-pay/xhttp"
 	"github.com/go-pay/xlog"
 	"github.com/go-pay/xtime"
 )

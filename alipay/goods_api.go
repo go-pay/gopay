@@ -10,14 +10,11 @@ import (
 
 // alipay.merchant.item.file.upload(商品文件上传接口)
 // 文档地址：https://opendocs.alipay.com/apis/api_4/alipay.merchant.item.file.upload
-func (a *Client) MerchantItemFileUpload(ctx context.Context, file *gopay.File) (aliRsp *MerchantItemFileUploadRsp, err error) {
-	if file == nil {
-		return nil, fmt.Errorf("file is nil")
+func (a *Client) MerchantItemFileUpload(ctx context.Context, bm gopay.BodyMap) (aliRsp *MerchantItemFileUploadRsp, err error) {
+	err = bm.CheckEmptyError("scene", "file_content")
+	if err != nil {
+		return nil, err
 	}
-	bm := make(gopay.BodyMap)
-	bm.Set("scene", "SYNC_ORDER") //素材固定值
-	bm.Set("file_content", file)  //素材固定值
-
 	var bs []byte
 	if bs, err = a.FileUploadRequest(ctx, bm, "alipay.merchant.item.file.upload"); err != nil {
 		return nil, err
