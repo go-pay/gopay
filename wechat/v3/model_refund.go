@@ -58,16 +58,16 @@ type RefundOrderResponse struct {
 }
 
 type RefundOrderAmount struct {
-	Total            int    `json:"total"`             // 订单总金额，单位为分
-	Refund           int    `json:"refund"`            // 退款标价金额，单位为分，可以做部分退款
-	From             *From  `json:"from"`              // 退款出资的账户类型及金额信息
-	PayerTotal       int    `json:"payer_total"`       // 用户支付金额，单位为分
-	PayerRefund      int    `json:"payer_refund"`      // 用户退款金额，不包含所有优惠券金额
-	SettlementRefund int    `json:"settlement_refund"` // 去掉非充值代金券退款金额后的退款金额，单位为分，退款金额=申请退款金额-非充值代金券退款金额，退款金额<=申请退款金额
-	SettlementTotal  int    `json:"settlement_total"`  // 应结订单金额=订单金额-免充值代金券金额，应结订单金额<=订单金额，单位为分
-	DiscountRefund   int    `json:"discount_refund"`   // 优惠退款金额
-	Currency         string `json:"currency"`          // CNY：人民币，境内商户号仅支持人民币
-	RefundFee        int    `json:"refund_fee"`        // 手续费退款金额，单位为分
+	Total            int     `json:"total"`             // 订单总金额，单位为分
+	Refund           int     `json:"refund"`            // 退款标价金额，单位为分，可以做部分退款
+	From             []*From `json:"from"`              // 退款出资的账户类型及金额信息
+	PayerTotal       int     `json:"payer_total"`       // 用户支付金额，单位为分
+	PayerRefund      int     `json:"payer_refund"`      // 用户退款金额，不包含所有优惠券金额
+	SettlementRefund int     `json:"settlement_refund"` // 去掉非充值代金券退款金额后的退款金额，单位为分，退款金额=申请退款金额-非充值代金券退款金额，退款金额<=申请退款金额
+	SettlementTotal  int     `json:"settlement_total"`  // 应结订单金额=订单金额-免充值代金券金额，应结订单金额<=订单金额，单位为分
+	DiscountRefund   int     `json:"discount_refund"`   // 优惠退款金额
+	Currency         string  `json:"currency"`          // CNY：人民币，境内商户号仅支持人民币
+	RefundFee        int     `json:"refund_fee"`        // 手续费退款金额，单位为分
 }
 
 type From struct {
