@@ -1,3 +1,8 @@
+版本号：Release 1.5.102
+修改记录：
+   (1) gopay：golang.org/x/crypto v0.23.0 版本升级到 v0.24.0。
+   (2) 微信V3：client.V3Refund() 返回值修复错误结构。
+
 版本号：Release 1.5.101
 修改记录：
    (1) gopay：golang.org/x/crypto v0.20.0 版本升级到 v0.23.0。

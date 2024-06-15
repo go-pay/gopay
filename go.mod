@@ -8,5 +8,5 @@ require (
 	github.com/go-pay/util v0.0.2
 	github.com/go-pay/xlog v0.0.2
 	github.com/go-pay/xtime v0.0.2
-	golang.org/x/crypto v0.23.0
+	golang.org/x/crypto v0.24.0
 )
