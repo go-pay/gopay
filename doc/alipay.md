@@ -1,5 +1,7 @@
 ## 支付宝
 
+> #### [开发文档（V3版）](https://opendocs.alipay.com/open-v3) is coming soon... 
+
 > #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用 `client.PostAliPayAPISelfV2()`方法实现！请参考 `client_test.go` 内的 `TestClient_PostAliPayAPISelfV2()` 方法
 
 > #### 希望有时间的伙伴儿Fork完后，补充并提交Pull Request，一起完善支付宝各个类别下的接口到相应的go文件中
@@ -305,16 +307,14 @@ xlog.Infof("%+v", phone)
     * 订单优惠前置咨询接口：`client.MarketingCampaignOrderVoucherConsult()`
   * 蚂蚁门店管理
     * 蚂蚁店铺创建接口: `client.AntMerchantShopCreate()`
-    * 店铺保存审核通过消息接口：TODO：https://opendocs.alipay.com/open/04fgwm
-    * 店铺保存拒绝消息：TODO：https://opendocs.alipay.com/open/04fgwn
     * 修改蚂蚁店铺接口: `client.AntMerchantShopModify()`
     * 商户申请单查询接口: `client.AntMerchantOrderQuery()`
-    * 店铺分页查询接口：TODO：https://opendocs.alipay.com/open/04fgwq
+    * 店铺分页查询接口：`client.AntMerchantShopPageQuery()`
     * 店铺查询接口：`client.AntMerchantShopQuery()`
     * 蚂蚁店铺关闭接口：`client.AntMerchantShopClose()`
     * 图片上传接口：`client.AntMerchantExpandIndirectImageUpload()`
-    * 商户mcc信息查询接口：TODO：https://opendocs.alipay.com/open/04fgwu
-    * 店铺增加收单账号接口：TODO：https://opendocs.alipay.com/open/54b69b89_ant.merchant.expand.shop.receiptaccount.save
+    * 商户mcc信息查询接口：`client.AntMerchantExpandMccQuery()`
+    * 店铺增加收单账号接口：`client.AntMerchantExpandShopReceiptAccountSave()`
   * 商家券 2.0
     * 活动创建
       * 创建商家券活动接口：TODO：https://opendocs.alipay.com/open/7ad3a7bf_alipay.marketing.activity.ordervoucher.create
@@ -388,8 +388,8 @@ xlog.Infof("%+v", phone)
 * <font color='#027AFF' size='4'>资金产品</font>
   * 转账到支付宝账户
     * 支付宝资金账户资产查询接口：`client.FundAccountQuery()`
-    * 申请电子回单(incubating)接口：TODO：https://opendocs.alipay.com/open/1aad1956_alipay.data.bill.ereceipt.apply
-    * 查询电子回单状态(incubating)接口：TODO：https://opendocs.alipay.com/open/30b94a2f_alipay.data.bill.ereceipt.query
+    * 申请电子回单(incubating)接口：`client.DataBillEreceiptApply()`
+    * 查询电子回单状态(incubating)接口：`client.DataBillEreceiptQuery()`
     * 查询转账订单接口: `client.FundTransOrderQuery()`
     * 批次下单接口: `client.FundBatchCreate()`
     * 批量转账关单接口: `client.FundBatchClose()`
@@ -398,19 +398,19 @@ xlog.Infof("%+v", phone)
 * <font color='#027AFF' size='4'>会员产品</font>
   * 人脸验证
     * 人脸核身
-      * APP人脸核身初始化接口：TODO：https://opendocs.alipay.com/open/04jg6r
-      * APP人脸核身结果查询接口：TODO：https://opendocs.alipay.com/open/04jg6s
-      * H5人脸核身初始化接口：TODO：https://opendocs.alipay.com/open/02zloa
-      * H5人脸核身开始认证接口：TODO：https://opendocs.alipay.com/open/02zlob
-      * H5人脸核身查询记录接口：TODO：https://opendocs.alipay.com/open/02zloc
-      * 纯服务端人脸核身接口：TODO：https://opendocs.alipay.com/open/04pxq6
+      * APP人脸核身初始化接口：`client.FaceVerificationInitialize()`
+      * APP人脸核身结果查询接口：`client.FaceVerificationQuery()`
+      * H5人脸核身初始化接口：`client.FaceCertifyInitialize()`
+      * H5人脸核身开始认证接口：`client.FaceCertifyVerify()`
+      * H5人脸核身查询记录接口：`client.FaceCertifyQuery()`
+      * 纯服务端人脸核身接口：`client.FaceSourceCertify()`
     * 活体检测
-      * 人脸检测初始化接口：TODO：https://opendocs.alipay.com/open/03nisu
-      * 人脸检测结果数据查询接口：TODO：https://opendocs.alipay.com/open/03nisv
+      * 人脸检测初始化接口：`client.FaceCheckInitialize()`
+      * 人脸检测结果数据查询接口：`client.FaceCheckQuery()`
     * OCR文字识别
-      * 服务端OCR接口：TODO：https://opendocs.alipay.com/open/05ut8h
-      * App端OCR初始化接口：TODO：https://opendocs.alipay.com/open/043ksf
-      * 文字识别OCR接口：TODO：https://opendocs.alipay.com/open/0776c2cb_datadigital.fincloud.generalsaas.ocr.common.detect
+      * 服务端OCR接口：`client.OcrServerDetect()`
+      * App端OCR初始化接口：`client.OcrMobileInitialize()`
+      * 文字识别OCR接口：`client.OcrCommonDetect()`
   * 获取会员信息
     * 支付宝会员授权信息查询接口：`client.UserInfoShare()`
     * 换取授权访问令牌接口：`client.SystemOauthToken()`
