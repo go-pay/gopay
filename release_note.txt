@@ -2,6 +2,22 @@
 修改记录：
    (1) gopay：golang.org/x/crypto v0.23.0 版本升级到 v0.24.0。
    (2) 微信V3：client.V3Refund() 返回值修复错误结构。
+   (3) 支付宝：新增 client.AntMerchantShopPageQuery()，店铺分页查询接口。
+   (4) 支付宝：新增 client.AntMerchantExpandMccQuery()，商户mcc信息查询接口。
+   (5) 支付宝：新增 client.AntMerchantExpandShopReceiptAccountSave()，店铺增加收单账号接口。
+   (6) 支付宝：新增 client.DataBillEreceiptApply()，申请电子回单(incubating)接口。
+   (7) 支付宝：新增 client.DataBillEreceiptQuery()，查询电子回单状态(incubating)接口。
+   (8) 支付宝：新增 client.FaceVerificationInitialize()，APP人脸核身初始化接口。
+   (9) 支付宝：新增 client.FaceVerificationQuery()，APP人脸核身结果查询接口。
+   (10) 支付宝：新增 client.FaceCertifyInitialize()，H5人脸核身初始化接口。
+   (11) 支付宝：新增 client.FaceCertifyVerify()，H5人脸核身开始认证接口。
+   (12) 支付宝：新增 client.FaceCertifyQuery()，H5人脸核身查询记录接口。
+   (13) 支付宝：新增 client.FaceSourceCertify()，纯服务端人脸核身接口。
+   (14) 支付宝：新增 client.FaceCheckInitialize()，人脸检测初始化接口。
+   (15) 支付宝：新增 client.FaceCheckQuery()，人脸检测结果数据查询接口。
+   (16) 支付宝：新增 client.OcrServerDetect()，服务端OCR接口。
+   (17) 支付宝：新增 client.OcrMobileInitialize()，App端OCR初始化接口。
+   (18) 支付宝：新增 client.OcrCommonDetect()，文字识别OCR接口。
 
 版本号：Release 1.5.101
 修改记录：
