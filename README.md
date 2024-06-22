@@ -81,7 +81,9 @@ func main() {
 
 QQ群：
 <img width="280" height="280" src=".github/qq_gopay.png"/>
-加微信拉群：
+微信群：
+<img width="280" height="280" src=".github/wx_gopay.png"/>
+<br>微信群二维码过期可加微信拉群：
 <img width="280" height="280" src=".github/wechat_jerry.png"/>
 
 ---
