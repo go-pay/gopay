@@ -46,6 +46,52 @@ func (a *Client) DataBillAccountLogQuery(ctx context.Context, bm gopay.BodyMap) 
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
+// alipay.data.bill.ereceipt.apply(申请电子回单(incubating))
+// 文档地址：https://opendocs.alipay.com/open/1aad1956_alipay.data.bill.ereceipt.apply
+func (a *Client) DataBillEreceiptApply(ctx context.Context, bm gopay.BodyMap) (aliRsp *DataBillEreceiptApplyRsp, err error) {
+	err = bm.CheckEmptyError("type", "key")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.data.bill.ereceipt.apply"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(DataBillEreceiptApplyRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.data.bill.ereceipt.query(查询电子回单状态(incubating))
+// 文档地址：https://opendocs.alipay.com/open/30b94a2f_alipay.data.bill.ereceipt.query
+func (a *Client) DataBillEreceiptQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *DataBillEreceiptQueryRsp, err error) {
+	err = bm.CheckEmptyError("file_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.data.bill.ereceipt.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(DataBillEreceiptQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
 // alipay.data.dataservice.bill.downloadurl.query(查询对账单下载地址)
 // 文档地址：https://opendocs.alipay.com/open/02e7gr
 func (a *Client) DataBillDownloadUrlQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *DataBillDownloadUrlQueryResponse, err error) {
