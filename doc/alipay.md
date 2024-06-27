@@ -464,7 +464,14 @@ xlog.Infof("%+v", phone)
 * <font color='#027AFF' size='4'>安全产品</font>
   * 交易安全防护
     * 商户数据同步：`client.SecurityCustomerRiskSend()`
-* <font color='#027AFF' size='4'>其他产品</font>
+* <font color='#027AFF' size='4'>广告产品</font>
+  * 支付宝广告投放
+    * 转化数据回传接口：https://opendocs.alipay.com/open/3940a105_alipay.data.dataservice.ad.conversion.upload
+    * 广告投放数据通用查询接口：https://opendocs.alipay.com/open/c089ee8d_alipay.data.dataservice.ad.reportdata.query
+    * 自建推广页列表批量查询接口：https://opendocs.alipay.com/open/e060c7d1_alipay.data.dataservice.ad.promotepage.batchquery
+    * 自建推广页留资数据查询接口：https://opendocs.alipay.com/open/1df3222a_alipay.data.dataservice.ad.promotepage.download
+    * 任务广告完成状态查询接口：https://opendocs.alipay.com/open/7275fba1_alipay.data.dataservice.xlight.task.query
+* <font color='#027AFF' size='4'>其他通用产品</font>
   * 花芝轻会员结算申请: `client.PcreditHuabeiAuthSettleApply()`
   * NFC用户卡信息同步: `client.CommerceTransportNfccardSend()`
   * 广告投放数据查询: `client.DataDataserviceAdDataQuery()`
