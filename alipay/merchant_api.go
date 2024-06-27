@@ -214,3 +214,26 @@ func (a *Client) SecurityCustomerRiskSend(ctx context.Context, bm gopay.BodyMap)
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+// alipay.pay.app.marketing.consult(商户前置内容咨询接口)
+// 文档地址：https://opendocs.alipay.com/pre-open/296d225f_alipay.pay.app.marketing.consult
+func (a *Client) PayAppMarketingConsult(ctx context.Context, bm gopay.BodyMap) (aliRsp *PayAppMarketingConsultRsp, err error) {
+	err = bm.CheckEmptyError("biz_scene", "total_amount", "product_code")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.pay.app.marketing.consult"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(PayAppMarketingConsultRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}

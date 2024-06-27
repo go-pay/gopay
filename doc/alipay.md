@@ -464,6 +464,10 @@ xlog.Infof("%+v", phone)
 * <font color='#027AFF' size='4'>安全产品</font>
   * 交易安全防护
     * 商户数据同步：`client.SecurityCustomerRiskSend()`
+  * RiskGO
+    * 消费者投诉
+      * 处理消费者投诉接口：https://opendocs.alipay.com/open/da75e1ec_alipay.security.risk.complaint.process.finish
+      * 
 * <font color='#027AFF' size='4'>广告产品</font>
   * 支付宝广告投放
     * 转化数据回传接口：https://opendocs.alipay.com/open/3940a105_alipay.data.dataservice.ad.conversion.upload
@@ -516,6 +520,10 @@ xlog.Infof("%+v", phone)
   * 加入信用服务: `clinet.ZhimaCreditEpSceneAgreementUse()`
   * 取消信用服务: `client.ZhimaCreditEpSceneAgreementCancel()`
   * 信用服务履约同步(批量): `client.ZhimaCreditEpSceneFulfillmentlistSync()`
+* <font color='#027AFF' size='4'>邀测站点</font>
+  * 营销咨询
+    * 商户前置内容咨询接口： `client.PayAppMarketingConsult()`
+    *
 
 ### 支付宝公共 API
 
