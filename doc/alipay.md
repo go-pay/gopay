@@ -316,15 +316,15 @@ xlog.Infof("%+v", phone)
     * 商户mcc信息查询接口：`client.AntMerchantExpandMccQuery()`
     * 店铺增加收单账号接口：`client.AntMerchantExpandShopReceiptAccountSave()`
   * 商家券 2.0
-    * 活动创建
-      * 创建商家券活动接口：TODO：https://opendocs.alipay.com/open/7ad3a7bf_alipay.marketing.activity.ordervoucher.create
-      * 同步商家券券码接口：TODO：https://opendocs.alipay.com/open/7ed0450d_alipay.marketing.activity.ordervoucher.codedeposit
+    * 活动创建 
+      * 创建商家券活动接口：`client.MarketingActivityOrderVoucherCreate()`
+      * 同步商家券券码接口：`client.MarketingActivityOrderVoucherCodeDeposit()`
     * 活动修改
-      * 修改商家券活动基本信息接口：TODO：https://opendocs.alipay.com/open/528f83f6_alipay.marketing.activity.ordervoucher.modify
+      * 修改商家券活动基本信息接口：`client.MarketingActivityOrderVoucherModify()`
     * 活动停止
-      * 停止商家券活动接口：TODO：https://opendocs.alipay.com/open/16803efe_alipay.marketing.activity.ordervoucher.stop
+      * 停止商家券活动接口：`client.MarketingActivityOrderVoucherStop()`
     * 预算追加
-      * 修改商家券活动发券数量上限接口：TODO：https://opendocs.alipay.com/open/4e2acff5_alipay.marketing.activity.ordervoucher.append
+      * 修改商家券活动发券数量上限接口：`client.MarketingActivityOrderVoucherAppend()`
     * 活动发放
       * 活动领取咨询接口：TODO：https://opendocs.alipay.com/open/cdf2e908_alipay.marketing.activity.consult
     * 优惠券核销
@@ -467,7 +467,18 @@ xlog.Infof("%+v", phone)
   * RiskGO
     * 消费者投诉
       * 处理消费者投诉接口：https://opendocs.alipay.com/open/da75e1ec_alipay.security.risk.complaint.process.finish
-      * 
+      * 投诉处理附件图片上传接口：https://opendocs.alipay.com/open/20ea7441_alipay.security.risk.complaint.file.upload
+      * 查询消费者投诉详情接口：https://opendocs.alipay.com/open/271499b9_alipay.security.risk.complaint.info.query
+      * 查询消费者投诉列表接口：https://opendocs.alipay.com/open/8ad1ac86_alipay.security.risk.complaint.info.batchquery
+    * 营销风险识别
+      * 营销风险识别发奖接口：https://opendocs.alipay.com/open/f4427923_alipay.security.risk.marketing.awarding.query
+      * 营销风险识别抢购接口：https://opendocs.alipay.com/open/91f83d97_alipay.security.risk.marketing.purchase.query
+    * 行业风险识别
+      * 行业风险识别黄牛接口：https://opendocs.alipay.com/open/5e344142_alipay.security.risk.industry.scalper.query
+      * 行业风险识别刷单接口：https://opendocs.alipay.com/open/e76efd50_alipay.security.risk.industry.farming.query
+      * 行业风险识别先享后付违约接口：https://opendocs.alipay.com/open/399e7ee9_alipay.security.risk.industry.nsf.query
+    * 内容风险识别
+      * 内容风险同步识别：https://opendocs.alipay.com/open/8513019b_alipay.security.risk.content.sync.detect
 * <font color='#027AFF' size='4'>广告产品</font>
   * 支付宝广告投放
     * 转化数据回传接口：https://opendocs.alipay.com/open/3940a105_alipay.data.dataservice.ad.conversion.upload
@@ -476,6 +487,16 @@ xlog.Infof("%+v", phone)
     * 自建推广页留资数据查询接口：https://opendocs.alipay.com/open/1df3222a_alipay.data.dataservice.ad.promotepage.download
     * 任务广告完成状态查询接口：https://opendocs.alipay.com/open/7275fba1_alipay.data.dataservice.xlight.task.query
 * <font color='#027AFF' size='4'>其他通用产品</font>
+  * 商家费率申请
+    * 特殊费率申请接口：https://opendocs.alipay.com/open/c50c780c_alipay.open.fee.adjust.apply
+* <font color='#027AFF' size='4'>第三方应用产品</font>
+  * 换取应用授权令牌：`client.OpenAuthTokenApp()`
+* <font color='#027AFF' size='4'>邀测站点</font>
+  * 营销咨询
+    * 商户前置内容咨询接口： `client.PayAppMarketingConsult()`
+* <font color='#027AFF' size='4'>可能失效的接口</font>
+  * 应用支付宝公钥证书下载：`client.PublicCertDownload()`
+  * 小程序生成推广二维码接口：`client.OpenAppQrcodeCreate()`
   * 花芝轻会员结算申请: `client.PcreditHuabeiAuthSettleApply()`
   * NFC用户卡信息同步: `client.CommerceTransportNfccardSend()`
   * 广告投放数据查询: `client.DataDataserviceAdDataQuery()`
@@ -495,7 +516,12 @@ xlog.Infof("%+v", phone)
   * 申请权益发放: `client.CommerceBenefitApply()`
   * 权益核销: `client.CommerceBenefitVerify()`
   * 还款账单查询: `client.TradeRepaybillQuery()`
-* <font color='#027AFF' size='4'>会员</font>
+  * 芝麻企业信用信用评估初始化: `client.ZhimaCreditEpSceneRatingInitialize()`
+  * 信用服务履约同步: `client.ZhimaCreditEpSceneFulfillmentSync()`
+  * 加入信用服务: `clinet.ZhimaCreditEpSceneAgreementUse()`
+  * 取消信用服务: `client.ZhimaCreditEpSceneAgreementCancel()`
+  * 信用服务履约同步(批量): `client.ZhimaCreditEpSceneFulfillmentlistSync()`
+  * 小程序生成推广二维码接口：`client.OpenAppQrcodeCreate()`
   * 协议由普通通用代扣协议产品转移到周期扣协议产品: `client.UserAgreementTransfer()`
   * 通用当面付二阶段接口: `client.UserTwostageCommonUse()`
   * 芝麻企业征信基于身份的协议授权: `client.UserAuthZhimaorgIdentityApply()`
@@ -509,21 +535,6 @@ xlog.Infof("%+v", phone)
   * 初始化家庭芝麻GO共享组件: `client.UserFamilyShareZmgoInitialize()`
   * 数字分行银行码明细数据查询: `client.UserDtbankQrcodedataQuery()`
   * 查询集分宝预算库详情: `client.UserAlipaypointBudgetlibQuery()`
-* <font color='#027AFF' size='4'>营销</font>
-  * 小程序生成推广二维码接口：`client.OpenAppQrcodeCreate()`
-* <font color='#027AFF' size='4'>工具类</font>
-  * 换取应用授权令牌：`client.OpenAuthTokenApp()`
-  * 应用支付宝公钥证书下载：`client.PublicCertDownload()`
-* <font color='#027AFF' size='4'>芝麻信用</font>
-  * 芝麻企业信用信用评估初始化: `client.ZhimaCreditEpSceneRatingInitialize()`
-  * 信用服务履约同步: `client.ZhimaCreditEpSceneFulfillmentSync()`
-  * 加入信用服务: `clinet.ZhimaCreditEpSceneAgreementUse()`
-  * 取消信用服务: `client.ZhimaCreditEpSceneAgreementCancel()`
-  * 信用服务履约同步(批量): `client.ZhimaCreditEpSceneFulfillmentlistSync()`
-* <font color='#027AFF' size='4'>邀测站点</font>
-  * 营销咨询
-    * 商户前置内容咨询接口： `client.PayAppMarketingConsult()`
-    *
 
 ### 支付宝公共 API
 
