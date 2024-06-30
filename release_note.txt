@@ -1,8 +1,15 @@
 版本号：Release 1.5.103
 修改记录：
    (1) 支付宝：新增 client.PayAppMarketingConsult()，商户前置内容咨询接口。
-   (2) 支付宝：新增
-   (3) 支付宝：新增
+   (2) 支付宝：新增 client.MarketingActivityOrderVoucherCreate()，创建商家券活动接口
+   (3) 支付宝：新增 client.MarketingActivityOrderVoucherCodeDeposit()，同步商家券券码接口
+   (4) 支付宝：新增 client.MarketingActivityOrderVoucherModify()，修改商家券活动基本信息接口
+   (4) 支付宝：新增 client.MarketingActivityOrderVoucherStop()，停止商家券活动接口
+   (4) 支付宝：新增 client.MarketingActivityOrderVoucherAppend()，修改商家券活动发券数量上限接口
+   (4) 支付宝：新增
+   (4) 支付宝：新增
+   (4) 支付宝：新增
+   (4) 支付宝：新增
    (4) 支付宝：新增
 
 版本号：Release 1.5.102

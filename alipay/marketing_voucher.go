@@ -170,3 +170,119 @@ func (a *Client) MarketingActivityVoucherStop(ctx context.Context, bm gopay.Body
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+// alipay.marketing.activity.ordervoucher.create(创建商家券活动)
+// 文档地址：https://opendocs.alipay.com/open/7ad3a7bf_alipay.marketing.activity.ordervoucher.create
+func (a *Client) MarketingActivityOrderVoucherCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityOrderVoucherCreateRsp, err error) {
+	err = bm.CheckEmptyError("out_biz_no", "activity_base_info", "merchant_access_mode", "voucher_send_mode_info",
+		"voucher_deduct_info", "voucher_available_scope_info", "voucher_use_rule_info", "voucher_customer_guide_info", "voucher_display_pattern_info")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.ordervoucher.create"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingActivityOrderVoucherCreateRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.marketing.activity.ordervoucher.codedeposit(同步商家券券码)
+// 文档地址：https://opendocs.alipay.com/open/7ed0450d_alipay.marketing.activity.ordervoucher.codedeposit
+func (a *Client) MarketingActivityOrderVoucherCodeDeposit(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityOrderVoucherCodeDepositRsp, err error) {
+	err = bm.CheckEmptyError("out_biz_no", "activity_id", "merchant_access_mode", "voucher_codes")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.ordervoucher.codedeposit"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingActivityOrderVoucherCodeDepositRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.marketing.activity.ordervoucher.modify(修改商家券活动基本信息)
+// 文档地址：https://opendocs.alipay.com/open/528f83f6_alipay.marketing.activity.ordervoucher.modify
+func (a *Client) MarketingActivityOrderVoucherModify(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityOrderVoucherModifyRsp, err error) {
+	err = bm.CheckEmptyError("out_biz_no", "activity_id", "merchant_access_mode", "activity_base_info")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.ordervoucher.modify"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingActivityOrderVoucherModifyRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.marketing.activity.ordervoucher.stop(停止商家券活动)
+// 文档地址：https://opendocs.alipay.com/open/16803efe_alipay.marketing.activity.ordervoucher.stop
+func (a *Client) MarketingActivityOrderVoucherStop(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityOrderVoucherStopRsp, err error) {
+	err = bm.CheckEmptyError("out_biz_no", "activity_id", "merchant_access_mode")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.ordervoucher.stop"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingActivityOrderVoucherStopRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.marketing.activity.ordervoucher.append(修改商家券活动发券数量上限)
+// 文档地址：https://opendocs.alipay.com/open/4e2acff5_alipay.marketing.activity.ordervoucher.append
+func (a *Client) MarketingActivityOrderVoucherAppend(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityOrderVoucherAppendRsp, err error) {
+	err = bm.CheckEmptyError("out_biz_no", "activity_id", "merchant_access_mode", "voucher_quantity")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.ordervoucher.append"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingActivityOrderVoucherAppendRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}

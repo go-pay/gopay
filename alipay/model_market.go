@@ -175,6 +175,41 @@ type MarketingCampaignOrderVoucherConsultRsp struct {
 	Sign         string                                `json:"sign"`
 }
 
+type MarketingActivityOrderVoucherCreateRsp struct {
+	Response     *MarketingActivityOrderVoucherCreate `json:"alipay_marketing_activity_ordervoucher_create_response"`
+	AlipayCertSn string                               `json:"alipay_cert_sn,omitempty"`
+	SignData     string                               `json:"-"`
+	Sign         string                               `json:"sign"`
+}
+
+type MarketingActivityOrderVoucherCodeDepositRsp struct {
+	Response     *MarketingActivityOrderVoucherCodeDeposit `json:"alipay_marketing_activity_ordervoucher_codedeposit_response"`
+	AlipayCertSn string                                    `json:"alipay_cert_sn,omitempty"`
+	SignData     string                                    `json:"-"`
+	Sign         string                                    `json:"sign"`
+}
+
+type MarketingActivityOrderVoucherModifyRsp struct {
+	Response     *MarketingActivityOrderVoucherModify `json:"alipay_marketing_activity_ordervoucher_modify_response"`
+	AlipayCertSn string                               `json:"alipay_cert_sn,omitempty"`
+	SignData     string                               `json:"-"`
+	Sign         string                               `json:"sign"`
+}
+
+type MarketingActivityOrderVoucherStopRsp struct {
+	Response     *MarketingActivityOrderVoucherStop `json:"alipay_marketing_activity_ordervoucher_stop_response"`
+	AlipayCertSn string                             `json:"alipay_cert_sn,omitempty"`
+	SignData     string                             `json:"-"`
+	Sign         string                             `json:"sign"`
+}
+
+type MarketingActivityOrderVoucherAppendRsp struct {
+	Response     *MarketingActivityOrderVoucherAppend `json:"alipay_marketing_activity_ordervoucher_append_response"`
+	AlipayCertSn string                             `json:"alipay_cert_sn,omitempty"`
+	SignData     string                             `json:"-"`
+	Sign         string                             `json:"sign"`
+}
+
 // =========================================================分割=========================================================
 
 type MarketingCampaignCashCreate struct {
@@ -764,4 +799,69 @@ type ItemConsult struct {
 	ItemId      string `json:"item_id"`
 	PromoAmount string `json:"promo_amount"`
 	PromoCount  string `json:"promo_count"`
+}
+
+type MarketingActivityOrderVoucherCreate struct {
+	ErrorResponse
+	ActivityId                      string                           `json:"activity_id"`
+	VoucherAvailableScopeResultInfo *VoucherAvailableScopeResultInfo `json:"voucher_available_scope_result_info"`
+}
+
+type VoucherAvailableScopeResultInfo struct {
+	VoucherAvailableGeographyScopeResultInfo *VoucherAvailableGeographyScopeResultInfo `json:"voucher_available_geography_scope_result_info"`
+}
+
+type VoucherAvailableGeographyScopeResultInfo struct {
+	AvailableGeographyShopResultInfo *AvailableGeographyShopResultInfo `json:"available_geography_shop_result_info"`
+}
+
+type AvailableGeographyShopResultInfo struct {
+	SuccessAvailableShopIds             []string                             `json:"success_available_shop_ids"`
+	FailAvailableShopInfos              []*FailAvailableShopInfo             `json:"fail_available_shop_infos"`
+	AvailableGeographyAllShopResultInfo *AvailableGeographyAllShopResultInfo `json:"available_geography_all_shop_result_info"`
+}
+
+type FailAvailableShopInfo struct {
+	ShopId      string   `json:"shop_id"`
+	FailReasons []string `json:"fail_reasons"`
+	FailMessage string   `json:"fail_message"`
+}
+
+type AvailableGeographyAllShopResultInfo struct {
+	SuccessExcludeShopIds []string               `json:"success_exclude_shop_ids"`
+	FailExcludeShopInfos  []*FailExcludeShopInfo `json:"fail_exclude_shop_infos"`
+}
+
+type FailExcludeShopInfo struct {
+	ShopId      string   `json:"shop_id"`
+	RealShopId  string   `json:"real_shop_id"`
+	FailReasons []string `json:"fail_reasons"`
+	FailMessage string   `json:"fail_message"`
+}
+
+type MarketingActivityOrderVoucherCodeDeposit struct {
+	ErrorResponse
+	SuccessCount              int                      `json:"success_count"`
+	FailCount                 int                      `json:"fail_count"`
+	SuccessVoucherCodeList    []string                 `json:"success_voucher_code_list"`
+	FailVoucherCodeDetailList []*FailVoucherCodeDetail `json:"fail_voucher_code_detail_list"`
+}
+
+type FailVoucherCodeDetail struct {
+	VoucherCode string `json:"voucher_code"`
+	ErrorCode   string `json:"error_code"`
+	ErrorMsg    string `json:"error_msg"`
+}
+
+type MarketingActivityOrderVoucherModify struct {
+	ErrorResponse
+	VoucherAvailableScopeResultInfo *VoucherAvailableScopeResultInfo `json:"voucher_available_scope_result_info"`
+}
+
+type MarketingActivityOrderVoucherStop struct {
+	ErrorResponse
+}
+
+type MarketingActivityOrderVoucherAppend struct {
+	ErrorResponse
 }
