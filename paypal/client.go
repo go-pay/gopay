@@ -2,6 +2,7 @@ package paypal
 
 import (
 	"context"
+	"github.com/go-pay/xlog"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
@@ -17,6 +18,7 @@ type Client struct {
 	IsProd         bool
 	ctx            context.Context
 	DebugSwitch    gopay.DebugSwitch
+	logger         xlog.XLogger
 	hc             *xhttp.Client
 	baseUrlProd    string
 	baseUrlSandbox string
@@ -29,12 +31,15 @@ func NewClient(clientid, secret string, isProd bool, options ...Option) (client 
 	if clientid == gopay.NULL || secret == gopay.NULL {
 		return nil, gopay.MissPayPalInitParamErr
 	}
+	logger := xlog.NewLogger()
+	logger.SetLevel(xlog.DebugLevel)
 	client = &Client{
 		Clientid:       clientid,
 		Secret:         secret,
 		IsProd:         isProd,
 		ctx:            context.Background(),
 		DebugSwitch:    gopay.DebugOff,
+		logger:         logger,
 		hc:             xhttp.NewClient(),
 		baseUrlProd:    baseUrlProd,
 		baseUrlSandbox: baseUrlSandbox,
@@ -63,6 +68,19 @@ func WithProxyUrl(proxyUrlProd, proxyUrlSandbox string) Option {
 func (c *Client) SetBodySize(sizeMB int) {
 	if sizeMB > 0 {
 		c.hc.SetBodySize(sizeMB)
+	}
+}
+
+// SetHttpClient 设置自定义的xhttp.Client
+func (c *Client) SetHttpClient(client *xhttp.Client) {
+	if client != nil {
+		c.hc = client
+	}
+}
+
+func (c *Client) SetLogger(logger xlog.XLogger) {
+	if logger != nil {
+		c.logger = logger
 	}
 }
 

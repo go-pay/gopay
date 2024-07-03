@@ -22,7 +22,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	xlog.Level = xlog.DebugLevel
+	xlog.SetLevel(xlog.DebugLevel)
 	// 初始化支付宝客户端
 	//    appid：应用ID
 	//    privateKey：应用私钥，支持PKCS1和PKCS8

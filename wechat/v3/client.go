@@ -3,6 +3,7 @@ package wechat
 import (
 	"context"
 	"crypto/rsa"
+	"github.com/go-pay/xlog"
 	"sync"
 
 	"github.com/go-pay/crypto/xpem"
@@ -23,6 +24,7 @@ type ClientV3 struct {
 	wxPublicKey *rsa.PublicKey
 	ctx         context.Context
 	DebugSwitch gopay.DebugSwitch
+	logger      xlog.XLogger
 	SnCertMap   map[string]*rsa.PublicKey // key: serial_no
 }
 
@@ -39,6 +41,8 @@ func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3
 	if err != nil {
 		return nil, err
 	}
+	logger := xlog.NewLogger()
+	logger.SetLevel(xlog.DebugLevel)
 	client = &ClientV3{
 		Mchid:       mchid,
 		SerialNo:    serialNo,
@@ -46,6 +50,7 @@ func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3
 		privateKey:  priKey,
 		ctx:         context.Background(),
 		DebugSwitch: gopay.DebugOff,
+		logger:      logger,
 		hc:          xhttp.NewClient(),
 	}
 	return client, nil
@@ -88,5 +93,13 @@ func (c *ClientV3) SetBodySize(sizeMB int) {
 
 // SetHttpClient 设置自定义的xhttp.Client
 func (c *ClientV3) SetHttpClient(client *xhttp.Client) {
-	c.hc = client
+	if client != nil {
+		c.hc = client
+	}
+}
+
+func (c *ClientV3) SetLogger(logger xlog.XLogger) {
+	if logger != nil {
+		c.logger = logger
+	}
 }

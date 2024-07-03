@@ -63,21 +63,14 @@ func (c *Client) pubParamsHandle(bm gopay.BodyMap) gopay.BodyMap {
 		bm.Set("terminal_id", c.terminalId)
 	}
 	sign := c.getRsaSign(bm)
-
 	bm.Set("key_sign", sign)
-
 	return bm
 }
 
 // doPost 发起请求
 func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs []byte, err error) {
 	param := c.pubParamsHandle(bm)
-	if err != nil {
-		return nil, err
-	}
-
 	xlog.Debugf("saobeiParam:%+v", param.JsonBody())
-
 	url := baseUrl
 	if !c.isProd {
 		url = sandboxBaseUrl

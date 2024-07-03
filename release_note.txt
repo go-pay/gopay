@@ -1,5 +1,7 @@
 版本号：Release 1.5.103
 修改记录：
+   (1) gopay：xlog 库更新，支持接口自定义logger。
+   (1) gopay：go mod 版本升级至 1.21。
    (1) 支付宝：新增 client.PayAppMarketingConsult()，商户前置内容咨询接口。
    (2) 支付宝：新增 client.MarketingActivityOrderVoucherCreate()，创建商家券活动接口
    (3) 支付宝：新增 client.MarketingActivityOrderVoucherCodeDeposit()，同步商家券券码接口

@@ -22,7 +22,6 @@ import (
 	"github.com/go-pay/crypto/xpem"
 	"github.com/go-pay/crypto/xrsa"
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/xlog"
 )
 
 // 允许进行 sn 提取的证书签名算法
@@ -192,7 +191,7 @@ func (a *Client) getRsaSign(bm gopay.BodyMap, signType string) (sign string, err
 	}
 	signParams := bm.EncodeAliPaySignParams()
 	if a.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Alipay_Request_SignStr: %s", signParams)
+		a.logger.Debugf("Alipay_Request_SignStr: %s", signParams)
 	}
 	if _, err = h.Write([]byte(signParams)); err != nil {
 		return
@@ -283,7 +282,7 @@ func VerifySyncSignWithCert(alipayPublicKeyCert any, signData, sign string) (ok 
 func (a *Client) autoVerifySignByCert(sign, signData string, signDataErr error) (err error) {
 	if a.autoSign && a.aliPayPublicKey != nil {
 		if a.DebugSwitch == gopay.DebugOn {
-			xlog.Debugf("Alipay_SyncSignData: %s, Sign=[%s]", signData, sign)
+			a.logger.Debugf("Alipay_SyncSignData: %s, Sign=[%s]", signData, sign)
 		}
 		// 只有证书验签时，才可能出现此error
 		if signDataErr != nil {

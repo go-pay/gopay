@@ -8,7 +8,6 @@ import (
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/xlog"
 	"github.com/go-pay/xtime"
 )
 
@@ -71,7 +70,7 @@ func (a *Client) PostFileAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, 
 		bm.Set(k, v)
 	}
 	if a.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Alipay_Request: %s", bm.JsonBody())
+		a.logger.Debugf("Alipay_Request: %s", bm.JsonBody())
 	}
 	if a.IsProd {
 		url = baseUrlUtf8
@@ -84,7 +83,7 @@ func (a *Client) PostFileAliPayAPISelfV2(ctx context.Context, bm gopay.BodyMap, 
 		return nil
 	}
 	if a.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		a.logger.Debugf("Alipay_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -112,7 +111,7 @@ func (a *Client) doAliPaySelf(ctx context.Context, bm gopay.BodyMap, method stri
 		bm.Set("sign", sign)
 	}
 	if a.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Alipay_Request: %s", bm.JsonBody())
+		a.logger.Debugf("Alipay_Request: %s", bm.JsonBody())
 	}
 	if a.IsProd {
 		url = baseUrlUtf8
@@ -124,7 +123,7 @@ func (a *Client) doAliPaySelf(ctx context.Context, bm gopay.BodyMap, method stri
 		return nil, err
 	}
 	if a.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		a.logger.Debugf("Alipay_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -179,7 +178,7 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 			return nil, err
 		}
 		if a.DebugSwitch == gopay.DebugOn {
-			xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+			a.logger.Debugf("Alipay_Response: %d, %s", res.StatusCode, string(bs))
 		}
 		if res.StatusCode != 200 {
 			return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -235,7 +234,7 @@ func (a *Client) DoAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 			return nil, err
 		}
 		if a.DebugSwitch == gopay.DebugOn {
-			xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+			a.logger.Debugf("Alipay_Response: %d, %s", res.StatusCode, string(bs))
 		}
 		if res.StatusCode != 200 {
 			return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -338,7 +337,7 @@ func (a *Client) FileUploadRequest(ctx context.Context, bm gopay.BodyMap, method
 	}
 	pubBody.Set("sign", sign)
 	if a.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Alipay_Query_Request: %s", pubBody.JsonBody())
+		a.logger.Debugf("Alipay_Query_Request: %s", pubBody.JsonBody())
 	}
 	url := baseUrlUtf8 + "&" + pubBody.EncodeURLParams()
 
@@ -348,7 +347,7 @@ func (a *Client) FileUploadRequest(ctx context.Context, bm gopay.BodyMap, method
 		return nil, err
 	}
 	if a.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		a.logger.Debugf("Alipay_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)

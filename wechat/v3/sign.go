@@ -18,7 +18,6 @@ import (
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/util"
 	"github.com/go-pay/util/convert"
-	"github.com/go-pay/xlog"
 )
 
 // Deprecated
@@ -242,7 +241,7 @@ func (c *ClientV3) authorization(method, path string, bm gopay.BodyMap) (string,
 	ts := convert.Int642String(timestamp)
 	_str := method + "\n" + path + "\n" + ts + "\n" + nonceStr + "\n" + jb + "\n"
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_SignString:\n%s", _str)
+		c.logger.Debugf("Wechat_V3_SignString:\n%s", _str)
 	}
 	sign, err := c.rsaSign(_str)
 	if err != nil {

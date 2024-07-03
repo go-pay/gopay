@@ -8,7 +8,6 @@ import (
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/xlog"
 )
 
 // 企业付款（企业向微信用户个人付款）
@@ -33,14 +32,15 @@ func (w *Client) Transfer(ctx context.Context, bm gopay.BodyMap) (wxRsp *Transfe
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
+
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -74,14 +74,14 @@ func (w *Client) GetTransferInfo(ctx context.Context, bm gopay.BodyMap) (wxRsp *
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -117,14 +117,14 @@ func (w *Client) PayBank(ctx context.Context, bm gopay.BodyMap) (wxRsp *PayBankR
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -156,14 +156,14 @@ func (w *Client) QueryBank(ctx context.Context, bm gopay.BodyMap) (wxRsp *QueryB
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -190,14 +190,14 @@ func (w *Client) GetRSAPublicKey(ctx context.Context, bm gopay.BodyMap) (wxRsp *
 
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)

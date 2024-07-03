@@ -23,7 +23,6 @@ import (
 	"github.com/go-pay/util"
 	"github.com/go-pay/util/convert"
 	"github.com/go-pay/util/retry"
-	"github.com/go-pay/xlog"
 	"github.com/go-pay/xtime"
 )
 
@@ -135,7 +134,7 @@ func GetPlatformSM2Certs(ctx context.Context, mchid, apiV3Key, serialNo, private
 func (c *ClientV3) SetPlatformCert(wxPublicKeyContent []byte, wxSerialNo string) (client *ClientV3) {
 	pubKey, err := xpem.DecodePublicKey(wxPublicKeyContent)
 	if err != nil {
-		xlog.Errorf("SetPlatformCert(%s),err:%+v", wxPublicKeyContent, err)
+		c.logger.Errorf("SetPlatformCert(%s),err:%+v", wxPublicKeyContent, err)
 	}
 	if pubKey != nil {
 		c.wxPublicKey = pubKey
@@ -310,12 +309,12 @@ func (c *ClientV3) decryptCerts(ciphertext, nonce, additional string) (wxCerts s
 }
 
 func (c *ClientV3) autoCheckCertProc() {
-	xlog.Info("auto refresh wechat platform public key")
+	c.logger.Warn("auto refresh wechat platform public key")
 	defer func() {
 		if r := recover(); r != nil {
 			buf := make([]byte, 64<<10)
 			buf = buf[:runtime.Stack(buf, false)]
-			xlog.Errorf("autoCheckCertProc: panic recovered: %s\n%s", r, buf)
+			c.logger.Errorf("autoCheckCertProc: panic recovered: %s\n%s", r, buf)
 			// 重启
 			c.autoCheckCertProc()
 		}
@@ -343,7 +342,7 @@ func (c *ClientV3) autoCheckCertProc() {
 			return nil
 		}, 3, time.Second)
 		if err != nil {
-			xlog.Errorf("c.GetAndSelectNewestCert()，err:%+v", err)
+			c.logger.Errorf("c.GetAndSelectNewestCert()，err:%+v", err)
 			continue
 		}
 	}

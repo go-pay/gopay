@@ -9,7 +9,6 @@ import (
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/util"
-	"github.com/go-pay/xlog"
 )
 
 func (c *ClientV3) doProdPostWithHeader(ctx context.Context, headerMap map[string]string, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
@@ -23,9 +22,9 @@ func (c *ClientV3) doProdPostWithHeader(ctx context.Context, headerMap map[strin
 		req.Header.Add(k, v)
 	}
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Url: %s", url)
-		xlog.Debugf("Wechat_V3_Req_Body: %s", bm.JsonBody())
-		xlog.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
+		c.logger.Debugf("Wechat_V3_Url: %s", url)
+		c.logger.Debugf("Wechat_V3_Req_Body: %s", bm.JsonBody())
+		c.logger.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
 	}
 	res, bs, err = req.Post(url).SendBodyMap(bm).EndBytes(ctx)
 	if err != nil {
@@ -39,9 +38,9 @@ func (c *ClientV3) doProdPostWithHeader(ctx context.Context, headerMap map[strin
 		SignBody:        string(bs),
 	}
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
-		xlog.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
-		xlog.Debugf("Wechat_V3_SignInfo: %#v", si)
+		c.logger.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
+		c.logger.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
+		c.logger.Debugf("Wechat_V3_SignInfo: %#v", si)
 	}
 	return res, si, bs, nil
 }
@@ -54,9 +53,9 @@ func (c *ClientV3) doProdPost(ctx context.Context, bm gopay.BodyMap, path, autho
 	req.Header.Add(HeaderSerial, c.WxSerialNo)
 	req.Header.Add("Accept", "application/json")
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Url: %s", url)
-		xlog.Debugf("Wechat_V3_Req_Body: %s", bm.JsonBody())
-		xlog.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
+		c.logger.Debugf("Wechat_V3_Url: %s", url)
+		c.logger.Debugf("Wechat_V3_Req_Body: %s", bm.JsonBody())
+		c.logger.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
 	}
 	res, bs, err = req.Post(url).SendBodyMap(bm).EndBytes(ctx)
 	if err != nil {
@@ -70,9 +69,9 @@ func (c *ClientV3) doProdPost(ctx context.Context, bm gopay.BodyMap, path, autho
 		SignBody:        string(bs),
 	}
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
-		xlog.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
-		xlog.Debugf("Wechat_V3_SignInfo: %#v", si)
+		c.logger.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
+		c.logger.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
+		c.logger.Debugf("Wechat_V3_SignInfo: %#v", si)
 	}
 	return res, si, bs, nil
 }
@@ -85,8 +84,8 @@ func (c *ClientV3) doProdGet(ctx context.Context, uri, authorization string) (re
 	req.Header.Add(HeaderSerial, c.WxSerialNo)
 	req.Header.Add("Accept", "application/json")
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Url: %s", url)
-		xlog.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
+		c.logger.Debugf("Wechat_V3_Url: %s", url)
+		c.logger.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
 	}
 	res, bs, err = req.Get(url).EndBytes(ctx)
 	if err != nil {
@@ -100,9 +99,9 @@ func (c *ClientV3) doProdGet(ctx context.Context, uri, authorization string) (re
 		SignBody:        string(bs),
 	}
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
-		xlog.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
-		xlog.Debugf("Wechat_V3_SignInfo: %#v", si)
+		c.logger.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
+		c.logger.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
+		c.logger.Debugf("Wechat_V3_SignInfo: %#v", si)
 	}
 	return res, si, bs, nil
 }
@@ -115,9 +114,9 @@ func (c *ClientV3) doProdPut(ctx context.Context, bm gopay.BodyMap, path, author
 	req.Header.Add(HeaderSerial, c.WxSerialNo)
 	req.Header.Add("Accept", "application/json")
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Url: %s", url)
-		xlog.Debugf("Wechat_V3_Req_Body: %s", bm.JsonBody())
-		xlog.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
+		c.logger.Debugf("Wechat_V3_Url: %s", url)
+		c.logger.Debugf("Wechat_V3_Req_Body: %s", bm.JsonBody())
+		c.logger.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
 	}
 	res, bs, err = req.Put(url).SendBodyMap(bm).EndBytes(ctx)
 	if err != nil {
@@ -131,9 +130,9 @@ func (c *ClientV3) doProdPut(ctx context.Context, bm gopay.BodyMap, path, author
 		SignBody:        string(bs),
 	}
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
-		xlog.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
-		xlog.Debugf("Wechat_V3_SignInfo: %#v", si)
+		c.logger.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
+		c.logger.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
+		c.logger.Debugf("Wechat_V3_SignInfo: %#v", si)
 	}
 	return res, si, bs, nil
 }
@@ -146,9 +145,9 @@ func (c *ClientV3) doProdDelete(ctx context.Context, bm gopay.BodyMap, path, aut
 	req.Header.Add(HeaderSerial, c.WxSerialNo)
 	req.Header.Add("Accept", "application/json")
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Url: %s", url)
-		xlog.Debugf("Wechat_V3_Req_Body: %s", bm.JsonBody())
-		xlog.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
+		c.logger.Debugf("Wechat_V3_Url: %s", url)
+		c.logger.Debugf("Wechat_V3_Req_Body: %s", bm.JsonBody())
+		c.logger.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
 	}
 	res, bs, err = req.Delete(url).SendBodyMap(bm).EndBytes(ctx)
 	if err != nil {
@@ -162,9 +161,9 @@ func (c *ClientV3) doProdDelete(ctx context.Context, bm gopay.BodyMap, path, aut
 		SignBody:        string(bs),
 	}
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
-		xlog.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
-		xlog.Debugf("Wechat_V3_SignInfo: %#v", si)
+		c.logger.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
+		c.logger.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
+		c.logger.Debugf("Wechat_V3_SignInfo: %#v", si)
 	}
 	return res, si, bs, nil
 }
@@ -177,9 +176,9 @@ func (c *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, path, a
 	req.Header.Add(HeaderSerial, c.WxSerialNo)
 	req.Header.Add("Accept", "application/json")
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Url: %s", url)
-		xlog.Debugf("Wechat_V3_Req_Body: %s", bm.JsonBody())
-		xlog.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
+		c.logger.Debugf("Wechat_V3_Url: %s", url)
+		c.logger.Debugf("Wechat_V3_Req_Body: %s", bm.JsonBody())
+		c.logger.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
 	}
 	res, bs, err = req.Post(url).SendMultipartBodyMap(bm).EndBytes(ctx)
 	if err != nil {
@@ -193,9 +192,9 @@ func (c *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, path, a
 		SignBody:        string(bs),
 	}
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
-		xlog.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
-		xlog.Debugf("Wechat_V3_SignInfo: %#v", si)
+		c.logger.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
+		c.logger.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
+		c.logger.Debugf("Wechat_V3_SignInfo: %#v", si)
 	}
 	return res, si, bs, nil
 }
@@ -208,9 +207,9 @@ func (c *ClientV3) doProdPatch(ctx context.Context, bm gopay.BodyMap, path, auth
 	req.Header.Add(HeaderSerial, c.WxSerialNo)
 	req.Header.Add("Accept", "application/json")
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Url: %s", url)
-		xlog.Debugf("Wechat_V3_Req_Body: %s", bm.JsonBody())
-		xlog.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
+		c.logger.Debugf("Wechat_V3_Url: %s", url)
+		c.logger.Debugf("Wechat_V3_Req_Body: %s", bm.JsonBody())
+		c.logger.Debugf("Wechat_V3_Req_Headers: %#v", req.Header)
 	}
 	res, bs, err = req.Patch(url).SendBodyMap(bm).EndBytes(ctx)
 	if err != nil {
@@ -224,9 +223,9 @@ func (c *ClientV3) doProdPatch(ctx context.Context, bm gopay.BodyMap, path, auth
 		SignBody:        string(bs),
 	}
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
-		xlog.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
-		xlog.Debugf("Wechat_V3_SignInfo: %#v", si)
+		c.logger.Debugf("Wechat_V3_Response: %d > %s", res.StatusCode, string(bs))
+		c.logger.Debugf("Wechat_V3_Rsp_Headers: %#v", res.Header)
+		c.logger.Debugf("Wechat_V3_SignInfo: %#v", si)
 	}
 	return res, si, bs, nil
 }

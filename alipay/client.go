@@ -33,6 +33,7 @@ type Client struct {
 	aliPayPublicKey    *rsa.PublicKey // 支付宝证书公钥内容 alipayPublicCert.crt
 	autoSign           bool
 	DebugSwitch        gopay.DebugSwitch
+	logger             xlog.XLogger
 	location           *time.Location
 	hc                 *xhttp.Client
 }
@@ -51,6 +52,8 @@ func NewClient(appid, privateKey string, isProd bool) (client *Client, err error
 	if err != nil {
 		return nil, err
 	}
+	logger := xlog.NewLogger()
+	logger.SetLevel(xlog.DebugLevel)
 	client = &Client{
 		AppId:       appid,
 		Charset:     UTF8,
@@ -58,6 +61,7 @@ func NewClient(appid, privateKey string, isProd bool) (client *Client, err error
 		IsProd:      isProd,
 		privateKey:  priKey,
 		DebugSwitch: gopay.DebugOff,
+		logger:      logger,
 		hc:          xhttp.NewClient(),
 	}
 	return client, nil
@@ -69,7 +73,7 @@ func NewClient(appid, privateKey string, isProd bool) (client *Client, err error
 func (a *Client) AutoVerifySign(alipayPublicKeyContent []byte) {
 	pubKey, err := xpem.DecodePublicKey(alipayPublicKeyContent)
 	if err != nil {
-		xlog.Errorf("AutoVerifySign(%s),err:%+v", alipayPublicKeyContent, err)
+		a.logger.Errorf("AutoVerifySign(%s),err:%+v", alipayPublicKeyContent, err)
 	}
 	if pubKey != nil {
 		a.aliPayPublicKey = pubKey
@@ -81,6 +85,19 @@ func (a *Client) AutoVerifySign(alipayPublicKeyContent []byte) {
 func (a *Client) SetBodySize(sizeMB int) {
 	if sizeMB > 0 {
 		a.hc.SetBodySize(sizeMB)
+	}
+}
+
+// SetHttpClient 设置自定义的xhttp.Client
+func (a *Client) SetHttpClient(client *xhttp.Client) {
+	if client != nil {
+		a.hc = client
+	}
+}
+
+func (a *Client) SetLogger(logger xlog.XLogger) {
+	if logger != nil {
+		a.logger = logger
 	}
 }
 
@@ -128,7 +145,7 @@ func (a *Client) RequestParam(bm gopay.BodyMap, method string) (string, error) {
 	}
 
 	if a.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Alipay_Request: %s", bm.JsonBody())
+		a.logger.Debugf("Alipay_Request: %s", bm.JsonBody())
 	}
 	return bm.EncodeURLParams(), nil
 }
@@ -192,8 +209,8 @@ func (a *Client) pubParamsHandle(bm gopay.BodyMap, method, bizContent string, au
 				return "", fmt.Errorf("EncryptBizContent Error: %w", err)
 			}
 			if a.DebugSwitch == gopay.DebugOn {
-				xlog.Debugf("Alipay_Origin_BizContent: %s", bizContent)
-				xlog.Debugf("Alipay_Encrypt_BizContent: %s", encryptBizContent)
+				a.logger.Debugf("Alipay_Origin_BizContent: %s", bizContent)
+				a.logger.Debugf("Alipay_Encrypt_BizContent: %s", encryptBizContent)
 			}
 			pubBody.Set("biz_content", encryptBizContent)
 		}
@@ -205,7 +222,7 @@ func (a *Client) pubParamsHandle(bm gopay.BodyMap, method, bizContent string, au
 	}
 	pubBody.Set("sign", sign)
 	if a.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Alipay_Request: %s", pubBody.JsonBody())
+		a.logger.Debugf("Alipay_Request: %s", pubBody.JsonBody())
 	}
 	param = pubBody.EncodeURLParams()
 	return
@@ -248,9 +265,4 @@ func (a *Client) encryptBizContent(originData string) (string, error) {
 		return "", err
 	}
 	return base64.StdEncoding.EncodeToString(encryptData), nil
-}
-
-// SetHttpClient 设置自定义的xhttp.Client
-func (a *Client) SetHttpClient(client *xhttp.Client) {
-	a.hc = client
 }

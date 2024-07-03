@@ -11,7 +11,6 @@ import (
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/util/retry"
-	"github.com/go-pay/xlog"
 )
 
 func (c *Client) goAuthRefreshToken() {
@@ -19,7 +18,7 @@ func (c *Client) goAuthRefreshToken() {
 		if r := recover(); r != nil {
 			buf := make([]byte, 64<<10)
 			buf = buf[:runtime.Stack(buf, false)]
-			xlog.Errorf("paypal_goAuthRefreshToken: panic recovered: %s\n%s", r, buf)
+			c.logger.Errorf("paypal_goAuthRefreshToken: panic recovered: %s\n%s", r, buf)
 		}
 	}()
 	for {
@@ -32,7 +31,7 @@ func (c *Client) goAuthRefreshToken() {
 			return nil
 		}, 3, time.Second)
 		if err != nil {
-			xlog.Errorf("PayPal GetAccessToken Error: %s", err.Error())
+			c.logger.Errorf("PayPal GetAccessToken Error: %s", err.Error())
 		}
 	}
 }
@@ -59,17 +58,17 @@ func (c *Client) GetAccessToken() (token *AccessToken, err error) {
 	bm := make(gopay.BodyMap)
 	bm.Set("grant_type", "client_credentials")
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("PayPal_Url: %s", url)
-		xlog.Debugf("PayPal_Req_Body: %s", bm.JsonBody())
-		xlog.Debugf("PayPal_Req_Headers: %#v", req.Header)
+		c.logger.Debugf("PayPal_Url: %s", url)
+		c.logger.Debugf("PayPal_Req_Body: %s", bm.JsonBody())
+		c.logger.Debugf("PayPal_Req_Headers: %#v", req.Header)
 	}
 	res, bs, err := req.Post(url).SendBodyMap(bm).EndBytes(c.ctx)
 	if err != nil {
 		return nil, err
 	}
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("PayPal_Response: %d > %s", res.StatusCode, string(bs))
-		xlog.Debugf("PayPal_Rsp_Headers: %#v", res.Header)
+		c.logger.Debugf("PayPal_Response: %d > %s", res.StatusCode, string(bs))
+		c.logger.Debugf("PayPal_Rsp_Headers: %#v", res.Header)
 	}
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
