@@ -77,7 +77,7 @@ func main() {
 * 接入gopay示例项目(可参考接入使用方式)：[gopay-platform](https://github.com/go-pay/gopay-platform)
 * 有问题请加QQ群(加群验证答案：gopay) 或 加微信好友(备注：gopay开发)拉群。在此，非常感谢提出宝贵意见和反馈问题的同志们！
 * 开发过程中，请尽量使用正式环境，1分钱测试法！
-* 业余时间接各类业务外包项目开发(前端+后端，架构设计->系统开发->部署运营)，如需要加微信联系。
+* 有偿承接技术咨询、开发，如需要加微信联系。
 
 QQ群：
 <img width="280" height="280" src=".github/qq_gopay.png"/>
