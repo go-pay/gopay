@@ -91,3 +91,8 @@ func (c *Client) SetProxyUrl(proxyUrlProd, proxyUrlSandbox string) {
 	c.baseUrlProd = proxyUrlProd
 	c.baseUrlSandbox = proxyUrlSandbox
 }
+
+// SetHttpClient 设置自定义的xhttp.Client
+func (c *Client) SetHttpClient(client *xhttp.Client) {
+	c.hc = client
+}
