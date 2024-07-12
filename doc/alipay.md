@@ -326,20 +326,20 @@ xlog.Infof("%+v", phone)
     * 预算追加
       * 修改商家券活动发券数量上限接口：`client.MarketingActivityOrderVoucherAppend()`
     * 活动发放
-      * 活动领取咨询接口：TODO：https://opendocs.alipay.com/open/cdf2e908_alipay.marketing.activity.consult
+      * 活动领取咨询接口：`client.MarketingActivityConsult()`
     * 优惠券核销
-      * 同步券核销状态接口：TODO：https://opendocs.alipay.com/open/3ffce87f_alipay.marketing.activity.ordervoucher.use
-      * 取消券核销状态接口：TODO：https://opendocs.alipay.com/open/4682759b_alipay.marketing.activity.ordervoucher.refund
+      * 同步券核销状态接口：`client.MarketingActivityOrderVoucherUse()`
+      * 取消券核销状态接口：`client.MarketingActivityOrderVoucherRefund()`
     * 活动查询
-      * 查询商家券活动接口：TODO：https://opendocs.alipay.com/open/51f5946e_alipay.marketing.activity.ordervoucher.query
-      * 查询活动详情接口：TODO：https://opendocs.alipay.com/open/f76b603f_alipay.marketing.activity.query
-      * 统计商家券券码数量接口：TODO：https://opendocs.alipay.com/open/f6e49e82_alipay.marketing.activity.ordervoucher.codecount
-      * 条件查询活动列表接口：TODO：https://opendocs.alipay.com/open/55aa8ee8_alipay.marketing.activity.batchquery
-      * 条件查询用户券接口：TODO：https://opendocs.alipay.com/open/300dff38_alipay.marketing.activity.user.batchqueryvoucher
-      * 查询用户券详情接口：TODO：https://opendocs.alipay.com/open/abffd3f6_alipay.marketing.activity.user.queryvoucher
-      * 查询活动可用小程序接口：TODO：https://opendocs.alipay.com/open/634212b2_alipay.marketing.activity.app.batchquery
-      * 查询活动可用门店接口：TODO：https://opendocs.alipay.com/open/cf4e0873_alipay.marketing.activity.shop.batchquery
-      * 查询活动适用商品接口：TODO：https://opendocs.alipay.com/open/1bee5767_alipay.marketing.activity.goods.batchquery
+      * 查询商家券活动接口：`client.MarketingActivityOrderVoucherQuery()`
+      * 查询活动详情接口：`client.MarketingActivityQuery()`
+      * 统计商家券券码数量接口：`client.MarketingActivityOrderVoucherCodeCount()`
+      * 条件查询活动列表接口：`client.MarketingActivityBatchQuery()`
+      * 条件查询用户券接口：`client.MarketingActivityQueryUserBatchQueryVoucher()`
+      * 查询用户券详情接口：`client.MarketingActivityQueryUserQueryVoucher()`
+      * 查询活动可用小程序接口：`client.MarketingActivityQueryAppBatchQuery()`
+      * 查询活动可用门店接口：`client.MarketingActivityQueryShopBatchQuery()`
+      * 查询活动适用商品接口：`client.MarketingActivityQueryGoodsBatchQuery()`
   * 商家会员卡
     * 基础功能
       * 会员卡模板创建接口：TODO：https://opendocs.alipay.com/open/b2854ad3_alipay.marketing.card.template.create

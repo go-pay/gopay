@@ -205,9 +205,37 @@ type MarketingActivityOrderVoucherStopRsp struct {
 
 type MarketingActivityOrderVoucherAppendRsp struct {
 	Response     *MarketingActivityOrderVoucherAppend `json:"alipay_marketing_activity_ordervoucher_append_response"`
-	AlipayCertSn string                             `json:"alipay_cert_sn,omitempty"`
-	SignData     string                             `json:"-"`
-	Sign         string                             `json:"sign"`
+	AlipayCertSn string                               `json:"alipay_cert_sn,omitempty"`
+	SignData     string                               `json:"-"`
+	Sign         string                               `json:"sign"`
+}
+
+type MarketingActivityOrderVoucherUseRsp struct {
+	Response     *MarketingActivityOrderVoucherUse `json:"alipay_marketing_activity_ordervoucher_use_response"`
+	AlipayCertSn string                            `json:"alipay_cert_sn,omitempty"`
+	SignData     string                            `json:"-"`
+	Sign         string                            `json:"sign"`
+}
+
+type MarketingActivityOrderVoucherRefundRsp struct {
+	Response     *MarketingActivityOrderVoucherRefund `json:"alipay_marketing_activity_ordervoucher_refund_response"`
+	AlipayCertSn string                               `json:"alipay_cert_sn,omitempty"`
+	SignData     string                               `json:"-"`
+	Sign         string                               `json:"sign"`
+}
+
+type MarketingActivityOrderVoucherQueryRsp struct {
+	Response     *MarketingActivityOrderVoucherQuery `json:"alipay_marketing_activity_ordervoucher_query_response"`
+	AlipayCertSn string                              `json:"alipay_cert_sn,omitempty"`
+	SignData     string                              `json:"-"`
+	Sign         string                              `json:"sign"`
+}
+
+type MarketingActivityOrderVoucherCodeCountRsp struct {
+	Response     *MarketingActivityOrderVoucherCodeCount `json:"alipay_marketing_activity_ordervoucher_codecount_response"`
+	AlipayCertSn string                                  `json:"alipay_cert_sn,omitempty"`
+	SignData     string                                  `json:"-"`
+	Sign         string                                  `json:"sign"`
 }
 
 // =========================================================分割=========================================================
@@ -386,6 +414,7 @@ type ActivityBaseInfo struct {
 	ActivityId              string              `json:"activity_id"`
 	ActivityName            string              `json:"activity_name,omitempty"`
 	BelongMerchantInfo      *BelongMerchantInfo `json:"belong_merchant_info"`
+	CodeMode                string              `json:"code_mode,omitempty"`
 	ActivityOperationStatus string              `json:"activity_operation_status,omitempty"`
 	ActivityStatus          string              `json:"activity_status"`
 	ActivityProductType     string              `json:"activity_product_type,omitempty"`
@@ -864,4 +893,37 @@ type MarketingActivityOrderVoucherStop struct {
 
 type MarketingActivityOrderVoucherAppend struct {
 	ErrorResponse
+}
+
+type MarketingActivityOrderVoucherUse struct {
+	ErrorResponse
+	ActivityId                 string                      `json:"activity_id"`
+	VoucherUseDetailResultInfo *VoucherUseDetailResultInfo `json:"voucher_use_detail_result_info"`
+}
+
+type VoucherUseDetailResultInfo struct {
+	VoucherMaxUnUseTimes int `json:"voucher_max_un_use_times"`
+}
+
+type MarketingActivityOrderVoucherRefund struct {
+	ErrorResponse
+	ActivityId                 string                      `json:"activity_id"`
+	VoucherUseDetailResultInfo *VoucherUseDetailResultInfo `json:"voucher_use_detail_result_info"`
+}
+
+type MarketingActivityOrderVoucherQuery struct {
+	ErrorResponse
+	ActivityBaseInfo          *ActivityBaseInfo          `json:"activity_base_info"`
+	VoucherSendModeInfo       *VoucherSendModeInfo       `json:"voucher_send_mode_info"`
+	VoucherDeductInfo         *VoucherDeductInfo         `json:"voucher_deduct_info"`
+	VoucherAvailableScopeInfo *VoucherAvailableScopeInfo `json:"voucher_available_scope_info"`
+	VoucherUseRuleInfo        *VoucherUseRuleInfo        `json:"voucher_use_rule_info"`
+	VoucherDisplayPatternInfo *VoucherDisplayPatternInfo `json:"voucher_display_pattern_info"`
+	VoucherCustomerGuideInfo  *VoucherCustomerGuideInfo  `json:"voucher_customer_guide_info"`
+	VoucherInventoryInfo      *VoucherInventoryInfo      `json:"voucher_inventory_info"`
+}
+
+type MarketingActivityOrderVoucherCodeCount struct {
+	ErrorResponse
+	SuccessCount int `json:"success_count"`
 }

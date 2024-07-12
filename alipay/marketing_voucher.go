@@ -286,3 +286,95 @@ func (a *Client) MarketingActivityOrderVoucherAppend(ctx context.Context, bm gop
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
+
+// alipay.marketing.activity.ordervoucher.use(同步券核销状态)
+// 文档地址：https://opendocs.alipay.com/open/3ffce87f_alipay.marketing.activity.ordervoucher.use
+func (a *Client) MarketingActivityOrderVoucherUse(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityOrderVoucherUseRsp, err error) {
+	err = bm.CheckEmptyError("biz_dt", "activity_id", "voucher_code", "trade_channel", "total_fee", "out_biz_no")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.ordervoucher.use"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingActivityOrderVoucherUseRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.marketing.activity.ordervoucher.refund(取消券核销状态)
+// 文档地址：https://opendocs.alipay.com/open/4682759b_alipay.marketing.activity.ordervoucher.refund?scene=common
+func (a *Client) MarketingActivityOrderVoucherRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityOrderVoucherRefundRsp, err error) {
+	err = bm.CheckEmptyError("biz_dt", "activity_id", "voucher_code", "out_biz_no")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.ordervoucher.refund"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingActivityOrderVoucherRefundRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.marketing.activity.ordervoucher.query(查询商家券活动)
+// 文档地址：https://opendocs.alipay.com/open/51f5946e_alipay.marketing.activity.ordervoucher.query
+func (a *Client) MarketingActivityOrderVoucherQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityOrderVoucherQueryRsp, err error) {
+	err = bm.CheckEmptyError("activity_id", "merchant_access_mode")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.ordervoucher.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingActivityOrderVoucherQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.marketing.activity.ordervoucher.codecount(统计商家券券码数量)
+// 文档地址：https://opendocs.alipay.com/open/f6e49e82_alipay.marketing.activity.ordervoucher.codecount
+func (a *Client) MarketingActivityOrderVoucherCodeCount(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingActivityOrderVoucherCodeCountRsp, err error) {
+	err = bm.CheckEmptyError("activity_id", "merchant_access_mode")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.activity.ordervoucher.codecount"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingActivityOrderVoucherCodeCountRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
