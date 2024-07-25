@@ -9,7 +9,7 @@ import (
 )
 
 // alipay.trade.royalty.relation.bind(分账关系绑定)
-// 文档地址：https://opendocs.alipay.com/open/02c7hq
+// 文档地址：https://opendocs.alipay.com/open/c21931d6_alipay.trade.royalty.relation.bind
 func (a *Client) TradeRelationBind(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeRelationBindResponse, err error) {
 	err = bm.CheckEmptyError("receiver_list", "out_request_no")
 	if err != nil {
@@ -32,7 +32,7 @@ func (a *Client) TradeRelationBind(ctx context.Context, bm gopay.BodyMap) (aliRs
 }
 
 // alipay.trade.royalty.relation.unbind(分账关系解绑)
-// 文档地址：https://opendocs.alipay.com/open/02c7hr
+// 文档地址：https://opendocs.alipay.com/open/3613f4e1_alipay.trade.royalty.relation.unbind
 func (a *Client) TradeRelationUnbind(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeRelationUnbindResponse, err error) {
 	err = bm.CheckEmptyError("receiver_list", "out_request_no")
 	if err != nil {
@@ -55,7 +55,7 @@ func (a *Client) TradeRelationUnbind(ctx context.Context, bm gopay.BodyMap) (ali
 }
 
 // alipay.trade.royalty.relation.batchquery(分账关系查询)
-// 文档地址：https://opendocs.alipay.com/open/02c7hs
+// 文档地址：https://opendocs.alipay.com/open/1860be54_alipay.trade.royalty.relation.batchquery
 func (a *Client) TradeRelationBatchQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeRelationBatchQueryResponse, err error) {
 	err = bm.CheckEmptyError("out_request_no")
 	if err != nil {
@@ -101,7 +101,7 @@ func (a *Client) TradeSettleConfirm(ctx context.Context, bm gopay.BodyMap) (aliR
 }
 
 // alipay.trade.order.settle(统一收单交易结算接口)
-// 文档地址：https://opendocs.alipay.com/open/02j2bt
+// 文档地址：https://opendocs.alipay.com/open/c3b24498_alipay.trade.order.settle
 func (a *Client) TradeOrderSettle(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeOrderSettleResponse, err error) {
 	err = bm.CheckEmptyError("out_request_no", "trade_no", "royalty_parameters")
 	if err != nil {
