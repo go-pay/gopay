@@ -17,7 +17,7 @@ func TestDecodeSignedPayload(t *testing.T) {
 		xlog.Error(err)
 		return
 	}
-	xlog.Color(xlog.CyanBright).Infof("req: %+v", *req)
+	xlog.Infof("req: %+v", *req)
 	// decode signedPayload
 	payload, err := DecodeSignedPayload(req.SignedPayload)
 	if err != nil {
@@ -30,7 +30,7 @@ func TestDecodeSignedPayload(t *testing.T) {
 	xlog.Debugf("payload.Version: %s", payload.Version)
 	xlog.Debugf("payload.Data: %+v", payload.Data)
 	bs1, _ := json.Marshal(payload)
-	xlog.Color(xlog.RedBright).Info(string(bs1))
+	xlog.Info(string(bs1))
 	/*
 		{
 		    "notificationType":"DID_RENEW",
@@ -56,7 +56,7 @@ func TestDecodeSignedPayload(t *testing.T) {
 	}
 	xlog.Debugf("data.renewalInfo: %+v", renewalInfo)
 	bs, _ := json.Marshal(renewalInfo)
-	xlog.Color(xlog.GreenBright).Info(string(bs))
+	xlog.Info(string(bs))
 	/*
 		{
 		    "autoRenewProductId":"com.audaos.audarecorder.vip.m2",
@@ -83,7 +83,7 @@ func TestDecodeSignedPayload(t *testing.T) {
 	}
 	xlog.Debugf("data.transactionInfo: %+v", transactionInfo)
 	bs2, _ := json.Marshal(transactionInfo)
-	xlog.Color(xlog.YellowBright).Info(string(bs2))
+	xlog.Info(string(bs2))
 	/*
 		{
 		    "appAccountToken":"",

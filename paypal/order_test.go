@@ -20,6 +20,7 @@ func TestCreateOrder(t *testing.T) {
 	pus = append(pus, item)
 
 	bm := make(gopay.BodyMap)
+	// can be AUTHORIZE
 	bm.Set("intent", "CAPTURE").
 		Set("purchase_units", pus).
 		SetBodyMap("application_context", func(b gopay.BodyMap) {
@@ -131,6 +132,9 @@ func TestOrderAuthorize(t *testing.T) {
 			xlog.Debugf("ppRsp.Response.PurchaseUnit.Shipping.Address: %+v", v.Shipping.Address)
 		}
 		xlog.Debugf("ppRsp.Response.PurchaseUnit.Description: %+v", v.Description)
+		if v.Payments != nil && v.Payments.Authorizations != nil {
+			xlog.Debugf("ppRsp.Response.PurchaseUnit.Payments.Authorizations: %+v", v.Payments.Authorizations)
+		}
 	}
 	for _, v := range ppRsp.Response.Links {
 		xlog.Debugf("ppRsp.Response.Links: %+v", v)

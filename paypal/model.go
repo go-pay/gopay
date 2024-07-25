@@ -467,7 +467,26 @@ type Payments struct {
 }
 
 type Authorization struct {
-	ProcessorResponse *Processor `json:"processor_response,omitempty"`
+	Id                          string                       `json:"id,omitempty"`
+	Status                      string                       `json:"status,omitempty"` // CREATED、CAPTURED、DENIED、PARTIALLY_CAPTURED、VOIDED、PENDING
+	StatusDetails               *StatusDetails               `json:"status_details,omitempty"`
+	InvoiceId                   string                       `json:"invoice_id,omitempty"`
+	CustomId                    string                       `json:"custom_id,omitempty"`
+	Links                       []*Link                      `json:"links,omitempty"`
+	Amount                      *Amount                      `json:"amount"`
+	NetworkTransactionReference *NetworkTransactionReference `json:"network_transaction_reference"`
+	SellerProtection            *SellerProtection            `json:"seller_protection,omitempty"`
+	ExpirationTime              string                       `json:"expiration_time,omitempty"`
+	CreateTime                  string                       `json:"create_time,omitempty"`
+	UpdateTime                  string                       `json:"update_time,omitempty"`
+	ProcessorResponse           *Processor                   `json:"processor_response,omitempty"`
+}
+
+type NetworkTransactionReference struct {
+	Id                      string `json:"id"`
+	Date                    string `json:"date"`
+	AcquirerReferenceNumber string `json:"acquirer_reference_number"`
+	Network                 string `json:"network"`
 }
 
 type Processor struct {

@@ -7,7 +7,7 @@
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
 [![Github](https://img.shields.io/github/forks/go-pay/gopay?label=Fork&style=social)](https://github.com/go-pay/gopay/fork)
 
-[![Golang](https://img.shields.io/badge/golang-1.20-brightgreen.svg)](https://golang.google.cn)
+[![Golang](https://img.shields.io/badge/golang-1.21-brightgreen.svg)](https://golang.google.cn)
 [![GoDoc](https://img.shields.io/badge/doc-pkg.go.dev-informational.svg)](https://pkg.go.dev/github.com/go-pay/gopay)
 [![Go](https://github.com/go-pay/gopay/actions/workflows/go.yml/badge.svg)](https://github.com/go-pay/gopay/actions/workflows/go.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/go-pay/gopay)](https://github.com/go-pay/gopay/releases)
@@ -60,11 +60,8 @@ func main() {
 
 # 三、其他说明
 
-* 如需自定义Log输出，请调用以下方法设置自定义Logger，实现 `xlog.XLogger` 接口即可。
-    * `xlog.SetDebugLog()`
-    * `xlog.SetInfoLog()`
-    * `xlog.SetWarnLog()`
-    * `xlog.SetErrLog()`
+* 如需自定义Log输出，New Client 后，调用 `client.SetLogger()` 方法设置自定义Logger，自定义Logger实现 `xlog.XLogger` interface即可。
+
 * 各支付方式接入，请仔细查看 `xxx_test.go` 使用方式
     * `gopay/wechat/v3/client_test.go`
     * `gopay/alipay/client_test.go`
@@ -77,7 +74,7 @@ func main() {
 * 接入gopay示例项目(可参考接入使用方式)：[gopay-platform](https://github.com/go-pay/gopay-platform)
 * 有问题请加QQ群(加群验证答案：gopay) 或 加微信好友(备注：gopay开发)拉群。在此，非常感谢提出宝贵意见和反馈问题的同志们！
 * 开发过程中，请尽量使用正式环境，1分钱测试法！
-* 业余时间接各类业务外包项目开发(前端+后端，架构设计->系统开发->部署运营)，如需要加微信联系。
+* 有偿承接技术咨询、开发，如需要加微信联系。
 
 QQ群：
 <img width="280" height="280" src=".github/qq_gopay.png"/>

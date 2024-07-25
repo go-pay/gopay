@@ -87,7 +87,7 @@ xlog.Debugf("payload.NotificationUUID: %s", payload.NotificationUUID)
 xlog.Debugf("payload.NotificationVersion: %s", payload.NotificationVersion)
 xlog.Debugf("payload.Data: %+v", payload.Data)
 bs1, _ := json.Marshal(payload)
-xlog.Color(xlog.RedBright).Info(string(bs1))
+xlog.Info(string(bs1))
 /*
    {
        "notificationType":"DID_RENEW",
@@ -113,7 +113,7 @@ if err != nil {
 }
 xlog.Debugf("data.renewalInfo: %+v", renewalInfo)
 bs, _ := json.Marshal(renewalInfo)
-xlog.Color(xlog.GreenBright).Info(string(bs))
+xlog.Info(string(bs))
 /*
    {
        "autoRenewProductId":"com.audaos.audarecorder.vip.m2",
@@ -138,7 +138,7 @@ if err != nil {
 }
 xlog.Debugf("data.transactionInfo: %+v", transactionInfo)
 bs2, _ := json.Marshal(transactionInfo)
-xlog.Color(xlog.YellowBright).Info(string(bs2))
+xlog.Info(string(bs2))
 /*
 {
     "appAccountToken":"",
