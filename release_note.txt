@@ -1,3 +1,9 @@
+版本号：Release 1.5.104
+修改记录：
+   (1) gopay：golang.org/x/crypto v0.24.0 版本升级到 v0.25.0。
+   (2) 支付宝：client.TradeOrderSettle()，response 完善字段。
+
+
 版本号：Release 1.5.103
 修改记录：
    (1) gopay：xlog 库更新，支持接口自定义logger。
