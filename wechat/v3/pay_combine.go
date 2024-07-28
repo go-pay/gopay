@@ -117,6 +117,34 @@ func (c *ClientV3) V3CombineTransactionH5(ctx context.Context, bm gopay.BodyMap)
 	return wxRsp, c.verifySyncSign(si)
 }
 
+// 合单QQ小程序下单-H5
+// Code = 0 is success
+func (c *ClientV3) V3CombineQQTransactionH5(ctx context.Context, qqAppid, accessToken, realNotifyUrl string, bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
+	if bm.GetString("combine_mchid") == gopay.NULL {
+		bm.Set("combine_mchid", c.Mchid)
+	}
+	authorization, err := c.authorization(MethodPost, v3CombinePayH5, bm)
+	if err != nil {
+		return nil, err
+	}
+	path := "/wxpay/v3/combine-transactions/h5?appid=" + qqAppid + "&access_token=" + accessToken + "&real_notify_url=" + realNotifyUrl
+	res, si, bs, err := c.doProdPostWithHost(ctx, bm, "https://api.q.qq.com", path, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &H5Rsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(H5Url)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
 // 合单查询订单
 // Code = 0 is success
 func (c *ClientV3) V3CombineQueryOrder(ctx context.Context, traderNo string) (wxRsp *CombineQueryOrderRsp, err error) {

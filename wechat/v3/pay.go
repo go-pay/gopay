@@ -10,7 +10,7 @@ import (
 	"github.com/go-pay/gopay"
 )
 
-// APP下单API
+// APP下单
 // Code = 0 is success
 func (c *ClientV3) V3TransactionApp(ctx context.Context, bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	if bm.GetString("mchid") == gopay.NULL {
@@ -37,7 +37,7 @@ func (c *ClientV3) V3TransactionApp(ctx context.Context, bm gopay.BodyMap) (wxRs
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// JSAPI/小程序下单API
+// JSAPI/小程序下单
 // Code = 0 is success
 func (c *ClientV3) V3TransactionJsapi(ctx context.Context, bm gopay.BodyMap) (wxRsp *PrepayRsp, err error) {
 	if bm.GetString("mchid") == gopay.NULL {
@@ -64,7 +64,7 @@ func (c *ClientV3) V3TransactionJsapi(ctx context.Context, bm gopay.BodyMap) (wx
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// Native下单API
+// Native下单
 // Code = 0 is success
 func (c *ClientV3) V3TransactionNative(ctx context.Context, bm gopay.BodyMap) (wxRsp *NativeRsp, err error) {
 	if bm.GetString("mchid") == gopay.NULL {
@@ -91,7 +91,7 @@ func (c *ClientV3) V3TransactionNative(ctx context.Context, bm gopay.BodyMap) (w
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// H5下单API
+// H5下单
 // Code = 0 is success
 func (c *ClientV3) V3TransactionH5(ctx context.Context, bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
 	if bm.GetString("mchid") == gopay.NULL {
@@ -102,6 +102,34 @@ func (c *ClientV3) V3TransactionH5(ctx context.Context, bm gopay.BodyMap) (wxRsp
 		return nil, err
 	}
 	res, si, bs, err := c.doProdPost(ctx, bm, v3ApiH5, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &H5Rsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(H5Url)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// QQ小程序H5下单
+// Code = 0 is success
+func (c *ClientV3) V3QQTransactionH5(ctx context.Context, qqAppid, accessToken, realNotifyUrl string, bm gopay.BodyMap) (wxRsp *H5Rsp, err error) {
+	if bm.GetString("mchid") == gopay.NULL {
+		bm.Set("mchid", c.Mchid)
+	}
+	authorization, err := c.authorization(MethodPost, v3ApiH5, bm)
+	if err != nil {
+		return nil, err
+	}
+	path := "/wxpay/v3/pay/transactions/h5?appid=" + qqAppid + "&access_token=" + accessToken + "&real_notify_url=" + realNotifyUrl
+	res, si, bs, err := c.doProdPostWithHost(ctx, bm, "https://api.q.qq.com", path, authorization)
 	if err != nil {
 		return nil, err
 	}
