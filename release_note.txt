@@ -2,7 +2,8 @@
 修改记录：
    (1) gopay：golang.org/x/crypto v0.24.0 版本升级到 v0.25.0。
    (2) 支付宝：client.TradeOrderSettle()，response 完善字段。
-
+   (3) 微信V3：新增client.V3QQTransactionH5()， QQ小程序H5下单。
+   (4) 微信V3：新增client.V3CombineQQTransactionH5()， 合单QQ小程序下单-H5。
 
 版本号：Release 1.5.103
 修改记录：
