@@ -76,21 +76,25 @@ func main() {
 * 开发过程中，请尽量使用正式环境，1分钱测试法！
 * 有偿承接技术咨询、开发，如需要加微信联系。
 
-QQ群：
-<img width="280" height="280" src=".github/qq_gopay.png"/>
-微信群：
-<img width="280" height="280" src=".github/wx_gopay.png"/>
-<br>微信群二维码过期可加微信拉群：
-<img width="280" height="280" src=".github/wechat_jerry.png"/>
+<br>
 
 ---
-
-<br>
 
 ## 赞赏多少是您的心意，感谢支持！
 
 微信赞赏码： <img width="200" height="200" src=".github/zanshang.png"/>
 支付宝赞助码： <img width="200" height="200" src=".github/zanshang_zfb.png"/>
+
+---
+
+## 讨论群
+
+QQ群：
+<img width="240" height="240" src=".github/qq_gopay.png"/>
+微信群：
+<img width="240" height="240" src=".github/wx_gopay.png"/>
+<br>微信群二维码过期加微信拉群：
+<img width="240" height="240" src=".github/wechat_jerry.png"/>
 
 ---
 
