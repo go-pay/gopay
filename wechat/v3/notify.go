@@ -57,6 +57,29 @@ type V3DecryptPartnerPayResult struct {
 	PromotionDetail []*PromotionDetail `json:"promotion_detail"`
 }
 
+// V3DecryptViolationNotificationResult 服务商子商户处置记录回调通知
+type V3DecryptViolationNotificationResult struct {
+	SubMchid          string `json:"sub_mchid" dc:"子商户商户ID"`
+	CompanyName       string `json:"company_name" dc:"子商户主体名称"`
+	RecordId          string `json:"record_id" dc:"通知ID，可用于去重"`
+	PunishPlan        string `json:"punish_plan" dc:"处罚方案"`
+	PunishTime        string `json:"punish_time" dc:"处罚时间"`
+	PunishDescription string `json:"punish_description" dc:"处罚描述"`
+	RiskType          string `json:"risk_type" dc:"风险类型"`
+	RiskDescription   string `json:"risk_description" dc:"风险描述"`
+}
+
+// V3DecryptViolationNotification 服务商子商户处置记录回调解密
+func V3DecryptViolationNotification(req *http.Request, apiV3Key string) (res *V3DecryptViolationNotificationResult, err error) {
+	notifyResult, err := V3ParseNotify(req)
+	if err != nil {
+		return
+	}
+	var result *V3DecryptViolationNotificationResult
+	err = notifyResult.DecryptCipherTextToStruct(apiV3Key, &result)
+	return result, err
+}
+
 // 退款通知 解密结果
 type V3DecryptRefundResult struct {
 	Mchid               string              `json:"mchid"`
