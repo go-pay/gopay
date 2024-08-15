@@ -293,3 +293,17 @@ func V3DecryptInvoiceNotifyCipherText(ciphertext, nonce, additional, apiV3Key st
 	}
 	return result, nil
 }
+
+// 解密 服务商子商户处置记录 回调中的加密信息
+func V3DecryptViolationNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptViolationResult, err error) {
+	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
+	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
+	if err != nil {
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
+	}
+	result = &V3DecryptViolationResult{}
+	if err = json.Unmarshal(decrypt, result); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%w", string(decrypt), err)
+	}
+	return result, nil
+}
