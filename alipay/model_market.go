@@ -238,6 +238,69 @@ type MarketingActivityOrderVoucherCodeCountRsp struct {
 	Sign         string                                  `json:"sign"`
 }
 
+type MarketingCardTemplateCreateRsp struct {
+	Response     *MarketingCardTemplateCreate `json:"alipay_marketing_card_template_create_response"`
+	AlipayCertSn string                       `json:"alipay_cert_sn,omitempty"`
+	SignData     string                       `json:"-"`
+	Sign         string                       `json:"sign"`
+}
+
+type MarketingCardTemplateModifyRsp struct {
+	Response     *MarketingCardTemplateModify `json:"alipay_marketing_card_template_modify_response"`
+	AlipayCertSn string                       `json:"alipay_cert_sn,omitempty"`
+	SignData     string                       `json:"-"`
+	Sign         string                       `json:"sign"`
+}
+
+type MarketingCardTemplateQueryRsp struct {
+	Response     *MarketingCardTemplateQuery `json:"alipay_marketing_card_template_query_response"`
+	AlipayCertSn string                      `json:"alipay_cert_sn,omitempty"`
+	SignData     string                      `json:"-"`
+	Sign         string                      `json:"sign"`
+}
+
+type MarketingCardUpdateRsp struct {
+	Response     *MarketingCardUpdate `json:"alipay_marketing_card_update_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
+}
+
+type MarketingCardQueryRsp struct {
+	Response     *MarketingCardQuery `json:"alipay_marketing_card_query_response"`
+	AlipayCertSn string              `json:"alipay_cert_sn,omitempty"`
+	SignData     string              `json:"-"`
+	Sign         string              `json:"sign"`
+}
+
+type MarketingCardDeleteRsp struct {
+	Response     *MarketingCardDelete `json:"alipay_marketing_card_delete_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
+}
+
+type MarketingCardMessageNotifyRsp struct {
+	Response     *MarketingCardMessageNotify `json:"alipay_marketing_card_message_notify_response"`
+	AlipayCertSn string                      `json:"alipay_cert_sn,omitempty"`
+	SignData     string                      `json:"-"`
+	Sign         string                      `json:"sign"`
+}
+
+type MarketingCardFormTemplateSetRsp struct {
+	Response     *MarketingCardFormTemplateSet `json:"alipay_marketing_card_formtemplate_set_response"`
+	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
+	SignData     string                        `json:"-"`
+	Sign         string                        `json:"sign"`
+}
+
+type OfflineMaterialImageUploadRsp struct {
+	Response     *OfflineMaterialImageUpload `json:"alipay_offline_material_image_upload_response"`
+	AlipayCertSn string                      `json:"alipay_cert_sn,omitempty"`
+	SignData     string                      `json:"-"`
+	Sign         string                      `json:"sign"`
+}
+
 // =========================================================分割=========================================================
 
 type MarketingCampaignCashCreate struct {
@@ -926,4 +989,129 @@ type MarketingActivityOrderVoucherQuery struct {
 type MarketingActivityOrderVoucherCodeCount struct {
 	ErrorResponse
 	SuccessCount int `json:"success_count"`
+}
+
+type MarketingCardTemplateCreate struct {
+	ErrorResponse
+	TemplateId string `json:"template_id"`
+}
+
+type MarketingCardTemplateModify struct {
+	ErrorResponse
+	TemplateId string `json:"template_id"`
+}
+
+type MarketingCardTemplateQuery struct {
+	ErrorResponse
+	TemplateStyleInfo  *TemplateStyleInfo  `json:"template_style_info"`
+	AccessVersion      string              `json:"access_version"`
+	CardLevelConfs     []*CardLevelConf    `json:"card_level_confs"`
+	TemplateFormConfig *TemplateFormConfig `json:"template_form_config"`
+	SpiAppId           string              `json:"spi_app_id"`
+}
+
+type TemplateStyleInfo struct {
+	CardShowName string `json:"card_show_name"`
+	LogoId       string `json:"logo_id"`
+	BackgroundId string `json:"background_id"`
+	BrandName    string `json:"brand_name"`
+}
+
+type CardLevelConf struct {
+	Level         string `json:"level"`
+	LevelShowName string `json:"level_show_name"`
+	LevelIcon     string `json:"level_icon"`
+	LevelDesc     string `json:"level_desc"`
+}
+
+type TemplateFormConfig struct {
+	Fields            *Fields `json:"fields"`
+	OpenCardMiniAppId string  `json:"open_card_mini_app_id"`
+}
+
+type Fields struct {
+	Required []string `json:"required"`
+	Optional []string `json:"optional"`
+}
+
+type MarketingCardUpdate struct {
+	ErrorResponse
+	ResultCode string `json:"result_code"`
+}
+
+type MarketingCardQuery struct {
+	ErrorResponse
+	CardInfo          *CardInfo          `json:"card_info"`
+	SchemaUrl         string             `json:"schema_url"`
+	PassId            string             `json:"pass_id"`
+	PaidOuterCardInfo *PaidOuterCardInfo `json:"paid_outer_card_info"`
+}
+
+type CardInfo struct {
+	BizCardNo      string       `json:"biz_card_no"`
+	ExternalCardNo string       `json:"external_card_no"`
+	OpenDate       string       `json:"open_date"`
+	ValidDate      string       `json:"valid_date"`
+	Level          string       `json:"level"`
+	Point          string       `json:"point"`
+	Balance        string       `json:"balance"`
+	TemplateId     string       `json:"template_id"`
+	MdcodeInfo     *MdcodeInfo  `json:"mdcode_info"`
+	FrontTextList  []*FrontText `json:"front_text_list"`
+	FrontImageId   string       `json:"front_image_id"`
+}
+
+type MdcodeInfo struct {
+	CodeStatus string `json:"code_status"`
+	CodeValue  string `json:"code_value"`
+	ExpireTime string `json:"expire_time"`
+	TimeStamp  int    `json:"time_stamp"`
+}
+
+type FrontText struct {
+	Label string `json:"label"`
+	Value string `json:"value"`
+}
+
+type PaidOuterCardInfo struct {
+	Action       string        `json:"action"`
+	PurchaseInfo *PurchaseInfo `json:"purchase_info"`
+	CycleInfo    *CycleInfo    `json:"cycle_info"`
+}
+
+type PurchaseInfo struct {
+	Source        string `json:"source"`
+	Price         string `json:"price"`
+	ActionDate    string `json:"action_date"`
+	OutTradeNo    string `json:"out_trade_no"`
+	AlipayTradeNo string `json:"alipay_trade_no"`
+}
+
+type CycleInfo struct {
+	OpenStatus              string `json:"open_status"`
+	CloseReason             string `json:"close_reason"`
+	CycleType               string `json:"cycle_type"`
+	AlipayDeductScene       string `json:"alipay_deduct_scene"`
+	AlipayDeductProductCode string `json:"alipay_deduct_product_code"`
+	AlipayDeductAgreement   string `json:"alipay_deduct_agreement"`
+}
+
+type MarketingCardDelete struct {
+	ErrorResponse
+	BizSerialNo string `json:"biz_serial_no"`
+}
+
+type MarketingCardMessageNotify struct {
+	ErrorResponse
+	ResultCode string `json:"result_code"`
+}
+
+type MarketingCardFormTemplateSet struct {
+	ErrorResponse
+}
+
+type OfflineMaterialImageUpload struct {
+	ErrorResponse
+	ImageId  string `json:"image_id"`
+	ImageUrl string `json:"image_url"`
 }

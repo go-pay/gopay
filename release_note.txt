@@ -6,6 +6,17 @@
    (4) 微信V3：新增 client.V3CombineQQTransactionH5()，合单QQ小程序下单-H5。
    (5) 微信V3：新增 wechat.V3DecryptViolationNotifyCipherText()，解密 服务商子商户处置记录 回调中的加密信息。#412
    (6) 微信V3：新增 V3NotifyReq method req.DecryptViolationCipherText()，解密 服务商子商户处置记录 回调中的加密信息。
+   (7) 微信V3：新增 wechat.V3DecryptTransferBatchNotifyCipherText()，解密 商家转账批次回调通知 回调中的加密信息。
+   (8) 微信V3：新增 V3NotifyReq method req.DecryptTransferBatchCipherText()，解密 商家转账批次回调通知 回调中的加密信息。
+   (9) 支付宝：新增 client.MarketingCardTemplateCreate()，会员卡模板创建接口。
+   (10) 支付宝：新增 client.MarketingCardTemplateModify()，会员卡模板修改接口。
+   (11) 支付宝：新增 client.MarketingCardTemplateQuery()，会员卡模板查询接口。
+   (12) 支付宝：新增 client.MarketingCardUpdate()，会员卡更新接口。
+   (13) 支付宝：新增 client.MarketingCardQuery()，会员卡查询接口。
+   (14) 支付宝：新增 client.MarketingCardDelete()，会员卡删卡接口。
+   (15) 支付宝：新增 client.MarketingCardMessageNotify()，会员卡消息通知接口。
+   (16) 支付宝：新增 client.MarketingCardFormTemplateSet()，会员卡开卡表单模板配置接口。
+   (17) 支付宝：新增 client.OfflineMaterialImageUpload()，上传门店照片和视频接口。
 
 版本号：Release 1.5.103
 修改记录：

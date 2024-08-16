@@ -341,19 +341,15 @@ xlog.Infof("%+v", phone)
       * 查询活动可用门店接口：`client.MarketingActivityQueryShopBatchQuery()`
       * 查询活动适用商品接口：`client.MarketingActivityQueryGoodsBatchQuery()`
   * 商家会员卡
-    * 基础功能
-      * 会员卡模板创建接口：TODO：https://opendocs.alipay.com/open/b2854ad3_alipay.marketing.card.template.create
-      * 会员卡开通，获取会员卡信息接口：TODO：https://opendocs.alipay.com/open/03sx83
-      * 会员卡更新接口：TODO：https://opendocs.alipay.com/open/03sx89
-    * 扩展功能 
-      * 会员卡开卡表单模板配置接口：TODO：https://opendocs.alipay.com/open/03sx82
-      * 会员卡开卡结果通知接口：TODO：https://opendocs.alipay.com/open/03sx84
-      * 会员卡模板修改接口：TODO：https://opendocs.alipay.com/open/e3227c82_alipay.marketing.card.template.modify
-      * 会员卡模板查询接口：TODO：https://opendocs.alipay.com/open/690f3d16_alipay.marketing.card.template.query
-      * 会员卡查询接口：TODO：https://opendocs.alipay.com/open/03sx88
-      * 会员卡删卡接口：TODO：https://opendocs.alipay.com/open/03sx8a
-      * 会员卡消息通知接口：TODO：https://opendocs.alipay.com/open/06ruek
-      * 上传门店照片和视频接口：TODO：https://opendocs.alipay.com/open/03sx81
+    * 会员卡模板创建接口：`client.MarketingCardTemplateCreate()`
+    * 会员卡模板修改接口：`client.MarketingCardTemplateModify()`
+    * 会员卡模板查询接口：`client.MarketingCardTemplateQuery()`
+    * 会员卡更新接口：`client.MarketingCardUpdate()`
+    * 会员卡查询接口：`client.MarketingCardQuery()`
+    * 会员卡删卡接口：`client.MarketingCardDelete()`
+    * 会员卡消息通知接口：`client.MarketingCardMessageNotify()`
+    * 会员卡开卡表单模板配置接口：`client.MarketingCardFormTemplateSet()`
+    * 上传门店照片和视频接口：`client.OfflineMaterialImageUpload()`
   * 营销活动送红包 
     * 创建现金活动接口：TODO：https://opendocs.alipay.com/open/029yy9
     * 触发现金红包活动接口：TODO：https://opendocs.alipay.com/open/029yya

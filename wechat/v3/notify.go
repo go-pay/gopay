@@ -2,13 +2,13 @@ package wechat
 
 import (
 	"crypto/rsa"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 	"github.com/go-pay/xlog"
 )
 
@@ -59,14 +59,14 @@ type V3DecryptPartnerPayResult struct {
 
 // 服务商子商户处置记录回调通知
 type V3DecryptViolationResult struct {
-	SubMchid          string `json:"sub_mchid" dc:"子商户商户ID"`
-	CompanyName       string `json:"company_name" dc:"子商户主体名称"`
-	RecordId          string `json:"record_id" dc:"通知ID，可用于去重"`
-	PunishPlan        string `json:"punish_plan" dc:"处罚方案"`
-	PunishTime        string `json:"punish_time" dc:"处罚时间"`
-	PunishDescription string `json:"punish_description" dc:"处罚描述"`
-	RiskType          string `json:"risk_type" dc:"风险类型"`
-	RiskDescription   string `json:"risk_description" dc:"风险描述"`
+	SubMchid          string `json:"sub_mchid"`
+	CompanyName       string `json:"company_name"`
+	RecordId          string `json:"record_id"`
+	PunishPlan        string `json:"punish_plan"`
+	PunishTime        string `json:"punish_time"`
+	PunishDescription string `json:"punish_description"`
+	RiskType          string `json:"risk_type"`
+	RiskDescription   string `json:"risk_description"`
 }
 
 // 退款通知 解密结果
@@ -274,6 +274,22 @@ type V3DecryptComplaintResult struct {
 	ActionType  string `json:"action_type"`
 }
 
+// 商家转账批次回调通知 解密结果
+type V3DecryptTransferBatchResult struct {
+	Mchid         string `json:"mchid,omitempty"`
+	OutBatchNo    string `json:"out_batch_no"`
+	BatchId       string `json:"batch_id"`
+	BatchStatus   string `json:"batch_status"`
+	TotalNum      int    `json:"total_num"`
+	TotalAmount   int    `json:"total_amount"`
+	SuccessAmount int    `json:"success_amount"`
+	SuccessNum    int    `json:"success_num"`
+	FailAmount    int    `json:"fail_amount"`
+	FailNum       int    `json:"fail_num"`
+	UpdateTime    string `json:"update_time"`
+	CloseReason   string `json:"close_reason,omitempty"`
+}
+
 // =====================================================================================================================
 
 type V3NotifyReq struct {
@@ -308,7 +324,7 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 		SignBody:        string(bs),
 	}
 	notifyReq = &V3NotifyReq{SignInfo: si}
-	if err = json.Unmarshal(bs, notifyReq); err != nil {
+	if err = js.UnmarshalBytes(bs, notifyReq); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), notifyReq, err)
 	}
 	return notifyReq, nil
@@ -347,8 +363,7 @@ func (v *V3NotifyReq) DecryptCipherTextToStruct(apiV3Key string, objPtr any) (er
 	if v.Resource != nil {
 		err = V3DecryptNotifyCipherTextToStruct(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key, objPtr)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return nil
 	}
@@ -360,8 +375,7 @@ func (v *V3NotifyReq) DecryptPayCipherText(apiV3Key string) (result *V3DecryptPa
 	if v.Resource != nil {
 		result, err = V3DecryptPayNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -373,8 +387,7 @@ func (v *V3NotifyReq) DecryptPartnerPayCipherText(apiV3Key string) (result *V3De
 	if v.Resource != nil {
 		result, err = V3DecryptPartnerPayNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -386,8 +399,7 @@ func (v *V3NotifyReq) DecryptRefundCipherText(apiV3Key string) (result *V3Decryp
 	if v.Resource != nil {
 		result, err = V3DecryptRefundNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -399,8 +411,7 @@ func (v *V3NotifyReq) DecryptPartnerRefundCipherText(apiV3Key string) (result *V
 	if v.Resource != nil {
 		result, err = V3DecryptPartnerRefundNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -412,8 +423,7 @@ func (v *V3NotifyReq) DecryptCombineCipherText(apiV3Key string) (result *V3Decry
 	if v.Resource != nil {
 		result, err = V3DecryptCombineNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -425,8 +435,7 @@ func (v *V3NotifyReq) DecryptScoreCipherText(apiV3Key string) (result *V3Decrypt
 	if v.Resource != nil {
 		result, err = V3DecryptScoreNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -438,8 +447,7 @@ func (v *V3NotifyReq) DecryptScorePermissionCipherText(apiV3Key string) (result 
 	if v.Resource != nil {
 		result, err = V3DecryptScorePermissionNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -451,8 +459,7 @@ func (v *V3NotifyReq) DecryptProfitShareCipherText(apiV3Key string) (result *V3D
 	if v.Resource != nil {
 		result, err = V3DecryptProfitShareNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -464,8 +471,7 @@ func (v *V3NotifyReq) DecryptBusifavorCipherText(apiV3Key string) (result *V3Dec
 	if v.Resource != nil {
 		result, err = V3DecryptBusifavorNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -477,8 +483,7 @@ func (v *V3NotifyReq) DecryptParkingInCipherText(apiV3Key string) (result *V3Dec
 	if v.Resource != nil {
 		result, err = V3DecryptParkingInNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -490,8 +495,7 @@ func (v *V3NotifyReq) DecryptParkingPayCipherText(apiV3Key string) (result *V3De
 	if v.Resource != nil {
 		result, err = V3DecryptParkingPayNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -503,8 +507,7 @@ func (v *V3NotifyReq) DecryptCouponUseCipherText(apiV3Key string) (result *V3Dec
 	if v.Resource != nil {
 		result, err = V3DecryptCouponUseNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -516,8 +519,7 @@ func (v *V3NotifyReq) DecryptInvoiceTitleCipherText(apiV3Key string) (result *V3
 	if v.Resource != nil {
 		result, err = V3DecryptInvoiceTitleNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -529,8 +531,7 @@ func (v *V3NotifyReq) DecryptInvoiceCipherText(apiV3Key string) (result *V3Decry
 	if v.Resource != nil {
 		result, err = V3DecryptInvoiceNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -542,8 +543,19 @@ func (v *V3NotifyReq) DecryptViolationCipherText(apiV3Key string) (result *V3Dec
 	if v.Resource != nil {
 		result, err = V3DecryptViolationNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
 		if err != nil {
-			bytes, _ := json.Marshal(v)
-			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", string(bytes), err)
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
+		}
+		return result, nil
+	}
+	return nil, errors.New("notify data Resource is nil")
+}
+
+// 解密 商家转账批次回调通知 回调中的加密信息
+func (v *V3NotifyReq) DecryptTransferBatchCipherText(apiV3Key string) (result *V3DecryptTransferBatchResult, err error) {
+	if v.Resource != nil {
+		result, err = V3DecryptTransferBatchNotifyCipherText(v.Resource.Ciphertext, v.Resource.Nonce, v.Resource.AssociatedData, apiV3Key)
+		if err != nil {
+			return nil, fmt.Errorf("V3NotifyReq(%s) decrypt cipher text error(%w)", js.MarshalString(v), err)
 		}
 		return result, nil
 	}
@@ -561,7 +573,7 @@ func V3ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 		return
 	}
 	bm = make(gopay.BodyMap)
-	if err = json.Unmarshal(bs, &bm); err != nil {
+	if err = js.UnmarshalBytes(bs, &bm); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 	}
 	return bm, nil
