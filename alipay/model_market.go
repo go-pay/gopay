@@ -253,7 +253,7 @@ type MarketingCardTemplateModifyRsp struct {
 }
 
 type MarketingCardTemplateQueryRsp struct {
-	Response     *MarketingCardTemplateQuery `json:"alipay_marketing_card_template_modify_response"`
+	Response     *MarketingCardTemplateQuery `json:"alipay_marketing_card_template_query_response"`
 	AlipayCertSn string                      `json:"alipay_cert_sn,omitempty"`
 	SignData     string                      `json:"-"`
 	Sign         string                      `json:"sign"`
