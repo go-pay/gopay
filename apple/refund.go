@@ -4,8 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/go-pay/gopay"
 	"net/http"
+
+	"github.com/go-pay/gopay"
 )
 
 // GetRefundHistory Get Refund History
