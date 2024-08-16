@@ -273,6 +273,34 @@ type MarketingCardQueryRsp struct {
 	Sign         string              `json:"sign"`
 }
 
+type MarketingCardDeleteRsp struct {
+	Response     *MarketingCardDelete `json:"alipay_marketing_card_delete_response"`
+	AlipayCertSn string               `json:"alipay_cert_sn,omitempty"`
+	SignData     string               `json:"-"`
+	Sign         string               `json:"sign"`
+}
+
+type MarketingCardMessageNotifyRsp struct {
+	Response     *MarketingCardMessageNotify `json:"alipay_marketing_card_message_notify_response"`
+	AlipayCertSn string                      `json:"alipay_cert_sn,omitempty"`
+	SignData     string                      `json:"-"`
+	Sign         string                      `json:"sign"`
+}
+
+type MarketingCardFormTemplateSetRsp struct {
+	Response     *MarketingCardFormTemplateSet `json:"alipay_marketing_card_formtemplate_set_response"`
+	AlipayCertSn string                        `json:"alipay_cert_sn,omitempty"`
+	SignData     string                        `json:"-"`
+	Sign         string                        `json:"sign"`
+}
+
+type OfflineMaterialImageUploadRsp struct {
+	Response     *OfflineMaterialImageUpload `json:"alipay_offline_material_image_upload_response"`
+	AlipayCertSn string                      `json:"alipay_cert_sn,omitempty"`
+	SignData     string                      `json:"-"`
+	Sign         string                      `json:"sign"`
+}
+
 // =========================================================分割=========================================================
 
 type MarketingCampaignCashCreate struct {
@@ -1066,4 +1094,24 @@ type CycleInfo struct {
 	AlipayDeductScene       string `json:"alipay_deduct_scene"`
 	AlipayDeductProductCode string `json:"alipay_deduct_product_code"`
 	AlipayDeductAgreement   string `json:"alipay_deduct_agreement"`
+}
+
+type MarketingCardDelete struct {
+	ErrorResponse
+	BizSerialNo string `json:"biz_serial_no"`
+}
+
+type MarketingCardMessageNotify struct {
+	ErrorResponse
+	ResultCode string `json:"result_code"`
+}
+
+type MarketingCardFormTemplateSet struct {
+	ErrorResponse
+}
+
+type OfflineMaterialImageUpload struct {
+	ErrorResponse
+	ImageId  string `json:"image_id"`
+	ImageUrl string `json:"image_url"`
 }

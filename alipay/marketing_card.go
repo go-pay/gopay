@@ -125,21 +125,91 @@ func (a *Client) MarketingCardQuery(ctx context.Context, bm gopay.BodyMap) (aliR
 
 // alipay.marketing.card.delete(会员卡删卡)
 // 文档地址：https://opendocs.alipay.com/open/8efddab3_alipay.marketing.card.delete
-func (a *Client) MarketingCardDelete(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingCardQueryRsp, err error) {
-	err = bm.CheckEmptyError("target_card_no", "target_card_no_type")
+func (a *Client) MarketingCardDelete(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingCardDeleteRsp, err error) {
+	err = bm.CheckEmptyError("out_serial_no", "target_card_no", "target_card_no_type", "reason_code")
 	if err != nil {
 		return nil, err
 	}
 	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.card.query"); err != nil {
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.card.delete"); err != nil {
 		return nil, err
 	}
-	aliRsp = new(MarketingCardQueryRsp)
+	aliRsp = new(MarketingCardDeleteRsp)
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
 	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
 		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.marketing.card.message.notify(会员卡消息通知)
+// 文档地址：https://opendocs.alipay.com/open/4c052993_alipay.marketing.card.message.notify
+func (a *Client) MarketingCardMessageNotify(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingCardMessageNotifyRsp, err error) {
+	err = bm.CheckEmptyError("target_card_no", "target_card_no_type", "occur_time")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.card.message.notify"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingCardMessageNotifyRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.marketing.card.formtemplate.set(会员卡开卡表单模板配置)
+// 文档地址：https://opendocs.alipay.com/open/78c84d3f_alipay.marketing.card.formtemplate.set
+func (a *Client) MarketingCardFormTemplateSet(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingCardFormTemplateSetRsp, err error) {
+	err = bm.CheckEmptyError("template_id", "fields")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.marketing.card.formtemplate.set"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(MarketingCardFormTemplateSetRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// alipay.offline.material.image.upload(上传门店照片和视频接口)
+// 文档地址：https://opendocs.alipay.com/open/0af852ff_alipay.offline.material.image.upload
+func (a *Client) OfflineMaterialImageUpload(ctx context.Context, bm gopay.BodyMap) (aliRsp *OfflineMaterialImageUploadRsp, err error) {
+	err = bm.CheckEmptyError("image_type", "image_name", "image_content")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.FileUploadRequest(ctx, bm, "alipay.marketing.material.image.upload"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(OfflineMaterialImageUploadRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, err
+	}
+	if aliRsp.Response != nil && aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response
+		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
