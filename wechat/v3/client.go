@@ -3,12 +3,12 @@ package wechat
 import (
 	"context"
 	"crypto/rsa"
-	"github.com/go-pay/xlog"
 	"sync"
 
 	"github.com/go-pay/crypto/xpem"
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/go-pay/xlog"
 )
 
 // ClientV3 微信支付 V3
