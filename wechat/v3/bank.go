@@ -43,7 +43,7 @@ func (c *ClientV3) V3BankSearchPersonalList(ctx context.Context, limit, offset i
 	if limit == 0 {
 		limit = 20
 	}
-	uri := v3BankSearchPersonalList + "?limit=" + convert.Int2String(limit) + "&offset=" + convert.Int2String(offset)
+	uri := v3BankSearchPersonalList + "?limit=" + convert.IntToString(limit) + "&offset=" + convert.IntToString(offset)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -71,7 +71,7 @@ func (c *ClientV3) V3BankSearchCorporateList(ctx context.Context, limit, offset 
 	if limit == 0 {
 		limit = 20
 	}
-	uri := v3BankSearchCorporateList + "?limit=" + convert.Int2String(limit) + "&offset=" + convert.Int2String(offset)
+	uri := v3BankSearchCorporateList + "?limit=" + convert.IntToString(limit) + "&offset=" + convert.IntToString(offset)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -148,7 +148,7 @@ func (c *ClientV3) V3BankSearchBranchList(ctx context.Context, bankAliasCode str
 	if limit == 0 {
 		limit = 20
 	}
-	uri := fmt.Sprintf(v3BankSearchBranchList, bankAliasCode) + "?city_code=" + convert.Int2String(cityCode) + "&limit=" + convert.Int2String(limit) + "&offset=" + convert.Int2String(offset)
+	uri := fmt.Sprintf(v3BankSearchBranchList, bankAliasCode) + "?city_code=" + convert.IntToString(cityCode) + "&limit=" + convert.IntToString(limit) + "&offset=" + convert.IntToString(offset)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
