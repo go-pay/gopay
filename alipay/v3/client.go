@@ -44,3 +44,31 @@ type ClientV3 struct {
 	location           *time.Location
 	hc                 *xhttp.Client
 }
+
+// NewClientV3 初始化支付宝客户端 V3
+// mchid：商户ID 或者服务商模式的 sp_mchid
+// serialNo：商户API证书的证书序列号
+// apiV3Key：APIv3Key，商户平台获取
+// privateKey：商户API证书下载后，私钥 apiclient_key.pem 读取后的字符串内容
+//func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3, err error) {
+//	if mchid == gopay.NULL || serialNo == gopay.NULL || apiV3Key == gopay.NULL || privateKey == gopay.NULL {
+//		return nil, gopay.MissWechatInitParamErr
+//	}
+//	priKey, err := xpem.DecodePrivateKey([]byte(privateKey))
+//	if err != nil {
+//		return nil, err
+//	}
+//	logger := xlog.NewLogger()
+//	logger.SetLevel(xlog.DebugLevel)
+//	client = &ClientV3{
+//		Mchid:       mchid,
+//		SerialNo:    serialNo,
+//		ApiV3Key:    []byte(apiV3Key),
+//		privateKey:  priKey,
+//		ctx:         context.Background(),
+//		DebugSwitch: gopay.DebugOff,
+//		logger:      logger,
+//		hc:          xhttp.NewClient(),
+//	}
+//	return client, nil
+//}
