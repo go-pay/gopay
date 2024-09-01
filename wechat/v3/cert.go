@@ -54,7 +54,7 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 
 	timestamp := time.Now().Unix()
 	nonceStr := util.RandomString(32)
-	ts := convert.Int642String(timestamp)
+	ts := convert.Int64ToString(timestamp)
 	_str := MethodGet + "\n" + uri + "\n" + ts + "\n" + nonceStr + "\n" + jb + "\n"
 	// Sign
 	h := sha256.New()
