@@ -16,7 +16,7 @@ func (c *Client) SendConsumptionInformation(ctx context.Context, transactionId s
 	if err != nil {
 		return err
 	}
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != http.StatusAccepted {
 		return fmt.Errorf("http.stauts_code = %d", res.StatusCode)
 	}
 	return nil
