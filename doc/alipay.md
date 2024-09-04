@@ -10,6 +10,10 @@
 
 - 支付宝官方文档：[官方文档](https://openhome.alipay.com/docCenter/docCenter.htm)
 
+- 技术介入指南：[技术介入指南](https://opendocs.alipay.com/common/02mse2)
+
+- 技术支持&案例FAQ：[技术支持&案例FAQ](https://opendocs.alipay.com/support/01rarm)
+
 - 支付宝RSA秘钥生成文档：[生成RSA密钥](https://opendocs.alipay.com/common/02kipl) （推荐使用 RSA2）
 
 - 沙箱环境(新) 使用说明：[新版沙箱文档](https://opendocs.alipay.com/common/05yvy1)
