@@ -59,4 +59,7 @@ const (
 	createInvoiceTemplate      = "/v2/invoicing/templates"                    // 创建发票模板 POST
 	deleteInvoiceTemplate      = "/v2/invoicing/templates/%s"                 // template_id 删除发票模板 DELETE
 	fullyUpdateInvoiceTemplate = "/v2/invoicing/templates/%s"                 // template_id 全量更新发票模板 PUT
+
+	// 物流相关
+	addTrackingNumber = "/v2/checkout/orders/%s/track" // order_id 授权物流信息 POST
 )

@@ -31,6 +31,10 @@ func (c *Client) doPayPalGet(ctx context.Context, uri string) (res *http.Respons
 	return res, bs, nil
 }
 
+func (c *Client) DoPayPalPost(ctx context.Context, bm gopay.BodyMap, path string) (res *http.Response, bs []byte, err error) {
+	return c.doPayPalPost(ctx, bm, path)
+}
+
 func (c *Client) doPayPalPost(ctx context.Context, bm gopay.BodyMap, path string) (res *http.Response, bs []byte, err error) {
 	var url = c.baseUrlProd + path
 	if !c.IsProd {
