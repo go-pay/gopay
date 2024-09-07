@@ -355,11 +355,11 @@ xlog.Infof("%+v", phone)
     * 会员卡开卡表单模板配置接口：`client.MarketingCardFormTemplateSet()`
     * 上传门店照片和视频接口：`client.OfflineMaterialImageUpload()`
   * 营销活动送红包 
-    * 创建现金活动接口：TODO：https://opendocs.alipay.com/open/029yy9
-    * 触发现金红包活动接口：TODO：https://opendocs.alipay.com/open/029yya
-    * 更改现金活动状态接口：TODO：https://opendocs.alipay.com/open/029yyb
-    * 现金活动列表查询接口：TODO：https://opendocs.alipay.com/open/02a1f9
-    * 现金活动详情查询接口：TODO：https://opendocs.alipay.com/open/02a1fa
+    * 创建现金活动接口：`client.MarketingCampaignCashCreate()`
+    * 触发现金红包活动接口：`client.MarketingCampaignCashTrigger()`
+    * 更改现金活动状态接口：`client.MarketingCampaignCashStatusModify()`
+    * 现金活动列表查询接口：`client.MarketingCampaignCashListQuery()`
+    * 现金活动详情查询接口：`client.MarketingCampaignCashDetailQuery()`
   * 红包
     * 资金转账页面支付接口: `client.FundTransPagePay()`
     * 现金红包无线支付接口: `client.FundTransAppPay()`
@@ -368,23 +368,26 @@ xlog.Infof("%+v", phone)
     * 资金退回接口: `client.FundTransRefund()`
   * 棋盘密云
     * 接口上传人群
-      * 上传创建人群接口：TODO：https://opendocs.alipay.com/open/e93d9a54_alipay.merchant.qipan.crowd.create
-      * 人群中追加用户接口：TODO：https://opendocs.alipay.com/open/04330914_alipay.merchant.qipan.crowduser.add
-      * 人群中删除用户接口：TODO：https://opendocs.alipay.com/open/80646633_alipay.merchant.qipan.crowduser.delete
+      * 上传创建人群接口：`client.MerchantQipanCrowdCreate()`
+      * 人群中追加用户接口：`client.MerchantQipanCrowdUserAdd()`
+      * 人群中删除用户接口：`client.MerchantQipanCrowdUserDelete()`
     * 标签圈选创建人群
-      * 查询圈选标签列表接口：TODO：https://opendocs.alipay.com/open/8e411cec_alipay.marketing.qipan.crowdtag.query
-      * 标签圈选创建人群接口：TODO：https://opendocs.alipay.com/open/cbf0efa4_alipay.marketing.qipan.crowdwithtag.create
-      * 标签圈选预估人群规模接口：TODO：https://opendocs.alipay.com/open/adb5dd04_alipay.marketing.qipan.crowdwithtag.query
+      * 棋盘人群圈选标签基本信息查询接口：`client.MarketingQipanTagBaseBatchQuery()`
+      * 棋盘标签圈选值查询接口：`client.MarketingQipanTagQuery()`
+      * 棋盘人群创建接口：`client.MarketingQipanCrowdOperationCreate()`
+      * 查询圈选标签列表接口：`client.MarketingQipanCrowdTagQuery()`
+      * 标签圈选创建人群接口：`client.MarketingQipanCrowdWithTagCreate()`
+      * 标签圈选预估人群规模接口：`client.MarketingQipanCrowdWithTagQuery()`
     * 管理人群
-      * 查询人群列表接口：TODO：https://opendocs.alipay.com/open/b7f3caec_alipay.merchant.qipan.crowd.batchquery
-      * 查询人群详情接口：TODO：https://opendocs.alipay.com/open/be384367_alipay.merchant.qipan.crowd.query
-      * 修改人群接口：TODO：https://opendocs.alipay.com/open/6c8ebb31_alipay.merchant.qipan.crowd.modify
+      * 查询人群列表接口：`client.MarketingQipanCrowdBatchQuery()`
+      * 查询人群详情接口：`client.MarketingQipanCrowdQuery()`
+      * 修改人群接口：`client.MarketingQipanCrowdModify()`
     * 数据洞察 
-      * 看板分析接口：TODO：https://opendocs.alipay.com/open/aa5066aa_alipay.merchant.qipan.board.query
-      * 画像分析接口：TODO：https://opendocs.alipay.com/open/46a75f4e_alipay.merchant.qipan.insight.query
-      * 行为分析接口：TODO：https://opendocs.alipay.com/open/56735ac5_alipay.merchant.qipan.behavior.query
-      * 趋势分析接口：TODO：https://opendocs.alipay.com/open/8ee7795a_alipay.merchant.qipan.trend.query
-      * 常住省市查询接口：TODO：https://opendocs.alipay.com/open/f7d99821_alipay.merchant.qipan.insightcity.query
+      * 看板分析接口：`client.MarketingQipanBoardQuery()`
+      * 画像分析接口：`client.MarketingQipanInsightQuery()`
+      * 行为分析接口：`client.MarketingQipanBehaviorQuery()`
+      * 趋势分析接口：`client.MarketingQipanTrendQuery()`
+      * 常住省市查询接口：`client.MarketingQipanInsightCityQuery()`
 * <font color='#027AFF' size='4'>资金产品</font>
   * 转账到支付宝账户
     * 支付宝资金账户资产查询接口：`client.FundAccountQuery()`

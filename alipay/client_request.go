@@ -26,7 +26,6 @@ func (a *Client) PostAliPayAPISelfV2(ctx context.Context, bodyMap gopay.BodyMap,
 		}
 		bodyMap.Set("biz_content", string(bodyBs))
 	}
-
 	if bs, err = a.doAliPaySelf(ctx, bodyMap, method); err != nil {
 		return err
 	}
@@ -146,7 +145,9 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 				return nil, fmt.Errorf("json.Marshal：%w", err)
 			}
 			bizContent = string(bodyBs)
-			bm.Set("app_auth_token", aat)
+			if aat != "" {
+				bm.Set("app_auth_token", aat)
+			}
 		} else {
 			if bodyBs, err = json.Marshal(bm); err != nil {
 				return nil, fmt.Errorf("json.Marshal：%w", err)
