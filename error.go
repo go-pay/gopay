@@ -15,4 +15,5 @@ var (
 	VerifySignatureErr     = errors.New("verify signature error")
 	CertNotMatchErr        = errors.New("cert not match error")
 	GetSignDataErr         = errors.New("get signature data error")
+	BodyMapNilErr          = errors.New("body map is nil")
 )
