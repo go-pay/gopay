@@ -2,18 +2,13 @@ package alipay
 
 import (
 	"crypto"
-	"crypto/md5"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
-	"crypto/x509"
 	"encoding/base64"
-	"encoding/hex"
 	"encoding/json"
-	"encoding/pem"
 	"errors"
 	"fmt"
-	"hash"
 	"os"
 	"reflect"
 	"strings"
@@ -26,147 +21,70 @@ import (
 	"github.com/go-pay/util/convert"
 )
 
-// 允许进行 sn 提取的证书签名算法
-var allowSignatureAlgorithm = map[string]bool{
-	"MD2-RSA":       true,
-	"MD5-RSA":       true,
-	"SHA1-RSA":      true,
-	"SHA256-RSA":    true,
-	"SHA384-RSA":    true,
-	"SHA512-RSA":    true,
-	"SHA256-RSAPSS": true,
-	"SHA384-RSAPSS": true,
-	"SHA512-RSAPSS": true,
-}
-
-// GetCertSN 获取证书序列号SN
-// certPathOrData x509证书文件路径(appPublicCert.crt、alipayPublicCert.crt) 或证书 buffer
-// 返回 sn：证书序列号(app_cert_sn、alipay_cert_sn)
-// 返回 err：error 信息
-func GetCertSN(certPathOrData any) (sn string, err error) {
-	var certData []byte
-	switch pathOrData := certPathOrData.(type) {
-	case string:
-		certData, err = os.ReadFile(pathOrData)
-		if err != nil {
-			return gopay.NULL, err
-		}
-	case []byte:
-		certData = pathOrData
-	default:
-		return gopay.NULL, errors.New("certPathOrData 证书类型断言错误")
-	}
-
-	if block, _ := pem.Decode(certData); block != nil {
-		cert, err := x509.ParseCertificate(block.Bytes)
-		if err != nil {
-			return gopay.NULL, err
-		}
-		name := cert.Issuer.String()
-		serialNumber := cert.SerialNumber.String()
-		h := md5.New()
-		h.Write([]byte(name))
-		h.Write([]byte(serialNumber))
-		sn = hex.EncodeToString(h.Sum(nil))
-	}
-	if sn == gopay.NULL {
-		return gopay.NULL, errors.New("failed to get sn,please check your cert")
-	}
-	return sn, nil
-}
-
-// GetRootCertSN 获取root证书序列号SN
-// rootCertPathOrData x509证书文件路径(alipayRootCert.crt) 或文件 buffer
-// 返回 sn：证书序列号(alipay_root_cert_sn)
-// 返回 err：error 信息
-func GetRootCertSN(rootCertPathOrData any) (sn string, err error) {
-	var (
-		certData []byte
-		certEnd  = `-----END CERTIFICATE-----`
-	)
-	switch pathOrData := rootCertPathOrData.(type) {
-	case string:
-		certData, err = os.ReadFile(pathOrData)
-		if err != nil {
-			return gopay.NULL, err
-		}
-	case []byte:
-		certData = pathOrData
-	default:
-		return gopay.NULL, errors.New("rootCertPathOrData 断言异常")
-	}
-
-	pems := strings.Split(string(certData), certEnd)
-	for _, c := range pems {
-		if block, _ := pem.Decode([]byte(c + certEnd)); block != nil {
-			cert, err := x509.ParseCertificate(block.Bytes)
-			if err != nil {
-				continue
-			}
-			if !allowSignatureAlgorithm[cert.SignatureAlgorithm.String()] {
-				continue
-			}
-			name := cert.Issuer.String()
-			serialNumber := cert.SerialNumber.String()
-			h := md5.New()
-			h.Write([]byte(name))
-			h.Write([]byte(serialNumber))
-			if sn == gopay.NULL {
-				sn += hex.EncodeToString(h.Sum(nil))
-			} else {
-				sn += "_" + hex.EncodeToString(h.Sum(nil))
-			}
-		}
-	}
-	if sn == gopay.NULL {
-		return gopay.NULL, errors.New("failed to get sn,please check your cert")
-	}
-	return sn, nil
-}
-
-// v3 鉴权请求 authorization Header
-func (c *ClientV3) authorization(method, path string, bm gopay.BodyMap) (string, error) {
+// v3 鉴权请求 Authorization Header
+func (a *ClientV3) authorization(method, uri string, bm gopay.BodyMap) (string, error) {
 	var (
 		jb        = ""
 		timestamp = convert.Int64ToString(time.Now().UnixNano() / int64(time.Millisecond))
 		nonceStr  = util.RandomString(32)
 		// app_id=2014060600164699,app_cert_sn=xxx,nonce=5f9fba93-bbb2-40f0-b328-04d5ead3e131,timestamp=1667804301218
-		authString = "app_id=" + c.AppId + ",app_cert_sn=" + c.AppCertSN + ",nonce_str=" + nonceStr + ",timestamp=" + timestamp
+		authString = "app_id=" + a.AppId + ",app_cert_sn=" + a.AppCertSN + ",nonce=" + nonceStr + ",timestamp=" + timestamp
 	)
-	if c.AppCertSN == gopay.NULL {
-		authString = "app_id=" + c.AppId + ",nonce=" + nonceStr + ",timestamp=" + timestamp
+	if a.AppCertSN == gopay.NULL {
+		authString = "app_id=" + a.AppId + ",nonce=" + nonceStr + ",timestamp=" + timestamp
 	}
 	if bm != nil {
 		jb = bm.JsonBody()
 	}
-	//${authString}\n
-	//${httpMethod}\n
-	//${httpReuqestUrl}\n
-	//${httpRequestBody}\n
-	//${appAuthToken}\n
-	signStr := authString + "\n" + method + "\n" + path + "\n" + jb + "\n"
-	if c.DebugSwitch == gopay.DebugOn {
-		c.logger.Debugf("Alipay_V3_SignString:\n%s", signStr)
+	// ${authString}\n	步骤1中生成的认证串 authString。
+	// ${httpMethod}\n	本次请求的 http 方法，例如 GET\POST\PUT 等。
+	// ${httpReuqestUrl}\n   本次请求的 uri 信息，包括 queryString，不包括域名，例如 /v3/alipay/marketing/activity/ordervoucher/get?id=123。
+	// ${httpRequestBody}\n	本次请求的 body 内容。当使用GET等请求时，body 为空，该值传入空字符串，即""。
+	// ${appAuthToken}\n		应用授权令牌，和 header 参数中 alipay-app-auth-token 值保持一致。可选参数，不使用代调用模式时，不需要传入该字段。
+	//
+	// 示例：
+	// app_id=2014060600164699,timestamp=1655869956477,nonce=eb4ade8f-8cfa-4ebf-a048-7eb52684ab32,expired_seconds=120
+	// POST
+	// /v3/alipay/marketing/activity/ordervoucher/create?auth_token=123
+	// {"activity_name": "单品特价满10减1活动","publish_start_time": "2022-02-01 00:00:01"}
+	//
+	// body 空示例：
+	// app_id=2014060600164699,timestamp=1655869956477,nonce=eb4ade8f-8cfa-4ebf-a048-7eb52684ab32,expired_seconds=120
+	// GET
+	// /v3/alipay/marketing/activity/ordervoucher?id=123
+	//
+	// 代调示例：
+	// app_id=2014060600164699,timestamp=1655869956477,nonce=eb4ade8f-8cfa-4ebf-a048-7eb52684ab32,expired_seconds=120
+	// GET
+	// /v3/alipay/marketing/activity/ordervoucher?id=123
+	// 202212BB_D64b2be8afd4b6c8468cf585bd05E50
+	signStr := authString + "\n" + method + "\n" + uri + "\n" + jb + "\n"
+	if a.AppAuthToken != "" {
+		signStr += a.AppAuthToken + "\n"
 	}
-	sign, err := c.rsaSign(signStr)
+	if a.DebugSwitch == gopay.DebugOn {
+		a.logger.Debugf("Alipay_V3_SignString:\n%s", signStr)
+	}
+
+	sign, err := a.rsaSign(signStr)
 	if err != nil {
 		return "", err
 	}
-	if c.DebugSwitch == gopay.DebugOn {
-		c.logger.Debugf("Alipay_V3_Sign:\n%s", sign)
+	if a.DebugSwitch == gopay.DebugOn {
+		a.logger.Debugf("Alipay_V3_Sign:\n%s", sign)
 	}
 	// authorization: ${签名算法} ${authString},sign=${signature}
 	authorization := SignTypeRSA + " " + authString + ",sign=" + sign
 	return authorization, nil
 }
 
-func (c *ClientV3) rsaSign(str string) (string, error) {
-	if c.privateKey == nil {
+func (a *ClientV3) rsaSign(str string) (string, error) {
+	if a.privateKey == nil {
 		return "", errors.New("privateKey can't be nil")
 	}
 	h := sha256.New()
 	h.Write([]byte(str))
-	result, err := rsa.SignPKCS1v15(rand.Reader, c.privateKey, crypto.SHA256, h.Sum(nil))
+	result, err := rsa.SignPKCS1v15(rand.Reader, a.privateKey, crypto.SHA256, h.Sum(nil))
 	if err != nil {
 		return gopay.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
 	}
@@ -219,7 +137,7 @@ func (a *ClientV3) getSignData(bs []byte, alipayCertSN string) (signData string,
 func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error) {
 	// 支付宝公钥验签
 	pKey := xrsa.FormatAlipayPublicKey(aliPayPublicKey)
-	if err = verifySign(signData, sign, RSA2, pKey); err != nil {
+	if err = verifySign(signData, sign, pKey); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -243,7 +161,7 @@ func VerifySyncSignWithCert(alipayPublicKeyCert any, signData, sign string) (ok 
 	default:
 		return false, errors.New("alipayPublicKeyCert type assert error")
 	}
-	if err = verifySignCert(signData, sign, RSA2, alipayPublicKeyCert); err != nil {
+	if err = verifySignCert(signData, sign, alipayPublicKeyCert); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -284,15 +202,13 @@ func VerifySign(alipayPublicKey string, notifyBean any) (ok bool, err error) {
 		return false, errors.New("alipayPublicKey or notifyBean is nil")
 	}
 	var (
-		bodySign     string
-		bodySignType string
-		signData     string
-		bm           = make(gopay.BodyMap)
+		bodySign string
+		signData string
+		bm       = make(gopay.BodyMap)
 	)
 	if reflect.ValueOf(notifyBean).Kind() == reflect.Map {
 		if bm, ok = notifyBean.(gopay.BodyMap); ok {
 			bodySign = bm.GetString("sign")
-			bodySignType = bm.GetString("sign_type")
 			bm.Remove("sign")
 			bm.Remove("sign_type")
 			signData = bm.EncodeAliPaySignParams()
@@ -306,13 +222,12 @@ func VerifySign(alipayPublicKey string, notifyBean any) (ok bool, err error) {
 			return false, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
 		}
 		bodySign = bm.GetString("sign")
-		bodySignType = bm.GetString("sign_type")
 		bm.Remove("sign")
 		bm.Remove("sign_type")
 		signData = bm.EncodeAliPaySignParams()
 	}
 	pKey := xrsa.FormatAlipayPublicKey(alipayPublicKey)
-	if err = verifySign(signData, bodySign, bodySignType, pKey); err != nil {
+	if err = verifySign(signData, bodySign, pKey); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -358,11 +273,10 @@ func VerifySignWithCert(aliPayPublicKeyCert, notifyBean any) (ok bool, err error
 		}
 	}
 	bodySign := bm.GetString("sign")
-	bodySignType := bm.GetString("sign_type")
 	bm.Remove("sign")
 	bm.Remove("sign_type")
 	signData := bm.EncodeAliPaySignParams()
-	if err = verifySignCert(signData, bodySign, bodySignType, aliPayPublicKeyCert); err != nil {
+	if err = verifySignCert(signData, bodySign, aliPayPublicKeyCert); err != nil {
 		return false, err
 	}
 	return true, nil
@@ -370,37 +284,23 @@ func VerifySignWithCert(aliPayPublicKeyCert, notifyBean any) (ok bool, err error
 
 // =============================== 通用底层验签方法 ===============================
 
-func verifySign(signData, sign, signType, alipayPublicKey string) (err error) {
-	var (
-		h     hash.Hash
-		hashs crypto.Hash
-	)
+func verifySign(signData, sign, alipayPublicKey string) (err error) {
 	publicKey, err := xpem.DecodePublicKey([]byte(alipayPublicKey))
 	if err != nil {
 		return err
 	}
 	signBytes, _ := base64.StdEncoding.DecodeString(sign)
 
-	switch signType {
-	case RSA:
-		hashs = crypto.SHA1
-	case RSA2:
-		hashs = crypto.SHA256
-	default:
-		hashs = crypto.SHA256
-	}
-	h = hashs.New()
+	h := sha256.New()
 	h.Write([]byte(signData))
-	if err = rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes); err != nil {
+	if err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
 		return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
 	}
 	return nil
 }
 
-func verifySignCert(signData, sign, signType string, alipayPublicKeyCert any) (err error) {
+func verifySignCert(signData, sign string, alipayPublicKeyCert any) (err error) {
 	var (
-		h     hash.Hash
-		hashs crypto.Hash
 		bytes []byte
 	)
 	if v, ok := alipayPublicKeyCert.(string); ok {
@@ -419,17 +319,9 @@ func verifySignCert(signData, sign, signType string, alipayPublicKeyCert any) (e
 	}
 	signBytes, _ := base64.StdEncoding.DecodeString(sign)
 
-	switch signType {
-	case RSA:
-		hashs = crypto.SHA1
-	case RSA2:
-		hashs = crypto.SHA256
-	default:
-		hashs = crypto.SHA256
-	}
-	h = hashs.New()
+	h := sha256.New()
 	h.Write([]byte(signData))
-	if err = rsa.VerifyPKCS1v15(publicKey, hashs, h.Sum(nil), signBytes); err != nil {
+	if err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
 		return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
 	}
 	return nil

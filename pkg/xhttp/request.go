@@ -136,6 +136,83 @@ func (r *Request) SendString(encodeStr string) (client *Request) {
 
 // =====================================================================================================================
 
+func (r *Request) EndBytesForAlipayV3(ctx context.Context) (res *http.Response, bs []byte, err error) {
+	if r.err != nil {
+		return nil, nil, r.err
+	}
+	var (
+		body io.Reader
+		bw   *multipart.Writer
+	)
+	// multipart-form-data
+	if r.requestType == TypeMultipartFormData {
+		body = &bytes.Buffer{}
+		bw = multipart.NewWriter(body.(io.Writer))
+	}
+
+	switch r.method {
+	case GET:
+		// do nothing
+	case POST, PUT, DELETE, PATCH:
+		switch r.requestType {
+		case TypeJSON:
+			if r.jsonByte != nil {
+				body = strings.NewReader(string(r.jsonByte))
+			}
+		case TypeFormData:
+			if r.formString != "" {
+				body = strings.NewReader(r.formString)
+			}
+		case TypeMultipartFormData:
+			for k, v := range r.multipartBodyMap {
+				// file 参数
+				if file, ok := v.(*gopay.File); ok {
+					fw, e := bw.CreateFormFile(k, file.Name)
+					if e != nil {
+						return nil, nil, e
+					}
+					_, _ = fw.Write(file.Content)
+					continue
+				}
+				// text 参数
+				switch vs := v.(type) {
+				case string:
+					_ = bw.WriteField(k, vs)
+				default:
+					_ = bw.WriteField(k, ConvertToString(v))
+				}
+			}
+			_ = bw.Close()
+			r.Header.Set("Content-Type", bw.FormDataContentType())
+		case TypeXML:
+			if r.formString != "" {
+				body = strings.NewReader(r.formString)
+			}
+		default:
+			return nil, nil, errors.New("Request type Error ")
+		}
+	default:
+		return nil, nil, errors.New("Only support GET and POST and PUT and DELETE ")
+	}
+
+	// request
+	req, err := http.NewRequestWithContext(ctx, r.method, r.url, body)
+	if err != nil {
+		return nil, nil, err
+	}
+	req.Header = r.Header
+	res, err = r.client.HttpClient.Do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer res.Body.Close()
+	bs, err = io.ReadAll(io.LimitReader(res.Body, int64(r.client.bodySize<<20))) // default 10MB change the size you want
+	if err != nil {
+		return nil, nil, err
+	}
+	return res, bs, nil
+}
+
 func (r *Request) EndBytes(ctx context.Context) (res *http.Response, bs []byte, err error) {
 	if r.err != nil {
 		return nil, nil, r.err

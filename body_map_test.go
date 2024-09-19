@@ -10,6 +10,7 @@ import (
 )
 
 func TestBodyMapSetBodyMap(t *testing.T) {
+	xlog.SetLevel(xlog.DebugLevel)
 	bm := make(BodyMap)
 	// 1、配合map使用
 	sceneInfo := make(map[string]map[string]string)
@@ -56,6 +57,7 @@ func TestBodyMapSetBodyMap(t *testing.T) {
 }
 
 func TestBodyMapMarshal(t *testing.T) {
+	xlog.SetLevel(xlog.DebugLevel)
 	bm := make(BodyMap)
 	bm.Set("4key", "4value").
 		Set("6key", "6value").
@@ -93,6 +95,7 @@ func TestBodyMapMarshal(t *testing.T) {
 }
 
 func TestBodyMapMarshalSlice(t *testing.T) {
+	xlog.SetLevel(xlog.DebugLevel)
 	type Receiver struct {
 		Type        string `json:"type"`
 		Account     string `json:"account"`
@@ -133,6 +136,7 @@ func TestBodyMapMarshalSlice(t *testing.T) {
 }
 
 func TestSliceTest(t *testing.T) {
+	xlog.SetLevel(xlog.DebugLevel)
 	var rs []string
 	rs = append(rs, "SOFTWARE")
 	rs = append(rs, "SECURITY")
@@ -142,5 +146,29 @@ func TestSliceTest(t *testing.T) {
 	bm.Set("sub_mchid", "2021060717").
 		Set("advertising_industry_filters", rs)
 
+	xlog.Debugf("%s", bm.JsonBody())
+}
+
+func TestOutSlice(t *testing.T) {
+	xlog.SetLevel(xlog.DebugLevel)
+	type Jerry struct {
+		Name string `json:"name"`
+		Age  int    `json:"age"`
+	}
+	var js = []*Jerry{
+		{
+			Name: "Jerry",
+			Age:  18,
+		},
+		{
+			Name: "Tom",
+			Age:  20,
+		},
+	}
+
+	bm := make(BodyMap)
+	bm.Set("", js)
+	xlog.Debugf("%v", bm.GetInterface(""))
+	xlog.Debugf("%s", bm.GetString(""))
 	xlog.Debugf("%s", bm.JsonBody())
 }

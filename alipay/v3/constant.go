@@ -10,6 +10,8 @@ const (
 	MethodPATCH         = "PATCH"
 	HeaderAuthorization = "Authorization"
 	HeaderRequestID     = "alipay-request-id"
+	HeaderSdkVersion    = "alipay-sdk-version"
+	HeaderAppAuthToken  = "alipay-app-auth-token"
 
 	SignTypeRSA = "ALIPAY-SHA256withRSA"
 
