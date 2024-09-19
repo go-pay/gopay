@@ -333,6 +333,15 @@ type Card struct {
 	AuthenticationResult *AuthenticationResult `json:"authentication_result,omitempty"`
 }
 
+type PurchaseUnitAddress struct {
+	AddressLine1 string `json:"address_line_1"`
+	AddressLine2 string `json:"address_line_2"`
+	AdminArea1   string `json:"admin_area_1"`
+	AdminArea2   string `json:"admin_area_2"`
+	PostalCode   string `json:"postal_code"`
+	CountryCode  string `json:"country_code"`
+}
+
 type Address struct {
 	AddressLine1   string          `json:"address_line_1"`
 	AddressLine2   string          `json:"address_line_2"`
@@ -396,8 +405,26 @@ type PurchaseUnit struct {
 }
 
 type Amount struct {
-	CurrencyCode string `json:"currency_code"`
-	Value        string `json:"value"`
+	CurrencyCode          string                `json:"currency_code"`
+	Value                 string                `json:"value"`
+	PurchaseUnitBreakdown PurchaseUnitBreakdown `json:"breakdown"`
+}
+
+type PurchaseUnitBreakdown struct {
+	//item_total
+	ItemTotal *FixedPrice `json:"item_total,omitempty"`
+	// shipping
+	Shipping *FixedPrice `json:"shipping,omitempty"`
+	// handling
+	Handling *FixedPrice `json:"handling,omitempty"`
+	// tax_total
+	TaxTotal *FixedPrice `json:"tax_total,omitempty"`
+	// insurance
+	Insurance *FixedPrice `json:"insurance,omitempty"`
+	// shipping_discount
+	ShippingDiscount *FixedPrice `json:"shipping_discount,omitempty"`
+	// discount
+	Discount *FixedPrice `json:"discount,omitempty"`
 }
 
 type Payee struct {
@@ -436,9 +463,9 @@ type Discount struct {
 }
 
 type Shipping struct {
-	Name    *Name    `json:"name,omitempty"`
-	Type    string   `json:"type,omitempty"` // SHIPPING、PICKUP_IN_PERSON
-	Address *Address `json:"address,omitempty"`
+	Name    *Name                `json:"name,omitempty"`
+	Type    string               `json:"type,omitempty"` // SHIPPING、PICKUP_IN_PERSON
+	Address *PurchaseUnitAddress `json:"address,omitempty"`
 }
 
 type Name struct {
@@ -966,4 +993,26 @@ type TemplateInfo struct {
 	Invoicer             *Invoicer              `json:"invoicer"`
 	Items                []*Item                `json:"items,omitempty"`
 	PrimaryRecipients    []*RecipientInfo       `json:"primary_recipients,omitempty"`
+}
+
+type AddTrackingNumberReq struct {
+	TrackingNumber   string      `json:"tracking_number"`
+	CarrierNameOther string      `json:"carrier_name_other"`
+	Carrier          string      `json:"carrier"`
+	CaptureId        string      `json:"capture_id"`
+	NotifyPayer      bool        `json:"notify_payer"`
+	ShipItem         []*ShipItem `json:"items"`
+}
+type ShipItem struct {
+	Name     string `json:"name"`
+	Quantity int    `json:"quantity"`
+	Sku      string `json:"sku"`
+	Url      string `json:"url"`
+	ImageUrl string `json:"image_url"`
+}
+type AddTrackingNumberRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *OrderDetail   `json:"response,omitempty"`
 }

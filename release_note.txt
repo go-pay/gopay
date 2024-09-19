@@ -1,3 +1,34 @@
+版本号：Release 1.5.105
+修改记录：
+   (1) gopay：golang.org/x/crypto v0.26.0 版本升级到 v0.27.0。
+   (2) 支付宝：新增 client.MarketingCampaignCashCreate()，创建现金活动接口。
+   (3) 支付宝：新增 client.MarketingCampaignCashTrigger()，触发现金红包活动接口。
+   (4) 支付宝：新增 client.MarketingCampaignCashStatusModify()，更改现金活动状态接口。
+   (5) 支付宝：新增 client.MarketingCampaignCashListQuery()，现金活动列表查询接口。
+   (6) 支付宝：新增 client.MarketingCampaignCashDetailQuery()，现金活动详情查询接口。
+   (7) 支付宝：新增 client.MerchantQipanCrowdCreate()，上传创建人群接口。
+   (8) 支付宝：新增 client.MerchantQipanCrowdUserAdd()，人群中追加用户接口。
+   (9) 支付宝：新增 client.MerchantQipanCrowdUserDelete()，人群中删除用户接口。
+   (10) 支付宝：新增 client.MarketingQipanTagBaseBatchQuery()，棋盘人群圈选标签基本信息查询接口。
+   (11) 支付宝：新增 client.MarketingQipanTagQuery()，棋盘标签圈选值查询接口。
+   (12) 支付宝：新增 client.MarketingQipanCrowdOperationCreate()，棋盘人群创建接口。
+   (13) 支付宝：新增 client.MarketingQipanCrowdTagQuery()，查询圈选标签列表接口。
+   (14) 支付宝：新增 client.MarketingQipanCrowdWithTagCreate()，标签圈选创建人群接口。
+   (15) 支付宝：新增 client.MarketingQipanCrowdWithTagQuery()，标签圈选预估人群规模接口。
+   (16) 支付宝：新增 client.MarketingQipanCrowdBatchQuery()，查询人群列表接口。
+   (17) 支付宝：新增 client.MarketingQipanCrowdQuery()，查询人群详情接口。
+   (18) 支付宝：新增 client.MarketingQipanCrowdModify()，修改人群接口。
+   (19) 支付宝：新增 client.MarketingQipanBoardQuery()，看板分析接口。
+   (20) 支付宝：新增 client.MarketingQipanInsightQuery()，画像分析接口。
+   (21) 支付宝：新增 client.MarketingQipanBehaviorQuery()，行为分析接口。
+   (22) 支付宝：新增 client.MarketingQipanTrendQuery()，趋势分析接口。
+   (23) 支付宝：新增 client.MarketingQipanInsightCityQuery()，常住省市查询接口。
+   (24) PayPal：新增 client.AddTrackingNumber()，添加物流单号接口。
+   (25) PayPal：优化部分结构体字段。。
+   (26) 支付宝：FundTransCommonQuery 结构体补充字段。
+   (27) Apple：client.SendConsumptionInformation() 方法成功状态码判断修改。
+   (28) gopay：升级内部依赖module库。
+
 版本号：Release 1.5.104
 修改记录：
    (1) gopay：golang.org/x/crypto v0.24.0 版本升级到 v0.26.0。

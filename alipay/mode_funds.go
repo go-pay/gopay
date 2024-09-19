@@ -142,16 +142,20 @@ type ExtCardInfo struct {
 
 type FundTransCommonQuery struct {
 	ErrorResponse
-	OrderId        string `json:"order_id,omitempty"`
-	PayFundOrderId string `json:"pay_fund_order_id,omitempty"`
-	OutBizNo       string `json:"out_biz_no,omitempty"`
-	TransAmount    string `json:"trans_amount,omitempty"`
-	Status         string `json:"status,omitempty"`
-	PayDate        string `json:"pay_date,omitempty"`
-	ArrivalTimeEnd string `json:"arrival_time_end,omitempty"`
-	OrderFee       string `json:"order_fee,omitempty"`
-	ErrorCode      string `json:"error_code,omitempty"`
-	FailReason     string `json:"fail_reason,omitempty"`
+	OrderId            string `json:"order_id,omitempty"`
+	OutBizNo           string `json:"out_biz_no,omitempty"`
+	Status             string `json:"status,omitempty"`
+	SettleSerialNo     string `json:"settle_serial_no,omitempty"`
+	PayFundOrderId     string `json:"pay_fund_order_id,omitempty"`
+	TransAmount        string `json:"trans_amount,omitempty"`
+	PayDate            string `json:"pay_date,omitempty"`
+	ArrivalTimeEnd     string `json:"arrival_time_end,omitempty"`
+	OrderFee           string `json:"order_fee,omitempty"`
+	ErrorCode          string `json:"error_code,omitempty"`
+	FailReason         string `json:"fail_reason,omitempty"`
+	SubOrderErrorCode  string `json:"sub_order_error_code,omitempty"`
+	SubOrderFailReason string `json:"sub_order_fail_reason,omitempty"`
+	SubOrderStatus     string `json:"sub_order_status,omitempty"`
 }
 
 type FundTransOrderQuery struct {
