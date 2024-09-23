@@ -260,6 +260,45 @@ type PaymentSource struct {
 	P24        *P24        `json:"p24,omitempty"`
 	Sofort     *Sofort     `json:"sofort,omitempty"`
 	Trustly    *Trustly    `json:"trustly,omitempty"`
+	Paypal     *Paypal     `json:"paypal,omitempty"`
+}
+type Paypal struct {
+	EmailAddress  string            `json:"email_address"`
+	AccountID     string            `json:"account_id"`
+	AccountStatus string            `json:"account_status"`
+	Name          *PayerName        `json:"name"`
+	Address       *PayerAddress     `json:"address"`
+	Attributes    *PaypalAttributes `json:"attributes"`
+}
+
+type PayerName struct {
+	GivenName string `json:"given_name"`
+	Surname   string `json:"surname"`
+}
+
+type PayerAddress struct {
+	CountryCode string `json:"country_code"`
+}
+
+type PaypalAttributes struct {
+	Vault *PaypalVault `json:"vault"`
+}
+
+type PaypalVault struct {
+	ID       string          `json:"id"`
+	Status   string          `json:"status"`
+	Customer *PaypalCustomer `json:"customer"`
+	Links    []PaypalLink    `json:"links"`
+}
+
+type PaypalCustomer struct {
+	ID string `json:"id"`
+}
+
+type PaypalLink struct {
+	Href   string `json:"href"`
+	Rel    string `json:"rel"`
+	Method string `json:"method"`
 }
 
 type Bancontact struct {
