@@ -290,10 +290,8 @@ func (a *Client) autoVerifySignByCert(sign, signData string, signDataErr error) 
 		}
 
 		signBytes, _ := base64.StdEncoding.DecodeString(sign)
-		hashs := crypto.SHA256
-		h := hashs.New()
-		h.Write([]byte(signData))
-		if err = rsa.VerifyPKCS1v15(a.aliPayPublicKey, hashs, h.Sum(nil), signBytes); err != nil {
+		sum256 := sha256.Sum256([]byte(signData))
+		if err = rsa.VerifyPKCS1v15(a.aliPayPublicKey, crypto.SHA256, sum256[:], signBytes); err != nil {
 			return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
 		}
 	}

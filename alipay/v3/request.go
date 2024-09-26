@@ -13,6 +13,9 @@ import (
 
 func (a *ClientV3) doPost(ctx context.Context, bm gopay.BodyMap, uri, authorization string) (res *http.Response, bs []byte, err error) {
 	var url = v3BaseUrlCh + uri
+	if !a.IsProd {
+		url = v3SandboxBaseUrl + uri
+	}
 	req := a.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))

@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 	"os"
 	"reflect"
 	"strings"
@@ -126,6 +127,25 @@ func (a *ClientV3) getSignData(bs []byte, alipayCertSN string) (signData string,
 
 // =============================== 同步验签 ===============================
 
+func (a *ClientV3) autoVerifySignByCert(res *http.Response, body []byte) (err error) {
+	if a.autoSign && a.aliPayPublicKey != nil {
+		ts := res.Header.Get(HeaderTimestamp)
+		nonce := res.Header.Get(HeaderNonce)
+		sign := res.Header.Get(HeaderSignature)
+		if a.DebugSwitch == gopay.DebugOn {
+			a.logger.Debugf("Alipay_VerifySignHeader: alipay-timestamp=[%s], alipay-nonce=[%s], alipay-signature=[%s]", ts, nonce, sign)
+		}
+		signData := ts + "\n" + nonce + "\n" + string(body) + "\n"
+
+		signBytes, _ := base64.StdEncoding.DecodeString(sign)
+		sum256 := sha256.Sum256([]byte(signData))
+		if err = rsa.VerifyPKCS1v15(a.aliPayPublicKey, crypto.SHA256, sum256[:], signBytes); err != nil {
+			return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
+		}
+	}
+	return nil
+}
+
 // VerifySyncSign 支付宝同步返回验签（公钥模式）
 // 注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 不支持同步返回验签
 // aliPayPublicKey：支付宝平台获取的支付宝公钥
@@ -165,27 +185,6 @@ func VerifySyncSignWithCert(alipayPublicKeyCert any, signData, sign string) (ok 
 		return false, err
 	}
 	return true, nil
-}
-
-func (a *ClientV3) autoVerifySignByCert(sign, signData string, signDataErr error) (err error) {
-	if a.autoSign && a.aliPayPublicKey != nil {
-		if a.DebugSwitch == gopay.DebugOn {
-			a.logger.Debugf("Alipay_SyncSignData: %s, Sign=[%s]", signData, sign)
-		}
-		// 只有证书验签时，才可能出现此error
-		if signDataErr != nil {
-			return signDataErr
-		}
-
-		signBytes, _ := base64.StdEncoding.DecodeString(sign)
-		hashs := crypto.SHA256
-		h := hashs.New()
-		h.Write([]byte(signData))
-		if err = rsa.VerifyPKCS1v15(a.aliPayPublicKey, hashs, h.Sum(nil), signBytes); err != nil {
-			return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
-		}
-	}
-	return nil
 }
 
 // =============================== 异步验签 ===============================

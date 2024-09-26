@@ -13,9 +13,11 @@ package alipay
 // 429 - Too Many Requests	请求超过频率限制				请求未受理，请降低频率后重试。
 // 500 - Server Error		系统错误						按具体接口的错误指引进行重试。
 
-type CommonField struct {
-	Code    string `json:"code"`    // 详细错误码，参考接口描述及公共错误码，商家需要对该错误码处理。
-	Message string `json:"message"` // 错误描述，具体错误原因的文字描述，开发者可参考该描述判断错误原因。
+type ErrResponse struct {
+	Code    string    `json:"code"`    // 详细错误码，参考接口描述及公共错误码，商家需要对该错误码处理。
+	Message string    `json:"message"` // 错误描述，具体错误原因的文字描述，开发者可参考该描述判断错误原因。
+	Details []*Detail `json:"details,omitempty"`
+	Links   []*Link   `json:"links,omitempty"`
 }
 
 type Detail struct {
@@ -28,11 +30,6 @@ type Detail struct {
 
 type Link struct {
 	Link string `json:"link"`
+	Desc string `json:"desc"`
 	Rel  string `json:"rel"`
-}
-
-type ErrResponse struct {
-	CommonField
-	Details []*Detail `json:"details"`
-	Links   []*Link   `json:"links"`
 }

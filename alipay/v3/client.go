@@ -2,6 +2,7 @@ package alipay
 
 import (
 	"crypto/rsa"
+	"fmt"
 	"time"
 
 	"github.com/go-pay/crypto/xpem"
@@ -54,4 +55,42 @@ func NewClientV3(appid, privateKey string, isProd bool) (client *ClientV3, err e
 		hc:          xhttp.NewClient(),
 	}
 	return client, nil
+}
+
+// 应用公钥证书内容设置 app_cert_sn、alipay_root_cert_sn、alipay_cert_sn
+// appCertContent：应用公钥证书文件内容
+// alipayRootCertContent：支付宝根证书文件内容
+// alipayPublicCertContent：支付宝公钥证书文件内容
+func (a *ClientV3) SetCert(appCertContent, alipayRootCertContent, alipayPublicCertContent []byte) (err error) {
+	appCertSn, err := GetCertSN(appCertContent)
+	if err != nil {
+		return fmt.Errorf("get app_cert_sn return err, but alse return alipay client. err: %w", err)
+	}
+	rootCertSn, err := GetRootCertSN(alipayRootCertContent)
+	if err != nil {
+		return fmt.Errorf("get alipay_root_cert_sn return err, but alse return alipay client. err: %w", err)
+	}
+	publicCertSn, err := GetCertSN(alipayPublicCertContent)
+	if err != nil {
+		return fmt.Errorf("get alipay_cert_sn return err, but alse return alipay client. err: %w", err)
+	}
+
+	// alipay public key
+	pubKey, err := xpem.DecodePublicKey(alipayPublicCertContent)
+	if err != nil {
+		return fmt.Errorf("decode alipayPublicCertContent err: %w", err)
+	}
+
+	a.AppCertSN = appCertSn
+	a.AliPayRootCertSN = rootCertSn
+	a.AliPayPublicCertSN = publicCertSn
+	a.aliPayPublicKey = pubKey
+	return nil
+}
+
+// SetAESKey 设置 biz_content 的AES加密key，设置此参数默认开启 biz_content 参数加密
+// 注意：目前不可用，设置后会报错
+func (a *ClientV3) SetAESKey(aesKey string) {
+	a.aesKey = aesKey
+	a.ivKey = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 }
