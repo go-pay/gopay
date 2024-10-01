@@ -11,6 +11,14 @@ import (
 	"github.com/go-pay/util"
 )
 
+var defaultRequestIdFunc = &requestIdFunc{}
+
+type requestIdFunc struct{}
+
+func (d *requestIdFunc) RequestId() string {
+	return fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix())
+}
+
 func (a *ClientV3) doPost(ctx context.Context, bm gopay.BodyMap, uri, authorization string) (res *http.Response, bs []byte, err error) {
 	var url = v3BaseUrlCh + uri
 	if !a.IsProd {
@@ -18,7 +26,7 @@ func (a *ClientV3) doPost(ctx context.Context, bm gopay.BodyMap, uri, authorizat
 	}
 	req := a.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, authorization)
-	req.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
+	req.Header.Add(HeaderRequestID, a.requestIdFunc.RequestId())
 	req.Header.Add(HeaderSdkVersion, "gopay/"+gopay.Version)
 	if a.AppAuthToken != "" {
 		req.Header.Add(HeaderAppAuthToken, a.AppAuthToken)
@@ -45,7 +53,7 @@ func (a *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, uri, au
 	var url = v3BaseUrlCh + uri
 	req := a.hc.Req(xhttp.TypeMultipartFormData)
 	req.Header.Add(HeaderAuthorization, authorization)
-	req.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
+	req.Header.Add(HeaderRequestID, a.requestIdFunc.RequestId())
 	req.Header.Add(HeaderSdkVersion, "gopay/"+gopay.Version)
 	req.Header.Add("Accept", "application/json")
 	if a.DebugSwitch == gopay.DebugOn {

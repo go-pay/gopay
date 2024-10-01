@@ -17,6 +17,10 @@ import (
 	"github.com/go-pay/gopay"
 )
 
+type RequestIdHandler interface {
+	RequestId() string
+}
+
 type Request struct {
 	client           *Client
 	Header           http.Header

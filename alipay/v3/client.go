@@ -24,9 +24,9 @@ type ClientV3 struct {
 	ivKey              []byte
 	privateKey         *rsa.PrivateKey
 	aliPayPublicKey    *rsa.PublicKey // 支付宝证书公钥内容 alipayPublicCert.crt
-	autoSign           bool
 	DebugSwitch        gopay.DebugSwitch
 	logger             xlog.XLogger
+	requestIdFunc      xhttp.RequestIdHandler
 	location           *time.Location
 	hc                 *xhttp.Client
 }
@@ -47,14 +47,22 @@ func NewClientV3(appid, privateKey string, isProd bool) (client *ClientV3, err e
 	logger := xlog.NewLogger()
 	logger.SetLevel(xlog.DebugLevel)
 	client = &ClientV3{
-		AppId:       appid,
-		IsProd:      isProd,
-		privateKey:  priKey,
-		DebugSwitch: gopay.DebugOff,
-		logger:      logger,
-		hc:          xhttp.NewClient(),
+		AppId:         appid,
+		IsProd:        isProd,
+		privateKey:    priKey,
+		DebugSwitch:   gopay.DebugOff,
+		logger:        logger,
+		requestIdFunc: defaultRequestIdFunc,
+		hc:            xhttp.NewClient(),
 	}
 	return client, nil
+}
+
+// 设置自定义RequestId生成函数
+func (a *ClientV3) SetRequestIdFunc(requestIdFunc xhttp.RequestIdHandler) {
+	if requestIdFunc != nil {
+		a.requestIdFunc = requestIdFunc
+	}
 }
 
 // 应用公钥证书内容设置 app_cert_sn、alipay_root_cert_sn、alipay_cert_sn

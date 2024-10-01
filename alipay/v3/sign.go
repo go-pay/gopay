@@ -128,7 +128,7 @@ func (a *ClientV3) getSignData(bs []byte, alipayCertSN string) (signData string,
 // =============================== 同步验签 ===============================
 
 func (a *ClientV3) autoVerifySignByCert(res *http.Response, body []byte) (err error) {
-	if a.autoSign && a.aliPayPublicKey != nil {
+	if a.aliPayPublicKey != nil {
 		ts := res.Header.Get(HeaderTimestamp)
 		nonce := res.Header.Get(HeaderNonce)
 		sign := res.Header.Get(HeaderSignature)
