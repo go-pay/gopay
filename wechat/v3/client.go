@@ -13,19 +13,20 @@ import (
 
 // ClientV3 微信支付 V3
 type ClientV3 struct {
-	Mchid       string
-	ApiV3Key    []byte
-	SerialNo    string
-	WxSerialNo  string
-	autoSign    bool
-	rwMu        sync.RWMutex
-	hc          *xhttp.Client
-	privateKey  *rsa.PrivateKey
-	wxPublicKey *rsa.PublicKey
-	ctx         context.Context
-	DebugSwitch gopay.DebugSwitch
-	logger      xlog.XLogger
-	SnCertMap   map[string]*rsa.PublicKey // key: serial_no
+	Mchid         string
+	ApiV3Key      []byte
+	SerialNo      string
+	WxSerialNo    string
+	autoSign      bool
+	rwMu          sync.RWMutex
+	hc            *xhttp.Client
+	privateKey    *rsa.PrivateKey
+	wxPublicKey   *rsa.PublicKey
+	ctx           context.Context
+	DebugSwitch   gopay.DebugSwitch
+	requestIdFunc xhttp.RequestIdHandler
+	logger        xlog.XLogger
+	SnCertMap     map[string]*rsa.PublicKey // key: serial_no
 }
 
 // NewClientV3 初始化微信客户端 V3
@@ -44,16 +45,23 @@ func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3
 	logger := xlog.NewLogger()
 	logger.SetLevel(xlog.DebugLevel)
 	client = &ClientV3{
-		Mchid:       mchid,
-		SerialNo:    serialNo,
-		ApiV3Key:    []byte(apiV3Key),
-		privateKey:  priKey,
-		ctx:         context.Background(),
-		DebugSwitch: gopay.DebugOff,
-		logger:      logger,
-		hc:          xhttp.NewClient(),
+		Mchid:         mchid,
+		SerialNo:      serialNo,
+		ApiV3Key:      []byte(apiV3Key),
+		privateKey:    priKey,
+		ctx:           context.Background(),
+		DebugSwitch:   gopay.DebugOff,
+		logger:        logger,
+		requestIdFunc: defaultRequestIdFunc,
+		hc:            xhttp.NewClient(),
 	}
 	return client, nil
+}
+
+func (c *ClientV3) SetRequestIdFunc(requestIdFunc xhttp.RequestIdHandler) {
+	if requestIdFunc != nil {
+		c.requestIdFunc = requestIdFunc
+	}
 }
 
 // AutoVerifySign 开启请求完自动验签功能（默认不开启，推荐开启）
