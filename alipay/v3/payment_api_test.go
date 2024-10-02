@@ -30,5 +30,4 @@ func TestTradePrecreate(t *testing.T) {
 	}
 	xlog.Debug("aliRsp.QrCode:", aliRsp.QrCode)
 	xlog.Debug("aliRsp.OutTradeNo:", aliRsp.OutTradeNo)
-	xlog.Debug("aliRsp.ShareCode:", aliRsp.ShareCode)
 }

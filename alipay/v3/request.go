@@ -49,6 +49,35 @@ func (a *ClientV3) doPost(ctx context.Context, bm gopay.BodyMap, uri, authorizat
 	return res, bs, nil
 }
 
+func (a *ClientV3) doGet(ctx context.Context, uri, authorization string) (res *http.Response, bs []byte, err error) {
+	var url = v3BaseUrlCh + uri
+	if !a.IsProd {
+		url = v3SandboxBaseUrl + uri
+	}
+	req := a.hc.Req() // default json
+	req.Header.Add(HeaderAuthorization, authorization)
+	req.Header.Add(HeaderRequestID, a.requestIdFunc.RequestId())
+	req.Header.Add(HeaderSdkVersion, "gopay/"+gopay.Version)
+	if a.AppAuthToken != "" {
+		req.Header.Add(HeaderAppAuthToken, a.AppAuthToken)
+	}
+	req.Header.Add("Accept", "application/json")
+	if a.DebugSwitch == gopay.DebugOn {
+		a.logger.Debugf("Alipay_V3_Url: %s", url)
+		a.logger.Debugf("Alipay_V3_Req_Headers: %#v", req.Header)
+	}
+	res, bs, err = req.Get(url).EndBytesForAlipayV3(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if a.DebugSwitch == gopay.DebugOn {
+		a.logger.Debugf("Alipay_V3_Response: %d > %s", res.StatusCode, string(bs))
+		a.logger.Debugf("Alipay_V3_Rsp_Headers: %#v", res.Header)
+	}
+	return res, bs, nil
+}
+
 func (a *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, uri, authorization string) (res *http.Response, bs []byte, err error) {
 	var url = v3BaseUrlCh + uri
 	req := a.hc.Req(xhttp.TypeMultipartFormData)
