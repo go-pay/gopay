@@ -40,6 +40,13 @@ func (bm BodyMap) SetBodyMap(key string, value func(b BodyMap)) BodyMap {
 	return bm
 }
 
+func (bm BodyMap) SetSlice(key string, value func(b BodyMap)) BodyMap {
+	_bm := make(BodyMap)
+	value(_bm)
+	bm[key] = _bm
+	return bm
+}
+
 // 设置 FormFile
 func (bm BodyMap) SetFormFile(key string, file *File) BodyMap {
 	bm[key] = file
@@ -67,8 +74,17 @@ func (bm BodyMap) GetString(key string) string {
 	return v
 }
 
-// 获取原始参数
+// Deprecated
+// 推荐使用 GetAny()
 func (bm BodyMap) GetInterface(key string) any {
+	if bm == nil {
+		return nil
+	}
+	return bm[key]
+}
+
+// 获取原始参数
+func (bm BodyMap) GetAny(key string) any {
 	if bm == nil {
 		return nil
 	}

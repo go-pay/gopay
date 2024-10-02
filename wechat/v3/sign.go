@@ -30,9 +30,8 @@ func V3VerifySign(timestamp, nonce, signBody, sign, wxPubKeyContent string) (err
 	str := timestamp + "\n" + nonce + "\n" + signBody + "\n"
 	signBytes, _ := base64.StdEncoding.DecodeString(sign)
 
-	h := sha256.New()
-	h.Write([]byte(str))
-	if err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
+	sum256 := sha256.Sum256([]byte(str))
+	if err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, sum256[:], signBytes); err != nil {
 		return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
 	}
 	return nil
@@ -48,9 +47,8 @@ func V3VerifySignByPK(timestamp, nonce, signBody, sign string, wxPublicKey *rsa.
 	str := timestamp + "\n" + nonce + "\n" + signBody + "\n"
 	signBytes, _ := base64.StdEncoding.DecodeString(sign)
 
-	h := sha256.New()
-	h.Write([]byte(str))
-	if err = rsa.VerifyPKCS1v15(wxPublicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
+	sum256 := sha256.Sum256([]byte(str))
+	if err = rsa.VerifyPKCS1v15(wxPublicKey, crypto.SHA256, sum256[:], signBytes); err != nil {
 		return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
 	}
 	return nil
@@ -254,9 +252,8 @@ func (c *ClientV3) rsaSign(str string) (string, error) {
 	if c.privateKey == nil {
 		return "", errors.New("privateKey can't be nil")
 	}
-	h := sha256.New()
-	h.Write([]byte(str))
-	result, err := rsa.SignPKCS1v15(rand.Reader, c.privateKey, crypto.SHA256, h.Sum(nil))
+	sum256 := sha256.Sum256([]byte(str))
+	result, err := rsa.SignPKCS1v15(rand.Reader, c.privateKey, crypto.SHA256, sum256[:])
 	if err != nil {
 		return gopay.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
 	}
@@ -288,9 +285,8 @@ func (c *ClientV3) verifySyncSign(si *SignInfo) (err error) {
 	}
 	str := si.HeaderTimestamp + "\n" + si.HeaderNonce + "\n" + si.SignBody + "\n"
 	signBytes, _ := base64.StdEncoding.DecodeString(si.HeaderSignature)
-	h := sha256.New()
-	h.Write([]byte(str))
-	if err = rsa.VerifyPKCS1v15(wxPublicKey, crypto.SHA256, h.Sum(nil), signBytes); err != nil {
+	sum256 := sha256.Sum256([]byte(str))
+	if err = rsa.VerifyPKCS1v15(wxPublicKey, crypto.SHA256, sum256[:], signBytes); err != nil {
 		return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
 	}
 	return nil
