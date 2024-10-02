@@ -89,12 +89,10 @@ func main() {
 
 ## 讨论群
 
-QQ群：
-<img width="240" height="240" src=".github/qq_gopay.png"/>
-微信群：
-<img width="240" height="240" src=".github/wx_gopay.png"/>
-<br>微信群二维码过期加微信拉群：
-<img width="240" height="240" src=".github/wechat_jerry.png"/>
+抖音群：
+<img width="240" height="240" src=".github/douyin_gopay.png"/>
+&nbsp;&nbsp;&nbsp;&nbsp;抖音关注拉群：
+<img width="240" height="240" src=".github/douyin_jerry.png"/>
 
 ---
 
