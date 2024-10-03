@@ -88,11 +88,12 @@ func main() {
 ---
 
 ## 讨论群
+> 抖音关注（需要1000+粉丝量）私聊获取微信群二维码
 
-抖音群：
-<img width="240" height="240" src=".github/douyin_gopay.png"/>
-&nbsp;&nbsp;&nbsp;&nbsp;抖音关注拉群：
+抖音关注私聊拉群：
 <img width="240" height="240" src=".github/douyin_jerry.png"/>
+&nbsp;&nbsp;&nbsp;&nbsp;微信群：
+<img width="240" height="240" src=".github/wx_gopay.png"/>
 
 ---
 
