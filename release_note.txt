@@ -1,3 +1,9 @@
+版本号：v1.5.106
+修改记录：
+   (1) 支付宝：支付宝支持V3接口，接口还在完善中，欢迎提PR一起建设。
+   (2) gopay：支付宝、微信接口请求支持设置自定义RequestId的函数，client.SetRequestIdFunc()。
+
+
 版本号：Release 1.5.105
 修改记录：
    (1) gopay：golang.org/x/crypto v0.26.0 版本升级到 v0.27.0。
