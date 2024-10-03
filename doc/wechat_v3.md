@@ -48,6 +48,9 @@ if err != nil {
 // 自定义配置http请求接收返回结果body大小，默认 10MB
 client.SetBodySize() // 没有特殊需求，可忽略此配置
 
+// 设置自定义RequestId生成方法，非必须
+client.SetRequestIdFunc()
+
 // 打开Debug开关，输出日志，默认是关闭的
 client.DebugSwitch = gopay.DebugOn
 ```

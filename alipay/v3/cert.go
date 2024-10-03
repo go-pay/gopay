@@ -25,11 +25,10 @@ var allowSignatureAlgorithm = map[string]bool{
 	"SHA512-RSAPSS": true,
 }
 
-// GetCertSN 获取证书序列号SN
 // certPathOrData x509证书文件路径(appPublicCert.crt、alipayPublicCert.crt) 或证书 buffer
 // 返回 sn：证书序列号(app_cert_sn、alipay_cert_sn)
 // 返回 err：error 信息
-func GetCertSN(certPathOrData any) (sn string, err error) {
+func getCertSN(certPathOrData any) (sn string, err error) {
 	var certData []byte
 	switch pathOrData := certPathOrData.(type) {
 	case string:
@@ -61,11 +60,10 @@ func GetCertSN(certPathOrData any) (sn string, err error) {
 	return sn, nil
 }
 
-// GetRootCertSN 获取root证书序列号SN
 // rootCertPathOrData x509证书文件路径(alipayRootCert.crt) 或文件 buffer
 // 返回 sn：证书序列号(alipay_root_cert_sn)
 // 返回 err：error 信息
-func GetRootCertSN(rootCertPathOrData any) (sn string, err error) {
+func getRootCertSN(rootCertPathOrData any) (sn string, err error) {
 	var (
 		certData []byte
 		certEnd  = `-----END CERTIFICATE-----`

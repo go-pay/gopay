@@ -70,15 +70,15 @@ func (a *ClientV3) SetRequestIdFunc(requestIdFunc xhttp.RequestIdHandler) {
 // alipayRootCertContent：支付宝根证书文件内容
 // alipayPublicCertContent：支付宝公钥证书文件内容
 func (a *ClientV3) SetCert(appCertContent, alipayRootCertContent, alipayPublicCertContent []byte) (err error) {
-	appCertSn, err := GetCertSN(appCertContent)
+	appCertSn, err := getCertSN(appCertContent)
 	if err != nil {
 		return fmt.Errorf("get app_cert_sn return err, but alse return alipay client. err: %w", err)
 	}
-	rootCertSn, err := GetRootCertSN(alipayRootCertContent)
+	rootCertSn, err := getRootCertSN(alipayRootCertContent)
 	if err != nil {
 		return fmt.Errorf("get alipay_root_cert_sn return err, but alse return alipay client. err: %w", err)
 	}
-	publicCertSn, err := GetCertSN(alipayPublicCertContent)
+	publicCertSn, err := getCertSN(alipayPublicCertContent)
 	if err != nil {
 		return fmt.Errorf("get alipay_cert_sn return err, but alse return alipay client. err: %w", err)
 	}
@@ -94,6 +94,27 @@ func (a *ClientV3) SetCert(appCertContent, alipayRootCertContent, alipayPublicCe
 	a.AliPayPublicCertSN = publicCertSn
 	a.aliPayPublicKey = pubKey
 	return nil
+}
+
+// SetBodySize 设置http response body size(MB)
+func (a *ClientV3) SetBodySize(sizeMB int) {
+	if sizeMB > 0 {
+		a.hc.SetBodySize(sizeMB)
+	}
+}
+
+// SetHttpClient 设置自定义的xhttp.Client
+func (a *ClientV3) SetHttpClient(client *xhttp.Client) {
+	if client != nil {
+		a.hc = client
+	}
+}
+
+// SetLogger 设置自定义的logger
+func (a *ClientV3) SetLogger(logger xlog.XLogger) {
+	if logger != nil {
+		a.logger = logger
+	}
 }
 
 // SetAESKey 设置 biz_content 的AES加密key，设置此参数默认开启 biz_content 参数加密

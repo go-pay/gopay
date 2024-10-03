@@ -169,7 +169,7 @@ func TestOutSlice(t *testing.T) {
 
 	bm := make(BodyMap)
 	bm.Set("", js)
-	xlog.Debugf("%v", bm.GetInterface(""))
+	xlog.Debugf("%v", bm.GetAny(""))
 	xlog.Debugf("%s", bm.GetString(""))
 	xlog.Debugf("%s", bm.JsonBody())
 }

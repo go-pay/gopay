@@ -45,8 +45,10 @@ func main() {
 
 > ### 点击查看不同支付方式的使用文档。方便的话，请留下您认可的小星星，十分感谢！
 
+* #### [支付宝支付（V3版）](https://github.com/go-pay/gopay/blob/main/doc/alipay_v3.md)
 * #### [支付宝支付](https://github.com/go-pay/gopay/blob/main/doc/alipay.md)
-* #### [微信支付](https://github.com/go-pay/gopay/blob/main/doc/wechat_v3.md)
+* #### [微信支付（V3版）](https://github.com/go-pay/gopay/blob/main/doc/wechat_v3.md)
+* #### [微信支付（V2版，不推荐）](https://github.com/go-pay/gopay/blob/main/doc/wechat_v2.md)
 * #### [QQ支付](https://github.com/go-pay/gopay/blob/main/doc/qq.md)
 * #### [通联支付](https://github.com/go-pay/gopay/blob/main/doc/allinpay.md)
 * #### [拉卡拉支付](https://github.com/go-pay/gopay/blob/main/doc/lakala.md)

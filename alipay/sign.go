@@ -306,7 +306,7 @@ func (a *Client) autoVerifySignByCert(sign, signData string, signDataErr error) 
 // notifyBean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
 // 返回参数ok：是否验签通过
 // 返回参数err：错误信息
-// 验签文档：https://opendocs.alipay.com/open/200/106120
+// 验签文档：https://opendocs.alipay.com/common/02mse7
 func VerifySign(alipayPublicKey string, notifyBean any) (ok bool, err error) {
 	if alipayPublicKey == gopay.NULL || notifyBean == nil {
 		return false, errors.New("alipayPublicKey or notifyBean is nil")
@@ -352,7 +352,7 @@ func VerifySign(alipayPublicKey string, notifyBean any) (ok bool, err error) {
 // notifyBean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
 // 返回参数ok：是否验签通过
 // 返回参数err：错误信息
-// 验签文档：https://opendocs.alipay.com/open/200/106120
+// 验签文档：https://opendocs.alipay.com/common/02mse7
 func VerifySignWithCert(aliPayPublicKeyCert, notifyBean any) (ok bool, err error) {
 	if notifyBean == nil || aliPayPublicKeyCert == nil {
 		return false, errors.New("aliPayPublicKeyCert or notifyBean is nil")

@@ -6,17 +6,14 @@ import (
 	"crypto/rsa"
 	"crypto/sha256"
 	"encoding/base64"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"os"
-	"reflect"
 	"strings"
 	"time"
 
 	"github.com/go-pay/crypto/xpem"
-	"github.com/go-pay/crypto/xrsa"
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/util"
 	"github.com/go-pay/util/convert"
@@ -144,141 +141,6 @@ func (a *ClientV3) autoVerifySignByCert(res *http.Response, body []byte) (err er
 		}
 	}
 	return nil
-}
-
-// VerifySyncSign 支付宝同步返回验签（公钥模式）
-// 注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 不支持同步返回验签
-// aliPayPublicKey：支付宝平台获取的支付宝公钥
-// signData：待验签参数，aliRsp.SignData
-// sign：待验签sign，aliRsp.Sign
-// 返回参数ok：是否验签通过
-// 返回参数err：错误信息
-// 验签文档：https://opendocs.alipay.com/open/200/106120
-func VerifySyncSign(aliPayPublicKey, signData, sign string) (ok bool, err error) {
-	// 支付宝公钥验签
-	pKey := xrsa.FormatAlipayPublicKey(aliPayPublicKey)
-	if err = verifySign(signData, sign, pKey); err != nil {
-		return false, err
-	}
-	return true, nil
-}
-
-// VerifySyncSignWithCert 支付宝同步返回验签（公钥证书模式）
-// 注意：APP支付，手机网站支付，电脑网站支付，身份认证开始认证 不支持同步返回验签
-// aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayPublicCert.crt 或文件内容[]byte
-// signData：待验签参数，aliRsp.SignData
-// sign：待验签sign，aliRsp.Sign
-// 返回参数ok：是否验签通过
-// 返回参数err：错误信息
-// 验签文档：https://opendocs.alipay.com/open/200/106120
-func VerifySyncSignWithCert(alipayPublicKeyCert any, signData, sign string) (ok bool, err error) {
-	switch alipayPublicKeyCert.(type) {
-	case string:
-		if alipayPublicKeyCert == gopay.NULL {
-			return false, errors.New("aliPayPublicKeyPath is null")
-		}
-	case []byte:
-	default:
-		return false, errors.New("alipayPublicKeyCert type assert error")
-	}
-	if err = verifySignCert(signData, sign, alipayPublicKeyCert); err != nil {
-		return false, err
-	}
-	return true, nil
-}
-
-// =============================== 异步验签 ===============================
-
-// VerifySign 支付宝异步通知验签（公钥模式）
-// 注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
-// alipayPublicKey：支付宝平台获取的支付宝公钥
-// notifyBean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
-// 返回参数ok：是否验签通过
-// 返回参数err：错误信息
-// 验签文档：https://opendocs.alipay.com/open/200/106120
-func VerifySign(alipayPublicKey string, notifyBean any) (ok bool, err error) {
-	if alipayPublicKey == gopay.NULL || notifyBean == nil {
-		return false, errors.New("alipayPublicKey or notifyBean is nil")
-	}
-	var (
-		bodySign string
-		signData string
-		bm       = make(gopay.BodyMap)
-	)
-	if reflect.ValueOf(notifyBean).Kind() == reflect.Map {
-		if bm, ok = notifyBean.(gopay.BodyMap); ok {
-			bodySign = bm.GetString("sign")
-			bm.Remove("sign")
-			bm.Remove("sign_type")
-			signData = bm.EncodeAliPaySignParams()
-		}
-	} else {
-		bs, err := json.Marshal(notifyBean)
-		if err != nil {
-			return false, fmt.Errorf("json.Marshal：%w", err)
-		}
-		if err = json.Unmarshal(bs, &bm); err != nil {
-			return false, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
-		}
-		bodySign = bm.GetString("sign")
-		bm.Remove("sign")
-		bm.Remove("sign_type")
-		signData = bm.EncodeAliPaySignParams()
-	}
-	pKey := xrsa.FormatAlipayPublicKey(alipayPublicKey)
-	if err = verifySign(signData, bodySign, pKey); err != nil {
-		return false, err
-	}
-	return true, nil
-}
-
-// 支付宝异步通知验签（公钥证书模式）
-// 注意：APP支付，手机网站支付，电脑网站支付 暂不支持同步返回验签
-// aliPayPublicKeyCert：支付宝公钥证书存放路径 alipayPublicCert.crt 或文件内容[]byte
-// notifyBean：此参数为异步通知解析的结构体或BodyMap：notifyReq 或 bm，推荐通 BodyMap 验签
-// 返回参数ok：是否验签通过
-// 返回参数err：错误信息
-// 验签文档：https://opendocs.alipay.com/open/200/106120
-func VerifySignWithCert(aliPayPublicKeyCert, notifyBean any) (ok bool, err error) {
-	if notifyBean == nil || aliPayPublicKeyCert == nil {
-		return false, errors.New("aliPayPublicKeyCert or notifyBean is nil")
-	}
-	switch aliPayPublicKeyCert.(type) {
-	case string:
-		if aliPayPublicKeyCert == gopay.NULL {
-			return false, errors.New("aliPayPublicKeyPath is null")
-		}
-	case []byte:
-	default:
-		return false, errors.New("aliPayPublicKeyCert type assert error")
-	}
-	var bm gopay.BodyMap
-
-	switch nb := notifyBean.(type) {
-	case map[string]any:
-		bm = make(gopay.BodyMap, len(nb))
-		for key, val := range nb {
-			bm[key] = val
-		}
-	case gopay.BodyMap:
-		bm = nb
-	default:
-		bs, err := json.Marshal(notifyBean)
-		if err != nil {
-			return false, fmt.Errorf("json.Marshal：%w", err)
-		}
-		if err = json.Unmarshal(bs, &bm); err != nil {
-			return false, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
-		}
-	}
-	bodySign := bm.GetString("sign")
-	bm.Remove("sign")
-	bm.Remove("sign_type")
-	signData := bm.EncodeAliPaySignParams()
-	if err = verifySignCert(signData, bodySign, aliPayPublicKeyCert); err != nil {
-		return false, err
-	}
-	return true, nil
 }
 
 // =============================== 通用底层验签方法 ===============================

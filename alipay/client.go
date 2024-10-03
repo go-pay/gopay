@@ -95,6 +95,7 @@ func (a *Client) SetHttpClient(client *xhttp.Client) {
 	}
 }
 
+// SetLogger 设置自定义的logger
 func (a *Client) SetLogger(logger xlog.XLogger) {
 	if logger != nil {
 		a.logger = logger
@@ -126,7 +127,7 @@ func (a *Client) RequestParam(bm gopay.BodyMap, method string) (string, error) {
 		return "", gopay.BodyMapNilErr
 	}
 	// check if there is biz_content
-	bz := bm.GetInterface("biz_content")
+	bz := bm.GetAny("biz_content")
 	if bzBody, ok := bz.(gopay.BodyMap); ok {
 		if bodyBs, err = json.Marshal(bzBody); err != nil {
 			return "", fmt.Errorf("json.Marshal(%v)：%w", bzBody, err)

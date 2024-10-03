@@ -189,7 +189,7 @@ func (a *ClientV3) DataBillDownloadUrlQuery(ctx context.Context, bm gopay.BodyMa
 		return nil, err
 	}
 	uri := v3DataBillDownloadUrlQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, bm)
+	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,6 @@
 ## 支付宝
 
-> #### [开发文档（V3版）](https://opendocs.alipay.com/open-v3) is coming soon... 
+> #### [开发文档（V3版）](https://opendocs.alipay.com/open-v3) 支付宝v3版本已支持，接口持续完善中。
 
 > #### 因支付宝接口太多，如没实现的接口，还请开发者自行调用 `client.PostAliPayAPISelfV2()`方法实现！请参考 `client_test.go` 内的 `TestClient_PostAliPayAPISelfV2()` 方法
 
@@ -10,13 +10,13 @@
 
 - 支付宝官方文档：[官方文档](https://openhome.alipay.com/docCenter/docCenter.htm)
 
-- 技术介入指南：[技术介入指南](https://opendocs.alipay.com/common/02mse2)
+- 技术接入指南：[技术接入指南](https://opendocs.alipay.com/common/02mse2)
 
 - 技术支持&案例FAQ：[技术支持&案例FAQ](https://opendocs.alipay.com/support/01rarm)
 
 - 支付宝RSA秘钥生成文档：[生成RSA密钥](https://opendocs.alipay.com/common/02kipl) （推荐使用 RSA2）
 
-- 沙箱环境(新) 使用说明：[新版沙箱文档](https://opendocs.alipay.com/common/05yvy1)
+- 沙箱环境(新) 使用说明：[新版沙箱文档](https://opendocs.alipay.com/common/02kkv7)
 
 ---
 
@@ -42,6 +42,9 @@ if err != nil {
 
 // 自定义配置http请求接收返回结果body大小，默认 10MB
 client.SetBodySize() // 没有特殊需求，可忽略此配置
+
+// 设置自定义RequestId生成方法，非必须
+client.SetRequestIdFunc()
 
 // 打开Debug开关，输出日志，默认关闭
 client.DebugSwitch = gopay.DebugOn
@@ -71,7 +74,7 @@ err := client.SetCertSnByContent("appPublicCert.crt bytes", "alipayRootCert byte
 
 ### 2、API 方法调用及入参
 
-> 具体参数请根据不同接口查看：[支付宝支付API接口文档](https://opendocs.alipay.com/apis)
+> 具体参数请根据不同接口查看：[支付宝支付API接口文档](https://opendocs.alipay.com/open/065yhr)
 
 > 业务错误处理：当 `err != nil` 时，可通过 `alipay.IsBizError()` 捕获业务错误状态码和说明。
 > 不在乎 `BizError` 的可忽略统一判错处理
@@ -116,7 +119,7 @@ if err != nil {
 
 > 注意：APP支付、手机网站支付、电脑网站支付 不支持同步返回验签
 
-> 支付宝支付后的同步/异步通知验签文档：[支付结果通知](https://opendocs.alipay.com/open/200/106120)
+> 支付宝支付后的同步/异步通知验签文档：[支付结果通知](https://opendocs.alipay.com/common/02mse7)
 
 - 同步返回验签，手动验签（如已开启自动验签，则无需手动验签操作）
 

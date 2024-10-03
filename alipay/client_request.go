@@ -19,7 +19,7 @@ func (a *Client) PostAliPayAPISelfV2(ctx context.Context, bodyMap gopay.BodyMap,
 		bs, bodyBs []byte
 	)
 	// check if there is biz_content
-	bz := bodyMap.GetInterface("biz_content")
+	bz := bodyMap.GetAny("biz_content")
 	if bzBody, ok := bz.(gopay.BodyMap); ok {
 		if bodyBs, err = json.Marshal(bzBody); err != nil {
 			return fmt.Errorf("json.Marshal(%v)：%w", bzBody, err)
