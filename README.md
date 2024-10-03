@@ -66,6 +66,7 @@ func main() {
 
 * 各支付方式接入，请仔细查看 `xxx_test.go` 使用方式
     * `gopay/wechat/v3/client_test.go`
+    * `gopay/alipay/v3/client_test.go`
     * `gopay/alipay/client_test.go`
     * `gopay/qq/client_test.go`
     * `gopay/allinpay/client_test.go`
@@ -74,7 +75,7 @@ func main() {
     * `gopay/apple/verify_test.go`
     * 或 examples
 * 接入gopay示例项目(可参考接入使用方式)：[gopay-platform](https://github.com/go-pay/gopay-platform)
-* 有问题请加QQ群(加群验证答案：gopay) 或 加微信好友(备注：gopay开发)拉群。在此，非常感谢提出宝贵意见和反馈问题的同志们！
+* 有问题请加微信群 或 抖音关注并私信拉微信群。在此，非常感谢提出宝贵意见和反馈问题的同志们！
 * 开发过程中，请尽量使用正式环境，1分钱测试法！
 * 有偿承接技术咨询、开发，如需要加微信联系。
 
@@ -90,9 +91,9 @@ func main() {
 ---
 
 ## 讨论群
-> 抖音关注（需要1000+粉丝量）私聊获取微信群二维码
+> 抖音关注（需要1000+粉丝量）私信获取微信群二维码
 
-抖音关注私聊拉群：
+抖音关注私信拉群：
 <img width="240" height="240" src=".github/douyin_jerry.png"/>
 &nbsp;&nbsp;&nbsp;&nbsp;微信群：
 <img width="240" height="240" src=".github/wx_gopay.png"/>
