@@ -93,7 +93,7 @@ func main() {
 ## 讨论群
 > 抖音关注（需要1000+粉丝量）私信获取微信群二维码
 
-抖音关注私信拉群：
+抖音扫码关注：
 <img width="240" height="240" src=".github/douyin_jerry.png"/>
 &nbsp;&nbsp;&nbsp;&nbsp;微信群：
 <img width="240" height="240" src=".github/wx_gopay.png"/>
