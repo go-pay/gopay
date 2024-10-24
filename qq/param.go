@@ -32,7 +32,7 @@ func (q *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath any) 
 	if err != nil {
 		return
 	}
-	q.tlsHc.SetTLSConfig(config)
+	q.tlsHc.SetHttpTLSConfig(config)
 	return nil
 }
 

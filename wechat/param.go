@@ -80,7 +80,7 @@ func (w *Client) addCertFileContentOrPath(certFile, keyFile, pkcs12File any) (er
 	if err != nil {
 		return
 	}
-	w.tlsHc.SetTLSConfig(config)
+	w.tlsHc.SetHttpTLSConfig(config)
 	return
 }
 

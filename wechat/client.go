@@ -259,7 +259,7 @@ func (w *Client) doProdPostSelf(ctx context.Context, bm gopay.BodyMap, path stri
 	}
 	httpClient := xhttp.NewClient()
 	if w.IsProd && tlsConfig != nil {
-		httpClient.SetTLSConfig(tlsConfig)
+		httpClient.SetHttpTLSConfig(tlsConfig)
 	}
 	res, bs, err := httpClient.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {

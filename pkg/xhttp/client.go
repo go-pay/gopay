@@ -40,13 +40,20 @@ func NewClient() (client *Client) {
 	return defaultClient()
 }
 
-func (c *Client) SetTransport(transport *http.Transport) (client *Client) {
+func (c *Client) SetTransport(transport http.RoundTripper) (client *Client) {
 	c.HttpClient.Transport = transport
 	return c
 }
 
-func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
-	c.HttpClient.Transport.(*http.Transport).TLSClientConfig = tlsCfg
+func (c *Client) SetHttpTransport(transport *http.Transport) (client *Client) {
+	c.HttpClient.Transport = transport
+	return c
+}
+
+func (c *Client) SetHttpTLSConfig(tlsCfg *tls.Config) (client *Client) {
+	if ht, ok := c.HttpClient.Transport.(*http.Transport); ok {
+		ht.TLSClientConfig = tlsCfg
+	}
 	return c
 }
 
