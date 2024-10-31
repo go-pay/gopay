@@ -64,6 +64,13 @@ func WithProxyUrl(proxyUrlProd, proxyUrlSandbox string) Option {
 	}
 }
 
+// WithHttpClient 设置自定义的xhttp.Client
+func WithHttpClient(client *xhttp.Client) Option {
+	return func(c *Client) {
+		c.hc = client
+	}
+}
+
 // SetBodySize 设置http response body size(MB)
 func (c *Client) SetBodySize(sizeMB int) {
 	if sizeMB > 0 {
