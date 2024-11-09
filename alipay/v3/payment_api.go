@@ -11,7 +11,7 @@ import (
 )
 
 // 统一收单交易支付接口
-// Code = 200 is success
+// StatusCode = 200 is success
 func (a *ClientV3) TradePay(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradePayRsp, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject", "auth_code", "scene")
 	if err != nil {
@@ -39,7 +39,7 @@ func (a *ClientV3) TradePay(ctx context.Context, bm gopay.BodyMap) (aliRsp *Trad
 }
 
 // 统一收单交易查询
-// Code = 200 is success
+// StatusCode = 200 is success
 func (a *ClientV3) TradeQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeQueryRsp, err error) {
 	if bm.GetString("out_trade_no") == gopay.NULL && bm.GetString("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
@@ -66,7 +66,7 @@ func (a *ClientV3) TradeQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *Tr
 }
 
 // 统一收单交易退款接口
-// Code = 200 is success
+// StatusCode = 200 is success
 func (a *ClientV3) TradeRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeRefundRsp, err error) {
 	err = bm.CheckEmptyError("refund_amount")
 	if err != nil {
@@ -97,7 +97,7 @@ func (a *ClientV3) TradeRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp *T
 }
 
 // 统一收单交易退款查询
-// Code = 200 is success
+// StatusCode = 200 is success
 func (a *ClientV3) TradeFastPayRefundQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeFastPayRefundQueryRsp, err error) {
 	err = bm.CheckEmptyError("out_request_no")
 	if err != nil {
@@ -128,7 +128,7 @@ func (a *ClientV3) TradeFastPayRefundQuery(ctx context.Context, bm gopay.BodyMap
 }
 
 // 统一收单交易撤销接口
-// Code = 200 is success
+// StatusCode = 200 is success
 func (a *ClientV3) TradeCancel(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCancelRsp, err error) {
 	if bm.GetString("out_trade_no") == gopay.NULL && bm.GetString("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
@@ -155,7 +155,7 @@ func (a *ClientV3) TradeCancel(ctx context.Context, bm gopay.BodyMap) (aliRsp *T
 }
 
 // 统一收单交易关闭接口
-// Code = 200 is success
+// StatusCode = 200 is success
 func (a *ClientV3) TradeClose(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCloseRsp, err error) {
 	if bm.GetString("out_trade_no") == gopay.NULL && bm.GetString("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
@@ -182,7 +182,7 @@ func (a *ClientV3) TradeClose(ctx context.Context, bm gopay.BodyMap) (aliRsp *Tr
 }
 
 // 查询对账单下载地址
-// Code = 200 is success
+// StatusCode = 200 is success
 func (a *ClientV3) DataBillDownloadUrlQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *DataBillDownloadUrlQueryRsp, err error) {
 	err = bm.CheckEmptyError("bill_type", "bill_date")
 	if err != nil {
@@ -211,7 +211,7 @@ func (a *ClientV3) DataBillDownloadUrlQuery(ctx context.Context, bm gopay.BodyMa
 }
 
 // 统一收单线下交易预创建
-// Code = 200 is success
+// StatusCode = 200 is success
 func (a *ClientV3) TradePrecreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradePrecreateRsp, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
@@ -239,7 +239,7 @@ func (a *ClientV3) TradePrecreate(ctx context.Context, bm gopay.BodyMap) (aliRsp
 }
 
 // 统一收单交易创建接口
-// Code = 200 is success
+// StatusCode = 200 is success
 func (a *ClientV3) TradeCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCreateRsp, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject", "product_code", "op_app_id")
 	if err != nil {
