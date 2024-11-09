@@ -92,6 +92,24 @@ func (c *ClientV3) AutoVerifySign(autoRefresh ...bool) (err error) {
 	return
 }
 
+// wxPublicKeyContent：微信公钥证书文件内容[]byte
+// wxPublicKeyID：微信公钥证书ID
+func (c *ClientV3) AutoVerifySignByCert(wxPublicKeyContent []byte, wxPublicKeyID string) {
+	pubKey, err := xpem.DecodePublicKey(wxPublicKeyContent)
+	if err != nil {
+		c.logger.Errorf("AutoVerifySignByCert(%s),err:%+v", wxPublicKeyContent, err)
+	}
+	if pubKey != nil {
+		if len(c.SnCertMap) <= 0 {
+			c.SnCertMap = make(map[string]*rsa.PublicKey)
+		}
+		c.SnCertMap[wxPublicKeyID] = pubKey
+		c.wxPublicKey = pubKey
+		c.WxSerialNo = wxPublicKeyID
+		c.autoSign = true
+	}
+}
+
 // SetBodySize 设置http response body size(MB)
 func (c *ClientV3) SetBodySize(sizeMB int) {
 	if sizeMB > 0 {
