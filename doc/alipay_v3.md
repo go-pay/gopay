@@ -195,5 +195,15 @@ return c.String(http.StatusOK, "success")
   * 查询对账单下载地址：`client.DataBillDownloadUrlQuery()`
   * 统一收单线下交易预创建：`client.TradePrecreate()`
   * 统一收单交易创建接口：`client.TradeCreate()`
-
+  * 资金授权操作查询接口：`client.FundAuthOperationDetailQuery()`
+  * 资金授权冻结接口：`client.FundAuthOrderFreeze()`
+  * 资金授权解冻接口：`client.FundAuthOrderUnfreeze()`
+  * 资金授权发码接口：`client.FundAuthOrderVoucherCreate()`
+* <font color='#027AFF' size='4'>会员</font>
+  * 换取授权访问令牌：`client.SystemOauthToken()`
+  * 身份认证记录查询：`client.UserCertifyOpenQuery()`
+  * 身份认证初始化服务：`client.UserCertifyOpenInitialize()`
+  * 支付宝会员授权信息查询接口：`client.UserInfoShare()`
+  * 用户授权关系查询：`client.UserAuthRelationshipQuery()`
+  * 查询解除授权明细：`client.UserDelOauthDetailQuery()`
 ### 支付宝公共 API

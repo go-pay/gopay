@@ -62,4 +62,23 @@ const (
 	v3FundAuthOrderUnfreeze        = "/v3/alipay/fund/auth/order/unfreeze"         // 资金授权解冻接口
 	v3FundAuthOrderVoucherCreate   = "/v3/alipay/fund/auth/order/voucher/create"   // 资金授权发码接口
 
+	// 会员
+	v3UserCertifyOpenQuery       = "/v3/alipay/user/certify/open/query"                                // 身份认证记录查询
+	v3UserCertifyOpenInitialize  = "/v3/alipay/user/certify/open/initialize"                           // 身份认证初始化服务
+	v3SystemOauthToken           = "/v3/alipay/system/oauth/token"                                     // 换取授权访问令牌
+	v3UserInfoShare              = "/v3/alipay/user/info/share"                                        // 支付宝会员授权信息查询接口
+	v3UserAuthRelationshipQuery  = "/v3/alipay/open/auth/userauth/relationship/query"                  // 用户授权关系查询
+	v3UserDelOauthDetailQuery    = "/v3/alipay/user/deloauth/detail/query"                             // 查询解除授权明细
+	v3FaceVerificationInitialize = "/v3/datadigital/fincloud/generalsaas/face/verification/initialize" // 人脸核身初始化
+	v3FaceVerificationQuery      = "/v3/datadigital/fincloud/generalsaas/face/verification/query"      // 人脸核身结果查询
+	v3FaceCertifyInitialize      = "/v3/datadigital/fincloud/generalsaas/face/certify/initialize"      // 跳转支付宝人脸核身初始化
+	v3FaceCertifyVerify          = "/v3/datadigital/fincloud/generalsaas/face/certify/verify"          // 跳转支付宝人脸核身开始认证
+	v3FaceCertifyQuery           = "/v3/datadigital/fincloud/generalsaas/face/certify/query"           // 跳转支付宝人脸核身查询记录
+	v3FaceSourceCertify          = "/v3/datadigital/fincloud/generalsaas/face/source/certify"          // 纯服务端人脸核身
+	v3FaceCheckInitialize        = "/v3/datadigital/fincloud/generalsaas/face/check/initialize"        // 活体检测初始化
+	v3FaceCheckQuery             = "/v3/datadigital/fincloud/generalsaas/face/check/query"             // 活体检测结果查询
+	v3IdCardTwoMetaCheck         = "/v3/datadigital/fincloud/generalsaas/twometa/check"                // 身份证二要素核验
+	v3BankCardCheck              = "/v3/datadigital/fincloud/generalsaas/bankcard/check"               // 银行卡核验
+	v3OcrServerDetect            = "/v3/datadigital/fincloud/generalsaas/ocr/server/detect"            // 服务端OCR
+	v3OcrMobileInitialize        = "/v3/datadigital/fincloud/generalsaas/ocr/mobile/initialize"        // App端OCR初始化
 )
