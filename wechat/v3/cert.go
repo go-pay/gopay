@@ -8,6 +8,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"runtime"
@@ -131,16 +132,17 @@ func GetPlatformSM2Certs(ctx context.Context, mchid, apiV3Key, serialNo, private
 // 注意1：如已开启自动验签功能 client.AutoVerifySign()，无需再调用此方法设置
 // 注意2：请预先通过 wechat.GetPlatformCerts() 获取 微信平台公钥证书 和 证书序列号
 // 部分接口请求参数中敏感信息加密，使用此 微信支付平台公钥 和 证书序列号
-func (c *ClientV3) SetPlatformCert(wxPublicKeyContent []byte, wxSerialNo string) (client *ClientV3) {
+func (c *ClientV3) SetPlatformCert(wxPublicKeyContent []byte, wxSerialNo string) (err error) {
 	pubKey, err := xpem.DecodePublicKey(wxPublicKeyContent)
 	if err != nil {
-		c.logger.Errorf("SetPlatformCert(%s),err:%+v", wxPublicKeyContent, err)
+		return err
 	}
-	if pubKey != nil {
-		c.wxPublicKey = pubKey
+	if pubKey == nil {
+		return errors.New("xpem.DecodePublicKey() failed, pubKey is nil")
 	}
+	c.wxPublicKey = pubKey
 	c.WxSerialNo = wxSerialNo
-	return c
+	return nil
 }
 
 // 获取最新的 微信平台证书

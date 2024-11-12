@@ -3,6 +3,7 @@ package wechat
 import (
 	"context"
 	"crypto/rsa"
+	"errors"
 	"sync"
 
 	"github.com/go-pay/crypto/xpem"
@@ -85,11 +86,31 @@ func (c *ClientV3) AutoVerifySign(autoRefresh ...bool) (err error) {
 	c.WxSerialNo = wxSerialNo
 	c.wxPublicKey = c.SnCertMap[wxSerialNo]
 	if len(autoRefresh) == 1 && !autoRefresh[0] {
-		return
+		return nil
 	}
 	c.autoSign = true
 	go c.autoCheckCertProc()
-	return
+	return nil
+}
+
+// wxPublicKeyContent：微信公钥证书文件内容[]byte
+// wxPublicKeyID：微信公钥证书ID
+func (c *ClientV3) AutoVerifySignByCert(wxPublicKeyContent []byte, wxPublicKeyID string) (err error) {
+	pubKey, err := xpem.DecodePublicKey(wxPublicKeyContent)
+	if err != nil {
+		return err
+	}
+	if pubKey == nil {
+		return errors.New("xpem.DecodePublicKey() failed, pubKey is nil")
+	}
+	if len(c.SnCertMap) <= 0 {
+		c.SnCertMap = make(map[string]*rsa.PublicKey)
+	}
+	c.SnCertMap[wxPublicKeyID] = pubKey
+	c.wxPublicKey = pubKey
+	c.WxSerialNo = wxPublicKeyID
+	c.autoSign = true
+	return nil
 }
 
 // SetBodySize 设置http response body size(MB)
