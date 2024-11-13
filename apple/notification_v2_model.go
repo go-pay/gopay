@@ -97,20 +97,24 @@ type Data struct {
 // RenewalInfo https://developer.apple.com/documentation/appstoreservernotifications/jwsrenewalinfodecodedpayload
 type RenewalInfo struct {
 	jwt.StandardClaims
-	AutoRenewProductId          string `json:"autoRenewProductId"`
-	AutoRenewStatus             int64  `json:"autoRenewStatus"`
-	Environment                 string `json:"environment"`
-	ExpirationIntent            int64  `json:"expirationIntent"`
-	GracePeriodExpiresDate      int64  `json:"gracePeriodExpiresDate"`
-	IsInBillingRetryPeriod      bool   `json:"isInBillingRetryPeriod"`
-	OfferIdentifier             string `json:"offerIdentifier"`
-	OfferType                   int64  `json:"offerType"` // 1:An introductory offer. 2:A promotional offer. 3:An offer with a subscription offer code.
-	OriginalTransactionId       string `json:"originalTransactionId"`
-	PriceIncreaseStatus         int64  `json:"priceIncreaseStatus"` // 0: The customer hasn’t responded to the subscription price increase. 1:The customer consented to the subscription price increase.
-	ProductId                   string `json:"productId"`
-	RecentSubscriptionStartDate int64  `json:"recentSubscriptionStartDate"`
-	RenewalDate                 int64  `json:"renewalDate,omitempty"` // The UNIX time, in milliseconds, that the most recent auto-renewable subscription purchase expires.
-	SignedDate                  int64  `json:"signedDate"`
+	AutoRenewProductId          string   `json:"autoRenewProductId"`
+	AutoRenewStatus             int64    `json:"autoRenewStatus"`
+	Currency                    string   `json:"currency"`
+	EligibleWinBackOfferIds     []string `json:"eligibleWinBackOfferIds"`
+	Environment                 string   `json:"environment"`
+	ExpirationIntent            int64    `json:"expirationIntent"`
+	GracePeriodExpiresDate      int64    `json:"gracePeriodExpiresDate"`
+	IsInBillingRetryPeriod      bool     `json:"isInBillingRetryPeriod"`
+	OfferDiscountType           string   `json:"offerDiscountType"`
+	OfferIdentifier             string   `json:"offerIdentifier"`
+	OfferType                   int64    `json:"offerType"` // 1:An introductory offer. 2:A promotional offer. 3:An offer with a subscription offer code.
+	OriginalTransactionId       string   `json:"originalTransactionId"`
+	PriceIncreaseStatus         int64    `json:"priceIncreaseStatus"` // 0: The customer hasn’t responded to the subscription price increase. 1:The customer consented to the subscription price increase.
+	ProductId                   string   `json:"productId"`
+	RecentSubscriptionStartDate int64    `json:"recentSubscriptionStartDate"`
+	RenewalDate                 int64    `json:"renewalDate,omitempty"` // The UNIX time, in milliseconds, that the most recent auto-renewable subscription purchase expires.
+	RenewalPrice                int64    `json:"renewalPrice"`
+	SignedDate                  int64    `json:"signedDate"`
 }
 
 // TransactionInfo https://developer.apple.com/documentation/appstoreservernotifications/jwstransactiondecodedpayload
