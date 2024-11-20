@@ -102,7 +102,7 @@ func (p *Parser) ParseUnverified(tokenString string, claims Claims) (token *Toke
 	token = &Token{Raw: tokenString}
 
 	// verify slice to make sure it's valid
-	if token.TokenSegmentRows == nil || len(token.TokenSegmentRows) == 0 {
+	if len(token.TokenSegmentRows) == 0 {
 		token.TokenSegmentRows = make([]json.RawMessage, 0, len(parts))
 	}
 
