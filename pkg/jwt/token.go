@@ -21,7 +21,12 @@ type Keyfunc func(*Token) (any, error)
 // A JWT Token.  Different fields will be used depending on whether you're
 // creating or parsing/verifying a token.
 type Token struct {
-	Raw       string         // The raw token.  Populated when you Parse a token
+	Raw string // The raw token.  Populated when you Parse a token
+
+	// The raw token slice. The length is strings.Split(tokenString, ".").
+	// JWT default protocol Parse length is 3.
+	TokenSegmentRows []json.RawMessage
+
 	Method    SigningMethod  // The signing method used or to be used
 	Header    map[string]any // The first segment of the token
 	Claims    Claims         // The second segment of the token

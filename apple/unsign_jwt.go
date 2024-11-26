@@ -21,9 +21,20 @@ func ExtractClaims(signedPayload string, tran jwt.Claims) (err error) {
 	if valueOf.Kind() != reflect.Ptr {
 		return errors.New("tran must be ptr struct")
 	}
-
-	_, err = jwt.ParseWithClaims(signedPayload, tran, func(token *jwt.Token) (any, error) {
-		return x5cCertVerify(signedPayload)
+	tokenStr := signedPayload
+	rootCertStr, err := extractHeaderByIndex(tokenStr, 2)
+	if err != nil {
+		return err
+	}
+	intermediaCertStr, err := extractHeaderByIndex(tokenStr, 1)
+	if err != nil {
+		return err
+	}
+	if err = verifyCert(rootCertStr, intermediaCertStr); err != nil {
+		return err
+	}
+	_, err = jwt.ParseWithClaims(tokenStr, tran, func(token *jwt.Token) (any, error) {
+		return extractPublicKeyFromToken(tokenStr)
 	})
 	if err != nil {
 		return err
@@ -31,59 +42,45 @@ func ExtractClaims(signedPayload string, tran jwt.Claims) (err error) {
 	return nil
 }
 
-type header struct {
-	Alg string   `json:"alg"`
-	X5c []string `json:"x5c"`
+// ExtractClaimsToken 解析jws格式数据
+//
+// Args:
+//   - signedPayload：string, jws格式数据
+//   - tran：jwt.Claims, 指针类型的结构体，用于接收解析后的数据
+func ExtractClaimsToken(signedPayload string, tran jwt.Claims) (tk *jwt.Token, err error) {
+	valueOf := reflect.ValueOf(tran)
+	if valueOf.Kind() != reflect.Ptr {
+		return nil, errors.New("tran must be ptr struct")
+	}
+	tokenStr := signedPayload
+	rootCertStr, err := extractHeaderByIndex(tokenStr, 2)
+	if err != nil {
+		return nil, err
+	}
+	intermediaCertStr, err := extractHeaderByIndex(tokenStr, 1)
+	if err != nil {
+		return nil, err
+	}
+	if err = verifyCert(rootCertStr, intermediaCertStr); err != nil {
+		return nil, err
+	}
+	tk, err = jwt.ParseWithClaims(tokenStr, tran, func(token *jwt.Token) (any, error) {
+		return extractPublicKeyFromToken(tokenStr)
+	})
+	return tk, err
 }
 
-// 解析 x5c root intermedia user证书
 // Per doc: https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.6
-func (h *header) certParse() (*x509.Certificate, *x509.Certificate, *x509.Certificate, error) {
-	if len(h.X5c) != 3 {
-		return nil, nil, nil, errors.New("invalid x5c format")
-	}
-	var certDecode = func(certStr string) (*x509.Certificate, error) {
-		certBytes, err := base64.StdEncoding.DecodeString(certStr)
-		if err != nil {
-			return nil, fmt.Errorf("failed to parse certificate: %w", err)
-		}
-		cert, err := x509.ParseCertificate(certBytes)
-		if err != nil {
-			return nil, fmt.Errorf("failed to parse certificate: %w", err)
-		}
-		return cert, nil
-	}
-	root, err := certDecode(h.X5c[2])
-	if err != nil {
-		return nil, nil, nil, fmt.Errorf("failed to decode root certificate: %w", err)
-	}
-	interCert, err := certDecode(h.X5c[1])
-	if err != nil {
-		return nil, nil, nil, fmt.Errorf("failed to decode intermedia certificate: %w", err)
-	}
-	userCert, err := certDecode(h.X5c[0])
-	if err != nil {
-		return nil, nil, nil, fmt.Errorf("failed to decode user certificate: %w", err)
-	}
-	return root, interCert, userCert, nil
-}
-
-func (h *header) x5cCertVerify() (*ecdsa.PublicKey, error) {
-	_, i, u, err := h.certParse()
+func extractPublicKeyFromToken(tokenStr string) (*ecdsa.PublicKey, error) {
+	certStr, err := extractHeaderByIndex(tokenStr, 0)
 	if err != nil {
 		return nil, err
 	}
-	var iPool = x509.NewCertPool()
-	iPool.AddCert(i)
-	opts := x509.VerifyOptions{
-		Roots:         rootCertPool,
-		Intermediates: iPool,
-	}
-	_, err = u.Verify(opts)
+	cert, err := x509.ParseCertificate(certStr)
 	if err != nil {
 		return nil, err
 	}
-	switch pk := u.PublicKey.(type) {
+	switch pk := cert.PublicKey.(type) {
 	case *ecdsa.PublicKey:
 		return pk, nil
 	default:
@@ -91,28 +88,54 @@ func (h *header) x5cCertVerify() (*ecdsa.PublicKey, error) {
 	}
 }
 
-// 苹果根ca证书
-var rootCertPool *x509.CertPool
-
-func init() {
-	rootCertPool = x509.NewCertPool()
-	rootCertPool.AppendCertsFromPEM([]byte(rootPEM))
-}
-
-// 验证x5c证书链是否合法
-func x5cCertVerify(tokenStr string) (*ecdsa.PublicKey, error) {
-	tokenArr := strings.Split(tokenStr, ".")
-	if len(tokenArr) != 3 {
-		return nil, errors.New("invalid jwt format")
+func extractHeaderByIndex(tokenStr string, index int) ([]byte, error) {
+	if index > 2 {
+		return nil, errors.New("invalid index")
 	}
+	tokenArr := strings.Split(tokenStr, ".")
 	headerByte, err := base64.RawStdEncoding.DecodeString(tokenArr[0])
 	if err != nil {
 		return nil, err
 	}
-	h := &header{}
-	err = json.Unmarshal(headerByte, h)
-	if err != nil {
-		return nil, fmt.Errorf("invalid jwt.header: %w", err)
+	type Header struct {
+		Alg string   `json:"alg"`
+		X5c []string `json:"x5c"`
 	}
-	return h.x5cCertVerify()
+	header := &Header{}
+	err = json.Unmarshal(headerByte, header)
+	if err != nil {
+		return nil, err
+	}
+	if len(header.X5c) < index {
+		return nil, fmt.Errorf("index[%d] > header.x5c slice len(%d)", index, len(header.X5c))
+	}
+	certByte, err := base64.StdEncoding.DecodeString(header.X5c[index])
+	if err != nil {
+		return nil, err
+	}
+	return certByte, nil
+}
+
+func verifyCert(certByte, intermediaCertStr []byte) error {
+	roots := x509.NewCertPool()
+	ok := roots.AppendCertsFromPEM([]byte(rootPEM))
+	if !ok {
+		return errors.New("failed to parse root certificate")
+	}
+	interCert, err := x509.ParseCertificate(intermediaCertStr)
+	if err != nil {
+		return errors.New("failed to parse intermedia certificate")
+	}
+	intermedia := x509.NewCertPool()
+	intermedia.AddCert(interCert)
+	cert, err := x509.ParseCertificate(certByte)
+	if err != nil {
+		return err
+	}
+	opts := x509.VerifyOptions{
+		Roots:         roots,
+		Intermediates: intermedia,
+	}
+	_, err = cert.Verify(opts)
+	return err
 }
