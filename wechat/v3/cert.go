@@ -153,10 +153,11 @@ func (c *ClientV3) WxPublicKey() (wxPublicKey *rsa.PublicKey) {
 // 获取 微信平台证书 Map（readonly）
 // wxPublicKeyMap: key:SerialNo, value:WxPublicKey
 func (c *ClientV3) WxPublicKeyMap() (wxPublicKeyMap map[string]*rsa.PublicKey) {
-	wxPublicKeyMap = make(map[string]*rsa.PublicKey, len(c.SnCertMap))
-	for k, v := range c.SnCertMap {
+	wxPublicKeyMap = make(map[string]*rsa.PublicKey)
+	c.SnCertMap.Range(func(k string, v *rsa.PublicKey) bool {
 		wxPublicKeyMap[k] = v
-	}
+		return true
+	})
 	return wxPublicKeyMap
 }
 
@@ -328,19 +329,17 @@ func (c *ClientV3) autoCheckCertProc() {
 			if err != nil {
 				return err
 			}
-			snPkMap := make(map[string]*rsa.PublicKey)
 			for sn, cert := range snCertMap {
 				pubKey, err := xpem.DecodePublicKey([]byte(cert))
 				if err != nil {
 					return err
 				}
-				snPkMap[sn] = pubKey
+				c.SnCertMap.Store(sn, pubKey)
+				if sn == serialNo {
+					c.wxPublicKey = pubKey
+				}
 			}
-			c.rwMu.Lock()
-			c.SnCertMap = snPkMap
 			c.WxSerialNo = serialNo
-			c.wxPublicKey = snPkMap[serialNo]
-			c.rwMu.Unlock()
 			return nil
 		}, 3, time.Second)
 		if err != nil {
