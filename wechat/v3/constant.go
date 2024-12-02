@@ -304,6 +304,10 @@ const (
 	// 扣款服务-直连模式（其他相关接口在v2接口中）
 	v3EntrustPayNotify = "/v3/papay/contracts/%s/notify" // contract_id 预扣费通知 POST
 
+	// 刷掌支付
+	v3PalmServicePreAuthorize = "/v3/palmservice/authorization/preauthorize" // 用户自主录掌&预授权 POST
+	v3PalmServiceOpenidQuery  = "/v3/palmservice/authorization/openid/%s"    // organization_id 预授权状态查询 GET
+
 	// 特约商户进件申请单状态
 	ApplyStateEditing       = "APPLYMENT_STATE_EDITTING"        // 编辑中
 	ApplyStateAuditing      = "APPLYMENT_STATE_AUDITING"        // 审核中

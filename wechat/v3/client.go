@@ -9,6 +9,7 @@ import (
 	"github.com/go-pay/crypto/xpem"
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/go-pay/smap"
 	"github.com/go-pay/xlog"
 )
 
@@ -27,7 +28,7 @@ type ClientV3 struct {
 	DebugSwitch   gopay.DebugSwitch
 	requestIdFunc xhttp.RequestIdHandler
 	logger        xlog.XLogger
-	SnCertMap     map[string]*rsa.PublicKey // key: serial_no
+	SnCertMap     smap.Map[string, *rsa.PublicKey] // key: serial_no
 }
 
 // NewClientV3 初始化微信客户端 V3
@@ -72,19 +73,18 @@ func (c *ClientV3) AutoVerifySign(autoRefresh ...bool) (err error) {
 	if err != nil {
 		return err
 	}
-	if len(c.SnCertMap) <= 0 {
-		c.SnCertMap = make(map[string]*rsa.PublicKey)
-	}
 	for sn, cert := range certMap {
 		// decode cert
 		pubKey, err := xpem.DecodePublicKey([]byte(cert))
 		if err != nil {
 			return err
 		}
-		c.SnCertMap[sn] = pubKey
+		c.SnCertMap.Store(sn, pubKey)
+		if sn == wxSerialNo {
+			c.wxPublicKey = pubKey
+		}
 	}
 	c.WxSerialNo = wxSerialNo
-	c.wxPublicKey = c.SnCertMap[wxSerialNo]
 	if len(autoRefresh) == 1 && !autoRefresh[0] {
 		return nil
 	}
@@ -103,10 +103,7 @@ func (c *ClientV3) AutoVerifySignByCert(wxPublicKeyContent []byte, wxPublicKeyID
 	if pubKey == nil {
 		return errors.New("xpem.DecodePublicKey() failed, pubKey is nil")
 	}
-	if len(c.SnCertMap) <= 0 {
-		c.SnCertMap = make(map[string]*rsa.PublicKey)
-	}
-	c.SnCertMap[wxPublicKeyID] = pubKey
+	c.SnCertMap.Store(wxPublicKeyID, pubKey)
 	c.wxPublicKey = pubKey
 	c.WxSerialNo = wxPublicKeyID
 	c.autoSign = true

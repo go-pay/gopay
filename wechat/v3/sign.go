@@ -268,17 +268,14 @@ func (c *ClientV3) verifySyncSign(si *SignInfo) (err error) {
 	if si == nil {
 		return errors.New("auto verify sign, but SignInfo is nil")
 	}
-	c.rwMu.RLock()
-	wxPublicKey, exist := c.SnCertMap[si.HeaderSerial]
-	c.rwMu.RUnlock()
+
+	wxPublicKey, exist := c.SnCertMap.Load(si.HeaderSerial)
 	if !exist {
 		err = c.AutoVerifySign(false)
 		if err != nil {
 			return fmt.Errorf("[get all public key err]: %v", err)
 		}
-		c.rwMu.RLock()
-		wxPublicKey, exist = c.SnCertMap[si.HeaderSerial]
-		c.rwMu.RUnlock()
+		wxPublicKey, exist = c.SnCertMap.Load(si.HeaderSerial)
 		if !exist {
 			return errors.New("auto verify sign, but public key not found")
 		}

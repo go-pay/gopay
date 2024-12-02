@@ -445,6 +445,9 @@ wechat.V3DecryptCombineNotifyCipherText()
     * 查询省份列表：`client.V3BankSearchProvinceList()`
     * 查询城市列表：`client.V3BankSearchCityList()`
     * 查询支行列表：`client.V3BankSearchBranchList()`
+* <font color='#07C160' size='4'>掌纹支付</font>
+    * 用户自主录掌&预授权：`client.V3PalmServicePreAuthorize()`
+    * 预授权状态查询：`client.V3PalmServiceOpenidQuery()`
 
 
 ### 微信v3公共 API

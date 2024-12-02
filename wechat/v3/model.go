@@ -65,6 +65,20 @@ type EntrustPayNotifyRsp struct {
 	Error    string            `json:"-"`
 }
 
+type PalmServicePreAuthorizeRsp struct {
+	Code     int                      `json:"-"`
+	SignInfo *SignInfo                `json:"-"`
+	Response *PalmServicePreAuthorize `json:"response,omitempty"`
+	Error    string                   `json:"-"`
+}
+
+type PalmServiceOpenidQueryRsp struct {
+	Code     int                     `json:"-"`
+	SignInfo *SignInfo               `json:"-"`
+	Response *PalmServiceOpenidQuery `json:"response,omitempty"`
+	Error    string                  `json:"-"`
+}
+
 // =========================================================分割=========================================================
 
 type JSAPIPayParams struct {
@@ -298,4 +312,15 @@ type WithdrawStatus struct {
 	AccountNumber string `json:"account_number"` // 服务商提现入账的银行账号，仅显示后四位。
 	AccountBank   string `json:"account_bank"`   // 服务商提现入账的开户银行
 	BankName      string `json:"bank_name"`      // 服务商提现入账的开户银行全称（含支行）
+}
+
+type PalmServicePreAuthorize struct {
+	PermissionToken string `json:"permission_token"` // 预授权token，跳转小程序使用
+}
+
+type PalmServiceOpenidQuery struct {
+	OrganizationId string `json:"organization_id"`
+	Openid         string `json:"openid"`
+	State          string `json:"state"`
+	AuthorizeTime  string `json:"authorize_time"`
 }
