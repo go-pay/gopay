@@ -72,6 +72,13 @@ type PalmServicePreAuthorizeRsp struct {
 	Error    string                   `json:"-"`
 }
 
+type PalmServiceOpenidQueryRsp struct {
+	Code     int                     `json:"-"`
+	SignInfo *SignInfo               `json:"-"`
+	Response *PalmServiceOpenidQuery `json:"response,omitempty"`
+	Error    string                  `json:"-"`
+}
+
 // =========================================================分割=========================================================
 
 type JSAPIPayParams struct {
@@ -309,4 +316,11 @@ type WithdrawStatus struct {
 
 type PalmServicePreAuthorize struct {
 	PermissionToken string `json:"permission_token"` // 预授权token，跳转小程序使用
+}
+
+type PalmServiceOpenidQuery struct {
+	OrganizationId string `json:"organization_id"`
+	Openid         string `json:"openid"`
+	State          string `json:"state"`
+	AuthorizeTime  string `json:"authorize_time"`
 }
