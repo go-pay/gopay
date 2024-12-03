@@ -62,4 +62,11 @@ const (
 
 	// 物流相关
 	addTrackingNumber = "/v2/checkout/orders/%s/track" // order_id 授权物流信息 POST
+
+	// webhook 相关
+	createWebhook     = "/v1/notifications/webhooks"    // 创建webhook POST
+	listWebhook       = "/v1/notifications/webhooks"    // 获取webhook列表 GET
+	showWebhookDetail = "/v1/notifications/webhooks/%s" // webhook_id 获取webhook详情 GET
+	updateWebhook     = "/v1/notifications/webhooks/%s" // webhook_id 更新webhook PATCH
+	deleteWebhook     = "/v1/notifications/webhooks/%s" // webhook_id 删除webhook DELETE
 )

@@ -1055,3 +1055,42 @@ type AddTrackingNumberRsp struct {
 	ErrorResponse *ErrorResponse `json:"-"`
 	Response      *OrderDetail   `json:"response,omitempty"`
 }
+
+type CreateWebhookRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Webhook       `json:"response,omitempty"`
+}
+
+type WebhookEventType struct {
+	Name             string   `json:"name"`
+	Description      string   `json:"description,omitempty"`
+	Status           string   `json:"status,omitempty"`
+	ResourceVersions []string `json:"resource_versions,omitempty"`
+}
+
+type Webhook struct {
+	Id         string              `json:"id"`
+	Url        string              `json:"url"`
+	EventTypes []*WebhookEventType `json:"event_types"`
+	Links      []*Link             `json:"links,omitempty"`
+}
+
+type ListWebhook struct {
+	Webhooks []*Webhook `json:"webhooks"`
+}
+
+type ListWebhookRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *ListWebhook   `json:"response,omitempty"`
+}
+
+type WebhookDetailRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Webhook       `json:"response,omitempty"`
+}
