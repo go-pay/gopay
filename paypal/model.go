@@ -1117,3 +1117,15 @@ type VerifyWebhookSignatureRequest struct {
 type VerifyWebhookResponse struct {
 	VerificationStatus string `json:"verification_status,omitempty"`
 }
+
+type WebhookEvent struct {
+	Id              string          `json:"id"`
+	CreateTime      string          `json:"create_time"`
+	ResourceType    string          `json:"resource_type"`
+	EventType       string          `json:"event_type"`
+	Summary         string          `json:"summary"`
+	Resource        json.RawMessage `json:"resource,omitempty"`
+	Links           []*Link         `json:"links,omitempty"`
+	EventVersion    string          `json:"event_version"`
+	ResourceVersion string          `json:"resource_version"`
+}
