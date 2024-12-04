@@ -1,5 +1,7 @@
 package paypal
 
+import "encoding/json"
+
 type AccessToken struct {
 	Scope       string `json:"scope"`
 	AccessToken string `json:"access_token"`
@@ -1054,4 +1056,76 @@ type AddTrackingNumberRsp struct {
 	Error         string         `json:"-"`
 	ErrorResponse *ErrorResponse `json:"-"`
 	Response      *OrderDetail   `json:"response,omitempty"`
+}
+
+type CreateWebhookRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Webhook       `json:"response,omitempty"`
+}
+
+type WebhookEventType struct {
+	Name             string   `json:"name"`
+	Description      string   `json:"description,omitempty"`
+	Status           string   `json:"status,omitempty"`
+	ResourceVersions []string `json:"resource_versions,omitempty"`
+}
+
+type Webhook struct {
+	Id         string              `json:"id"`
+	Url        string              `json:"url"`
+	EventTypes []*WebhookEventType `json:"event_types"`
+	Links      []*Link             `json:"links,omitempty"`
+}
+
+type ListWebhook struct {
+	Webhooks []*Webhook `json:"webhooks"`
+}
+
+type ListWebhookRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *ListWebhook   `json:"response,omitempty"`
+}
+
+type WebhookDetailRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Webhook       `json:"response,omitempty"`
+}
+
+type WebhookEventDetailRsp struct {
+	Code          int             `json:"-"`
+	Error         string          `json:"-"`
+	ErrorResponse *ErrorResponse  `json:"-"`
+	Response      json.RawMessage `json:"response,omitempty"`
+}
+
+type VerifyWebhookSignatureRequest struct {
+	AuthAlgo         string          `json:"auth_algo,omitempty"`
+	CertURL          string          `json:"cert_url,omitempty"`
+	TransmissionID   string          `json:"transmission_id,omitempty"`
+	TransmissionSig  string          `json:"transmission_sig,omitempty"`
+	TransmissionTime string          `json:"transmission_time,omitempty"`
+	WebhookID        string          `json:"webhook_id,omitempty"`
+	Event            json.RawMessage `json:"webhook_event,omitempty"`
+}
+
+type VerifyWebhookResponse struct {
+	VerificationStatus string `json:"verification_status,omitempty"`
+}
+
+type WebhookEvent struct {
+	Id              string          `json:"id"`
+	CreateTime      string          `json:"create_time"`
+	ResourceType    string          `json:"resource_type"`
+	EventType       string          `json:"event_type"`
+	Summary         string          `json:"summary"`
+	Resource        json.RawMessage `json:"resource,omitempty"`
+	Links           []*Link         `json:"links,omitempty"`
+	EventVersion    string          `json:"event_version"`
+	ResourceVersion string          `json:"resource_version"`
 }
