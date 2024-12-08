@@ -37,11 +37,11 @@ func VerifySign(apiKey, signType string, bean any) (ok bool, err error) {
 
 	bs, err := json.Marshal(bean)
 	if err != nil {
-		return false, fmt.Errorf("json.Marshal(%s)：%w", string(bs), err)
+		return false, fmt.Errorf("json.Marshal(%s): %w", string(bs), err)
 	}
 	bm := make(gopay.BodyMap)
 	if err = json.Unmarshal(bs, &bm); err != nil {
-		return false, fmt.Errorf("json.Marshal(%s)：%w", string(bs), err)
+		return false, fmt.Errorf("json.Marshal(%s): %w", string(bs), err)
 	}
 	bodySign := bm.GetString("sign")
 	bm.Remove("sign")

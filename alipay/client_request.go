@@ -22,7 +22,7 @@ func (a *Client) PostAliPayAPISelfV2(ctx context.Context, bodyMap gopay.BodyMap,
 	bz := bodyMap.GetAny("biz_content")
 	if bzBody, ok := bz.(gopay.BodyMap); ok {
 		if bodyBs, err = json.Marshal(bzBody); err != nil {
-			return fmt.Errorf("json.Marshal(%v)：%w", bzBody, err)
+			return fmt.Errorf("json.Marshal(%v): %w", bzBody, err)
 		}
 		bodyMap.Set("biz_content", string(bodyBs))
 	}
@@ -142,7 +142,7 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 			aat := bm.GetString("app_auth_token")
 			bm.Remove("app_auth_token")
 			if bodyBs, err = json.Marshal(bm); err != nil {
-				return nil, fmt.Errorf("json.Marshal：%w", err)
+				return nil, fmt.Errorf("json.Marshal: %w", err)
 			}
 			bizContent = string(bodyBs)
 			if aat != "" {
@@ -150,7 +150,7 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 			}
 		} else {
 			if bodyBs, err = json.Marshal(bm); err != nil {
-				return nil, fmt.Errorf("json.Marshal：%w", err)
+				return nil, fmt.Errorf("json.Marshal: %w", err)
 			}
 			bizContent = string(bodyBs)
 			bm.Remove("app_auth_token")
@@ -200,13 +200,13 @@ func (a *Client) DoAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 			aat := bm.GetString("app_auth_token")
 			bm.Remove("app_auth_token")
 			if bodyBs, err = json.Marshal(bm); err != nil {
-				return nil, fmt.Errorf("json.Marshal：%w", err)
+				return nil, fmt.Errorf("json.Marshal: %w", err)
 			}
 			bizContent = string(bodyBs)
 			bm.Set("app_auth_token", aat)
 		} else {
 			if bodyBs, err = json.Marshal(bm); err != nil {
-				return nil, fmt.Errorf("json.Marshal：%w", err)
+				return nil, fmt.Errorf("json.Marshal: %w", err)
 			}
 			bizContent = string(bodyBs)
 			bm.Remove("app_auth_token")
@@ -256,13 +256,13 @@ func (a *Client) PageExecute(ctx context.Context, bm gopay.BodyMap, method strin
 			aat := bm.GetString("app_auth_token")
 			bm.Remove("app_auth_token")
 			if bodyBs, err = json.Marshal(bm); err != nil {
-				return "", fmt.Errorf("json.Marshal：%w", err)
+				return "", fmt.Errorf("json.Marshal: %w", err)
 			}
 			bizContent = string(bodyBs)
 			bm.Set("app_auth_token", aat)
 		} else {
 			if bodyBs, err = json.Marshal(bm); err != nil {
-				return "", fmt.Errorf("json.Marshal：%w", err)
+				return "", fmt.Errorf("json.Marshal: %w", err)
 			}
 			bizContent = string(bodyBs)
 			bm.Remove("app_auth_token")

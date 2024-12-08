@@ -81,11 +81,11 @@ func (w *Client) QueryOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Query
 	}
 	wxRsp = new(QueryOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s): %w", string(bs), err)
 	}
 	resBm = make(gopay.BodyMap)
 	if err = xml.Unmarshal(bs, &resBm); err != nil {
-		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s): %w", string(bs), err)
 	}
 	return wxRsp, resBm, nil
 }
@@ -139,11 +139,11 @@ func (w *Client) Refund(ctx context.Context, bm gopay.BodyMap) (wxRsp *RefundRes
 	}
 	wxRsp = new(RefundResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s): %w", string(bs), err)
 	}
 	resBm = make(gopay.BodyMap)
 	if err = xml.Unmarshal(bs, &resBm); err != nil {
-		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s): %w", string(bs), err)
 	}
 	return wxRsp, resBm, nil
 }
@@ -170,11 +170,11 @@ func (w *Client) QueryRefund(ctx context.Context, bm gopay.BodyMap) (wxRsp *Quer
 	}
 	wxRsp = new(QueryRefundResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s): %w", string(bs), err)
 	}
 	resBm = make(gopay.BodyMap)
 	if err = xml.Unmarshal(bs, &resBm); err != nil {
-		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s): %w", string(bs), err)
 	}
 	return wxRsp, resBm, nil
 }

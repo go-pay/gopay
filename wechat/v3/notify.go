@@ -325,7 +325,7 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 	}
 	notifyReq = &V3NotifyReq{SignInfo: si}
 	if err = js.UnmarshalBytes(bs, notifyReq); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), notifyReq, err)
+		return nil, fmt.Errorf("json.Unmarshal(%s, %+v): %w", string(bs), notifyReq, err)
 	}
 	return notifyReq, nil
 }
@@ -574,7 +574,7 @@ func V3ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	}
 	bm = make(gopay.BodyMap)
 	if err = js.UnmarshalBytes(bs, &bm); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s): %w", string(bs), err)
 	}
 	return bm, nil
 }

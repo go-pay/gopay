@@ -22,7 +22,7 @@ func (c *ClientV3) V3EncryptText(text string) (cipherText string, err error) {
 	}
 	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, c.wxPublicKey, []byte(text), nil)
 	if err != nil {
-		return "", fmt.Errorf("rsa.EncryptOAEP：%w", err)
+		return "", fmt.Errorf("rsa.EncryptOAEP: %w", err)
 	}
 	return base64.StdEncoding.EncodeToString(cipherByte), nil
 }
@@ -32,7 +32,7 @@ func (c *ClientV3) V3DecryptText(cipherText string) (text string, err error) {
 	cipherByte, _ := base64.StdEncoding.DecodeString(cipherText)
 	textByte, err := rsa.DecryptOAEP(sha1.New(), rand.Reader, c.privateKey, cipherByte, nil)
 	if err != nil {
-		return "", fmt.Errorf("rsa.DecryptOAEP：%w", err)
+		return "", fmt.Errorf("rsa.DecryptOAEP: %w", err)
 	}
 	return string(textByte), nil
 }
@@ -46,7 +46,7 @@ func V3EncryptText(text string, wxPublicKeyContent []byte) (cipherText string, e
 	}
 	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, publicKey, []byte(text), nil)
 	if err != nil {
-		return "", fmt.Errorf("rsa.EncryptOAEP：%w", err)
+		return "", fmt.Errorf("rsa.EncryptOAEP: %w", err)
 	}
 	return base64.StdEncoding.EncodeToString(cipherByte), nil
 }
@@ -61,7 +61,7 @@ func V3DecryptText(cipherText string, privateKeyContent []byte) (text string, er
 	cipherByte, _ := base64.StdEncoding.DecodeString(cipherText)
 	textByte, err := rsa.DecryptOAEP(sha1.New(), rand.Reader, privateKey, cipherByte, nil)
 	if err != nil {
-		return "", fmt.Errorf("rsa.DecryptOAEP：%w", err)
+		return "", fmt.Errorf("rsa.DecryptOAEP: %w", err)
 	}
 	return string(textByte), nil
 }

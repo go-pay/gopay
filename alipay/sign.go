@@ -328,10 +328,10 @@ func VerifySign(alipayPublicKey string, notifyBean any) (ok bool, err error) {
 	} else {
 		bs, err := json.Marshal(notifyBean)
 		if err != nil {
-			return false, fmt.Errorf("json.Marshal：%w", err)
+			return false, fmt.Errorf("json.Marshal: %w", err)
 		}
 		if err = json.Unmarshal(bs, &bm); err != nil {
-			return false, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+			return false, fmt.Errorf("json.Unmarshal(%s): %w", string(bs), err)
 		}
 		bodySign = bm.GetString("sign")
 		bodySignType = bm.GetString("sign_type")
@@ -379,10 +379,10 @@ func VerifySignWithCert(aliPayPublicKeyCert, notifyBean any) (ok bool, err error
 	default:
 		bs, err := json.Marshal(notifyBean)
 		if err != nil {
-			return false, fmt.Errorf("json.Marshal：%w", err)
+			return false, fmt.Errorf("json.Marshal: %w", err)
 		}
 		if err = json.Unmarshal(bs, &bm); err != nil {
-			return false, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+			return false, fmt.Errorf("json.Unmarshal(%s): %w", string(bs), err)
 		}
 	}
 	bodySign := bm.GetString("sign")

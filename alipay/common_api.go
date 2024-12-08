@@ -55,7 +55,7 @@ func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr any) (err 
 	ivKey := []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 	secretData, _ := base64.StdEncoding.DecodeString(encryptedData)
 	if block, err = aes.NewCipher(aesKey); err != nil {
-		return fmt.Errorf("aes.NewCipher：%w", err)
+		return fmt.Errorf("aes.NewCipher: %w", err)
 	}
 	if len(secretData)%len(aesKey) != 0 {
 		return errors.New("encryptedData is error")
@@ -67,7 +67,7 @@ func DecryptOpenDataToStruct(encryptedData, secretKey string, beanPtr any) (err 
 		originData = xaes.PKCS5UnPadding(originData)
 	}
 	if err = json.Unmarshal(originData, beanPtr); err != nil {
-		return fmt.Errorf("json.Unmarshal(%s)：%w", string(originData), err)
+		return fmt.Errorf("json.Unmarshal(%s): %w", string(originData), err)
 	}
 	return nil
 }
@@ -89,7 +89,7 @@ func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap
 	aesKey, _ = base64.StdEncoding.DecodeString(secretKey)
 	secretData, _ := base64.StdEncoding.DecodeString(encryptedData)
 	if block, err = aes.NewCipher(aesKey); err != nil {
-		return nil, fmt.Errorf("aes.NewCipher：%w", err)
+		return nil, fmt.Errorf("aes.NewCipher: %w", err)
 	}
 	if len(secretData)%len(aesKey) != 0 {
 		return nil, errors.New("encryptedData is error")
@@ -102,7 +102,7 @@ func DecryptOpenDataToBodyMap(encryptedData, secretKey string) (bm gopay.BodyMap
 	}
 	bm = make(gopay.BodyMap)
 	if err = json.Unmarshal(originData, &bm); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(originData), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s): %w", string(originData), err)
 	}
 	return
 }
@@ -143,7 +143,7 @@ func SystemOauthToken(ctx context.Context, appId string, privateKey, grantType, 
 	}
 	rsp = new(SystemOauthTokenResponse)
 	if err = json.Unmarshal(bs, rsp); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s): %w", string(bs), err)
 	}
 	if (rsp.Response == nil) || (rsp.Response != nil && rsp.Response.AccessToken == "") {
 		return nil, errors.New("response is nil or access_token is NULL")
