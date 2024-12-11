@@ -9,7 +9,7 @@ import (
 
 type Client struct {
 	HttpClient *http.Client
-	bodySize   int // body size limit(MB), default is 10MB
+	bodySize   int // body size limit(MB), default is 10MB 
 }
 
 func defaultClient() *Client {
