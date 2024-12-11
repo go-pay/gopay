@@ -1,6 +1,6 @@
 package bytedance
 
-// https://microapp.bytedance.com/docs/zh-CN/mini-app/develop/server/ecpay/APIlist/in
+// https://developer.open-douyin.com/docs/resource/zh-CN/mini-app/develop/server/server-api-introduction
 const (
 	// 进件及提现
 	appAddSubMerchant = "https://developer.toutiao.com/api/apps/ecpay/saas/app_add_sub_merchant" // POST 开发者为小程序收款商户/合作方进件
