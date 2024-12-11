@@ -130,7 +130,7 @@ func (a *Client) RequestParam(bm gopay.BodyMap, method string) (string, error) {
 	bz := bm.GetAny("biz_content")
 	if bzBody, ok := bz.(gopay.BodyMap); ok {
 		if bodyBs, err = json.Marshal(bzBody); err != nil {
-			return "", fmt.Errorf("json.Marshal(%v)：%w", bzBody, err)
+			return "", fmt.Errorf("json.Marshal(%v): %w", bzBody, err)
 		}
 		bm.Set("biz_content", string(bodyBs))
 	}
