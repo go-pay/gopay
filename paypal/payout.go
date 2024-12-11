@@ -28,7 +28,7 @@ func (c *Client) CreateBatchPayout(ctx context.Context, bm gopay.BodyMap) (ppRsp
 	ppRsp = &CreateBatchPayoutRsp{Code: Success}
 	ppRsp.Response = new(BatchPayout)
 	if err = json.Unmarshal(bs, ppRsp.Response); nil != err {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s): %w", string(bs), err)
 	}
 	if res.StatusCode != http.StatusCreated {
 		ppRsp.Code = res.StatusCode
@@ -54,7 +54,7 @@ func (c *Client) ShowPayoutBatchDetails(ctx context.Context, payoutBatchId strin
 	ppRsp = &PayoutBatchDetailRsp{Code: Success}
 	ppRsp.Response = new(PayoutBatchDetail)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s): %w", string(bs), err)
 	}
 	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
@@ -80,7 +80,7 @@ func (c Client) ShowPayoutItemDetails(ctx context.Context, payoutItemId string) 
 	ppRsp = &PayoutItemDetailRsp{Code: Success}
 	ppRsp.Response = new(PayoutItemDetail)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s): %w", string(bs), err)
 	}
 	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
@@ -106,7 +106,7 @@ func (c Client) CancelUnclaimedPayoutItem(ctx context.Context, payoutItemId stri
 	ppRsp = &CancelUnclaimedPayoutItemRsp{Code: Success}
 	ppRsp.Response = new(PayoutItemDetail)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s): %w", string(bs), err)
 	}
 	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode

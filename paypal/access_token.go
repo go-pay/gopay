@@ -75,7 +75,7 @@ func (c *Client) GetAccessToken() (token *AccessToken, err error) {
 	}
 	token = new(AccessToken)
 	if err = json.Unmarshal(bs, token); err != nil {
-		return nil, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err)
+		return nil, fmt.Errorf("json.Unmarshal(%s): %w", string(bs), err)
 	}
 	c.Appid = token.Appid
 	c.AccessToken = token.AccessToken

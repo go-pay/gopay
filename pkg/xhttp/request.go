@@ -72,7 +72,7 @@ func (r *Request) SendStruct(v any) (c *Request) {
 	}
 	bs, err := json.Marshal(v)
 	if err != nil {
-		r.err = fmt.Errorf("json.Marshal(%+v)：%w", v, err)
+		r.err = fmt.Errorf("json.Marshal(%+v): %w", v, err)
 		return r
 	}
 	switch r.requestType {
@@ -81,7 +81,7 @@ func (r *Request) SendStruct(v any) (c *Request) {
 	case TypeXML, TypeFormData:
 		body := make(map[string]any)
 		if err = json.Unmarshal(bs, &body); err != nil {
-			r.err = fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), body, err)
+			r.err = fmt.Errorf("json.Unmarshal(%s, %+v): %w", string(bs), body, err)
 			return r
 		}
 		r.formString = FormatURLParam(body)
@@ -97,7 +97,7 @@ func (r *Request) SendBodyMap(bm map[string]any) (client *Request) {
 	case TypeJSON:
 		bs, err := json.Marshal(bm)
 		if err != nil {
-			r.err = fmt.Errorf("json.Marshal(%+v)：%w", bm, err)
+			r.err = fmt.Errorf("json.Marshal(%+v): %w", bm, err)
 			return r
 		}
 		r.jsonByte = bs
@@ -115,7 +115,7 @@ func (r *Request) SendMultipartBodyMap(bm map[string]any) (client *Request) {
 	case TypeJSON:
 		bs, err := json.Marshal(bm)
 		if err != nil {
-			r.err = fmt.Errorf("json.Marshal(%+v)：%w", bm, err)
+			r.err = fmt.Errorf("json.Marshal(%+v): %w", bm, err)
 			return r
 		}
 		r.jsonByte = bs
@@ -307,13 +307,13 @@ func (r *Request) EndStruct(ctx context.Context, v any) (res *http.Response, err
 	case ResTypeJSON:
 		err = json.Unmarshal(bs, &v)
 		if err != nil {
-			return nil, fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), v, err)
+			return nil, fmt.Errorf("json.Unmarshal(%s, %+v): %w", string(bs), v, err)
 		}
 		return res, nil
 	case ResTypeXML:
 		err = xml.Unmarshal(bs, &v)
 		if err != nil {
-			return nil, fmt.Errorf("xml.Unmarshal(%s, %+v)：%w", string(bs), v, err)
+			return nil, fmt.Errorf("xml.Unmarshal(%s, %+v): %w", string(bs), v, err)
 		}
 		return res, nil
 	default:
