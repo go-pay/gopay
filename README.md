@@ -86,14 +86,15 @@ func main() {
 ## 赞赏多少是您的心意，感谢支持！
 
 微信赞赏码： <img width="200" height="200" src=".github/zanshang.png"/>
+&nbsp;&nbsp;&nbsp;&nbsp;
 支付宝赞助码： <img width="200" height="200" src=".github/zanshang_zfb.png"/>
 
 ---
 
 ## 讨论群
-> 抖音关注加主页粉丝群，获取微信入群二维码
+> 微信群过期加个人微信: 85411418 邀请加群（加个人微信备注 gopay 并关注抖音账号，谢谢）。
 
-抖音扫码关注：
+关注抖音：
 <img width="240" height="240" src=".github/douyin_jerry.png"/>
 &nbsp;&nbsp;&nbsp;&nbsp;微信群：
 <img width="240" height="240" src=".github/wx_gopay.png"/>
