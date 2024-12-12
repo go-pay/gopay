@@ -91,12 +91,14 @@ func main() {
 ---
 
 ## 讨论群
-> 抖音关注加主页粉丝群，获取微信入群二维码
+> 微信群过期加个人微信拉群（加个人微信备注 gopay 并关注抖音账号，谢谢）。
 
-抖音扫码关注：
-<img width="240" height="240" src=".github/douyin_jerry.png"/>
+关注抖音：
+<img width="220" height="220" src=".github/douyin_jerry.png"/>
+&nbsp;&nbsp;&nbsp;&nbsp;个人微信：
+<img width="220" height="220" src=".github/wechat_jerry.png"/>
 &nbsp;&nbsp;&nbsp;&nbsp;微信群：
-<img width="240" height="240" src=".github/wx_gopay.png"/>
+<img width="220" height="220" src=".github/wx_gopay.png"/>
 
 ---
 
