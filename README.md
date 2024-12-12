@@ -92,7 +92,7 @@ func main() {
 ---
 
 ## 讨论群
-> 微信群过期加个人微信: **_85411418_** 邀请加群（加个人微信备注 gopay 并关注抖音账号，谢谢）。
+> 微信群过期加个人微信: **[85411418](.github/wechat_jerry.png)** 邀请加群（加个人微信备注 gopay 并关注抖音账号，谢谢）。
 
 关注抖音：
 <img width="240" height="240" src=".github/douyin_jerry.png"/>
