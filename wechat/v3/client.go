@@ -60,6 +60,7 @@ func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3
 	return client, nil
 }
 
+// SetRequestIdFunc 设置自定义请求头 Request-Id 处理方法
 func (c *ClientV3) SetRequestIdFunc(requestIdFunc xhttp.RequestIdHandler) {
 	if requestIdFunc != nil {
 		c.requestIdFunc = requestIdFunc
