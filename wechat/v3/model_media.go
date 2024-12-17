@@ -16,6 +16,13 @@ type MediaUploadRsp struct {
 	Error    string       `json:"-"`
 }
 
+type ComplaintImageRsp struct {
+	Code     int             `json:"-"`
+	SignInfo *SignInfo       `json:"-"`
+	Response *ComplaintImage `json:"response,omitempty"`
+	Error    string          `json:"-"`
+}
+
 // =========================================================分割=========================================================
 
 type MarketMediaUpload struct {
@@ -24,4 +31,18 @@ type MarketMediaUpload struct {
 
 type MediaUpload struct {
 	MediaId string `json:"media_id"` // 微信返回的媒体文件标识Id。
+}
+
+type ComplaintImage struct {
+	MediaData *MediaData `json:"media_data"`
+}
+
+type MediaData struct {
+	Filename              string `json:"filename"`
+	ContentType           string `json:"content_type"`
+	TotalSize             int    `json:"total_size"`
+	FirstPos              int    `json:"first_pos"`
+	Chunk                 string `json:"chunk"`
+	Etag                  string `json:"etag"`
+	SupportPartialContent bool   `json:"support_partial_content"`
 }

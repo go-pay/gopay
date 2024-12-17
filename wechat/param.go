@@ -16,9 +16,8 @@ import (
 	"strings"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/util"
 	"golang.org/x/crypto/pkcs12"
 )
 
@@ -81,7 +80,7 @@ func (w *Client) addCertFileContentOrPath(certFile, keyFile, pkcs12File any) (er
 	if err != nil {
 		return
 	}
-	w.tlsHc.SetTLSConfig(config)
+	w.tlsHc.SetHttpTLSConfig(config)
 	return
 }
 
@@ -106,7 +105,7 @@ func (w *Client) addCertConfig(certFile, keyFile, pkcs12File any) (tlsConfig *tl
 			keyPem, err = os.ReadFile(keyFile.(string))
 		}
 		if err != nil {
-			return nil, fmt.Errorf("os.ReadFile：%w", err)
+			return nil, fmt.Errorf("os.ReadFile: %w", err)
 		}
 	} else if pkcs12File != nil {
 		var pfxData []byte
@@ -114,12 +113,12 @@ func (w *Client) addCertConfig(certFile, keyFile, pkcs12File any) (tlsConfig *tl
 			pfxData = pkcs12File.([]byte)
 		} else {
 			if pfxData, err = os.ReadFile(pkcs12File.(string)); err != nil {
-				return nil, fmt.Errorf("os.ReadFile：%w", err)
+				return nil, fmt.Errorf("os.ReadFile: %w", err)
 			}
 		}
 		blocks, err := pkcs12.ToPEM(pfxData, w.MchId)
 		if err != nil {
-			return nil, fmt.Errorf("pkcs12.ToPEM：%w", err)
+			return nil, fmt.Errorf("pkcs12.ToPEM: %w", err)
 		}
 		for _, b := range blocks {
 			keyPem = append(keyPem, pem.EncodeToMemory(b)...)
@@ -128,7 +127,7 @@ func (w *Client) addCertConfig(certFile, keyFile, pkcs12File any) (tlsConfig *tl
 	}
 	if certPem != nil && keyPem != nil {
 		if certificate, err = tls.X509KeyPair(certPem, keyPem); err != nil {
-			return nil, fmt.Errorf("tls.LoadX509KeyPair：%w", err)
+			return nil, fmt.Errorf("tls.LoadX509KeyPair: %w", err)
 		}
 		tlsConfig = &tls.Config{
 			Certificates:       []tls.Certificate{certificate},
@@ -148,7 +147,7 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File any) error {
 		for varName, v := range files {
 			switch v := v.(type) {
 			case string:
-				if v == util.NULL {
+				if v == gopay.NULL {
 					return fmt.Errorf("%s is empty", varName)
 				}
 			case []byte:
@@ -163,7 +162,7 @@ func checkCertFilePathOrContent(certFile, keyFile, pkcs12File any) error {
 	} else if pkcs12File != nil {
 		switch pkcs12File := pkcs12File.(type) {
 		case string:
-			if pkcs12File == util.NULL {
+			if pkcs12File == gopay.NULL {
 				return errors.New("pkcs12File is empty")
 			}
 		case []byte:
@@ -195,7 +194,7 @@ func GetReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign stri
 func (w *Client) getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
 	signParams := bm.EncodeWeChatSignParams(apiKey)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request_SignStr: %s", signParams)
+		w.logger.Debugf("Wechat_Request_SignStr: %s", signParams)
 	}
 	var h hash.Hash
 	if signType == SignType_HMAC_SHA256 {
@@ -239,7 +238,7 @@ func (w *Client) getSandBoxSign(ctx context.Context, mchId, apiKey string, bm go
 	h = md5.New()
 	signParams := bm.EncodeWeChatSignParams(sandBoxApiKey)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request_SignStr: %s", signParams)
+		w.logger.Debugf("Wechat_Request_SignStr: %s", signParams)
 	}
 	h.Write([]byte(signParams))
 	sign = strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
@@ -268,10 +267,10 @@ func getSanBoxSignKey(ctx context.Context, mchId, nonceStr, sign string) (key st
 	keyResponse := new(getSignKeyResponse)
 	_, err = xhttp.NewClient().Req(xhttp.TypeXML).Post(sandboxGetSignKey).SendString(GenerateXml(reqs)).EndStruct(ctx, keyResponse)
 	if err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	if keyResponse.ReturnCode == "FAIL" {
-		return util.NULL, errors.New(keyResponse.ReturnMsg)
+		return gopay.NULL, errors.New(keyResponse.ReturnMsg)
 	}
 	return keyResponse.SandboxSignkey, nil
 }
@@ -280,7 +279,7 @@ func getSanBoxSignKey(ctx context.Context, mchId, nonceStr, sign string) (key st
 func GenerateXml(bm gopay.BodyMap) (reqXml string) {
 	bs, err := xml.Marshal(bm)
 	if err != nil {
-		return util.NULL
+		return gopay.NULL
 	}
 	return string(bs)
 }

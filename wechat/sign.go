@@ -14,7 +14,7 @@ import (
 	"strings"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/util"
 )
 
 // VerifySign 微信同步返回参数验签或异步通知参数验签
@@ -37,11 +37,11 @@ func VerifySign(apiKey, signType string, bean any) (ok bool, err error) {
 
 	bs, err := json.Marshal(bean)
 	if err != nil {
-		return false, fmt.Errorf("json.Marshal(%s)：%w", string(bs), err)
+		return false, fmt.Errorf("json.Marshal(%s): %w", string(bs), err)
 	}
 	bm := make(gopay.BodyMap)
 	if err = json.Unmarshal(bs, &bm); err != nil {
-		return false, fmt.Errorf("json.Marshal(%s)：%w", string(bs), err)
+		return false, fmt.Errorf("json.Marshal(%s): %w", string(bs), err)
 	}
 	bodySign := bm.GetString("sign")
 	bm.Remove("sign")
@@ -176,7 +176,7 @@ func GetParamSign(appId, mchId, apiKey string, bm gopay.BodyMap) (sign string) {
 		h        hash.Hash
 	)
 	signType = bm.GetString("sign_type")
-	if signType == util.NULL {
+	if signType == gopay.NULL {
 		bm.Set("sign_type", SignType_MD5)
 	}
 	if signType == SignType_HMAC_SHA256 {

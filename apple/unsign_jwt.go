@@ -42,6 +42,34 @@ func ExtractClaims(signedPayload string, tran jwt.Claims) (err error) {
 	return nil
 }
 
+// ExtractClaimsToken 解析jws格式数据
+//
+// Args:
+//   - signedPayload：string, jws格式数据
+//   - tran：jwt.Claims, 指针类型的结构体，用于接收解析后的数据
+func ExtractClaimsToken(signedPayload string, tran jwt.Claims) (tk *jwt.Token, err error) {
+	valueOf := reflect.ValueOf(tran)
+	if valueOf.Kind() != reflect.Ptr {
+		return nil, errors.New("tran must be ptr struct")
+	}
+	tokenStr := signedPayload
+	rootCertStr, err := extractHeaderByIndex(tokenStr, 2)
+	if err != nil {
+		return nil, err
+	}
+	intermediaCertStr, err := extractHeaderByIndex(tokenStr, 1)
+	if err != nil {
+		return nil, err
+	}
+	if err = verifyCert(rootCertStr, intermediaCertStr); err != nil {
+		return nil, err
+	}
+	tk, err = jwt.ParseWithClaims(tokenStr, tran, func(token *jwt.Token) (any, error) {
+		return extractPublicKeyFromToken(tokenStr)
+	})
+	return tk, err
+}
+
 // Per doc: https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.6
 func extractPublicKeyFromToken(tokenStr string) (*ecdsa.PublicKey, error) {
 	certStr, err := extractHeaderByIndex(tokenStr, 0)

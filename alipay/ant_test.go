@@ -1,10 +1,12 @@
 package alipay
 
 import (
+	"io"
+	"os"
 	"testing"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/xlog"
 )
 
 func TestAntMerchantShopModify(t *testing.T) {
@@ -108,6 +110,34 @@ func TestAntMerchantShopClose(t *testing.T) {
 	aliRsp, err := client.AntMerchantShopClose(ctx, bm)
 	if err != nil {
 		xlog.Errorf("client.AntMerchantShopClose(%+v),error:%+v", bm, err)
+		return
+	}
+	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestAntMerchantExpandIndirectImageUpload(t *testing.T) {
+	// 请求参数
+	logo, err := os.Open("../logo.png")
+	if err != nil {
+		xlog.Errorf("os.Open(%s),error:%+v", "../logo.png", err)
+		return
+	}
+	xlog.Warnf("fileName: %s", logo.Name())
+	allBs, err := io.ReadAll(logo)
+	if err != nil {
+		xlog.Errorf("io.ReadAll(%s),error:%+v", logo.Name(), err)
+		return
+	}
+	f := &gopay.File{
+		Name:    "logo.png",
+		Content: allBs,
+	}
+	bm := make(gopay.BodyMap)
+	bm.Set("image_type", "png")
+	bm.SetFormFile("image_content", f)
+	aliRsp, err := client.AntMerchantExpandIndirectImageUpload(ctx, bm)
+	if err != nil {
+		xlog.Errorf("client.AntMerchantExpandIndirectImageUpload(),error:%+v", err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)

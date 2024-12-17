@@ -6,14 +6,13 @@ import (
 	"fmt"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // Deprecated
 // zhima.credit.score.get(查询芝麻用户的芝麻分)
 // 文档地址：https://opendocs.alipay.com/apis/api_8/zhima.credit.score.get
 func (a *Client) ZhimaCreditScoreGet(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditScoreGetResponse, err error) {
-	if bm.GetString("product_code") == util.NULL {
+	if bm.GetString("product_code") == gopay.NULL {
 		bm.Set("product_code", "w1010100100000000001")
 	}
 	err = bm.CheckEmptyError("transaction_id")
@@ -39,7 +38,7 @@ func (a *Client) ZhimaCreditScoreGet(ctx context.Context, bm gopay.BodyMap) (ali
 // zhima.credit.ep.scene.rating.initialize(芝麻企业信用信用评估初始化)
 // 文档地址：https://opendocs.alipay.com/apis/api_8/zhima.credit.ep.scene.rating.initialize
 func (a *Client) ZhimaCreditEpSceneRatingInitialize(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditEpSceneRatingInitializeRsp, err error) {
-	if bm.GetString("product_code") == util.NULL {
+	if bm.GetString("product_code") == gopay.NULL {
 		bm.Set("product_code", "w1010100100000000001")
 	}
 	err = bm.CheckEmptyError("credit_category", "out_order_no", "user_id")
@@ -223,6 +222,75 @@ func (a *Client) ZhimaMerchantZmgoCumulateQuery(ctx context.Context, bm gopay.Bo
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
+// zhima.merchant.zmgo.template.create(商户创建芝麻GO模板接口)
+// 文档地址：https://opendocs.alipay.com/open/03uq08
+func (a *Client) ZhimaMerchantZmgoTemplateCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaMerchantZmgoTemplateCreateRsp, err error) {
+	err = bm.CheckEmptyError("basic_config", "right_config", "open_config", "settlement_config")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.merchant.zmgo.template.create"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaMerchantZmgoTemplateCreateRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// zhima.merchant.zmgo.template.query(芝麻GO模板查询)
+// 文档地址：https://opendocs.alipay.com/open/04m8ci
+func (a *Client) ZhimaMerchantZmgoTemplateQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaMerchantZmgoTemplateQueryRsp, err error) {
+	err = bm.CheckEmptyError("template_no", "partner_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.merchant.zmgo.template.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaMerchantZmgoTemplateQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// zhima.credit.pe.zmgo.settle.apply(芝麻GO结算申请)
+// 文档地址：https://opendocs.alipay.com/open/03usxk
+func (a *Client) ZhimaCreditPeZmgoSettleApply(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoSettleApplyRsp, err error) {
+	err = bm.CheckEmptyError("agreement_id", "partner_id", "out_request_no", "withhold_plan_no", "pay_amount")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.pe.zmgo.settle.apply"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPeZmgoSettleApplyRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
 // zhima.credit.pe.zmgo.bizopt.close(芝麻GO签约关单)
 // 文档地址：https://opendocs.alipay.com/apis/01qii3
 func (a *Client) ZhimaCreditPeZmgoBizoptClose(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditPeZmgoBizoptCloseRsp, err error) {
@@ -290,6 +358,21 @@ func (a *Client) ZhimaCreditPeZmgoPreorderCreate(ctx context.Context, bm gopay.B
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
 	aliRsp.SignData = signData
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// zhima.credit.pe.zmgo.sign.apply(芝麻GO页面签约接口)
+// 文档地址：https://opendocs.alipay.com/open/03u934
+func (a *Client) ZhimaCreditPeZmgoSignApply(ctx context.Context, bm gopay.BodyMap) (orderStr string, err error) {
+	err = bm.CheckEmptyError("partner_id", "template_id", "out_request_no")
+	if err != nil {
+		return gopay.NULL, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.pe.zmgo.sign.apply"); err != nil {
+		return gopay.NULL, err
+	}
+	orderStr = string(bs)
+	return orderStr, nil
 }
 
 // zhima.credit.pe.zmgo.agreement.unsign(芝麻GO协议解约)
@@ -407,6 +490,105 @@ func (a *Client) ZhimaCreditPeZmgoPaysignConfirm(ctx context.Context, bm gopay.B
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
+// zhima.credit.payafteruse.creditagreement.sign(信用服务开通/授权)
+// 文档地址：https://opendocs.alipay.com/open/03uloz
+func (a *Client) ZhimaCreditPayAfterUseAgreementSign(ctx context.Context, bm gopay.BodyMap) (orderStr string, err error) {
+	err = bm.CheckEmptyError("out_agreement_no", "zm_service_id")
+	if err != nil {
+		return gopay.NULL, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.payafteruse.creditagreement.sign"); err != nil {
+		return gopay.NULL, err
+	}
+	orderStr = string(bs)
+	return orderStr, nil
+}
+
+// zhima.credit.payafteruse.creditagreement.query(查询服务开通/授权信息)
+// 文档地址：https://opendocs.alipay.com/open/03ulp0
+func (a *Client) ZhimaCreditPayAfterUseAgreementQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditPayAfterUseAgreementQueryRsp, err error) {
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.payafteruse.creditagreement.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPayAfterUseAgreementQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// zhima.credit.payafteruse.creditbizorder.order(芝麻信用服务下单（免用户确认场景）)
+// 文档地址：https://opendocs.alipay.com/open/03ulpo
+func (a *Client) ZhimaCreditPayAfterUseCreditBizOrder(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditPayAfterUseCreditBizOrderRsp, err error) {
+	err = bm.CheckEmptyError("out_order_no", "credit_agreement_id", "subject")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.payafteruse.creditbizorder.order"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPayAfterUseCreditBizOrderRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// zhima.credit.payafteruse.creditbizorder.query(信用服务订单查询)
+// 文档地址：https://opendocs.alipay.com/open/03vtet
+func (a *Client) ZhimaCreditPayAfterUseCreditBizOrderQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditPayAfterUseCreditBizOrderQueryRsp, err error) {
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.payafteruse.creditbizorder.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPayAfterUseCreditBizOrderQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// zhima.credit.payafteruse.creditbizorder.finish(结束信用服务订单)
+// 文档地址：https://opendocs.alipay.com/open/03vteu
+func (a *Client) ZhimaCreditPayAfterUseCreditBizOrderFinish(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCreditPayAfterUseCreditBizOrderFinishRsp, err error) {
+	err = bm.CheckEmptyError("out_request_no", "credit_biz_order_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.credit.payafteruse.creditbizorder.finish"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCreditPayAfterUseCreditBizOrderFinishRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
 // zhima.customer.jobworth.adapter.query(职得工作证信息匹配度查询)
 // 文档地址：https://opendocs.alipay.com/apis/022mvz
 func (a *Client) ZhimaCustomerJobworthAdapterQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCustomerJobworthAdapterQueryRsp, err error) {
@@ -434,6 +616,52 @@ func (a *Client) ZhimaCustomerJobworthSceneUse(ctx context.Context, bm gopay.Bod
 		return nil, err
 	}
 	aliRsp = new(ZhimaCustomerJobworthSceneUseRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// zhima.customer.jobworth.authentication.query(职得身份认证查询接口)
+// 文档地址：https://opendocs.alipay.com/open/351177b5_zhima.customer.jobworth.authentication.query
+func (a *Client) ZhimaCustomerJobworthAuthQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCustomerJobworthAuthQueryRsp, err error) {
+	err = bm.CheckEmptyError("conn_key", "once_token", "query_type", "identity_type", "service_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.customer.jobworth.authentication.query"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCustomerJobworthAuthQueryRsp)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
+// zhima.customer.jobworth.authentication.preconsult(身份验真预咨询服务)
+// 文档地址：https://opendocs.alipay.com/open/16f72e43_zhima.customer.jobworth.authentication.preconsult
+func (a *Client) ZhimaCustomerJobworthAuthPreConsult(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZhimaCustomerJobworthAuthPreConsultRsp, err error) {
+	err = bm.CheckEmptyError("out_agreement_no", "once_token", "identity_type", "query_type", "zm_service_id")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "zhima.customer.jobworth.authentication.preconsult"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(ZhimaCustomerJobworthAuthPreConsultRsp)
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}

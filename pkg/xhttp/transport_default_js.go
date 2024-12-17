@@ -5,7 +5,7 @@
 //go:build js && wasm
 // +build js,wasm
 
-package http
+package xhttp
 
 import (
 	"context"

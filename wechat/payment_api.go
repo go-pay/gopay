@@ -19,9 +19,8 @@ import (
 	"net/http"
 	"strings"
 
+	xaes "github.com/go-pay/crypto/aes"
 	"github.com/go-pay/gopay"
-	xaes "github.com/go-pay/gopay/pkg/aes"
-	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
 )
 
@@ -33,7 +32,7 @@ func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := io.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
 	defer req.Body.Close()
 	if err != nil {
-		return nil, fmt.Errorf("ioutil.ReadAll：%w", err)
+		return nil, fmt.Errorf("ioutil.ReadAll: %w", err)
 	}
 	bm = make(gopay.BodyMap)
 	if err = xml.Unmarshal(bs, &bm); err != nil {
@@ -49,7 +48,7 @@ func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 	err = xml.NewDecoder(req.Body).Decode(notifyReq)
 	defer req.Body.Close()
 	if err != nil {
-		return nil, fmt.Errorf("xml.NewDecoder.Decode：%w", err)
+		return nil, fmt.Errorf("xml.NewDecoder.Decode: %w", err)
 	}
 	return
 }
@@ -63,7 +62,7 @@ func ParseRefundNotify(req *http.Request) (notifyReq *RefundNotifyRequest, err e
 	err = xml.NewDecoder(req.Body).Decode(notifyReq)
 	defer req.Body.Close()
 	if err != nil {
-		return nil, fmt.Errorf("xml.NewDecoder.Decode：%w", err)
+		return nil, fmt.Errorf("xml.NewDecoder.Decode: %w", err)
 	}
 	return
 }
@@ -75,7 +74,7 @@ func ParseRefundNotify(req *http.Request) (notifyReq *RefundNotifyRequest, err e
 // 返回参数err：错误信息
 // 文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_16&index=10
 func DecryptRefundNotifyReqInfo(reqInfo, apiKey string) (refundNotify *RefundNotify, err error) {
-	if reqInfo == util.NULL || apiKey == util.NULL {
+	if reqInfo == gopay.NULL || apiKey == gopay.NULL {
 		return nil, errors.New("reqInfo or apiKey is null")
 	}
 	var (

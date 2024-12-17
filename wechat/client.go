@@ -14,9 +14,8 @@ import (
 	"sync"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/xlog"
 )
 
 type Client struct {
@@ -26,6 +25,7 @@ type Client struct {
 	BaseURL     string
 	IsProd      bool
 	DebugSwitch gopay.DebugSwitch
+	logger      xlog.XLogger
 	mu          sync.RWMutex
 	sha256Hash  hash.Hash
 	md5Hash     hash.Hash
@@ -39,12 +39,15 @@ type Client struct {
 // ApiKey：API秘钥值
 // IsProd：是否是正式环境
 func NewClient(appId, mchId, apiKey string, isProd bool) (client *Client) {
+	logger := xlog.NewLogger()
+	logger.SetLevel(xlog.DebugLevel)
 	return &Client{
 		AppId:       appId,
 		MchId:       mchId,
 		ApiKey:      apiKey,
 		IsProd:      isProd,
 		DebugSwitch: gopay.DebugOff,
+		logger:      logger,
 		sha256Hash:  hmac.New(sha256.New, []byte(apiKey)),
 		md5Hash:     md5.New(),
 		hc:          xhttp.NewClient(),
@@ -56,6 +59,26 @@ func NewClient(appId, mchId, apiKey string, isProd bool) (client *Client) {
 func (w *Client) SetBodySize(sizeMB int) {
 	if sizeMB > 0 {
 		w.hc.SetBodySize(sizeMB)
+	}
+}
+
+// SetHttpClient 设置自定义的xhttp.Client
+func (w *Client) SetHttpClient(client *xhttp.Client) {
+	if client != nil {
+		w.hc = client
+	}
+}
+
+// SetTLSHttpClient 设置自定义的xhttp.Client
+func (w *Client) SetTLSHttpClient(client *xhttp.Client) {
+	if client != nil {
+		w.tlsHc = client
+	}
+}
+
+func (w *Client) SetLogger(logger xlog.XLogger) {
+	if logger != nil {
+		w.logger = logger
 	}
 }
 
@@ -91,11 +114,11 @@ func (w *Client) AuthCodeToOpenId(ctx context.Context, bm gopay.BodyMap) (wxRsp 
 func (w *Client) DownloadBill(ctx context.Context, bm gopay.BodyMap) (wxRsp string, err error) {
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "bill_type")
 	if err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	billType := bm.GetString("bill_type")
 	if billType != "ALL" && billType != "SUCCESS" && billType != "REFUND" && billType != "RECHARGE_REFUND" {
-		return util.NULL, errors.New("bill_type error, please reference: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_6")
+		return gopay.NULL, errors.New("bill_type error, please reference: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_6")
 	}
 	var bs []byte
 	if w.IsProd {
@@ -104,7 +127,7 @@ func (w *Client) DownloadBill(ctx context.Context, bm gopay.BodyMap) (wxRsp stri
 		bs, err = w.doSanBoxPost(ctx, bm, sandboxDownloadBill)
 	}
 	if err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	return string(bs), nil
 }
@@ -116,16 +139,16 @@ func (w *Client) DownloadBill(ctx context.Context, bm gopay.BodyMap) (wxRsp stri
 func (w *Client) DownloadFundFlow(ctx context.Context, bm gopay.BodyMap) (wxRsp string, err error) {
 	err = bm.CheckEmptyError("nonce_str", "bill_date", "account_type")
 	if err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	accountType := bm.GetString("account_type")
 	if accountType != "Basic" && accountType != "Operation" && accountType != "Fees" {
-		return util.NULL, errors.New("account_type error, please reference: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7")
+		return gopay.NULL, errors.New("account_type error, please reference: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_18&index=7")
 	}
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bs, err := w.doProdPostTLS(ctx, bm, downloadFundFlow)
 	if err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	wxRsp = string(bs)
 	return
@@ -166,12 +189,12 @@ func (w *Client) Report(ctx context.Context, bm gopay.BodyMap) (wxRsp *ReportRes
 func (w *Client) BatchQueryComment(ctx context.Context, bm gopay.BodyMap) (wxRsp string, err error) {
 	err = bm.CheckEmptyError("nonce_str", "begin_time", "end_time", "offset")
 	if err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bs, err := w.doProdPostTLS(ctx, bm, batchQueryComment)
 	if err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	return string(bs), nil
 }
@@ -182,7 +205,7 @@ func (w *Client) doSanBoxPost(ctx context.Context, bm gopay.BodyMap, path string
 	bm.Set("appid", w.AppId)
 	bm.Set("mch_id", w.MchId)
 
-	if bm.GetString("sign") == util.NULL {
+	if bm.GetString("sign") == gopay.NULL {
 		bm.Set("sign_type", SignType_MD5)
 		sign, err := w.getSandBoxSign(ctx, w.MchId, w.ApiKey, bm)
 		if err != nil {
@@ -191,19 +214,19 @@ func (w *Client) doSanBoxPost(ctx context.Context, bm gopay.BodyMap, path string
 		bm.Set("sign", sign)
 	}
 
-	if w.BaseURL != util.NULL {
+	if w.BaseURL != gopay.NULL {
 		url = w.BaseURL + path
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.hc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -217,33 +240,33 @@ func (w *Client) doSanBoxPost(ctx context.Context, bm gopay.BodyMap, path string
 // Post请求、正式
 func (w *Client) doProdPostSelf(ctx context.Context, bm gopay.BodyMap, path string, tlsConfig *tls.Config) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	if bm.GetString("appid") == util.NULL {
+	if bm.GetString("appid") == gopay.NULL {
 		bm.Set("appid", w.AppId)
 	}
-	if bm.GetString("mch_id") == util.NULL {
+	if bm.GetString("mch_id") == gopay.NULL {
 		bm.Set("mch_id", w.MchId)
 	}
-	if bm.GetString("sign") == util.NULL {
+	if bm.GetString("sign") == gopay.NULL {
 		sign := w.getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
 		bm.Set("sign", sign)
 	}
-	if w.BaseURL != util.NULL {
+	if w.BaseURL != gopay.NULL {
 		url = w.BaseURL + path
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	httpClient := xhttp.NewClient()
 	if w.IsProd && tlsConfig != nil {
-		httpClient.SetTLSConfig(tlsConfig)
+		httpClient.SetHttpTLSConfig(tlsConfig)
 	}
 	res, bs, err := httpClient.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -257,29 +280,29 @@ func (w *Client) doProdPostSelf(ctx context.Context, bm gopay.BodyMap, path stri
 // Post请求、正式
 func (w *Client) doProdPost(ctx context.Context, bm gopay.BodyMap, path string) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	if bm.GetString("appid") == util.NULL {
+	if bm.GetString("appid") == gopay.NULL {
 		bm.Set("appid", w.AppId)
 	}
-	if bm.GetString("mch_id") == util.NULL {
+	if bm.GetString("mch_id") == gopay.NULL {
 		bm.Set("mch_id", w.MchId)
 	}
-	if bm.GetString("sign") == util.NULL {
+	if bm.GetString("sign") == gopay.NULL {
 		sign := w.getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
 		bm.Set("sign", sign)
 	}
-	if w.BaseURL != util.NULL {
+	if w.BaseURL != gopay.NULL {
 		url = w.BaseURL + path
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.hc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -292,29 +315,29 @@ func (w *Client) doProdPost(ctx context.Context, bm gopay.BodyMap, path string) 
 
 func (w *Client) doProdPostTLS(ctx context.Context, bm gopay.BodyMap, path string) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	if bm.GetString("appid") == util.NULL {
+	if bm.GetString("appid") == gopay.NULL {
 		bm.Set("appid", w.AppId)
 	}
-	if bm.GetString("mch_id") == util.NULL {
+	if bm.GetString("mch_id") == gopay.NULL {
 		bm.Set("mch_id", w.MchId)
 	}
-	if bm.GetString("sign") == util.NULL {
+	if bm.GetString("sign") == gopay.NULL {
 		sign := w.getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
 		bm.Set("sign", sign)
 	}
-	if w.BaseURL != util.NULL {
+	if w.BaseURL != gopay.NULL {
 		url = w.BaseURL + path
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -327,19 +350,19 @@ func (w *Client) doProdPostTLS(ctx context.Context, bm gopay.BodyMap, path strin
 
 func (w *Client) doProdPostPure(ctx context.Context, bm gopay.BodyMap, path string) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	if w.BaseURL != util.NULL {
+	if w.BaseURL != gopay.NULL {
 		url = w.BaseURL + path
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.hc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -352,19 +375,19 @@ func (w *Client) doProdPostPure(ctx context.Context, bm gopay.BodyMap, path stri
 
 func (w *Client) doProdPostPureTLS(ctx context.Context, bm gopay.BodyMap, path string) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	if w.BaseURL != util.NULL {
+	if w.BaseURL != gopay.NULL {
 		url = w.BaseURL + path
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -378,20 +401,20 @@ func (w *Client) doProdPostPureTLS(ctx context.Context, bm gopay.BodyMap, path s
 // Get请求、正式
 func (w *Client) doProdGet(ctx context.Context, bm gopay.BodyMap, path, signType string) (bs []byte, err error) {
 	var url = baseUrlCh + path
-	if bm.GetString("appid") == util.NULL {
+	if bm.GetString("appid") == gopay.NULL {
 		bm.Set("appid", w.AppId)
 	}
-	if bm.GetString("mch_id") == util.NULL {
+	if bm.GetString("mch_id") == gopay.NULL {
 		bm.Set("mch_id", w.MchId)
 	}
 	bm.Remove("sign")
 	sign := w.getReleaseSign(w.ApiKey, signType, bm)
 	bm.Set("sign", sign)
-	if w.BaseURL != util.NULL {
+	if w.BaseURL != gopay.NULL {
 		url = w.BaseURL + path
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", bm.JsonBody())
+		w.logger.Debugf("Wechat_Request: %s", bm.JsonBody())
 	}
 	param := bm.EncodeURLParams()
 	uri := url + "?" + param
@@ -400,7 +423,7 @@ func (w *Client) doProdGet(ctx context.Context, bm gopay.BodyMap, path, signType
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)

@@ -8,6 +8,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"runtime"
@@ -15,15 +16,15 @@ import (
 	"sync"
 	"time"
 
+	"github.com/go-pay/crypto/aes"
+	"github.com/go-pay/crypto/xpem"
+	"github.com/go-pay/errgroup"
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/aes"
-	"github.com/go-pay/gopay/pkg/errgroup"
-	"github.com/go-pay/gopay/pkg/retry"
-	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
-	"github.com/go-pay/gopay/pkg/xpem"
-	"github.com/go-pay/gopay/pkg/xtime"
+	"github.com/go-pay/util"
+	"github.com/go-pay/util/convert"
+	"github.com/go-pay/util/retry"
+	"github.com/go-pay/xtime"
 )
 
 // 获取平台RSA证书列表（获取后自行保存使用，如需定期刷新功能，自行实现）
@@ -54,7 +55,7 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 
 	timestamp := time.Now().Unix()
 	nonceStr := util.RandomString(32)
-	ts := util.Int642String(timestamp)
+	ts := convert.Int64ToString(timestamp)
 	_str := MethodGet + "\n" + uri + "\n" + ts + "\n" + nonceStr + "\n" + jb + "\n"
 	// Sign
 	h := sha256.New()
@@ -131,16 +132,17 @@ func GetPlatformSM2Certs(ctx context.Context, mchid, apiV3Key, serialNo, private
 // 注意1：如已开启自动验签功能 client.AutoVerifySign()，无需再调用此方法设置
 // 注意2：请预先通过 wechat.GetPlatformCerts() 获取 微信平台公钥证书 和 证书序列号
 // 部分接口请求参数中敏感信息加密，使用此 微信支付平台公钥 和 证书序列号
-func (c *ClientV3) SetPlatformCert(wxPublicKeyContent []byte, wxSerialNo string) (client *ClientV3) {
+func (c *ClientV3) SetPlatformCert(wxPublicKeyContent []byte, wxSerialNo string) (err error) {
 	pubKey, err := xpem.DecodePublicKey(wxPublicKeyContent)
 	if err != nil {
-		xlog.Errorf("SetPlatformCert(%s),err:%+v", wxPublicKeyContent, err)
+		return err
 	}
-	if pubKey != nil {
-		c.wxPublicKey = pubKey
+	if pubKey == nil {
+		return errors.New("xpem.DecodePublicKey() failed, pubKey is nil")
 	}
+	c.wxPublicKey = pubKey
 	c.WxSerialNo = wxSerialNo
-	return c
+	return nil
 }
 
 // 获取最新的 微信平台证书
@@ -151,10 +153,11 @@ func (c *ClientV3) WxPublicKey() (wxPublicKey *rsa.PublicKey) {
 // 获取 微信平台证书 Map（readonly）
 // wxPublicKeyMap: key:SerialNo, value:WxPublicKey
 func (c *ClientV3) WxPublicKeyMap() (wxPublicKeyMap map[string]*rsa.PublicKey) {
-	wxPublicKeyMap = make(map[string]*rsa.PublicKey, len(c.SnCertMap))
-	for k, v := range c.SnCertMap {
+	wxPublicKeyMap = make(map[string]*rsa.PublicKey)
+	c.SnCertMap.Range(func(k string, v *rsa.PublicKey) bool {
 		wxPublicKeyMap[k] = v
-	}
+		return true
+	})
 	return wxPublicKeyMap
 }
 
@@ -309,12 +312,12 @@ func (c *ClientV3) decryptCerts(ciphertext, nonce, additional string) (wxCerts s
 }
 
 func (c *ClientV3) autoCheckCertProc() {
-	xlog.Info("auto refresh wechat platform public key")
+	c.logger.Warn("auto refresh wechat platform public key")
 	defer func() {
 		if r := recover(); r != nil {
 			buf := make([]byte, 64<<10)
 			buf = buf[:runtime.Stack(buf, false)]
-			xlog.Errorf("autoCheckCertProc: panic recovered: %s\n%s", r, buf)
+			c.logger.Errorf("autoCheckCertProc: panic recovered: %s\n%s", r, buf)
 			// 重启
 			c.autoCheckCertProc()
 		}
@@ -326,23 +329,21 @@ func (c *ClientV3) autoCheckCertProc() {
 			if err != nil {
 				return err
 			}
-			snPkMap := make(map[string]*rsa.PublicKey)
 			for sn, cert := range snCertMap {
 				pubKey, err := xpem.DecodePublicKey([]byte(cert))
 				if err != nil {
 					return err
 				}
-				snPkMap[sn] = pubKey
+				c.SnCertMap.Store(sn, pubKey)
+				if sn == serialNo {
+					c.wxPublicKey = pubKey
+				}
 			}
-			c.rwMu.Lock()
-			c.SnCertMap = snPkMap
 			c.WxSerialNo = serialNo
-			c.wxPublicKey = snPkMap[serialNo]
-			c.rwMu.Unlock()
 			return nil
 		}, 3, time.Second)
 		if err != nil {
-			xlog.Errorf("c.GetAndSelectNewestCert()，err:%+v", err)
+			c.logger.Errorf("c.GetAndSelectNewestCert()，err:%+v", err)
 			continue
 		}
 	}

@@ -3,11 +3,11 @@ package wechat
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/xlog"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/wechat/v3"
+	"github.com/go-pay/util"
 )
 
 /*
@@ -75,8 +75,8 @@ func RefundV3() {
 		SetBodyMap("amount", func(bm gopay.BodyMap) {
 			// 退款金额:单位是分
 			bm.Set("refund", "1"). //实际退款金额
-						Set("total", "1"). // 折扣前总金额（不是实际退款数）
-						Set("currency", "CNY")
+				Set("total", "1"). // 折扣前总金额（不是实际退款数）
+				Set("currency", "CNY")
 		})
 	//请求申请退款（沙箱环境下，证书路径参数可传空）
 	//    body：参数Body

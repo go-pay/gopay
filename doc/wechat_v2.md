@@ -58,13 +58,13 @@ client.AddCertPkcs12FileContent()
 
 ```go
 import (
-    "github.com/go-pay/gopay/pkg/util"
+    "github.com/go-pay/util"
     "github.com/go-pay/gopay/wechat"
 )
 
 // 初始化 BodyMap
 bm := make(gopay.BodyMap)
-bm.Set("nonce_str", util.GetRandomString(32)).
+bm.Set("nonce_str", util.RandomString(32)).
     Set("body", "H5支付").
     Set("out_trade_no", number).
     Set("total_fee", 1).
@@ -245,6 +245,8 @@ return c.String(http.StatusOK, rsp.ToXmlString())
 * 请求单次分账（正式）：`client.ProfitSharing()`
 * 请求多次分账（正式）：`client.MultiProfitSharing()`
 * 查询分账结果（正式）：`client.ProfitSharingQuery()`
+* 查询订单待分账金额 （正式）：`client.ProfitSharingOrderAmountQuery()`
+* 查询最大分账比例 （正式）：`client.ProfitSharingMerchantRatioQuery()`
 * 添加分账接收方（正式）：`client.ProfitSharingAddReceiver()`
 * 删除分账接收方（正式）：`client.ProfitSharingRemoveReceiver()`
 * 完结分账（正式）：`client.ProfitSharingFinish()`

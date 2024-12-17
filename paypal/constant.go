@@ -59,4 +59,16 @@ const (
 	createInvoiceTemplate      = "/v2/invoicing/templates"                    // 创建发票模板 POST
 	deleteInvoiceTemplate      = "/v2/invoicing/templates/%s"                 // template_id 删除发票模板 DELETE
 	fullyUpdateInvoiceTemplate = "/v2/invoicing/templates/%s"                 // template_id 全量更新发票模板 PUT
+
+	// 物流相关
+	addTrackingNumber = "/v2/checkout/orders/%s/track" // order_id 授权物流信息 POST
+
+	// webhook 相关
+	createWebhook          = "/v1/notifications/webhooks"                 // 创建webhook POST
+	listWebhook            = "/v1/notifications/webhooks"                 // 获取webhook列表 GET
+	showWebhookDetail      = "/v1/notifications/webhooks/%s"              // webhook_id 获取webhook详情 GET
+	updateWebhook          = "/v1/notifications/webhooks/%s"              // webhook_id 更新webhook PATCH
+	deleteWebhook          = "/v1/notifications/webhooks/%s"              // webhook_id 删除webhook DELETE
+	verifyWebhookSignature = "/v1/notifications/verify-webhook-signature" //webhook消息验签
+	showWebhookEventDetail = "/v1/notifications/webhooks-events/%s"       // webhook_id 获取webhook-event详情 GET
 )

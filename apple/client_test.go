@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/xlog"
 )
 
 var (
@@ -19,7 +19,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	xlog.Level = xlog.DebugLevel
+	xlog.SetLevel(xlog.DebugLevel)
 	// 初始化客户端
 	// iss：issuer ID
 	// bid：bundle ID

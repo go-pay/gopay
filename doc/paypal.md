@@ -13,7 +13,7 @@
 ```go
 import (
     "github.com/go-pay/gopay/paypal"
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/xlog"
 )
 
 // 初始化PayPal支付客户端
@@ -44,8 +44,8 @@ client.DebugSwitch = gopay.DebugOn
 import (
     "github.com/go-pay/gopay"
     "github.com/go-pay/gopay/paypal"
-    "github.com/go-pay/gopay/pkg/util"
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/util"
+    "github.com/go-pay/xlog"
 )
 
 // Create Orders example
@@ -90,7 +90,7 @@ if ppRsp.Code != 200 {
 ```go
 import (
     "github.com/go-pay/gopay"
-    "github.com/go-pay/gopay/pkg/xlog"
+    "github.com/go-pay/xlog"
 )
 
 // Capture payment for order

@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // 创建投诉通知回调地址API
@@ -106,10 +105,10 @@ func (c *ClientV3) V3ComplaintNotifyUrlDelete(ctx context.Context) (wxRsp *Empty
 	return wxRsp, c.verifySyncSign(si)
 }
 
-// 商户上传反馈图片API
+// 商户上传反馈图片
 // 注意：图片不能超过2MB
 // Code = 0 is success
-func (c *ClientV3) V3ComplaintUploadImage(ctx context.Context, fileName, fileSha256 string, img *util.File) (wxRsp *MediaUploadRsp, err error) {
+func (c *ClientV3) V3ComplaintUploadImage(ctx context.Context, fileName, fileSha256 string, img *gopay.File) (wxRsp *MediaUploadRsp, err error) {
 	bmFile := make(gopay.BodyMap)
 	bmFile.Set("filename", fileName).Set("sha256", fileSha256)
 	authorization, err := c.authorization(MethodPost, v3ComplaintUploadImage, bmFile)
@@ -127,6 +126,31 @@ func (c *ClientV3) V3ComplaintUploadImage(ctx context.Context, fileName, fileSha
 	}
 	wxRsp = &MediaUploadRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(MediaUpload)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 商户反馈图片请求
+// Code = 0 is success
+func (c *ClientV3) V3ComplaintImage(ctx context.Context, mediaId string) (wxRsp *ComplaintImageRsp, err error) {
+	uri := fmt.Sprintf(v3ComplaintImage, mediaId)
+	authorization, err := c.authorization(MethodGet, uri, nil)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &ComplaintImageRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(ComplaintImage)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}

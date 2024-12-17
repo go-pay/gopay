@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/util"
+	"github.com/go-pay/xlog"
 )
 
 var (
@@ -510,7 +510,7 @@ func TestClientV3_V3MediaUploadImage(t *testing.T) {
 	sha256Str := hex.EncodeToString(h.Sum(nil))
 	xlog.Debug("sha256：", sha256Str)
 
-	img := &util.File{
+	img := &gopay.File{
 		Name:    fileName,
 		Content: fileContent,
 	}
@@ -539,7 +539,7 @@ func TestClientV3_V3ComplaintUploadImage(t *testing.T) {
 	sha256Str := hex.EncodeToString(h.Sum(nil))
 	xlog.Debug("sha256：", sha256Str)
 
-	img := &util.File{
+	img := &gopay.File{
 		Name:    fileName,
 		Content: fileContent,
 	}

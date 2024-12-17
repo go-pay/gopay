@@ -7,9 +7,7 @@ import (
 	"fmt"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 // 企业付款（企业向微信用户个人付款）
@@ -27,21 +25,22 @@ func (w *Client) Transfer(ctx context.Context, bm gopay.BodyMap) (wxRsp *Transfe
 	)
 	bm.Set("sign", w.getReleaseSign(w.ApiKey, SignType_MD5, bm))
 
-	if w.BaseURL != util.NULL {
+	if w.BaseURL != gopay.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + transfers
 		w.mu.RUnlock()
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
+
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -68,21 +67,21 @@ func (w *Client) GetTransferInfo(ctx context.Context, bm gopay.BodyMap) (wxRsp *
 	)
 	bm.Set("sign", w.getReleaseSign(w.ApiKey, SignType_MD5, bm))
 
-	if w.BaseURL != util.NULL {
+	if w.BaseURL != gopay.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + getTransferInfo
 		w.mu.RUnlock()
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -111,21 +110,21 @@ func (w *Client) PayBank(ctx context.Context, bm gopay.BodyMap) (wxRsp *PayBankR
 	)
 	bm.Set("sign", w.getReleaseSign(w.ApiKey, SignType_MD5, bm))
 
-	if w.BaseURL != util.NULL {
+	if w.BaseURL != gopay.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + payBank
 		w.mu.RUnlock()
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -150,21 +149,21 @@ func (w *Client) QueryBank(ctx context.Context, bm gopay.BodyMap) (wxRsp *QueryB
 	)
 	bm.Set("sign", w.getReleaseSign(w.ApiKey, SignType_MD5, bm))
 
-	if w.BaseURL != util.NULL {
+	if w.BaseURL != gopay.NULL {
 		w.mu.RLock()
 		url = w.BaseURL + queryBank
 		w.mu.RUnlock()
 	}
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -191,14 +190,14 @@ func (w *Client) GetRSAPublicKey(ctx context.Context, bm gopay.BodyMap) (wxRsp *
 
 	req := GenerateXml(bm)
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Request: %s", req)
+		w.logger.Debugf("Wechat_Request: %s", req)
 	}
 	res, bs, err := w.tlsHc.Req(xhttp.TypeXML).Post(url).SendString(req).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if w.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Wechat_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		w.logger.Debugf("Wechat_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
@@ -261,7 +260,7 @@ func (w *Client) ProfitSharingQuery(ctx context.Context, bm gopay.BodyMap) (wxRs
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
 	bm.Set("sign_type", SignType_HMAC_SHA256)
 	bm.Set("mch_id", w.MchId)
-	if bm.GetString("sign") == util.NULL {
+	if bm.GetString("sign") == gopay.NULL {
 		sign := w.getReleaseSign(w.ApiKey, bm.GetString("sign_type"), bm)
 		bm.Set("sign", sign)
 	}
@@ -342,6 +341,52 @@ func (w *Client) ProfitSharingFinish(ctx context.Context, bm gopay.BodyMap) (wxR
 	return wxRsp, nil
 }
 
+// 服务商可通过调用此接口查询订单剩余待分金额
+// 接口频率：30QPS
+// 微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation_sl.php?chapter=25_10&index=7
+func (w *Client) ProfitSharingOrderAmountQuery(ctx context.Context, bm gopay.BodyMap) (wxRsp *ProfitSharingOrderAmountQueryResponse, err error) {
+	err = bm.CheckEmptyError("mch_id", "transaction_id", "nonce_str")
+	if err != nil {
+		return nil, err
+	}
+
+	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	bm.Set("sign_type", SignType_HMAC_SHA256)
+	bs, err := w.doProdPostTLS(ctx, bm, profitSharingOrderAmountQuery)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = new(ProfitSharingOrderAmountQueryResponse)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	return wxRsp, nil
+}
+
+// 服务商可以查询子商户设置的允许服务商分账的最大比例
+// 接口频率：30QPS
+// 微信文档：https://pay.weixin.qq.com/wiki/doc/api/allocation_sl.php?chapter=25_10&index=7
+func (w *Client) ProfitSharingMerchantRatioQuery(ctx context.Context, bm gopay.BodyMap) (wxRsp *ProfitSharingMerchantRatioQuery, err error) {
+	err = bm.CheckEmptyError("mch_id", "nonce_str")
+	if err != nil {
+		return nil, err
+	}
+	if (bm.GetString("sub_mch_id") == gopay.NULL) && (bm.GetString("brand_mch_id") == gopay.NULL) {
+		return nil, errors.New("param sub_mch_id and brand_mch_id can not be null at the same time")
+	}
+	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
+	bm.Set("sign_type", SignType_HMAC_SHA256)
+	bs, err := w.doProdPostTLS(ctx, bm, profitSharingMerchantRatioQuery)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = new(ProfitSharingMerchantRatioQuery)
+	if err = xml.Unmarshal(bs, wxRsp); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	return wxRsp, nil
+}
+
 // 分账回退
 // 对订单进行退款时，如果订单已经分账，可以先调用此接口将指定的金额从分账接收方（仅限商户类型的分账接收方）回退给本商户，然后再退款。
 // 回退以原分账请求为依据，可以对分给分账接收方的金额进行多次回退，只要满足累计回退不超过该请求中分给接收方的金额。
@@ -355,7 +400,7 @@ func (w *Client) ProfitSharingReturn(ctx context.Context, bm gopay.BodyMap) (wxR
 		return nil, err
 	}
 
-	if (bm.GetString("order_id") == util.NULL) && (bm.GetString("out_order_no") == util.NULL) {
+	if (bm.GetString("order_id") == gopay.NULL) && (bm.GetString("out_order_no") == gopay.NULL) {
 		return nil, errors.New("param order_id and out_order_no can not be null at the same time")
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256
@@ -381,7 +426,7 @@ func (w *Client) ProfitSharingReturnQuery(ctx context.Context, bm gopay.BodyMap)
 		return nil, err
 	}
 
-	if (bm.GetString("order_id") == util.NULL) && (bm.GetString("out_order_no") == util.NULL) {
+	if (bm.GetString("order_id") == gopay.NULL) && (bm.GetString("out_order_no") == gopay.NULL) {
 		return nil, errors.New("param order_id and out_order_no can not be null at the same time")
 	}
 	// 设置签名类型，官方文档此接口只支持 HMAC_SHA256

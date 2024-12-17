@@ -12,9 +12,9 @@ import (
 	"time"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
+	"github.com/go-pay/util"
+	"github.com/go-pay/xlog"
 )
 
 // Client lakala
@@ -24,6 +24,7 @@ type Client struct {
 	credentialCode string            // credential_code:系统为商户分配的开发校验码，请妥善保管，不要在公开场合泄露
 	IsProd         bool              // 是否生产环境
 	DebugSwitch    gopay.DebugSwitch // 调试开关，是否打印日志
+	logger         xlog.XLogger
 	hc             *xhttp.Client
 	sha256Hash     hash.Hash
 	mu             sync.Mutex
@@ -34,15 +35,18 @@ type Client struct {
 // credentialCode: 系统为商户分配的开发校验码，请妥善保管，不要在公开场合泄露
 // isProd: 是否生产环境
 func NewClient(partnerCode, credentialCode string, isProd bool) (client *Client, err error) {
-	if partnerCode == util.NULL || credentialCode == util.NULL {
+	if partnerCode == gopay.NULL || credentialCode == gopay.NULL {
 		return nil, gopay.MissLakalaInitParamErr
 	}
+	logger := xlog.NewLogger()
+	logger.SetLevel(xlog.DebugLevel)
 	client = &Client{
 		ctx:            context.Background(),
 		PartnerCode:    partnerCode,
 		credentialCode: credentialCode,
 		IsProd:         isProd,
 		DebugSwitch:    gopay.DebugOff,
+		logger:         logger,
 		hc:             xhttp.NewClient(),
 		sha256Hash:     sha256.New(),
 	}
@@ -53,6 +57,19 @@ func NewClient(partnerCode, credentialCode string, isProd bool) (client *Client,
 func (c *Client) SetBodySize(sizeMB int) {
 	if sizeMB > 0 {
 		c.hc.SetBodySize(sizeMB)
+	}
+}
+
+// SetHttpClient 设置自定义的xhttp.Client
+func (c *Client) SetHttpClient(client *xhttp.Client) {
+	if client != nil {
+		c.hc = client
+	}
+}
+
+func (c *Client) SetLogger(logger xlog.XLogger) {
+	if logger != nil {
+		c.logger = logger
 	}
 }
 
@@ -115,9 +132,9 @@ func (c *Client) doPut(ctx context.Context, path string, bm gopay.BodyMap) (bs [
 	req.Header.Add("Accept", "application/json")
 	uri := url + "?" + param
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Lakala_Url: %s", uri)
-		xlog.Debugf("Lakala_Req_Body: %s", bm.JsonBody())
-		xlog.Debugf("Lakala_Req_Headers: %#v", req.Header)
+		c.logger.Debugf("Lakala_Url: %s", uri)
+		c.logger.Debugf("Lakala_Req_Body: %s", bm.JsonBody())
+		c.logger.Debugf("Lakala_Req_Headers: %#v", req.Header)
 	}
 	res, bs, err := req.Put(uri).SendBodyMap(bm).EndBytes(ctx)
 	if err != nil {
@@ -140,9 +157,9 @@ func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs 
 	req.Header.Add("Accept", "application/json")
 	uri := url + "?" + param
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Lakala_Url: %s", uri)
-		xlog.Debugf("Lakala_Req_Body: %s", bm.JsonBody())
-		xlog.Debugf("Lakala_Req_Headers: %#v", req.Header)
+		c.logger.Debugf("Lakala_Url: %s", uri)
+		c.logger.Debugf("Lakala_Req_Body: %s", bm.JsonBody())
+		c.logger.Debugf("Lakala_Req_Headers: %#v", req.Header)
 	}
 	res, bs, err := req.Post(uri).SendBodyMap(bm).EndBytes(ctx)
 	if err != nil {
@@ -168,8 +185,8 @@ func (c *Client) doGet(ctx context.Context, path, queryParams string) (bs []byte
 	req.Header.Add("Accept", "application/json")
 	uri := url + "?" + param
 	if c.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Lakala_Url: %s", uri)
-		xlog.Debugf("Lakala_Req_Headers: %#v", req.Header)
+		c.logger.Debugf("Lakala_Url: %s", uri)
+		c.logger.Debugf("Lakala_Req_Headers: %#v", req.Header)
 	}
 	res, bs, err := req.Get(uri).EndBytes(ctx)
 	if err != nil {

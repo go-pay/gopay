@@ -6,10 +6,10 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/go-pay/crypto/xrsa"
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
-	"github.com/go-pay/gopay/pkg/xlog"
-	"github.com/go-pay/gopay/pkg/xrsa"
+	"github.com/go-pay/util"
+	"github.com/go-pay/xlog"
 )
 
 func TestClient_Transfer(t *testing.T) {
@@ -137,13 +137,13 @@ func TestClient_PayBank(t *testing.T) {
 
 	// publicKey 通过 client.GetRSAPublicKey() 获取
 	// 加密 银行账号，需要转 base64，微信解密使用的是 sha1
-	encryptBank, err := xrsa.RsaEncryptOAEPData(sha1.New(), xrsa.PKCS1, "publicKey content", []byte("621400000000567"), nil)
+	encryptBank, err := xrsa.RsaEncryptOAEP(sha1.New(), xrsa.PKCS1, "publicKey content", []byte("621400000000567"), nil)
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
 	// 加密 银行收款人，需要转 base64，微信解密使用的是 sha1
-	encryptName, err := xrsa.RsaEncryptOAEPData(sha1.New(), xrsa.PKCS1, "publicKey content", []byte("Jerry"), nil)
+	encryptName, err := xrsa.RsaEncryptOAEP(sha1.New(), xrsa.PKCS1, "publicKey content", []byte("Jerry"), nil)
 	if err != nil {
 		xlog.Error(err)
 		return

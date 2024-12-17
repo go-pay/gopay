@@ -7,7 +7,6 @@ import (
 	"fmt"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 )
 
 // alipay.trade.pay(统一收单交易支付接口)
@@ -25,7 +24,7 @@ func (a *Client) TradePay(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeP
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+	if err = bizErrCheckTradePay(aliRsp.Response.ErrorResponse); err != nil {
 		return aliRsp, err
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
@@ -65,27 +64,27 @@ func (a *Client) TradePrecreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *
 func (a *Client) TradeAppPay(ctx context.Context, bm gopay.BodyMap) (payParam string, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	var bs []byte
 	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.app.pay"); err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	payParam = string(bs)
 	return payParam, nil
 }
 
 // alipay.trade.wap.pay(手机网站支付接口2.0)
-// 文档地址：https://opendocs.alipay.com/open/02ivbs?scene=21&ref=api
+// 文档地址：https://opendocs.alipay.com/open/02ivbs
 func (a *Client) TradeWapPay(ctx context.Context, bm gopay.BodyMap) (payUrl string, err error) {
 	bm.Set("product_code", "QUICK_WAP_WAY")
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	var bs []byte
 	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.wap.pay"); err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	payUrl = string(bs)
 	return payUrl, nil
@@ -97,11 +96,11 @@ func (a *Client) TradePagePay(ctx context.Context, bm gopay.BodyMap) (payUrl str
 	bm.Set("product_code", "FAST_INSTANT_TRADE_PAY")
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	var bs []byte
 	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.page.pay"); err != nil {
-		return util.NULL, err
+		return gopay.NULL, err
 	}
 	payUrl = string(bs)
 	return payUrl, nil
@@ -130,10 +129,33 @@ func (a *Client) TradeCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *Tra
 	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
 }
 
+// alipay.trade.order.pay(统一收单交易订单支付接口)
+// 文档地址：https://opendocs.alipay.com/open/03vtew
+func (a *Client) TradeOrderPay(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeOrderPayResponse, err error) {
+	err = bm.CheckEmptyError("trade_no")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.order.pay"); err != nil {
+		return nil, err
+	}
+	aliRsp = new(TradeOrderPayResponse)
+	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err = bizErrCheck(aliRsp.Response.ErrorResponse); err != nil {
+		return aliRsp, err
+	}
+	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
+	aliRsp.SignData = signData
+	return aliRsp, a.autoVerifySignByCert(aliRsp.Sign, signData, signDataErr)
+}
+
 // alipay.trade.query(统一收单线下交易查询)
 // 文档地址：https://opendocs.alipay.com/open/02e7gm
 func (a *Client) TradeQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeQueryResponse, err error) {
-	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("trade_no") == util.NULL {
+	if bm.GetString("out_trade_no") == gopay.NULL && bm.GetString("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	var bs []byte
@@ -155,7 +177,7 @@ func (a *Client) TradeQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *Trad
 // alipay.trade.cancel(统一收单交易撤销接口)
 // 文档地址：https://opendocs.alipay.com/open/02ekfi
 func (a *Client) TradeCancel(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCancelResponse, err error) {
-	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("trade_no") == util.NULL {
+	if bm.GetString("out_trade_no") == gopay.NULL && bm.GetString("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	var bs []byte
@@ -177,7 +199,7 @@ func (a *Client) TradeCancel(ctx context.Context, bm gopay.BodyMap) (aliRsp *Tra
 // alipay.trade.close(统一收单交易关闭接口)
 // 文档地址：https://opendocs.alipay.com/open/02e7gn
 func (a *Client) TradeClose(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCloseResponse, err error) {
-	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("trade_no") == util.NULL {
+	if bm.GetString("out_trade_no") == gopay.NULL && bm.GetString("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	var bs []byte
@@ -199,7 +221,7 @@ func (a *Client) TradeClose(ctx context.Context, bm gopay.BodyMap) (aliRsp *Trad
 // alipay.trade.refund(统一收单交易退款接口)
 // 文档地址：https://opendocs.alipay.com/open/02e7go
 func (a *Client) TradeRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeRefundResponse, err error) {
-	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("trade_no") == util.NULL {
+	if bm.GetString("out_trade_no") == gopay.NULL && bm.GetString("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	err = bm.CheckEmptyError("refund_amount")
@@ -225,7 +247,7 @@ func (a *Client) TradeRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp *Tra
 // alipay.trade.page.refund(统一收单退款页面接口)
 // 文档地址：https://opendocs.alipay.com/apis/api_1/alipay.trade.page.refund
 func (a *Client) TradePageRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradePageRefundResponse, err error) {
-	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("trade_no") == util.NULL {
+	if bm.GetString("out_trade_no") == gopay.NULL && bm.GetString("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	err = bm.CheckEmptyError("out_request_no", "refund_amount")
@@ -251,7 +273,7 @@ func (a *Client) TradePageRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp 
 // alipay.trade.fastpay.refund.query(统一收单交易退款查询)
 // 文档地址：https://opendocs.alipay.com/open/02e7gp
 func (a *Client) TradeFastPayRefundQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeFastpayRefundQueryResponse, err error) {
-	if bm.GetString("out_trade_no") == util.NULL && bm.GetString("trade_no") == util.NULL {
+	if bm.GetString("out_trade_no") == gopay.NULL && bm.GetString("trade_no") == gopay.NULL {
 		return nil, errors.New("out_trade_no and trade_no are not allowed to be null at the same time")
 	}
 	err = bm.CheckEmptyError("out_request_no")

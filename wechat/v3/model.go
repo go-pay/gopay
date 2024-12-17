@@ -65,6 +65,20 @@ type EntrustPayNotifyRsp struct {
 	Error    string            `json:"-"`
 }
 
+type PalmServicePreAuthorizeRsp struct {
+	Code     int                      `json:"-"`
+	SignInfo *SignInfo                `json:"-"`
+	Response *PalmServicePreAuthorize `json:"response,omitempty"`
+	Error    string                   `json:"-"`
+}
+
+type PalmServiceOpenidQueryRsp struct {
+	Code     int                     `json:"-"`
+	SignInfo *SignInfo               `json:"-"`
+	Response *PalmServiceOpenidQuery `json:"response,omitempty"`
+	Error    string                  `json:"-"`
+}
+
 // =========================================================分割=========================================================
 
 type JSAPIPayParams struct {
@@ -122,6 +136,10 @@ type APPScoreQuery struct {
 	Sign      string `json:"sign"`
 }
 
+type AppletScorePartnerExtraData struct {
+	Package string `json:"package"`
+}
+
 // ==================================分割==================================
 
 type SignInfo struct {
@@ -158,14 +176,14 @@ type EncryptCert struct {
 }
 
 type Amount struct {
-	Total         int    `json:"total,omitempty"`          // 订单总金额，单位为分
-	PayerTotal    int    `json:"payer_total,omitempty"`    // 用户支付金额，单位为分
+	Total         int    `json:"total"`                    // 订单总金额，单位为分
+	PayerTotal    int    `json:"payer_total"`              // 用户支付金额，单位为分
 	DiscountTotal int    `json:"discount_total,omitempty"` // 订单折扣
-	Currency      string `json:"currency,omitempty"`       // CNY：人民币，境内商户号仅支持人民币
-	PayerCurrency string `json:"payer_currency,omitempty"` // 用户支付币种
+	Currency      string `json:"currency"`                 // CNY：人民币，境内商户号仅支持人民币
+	PayerCurrency string `json:"payer_currency"`           // 用户支付币种
 }
 
-type RefundAmount struct {
+type RefundNotifyAmount struct {
 	Total       int `json:"total,omitempty"`       // 订单总金额，单位为分，只能为整数
 	Refund      int `json:"refund,omitempty"`      // 退款金额，币种的最小单位，只能为整数，不能超过原订单支付金额，如果有使用券，后台会按比例退
 	PayerTotal  int `json:"payer_total,omitempty"` // 用户实际支付金额，单位为分，只能为整数
@@ -178,6 +196,7 @@ type SceneInfo struct {
 
 type PromotionDetail struct {
 	Amount              int            `json:"amount"`                         // 优惠券面额
+	ActivityId          string         `json:"activity_id"`                    // 在微信商户后台配置的批次ID。
 	CouponId            string         `json:"coupon_id"`                      // 券Id
 	Name                string         `json:"name,omitempty"`                 // 优惠名称
 	Scope               string         `json:"scope,omitempty"`                // 优惠范围：GLOBAL：全场代金券, SINGLE：单品优惠
@@ -293,4 +312,15 @@ type WithdrawStatus struct {
 	AccountNumber string `json:"account_number"` // 服务商提现入账的银行账号，仅显示后四位。
 	AccountBank   string `json:"account_bank"`   // 服务商提现入账的开户银行
 	BankName      string `json:"bank_name"`      // 服务商提现入账的开户银行全称（含支行）
+}
+
+type PalmServicePreAuthorize struct {
+	PermissionToken string `json:"permission_token"` // 预授权token，跳转小程序使用
+}
+
+type PalmServiceOpenidQuery struct {
+	OrganizationId string `json:"organization_id"`
+	Openid         string `json:"openid"`
+	State          string `json:"state"`
+	AuthorizeTime  string `json:"authorize_time"`
 }

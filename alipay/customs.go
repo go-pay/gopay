@@ -7,7 +7,6 @@ import (
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xlog"
 )
 
 // alipay.trade.customs.declare(统一收单报关接口)
@@ -76,15 +75,15 @@ func (a *Client) doAliPayCustoms(ctx context.Context, bm gopay.BodyMap, service 
 
 	bm.Set("sign_type", RSA).Set("sign", sign)
 	if a.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Alipay_Request: %s", bm.JsonBody())
+		a.logger.Debugf("Alipay_Request: %s", bm.JsonBody())
 	}
 	// request
-	res, bs, err := a.hc.Req(xhttp.TypeForm).Post("https://mapi.alipay.com/gateway.do").SendString(bm.EncodeURLParams()).EndBytes(ctx)
+	res, bs, err := a.hc.Req(xhttp.TypeFormData).Post("https://mapi.alipay.com/gateway.do").SendString(bm.EncodeURLParams()).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
 	if a.DebugSwitch == gopay.DebugOn {
-		xlog.Debugf("Alipay_Response: %s%d %s%s", xlog.Red, res.StatusCode, xlog.Reset, string(bs))
+		a.logger.Debugf("Alipay_Response: %d, %s", res.StatusCode, string(bs))
 	}
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)

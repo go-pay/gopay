@@ -12,11 +12,11 @@ import (
 	"hash"
 	"sync"
 
+	"github.com/go-pay/crypto/xpem"
+	"github.com/go-pay/crypto/xrsa"
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
 	"github.com/go-pay/gopay/pkg/xhttp"
-	"github.com/go-pay/gopay/pkg/xpem"
-	"github.com/go-pay/gopay/pkg/xrsa"
+	"github.com/go-pay/util"
 )
 
 type Client struct {
@@ -87,7 +87,7 @@ func (c *Client) getRsaSign(bm gopay.BodyMap, signType string, privateKey *rsa.P
 	}()
 	c.sha1Hash.Write([]byte(signParams))
 	if encryptedBytes, err = rsa.SignPKCS1v15(rand.Reader, privateKey, hashs, c.sha1Hash.Sum(nil)); err != nil {
-		return util.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
+		return gopay.NULL, fmt.Errorf("[%w]: %+v", gopay.SignatureErr, err)
 	}
 	sign = base64.StdEncoding.EncodeToString(encryptedBytes)
 	return
@@ -99,11 +99,11 @@ func (c *Client) pubParamsHandle(bm gopay.BodyMap) (param string, err error) {
 		Set("appid", c.AppId).
 		Set("signtype", c.SignType)
 	//集团/代理商商户号
-	if c.orgId != util.NULL {
+	if c.orgId != gopay.NULL {
 		bm.Set("orgid", c.orgId)
 	}
 	// version
-	if version := bm.GetString("version"); version == util.NULL {
+	if version := bm.GetString("version"); version == gopay.NULL {
 		bm.Set("version", "11")
 	}
 	bm.Set("randomstr", util.RandomString(20))
@@ -127,7 +127,7 @@ func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs 
 	if !c.isProd {
 		url = sandboxBaseUrl
 	}
-	res, bs, err := c.hc.Req(xhttp.TypeForm).Post(url + path).SendString(param).EndBytes(ctx)
+	res, bs, err := c.hc.Req(xhttp.TypeFormData).Post(url + path).SendString(param).EndBytes(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -135,4 +135,9 @@ func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs 
 		return nil, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
 	}
 	return bs, nil
+}
+
+// SetHttpClient 设置自定义的xhttp.Client
+func (c *Client) SetHttpClient(client *xhttp.Client) {
+	c.hc = client
 }

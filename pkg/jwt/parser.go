@@ -101,6 +101,11 @@ func (p *Parser) ParseUnverified(tokenString string, claims Claims) (token *Toke
 
 	token = &Token{Raw: tokenString}
 
+	// verify slice to make sure it's valid
+	if len(token.TokenSegmentRows) == 0 {
+		token.TokenSegmentRows = make([]json.RawMessage, 0, len(parts))
+	}
+
 	// parse Header
 	var headerBytes []byte
 	if headerBytes, err = DecodeSegment(parts[0]); err != nil {
@@ -112,6 +117,7 @@ func (p *Parser) ParseUnverified(tokenString string, claims Claims) (token *Toke
 	if err = json.Unmarshal(headerBytes, &token.Header); err != nil {
 		return token, parts, &ValidationError{Inner: err, Errors: ValidationErrorMalformed}
 	}
+	token.TokenSegmentRows = append(token.TokenSegmentRows, headerBytes)
 
 	// parse Claims
 	var claimBytes []byte
@@ -120,6 +126,8 @@ func (p *Parser) ParseUnverified(tokenString string, claims Claims) (token *Toke
 	if claimBytes, err = DecodeSegment(parts[1]); err != nil {
 		return token, parts, &ValidationError{Inner: err, Errors: ValidationErrorMalformed}
 	}
+	token.TokenSegmentRows = append(token.TokenSegmentRows, claimBytes)
+
 	dec := json.NewDecoder(bytes.NewBuffer(claimBytes))
 	if p.UseJSONNumber {
 		dec.UseNumber()
@@ -134,6 +142,13 @@ func (p *Parser) ParseUnverified(tokenString string, claims Claims) (token *Toke
 	if err != nil {
 		return token, parts, &ValidationError{Inner: err, Errors: ValidationErrorMalformed}
 	}
+
+	// Final data integrity verification
+	joinBytes, err := DecodeSegment(parts[2])
+	if err != nil {
+		return token, parts, &ValidationError{Inner: err, Errors: ValidationErrorMalformed}
+	}
+	token.TokenSegmentRows = append(token.TokenSegmentRows, joinBytes)
 
 	// Lookup signature method
 	if method, ok := token.Header["alg"].(string); ok {

@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/util"
+	"github.com/go-pay/util/convert"
 )
 
 // 创建代金券批次
@@ -167,7 +167,7 @@ func (c *ClientV3) V3FavorMerchant(ctx context.Context, stockId, stockCreatorMch
 	if limit == 0 {
 		limit = 20
 	}
-	uri := fmt.Sprintf(v3FavorMerchant, stockId) + "?stock_creator_mchid=" + stockCreatorMchid + "&limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
+	uri := fmt.Sprintf(v3FavorMerchant, stockId) + "?stock_creator_mchid=" + stockCreatorMchid + "&limit=" + convert.IntToString(limit) + "&offset=" + convert.IntToString(offset)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -195,7 +195,7 @@ func (c *ClientV3) V3FavorItems(ctx context.Context, stockId, stockCreatorMchid 
 	if limit == 0 {
 		limit = 20
 	}
-	uri := fmt.Sprintf(v3FavorItems, stockId) + "?stock_creator_mchid=" + stockCreatorMchid + "&limit=" + util.Int2String(limit) + "&offset=" + util.Int2String(offset)
+	uri := fmt.Sprintf(v3FavorItems, stockId) + "?stock_creator_mchid=" + stockCreatorMchid + "&limit=" + convert.IntToString(limit) + "&offset=" + convert.IntToString(offset)
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -281,6 +281,31 @@ func (c *ClientV3) V3FavorRefundFlowDownload(ctx context.Context, stockId string
 	}
 	wxRsp = &FavorRefundFlowDownloadRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(FavorFlowDownload)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 查询消息通知地址
+// Code = 0 is success
+func (c *ClientV3) V3FavorCallbackUrl(ctx context.Context, mchid string) (wxRsp *FavorCallbackUrlGetRsp, err error) {
+	uri := v3FavorCallbackUrl + "?" + mchid
+	authorization, err := c.authorization(MethodGet, uri, nil)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &FavorCallbackUrlGetRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(FavorCallbackUrlGet)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}

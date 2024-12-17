@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/go-pay/gopay"
 )
@@ -182,6 +183,31 @@ func (c *ClientV3) V3ScoreOrderCreate(ctx context.Context, bm gopay.BodyMap) (wx
 	return wxRsp, c.verifySyncSign(si)
 }
 
+// V3ScoreOrderPartnerCreate 服务行模式创建支付分订单
+// Code = 0 is success
+// 微信文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter6_2_1.shtml
+func (c *ClientV3) V3ScoreOrderPartnerCreate(ctx context.Context, bm gopay.BodyMap) (*ScoreOrderPartnerCreateRsp, error) {
+	authorization, err := c.authorization(MethodPost, v3ScoreOrderPartnerCreate, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(ctx, bm, v3ScoreOrderPartnerCreate, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp := &ScoreOrderPartnerCreateRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(ScoreOrderPartnerCreate)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
 // 查询支付分订单API
 // Code = 0 is success
 func (c *ClientV3) V3ScoreOrderQuery(ctx context.Context, orderNoType OrderNoType, appid, orderNo, serviceid string) (wxRsp *ScoreOrderQueryRsp, err error) {
@@ -204,6 +230,43 @@ func (c *ClientV3) V3ScoreOrderQuery(ctx context.Context, orderNoType OrderNoTyp
 	}
 	wxRsp = &ScoreOrderQueryRsp{Code: Success, SignInfo: si}
 	wxRsp.Response = new(ScoreOrderQuery)
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// V3ScoreOrderPartnerQuery 服务商模式查询支付分订单
+// Code = 0 is success
+// 微信文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter6_2_2.shtml
+func (c *ClientV3) V3ScoreOrderPartnerQuery(ctx context.Context, orderNoType OrderNoType, orderNo, serviceid, subMchid string) (*ScoreOrderPartnerQueryRsp, error) {
+	query := url.Values{}
+	query.Set("service_id", serviceid)
+	query.Set("sub_mchid", subMchid)
+	switch orderNoType {
+	case OutTradeNo:
+		query.Set("out_order_no", orderNo)
+	case QueryId:
+		query.Set("query_id", orderNo)
+	default:
+		return nil, errors.New("unsupported order number type")
+	}
+	uri := fmt.Sprintf("%s?%s", v3ScoreOrderPartnerQuery, query.Encode())
+	authorization, err := c.authorization(MethodGet, uri, nil)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp := &ScoreOrderPartnerQueryRsp{Code: Success, SignInfo: si}
+	wxRsp.Response = new(ScoreOrderPartnerQuery)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
@@ -244,6 +307,32 @@ func (c *ClientV3) V3ScoreOrderCancel(ctx context.Context, appid, tradeNo, servi
 	return wxRsp, c.verifySyncSign(si)
 }
 
+// V3ScoreOrderPartnerCancel 服务商模式取消支付分订单
+// Code = 0 is success
+// 微信文档：https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter6_2_3.shtml
+func (c *ClientV3) V3ScoreOrderPartnerCancel(ctx context.Context, subMchid, tradeNo, serviceid, reason string) (*ScoreOrderPartnerCancelRsp, error) {
+	path := fmt.Sprintf(v3ScoreOrderPartnerCancel, tradeNo)
+	bm := make(gopay.BodyMap)
+	bm.Set("sub_mchid", subMchid).
+		Set("service_id", serviceid).
+		Set("reason", reason)
+	authorization, err := c.authorization(MethodPost, path, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(ctx, bm, path, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp := &ScoreOrderPartnerCancelRsp{Code: Success, SignInfo: si}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
 // 修改订单金额API
 // Code = 0 is success
 func (c *ClientV3) V3ScoreOrderModify(ctx context.Context, tradeNo string, bm gopay.BodyMap) (wxRsp *ScoreOrderModifyRsp, err error) {
@@ -261,7 +350,7 @@ func (c *ClientV3) V3ScoreOrderModify(ctx context.Context, tradeNo string, bm go
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != http.StatusOK && res.StatusCode != http.StatusNoContent {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
 		return wxRsp, nil
@@ -287,6 +376,28 @@ func (c *ClientV3) V3ScoreOrderComplete(ctx context.Context, tradeNo string, bm 
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		return wxRsp, nil
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// V3ScoreOrderPartnerComplete 服务商模式完结支付分订单A
+// Code = 0 is success
+// 微信文档: https://pay.weixin.qq.com/wiki/doc/apiv3_partner/Offline/apis/chapter6_2_5.shtml
+func (c *ClientV3) V3ScoreOrderPartnerComplete(ctx context.Context, tradeNo string, bm gopay.BodyMap) (*ScoreOrderPartnerCompleteRsp, error) {
+	path := fmt.Sprintf(v3ScoreOrderPartnerComplete, tradeNo)
+	authorization, err := c.authorization(MethodPost, path, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(ctx, bm, path, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp := &ScoreOrderPartnerCompleteRsp{Code: Success, SignInfo: si}
+	if res.StatusCode != http.StatusOK && res.StatusCode != http.StatusNoContent {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
 		return wxRsp, nil
