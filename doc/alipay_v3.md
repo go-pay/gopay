@@ -195,10 +195,23 @@ return c.String(http.StatusOK, "success")
   * 查询对账单下载地址：`client.DataBillDownloadUrlQuery()`
   * 统一收单线下交易预创建：`client.TradePrecreate()`
   * 统一收单交易创建接口：`client.TradeCreate()`
+  * 支付宝订单信息同步接口：`client.TradeOrderInfoSync()`
   * 资金授权操作查询接口：`client.FundAuthOperationDetailQuery()`
   * 资金授权冻结接口：`client.FundAuthOrderFreeze()`
   * 资金授权解冻接口：`client.FundAuthOrderUnfreeze()`
   * 资金授权发码接口：`client.FundAuthOrderVoucherCreate()`
+  * 刷脸支付初始化接口：`client.ZolozAuthenticationSmilepayInitialize()`
+  * 查询刷脸结果信息接口：`client.ZolozAuthenticationCustomerFtokenQuery()`
+* <font color='#027AFF' size='4'>商家扣款</font>
+  * 支付宝个人代扣协议查询接口：`client.UserAgreementQuery()`
+  * 支付宝个人代扣协议解约接口：`client.UserAgreementPageUnSign()`
+* <font color='#027AFF' size='4'>商家分账</font>
+  * 分账关系绑定接口：`client.TradeRelationBind()`
+  * 分账关系解绑：`client.TradeRelationUnbind()`
+  * 分账关系查询：`client.TradeRelationBatchQuery()`
+  * 分账比例查询：`client.TradeRoyaltyRateQuery()`
+  * 统一收单交易结算接口：`client.TradeOrderSettle()`
+  * 分账剩余金额查询：`client.TradeOrderOnSettleQuery()`
 * <font color='#027AFF' size='4'>会员</font>
   * 换取授权访问令牌：`client.SystemOauthToken()`
   * 身份认证记录查询：`client.UserCertifyOpenQuery()`

@@ -37,6 +37,7 @@ const (
 	v3DataBillDownloadUrlQuery = "/v3/alipay/data/dataservice/bill/downloadurl/query" // 查询对账单下载地址
 	v3TradePrecreate           = "/v3/alipay/trade/precreate"                         // 统一收单线下交易预创建
 	v3TradeCreate              = "/v3/alipay/trade/create"                            // 统一收单交易创建接口
+	v3TradeOrderInfoSync       = "/v3/alipay/trade/orderinfo/sync"                    // 支付宝订单信息同步接口
 
 	// 商家扣款
 	v3UserAgreementQuery      = "/v3/alipay/user/agreement/query"  // 支付宝个人代扣协议查询接口
@@ -50,7 +51,6 @@ const (
 	v3TradeOrderSettle               = "/v3/alipay/trade/order/settle"                // 统一收单交易结算接口
 	v3TradeOrderSettleQuery          = "/v3/alipay/trade/order/settle/query"          // 交易分账查询接口
 	v3TradeOrderOnSettleQuery        = "/v3/alipay/trade/order/onsettle/query"        // 分账剩余金额查询
-	v3TradeOrderInfoSync             = "/v3/alipay/trade/orderinfo/sync"              // 支付宝订单信息同步接口
 
 	// 刷脸付
 	v3ZolozAuthenticationSmilepayInitialize  = "/v3/zoloz/authentication/smilepay/initialize"   // 刷脸支付初始化
