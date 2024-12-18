@@ -219,4 +219,20 @@ return c.String(http.StatusOK, "success")
   * 支付宝会员授权信息查询接口：`client.UserInfoShare()`
   * 用户授权关系查询：`client.UserAuthRelationshipQuery()`
   * 查询解除授权明细：`client.UserDelOauthDetailQuery()`
+* <font color='#027AFF' size='4'>人脸认证</font>
+  * 人脸核身初始化：`client.FaceVerificationInitialize()`
+  * 人脸核身结果查询：`client.FaceVerificationQuery()`
+  * 跳转支付宝人脸核身初始化：`client.FaceCertifyInitialize()`
+  * 跳转支付宝人脸核身开始认证：`client.FaceCertifyVerify()`
+  * 跳转支付宝人脸核身查询记录：`client.FaceCertifyQuery()`
+  * 纯服务端人脸核身：`client.FaceSourceCertify()`
+  * 活体检测初始化：`client.FaceCheckInitialize()`
+  * 活体检测结果查询：`client.FaceCheckQuery()`
+  * 身份证二要素核验：`client.IDCardTwoMetaCheck()`
+  * 银行卡核验：`client.BankCardCheck()`
+  * 手机号三要素核验简版：`client.MobileThreeMetaSimpleCheck()`
+  * 手机号三要素核验详版：`client.MobileThreeMetaDetailCheck()`
+  * 服务端OCR：`client.OcrServerDetect()`
+  * App端OCR初始化：`client.OcrMobileInitialize()`
+
 ### 支付宝公共 API

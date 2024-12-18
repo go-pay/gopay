@@ -77,8 +77,10 @@ const (
 	v3FaceSourceCertify          = "/v3/datadigital/fincloud/generalsaas/face/source/certify"          // 纯服务端人脸核身
 	v3FaceCheckInitialize        = "/v3/datadigital/fincloud/generalsaas/face/check/initialize"        // 活体检测初始化
 	v3FaceCheckQuery             = "/v3/datadigital/fincloud/generalsaas/face/check/query"             // 活体检测结果查询
-	v3IdCardTwoMetaCheck         = "/v3/datadigital/fincloud/generalsaas/twometa/check"                // 身份证二要素核验
+	v3IDCardTwoMetaCheck         = "/v3/datadigital/fincloud/generalsaas/twometa/check"                // 身份证二要素核验
 	v3BankCardCheck              = "/v3/datadigital/fincloud/generalsaas/bankcard/check"               // 银行卡核验
+	v3MobileThreeMetaSimpleCheck = "/v3/datadigital/fincloud/generalsaas/mobilethreemeta/simple/check" // 手机号三要素核验简版
+	v3MobileThreeMetaDetailCheck = "/v3/datadigital/fincloud/generalsaas/mobilethreemeta/detail/check" // 手机号三要素核验详版
 	v3OcrServerDetect            = "/v3/datadigital/fincloud/generalsaas/ocr/server/detect"            // 服务端OCR
 	v3OcrMobileInitialize        = "/v3/datadigital/fincloud/generalsaas/ocr/mobile/initialize"        // App端OCR初始化
 )
