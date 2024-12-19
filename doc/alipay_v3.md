@@ -195,10 +195,23 @@ return c.String(http.StatusOK, "success")
   * 查询对账单下载地址：`client.DataBillDownloadUrlQuery()`
   * 统一收单线下交易预创建：`client.TradePrecreate()`
   * 统一收单交易创建接口：`client.TradeCreate()`
+  * 支付宝订单信息同步接口：`client.TradeOrderInfoSync()`
   * 资金授权操作查询接口：`client.FundAuthOperationDetailQuery()`
   * 资金授权冻结接口：`client.FundAuthOrderFreeze()`
   * 资金授权解冻接口：`client.FundAuthOrderUnfreeze()`
   * 资金授权发码接口：`client.FundAuthOrderVoucherCreate()`
+  * 刷脸支付初始化接口：`client.ZolozAuthenticationSmilepayInitialize()`
+  * 查询刷脸结果信息接口：`client.ZolozAuthenticationCustomerFtokenQuery()`
+* <font color='#027AFF' size='4'>商家扣款</font>
+  * 支付宝个人代扣协议查询接口：`client.UserAgreementQuery()`
+  * 支付宝个人代扣协议解约接口：`client.UserAgreementPageUnSign()`
+* <font color='#027AFF' size='4'>商家分账</font>
+  * 分账关系绑定接口：`client.TradeRelationBind()`
+  * 分账关系解绑：`client.TradeRelationUnbind()`
+  * 分账关系查询：`client.TradeRelationBatchQuery()`
+  * 分账比例查询：`client.TradeRoyaltyRateQuery()`
+  * 统一收单交易结算接口：`client.TradeOrderSettle()`
+  * 分账剩余金额查询：`client.TradeOrderOnSettleQuery()`
 * <font color='#027AFF' size='4'>会员</font>
   * 换取授权访问令牌：`client.SystemOauthToken()`
   * 身份认证记录查询：`client.UserCertifyOpenQuery()`
@@ -206,4 +219,20 @@ return c.String(http.StatusOK, "success")
   * 支付宝会员授权信息查询接口：`client.UserInfoShare()`
   * 用户授权关系查询：`client.UserAuthRelationshipQuery()`
   * 查询解除授权明细：`client.UserDelOauthDetailQuery()`
+* <font color='#027AFF' size='4'>人脸认证</font>
+  * 人脸核身初始化：`client.FaceVerificationInitialize()`
+  * 人脸核身结果查询：`client.FaceVerificationQuery()`
+  * 跳转支付宝人脸核身初始化：`client.FaceCertifyInitialize()`
+  * 跳转支付宝人脸核身开始认证：`client.FaceCertifyVerify()`
+  * 跳转支付宝人脸核身查询记录：`client.FaceCertifyQuery()`
+  * 纯服务端人脸核身：`client.FaceSourceCertify()`
+  * 活体检测初始化：`client.FaceCheckInitialize()`
+  * 活体检测结果查询：`client.FaceCheckQuery()`
+  * 身份证二要素核验：`client.IDCardTwoMetaCheck()`
+  * 银行卡核验：`client.BankCardCheck()`
+  * 手机号三要素核验简版：`client.MobileThreeMetaSimpleCheck()`
+  * 手机号三要素核验详版：`client.MobileThreeMetaDetailCheck()`
+  * 服务端OCR：`client.OcrServerDetect()`
+  * App端OCR初始化：`client.OcrMobileInitialize()`
+
 ### 支付宝公共 API
