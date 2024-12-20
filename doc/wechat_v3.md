@@ -343,9 +343,28 @@ wechat.V3DecryptCombineNotifyCipherText()
     * 终止合作关系：`client.V3PartnershipsTerminate()`
     * 查询合作关系列表：`client.V3PartnershipsList()`
 * <font color='#07C160' size='4'>支付有礼</font>
-    * 待实现-[文档](https://pay.weixin.qq.com/docs/merchant/apis/gift-activity/activity/create-full-send-act.html)
+    * 创建全场满额送活动：`client.V3PayGiftActivityCreate()`
+    * 获取支付有礼活动列表：`client.V3PayGiftActivityList()`
+    * 获取活动详情：`client.V3PayGiftActivityDetail()`
+    * 获取活动指定商品列表：`client.V3PayGiftActivityGoods()`
+    * 终止活动：`client.V3PayGiftActivityTerminate()`
+    * 获取活动发券商户号：`client.V3PayGiftActivityMerchant()`
+    * 新增活动发券商户号：`client.V3PayGiftActivityMerchantAdd()`
+    * 删除活动发券商户号：`client.V3PayGiftActivityMerchantDelete()`
 * <font color='#07C160' size='4'>电子发票</font>
-    * 待实现-[文档](https://pay.weixin.qq.com/docs/merchant/apis/fapiao/fapiao-card-template/create-fapiao-card-template.html)
+    * 创建电子发票卡券模板：`client.V3InvoiceCardTemplateCreate()`
+    * 配置开发选项：`client.V3InvoiceMerchantDevConfig()`
+    * 查询商户配置的开发选项：`client.V3InvoiceMerchantDevConfigQuery()`
+    * 查询电子发票：`client.V3InvoiceQuery()`
+    * 获取抬头填写链接：`client.V3InvoiceUserTitleUrl()`
+    * 获取用户填写的抬头：`client.V3InvoiceUserTitle()`
+    * 获取商户开票基础信息：`client.V3InvoiceMerchantBaseInfo()`
+    * 获取商户可开具的商品和服务税收分类编码对照表：`client.V3InvoiceMerchantTaxCodes()`
+    * 开具电子发票：`client.V3InvoiceCreate()`
+    * 冲红电子发票：`client.V3InvoiceReverse()`
+    * 获取发票下载信息：`client.V3InvoiceFileUrl()`
+    * 上传电子发票文件：`client.V3InvoiceUploadFile()`
+    * 将电子发票插入微信用户卡包：`client.V3InvoiceInsertCard()`
 * <font color='#07C160' size='4'>分账</font>
     * 请求分账：`client.V3ProfitShareOrder()`
     * 查询分账结果：`client.V3ProfitShareOrderQuery()`
