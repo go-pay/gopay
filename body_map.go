@@ -40,13 +40,6 @@ func (bm BodyMap) SetBodyMap(key string, value func(b BodyMap)) BodyMap {
 	return bm
 }
 
-func (bm BodyMap) SetSlice(key string, value func(b BodyMap)) BodyMap {
-	_bm := make(BodyMap)
-	value(_bm)
-	bm[key] = _bm
-	return bm
-}
-
 // 设置 FormFile
 func (bm BodyMap) SetFormFile(key string, file *File) BodyMap {
 	bm[key] = file
