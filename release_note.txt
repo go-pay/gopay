@@ -1,7 +1,11 @@
 版本号：v1.5.107
 修改记录：
    (1) gopay：golang.org/x/crypto 版本升级到 v0.31.0。
-   (2) 微信V3：新增掌纹支付相关接口。
+   (2) gopay：xhttp transport 的默认 MaxIdleConnsPerHost 设置为 1000，MaxConnsPerHost 设置为 3000。
+   (3) 微信V3：新增掌纹支付相关接口。
+   (4) 微信V3：补充 支付有礼相关接口。
+   (5) 微信V3：补充 电子发票相关接口。
+   (6) 支付宝V3：补充 支付宝的若干v3接口。
 
 版本号：v1.5.106
 修改记录：
