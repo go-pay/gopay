@@ -266,8 +266,7 @@ func (c *ClientV3) V3BusiFavorBatchUpdate(ctx context.Context, stockId string, b
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &BusiFavorBatchUpdateRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(BusiFavorBatchUpdate)
+	wxRsp = &BusiFavorBatchUpdateRsp{Code: Success, SignInfo: si, Response: &BusiFavorBatchUpdate{}}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}

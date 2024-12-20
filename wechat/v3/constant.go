@@ -248,7 +248,7 @@ const (
 	v3PartnerTransferMerchantQuery  = "/v3/partner-transfer/batches/out-batch-no/%s"                          // out_batch_no 商家批次单号查询批次单 GET
 	v3PartnerTransferMerchantDetail = "/v3/partner-transfer/batches/out-batch-no/%s/details/out-detail-no/%s" // out_batch_no、out_detail_no 商家明细单号查询明细单 GET
 
-	// 余额
+	// 平台收付通（余额查询）
 	v3MerchantBalance     = "/v3/merchant/fund/balance/%s"        // account_type 查询账户实时余额 GET
 	v3MerchantDayBalance  = "/v3/merchant/fund/dayendbalance/%s"  // account_type 查询账户日终余额 GET
 	v3EcommerceBalance    = "/v3/ecommerce/fund/balance/%s"       // sub_mchid 查询特约商户账户实时余额 GET
@@ -266,12 +266,12 @@ const (
 	v3Apply4SubQuerySettlement      = "/v3/apply4sub/sub_merchants/%s/settlement"        // sub_mchid 查询结算账户 GET
 	v3Apply4SubMerchantsApplication = "/v3/apply4sub/sub_merchants/%s/application/%s"    // sub_mchid、application_no 查询结算账户修改申请状态
 
-	// 电商收付通（商户进件）
+	// 平台收付通（商户进件）
 	v3EcommerceApply          = "/v3/ecommerce/applyments/"                  // 二级商户进件 POST
 	v3EcommerceApplyQueryById = "/v3/ecommerce/applyments/%d"                // applyment_id 通过申请单ID查询申请状态 GET
 	v3EcommerceApplyQueryByNo = "/v3/ecommerce/applyments/out-request-no/%s" // out_request_no 通过业务申请编号查询申请状态 GET
 
-	// 电商收付通（分账）
+	// 平台收付通（分账）
 	v3EcommerceProfitShare               = "/v3/ecommerce/profitsharing/orders"            // 请求分账 POST
 	v3EcommerceProfitShareQuery          = "/v3/ecommerce/profitsharing/orders"            // 查询分账结果 GET
 	v3EcommerceProfitShareReturn         = "/v3/ecommerce/profitsharing/returnorders"      // 请求分账回退 POST
@@ -281,12 +281,12 @@ const (
 	v3EcommerceProfitShareAddReceiver    = "/v3/ecommerce/profitsharing/receivers/add"     // 添加分账接收方 POST
 	v3EcommerceProfitShareDeleteReceiver = "/v3/ecommerce/profitsharing/receivers/delete"  // 删除分账接收方 POST
 
-	// 电商收付通（补差）
+	// 平台收付通（补差）
 	v3EcommerceSubsidies       = "/v3/ecommerce/subsidies/create" // 请求补差 POST
 	v3EcommerceSubsidiesReturn = "/v3/ecommerce/subsidies/return" // 请求补差回退 POST
 	v3EcommerceSubsidiesCancel = "/v3/ecommerce/subsidies/cancel" // 取消补差 POST
 
-	// 电商收付通（退款）
+	// 平台收付通（退款）
 	v3CommerceRefund              = "/v3/ecommerce/refunds/apply"             // 申请退款 POST
 	v3CommerceRefundQueryById     = "/v3/ecommerce/refunds/id/%s"             // refund_id 通过微信支付退款单号查询退款 GET
 	v3CommerceRefundQueryByNo     = "/v3/ecommerce/refunds/out-refund-no/%s"  // out_refund_no 通过商户退款单号查询退款 GET
