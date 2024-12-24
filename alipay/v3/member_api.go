@@ -9,7 +9,7 @@ import (
 	"github.com/go-pay/gopay"
 )
 
-// 换取授权访问令牌
+// 换取授权访问令牌 alipay.system.oauth.token
 // StatusCode = 200 is success
 func (a *ClientV3) SystemOauthToken(ctx context.Context, bm gopay.BodyMap) (aliRsp *SystemOauthTokenRsp, err error) {
 	err = bm.CheckEmptyError("grant_type")
@@ -37,7 +37,7 @@ func (a *ClientV3) SystemOauthToken(ctx context.Context, bm gopay.BodyMap) (aliR
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 身份认证记录查询
+// 身份认证记录查询 alipay.user.certify.open.query
 // StatusCode = 200 is success
 func (a *ClientV3) UserCertifyOpenQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserCertifyOpenQueryRsp, err error) {
 	err = bm.CheckEmptyError("certify_id")
@@ -66,7 +66,7 @@ func (a *ClientV3) UserCertifyOpenQuery(ctx context.Context, bm gopay.BodyMap) (
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 身份认证初始化服务
+// 身份认证初始化服务 alipay.user.certify.open.initialize
 // StatusCode = 200 is success
 func (a *ClientV3) UserCertifyOpenInitialize(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserCertifyOpenInitializeRsp, err error) {
 	err = bm.CheckEmptyError("outer_order_no", "biz_code", "identity_param")
@@ -94,7 +94,7 @@ func (a *ClientV3) UserCertifyOpenInitialize(ctx context.Context, bm gopay.BodyM
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 支付宝会员授权信息查询接口
+// 支付宝会员授权信息查询接口 alipay.user.info.share
 // StatusCode = 200 is success
 func (a *ClientV3) UserInfoShare(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserInfoShareRsp, err error) {
 	err = bm.CheckEmptyError("avatar", "city", "nick_name", "province")
@@ -122,7 +122,7 @@ func (a *ClientV3) UserInfoShare(ctx context.Context, bm gopay.BodyMap) (aliRsp 
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 用户授权关系查询
+// 用户授权关系查询 alipay.open.auth.userauth.relationship.query
 // StatusCode = 200 is success
 func (a *ClientV3) UserAuthRelationshipQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserAuthRelationshipQueryRsp, err error) {
 	err = bm.CheckEmptyError("scopes")
@@ -151,7 +151,7 @@ func (a *ClientV3) UserAuthRelationshipQuery(ctx context.Context, bm gopay.BodyM
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 查询解除授权明细
+// 查询解除授权明细 alipay.user.deloauth.detail.query
 // StatusCode = 200 is success
 func (a *ClientV3) UserDelOauthDetailQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserDelOauthDetailQueryRsp, err error) {
 	err = bm.CheckEmptyError("date", "limit", "offset")

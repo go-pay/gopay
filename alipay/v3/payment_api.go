@@ -10,7 +10,7 @@ import (
 	"github.com/go-pay/gopay"
 )
 
-// 统一收单交易支付接口
+// 统一收单交易支付接口 alipay.trade.pay
 // StatusCode = 200 is success
 func (a *ClientV3) TradePay(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradePayRsp, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject", "auth_code", "scene")
@@ -38,7 +38,7 @@ func (a *ClientV3) TradePay(ctx context.Context, bm gopay.BodyMap) (aliRsp *Trad
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 统一收单交易查询
+// 统一收单交易查询 alipay.trade.query
 // StatusCode = 200 is success
 func (a *ClientV3) TradeQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeQueryRsp, err error) {
 	if bm.GetString("out_trade_no") == gopay.NULL && bm.GetString("trade_no") == gopay.NULL {
@@ -65,7 +65,7 @@ func (a *ClientV3) TradeQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *Tr
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 统一收单交易退款接口
+// 统一收单交易退款接口 alipay.trade.refund
 // StatusCode = 200 is success
 func (a *ClientV3) TradeRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeRefundRsp, err error) {
 	err = bm.CheckEmptyError("refund_amount")
@@ -96,7 +96,7 @@ func (a *ClientV3) TradeRefund(ctx context.Context, bm gopay.BodyMap) (aliRsp *T
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 统一收单交易退款查询
+// 统一收单交易退款查询 alipay.trade.fastpay.refund.query
 // StatusCode = 200 is success
 func (a *ClientV3) TradeFastPayRefundQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeFastPayRefundQueryRsp, err error) {
 	err = bm.CheckEmptyError("out_request_no")
@@ -127,7 +127,7 @@ func (a *ClientV3) TradeFastPayRefundQuery(ctx context.Context, bm gopay.BodyMap
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 统一收单交易撤销接口
+// 统一收单交易撤销接口 alipay.trade.cancel
 // StatusCode = 200 is success
 func (a *ClientV3) TradeCancel(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCancelRsp, err error) {
 	if bm.GetString("out_trade_no") == gopay.NULL && bm.GetString("trade_no") == gopay.NULL {
@@ -154,7 +154,7 @@ func (a *ClientV3) TradeCancel(ctx context.Context, bm gopay.BodyMap) (aliRsp *T
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 统一收单交易关闭接口
+// 统一收单交易关闭接口 alipay.trade.close
 // StatusCode = 200 is success
 func (a *ClientV3) TradeClose(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCloseRsp, err error) {
 	if bm.GetString("out_trade_no") == gopay.NULL && bm.GetString("trade_no") == gopay.NULL {
@@ -181,7 +181,7 @@ func (a *ClientV3) TradeClose(ctx context.Context, bm gopay.BodyMap) (aliRsp *Tr
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 查询对账单下载地址
+// 查询对账单下载地址 alipay.data.dataservice.bill.downloadurl.query
 // StatusCode = 200 is success
 func (a *ClientV3) DataBillDownloadUrlQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *DataBillDownloadUrlQueryRsp, err error) {
 	err = bm.CheckEmptyError("bill_type", "bill_date")
@@ -210,7 +210,7 @@ func (a *ClientV3) DataBillDownloadUrlQuery(ctx context.Context, bm gopay.BodyMa
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 统一收单线下交易预创建
+// 统一收单线下交易预创建 alipay.trade.precreate
 // StatusCode = 200 is success
 func (a *ClientV3) TradePrecreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradePrecreateRsp, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
@@ -238,7 +238,7 @@ func (a *ClientV3) TradePrecreate(ctx context.Context, bm gopay.BodyMap) (aliRsp
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 统一收单交易创建接口
+// 统一收单交易创建接口 alipay.trade.create
 // StatusCode = 200 is success
 func (a *ClientV3) TradeCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCreateRsp, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject", "product_code", "op_app_id")
@@ -257,6 +257,86 @@ func (a *ClientV3) TradeCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *T
 		return nil, err
 	}
 	aliRsp = &TradeCreateRsp{StatusCode: res.StatusCode}
+	if res.StatusCode != http.StatusOK {
+		if err = json.Unmarshal(bs, &aliRsp.ErrResponse); err != nil {
+			return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+		}
+		return aliRsp, nil
+	}
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	return aliRsp, a.autoVerifySignByCert(res, bs)
+}
+
+// 支付宝订单信息同步接口 alipay.trade.orderinfo.sync
+// StatusCode = 200 is success
+func (a *ClientV3) TradeOrderInfoSync(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeOrderInfoSyncRsp, err error) {
+	err = bm.CheckEmptyError("trade_no", "out_request_no", "biz_type")
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := a.authorization(MethodPost, v3TradeOrderInfoSync, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, bs, err := a.doPost(ctx, bm, v3TradeOrderInfoSync, authorization)
+	if err != nil {
+		return nil, err
+	}
+	aliRsp = &TradeOrderInfoSyncRsp{StatusCode: res.StatusCode}
+	if res.StatusCode != http.StatusOK {
+		if err = json.Unmarshal(bs, &aliRsp.ErrResponse); err != nil {
+			return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+		}
+		return aliRsp, nil
+	}
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	return aliRsp, a.autoVerifySignByCert(res, bs)
+}
+
+// 刷脸支付初始化 zoloz.authentication.smilepay.initialize
+// StatusCode = 200 is success
+func (a *ClientV3) ZolozAuthenticationSmilepayInitialize(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZolozAuthenticationSmilepayInitializeRsp, err error) {
+	authorization, err := a.authorization(MethodPost, v3ZolozAuthenticationSmilepayInitialize, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, bs, err := a.doPost(ctx, bm, v3ZolozAuthenticationSmilepayInitialize, authorization)
+	if err != nil {
+		return nil, err
+	}
+	aliRsp = &ZolozAuthenticationSmilepayInitializeRsp{StatusCode: res.StatusCode}
+	if res.StatusCode != http.StatusOK {
+		if err = json.Unmarshal(bs, &aliRsp.ErrResponse); err != nil {
+			return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+		}
+		return aliRsp, nil
+	}
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	return aliRsp, a.autoVerifySignByCert(res, bs)
+}
+
+// 查询刷脸结果信息接口 zoloz.authentication.customer.ftoken.query
+// StatusCode = 200 is success
+func (a *ClientV3) ZolozAuthenticationCustomerFtokenQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZolozAuthenticationCustomerFtokenQueryRsp, err error) {
+	err = bm.CheckEmptyError("ftoken", "biz_type")
+	if err != nil {
+		return nil, err
+	}
+	authorization, err := a.authorization(MethodPost, v3ZolozAuthenticationCustomerFtokenQuery, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, bs, err := a.doPost(ctx, bm, v3ZolozAuthenticationCustomerFtokenQuery, authorization)
+	if err != nil {
+		return nil, err
+	}
+	aliRsp = &ZolozAuthenticationCustomerFtokenQueryRsp{StatusCode: res.StatusCode}
 	if res.StatusCode != http.StatusOK {
 		if err = json.Unmarshal(bs, &aliRsp.ErrResponse); err != nil {
 			return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))

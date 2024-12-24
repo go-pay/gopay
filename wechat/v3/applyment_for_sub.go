@@ -49,8 +49,7 @@ func (c *ClientV3) V3Apply4SubQueryByBusinessCode(ctx context.Context, businessC
 	if err != nil {
 		return nil, err
 	}
-	wxRsp := &Apply4SubQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(Apply4SubQuery)
+	wxRsp := &Apply4SubQueryRsp{Code: Success, SignInfo: si, Response: &Apply4SubQuery{}}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
