@@ -20,23 +20,22 @@ func (c *ClientV3) V3PalmServicePreAuthorize(ctx context.Context, bm gopay.BodyM
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &PalmServicePreAuthorizeRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(PalmServicePreAuthorize)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &PalmServicePreAuthorizeRsp{Code: Success, SignInfo: si, Response: &PalmServicePreAuthorize{}}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
 
 // 预授权状态查询
 // Code = 0 is success
-func (c *ClientV3) V3PalmServiceOpenidQuery(ctx context.Context, openid, organizationId string) (wxRsp *PalmServiceOpenidQueryRsp, err error) {
-	uri := fmt.Sprintf(v3PalmServiceOpenidQuery, openid) + "?organization_id=" + organizationId
+func (c *ClientV3) V3PalmServiceOpenidQuery(ctx context.Context, openid string, bm gopay.BodyMap) (wxRsp *PalmServiceOpenidQueryRsp, err error) {
+	uri := fmt.Sprintf(v3PalmServiceOpenidQuery, openid) + "?" + bm.EncodeURLParams()
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
@@ -45,15 +44,14 @@ func (c *ClientV3) V3PalmServiceOpenidQuery(ctx context.Context, openid, organiz
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &PalmServiceOpenidQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(PalmServiceOpenidQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &PalmServiceOpenidQueryRsp{Code: Success, SignInfo: si, Response: &PalmServiceOpenidQuery{}}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
