@@ -130,3 +130,25 @@ func (c *ClientV3) SetLogger(logger xlog.XLogger) {
 		c.logger = logger
 	}
 }
+
+// SetProxyUrl 设置代理URL
+// 使用场景：
+// 1. 部署环境无法访问互联网，可以通过代理服务器访问
+var (
+	proxyUrl string
+	mu       sync.Mutex
+)
+
+// GetProxyUrl 返回当前的 ProxyUrl
+func GetProxyUrl() string {
+	mu.Lock()
+	defer mu.Unlock()
+	return proxyUrl
+}
+
+// SetProxyUrl 设置新的 ProxyUrl
+func SetProxyUrl(newProxyUrl string) {
+	mu.Lock()
+	defer mu.Unlock()
+	proxyUrl = newProxyUrl
+}
