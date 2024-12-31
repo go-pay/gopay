@@ -44,6 +44,16 @@ func (w *Client) SetCountry(country Country) (client *Client) {
 	return w
 }
 
+// SetProxyUrl 设置代理 Url
+// 使用场景：
+// 1. 部署环境无法访问互联网，可以通过代理服务器访问
+func (w *Client) SetProxyUrl(proxyUrl string) (client *Client) {
+	w.mu.Lock()
+	w.BaseURL = proxyUrl
+	w.mu.Unlock()
+	return w
+}
+
 // 添加微信pem证书文件路径
 // certFilePath：apiclient_cert.pem 文件路径
 // keyFilePath：apiclient_key.pem 文件路径

@@ -69,6 +69,9 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 	authorization := Authorization + ` mchid="` + mchid + `",nonce_str="` + nonceStr + `",timestamp="` + ts + `",serial_no="` + serialNo + `",signature="` + sign + `"`
 	// Request
 	var url = v3BaseUrlCh + uri
+	if v3ProxyUrl := GetProxyUrl(); v3ProxyUrl != "" {
+		url = v3ProxyUrl + uri
+	}
 	hc := xhttp.NewClient().Req()
 	hc.Header.Add(HeaderAuthorization, authorization)
 	hc.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
