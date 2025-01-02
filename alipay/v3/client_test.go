@@ -74,3 +74,41 @@ func TestDoAliPayAPISelfV3(t *testing.T) {
 		return
 	}
 }
+
+func TestClientV3_Transfer(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	// 收款方信息
+	type PayeeInfo struct {
+		Identity     string `json:"identity"`      // 必选
+		IdentityType string `json:"identity_type"` // 必选
+		CertNo       string `json:"cert_no"`       // 可选
+		CertType     string `json:"cert_type"`     // 可选
+		Name         string `json:"name"`          // 可选
+	}
+	payeeInfo := &PayeeInfo{
+		Identity:     "sjrngj9819@sandbox.com",
+		IdentityType: "ALIPAY_LOGON_ID",
+		Name:         "sjrngj9819",
+	}
+
+	bm.Set("out_biz_no", util.RandomString(32)).
+		Set("trans_amount", "0.01").
+		Set("biz_scene", "DIRECT_TRANSFER").
+		Set("product_code", "TRANS_ACCOUNT_NO_PWD").
+		Set("order_title", "转账测试").
+		Set("payee_info", payeeInfo).
+		Set("remark", "转账测试").
+		Set("business_params", struct{}{})
+
+	res, err := client.Transfer(ctx, bm)
+	if err != nil {
+		xlog.Errorf("client.Transfer(), err:%v", err)
+		return
+	}
+
+	xlog.Debugf("aliRsp:%s", js.Marshal(res))
+	if res.StatusCode != Success {
+		xlog.Errorf("aliRsp.StatusCode:%d", res.StatusCode)
+		return
+	}
+}

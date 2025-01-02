@@ -83,4 +83,7 @@ const (
 	v3MobileThreeMetaDetailCheck = "/v3/datadigital/fincloud/generalsaas/mobilethreemeta/detail/check" // 手机号三要素核验详版
 	v3OcrServerDetect            = "/v3/datadigital/fincloud/generalsaas/ocr/server/detect"            // 服务端OCR
 	v3OcrMobileInitialize        = "/v3/datadigital/fincloud/generalsaas/ocr/mobile/initialize"        // App端OCR初始化
+
+	// 转账
+	v3TransUniTransfer = "/v3/alipay/fund/trans/uni/transfer" // 单笔转账接口
 )
