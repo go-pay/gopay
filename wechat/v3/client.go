@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rsa"
 	"errors"
+	"strings"
 	"sync"
 
 	"github.com/go-pay/crypto/xpem"
@@ -19,6 +20,7 @@ type ClientV3 struct {
 	ApiV3Key      []byte
 	SerialNo      string
 	WxSerialNo    string
+	proxyHost     string // 代理host地址
 	autoSign      bool
 	rwMu          sync.RWMutex
 	hc            *xhttp.Client
@@ -125,30 +127,27 @@ func (c *ClientV3) SetHttpClient(client *xhttp.Client) {
 	}
 }
 
+// SetLogger 设置自定义 logger
 func (c *ClientV3) SetLogger(logger xlog.XLogger) {
 	if logger != nil {
 		c.logger = logger
 	}
 }
 
-// SetProxyUrl 设置代理URL
+// SetProxyHost 设置的 ProxyHost
 // 使用场景：
 // 1. 部署环境无法访问互联网，可以通过代理服务器访问
-var (
-	proxyUrl string
-	mu       sync.Mutex
-)
-
-// GetProxyUrl 返回当前的 ProxyUrl
-func GetProxyUrl() string {
-	mu.Lock()
-	defer mu.Unlock()
-	return proxyUrl
+// 2. 不设置则默认 https://api.mch.weixin.qq.com
+func (c *ClientV3) SetProxyHost(proxyHost string) {
+	before, found := strings.CutSuffix(proxyHost, "/")
+	if found {
+		c.proxyHost = before
+		return
+	}
+	c.proxyHost = proxyHost
 }
 
-// SetProxyUrl 设置新的 ProxyUrl
-func SetProxyUrl(newProxyUrl string) {
-	mu.Lock()
-	defer mu.Unlock()
-	proxyUrl = newProxyUrl
+// GetProxyHost 返回当前的 ProxyHost
+func (c *ClientV3) GetProxyHost() string {
+	return c.proxyHost
 }

@@ -3,6 +3,7 @@ package alipay
 import (
 	"crypto/rsa"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/go-pay/crypto/xpem"
@@ -21,6 +22,7 @@ type ClientV3 struct {
 	AppAuthToken       string
 	IsProd             bool
 	aesKey             string // biz_content 加密的 AES KEY
+	proxyHost          string // 代理host地址
 	ivKey              []byte
 	privateKey         *rsa.PrivateKey
 	aliPayPublicKey    *rsa.PublicKey // 支付宝证书公钥内容 alipayPublicCert.crt
@@ -122,4 +124,22 @@ func (a *ClientV3) SetLogger(logger xlog.XLogger) {
 func (a *ClientV3) SetAESKey(aesKey string) {
 	a.aesKey = aesKey
 	a.ivKey = []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+}
+
+// SetProxyHost 设置的 ProxyHost
+// 使用场景：
+// 1. 部署环境无法访问互联网，可以通过代理服务器访问
+// 2. 不设置则默认 https://api.mch.weixin.qq.com
+func (a *ClientV3) SetProxyHost(proxyHost string) {
+	before, found := strings.CutSuffix(proxyHost, "/")
+	if found {
+		a.proxyHost = before
+		return
+	}
+	a.proxyHost = proxyHost
+}
+
+// GetProxyHost 返回当前的 ProxyHost
+func (a *ClientV3) GetProxyHost() string {
+	return a.proxyHost
 }

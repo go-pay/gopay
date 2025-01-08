@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"runtime"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
@@ -26,6 +27,34 @@ import (
 	"github.com/go-pay/util/retry"
 	"github.com/go-pay/xtime"
 )
+
+// 设置代理Host地址
+// 使用场景：
+// 1. 部署环境无法访问互联网，可以通过代理服务器访问
+var (
+	proxyHost string
+	mu        sync.RWMutex
+)
+
+// GetProxyHost 返回当前的 ProxyHost
+func GetProxyHost() string {
+	mu.RLock()
+	defer mu.RUnlock()
+	return proxyHost
+}
+
+// SetProxyHost 设置新的 ProxyHost
+// 注意：目前仅适用于 wechat.GetPlatformCerts() 函数
+func SetProxyHost(newProxyHost string) {
+	mu.Lock()
+	defer mu.Unlock()
+	before, found := strings.CutSuffix(newProxyHost, "/")
+	if found {
+		proxyHost = before
+		return
+	}
+	proxyHost = newProxyHost
+}
 
 // 获取平台RSA证书列表（获取后自行保存使用，如需定期刷新功能，自行实现）
 // 注意事项
@@ -69,8 +98,8 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 	authorization := Authorization + ` mchid="` + mchid + `",nonce_str="` + nonceStr + `",timestamp="` + ts + `",serial_no="` + serialNo + `",signature="` + sign + `"`
 	// Request
 	var url = v3BaseUrlCh + uri
-	if v3ProxyUrl := GetProxyUrl(); v3ProxyUrl != "" {
-		url = v3ProxyUrl + uri
+	if proxyHost != "" {
+		url = proxyHost + uri
 	}
 	hc := xhttp.NewClient().Req()
 	hc.Header.Add(HeaderAuthorization, authorization)

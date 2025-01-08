@@ -58,6 +58,9 @@ func (a *ClientV3) doPost(ctx context.Context, bm gopay.BodyMap, uri, authorizat
 	if !a.IsProd {
 		url = v3SandboxBaseUrl + uri
 	}
+	if a.proxyHost != "" {
+		url = a.proxyHost + uri
+	}
 	req := a.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, a.requestIdFunc.RequestId())
@@ -88,6 +91,9 @@ func (a *ClientV3) doGet(ctx context.Context, uri, authorization string) (res *h
 	if !a.IsProd {
 		url = v3SandboxBaseUrl + uri
 	}
+	if a.proxyHost != "" {
+		url = a.proxyHost + uri
+	}
 	req := a.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, a.requestIdFunc.RequestId())
@@ -114,6 +120,9 @@ func (a *ClientV3) doGet(ctx context.Context, uri, authorization string) (res *h
 
 func (a *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, uri, authorization string) (res *http.Response, bs []byte, err error) {
 	var url = v3BaseUrlCh + uri
+	if a.proxyHost != "" {
+		url = a.proxyHost + uri
+	}
 	req := a.hc.Req(xhttp.TypeMultipartFormData)
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, a.requestIdFunc.RequestId())
