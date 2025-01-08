@@ -100,9 +100,9 @@ func TestClientV3_Transfer(t *testing.T) {
 		Set("remark", "转账测试").
 		Set("business_params", struct{}{})
 
-	res, err := client.Transfer(ctx, bm)
+	res, err := client.FundTransUniTransfer(ctx, bm)
 	if err != nil {
-		xlog.Errorf("client.Transfer(), err:%v", err)
+		xlog.Errorf("client.FundTransUniTransfer(), err:%v", err)
 		return
 	}
 

@@ -3,6 +3,7 @@
    (1) gopay：golang.org/x/crypto 版本升级到 v0.32.0。
    (2) 微信V3：支持设置代理 Host 地址，client.SetProxyHost()，wechat.SetProxyHost()。
    (3) 支付宝V3：支持设置代理 Host 地址，client.SetProxyHost()。
+   (4) 补充部分支付宝V3接口。
 
 版本号：v1.5.107
 修改记录：
