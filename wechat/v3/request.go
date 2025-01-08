@@ -21,6 +21,9 @@ func (d *requestIdFunc) RequestId() string {
 
 func (c *ClientV3) doProdPostWithHeader(ctx context.Context, headerMap map[string]string, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
+	if v3ProxyUrl := GetProxyUrl(); v3ProxyUrl != "" {
+		url = v3ProxyUrl + path
+	}
 	req := c.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, c.requestIdFunc.RequestId())
@@ -86,6 +89,9 @@ func (c *ClientV3) doProdPostWithHost(ctx context.Context, bm gopay.BodyMap, hos
 
 func (c *ClientV3) doProdPost(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
+	if v3ProxyUrl := GetProxyUrl(); v3ProxyUrl != "" {
+		url = v3ProxyUrl + path
+	}
 	req := c.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, c.requestIdFunc.RequestId())
@@ -117,6 +123,9 @@ func (c *ClientV3) doProdPost(ctx context.Context, bm gopay.BodyMap, path, autho
 
 func (c *ClientV3) doProdGet(ctx context.Context, uri, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + uri
+	if v3ProxyUrl := GetProxyUrl(); v3ProxyUrl != "" {
+		url = v3ProxyUrl + uri
+	}
 	req := c.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, c.requestIdFunc.RequestId())
@@ -147,6 +156,9 @@ func (c *ClientV3) doProdGet(ctx context.Context, uri, authorization string) (re
 
 func (c *ClientV3) doProdPut(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
+	if v3ProxyUrl := GetProxyUrl(); v3ProxyUrl != "" {
+		url = v3ProxyUrl + path
+	}
 	req := c.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, c.requestIdFunc.RequestId())
@@ -178,6 +190,9 @@ func (c *ClientV3) doProdPut(ctx context.Context, bm gopay.BodyMap, path, author
 
 func (c *ClientV3) doProdDelete(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
+	if v3ProxyUrl := GetProxyUrl(); v3ProxyUrl != "" {
+		url = v3ProxyUrl + path
+	}
 	req := c.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, c.requestIdFunc.RequestId())
@@ -209,6 +224,9 @@ func (c *ClientV3) doProdDelete(ctx context.Context, bm gopay.BodyMap, path, aut
 
 func (c *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
+	if v3ProxyUrl := GetProxyUrl(); v3ProxyUrl != "" {
+		url = v3ProxyUrl + path
+	}
 	req := c.hc.Req(xhttp.TypeMultipartFormData)
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, c.requestIdFunc.RequestId())
@@ -240,6 +258,9 @@ func (c *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, path, a
 
 func (c *ClientV3) doProdPatch(ctx context.Context, bm gopay.BodyMap, path, authorization string) (res *http.Response, si *SignInfo, bs []byte, err error) {
 	var url = v3BaseUrlCh + path
+	if v3ProxyUrl := GetProxyUrl(); v3ProxyUrl != "" {
+		url = v3ProxyUrl + path
+	}
 	req := c.hc.Req() // default json
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, c.requestIdFunc.RequestId())
