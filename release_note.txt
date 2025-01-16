@@ -4,6 +4,7 @@
    (2) 微信V3：支持设置代理 Host 地址，client.SetProxyHost()，wechat.SetProxyHost()。
    (3) 支付宝V3：支持设置代理 Host 地址，client.SetProxyHost()。
    (4) 补充部分支付宝V3接口。
+   (5) 支付宝V3：处理公共参数方法 a.pubParamsHandle() 内逻辑变更，优先判断非body map内的参数赋值。
 
 版本号：v1.5.107
 修改记录：

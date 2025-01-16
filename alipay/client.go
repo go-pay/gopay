@@ -165,37 +165,38 @@ func (a *Client) pubParamsHandle(bm gopay.BodyMap, method, bizContent string, au
 		Set("version", "1.0").
 		Set("timestamp", time.Now().Format(xtime.TimeLayout))
 
+	// 前置参数校验赋值
+	if a.AppCertSN != gopay.NULL {
+		pubBody.Set("app_cert_sn", a.AppCertSN)
+	}
+	if a.AliPayRootCertSN != gopay.NULL {
+		pubBody.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
+	}
+	// return_url
+	if a.ReturnUrl != gopay.NULL {
+		pubBody.Set("return_url", a.ReturnUrl)
+	}
+	// notify_url
+	if a.NotifyUrl != gopay.NULL {
+		pubBody.Set("notify_url", a.NotifyUrl)
+	}
+	// default use app_auth_token
+	if a.AppAuthToken != gopay.NULL {
+		pubBody.Set("app_auth_token", a.AppAuthToken)
+	}
+	if a.location != nil {
+		pubBody.Set("timestamp", time.Now().In(a.location).Format(xtime.TimeLayout))
+	}
 	if bm != nil {
 		// version
 		if version := bm.GetString("version"); version != gopay.NULL {
 			pubBody.Set("version", version)
 		}
-		if a.AppCertSN != gopay.NULL {
-			pubBody.Set("app_cert_sn", a.AppCertSN)
-		}
-		if a.AliPayRootCertSN != gopay.NULL {
-			pubBody.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
-		}
-		// return_url
-		if a.ReturnUrl != gopay.NULL {
-			pubBody.Set("return_url", a.ReturnUrl)
-		}
 		if returnUrl := bm.GetString("return_url"); returnUrl != gopay.NULL {
 			pubBody.Set("return_url", returnUrl)
 		}
-		if a.location != nil {
-			pubBody.Set("timestamp", time.Now().In(a.location).Format(xtime.TimeLayout))
-		}
-		// notify_url
-		if a.NotifyUrl != gopay.NULL {
-			pubBody.Set("notify_url", a.NotifyUrl)
-		}
 		if notifyUrl := bm.GetString("notify_url"); notifyUrl != gopay.NULL {
 			pubBody.Set("notify_url", notifyUrl)
-		}
-		// default use app_auth_token
-		if a.AppAuthToken != gopay.NULL {
-			pubBody.Set("app_auth_token", a.AppAuthToken)
 		}
 		// if user set app_auth_token in body_map, use this
 		if aat := bm.GetString("app_auth_token"); aat != gopay.NULL {
