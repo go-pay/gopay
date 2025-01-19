@@ -1,7 +1,5 @@
 package wechat
 
-import "time"
-
 // 发起转账 Rsp
 type TransferBillsRsp struct {
 	Code     int            `json:"-"`
@@ -69,77 +67,77 @@ type TransferElecsignQueryRsp struct {
 // =========================================================分割=========================================================
 
 type TransferBills struct {
-	OutBillNo      string    `json:"out_bill_no"`
-	TransferBillNo string    `json:"transfer_bill_no"`
-	CreateTime     time.Time `json:"create_time"`
-	State          string    `json:"state"`
-	FailReason     string    `json:"fail_reason"`
-	PackageInfo    string    `json:"package_info"`
+	OutBillNo      string `json:"out_bill_no"`
+	TransferBillNo string `json:"transfer_bill_no"`
+	CreateTime     string `json:"create_time"`
+	State          string `json:"state"`
+	FailReason     string `json:"fail_reason"`
+	PackageInfo    string `json:"package_info"`
 }
 
 type TransferBillsCancel struct {
-	OutBillNo      string    `json:"out_bill_no"`
-	TransferBillNo string    `json:"transfer_bill_no"`
-	State          string    `json:"state"`
-	UpdateTime     time.Time `json:"update_time"`
+	OutBillNo      string `json:"out_bill_no"`
+	TransferBillNo string `json:"transfer_bill_no"`
+	State          string `json:"state"`
+	UpdateTime     string `json:"update_time"`
 }
 
 type TransferBillsMerchantQuery struct {
-	MchID          string    `json:"mch_id"`
-	OutBillNo      string    `json:"out_bill_no"`
-	TransferBillNo string    `json:"transfer_bill_no"`
-	Appid          string    `json:"appid"`
-	State          string    `json:"state"`
-	TransferAmount int       `json:"transfer_amount"`
-	TransferRemark string    `json:"transfer_remark"`
-	FailReason     string    `json:"fail_reason"`
-	Openid         string    `json:"openid"`
-	UserName       string    `json:"user_name"`
-	CreateTime     time.Time `json:"create_time"`
-	UpdateTime     time.Time `json:"update_time"`
+	MchID          string `json:"mch_id"`
+	OutBillNo      string `json:"out_bill_no"`
+	TransferBillNo string `json:"transfer_bill_no"`
+	Appid          string `json:"appid"`
+	State          string `json:"state"`
+	TransferAmount int    `json:"transfer_amount"`
+	TransferRemark string `json:"transfer_remark"`
+	FailReason     string `json:"fail_reason"`
+	Openid         string `json:"openid"`
+	UserName       string `json:"user_name"`
+	CreateTime     string `json:"create_time"`
+	UpdateTime     string `json:"update_time"`
 }
 
 type TransferBillsQuery struct {
-	MchID          string    `json:"mch_id"`
-	OutBillNo      string    `json:"out_bill_no"`
-	TransferBillNo string    `json:"transfer_bill_no"`
-	Appid          string    `json:"appid"`
-	State          string    `json:"state"`
-	TransferAmount int       `json:"transfer_amount"`
-	TransferRemark string    `json:"transfer_remark"`
-	FailReason     string    `json:"fail_reason"`
-	Openid         string    `json:"openid"`
-	UserName       string    `json:"user_name"`
-	CreateTime     time.Time `json:"create_time"`
-	UpdateTime     time.Time `json:"update_time"`
+	MchID          string `json:"mch_id"`
+	OutBillNo      string `json:"out_bill_no"`
+	TransferBillNo string `json:"transfer_bill_no"`
+	Appid          string `json:"appid"`
+	State          string `json:"state"`
+	TransferAmount int    `json:"transfer_amount"`
+	TransferRemark string `json:"transfer_remark"`
+	FailReason     string `json:"fail_reason"`
+	Openid         string `json:"openid"`
+	UserName       string `json:"user_name"`
+	CreateTime     string `json:"create_time"`
+	UpdateTime     string `json:"update_time"`
 }
 
 type TransferElecsignMerchant struct {
-	State      string    `json:"state"`
-	CreateTime time.Time `json:"create_time"`
+	State      string `json:"state"`
+	CreateTime string `json:"create_time"`
 }
 
 type TransferElecsignMerchantQuery struct {
-	State       string    `json:"state"`
-	CreateTime  time.Time `json:"create_time"`
-	UpdateTime  time.Time `json:"update_time"`
-	HashType    string    `json:"hash_type"`
-	HashValue   string    `json:"hash_value"`
-	DownloadURL string    `json:"download_url"`
-	FailReason  string    `json:"fail_reason"`
+	State       string `json:"state"`
+	CreateTime  string `json:"create_time"`
+	UpdateTime  string `json:"update_time"`
+	HashType    string `json:"hash_type"`
+	HashValue   string `json:"hash_value"`
+	DownloadURL string `json:"download_url"`
+	FailReason  string `json:"fail_reason"`
 }
 
 type TransferElecsign struct {
-	State      string    `json:"state"`
-	CreateTime time.Time `json:"create_time"`
+	State      string `json:"state"`
+	CreateTime string `json:"create_time"`
 }
 
 type TransferElecsignQuery struct {
-	State       string    `json:"state"`
-	CreateTime  time.Time `json:"create_time"`
-	UpdateTime  time.Time `json:"update_time"`
-	HashType    string    `json:"hash_type"`
-	HashValue   string    `json:"hash_value"`
-	DownloadURL string    `json:"download_url"`
-	FailReason  string    `json:"fail_reason"`
+	State       string `json:"state"`
+	CreateTime  string `json:"create_time"`
+	UpdateTime  string `json:"update_time"`
+	HashType    string `json:"hash_type"`
+	HashValue   string `json:"hash_value"`
+	DownloadURL string `json:"download_url"`
+	FailReason  string `json:"fail_reason"`
 }
