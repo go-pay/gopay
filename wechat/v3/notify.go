@@ -4,12 +4,11 @@ import (
 	"crypto/rsa"
 	"errors"
 	"fmt"
-	"io"
-	"net/http"
-
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/util/js"
 	"github.com/go-pay/xlog"
+	"io"
+	"net/http"
 )
 
 type Resource struct {
@@ -288,6 +287,22 @@ type V3DecryptTransferBatchResult struct {
 	FailNum       int    `json:"fail_num"`
 	UpdateTime    string `json:"update_time"`
 	CloseReason   string `json:"close_reason,omitempty"`
+}
+
+// 商家转账新版本回调通知 解密结果
+type V3DecryptTransferBillsResult struct {
+	ID           string `json:"id"`
+	CreateTime   string `json:"create_time"`
+	EventType    string `json:"event_type"`
+	ResourceType string `json:"resource_type"`
+	Resource     struct {
+		Algorithm      string `json:"algorithm"`
+		Ciphertext     string `json:"ciphertext"`
+		AssociatedData string `json:"associated_data"`
+		OriginalType   string `json:"original_type"`
+		Nonce          string `json:"nonce"`
+	} `json:"resource"`
+	Summary string `json:"summary"`
 }
 
 // =====================================================================================================================
