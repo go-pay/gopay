@@ -24,7 +24,7 @@ go get github.com/go-pay/gopay
 
 #### 查看 GoPay 版本
 
-  [版本更新记录](https://github.com/go-pay/gopay/blob/main/release_note.txt)
+  [版本更新记录](https://github.com/go-pay/gopay/blob/main/release_note.md)
 
 ```go
 import (
@@ -48,8 +48,7 @@ func main() {
 * #### [支付宝支付（V3版）](https://github.com/go-pay/gopay/blob/main/doc/alipay_v3.md)
 * #### [支付宝支付](https://github.com/go-pay/gopay/blob/main/doc/alipay.md)
 * #### [微信支付（V3版）](https://github.com/go-pay/gopay/blob/main/doc/wechat_v3.md)
-  * 微信商家转账产品升级，目前了解下来老接口暂不受影响，后续gopay会尽快增加新版的商家转账接口，各位用到的关注一下：https://developers.weixin.qq.com/community/pay/doc/000a060bb4c13095b6b27cc1b6ac01
-  * 【fork】`已更新`
+  * 微信商家转账产品升级，目前已支持新版商家转账接口
 * #### [微信支付（V2版，不推荐）](https://github.com/go-pay/gopay/blob/main/doc/wechat_v2.md)
 * #### [QQ支付](https://github.com/go-pay/gopay/blob/main/doc/qq.md)
 * #### [通联支付](https://github.com/go-pay/gopay/blob/main/doc/allinpay.md)

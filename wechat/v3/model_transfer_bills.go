@@ -83,7 +83,7 @@ type TransferBillsCancel struct {
 }
 
 type TransferBillsMerchantQuery struct {
-	MchID          string `json:"mch_id"`
+	Mchid          string `json:"mch_id"`
 	OutBillNo      string `json:"out_bill_no"`
 	TransferBillNo string `json:"transfer_bill_no"`
 	Appid          string `json:"appid"`
@@ -98,7 +98,7 @@ type TransferBillsMerchantQuery struct {
 }
 
 type TransferBillsQuery struct {
-	MchID          string `json:"mch_id"`
+	Mchid          string `json:"mch_id"`
 	OutBillNo      string `json:"out_bill_no"`
 	TransferBillNo string `json:"transfer_bill_no"`
 	Appid          string `json:"appid"`

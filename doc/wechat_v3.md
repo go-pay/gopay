@@ -413,6 +413,15 @@ wechat.V3DecryptCombineNotifyCipherText()
     * 微信明细单号查询明细单：`client.V3PartnerTransferDetail()`
     * 商家批次单号查询批次单：`client.V3PartnerTransferMerchantQuery()`
     * 商家明细单号查询明细单：`client.V3PartnerTransferMerchantDetail()`
+* <font color='#07C160' size='4'>商家转账（新版）</font>
+    * 发起转账：`client.V3TransferBills()`
+    * 撤销转账：`client.V3TransferBillsCancel()`
+    * 商户单号查询转账单：`client.V3TransferBillsMerchantQuery()`
+    * 微信单号查询转账单：`client.V3TransferBillsQuery()`
+    * 商户单号申请电子回单：`client.V3TransferElecsignMerchant()`
+    * 微信单号申请电子回单：`client.V3TransferElecsign()`
+    * 商户单号查询电子回单：`client.V3TransferElecsignQuery()`
+    * 微信单号查询电子回单：`client.V3TransferElecsignMerchantQuery()`
 * <font color='#07C160' size='4'>余额查询</font>
     * 查询特约商户账户实时余额：`client.V3EcommerceBalance()`
     * 查询二级商户账户日终余额：`client.V3EcommerceDayBalance()`

@@ -322,7 +322,7 @@ func V3DecryptTransferBatchNotifyCipherText(ciphertext, nonce, additional, apiV3
 	return result, nil
 }
 
-// 解密 商家转账批次回调通知 回调中的加密信息
+// 解密 新版商家转账通知 回调中的加密信息
 func V3DecryptTransferBillsNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptTransferBillsResult, err error) {
 	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
 	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))

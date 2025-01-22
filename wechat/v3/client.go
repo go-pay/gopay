@@ -96,6 +96,7 @@ func (c *ClientV3) AutoVerifySign(autoRefresh ...bool) (err error) {
 	return nil
 }
 
+// AutoVerifySignByCert 设置 微信公钥证书 和 微信公钥证书ID
 // wxPublicKeyContent：微信公钥证书文件内容[]byte
 // wxPublicKeyID：微信公钥证书ID
 func (c *ClientV3) AutoVerifySignByCert(wxPublicKeyContent []byte, wxPublicKeyID string) (err error) {
