@@ -248,6 +248,16 @@ const (
 	v3PartnerTransferMerchantQuery  = "/v3/partner-transfer/batches/out-batch-no/%s"                          // out_batch_no 商家批次单号查询批次单 GET
 	v3PartnerTransferMerchantDetail = "/v3/partner-transfer/batches/out-batch-no/%s/details/out-detail-no/%s" // out_batch_no、out_detail_no 商家明细单号查询明细单 GET
 
+	// 转账 - 新版本
+	V3TransferBills                 = "/v3/fund-app/mch-transfer/transfer-bills"                       // 发起商家转账 POST
+	V3TransferBillsCancel           = "/v3/fund-app/mch-transfer/transfer-bills/out-bill-no/%s/cancel" // 撤销转账 POST
+	V3TransferBillsMerchantQuery    = "/v3/fund-app/mch-transfer/transfer-bills/out-bill-no/%s"        // 商户单号查询转账单 GET
+	V3TransferBillsQuery            = "/v3/fund-app/mch-transfer/transfer-bills/transfer-bill-no/%s"   // 微信单号查询转账单 GET
+	V3TransferElecsignMerchant      = "/v3/fund-app/mch-transfer/elecsign/out-bill-no"                 // 商户单号申请电子回单 POST
+	V3TransferElecsignMerchantQuery = "/v3/fund-app/mch-transfer/elecsign/out-bill-no/%s"              // 商户单号查询电子回单 GET
+	V3TransferElecsign              = "/v3/fund-app/mch-transfer/elecsign/transfer-bill-no"            // 微信单号申请电子回单 POST
+	V3TransferElecsignQuery         = "/v3/fund-app/mch-transfer/elecsign/transfer-bill-no/%s"         // 微信单号查询电子回单 GET
+
 	// 平台收付通（余额查询）
 	v3MerchantBalance     = "/v3/merchant/fund/balance/%s"        // account_type 查询账户实时余额 GET
 	v3MerchantDayBalance  = "/v3/merchant/fund/dayendbalance/%s"  // account_type 查询账户日终余额 GET
