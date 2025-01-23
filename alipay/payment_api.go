@@ -61,7 +61,7 @@ func (a *Client) TradePrecreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *
 
 // alipay.trade.app.pay(app支付接口2.0)
 // 文档地址：https://opendocs.alipay.com/open/02e7gq
-func (a *Client) TradeAppPay(ctx context.Context, bm gopay.BodyMap) (payParam string, err error) {
+func (a *Client) TradeAppPay(ctx context.Context, bm gopay.BodyMap) (orderStr string, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
 		return gopay.NULL, err
@@ -70,8 +70,8 @@ func (a *Client) TradeAppPay(ctx context.Context, bm gopay.BodyMap) (payParam st
 	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.app.pay"); err != nil {
 		return gopay.NULL, err
 	}
-	payParam = string(bs)
-	return payParam, nil
+	orderStr = string(bs)
+	return orderStr, nil
 }
 
 // alipay.trade.wap.pay(手机网站支付接口2.0)

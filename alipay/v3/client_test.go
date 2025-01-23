@@ -7,8 +7,8 @@ import (
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/alipay/cert"
-	"github.com/go-pay/gopay/pkg/js"
 	"github.com/go-pay/util"
+	"github.com/go-pay/util/js"
 	"github.com/go-pay/xlog"
 )
 
@@ -68,7 +68,7 @@ func TestDoAliPayAPISelfV3(t *testing.T) {
 		xlog.Errorf("client.TradePrecreate(), err:%v", err)
 		return
 	}
-	xlog.Debugf("aliRsp:%s", js.Marshal(rsp))
+	xlog.Debugf("aliRsp:%s", js.MarshalString(rsp))
 	if res.StatusCode != Success {
 		xlog.Errorf("aliRsp.StatusCode:%d", res.StatusCode)
 		return
@@ -106,7 +106,7 @@ func TestClientV3_Transfer(t *testing.T) {
 		return
 	}
 
-	xlog.Debugf("aliRsp:%s", js.Marshal(res))
+	xlog.Debugf("aliRsp:%s", js.MarshalString(res))
 	if res.StatusCode != Success {
 		xlog.Errorf("aliRsp.StatusCode:%d", res.StatusCode)
 		return

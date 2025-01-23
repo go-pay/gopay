@@ -98,8 +98,24 @@ func TestClient_FundTransPagePay(t *testing.T) {
 
 	aliRsp, err := client.FundTransPagePay(ctx, bm)
 	if err != nil {
-		//xlog.Errorf("client.FundTransPagePay(%+v),error:%+v", bm, err)
+		xlog.Errorf("client.FundTransPagePay(%+v),err:%+v", bm, err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)
+}
+
+func TestClient_FundTransAppPay(t *testing.T) {
+	bm := make(gopay.BodyMap)
+	bm.Set("out_biz_no", "20180628000035").
+		Set("trans_amount", "8.88").
+		Set("product_code", "STD_RED_PACKET").
+		Set("biz_scene", "PERSONAL_PAY").
+		Set("order_title", "钉钉拼手气红包")
+
+	pageRedirectionData, err := client.FundTransAppPay(ctx, bm)
+	if err != nil {
+		xlog.Errorf("client.FundTransAppPay(%+v),err:%+v", bm, err)
+		return
+	}
+	xlog.Debug("pageRedirectionData: ", pageRedirectionData)
 }

@@ -162,7 +162,9 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 		return nil, err
 	}
 	switch method {
-	case "alipay.trade.app.pay", "alipay.fund.auth.order.app.freeze", "zhima.credit.pe.zmgo.sign.apply", "zhima.credit.payafteruse.creditagreement.sign":
+	case "alipay.trade.app.pay", "alipay.fund.auth.order.app.freeze",
+		"alipay.fund.trans.app.pay", "alipay.user.agreement.page.sign",
+		"zhima.credit.pe.zmgo.sign.apply", "zhima.credit.payafteruse.creditagreement.sign":
 		return []byte(param), nil
 	case "alipay.trade.wap.pay", "alipay.trade.page.pay", "alipay.user.certify.open.certify":
 		if !a.IsProd {
@@ -218,7 +220,9 @@ func (a *Client) DoAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 		return nil, err
 	}
 	switch method {
-	case "alipay.trade.app.pay", "alipay.fund.auth.order.app.freeze":
+	case "alipay.trade.app.pay", "alipay.fund.auth.order.app.freeze",
+		"alipay.fund.trans.app.pay", "alipay.user.agreement.page.sign",
+		"zhima.credit.pe.zmgo.sign.apply", "zhima.credit.payafteruse.creditagreement.sign":
 		return []byte(param), nil
 	case "alipay.trade.wap.pay", "alipay.trade.page.pay", "alipay.user.certify.open.certify":
 		if !a.IsProd {
@@ -244,7 +248,7 @@ func (a *Client) DoAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 	}
 }
 
-// 保持和官方 SDK 命名方式一致
+// Deprecated
 func (a *Client) PageExecute(ctx context.Context, bm gopay.BodyMap, method string, authToken ...string) (url string, err error) {
 	var (
 		bizContent string

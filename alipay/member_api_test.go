@@ -122,7 +122,7 @@ func TestUserAgreementTransfer(t *testing.T) {
 	xlog.Debug("aliRsp:", *aliRsp)
 }
 
-func TestUserAgreementPageSignInApp(t *testing.T) {
+func TestUserAgreementPageSignInQRCode(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("personal_product_code", "CYCLE_PAY_AUTH_P")
@@ -143,8 +143,7 @@ func TestUserAgreementPageSignInApp(t *testing.T) {
 	})
 
 	// 发起请求
-	link, err := client.UserAgreementPageSignInApp(ctx, bm)
-	xlog.Info(err)
+	qrcode, err := client.UserAgreementPageSignInQRCode(ctx, bm)
 	if err != nil {
 		if bizErr, ok := IsBizError(err); ok {
 			xlog.Errorf("%+v", bizErr)
@@ -153,8 +152,7 @@ func TestUserAgreementPageSignInApp(t *testing.T) {
 		}
 		return
 	}
-
-	xlog.Debug("aliRsp:", link)
+	xlog.Debug("aliRsp:", qrcode)
 }
 
 func TestUserTwostageCommonUse(t *testing.T) {
