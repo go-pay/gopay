@@ -1,3 +1,9 @@
+## 版本号：v1.5.109
+
+* 修改记录：
+    * 支付宝：作废 client.UserAgreementPageSignInApp() 方法，使用 client.UserAgreementPageSignInQRCode() 方法替换。
+    * 支付宝：修改 client.FundTransAppPay() 方法返回参数。
+
 ## 版本号：v1.5.108
 
 * 修改记录：

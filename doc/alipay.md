@@ -278,7 +278,7 @@ xlog.Infof("%+v", phone)
       * 交易分账查询接口：`client.TradeOrderSettleQuery()`
   * 商家扣款
     * 支付宝个人协议页面签约接口: `client.UserAgreementPageSign()`
-    * 支付宝个人协议页面签约接口(App 专用,生成唤醒签约页面链接): `client.UserAgreementPageSignInApp()`
+    * 支付宝个人协议页面签约接口 - PC转二维码唤起签约页: `client.UserAgreementPageSignInQRCode()`
     * 支付宝个人代扣协议查询接口: `client.UserAgreementQuery()`
     * 支付宝个人代扣协议解约接口: `client.UserAgreementPageUnSign()`
     * 周期性扣款协议执行计划修改接口: `client.UserAgreementExecutionplanModify()`
