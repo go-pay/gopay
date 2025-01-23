@@ -233,6 +233,7 @@ xlog.Infof("%+v", phone)
 ### 支付宝支付 API
 
 * 支付宝接口自行实现方法：`client.PostAliPayAPISelfV2()`
+* 生成请求参数：`client.RequestParam()`
 * <font color='#027AFF' size='4'>支付产品</font>
   * 当面付
     * 付款码支付接口(商家扫用户付款码)：`client.TradePay()`
