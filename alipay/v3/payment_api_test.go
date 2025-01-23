@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/js"
 	"github.com/go-pay/util"
+	"github.com/go-pay/util/js"
 	"github.com/go-pay/xlog"
 )
 
@@ -22,7 +22,7 @@ func TestTradePrecreate(t *testing.T) {
 		xlog.Errorf("client.TradePrecreate(), err:%v", err)
 		return
 	}
-	xlog.Debugf("aliRsp:%s", js.Marshal(aliRsp))
+	xlog.Debugf("aliRsp:%s", js.MarshalString(aliRsp))
 
 	if aliRsp.StatusCode != Success {
 		xlog.Errorf("aliRsp.StatusCode:%d", aliRsp.StatusCode)

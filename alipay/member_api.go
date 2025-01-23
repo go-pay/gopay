@@ -209,7 +209,7 @@ func (a *Client) UserCertifyOpenQuery(ctx context.Context, bm gopay.BodyMap) (al
 
 // alipay.user.agreement.page.sign(支付宝个人协议页面签约接口)
 // 文档地址：https://opendocs.alipay.com/open/8bccfa0b_alipay.user.agreement.page.sign
-func (a *Client) UserAgreementPageSign(ctx context.Context, bm gopay.BodyMap) (ret string, err error) {
+func (a *Client) UserAgreementPageSign(ctx context.Context, bm gopay.BodyMap) (pageRedirectionData string, err error) {
 	err = bm.CheckEmptyError("personal_product_code")
 	if err != nil {
 		return gopay.NULL, err
@@ -221,27 +221,43 @@ func (a *Client) UserAgreementPageSign(ctx context.Context, bm gopay.BodyMap) (r
 	return string(bs), nil
 }
 
-// alipay.user.agreement.page.sign(APP 支付宝个人协议页面签约接口)
-// 文档地址：https://opendocs.alipay.com/open/00a05b  通过 App 唤起支付宝的签约页面
+// alipay.user.agreement.page.sign(支付宝个人协议页面签约接口) - PC转二维码唤起签约页
+// 文档地址：https://opendocs.alipay.com/open/08ayiq?pathHash=a2d4e097#PC%E8%BD%AC%E4%BA%8C%E7%BB%B4%E7%A0%81%E5%94%A4%E8%B5%B7%E7%AD%BE%E7%BA%A6%E9%A1%B5
+func (a *Client) UserAgreementPageSignInQRCode(ctx context.Context, bm gopay.BodyMap) (qrcode string, err error) {
+	err = bm.CheckEmptyError("personal_product_code", "access_params")
+	if err != nil {
+		return gopay.NULL, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.user.agreement.page.sign"); err != nil {
+		return "", err
+	}
+	// 该链接里面的 APPID 为固定值，不可修改
+	// 生成唤起客户端。把signParams使用 UTF-8 字符集整体做一次 encode
+	qrcode = "alipays://platformapi/startapp?appId=60000157&appClearTop=false&startMultApp=YES&sign_params=" + url.QueryEscape(string(bs))
+	return qrcode, nil
+}
+
+// Deprecated
+// 后续会删除，请使用 UserAgreementPageSignInQRCode() 替代
 func (a *Client) UserAgreementPageSignInApp(ctx context.Context, bm gopay.BodyMap) (ret string, err error) {
-	err = bm.CheckEmptyError("personal_product_code")
+	err = bm.CheckEmptyError("personal_product_code", "access_params")
 	if err != nil {
 		return gopay.NULL, err
 	}
 
-	var bs string
-	// 参考官方示例
-	// PageExecute get方式，生成url
-	if bs, err = a.PageExecute(ctx, bm, "alipay.user.agreement.page.sign"); err != nil {
+	// 参考官方示例 PageExecute get方式，生成 uri
+	uri, err := a.PageExecute(ctx, bm, "alipay.user.agreement.page.sign")
+	if err != nil {
 		return "", err
 	}
 
-	// / 生成的url地址去除 http://openapi.alipay.com/gateway.do
+	// / 生成的url地址去除 http://openapi.alipay.com/gateway.do?
 	replaceUrl := baseUrl + "?"
 	if !a.IsProd {
 		replaceUrl = sandboxBaseUrl + "?"
 	}
-	signParams := strings.Replace(bs, replaceUrl, "", 1)
+	signParams := strings.Replace(uri, replaceUrl, "", 1)
 
 	// 该链接里面的 APPID 为固定值，不可修改）
 	// 生成唤起客户端。把signParams使用 UTF-8 字符集整体做一次 encode
