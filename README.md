@@ -112,4 +112,4 @@ func main() {
 <br>
 [<img src=".github/jetbrains.png" width="300"/>](https://www.jetbrains.com/?from=gopay)
 
-> Copyright © 2000-2024 JetBrains s.r.o. JetBrains and the JetBrains logo are registered trademarks of JetBrains s.r.o.
+> Copyright © 2025 JetBrains s.r.o. JetBrains and the JetBrains logo are trademarks of JetBrains s.r.o.
