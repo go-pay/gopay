@@ -2,26 +2,27 @@ package paypal
 
 import (
 	"context"
-	"github.com/go-pay/xlog"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/go-pay/xlog"
 )
 
 // Client PayPal支付客户端
 type Client struct {
-	Clientid       string
-	Secret         string
-	Appid          string
-	AccessToken    string
-	ExpiresIn      int
-	IsProd         bool
-	ctx            context.Context
-	DebugSwitch    gopay.DebugSwitch
-	logger         xlog.XLogger
-	hc             *xhttp.Client
-	baseUrlProd    string
-	baseUrlSandbox string
+	Clientid         string
+	Secret           string
+	Appid            string
+	AccessToken      string
+	ExpiresIn        int
+	IsProd           bool
+	ctx              context.Context
+	DebugSwitch      gopay.DebugSwitch
+	logger           xlog.XLogger
+	hc               *xhttp.Client
+	baseUrlProd      string
+	baseUrlSandbox   string
+	autoRefreshToken bool
 }
 
 type Option func(*Client)
@@ -34,15 +35,16 @@ func NewClient(clientid, secret string, isProd bool, options ...Option) (client 
 	logger := xlog.NewLogger()
 	logger.SetLevel(xlog.DebugLevel)
 	client = &Client{
-		Clientid:       clientid,
-		Secret:         secret,
-		IsProd:         isProd,
-		ctx:            context.Background(),
-		DebugSwitch:    gopay.DebugOff,
-		logger:         logger,
-		hc:             xhttp.NewClient(),
-		baseUrlProd:    baseUrlProd,
-		baseUrlSandbox: baseUrlSandbox,
+		Clientid:         clientid,
+		Secret:           secret,
+		IsProd:           isProd,
+		ctx:              context.Background(),
+		DebugSwitch:      gopay.DebugOff,
+		logger:           logger,
+		hc:               xhttp.NewClient(),
+		baseUrlProd:      baseUrlProd,
+		baseUrlSandbox:   baseUrlSandbox,
+		autoRefreshToken: true,
 	}
 	for _, option := range options {
 		option(client)
@@ -52,7 +54,9 @@ func NewClient(clientid, secret string, isProd bool, options ...Option) (client 
 		return nil, err
 	}
 	// 自动刷新Token
-	go client.goAuthRefreshToken()
+	if client.autoRefreshToken {
+		go client.goAuthRefreshToken()
+	}
 	return client, nil
 }
 
@@ -68,6 +72,13 @@ func WithProxyUrl(proxyUrlProd, proxyUrlSandbox string) Option {
 func WithHttpClient(client *xhttp.Client) Option {
 	return func(c *Client) {
 		c.hc = client
+	}
+}
+
+// WithoutAutoRefreshToken 设置不自动刷新Token
+func WithoutAutoRefreshToken() Option {
+	return func(c *Client) {
+		c.autoRefreshToken = false
 	}
 }
 
