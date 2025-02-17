@@ -71,4 +71,12 @@ const (
 	deleteWebhook          = "/v1/notifications/webhooks/%s"              // webhook_id 删除webhook DELETE
 	verifyWebhookSignature = "/v1/notifications/verify-webhook-signature" //webhook消息验签
 	showWebhookEventDetail = "/v1/notifications/webhooks-events/%s"       // webhook_id 获取webhook-event详情 GET
+
+	// payment method tokens相关
+	createPaymentToken   = "/v3/vault/payment-tokens"    // 创建支付方式token POST
+	paymentTokenList     = "/v3/vault/payment-tokens"    // 获取支付方式token列表 GET
+	retrievePaymentToken = "/v3/vault/payment-tokens/%s" // 获取支付方式token详情 GET
+	deletePaymentToken   = "/v3/vault/payment-tokens/%s" // 删除支付方式token DELETE
+	createSetupToken     = "/v3/vault/setup-tokens"      // 创建支付方式token POST
+	retrieveSetupToken   = "/v3/vault/setup-tokens/%s"   // 获取支付方式token详情 GET
 )
