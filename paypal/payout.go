@@ -68,7 +68,7 @@ func (c *Client) ShowPayoutBatchDetails(ctx context.Context, payoutBatchId strin
 // 批量支出项目详情（Show Payout Item Details）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/payments.payouts-batch/v1/#payouts-item_get
-func (c Client) ShowPayoutItemDetails(ctx context.Context, payoutItemId string) (ppRsp *PayoutItemDetailRsp, err error) {
+func (c *Client) ShowPayoutItemDetails(ctx context.Context, payoutItemId string) (ppRsp *PayoutItemDetailRsp, err error) {
 	if payoutItemId == gopay.NULL {
 		return nil, errors.New("payout_item_id is empty")
 	}
