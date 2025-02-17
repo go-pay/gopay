@@ -94,7 +94,7 @@ func (c *Client) ShowPayoutItemDetails(ctx context.Context, payoutItemId string)
 // 取消批量支付中收款人无PayPal账号的项目（Cancel Unclaimed Payout Item）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/payments.payouts-batch/v1/#payouts-item_cancel
-func (c Client) CancelUnclaimedPayoutItem(ctx context.Context, payoutItemId string) (ppRsp *CancelUnclaimedPayoutItemRsp, err error) {
+func (c *Client) CancelUnclaimedPayoutItem(ctx context.Context, payoutItemId string) (ppRsp *CancelUnclaimedPayoutItemRsp, err error) {
 	if payoutItemId == gopay.NULL {
 		return nil, errors.New("payout_item_id is empty")
 	}
