@@ -19,13 +19,14 @@ var (
 )
 
 func TestMain(m *testing.M) {
+	xlog.SetLevel(xlog.DebugLevel)
 	client, err = NewClient(Clientid, Secret, false)
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
 	// 打开Debug开关，输出日志
-	client.DebugSwitch = gopay.DebugOff
+	client.DebugSwitch = gopay.DebugOn
 
 	xlog.Debugf("Appid: %s", client.Appid)
 	xlog.Debugf("AccessToken: %s", client.AccessToken)

@@ -229,6 +229,41 @@ type InvoiceTemplateUpdateRsp struct {
 	Response      *Template      `json:"response,omitempty"`
 }
 
+type PaymentTokenCreateRsp struct {
+	Code          int                  `json:"-"`
+	Error         string               `json:"-"`
+	ErrorResponse *ErrorResponse       `json:"-"`
+	Response      *PaymentMethodDetail `json:"response,omitempty"`
+}
+
+type PaymentTokenListRsp struct {
+	Code          int                `json:"-"`
+	Error         string             `json:"-"`
+	ErrorResponse *ErrorResponse     `json:"-"`
+	Response      *PaymentTokensList `json:"response,omitempty"`
+}
+
+type PaymentTokenDetailRsp struct {
+	Code          int                  `json:"-"`
+	Error         string               `json:"-"`
+	ErrorResponse *ErrorResponse       `json:"-"`
+	Response      *PaymentMethodDetail `json:"response,omitempty"`
+}
+
+type PaymentSetupTokenCreateRsp struct {
+	Code          int                      `json:"-"`
+	Error         string                   `json:"-"`
+	ErrorResponse *ErrorResponse           `json:"-"`
+	Response      *PaymentSetupTokenDetail `json:"response,omitempty"`
+}
+
+type PaymentSetupTokenDetailRsp struct {
+	Code          int                      `json:"-"`
+	Error         string                   `json:"-"`
+	ErrorResponse *ErrorResponse           `json:"-"`
+	Response      *PaymentSetupTokenDetail `json:"response,omitempty"`
+}
+
 // ==================================分割==================================
 
 type Patch struct {
@@ -294,7 +329,13 @@ type PaypalVault struct {
 }
 
 type PaypalCustomer struct {
-	ID string `json:"id"`
+	ID         string         `json:"id"`
+	Phones     []*PhoneDetail `json:"phones"`
+	WebsiteUrl string         `json:"website_url"`
+	Company    string         `json:"company"`
+	Name       *Name          `json:"name"`
+	Email      string         `json:"email"`
+	Links      []*Link        `json:"links,omitempty"`
 }
 
 type PaypalLink struct {
@@ -686,6 +727,30 @@ type NetAmountBreakdown struct {
 	PayableAmount   *Amount       `json:"payable_amount,omitempty"`
 	ConvertedAmount *Amount       `json:"converted_amount,omitempty"`
 	ExchangeRate    *ExchangeRate `json:"exchange_rate,omitempty"`
+}
+
+type PaymentMethodDetail struct {
+	Id            string          `json:"id,omitempty"`
+	PaymentSource *PaymentSource  `json:"payment_source,omitempty"`
+	Customer      *PaypalCustomer `json:"customer,omitempty"`
+	Links         []*Link         `json:"links,omitempty"`
+}
+
+type PaymentTokensList struct {
+	TotalItems    int                    `json:"total_items,omitempty"`
+	TotalPages    int                    `json:"total_pages,omitempty"`
+	PaymentTokens []*PaymentMethodDetail `json:"payment_tokens,omitempty"`
+	Links         []*Link                `json:"links,omitempty"`
+	Customer      *PaypalCustomer        `json:"customer,omitempty"`
+}
+
+type PaymentSetupTokenDetail struct {
+	PaymentSource *PaymentSource  `json:"payment_source,omitempty"`
+	Links         []*Link         `json:"links,omitempty"`
+	Id            string          `json:"id,omitempty"`
+	Ordinal       int             `json:"ordinal,omitempty"`
+	Customer      *PaypalCustomer `json:"customer,omitempty"`
+	Status        string          `json:"status,omitempty"`
 }
 
 // =============== V1 API Payout ==================================
