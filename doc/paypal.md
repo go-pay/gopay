@@ -120,7 +120,7 @@ if ppRsp.Code != paypal.Success {
 
 * <font color='#003087' size='4'>AccessToken</font>
     * 获取AccessToken（Get AccessToken）：`client.GetAccessToken()`
-* <font color='#003087' size='4'>发票</font>
+* <font color='#003087' size='4'>Invoices</font>
 	* 生成发票号码（Generate invoice number）：`client.InvoiceNumberGenerate()`
 	* 发票列表（List invoices）：`client.InvoiceList()`
 	* 创建虚拟发票（Create draft invoice）：`client.InvoiceCreate()`
@@ -139,14 +139,14 @@ if ppRsp.Code != paypal.Success {
 	* 创建发票模板（Create template）：`client.InvoiceTemplateCreate()`
 	* 删除发票模板（Delete template）：`client.InvoiceTemplateDelete()`
 	* 更新发票模板（Fully update template）：`client.InvoiceTemplateUpdate()`
-* <font color='#003087' size='4'>订单</font>
+* <font color='#003087' size='4'>Orders</font>
     * 创建订单（Create order）：`client.CreateOrder()`
     * 订单详情（Show order details）：`client.OrderDetail()`
     * 更新订单（Update order）：`client.UpdateOrder()`
     * 订单支付授权（Authorize payment for order）：`client.OrderAuthorize()`
     * 订单支付捕获（Capture payment for order）：`client.OrderCapture()`
     * 订单支付确认（Confirm the Order）：`client.OrderConfirm()`
-* <font color='#003087' size='4'>支付</font>
+* <font color='#003087' size='4'>Payments</font>
     * 支付授权详情（Show details for authorized payment）：`client.PaymentAuthorizeDetail()`
     * 重新授权支付授权（Reauthorize authorized payment）：`client.PaymentReauthorize()`
     * 作废支付授权（Void authorized payment）：`client.PaymentAuthorizeVoid()`
@@ -154,11 +154,18 @@ if ppRsp.Code != paypal.Success {
     * 支付捕获详情（Show captured payment details）：`client.PaymentCaptureDetail()`
     * 支付捕获退款（Refund captured payment）：`client.PaymentCaptureRefund()`
     * 支付退款详情（Show refund details）：`client.PaymentRefundDetail()`
-* <font color='#003087' size='4'>支出</font>
+* <font color='#003087' size='4'>Payment Method Tokens</font>
+    * 为给定的支付来源创建支付令牌（Create payment token for a given payment source）：`client.CreatePaymentToken()`
+    * 列出所有支付令牌（List all payment tokens）：`client.ListAllPaymentTokens()`
+    * 检索付款令牌（Retrieve a payment token）：`client.RetrievePaymentToken()`
+    * 删除付款令牌（Delete payment token）：`client.DeletePaymentToken()`
+    * 创建设置令牌（Create a setup token）：`client.CreateSetupToken()`
+    * 检索设置令牌（Retrieve a setup token）：`client.RetrieveSetupToken()`
+* <font color='#003087' size='4'>Payouts</font>
     * 创建批量支出（Create batch payout）：`client.CreateBatchPayout()`
     * 批量支出详情（Show payout batch details）：`client.ShowPayoutBatchDetails()`
     * 批量支出项目详情（Show Payout Item Details）：`client.ShowPayoutItemDetails()`
     * 取消批量支付中收款人无PayPal账号的项目（Cancel Unclaimed Payout Item）：`client.CancelUnclaimedPayoutItem()`
-* <font color='#003087' size='4'>订阅</font>
+* <font color='#003087' size='4'>Subscriptions</font>
     * 创建订阅计划（Create plan）：`client.CreateBillingPlan()`
 
