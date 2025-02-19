@@ -4,6 +4,7 @@
     * gopay：golang.org/x/crypto 版本升级到 v0.33.0。
     * 支付宝：作废 client.UserAgreementPageSignInApp() 方法，使用 client.UserAgreementPageSignInQRCode() 方法替换。
     * 支付宝：修改 client.FundTransAppPay() 方法返回参数。
+    * PayPal：新增 Payment Method Tokens 相关接口。
 
 ## 版本号：v1.5.108
 
