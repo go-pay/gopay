@@ -5,7 +5,6 @@ import (
 	"crypto/rsa"
 	"errors"
 	"strings"
-	"sync"
 
 	"github.com/go-pay/crypto/xpem"
 	"github.com/go-pay/gopay"
@@ -22,7 +21,6 @@ type ClientV3 struct {
 	WxSerialNo    string
 	proxyHost     string // 代理host地址
 	autoSign      bool
-	rwMu          sync.RWMutex
 	hc            *xhttp.Client
 	privateKey    *rsa.PrivateKey
 	wxPublicKey   *rsa.PublicKey

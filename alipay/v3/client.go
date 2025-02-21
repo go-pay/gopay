@@ -4,7 +4,6 @@ import (
 	"crypto/rsa"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/go-pay/crypto/xpem"
 	"github.com/go-pay/crypto/xrsa"
@@ -29,7 +28,6 @@ type ClientV3 struct {
 	DebugSwitch        gopay.DebugSwitch
 	logger             xlog.XLogger
 	requestIdFunc      xhttp.RequestIdHandler
-	location           *time.Location
 	hc                 *xhttp.Client
 }
 
