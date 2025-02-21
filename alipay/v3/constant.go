@@ -27,7 +27,7 @@ const (
 
 // 支付
 const (
-	// 交易
+	// 支付-交易
 	v3TradePay                 = "/v3/alipay/trade/pay"                               // 统一收单交易支付接口
 	v3TradeQuery               = "/v3/alipay/trade/query"                             // 统一收单交易查询接口
 	v3TradeRefund              = "/v3/alipay/trade/refund"                            // 统一收单交易退款接口
@@ -39,11 +39,11 @@ const (
 	v3TradeCreate              = "/v3/alipay/trade/create"                            // 统一收单交易创建接口
 	v3TradeOrderInfoSync       = "/v3/alipay/trade/orderinfo/sync"                    // 支付宝订单信息同步接口
 
-	// 商家扣款
+	// 支付-商家扣款
 	v3UserAgreementQuery      = "/v3/alipay/user/agreement/query"  // 支付宝个人代扣协议查询接口
 	v3UserAgreementPageUnSign = "/v3/alipay/user/agreement/unsign" // 支付宝个人代扣协议解约接口
 
-	// 商家分账
+	// 资金-商家分账
 	v3TradeRoyaltyRelationBind       = "/v3/alipay/trade/royalty/relation/bind"       // 分账关系绑定
 	v3TradeRoyaltyRelationUnbind     = "/v3/alipay/trade/royalty/relation/unbind"     // 分账关系解绑
 	v3TradeRoyaltyRelationBatchQuery = "/v3/alipay/trade/royalty/relation/batchquery" // 分账关系查询
@@ -52,11 +52,11 @@ const (
 	v3TradeOrderSettleQuery          = "/v3/alipay/trade/order/settle/query"          // 交易分账查询接口
 	v3TradeOrderOnSettleQuery        = "/v3/alipay/trade/order/onsettle/query"        // 分账剩余金额查询
 
-	// 刷脸付
+	// 支付-刷脸付
 	v3ZolozAuthenticationSmilepayInitialize  = "/v3/zoloz/authentication/smilepay/initialize"   // 刷脸支付初始化
 	v3ZolozAuthenticationCustomerFtokenQuery = "/v3/zoloz/authentication/customer/ftoken/query" // 查询刷脸结果信息接口
 
-	// 预授权支付
+	// 支付-预授权支付
 	v3FundAuthOperationDetailQuery = "/v3/alipay/fund/auth/operation/detail/query" // 资金授权操作查询接口
 	v3FundAuthOrderFreeze          = "/v3/alipay/fund/auth/order/freeze"           // 资金授权冻结接口
 	v3FundAuthOrderUnfreeze        = "/v3/alipay/fund/auth/order/unfreeze"         // 资金授权解冻接口
@@ -84,6 +84,13 @@ const (
 	v3OcrServerDetect            = "/v3/datadigital/fincloud/generalsaas/ocr/server/detect"            // 服务端OCR
 	v3OcrMobileInitialize        = "/v3/datadigital/fincloud/generalsaas/ocr/mobile/initialize"        // App端OCR初始化
 
-	// 转账
-	v3TransUniTransfer = "/v3/alipay/fund/trans/uni/transfer" // 单笔转账接口
+	// 资金-商家转账
+	v3FundAccountQuery           = "/v3/alipay/fund/account/query"            // GET 支付宝资金账户资产查询接口
+	v3FundQuotaQuery             = "/v3/alipay/fund/quota/query"              // GET 转账额度查询接口
+	v3DataBillEreceiptApply      = "/v3/alipay/data/bill/ereceipt/apply"      // POST 申请电子回单(incubating)
+	v3DataBillEreceiptQuery      = "/v3/alipay/data/bill/ereceipt/query"      // GET 查询电子回单状态(incubating)
+	v3FundTransUniTransfer       = "/v3/alipay/fund/trans/uni/transfer"       // POST 单笔转账接口
+	v3FundTransCommonQuery       = "/v3/alipay/fund/trans/common/query"       // GET 转账业务单据查询接口
+	v3FundTransMultistepTransfer = "/v3/alipay/fund/trans/multistep/transfer" // POST 多步转账创建并支付
+	v3FundTransMultistepQuery    = "/v3/alipay/fund/trans/multistep/query"    // POST 多步转账查询接口
 )

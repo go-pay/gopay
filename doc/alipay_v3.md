@@ -212,6 +212,15 @@ return c.String(http.StatusOK, "success")
   * 分账比例查询：`client.TradeRoyaltyRateQuery()`
   * 统一收单交易结算接口：`client.TradeOrderSettle()`
   * 分账剩余金额查询：`client.TradeOrderOnSettleQuery()`
+* <font color='#027AFF' size='4'>商家转账</font>
+  * 支付宝资金账户资产查询接口：`client.FundAccountQuery()`
+  * 转账额度查询接口：`client.FundQuotaQuery()`
+  * 单笔转账接口：`client.FundTransUniTransfer()`
+  * 申请电子回单(incubating)：`client.DataBillEreceiptApply()`
+  * 查询电子回单状态(incubating)：`client.DataBillEreceiptQuery()`
+  * 转账业务单据查询接口：`client.FundTransCommonQuery()`
+  * 多步转账创建并支付：`client.FundTransMultistepTransfer()`
+  * 多步转账查询接口：`client.FundTransMultistepQuery()`
 * <font color='#027AFF' size='4'>会员</font>
   * 换取授权访问令牌：`client.SystemOauthToken()`
   * 身份认证记录查询：`client.UserCertifyOpenQuery()`
