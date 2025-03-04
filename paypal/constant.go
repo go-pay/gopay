@@ -79,4 +79,10 @@ const (
 	deletePaymentToken   = "/v3/vault/payment-tokens/%s" // 删除支付方式token DELETE
 	createSetupToken     = "/v3/vault/setup-tokens"      // 创建支付方式token POST
 	retrieveSetupToken   = "/v3/vault/setup-tokens/%s"   // 获取支付方式token详情 GET
+
+	// product 产品相关
+	productCreate = "/v1/catalogs/products"
+	productList   = "/v1/catalogs/products"
+	productDetail = "/v1/catalogs/products/%s" // product_id 产品详情 GET
+	productUpdate = "/v1/catalogs/products/%s" // product_id 更新产品 PATCH
 )
