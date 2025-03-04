@@ -12,7 +12,10 @@ import (
 // GetRefundHistory Get Refund History
 // Doc: https://developer.apple.com/documentation/appstoreserverapi/get_refund_history
 func (c *Client) GetRefundHistory(ctx context.Context, transactionId, revision string) (rsp *RefundHistoryRsp, err error) {
-	path := fmt.Sprintf(getRefundHistory, transactionId) + "?revision=" + revision
+	path := fmt.Sprintf(getRefundHistory, transactionId)
+	if revision != "" {
+		path = fmt.Sprintf(getRefundHistory, transactionId) + "?revision=" + revision
+	}
 	res, bs, err := c.doRequestGet(ctx, path)
 	if err != nil {
 		return nil, err
