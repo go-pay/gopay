@@ -37,16 +37,22 @@ const (
 	cancelUnclaimedPayoutItem = "/v1/payments/payouts-item/%s/cancel" // payout_item_id 取消支出项目 POST
 
 	// 订阅相关
-	planCreate               = "/v1/billing/plans" // 创建订阅 POST
-	planList                 = "/v1/billing/plans"
-	planDetail               = "/v1/billing/plans/%s" // plan_id 计划详情 GET
-	planUpdate               = "/v1/billing/plans/%s" // plan_id 更新计划 PATCH
-	subscriptionCreate       = "/v1/billing/subscriptions"
-	subscriptionDetail       = "/v1/billing/subscriptions/%s"              // subscription_id 订阅详情 GET
-	subscriptionSuspend      = "/v1/billing/subscriptions/%s/suspend"      // subscription_id 暂停订阅 GET
-	subscriptionCancel       = "/v1/billing/subscriptions/%s/cancel"       // subscription_id 取消订阅 GET
-	subscriptionActivate     = "/v1/billing/subscriptions/%s/activate"     // subscription_id 激活订阅 GET
-	subscriptionTransactions = "/v1/billing/subscriptions/%s/transactions" // subscription_id 激活订阅 GET
+	planCreate               = "/v1/billing/plans"                           // 创建订阅 POST
+	planList                 = "/v1/billing/plans"                           // 订阅计划列表 GET
+	planDetail               = "/v1/billing/plans/%s"                        // plan_id 计划详情 GET
+	planUpdate               = "/v1/billing/plans/%s"                        // plan_id 更新计划 PATCH
+	planActivate             = "/v1/billing/plans/%s/activate"               // plan_id 激活计划 POST
+	planDeactivate           = "/v1/billing/plans/%s/deactivate"             // plan_id 停用计划 POST
+	planUpdatePrice          = "/v1/billing/plans/%s/update-pricing-schemes" // plan_id 更新计划价格 POST
+	subscriptionCreate       = "/v1/billing/subscriptions"                   // 创建订阅 POST
+	subscriptionDetail       = "/v1/billing/subscriptions/%s"                // subscription_id 订阅详情 GET
+	subscriptionUpdate       = "/v1/billing/subscriptions/%s"                // subscription_id 更新订阅 PATCH
+	subscriptionRevise       = "/v1/billing/subscriptions/%s/revise"         // subscription_id 修改计划或订阅数量 POST
+	subscriptionSuspend      = "/v1/billing/subscriptions/%s/suspend"        // subscription_id 暂停订阅 POST
+	subscriptionCancel       = "/v1/billing/subscriptions/%s/cancel"         // subscription_id 取消订阅 POST
+	subscriptionActivate     = "/v1/billing/subscriptions/%s/activate"       // subscription_id 激活订阅 POST
+	subscriptionCapture      = "/v1/billing/subscriptions/%s/capture"        // subscription_id 订阅时获取授权付款 POST
+	subscriptionTransactions = "/v1/billing/subscriptions/%s/transactions"   // subscription_id 列出订阅的交易 GET
 
 	// 发票 Invoices 相关
 	generateInvoiceNumber      = "/v2/invoicing/generate-next-invoice-number" // 生成发票号码 POST
@@ -78,8 +84,8 @@ const (
 	showWebhookDetail      = "/v1/notifications/webhooks/%s"              // webhook_id 获取webhook详情 GET
 	updateWebhook          = "/v1/notifications/webhooks/%s"              // webhook_id 更新webhook PATCH
 	deleteWebhook          = "/v1/notifications/webhooks/%s"              // webhook_id 删除webhook DELETE
-	verifyWebhookSignature = "/v1/notifications/verify-webhook-signature" //webhook消息验签
-	showWebhookEventDetail = "/v1/notifications/webhooks-events/%s"       // webhook_id 获取webhook-event详情 GET
+	verifyWebhookSignature = "/v1/notifications/verify-webhook-signature" // webhook消息验签
+	showWebhookEventDetail = "/v1/notifications/webhooks-events/%s"       // event_id 获取webhook-event详情 GET
 
 	// payment method tokens相关
 	createPaymentToken   = "/v3/vault/payment-tokens"    // 创建支付方式token POST
@@ -90,8 +96,8 @@ const (
 	retrieveSetupToken   = "/v3/vault/setup-tokens/%s"   // 获取支付方式token详情 GET
 
 	// product 产品相关
-	productCreate = "/v1/catalogs/products"
-	productList   = "/v1/catalogs/products"
+	productCreate = "/v1/catalogs/products"    // 创建产品 POST
+	productList   = "/v1/catalogs/products"    // 产品列表 GET
 	productDetail = "/v1/catalogs/products/%s" // product_id 产品详情 GET
 	productUpdate = "/v1/catalogs/products/%s" // product_id 更新产品 PATCH
 )
