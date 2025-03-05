@@ -882,6 +882,53 @@ type BillingDetail struct {
 	Links       []*Link `json:"links"`
 }
 
+type BillingListRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *BillingPlans  `json:"response,omitempty"`
+}
+
+type BillingPlans struct {
+	Plans []Plan  `json:"plans"`
+	Links []*Link `json:"links,omitempty"`
+}
+
+type Plan struct {
+	ID          string  `json:"id"`
+	Name        string  `json:"name"`
+	Status      string  `json:"status"`
+	Description string  `json:"description"`
+	UsageType   string  `json:"usage_type"`
+	CreateTime  string  `json:"create_time"`
+	Links       []*Link `json:"links,omitempty"`
+}
+
+type PlanDetailRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *PlanDetail    `json:"response,omitempty"`
+}
+
+type PlanDetail struct {
+	ID            string           `json:"id"`
+	ProductID     string           `json:"product_id"`
+	Name          string           `json:"name"`
+	Description   string           `json:"description"`
+	Status        string           `json:"status"`
+	BillingCycles []*BillingCycles `json:"billing_cycles"`
+	Taxes         *Taxes           `json:"taxes"`
+	CreateTime    string           `json:"create_time"`
+	UpdateTime    string           `json:"update_time"`
+	Links         []*Link          `json:"links,omitempty"`
+}
+
+type Taxes struct {
+	Percentage string `json:"percentage"`
+	Inclusive  bool   `json:"inclusive"`
+}
+
 type InvoiceNumber struct {
 	InvoiceNumber string `json:"invoice_number"`
 }

@@ -38,6 +38,9 @@ const (
 
 	// 订阅相关
 	subscriptionCreate = "/v1/billing/plans" // 创建订阅 POST
+	subscriptionList   = "/v1/billing/plans"
+	subscriptionDetail = "/v1/billing/plans/%s" // plan_id 订阅详情 GET
+	subscriptionUpdate = "/v1/billing/plans/%s" // plan_id 更新订阅 PATCH
 
 	// 发票 Invoices 相关
 	generateInvoiceNumber      = "/v2/invoicing/generate-next-invoice-number" // 生成发票号码 POST
