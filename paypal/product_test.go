@@ -26,7 +26,7 @@ func TestCreateProduct(t *testing.T) {
 	//Set("home_url", "https://example.com/home")
 	xlog.Debug("bm：", bm.JsonBody())
 
-	ppRsp, err := client.CreateCatalogsProduct(ctx, bm)
+	ppRsp, err := client.ProductCreate(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -44,7 +44,7 @@ func TestCreateProduct(t *testing.T) {
 }
 
 func TestListProduct(t *testing.T) {
-	ppRsp, err := client.ListCatalogsProducts(ctx, nil)
+	ppRsp, err := client.ProductList(ctx, nil)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -65,7 +65,7 @@ func TestListProduct(t *testing.T) {
 }
 
 func TestProductDetail(t *testing.T) {
-	ppRsp, err := client.CatalogsProductDetails(ctx, "PROD-10J947659N0823244", nil)
+	ppRsp, err := client.ProductDetails(ctx, "PROD-10J947659N0823244", nil)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -92,7 +92,7 @@ func TestUpdateProduct(t *testing.T) {
 
 	ps = append(ps, item)
 
-	ppRsp, err := client.UpdateProduct(ctx, "PROD-10J947659N0823244", ps)
+	ppRsp, err := client.ProductUpdate(ctx, "PROD-10J947659N0823244", ps)
 	if err != nil {
 		xlog.Error(err)
 		return

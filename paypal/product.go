@@ -5,14 +5,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/go-pay/gopay"
 	"net/http"
+
+	"github.com/go-pay/gopay"
 )
 
-// 创建产品（CreateCatalogsProductsRep）
+// 创建产品（Create product）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/catalog-products/v1/#products_create
-func (c *Client) CreateCatalogsProduct(ctx context.Context, bm gopay.BodyMap) (ppRsp *CreateCatalogsProductsRep, err error) {
+func (c *Client) ProductCreate(ctx context.Context, bm gopay.BodyMap) (ppRsp *ProductCreateRep, err error) {
 	if err = bm.CheckEmptyError("name", "type"); err != nil {
 		return nil, err
 	}
@@ -20,8 +21,8 @@ func (c *Client) CreateCatalogsProduct(ctx context.Context, bm gopay.BodyMap) (p
 	if err != nil {
 		return nil, err
 	}
-	ppRsp = &CreateCatalogsProductsRep{Code: Success}
-	ppRsp.Response = new(CatalogsProducts)
+	ppRsp = &ProductCreateRep{Code: Success}
+	ppRsp.Response = new(Product)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
@@ -34,10 +35,10 @@ func (c *Client) CreateCatalogsProduct(ctx context.Context, bm gopay.BodyMap) (p
 	return ppRsp, nil
 }
 
-// 产品列表（ListCatalogsProducts）
+// 产品列表（List products）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/catalog-products/v1/#products_list
-func (c *Client) ListCatalogsProducts(ctx context.Context, bm gopay.BodyMap) (ppRsp *ProductsListRsp, err error) {
+func (c *Client) ProductList(ctx context.Context, bm gopay.BodyMap) (ppRsp *ProductsListRsp, err error) {
 	uri := productList + "?" + bm.EncodeURLParams()
 	res, bs, err := c.doPayPalGet(ctx, uri)
 	if err != nil {
@@ -57,19 +58,19 @@ func (c *Client) ListCatalogsProducts(ctx context.Context, bm gopay.BodyMap) (pp
 	return ppRsp, nil
 }
 
-// 产品详情（CatalogsProductDetails）
+// 产品详情（Show product details）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/catalog-products/v1/#products_get
-func (c *Client) CatalogsProductDetails(ctx context.Context, ProductID string, bm gopay.BodyMap) (ppRsp *ProductsDetailRsp, err error) {
-	if ProductID == gopay.NULL {
+func (c *Client) ProductDetails(ctx context.Context, productId string, bm gopay.BodyMap) (ppRsp *ProductDetailsRsp, err error) {
+	if productId == gopay.NULL {
 		return nil, errors.New("product_id is empty")
 	}
-	uri := fmt.Sprintf(productDetail, ProductID) + "?" + bm.EncodeURLParams()
+	uri := fmt.Sprintf(productDetail, productId) + "?" + bm.EncodeURLParams()
 	res, bs, err := c.doPayPalGet(ctx, uri)
 	if err != nil {
 		return nil, err
 	}
-	ppRsp = &ProductsDetailRsp{Code: Success}
+	ppRsp = &ProductDetailsRsp{Code: Success}
 	ppRsp.Response = new(ProductDetail)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
@@ -86,11 +87,11 @@ func (c *Client) CatalogsProductDetails(ctx context.Context, ProductID string, b
 // 更新产品（Update product）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/catalog-products/v1/#products_patch
-func (c *Client) UpdateProduct(ctx context.Context, productID string, patchs []*Patch) (ppRsp *EmptyRsp, err error) {
-	if productID == gopay.NULL {
+func (c *Client) ProductUpdate(ctx context.Context, productId string, patchs []*Patch) (ppRsp *EmptyRsp, err error) {
+	if productId == gopay.NULL {
 		return nil, errors.New("product_id is empty")
 	}
-	url := fmt.Sprintf(productUpdate, productID)
+	url := fmt.Sprintf(productUpdate, productId)
 	res, bs, err := c.doPayPalPatch(ctx, patchs, url)
 	if err != nil {
 		return nil, err

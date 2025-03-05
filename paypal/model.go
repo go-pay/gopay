@@ -882,15 +882,15 @@ type BillingDetail struct {
 	Links       []*Link `json:"links"`
 }
 
-type BillingListRsp struct {
+type PlanListRsp struct {
 	Code          int            `json:"-"`
 	Error         string         `json:"-"`
 	ErrorResponse *ErrorResponse `json:"-"`
-	Response      *BillingPlans  `json:"response,omitempty"`
+	Response      *BillingPlan   `json:"response,omitempty"`
 }
 
-type BillingPlans struct {
-	Plans []Plan  `json:"plans"`
+type BillingPlan struct {
+	Plans []*Plan `json:"plans"`
 	Links []*Link `json:"links,omitempty"`
 }
 
@@ -929,97 +929,9 @@ type Taxes struct {
 	Inclusive  bool   `json:"inclusive"`
 }
 
-type CreateSubscriptionRsp struct {
-	Code          int                 `json:"-"`
-	Error         string              `json:"-"`
-	ErrorResponse *ErrorResponse      `json:"-"`
-	Response      *SubscriptionDetail `json:"response,omitempty"`
-}
-
-type SubscriptionDetail struct {
-	ID               string          `json:"id"`
-	Status           string          `json:"status"`
-	StatusUpdateTime string          `json:"status_update_time"`
-	PlanID           string          `json:"plan_id"`
-	PlanOverridden   bool            `json:"plan_overridden"`
-	StartTime        string          `json:"start_time"`
-	Quantity         string          `json:"quantity"`
-	ShippingAmount   *CommonAmount   `json:"shipping_amount"`
-	Subscriber       *Subscriber     `json:"subscriber"`
-	BillingInfo      *BillingInfoNew `json:"billing_info,omitempty"`
-	CreateTime       string          `json:"create_time"`
-	UpdateTime       string          `json:"update_time,omitempty"`
-	Links            []*Link         `json:"links,omitempty"`
-}
-
-type BillingInfoNew struct {
-	OutstandingBalance  *CommonAmount     `json:"outstanding_balance"`
-	CycleExecutions     []*CycleExecution `json:"cycle_executions"`
-	LastPayment         *LastPayment      `json:"last_payment"`
-	NextBillingTime     string            `json:"next_billing_time"`
-	FailedPaymentsCount int               `json:"failed_payments_count"`
-}
-
-type LastPayment struct {
-	Amount *CommonAmount `json:"amount"`
-	Time   string        `json:"time"`
-}
-
-type CycleExecution struct {
-	TenureType      string `json:"tenure_type"`
-	Sequence        int    `json:"sequence"`
-	CyclesCompleted int    `json:"cycles_completed"`
-	CyclesRemaining int    `json:"cycles_remaining"`
-	TotalCycles     int    `json:"total_cycles"`
-}
-
 type CommonAmount struct {
 	CurrencyCode string `json:"currency_code"`
 	Value        string `json:"value"`
-}
-
-type Subscriber struct {
-	Name            *Name            `json:"name"`
-	EmailAddress    string           `json:"email_address"`
-	PayerId         string           `json:"payer_id"`
-	ShippingAddress *ShippingAddress `json:"shipping_address"`
-}
-
-type ShippingAddress struct {
-	Name    *Name    `json:"name"`
-	Address *Address `json:"address"`
-}
-
-type SubscriptionDetailRsp struct {
-	Code          int                 `json:"-"`
-	Error         string              `json:"-"`
-	ErrorResponse *ErrorResponse      `json:"-"`
-	Response      *SubscriptionDetail `json:"response,omitempty"`
-}
-
-type ListTransSubscriptionRsp struct {
-	Code          int                `json:"-"`
-	Error         string             `json:"-"`
-	ErrorResponse *ErrorResponse     `json:"-"`
-	Response      *TransSubscription `json:"response,omitempty"`
-}
-type TransSubscription struct {
-	Transactions []*Transaction `json:"transactions"`
-	Links        []*Link        `json:"links,omitempty"`
-}
-type Transaction struct {
-	ID                  string               `json:"id"`
-	Status              string               `json:"status"`
-	PayerEmail          string               `json:"payer_email"`
-	PayerName           *Name                `json:"payer_name"`
-	AmountWithBreakdown *AmountWithBreakdown `json:"amount_with_breakdown"`
-	Time                string               `json:"time"`
-}
-
-type AmountWithBreakdown struct {
-	GrossAmount *CommonAmount `json:"gross_amount"`
-	FeeAmount   *CommonAmount `json:"fee_amount"`
-	NetAmount   *CommonAmount `json:"net_amount"`
 }
 
 type InvoiceNumber struct {
@@ -1305,10 +1217,45 @@ type WebhookDetailRsp struct {
 }
 
 type WebhookEventDetailRsp struct {
-	Code          int             `json:"-"`
-	Error         string          `json:"-"`
-	ErrorResponse *ErrorResponse  `json:"-"`
-	Response      json.RawMessage `json:"response,omitempty"`
+	Code          int                 `json:"-"`
+	Error         string              `json:"-"`
+	ErrorResponse *ErrorResponse      `json:"-"`
+	Response      *WebhookEventDetail `json:"response,omitempty"`
+}
+
+type WebhookEventDetail struct {
+	Id              string `json:"id"`
+	CreateTime      string `json:"create_time"`
+	ResourceType    string `json:"resource_type"`
+	EventVersion    string `json:"event_version"`
+	EventType       string `json:"event_type"`
+	Summary         string `json:"summary"`
+	ResourceVersion string `json:"resource_version"`
+	Resource        struct {
+		Id         string `json:"id"`
+		CreateTime string `json:"create_time"`
+		UpdateTime string `json:"update_time"`
+		State      string `json:"state"`
+		Amount     struct {
+			Total    string `json:"total"`
+			Currency string `json:"currency"`
+			Details  struct {
+				Subtotal string `json:"subtotal"`
+			} `json:"details"`
+		} `json:"amount"`
+		ParentPayment string `json:"parent_payment"`
+		ValidUntil    string `json:"valid_until"`
+		Links         []struct {
+			Href   string `json:"href"`
+			Rel    string `json:"rel"`
+			Method string `json:"method"`
+		} `json:"links"`
+	} `json:"resource"`
+	Links []struct {
+		Href   string `json:"href"`
+		Rel    string `json:"rel"`
+		Method string `json:"method"`
+	} `json:"links"`
 }
 
 type VerifyWebhookSignatureRequest struct {
@@ -1335,66 +1282,4 @@ type WebhookEvent struct {
 	Links           []*Link         `json:"links,omitempty"`
 	EventVersion    string          `json:"event_version"`
 	ResourceVersion string          `json:"resource_version"`
-}
-
-type CreateCatalogsProductsRep struct {
-	Code          int               `json:"-"`
-	Error         string            `json:"-"`
-	ErrorResponse *ErrorResponse    `json:"-"`
-	Response      *CatalogsProducts `json:"response,omitempty"`
-}
-
-type CatalogsProducts struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Type        string `json:"type"`
-	Category    string `json:"category"`
-	ImageURL    string `json:"image_url"`
-	HomeURL     string `json:"home_url"`
-	CreateTime  string `json:"create_time"`
-	UpdateTime  string `json:"update_time"`
-	Links       []struct {
-		Href   string `json:"href"`
-		Rel    string `json:"rel"`
-		Method string `json:"method"`
-	} `json:"links"`
-}
-
-type ProductsListRsp struct {
-	Code          int            `json:"-"`
-	Error         string         `json:"-"`
-	ErrorResponse *ErrorResponse `json:"-"`
-	Response      *ProductsList  `json:"response,omitempty"`
-}
-
-type ProductsList struct {
-	TotalItems int              `json:"total_items"`
-	TotalPages int              `json:"total_pages"`
-	Items      []*ProductDetail `json:"products"`
-	Links      []*Link          `json:"links,omitempty"`
-}
-
-type ProductsDetailRsp struct {
-	Code          int            `json:"-"`
-	Error         string         `json:"-"`
-	ErrorResponse *ErrorResponse `json:"-"`
-	Response      *ProductDetail `json:"response,omitempty"`
-}
-
-type ProductDetail struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Type        string `json:"type,omitempty"`
-	Category    string `json:"category,omitempty"`
-	ImageURL    string `json:"image_url,omitempty"`
-	HomeURL     string `json:"home_url,omitempty"`
-	CreateTime  string `json:"create_time"`
-	UpdateTime  string `json:"update_time,omitempty"`
-	Links       []struct {
-		Href   string `json:"href"`
-		Rel    string `json:"rel"`
-		Method string `json:"method"`
-	} `json:"links"`
 }

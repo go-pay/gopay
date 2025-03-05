@@ -58,7 +58,7 @@ func TestClient_CreateBillingPlan(t *testing.T) {
 }
 
 func TestListBillingPlan(t *testing.T) {
-	ppRsp, err := client.ListBillingPlan(ctx, nil)
+	ppRsp, err := client.PlanList(ctx, nil)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -79,7 +79,7 @@ func TestListBillingPlan(t *testing.T) {
 }
 
 func TestBillingPlanDetail(t *testing.T) {
-	ppRsp, err := client.BillingPlanDetails(ctx, "P-4A621926UG9673307M7D3JIA", nil)
+	ppRsp, err := client.PlanDetails(ctx, "P-4A621926UG9673307M7D3JIA")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -106,7 +106,7 @@ func TestUpdateBillingPlan(t *testing.T) {
 
 	ps = append(ps, item)
 
-	ppRsp, err := client.UpdateBillingPlan(ctx, "P-4A621926UG9673307M7D3JIA", ps)
+	ppRsp, err := client.PlanUpdate(ctx, "P-4A621926UG9673307M7D3JIA", ps)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -127,7 +127,7 @@ func TestCreateBillingSubscription(t *testing.T) {
 	bm.Set("plan_id", "P-4A621926UG9673307M7D3JIA")
 	xlog.Debug("bm：", bm.JsonBody())
 
-	ppRsp, err := client.CreateBillingSubscription(ctx, bm)
+	ppRsp, err := client.SubscriptionCreate(ctx, bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -166,7 +166,7 @@ func TestSuspendSubscription(t *testing.T) {
 
 	bm := make(gopay.BodyMap)
 	bm.Set("reason", "wait a minute")
-	ppRsp, err := client.SuspendSubscription(ctx, "I-5V3YPKHJ9LE4", bm)
+	ppRsp, err := client.SubscriptionSuspend(ctx, "I-5V3YPKHJ9LE4", bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -184,7 +184,7 @@ func TestCancelSubscription(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("reason", "cancel a minute")
 
-	ppRsp, err := client.CancelSubscription(ctx, "I-5V3YPKHJ9LE4", bm)
+	ppRsp, err := client.SubscriptionCancel(ctx, "I-5V3YPKHJ9LE4", bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -201,7 +201,7 @@ func TestCancelSubscription(t *testing.T) {
 func TestActivateSubscription(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("reason", "activate")
-	ppRsp, err := client.ActivateSubscription(ctx, "I-5V3YPKHJ9LE4", bm)
+	ppRsp, err := client.SubscriptionActivate(ctx, "I-5V3YPKHJ9LE4", bm)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -219,7 +219,7 @@ func TestListTransSubscription(t *testing.T) {
 	bm := make(gopay.BodyMap)
 	bm.Set("start_time", "2025-03-03T07:50:20.940Z")
 	bm.Set("end_time", "2025-04-21T07:50:20.940Z")
-	ppRsp, err := client.ListTransSubscription(ctx, "I-5V3YPKHJ9LE4", bm)
+	ppRsp, err := client.SubscriptionTransactionList(ctx, "I-5V3YPKHJ9LE4", bm)
 	if err != nil {
 		xlog.Error(err)
 		return
