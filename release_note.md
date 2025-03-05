@@ -1,3 +1,30 @@
+## 版本号：v1.5.110
+
+* 修改记录：
+  * gopay：module 最低版本 go 1.22
+  * Apple：client.GetRefundHistory() 接口优化，无version时，请求query参数中不再带上version字段。
+  * PayPal：新增 Subscriptions 相关接口。
+    * client.PlanList()，计划列表。
+    * client.PlanDetails()，计划详情。
+    * client.PlanUpdate()，更新计划。
+    * client.PlanActivate()，激活计划。
+    * client.PlanDeactivate()，停用计划。
+    * client.PlanUpdatePrice()，更新计划价格。
+    * client.SubscriptionCreate()，创建订阅。
+    * client.SubscriptionDetails()，订阅详情。
+    * client.SubscriptionUpdate()，更新订阅。
+    * client.SubscriptionRevise()，修改计划或订阅数量。
+    * client.SubscriptionSuspend()，暂停订阅。
+    * client.SubscriptionCancel()，取消订阅。
+    * client.SubscriptionActivate()，激活订阅。
+    * client.SubscriptionCapture()，订阅时获取授权付款。
+    * client.SubscriptionTransactionList()，订阅的交易列表。
+  * PayPal：新增 Product 相关接口。
+    * client.ProductCreate()，创建产品。
+    * client.ProductList()，产品列表。
+    * client.ProductDetails()，产品详情。
+    * client.ProductUpdate()，更新产品。
+
 ## 版本号：v1.5.109
 
 * 修改记录：
