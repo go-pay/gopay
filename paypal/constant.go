@@ -37,10 +37,16 @@ const (
 	cancelUnclaimedPayoutItem = "/v1/payments/payouts-item/%s/cancel" // payout_item_id 取消支出项目 POST
 
 	// 订阅相关
-	subscriptionCreate = "/v1/billing/plans" // 创建订阅 POST
-	subscriptionList   = "/v1/billing/plans"
-	subscriptionDetail = "/v1/billing/plans/%s" // plan_id 订阅详情 GET
-	subscriptionUpdate = "/v1/billing/plans/%s" // plan_id 更新订阅 PATCH
+	planCreate               = "/v1/billing/plans" // 创建订阅 POST
+	planList                 = "/v1/billing/plans"
+	planDetail               = "/v1/billing/plans/%s" // plan_id 计划详情 GET
+	planUpdate               = "/v1/billing/plans/%s" // plan_id 更新计划 PATCH
+	subscriptionCreate       = "/v1/billing/subscriptions"
+	subscriptionDetail       = "/v1/billing/subscriptions/%s"              // subscription_id 订阅详情 GET
+	subscriptionSuspend      = "/v1/billing/subscriptions/%s/suspend"      // subscription_id 暂停订阅 GET
+	subscriptionCancel       = "/v1/billing/subscriptions/%s/cancel"       // subscription_id 取消订阅 GET
+	subscriptionActivate     = "/v1/billing/subscriptions/%s/activate"     // subscription_id 激活订阅 GET
+	subscriptionTransactions = "/v1/billing/subscriptions/%s/transactions" // subscription_id 激活订阅 GET
 
 	// 发票 Invoices 相关
 	generateInvoiceNumber      = "/v2/invoicing/generate-next-invoice-number" // 生成发票号码 POST
