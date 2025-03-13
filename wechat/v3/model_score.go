@@ -2,120 +2,119 @@ package wechat
 
 // 创建支付分订单 Rsp
 type ScoreOrderCreateRsp struct {
-	Code     int               `json:"-"`
-	SignInfo *SignInfo         `json:"-"`
-	Response *ScoreOrderCreate `json:"response,omitempty"`
-	Error    string            `json:"-"`
+	Code        int               `json:"-"`
+	SignInfo    *SignInfo         `json:"-"`
+	Response    *ScoreOrderCreate `json:"response,omitempty"`
+	ErrResponse ErrResponse       `json:"err_response,omitempty"`
+	Error       string            `json:"-"`
 }
 
 // ScoreOrderPartnerCreateRsp 服务商模式创建支付分订单 Rsp
 type ScoreOrderPartnerCreateRsp struct {
-	Code     int                      `json:"code"`
-	SignInfo *SignInfo                `json:"-"`
-	Response *ScoreOrderPartnerCreate `json:"response,omitempty"`
-	Error    string                   `json:"error"`
+	Code        int                      `json:"code"`
+	SignInfo    *SignInfo                `json:"-"`
+	Response    *ScoreOrderPartnerCreate `json:"response,omitempty"`
+	ErrResponse ErrResponse              `json:"err_response,omitempty"`
+	Error       string                   `json:"-"`
 }
 
 // 查询支付分订单 Rsp
 type ScoreOrderQueryRsp struct {
-	Code     int              `json:"-"`
-	SignInfo *SignInfo        `json:"-"`
-	Response *ScoreOrderQuery `json:"response,omitempty"`
-	Error    string           `json:"-"`
+	Code        int              `json:"-"`
+	SignInfo    *SignInfo        `json:"-"`
+	Response    *ScoreOrderQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse      `json:"err_response,omitempty"`
+	Error       string           `json:"-"`
 }
 
 // ScoreOrderPartnerQueryRsp 服务商模式查询支付分订单 Rsp
 type ScoreOrderPartnerQueryRsp struct {
-	Code     int                     `json:"code"`
-	SignInfo *SignInfo               `json:"-"`
-	Response *ScoreOrderPartnerQuery `json:"response,omitempty"`
-	Error    string                  `json:"error"`
+	Code        int                     `json:"code"`
+	SignInfo    *SignInfo               `json:"-"`
+	Response    *ScoreOrderPartnerQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse             `json:"err_response,omitempty"`
+	Error       string                  `json:"-"`
 }
 
 // 取消支付分订单 Rsp
 type ScoreOrderCancelRsp struct {
-	Code     int               `json:"-"`
-	SignInfo *SignInfo         `json:"-"`
-	Response *ScoreOrderCancel `json:"response,omitempty"`
-	Error    string            `json:"-"`
-}
-
-// ScoreOrderPartnerCancelRsp 服务商模式取消支付分订单 Rsp
-type ScoreOrderPartnerCancelRsp struct {
-	Code     int       `json:"code"`
-	SignInfo *SignInfo `json:"-"`
-	Error    string    `json:"error"`
+	Code        int               `json:"-"`
+	SignInfo    *SignInfo         `json:"-"`
+	Response    *ScoreOrderCancel `json:"response,omitempty"`
+	ErrResponse ErrResponse       `json:"err_response,omitempty"`
+	Error       string            `json:"-"`
 }
 
 // 修改订单金额 Rsp
 type ScoreOrderModifyRsp struct {
-	Code     int               `json:"-"`
-	SignInfo *SignInfo         `json:"-"`
-	Response *ScoreOrderModify `json:"response,omitempty"`
-	Error    string            `json:"-"`
+	Code        int               `json:"-"`
+	SignInfo    *SignInfo         `json:"-"`
+	Response    *ScoreOrderModify `json:"response,omitempty"`
+	ErrResponse ErrResponse       `json:"err_response,omitempty"`
+	Error       string            `json:"-"`
 }
 
 // 完结支付分订单 Rsp
 type ScoreOrderCompleteRsp struct {
-	Code     int                 `json:"-"`
-	SignInfo *SignInfo           `json:"-"`
-	Response *ScoreOrderComplete `json:"response,omitempty"`
-	Error    string              `json:"-"`
-}
-
-// ScoreOrderPartnerCompleteRsp 服务商模式完结支付分订单 Rsp
-type ScoreOrderPartnerCompleteRsp struct {
-	Code     int       `json:"code"`
-	SignInfo *SignInfo `json:"-"`
-	Error    string    `json:"error"`
+	Code        int                 `json:"-"`
+	SignInfo    *SignInfo           `json:"-"`
+	Response    *ScoreOrderComplete `json:"response,omitempty"`
+	ErrResponse ErrResponse         `json:"err_response,omitempty"`
+	Error       string              `json:"-"`
 }
 
 // 商户发起催收扣款 Rsp
 type ScoreOrderPayRsp struct {
-	Code     int            `json:"-"`
-	SignInfo *SignInfo      `json:"-"`
-	Response *ScoreOrderPay `json:"response,omitempty"`
-	Error    string         `json:"-"`
+	Code        int            `json:"-"`
+	SignInfo    *SignInfo      `json:"-"`
+	Response    *ScoreOrderPay `json:"response,omitempty"`
+	ErrResponse ErrResponse    `json:"err_response,omitempty"`
+	Error       string         `json:"-"`
 }
 
 // 同步服务订单信息 Rsp
 type ScoreOrderSyncRsp struct {
-	Code     int             `json:"-"`
-	SignInfo *SignInfo       `json:"-"`
-	Response *ScoreOrderSync `json:"response,omitempty"`
-	Error    string          `json:"-"`
+	Code        int             `json:"-"`
+	SignInfo    *SignInfo       `json:"-"`
+	Response    *ScoreOrderSync `json:"response,omitempty"`
+	ErrResponse ErrResponse     `json:"err_response,omitempty"`
+	Error       string          `json:"-"`
 }
 
 // 创单结单合并 Rsp
 type ScoreDirectCompleteRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *ScoreDirectComplete `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *ScoreDirectComplete `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 // 创单结单合并 Rsp
 type ScorePermissionRsp struct {
-	Code     int              `json:"-"`
-	SignInfo *SignInfo        `json:"-"`
-	Response *ScorePermission `json:"response,omitempty"`
-	Error    string           `json:"-"`
+	Code        int              `json:"-"`
+	SignInfo    *SignInfo        `json:"-"`
+	Response    *ScorePermission `json:"response,omitempty"`
+	ErrResponse ErrResponse      `json:"err_response,omitempty"`
+	Error       string           `json:"-"`
 }
 
 // 查询用户授权记录（授权协议号） Rsp
 type ScorePermissionQueryRsp struct {
-	Code     int                   `json:"-"`
-	SignInfo *SignInfo             `json:"-"`
-	Response *ScorePermissionQuery `json:"response,omitempty"`
-	Error    string                `json:"-"`
+	Code        int                   `json:"-"`
+	SignInfo    *SignInfo             `json:"-"`
+	Response    *ScorePermissionQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse           `json:"err_response,omitempty"`
+	Error       string                `json:"-"`
 }
 
 // 查询用户授权记录（openid） Rsp
 type ScorePermissionOpenidQueryRsp struct {
-	Code     int                         `json:"-"`
-	SignInfo *SignInfo                   `json:"-"`
-	Response *ScorePermissionOpenidQuery `json:"response,omitempty"`
-	Error    string                      `json:"-"`
+	Code        int                         `json:"-"`
+	SignInfo    *SignInfo                   `json:"-"`
+	Response    *ScorePermissionOpenidQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse                 `json:"err_response,omitempty"`
+	Error       string                      `json:"-"`
 }
 
 // =========================================================分割=========================================================

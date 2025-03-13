@@ -2,42 +2,47 @@ package wechat
 
 // 退款 Rsp
 type RefundRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *RefundOrderResponse `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *RefundOrderResponse `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 // 退款查询 Rsp
 type RefundQueryRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *RefundQueryResponse `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *RefundQueryResponse `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 // 申请退款 Rsp
 type EcommerceRefundRsp struct {
-	Code     int              `json:"-"`
-	SignInfo *SignInfo        `json:"-"`
-	Response *EcommerceRefund `json:"response,omitempty"`
-	Error    string           `json:"-"`
+	Code        int              `json:"-"`
+	SignInfo    *SignInfo        `json:"-"`
+	Response    *EcommerceRefund `json:"response,omitempty"`
+	ErrResponse ErrResponse      `json:"err_response,omitempty"`
+	Error       string           `json:"-"`
 }
 
 // 申请退款 Rsp
 type EcommerceRefundQueryRsp struct {
-	Code     int                   `json:"-"`
-	SignInfo *SignInfo             `json:"-"`
-	Response *EcommerceRefundQuery `json:"response,omitempty"`
-	Error    string                `json:"-"`
+	Code        int                   `json:"-"`
+	SignInfo    *SignInfo             `json:"-"`
+	Response    *EcommerceRefundQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse           `json:"err_response,omitempty"`
+	Error       string                `json:"-"`
 }
 
 // 垫付退款回补 Rsp
 type EcommerceRefundAdvanceRsp struct {
-	Code     int                     `json:"-"`
-	SignInfo *SignInfo               `json:"-"`
-	Response *EcommerceRefundAdvance `json:"response,omitempty"`
-	Error    string                  `json:"-"`
+	Code        int                     `json:"-"`
+	SignInfo    *SignInfo               `json:"-"`
+	Response    *EcommerceRefundAdvance `json:"response,omitempty"`
+	ErrResponse ErrResponse             `json:"err_response,omitempty"`
+	Error       string                  `json:"-"`
 }
 
 // =========================================================分割=========================================================

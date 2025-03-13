@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // 提交申请单API
@@ -24,15 +25,15 @@ func (c *ClientV3) V3Apply4SubSubmit(ctx context.Context, bm gopay.BodyMap) (*Ap
 	if err != nil {
 		return nil, err
 	}
-	wxRsp := &Apply4SubSubmitRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(Apply4SubSubmit)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &Apply4SubSubmitRsp{Code: Success, SignInfo: si, Response: &Apply4SubSubmit{}}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -50,13 +51,14 @@ func (c *ClientV3) V3Apply4SubQueryByBusinessCode(ctx context.Context, businessC
 		return nil, err
 	}
 	wxRsp := &Apply4SubQueryRsp{Code: Success, SignInfo: si, Response: &Apply4SubQuery{}}
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -74,15 +76,15 @@ func (c *ClientV3) V3Apply4SubQueryByApplyId(ctx context.Context, applyId string
 		return nil, err
 	}
 
-	wxRsp := &Apply4SubQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(Apply4SubQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &Apply4SubQueryRsp{Code: Success, SignInfo: si, Response: &Apply4SubQuery{}}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -107,6 +109,7 @@ func (c *ClientV3) V3Apply4SubModifySettlement(ctx context.Context, bm gopay.Bod
 	if res.StatusCode != http.StatusNoContent {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	return wxRsp, c.verifySyncSign(si)
@@ -129,20 +132,21 @@ func (c *ClientV3) V3AsyncApply4SubModifySettlement(ctx context.Context, bm gopa
 	if err != nil {
 		return nil, err
 	}
-	wxRsp := &Apply4SubModifySettlementRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(Apply4SubModifySettlement)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &Apply4SubModifySettlementRsp{Code: Success, SignInfo: si, Response: &Apply4SubModifySettlement{}}
 	if mode == ApplySettlementModifyModeAsync && res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if mode != ApplySettlementModifyModeAsync && res.StatusCode != http.StatusNoContent {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -159,15 +163,15 @@ func (c *ClientV3) V3Apply4SubQuerySettlement(ctx context.Context, subMchId stri
 	if err != nil {
 		return nil, err
 	}
-	wxRsp := &Apply4SubQuerySettlementRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(Apply4SubQuerySettlement)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &Apply4SubQuerySettlementRsp{Code: Success, SignInfo: si, Response: &Apply4SubQuerySettlement{}}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -184,15 +188,15 @@ func (c *ClientV3) V3Apply4SubMerchantsApplication(ctx context.Context, subMchId
 	if err != nil {
 		return nil, err
 	}
-	wxRsp := &V3Apply4SubMerchantsApplicationRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(V3Apply4SubMerchantsApplication)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &V3Apply4SubMerchantsApplicationRsp{Code: Success, SignInfo: si, Response: &V3Apply4SubMerchantsApplication{}}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }

@@ -35,15 +35,19 @@ if err != nil {
     return
 }
 
-// 设置微信平台API证书和序列号（推荐开启自动验签，无需手动设置证书公钥等信息）
-//client.SetPlatformCert([]byte(""), "")
-
-// 启用自动同步返回验签，并定时更新微信平台API证书（开启自动验签时，无需单独设置微信平台API证书和序列号）
-err = client.AutoVerifySign()
+// 注意：以下两种自动验签方式二选一
+// 微信支付公钥自动同步验签（新微信支付用户推荐）
+err = client.AutoVerifySignByPublicKey([]byte("微信支付公钥内容"), "微信支付公钥ID")
 if err != nil {
     xlog.Error(err)
     return
 }
+//// 微信平台证书自动获取证书+同步验签（并自动定时更新微信平台API证书）
+//err = client.AutoVerifySign()
+//if err != nil {
+//	xlog.Error(err)
+//	return
+//}
 
 // 自定义配置http请求接收返回结果body大小，默认 10MB
 client.SetBodySize() // 没有特殊需求，可忽略此配置

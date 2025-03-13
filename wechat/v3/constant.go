@@ -17,10 +17,11 @@ const (
 	HeaderAuthorization = "Authorization"
 	HeaderRequestID     = "Request-ID"
 
-	HeaderTimestamp = "Wechatpay-Timestamp"
-	HeaderNonce     = "Wechatpay-Nonce"
-	HeaderSignature = "Wechatpay-Signature"
-	HeaderSerial    = "Wechatpay-Serial"
+	HeaderTimestamp     = "Wechatpay-Timestamp"
+	HeaderNonce         = "Wechatpay-Nonce"
+	HeaderSignatureType = "Wechatpay-Signature-Type"
+	HeaderSignature     = "Wechatpay-Signature"
+	HeaderSerial        = "Wechatpay-Serial"
 
 	Authorization = "WECHATPAY2-SHA256-RSA2048"
 

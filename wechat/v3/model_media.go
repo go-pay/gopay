@@ -2,25 +2,28 @@ package wechat
 
 // 商户上传(营销专用)反馈图片 Rsp
 type MarketMediaUploadRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *MarketMediaUpload `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *MarketMediaUpload `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
 }
 
 // 商户上传反馈图片 Rsp
 type MediaUploadRsp struct {
-	Code     int          `json:"-"`
-	SignInfo *SignInfo    `json:"-"`
-	Response *MediaUpload `json:"response,omitempty"`
-	Error    string       `json:"-"`
+	Code        int          `json:"-"`
+	SignInfo    *SignInfo    `json:"-"`
+	Response    *MediaUpload `json:"response,omitempty"`
+	ErrResponse ErrResponse  `json:"err_response,omitempty"`
+	Error       string       `json:"-"`
 }
 
 type ComplaintImageRsp struct {
-	Code     int             `json:"-"`
-	SignInfo *SignInfo       `json:"-"`
-	Response *ComplaintImage `json:"response,omitempty"`
-	Error    string          `json:"-"`
+	Code        int             `json:"-"`
+	SignInfo    *SignInfo       `json:"-"`
+	Response    *ComplaintImage `json:"response,omitempty"`
+	ErrResponse ErrResponse     `json:"err_response,omitempty"`
+	Error       string          `json:"-"`
 }
 
 // =========================================================分割=========================================================

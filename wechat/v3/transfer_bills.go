@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // 发起转账
@@ -19,11 +20,11 @@ func (c *ClientV3) V3TransferBills(ctx context.Context, bm gopay.BodyMap) (*Tran
 	if err != nil {
 		return nil, err
 	}
-
 	wxRsp := &TransferBillsRsp{Code: Success, SignInfo: si, Response: &TransferBills{}}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -43,11 +44,11 @@ func (c *ClientV3) V3TransferBillsCancel(ctx context.Context, outBillNo string) 
 	if err != nil {
 		return nil, err
 	}
-
 	wxRsp := &TransferBillsCancelRsp{Code: Success, SignInfo: si, Response: &TransferBillsCancel{}}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -63,16 +64,15 @@ func (c *ClientV3) V3TransferBillsMerchantQuery(ctx context.Context, outBillNo s
 	if err != nil {
 		return nil, err
 	}
-
 	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
 	if err != nil {
 		return nil, err
 	}
-
 	wxRsp := &TransferBillsMerchantQueryRsp{Code: Success, SignInfo: si, Response: &TransferBillsMerchantQuery{}}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -96,6 +96,7 @@ func (c *ClientV3) V3TransferBillsQuery(ctx context.Context, transferBillNo stri
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -118,6 +119,7 @@ func (c *ClientV3) V3TransferElecsignMerchant(ctx context.Context, bm gopay.Body
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -140,6 +142,7 @@ func (c *ClientV3) V3TransferElecsign(ctx context.Context, bm gopay.BodyMap) (*T
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -163,6 +166,7 @@ func (c *ClientV3) V3TransferElecsignQuery(ctx context.Context, transferBillNo s
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -186,6 +190,7 @@ func (c *ClientV3) V3TransferElecsignMerchantQuery(ctx context.Context, transfer
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {

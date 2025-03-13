@@ -2,57 +2,56 @@ package wechat
 
 // Prepay 支付Rsp
 type PrepayRsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Response *Prepay   `json:"response,omitempty"`
-	Error    string    `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *Prepay     `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // H5 支付Rsp
 type H5Rsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Response *H5Url    `json:"response,omitempty"`
-	Error    string    `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *H5Url      `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // Native 支付Rsp
 type NativeRsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Response *Native   `json:"response,omitempty"`
-	Error    string    `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *Native     `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // 查询订单 Rsp
 type QueryOrderRsp struct {
-	Code     int         `json:"-"`
-	SignInfo *SignInfo   `json:"-"`
-	Response *QueryOrder `json:"response,omitempty"`
-	Error    string      `json:"-"`
-}
-
-// 关闭订单 Rsp
-type CloseOrderRsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Error    string    `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *QueryOrder `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // 合单查询订单 Rsp
 type CombineQueryOrderRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *CombineQueryOrder `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *CombineQueryOrder `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
 }
 
 // 服务商查询订单 Rsp
 type PartnerQueryOrderRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *PartnerQueryOrder `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *PartnerQueryOrder `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
 }
 
 // =========================================================分割=========================================================

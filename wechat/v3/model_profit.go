@@ -2,81 +2,91 @@ package wechat
 
 // 请求分账 Rsp
 type ProfitShareOrderRsp struct {
-	Code     int               `json:"-"`
-	SignInfo *SignInfo         `json:"-"`
-	Response *ProfitShareOrder `json:"response,omitempty"`
-	Error    string            `json:"-"`
+	Code        int               `json:"-"`
+	SignInfo    *SignInfo         `json:"-"`
+	Response    *ProfitShareOrder `json:"response,omitempty"`
+	ErrResponse ErrResponse       `json:"err_response,omitempty"`
+	Error       string            `json:"-"`
 }
 
 // 查询分账结果 Rsp
 type ProfitShareOrderQueryRsp struct {
-	Code     int                    `json:"-"`
-	SignInfo *SignInfo              `json:"-"`
-	Response *ProfitShareOrderQuery `json:"response,omitempty"`
-	Error    string                 `json:"-"`
+	Code        int                    `json:"-"`
+	SignInfo    *SignInfo              `json:"-"`
+	Response    *ProfitShareOrderQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse            `json:"err_response,omitempty"`
+	Error       string                 `json:"-"`
 }
 
 // 请求分账回退 Rsp
 type ProfitShareReturnRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *ProfitShareReturn `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *ProfitShareReturn `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
 }
 
 // 请求分账回退 Rsp
 type ProfitShareReturnResultRsp struct {
-	Code     int                      `json:"-"`
-	SignInfo *SignInfo                `json:"-"`
-	Response *ProfitShareReturnResult `json:"response,omitempty"`
-	Error    string                   `json:"-"`
+	Code        int                      `json:"-"`
+	SignInfo    *SignInfo                `json:"-"`
+	Response    *ProfitShareReturnResult `json:"response,omitempty"`
+	ErrResponse ErrResponse              `json:"err_response,omitempty"`
+	Error       string                   `json:"-"`
 }
 
 // 解冻剩余资金 Rsp
 type ProfitShareOrderUnfreezeRsp struct {
-	Code     int                       `json:"-"`
-	SignInfo *SignInfo                 `json:"-"`
-	Response *ProfitShareOrderUnfreeze `json:"response,omitempty"`
-	Error    string                    `json:"-"`
+	Code        int                       `json:"-"`
+	SignInfo    *SignInfo                 `json:"-"`
+	Response    *ProfitShareOrderUnfreeze `json:"response,omitempty"`
+	ErrResponse ErrResponse               `json:"err_response,omitempty"`
+	Error       string                    `json:"-"`
 }
 
 // 查询剩余待分金额 Rsp
 type ProfitShareUnsplitAmountRsp struct {
-	Code     int                       `json:"-"`
-	SignInfo *SignInfo                 `json:"-"`
-	Response *ProfitShareUnsplitAmount `json:"response,omitempty"`
-	Error    string                    `json:"-"`
+	Code        int                       `json:"-"`
+	SignInfo    *SignInfo                 `json:"-"`
+	Response    *ProfitShareUnsplitAmount `json:"response,omitempty"`
+	ErrResponse ErrResponse               `json:"err_response,omitempty"`
+	Error       string                    `json:"-"`
 }
 
 // 添加分账接收方 Rsp
 type ProfitShareAddReceiverRsp struct {
-	Code     int                     `json:"-"`
-	SignInfo *SignInfo               `json:"-"`
-	Response *ProfitShareAddReceiver `json:"response,omitempty"`
-	Error    string                  `json:"-"`
+	Code        int                     `json:"-"`
+	SignInfo    *SignInfo               `json:"-"`
+	Response    *ProfitShareAddReceiver `json:"response,omitempty"`
+	ErrResponse ErrResponse             `json:"err_response,omitempty"`
+	Error       string                  `json:"-"`
 }
 
 // 删除分账接收方 Rsp
 type ProfitShareDeleteReceiverRsp struct {
-	Code     int                        `json:"-"`
-	SignInfo *SignInfo                  `json:"-"`
-	Response *ProfitShareDeleteReceiver `json:"response,omitempty"`
-	Error    string                     `json:"-"`
+	Code        int                        `json:"-"`
+	SignInfo    *SignInfo                  `json:"-"`
+	Response    *ProfitShareDeleteReceiver `json:"response,omitempty"`
+	ErrResponse ErrResponse                `json:"err_response,omitempty"`
+	Error       string                     `json:"-"`
 }
 
 type ProfitShareMerchantConfigsRsp struct {
-	Code     int                         `json:"-"`
-	SignInfo *SignInfo                   `json:"-"`
-	Response *ProfitShareMerchantConfigs `json:"response,omitempty"`
-	Error    string                      `json:"-"`
+	Code        int                         `json:"-"`
+	SignInfo    *SignInfo                   `json:"-"`
+	Response    *ProfitShareMerchantConfigs `json:"response,omitempty"`
+	ErrResponse ErrResponse                 `json:"err_response,omitempty"`
+	Error       string                      `json:"-"`
 }
 
 // 申请分账账单 Rsp
 type ProfitShareBillsRsp struct {
-	Code     int               `json:"-"`
-	SignInfo *SignInfo         `json:"-"`
-	Response *ProfitShareBills `json:"response,omitempty"`
-	Error    string            `json:"-"`
+	Code        int               `json:"-"`
+	SignInfo    *SignInfo         `json:"-"`
+	Response    *ProfitShareBills `json:"response,omitempty"`
+	ErrResponse ErrResponse       `json:"err_response,omitempty"`
+	Error       string            `json:"-"`
 }
 
 // =========================================================分割=========================================================

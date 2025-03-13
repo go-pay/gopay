@@ -18,7 +18,7 @@ type ClientV3 struct {
 	Mchid         string
 	ApiV3Key      []byte
 	SerialNo      string
-	WxSerialNo    string
+	WxSerialNo    string // 微信支付公钥ID（微信平台证书序列号）
 	proxyHost     string // 代理host地址
 	autoSign      bool
 	hc            *xhttp.Client
@@ -69,6 +69,9 @@ func (c *ClientV3) SetRequestIdFunc(requestIdFunc xhttp.RequestIdHandler) {
 
 // AutoVerifySign 开启请求完自动验签功能（默认不开启，推荐开启）
 // 开启自动验签，自动开启每12小时一次轮询，请求最新证书操作
+// autoRefresh：是否自动刷新证书，默认 true：自动刷新
+// 说明：开启自动验签功能，会自动获取并刷新微信平台证书，并同步验签。
+// 注意：此方法仅支持微信平台证书验签，不支持微信支付公钥验签，如使用微信支付公钥验签请使用 AutoVerifySignByPublicKey() 方法
 func (c *ClientV3) AutoVerifySign(autoRefresh ...bool) (err error) {
 	wxSerialNo, certMap, err := c.GetAndSelectNewestCert()
 	if err != nil {
@@ -94,9 +97,17 @@ func (c *ClientV3) AutoVerifySign(autoRefresh ...bool) (err error) {
 	return nil
 }
 
-// AutoVerifySignByCert 设置 微信公钥证书 和 微信公钥证书ID
+// AutoVerifySignByPublicKey 微信支付公钥自动验签
+// wxPublicKeyContent：微信支付公钥内容[]byte
+// wxPublicKeyID：微信支付公钥ID
+func (c *ClientV3) AutoVerifySignByPublicKey(wxPublicKeyContent []byte, wxPublicKeyID string) (err error) {
+	return c.AutoVerifySignByCert(wxPublicKeyContent, wxPublicKeyID)
+}
+
+// Deprecated
+// AutoVerifySignByCert 微信平台证书自动验签（微信支付公钥验签同样适用）
 // wxPublicKeyContent：微信公钥证书文件内容[]byte
-// wxPublicKeyID：微信公钥证书ID
+// wxPublicKeyID：微信公钥证书ID，即 证书序列号
 func (c *ClientV3) AutoVerifySignByCert(wxPublicKeyContent []byte, wxPublicKeyID string) (err error) {
 	pubKey, err := xpem.DecodePublicKey(wxPublicKeyContent)
 	if err != nil {

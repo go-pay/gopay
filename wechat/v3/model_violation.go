@@ -2,10 +2,11 @@ package wechat
 
 // 创建、查询、更新投诉通知回调地址 Rsp
 type ViolationNotifyUrlRsp struct {
-	Code     int                 `json:"-"`
-	SignInfo *SignInfo           `json:"-"`
-	Response *ViolationNotifyUrl `json:"response,omitempty"`
-	Error    string              `json:"-"`
+	Code        int                 `json:"-"`
+	SignInfo    *SignInfo           `json:"-"`
+	Response    *ViolationNotifyUrl `json:"response,omitempty"`
+	ErrResponse ErrResponse         `json:"err_response,omitempty"`
+	Error       string              `json:"-"`
 }
 
 type ViolationNotifyUrl struct {

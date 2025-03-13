@@ -1,36 +1,38 @@
 package wechat
 
-
 type VehicleParkingQueryRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *VehicleParkingQuery `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *VehicleParkingQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 type VehicleParkingInRsp struct {
-	Code     int               `json:"-"`
-	SignInfo *SignInfo         `json:"-"`
-	Response *VehicleParkingIn `json:"response,omitempty"`
-	Error    string            `json:"-"`
+	Code        int               `json:"-"`
+	SignInfo    *SignInfo         `json:"-"`
+	Response    *VehicleParkingIn `json:"response,omitempty"`
+	ErrResponse ErrResponse       `json:"err_response,omitempty"`
+	Error       string            `json:"-"`
 }
 
 type VehicleParkingFeeRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *VehicleParkingFee `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *VehicleParkingFee `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
 }
 
 type VehicleParkingOrderRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *VehicleParkingOrder `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *VehicleParkingOrder `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 // =========================================================分割=========================================================
-
 
 type VehicleParkingQuery struct {
 	PlateNumber     string `json:"plate_number"` // 车牌号，仅包括省份+车牌，不包括特殊字符。

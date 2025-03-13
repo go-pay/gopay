@@ -1,59 +1,67 @@
 package wechat
 
 type PayGiftActivityCreateRsp struct {
-	Code     int                    `json:"-"`
-	SignInfo *SignInfo              `json:"-"`
-	Response *PayGiftActivityCreate `json:"response,omitempty"`
-	Error    string                 `json:"-"`
+	Code        int                    `json:"-"`
+	SignInfo    *SignInfo              `json:"-"`
+	Response    *PayGiftActivityCreate `json:"response,omitempty"`
+	ErrResponse ErrResponse            `json:"err_response,omitempty"`
+	Error       string                 `json:"-"`
 }
 
 type PayGiftActivityListRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *PayGiftActivityList `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *PayGiftActivityList `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 type PayGiftActivityDetailRsp struct {
-	Code     int                    `json:"-"`
-	SignInfo *SignInfo              `json:"-"`
-	Response *PayGiftActivityDetail `json:"response,omitempty"`
-	Error    string                 `json:"-"`
+	Code        int                    `json:"-"`
+	SignInfo    *SignInfo              `json:"-"`
+	Response    *PayGiftActivityDetail `json:"response,omitempty"`
+	ErrResponse ErrResponse            `json:"err_response,omitempty"`
+	Error       string                 `json:"-"`
 }
 
 type PayGiftActivityGoodsRsp struct {
-	Code     int                   `json:"-"`
-	SignInfo *SignInfo             `json:"-"`
-	Response *PayGiftActivityGoods `json:"response,omitempty"`
-	Error    string                `json:"-"`
+	Code        int                   `json:"-"`
+	SignInfo    *SignInfo             `json:"-"`
+	Response    *PayGiftActivityGoods `json:"response,omitempty"`
+	ErrResponse ErrResponse           `json:"err_response,omitempty"`
+	Error       string                `json:"-"`
 }
 
 type PayGiftActivityTerminateRsp struct {
-	Code     int                       `json:"-"`
-	SignInfo *SignInfo                 `json:"-"`
-	Response *PayGiftActivityTerminate `json:"response,omitempty"`
-	Error    string                    `json:"-"`
+	Code        int                       `json:"-"`
+	SignInfo    *SignInfo                 `json:"-"`
+	Response    *PayGiftActivityTerminate `json:"response,omitempty"`
+	ErrResponse ErrResponse               `json:"err_response,omitempty"`
+	Error       string                    `json:"-"`
 }
 
 type PayGiftActivityMerchantRsp struct {
-	Code     int                      `json:"-"`
-	SignInfo *SignInfo                `json:"-"`
-	Response *PayGiftActivityMerchant `json:"response,omitempty"`
-	Error    string                   `json:"-"`
+	Code        int                      `json:"-"`
+	SignInfo    *SignInfo                `json:"-"`
+	Response    *PayGiftActivityMerchant `json:"response,omitempty"`
+	ErrResponse ErrResponse              `json:"err_response,omitempty"`
+	Error       string                   `json:"-"`
 }
 
 type PayGiftActivityMerchantAddRsp struct {
-	Code     int                         `json:"-"`
-	SignInfo *SignInfo                   `json:"-"`
-	Response *PayGiftActivityMerchantAdd `json:"response,omitempty"`
-	Error    string                      `json:"-"`
+	Code        int                         `json:"-"`
+	SignInfo    *SignInfo                   `json:"-"`
+	Response    *PayGiftActivityMerchantAdd `json:"response,omitempty"`
+	ErrResponse ErrResponse                 `json:"err_response,omitempty"`
+	Error       string                      `json:"-"`
 }
 
 type PayGiftActivityMerchantDeleteRsp struct {
-	Code     int                            `json:"-"`
-	SignInfo *SignInfo                      `json:"-"`
-	Response *PayGiftActivityMerchantDelete `json:"response,omitempty"`
-	Error    string                         `json:"-"`
+	Code        int                            `json:"-"`
+	SignInfo    *SignInfo                      `json:"-"`
+	Response    *PayGiftActivityMerchantDelete `json:"response,omitempty"`
+	ErrResponse ErrResponse                    `json:"err_response,omitempty"`
+	Error       string                         `json:"-"`
 }
 
 // =========================================================分割=========================================================

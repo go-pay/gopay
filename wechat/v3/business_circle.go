@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // 商圈积分同步
@@ -24,6 +25,7 @@ func (c *ClientV3) V3BusinessPointsSync(ctx context.Context, bm gopay.BodyMap) (
 	if res.StatusCode != http.StatusNoContent {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	return wxRsp, c.verifySyncSign(si)
@@ -43,15 +45,15 @@ func (c *ClientV3) V3BusinessAuthPointsQuery(ctx context.Context, openid string,
 	if err != nil {
 		return nil, err
 	}
-	wxRsp := &BusinessAuthPointsQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(BusinessAuthPointsQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &BusinessAuthPointsQueryRsp{Code: Success, SignInfo: si, Response: &BusinessAuthPointsQuery{}}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -70,15 +72,15 @@ func (c *ClientV3) V3BusinessPointsStatusQuery(ctx context.Context, openid strin
 	if err != nil {
 		return nil, err
 	}
-	wxRsp := &BusinessPointsStatusQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(BusinessPointsStatusQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &BusinessPointsStatusQueryRsp{Code: Success, SignInfo: si, Response: &BusinessPointsStatusQuery{}}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -98,6 +100,7 @@ func (c *ClientV3) V3BusinessParkingSync(ctx context.Context, bm gopay.BodyMap) 
 	if res.StatusCode != http.StatusNoContent {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	return wxRsp, c.verifySyncSign(si)

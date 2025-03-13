@@ -2,66 +2,74 @@ package wechat
 
 // 发起转账 Rsp
 type TransferBillsRsp struct {
-	Code     int            `json:"-"`
-	SignInfo *SignInfo      `json:"-"`
-	Response *TransferBills `json:"response,omitempty"`
-	Error    string         `json:"-"`
+	Code        int            `json:"-"`
+	SignInfo    *SignInfo      `json:"-"`
+	Response    *TransferBills `json:"response,omitempty"`
+	ErrResponse ErrResponse    `json:"err_response,omitempty"`
+	Error       string         `json:"-"`
 }
 
 // 发起撤销转账 Rsp
 type TransferBillsCancelRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *TransferBillsCancel `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *TransferBillsCancel `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 // 商户单号查询转账单 Rsp
 type TransferBillsQueryRsp struct {
-	Code     int                 `json:"-"`
-	SignInfo *SignInfo           `json:"-"`
-	Response *TransferBillsQuery `json:"response,omitempty"`
-	Error    string              `json:"-"`
+	Code        int                 `json:"-"`
+	SignInfo    *SignInfo           `json:"-"`
+	Response    *TransferBillsQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse         `json:"err_response,omitempty"`
+	Error       string              `json:"-"`
 }
 
 // 微信单号查询转账单 Rsp
 type TransferBillsMerchantQueryRsp struct {
-	Code     int                         `json:"-"`
-	SignInfo *SignInfo                   `json:"-"`
-	Response *TransferBillsMerchantQuery `json:"response,omitempty"`
-	Error    string                      `json:"-"`
+	Code        int                         `json:"-"`
+	SignInfo    *SignInfo                   `json:"-"`
+	Response    *TransferBillsMerchantQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse                 `json:"err_response,omitempty"`
+	Error       string                      `json:"-"`
 }
 
 // 商户单号申请电子回单 Rsp
 type TransferElecsignMerchantRsp struct {
-	Code     int                       `json:"-"`
-	SignInfo *SignInfo                 `json:"-"`
-	Response *TransferElecsignMerchant `json:"response,omitempty"`
-	Error    string                    `json:"-"`
+	Code        int                       `json:"-"`
+	SignInfo    *SignInfo                 `json:"-"`
+	Response    *TransferElecsignMerchant `json:"response,omitempty"`
+	ErrResponse ErrResponse               `json:"err_response,omitempty"`
+	Error       string                    `json:"-"`
 }
 
 // 商户单号查询电子回单 Rsp
 type TransferElecsignMerchantQueryRsp struct {
-	Code     int                            `json:"-"`
-	SignInfo *SignInfo                      `json:"-"`
-	Response *TransferElecsignMerchantQuery `json:"response,omitempty"`
-	Error    string                         `json:"-"`
+	Code        int                            `json:"-"`
+	SignInfo    *SignInfo                      `json:"-"`
+	Response    *TransferElecsignMerchantQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse                    `json:"err_response,omitempty"`
+	Error       string                         `json:"-"`
 }
 
 // 微信单号申请电子回单 Rsp
 type TransferElecsignRsp struct {
-	Code     int               `json:"-"`
-	SignInfo *SignInfo         `json:"-"`
-	Response *TransferElecsign `json:"response,omitempty"`
-	Error    string            `json:"-"`
+	Code        int               `json:"-"`
+	SignInfo    *SignInfo         `json:"-"`
+	Response    *TransferElecsign `json:"response,omitempty"`
+	ErrResponse ErrResponse       `json:"err_response,omitempty"`
+	Error       string            `json:"-"`
 }
 
 // 微信单号申请电子回单 Rsp
 type TransferElecsignQueryRsp struct {
-	Code     int                    `json:"-"`
-	SignInfo *SignInfo              `json:"-"`
-	Response *TransferElecsignQuery `json:"response,omitempty"`
-	Error    string                 `json:"-"`
+	Code        int                    `json:"-"`
+	SignInfo    *SignInfo              `json:"-"`
+	Response    *TransferElecsignQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse            `json:"err_response,omitempty"`
+	Error       string                 `json:"-"`
 }
 
 // =========================================================分割=========================================================

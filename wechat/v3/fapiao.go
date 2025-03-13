@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // 创建电子发票卡券模板
@@ -27,6 +28,7 @@ func (c *ClientV3) V3InvoiceCardTemplateCreate(ctx context.Context, bm gopay.Bod
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -50,6 +52,7 @@ func (c *ClientV3) V3InvoiceMerchantDevConfig(ctx context.Context, bm gopay.Body
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -73,6 +76,7 @@ func (c *ClientV3) V3InvoiceMerchantDevConfigQuery(ctx context.Context) (*Invoic
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -97,6 +101,7 @@ func (c *ClientV3) V3InvoiceQuery(ctx context.Context, fapiaoApplyId string, bm 
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -124,6 +129,7 @@ func (c *ClientV3) V3InvoiceUserTitleUrl(ctx context.Context, bm gopay.BodyMap) 
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -151,6 +157,7 @@ func (c *ClientV3) V3InvoiceUserTitle(ctx context.Context, bm gopay.BodyMap) (*I
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -174,6 +181,7 @@ func (c *ClientV3) V3InvoiceMerchantBaseInfo(ctx context.Context) (*InvoiceMerch
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -201,6 +209,7 @@ func (c *ClientV3) V3InvoiceMerchantTaxCodes(ctx context.Context, bm gopay.BodyM
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -227,6 +236,7 @@ func (c *ClientV3) V3InvoiceCreate(ctx context.Context, bm gopay.BodyMap) (*Empt
 	if res.StatusCode != http.StatusAccepted {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	return wxRsp, c.verifySyncSign(si)
@@ -251,6 +261,7 @@ func (c *ClientV3) V3InvoiceReverse(ctx context.Context, fapiaoApplyId string, b
 	if res.StatusCode != http.StatusAccepted {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	return wxRsp, c.verifySyncSign(si)
@@ -272,6 +283,7 @@ func (c *ClientV3) V3InvoiceFileUrl(ctx context.Context, fapiaoApplyId string, b
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -307,6 +319,7 @@ func (c *ClientV3) V3InvoiceUploadFile(ctx context.Context, subMchid, fileType, 
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -334,6 +347,7 @@ func (c *ClientV3) V3InvoiceInsertCard(ctx context.Context, fapiaoApplyId string
 	if res.StatusCode != http.StatusAccepted {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	return wxRsp, c.verifySyncSign(si)

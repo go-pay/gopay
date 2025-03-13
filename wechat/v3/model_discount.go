@@ -2,18 +2,20 @@ package wechat
 
 // 预受理领卡请求 Rsp
 type DiscountCardApplyRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *DiscountCardApply `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *DiscountCardApply `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
 }
 
 // 查询先享卡订单 Rsp
 type DiscountCardQueryRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *DiscountCardQuery `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *DiscountCardQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
 }
 
 // =========================================================分割=========================================================

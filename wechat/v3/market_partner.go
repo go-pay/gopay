@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/go-pay/util/js"
 	"net/http"
 
 	"github.com/go-pay/gopay"
@@ -20,15 +21,15 @@ func (c *ClientV3) V3PartnershipsBuild(ctx context.Context, idempotencyKey strin
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &PartnershipsBuildRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(PartnershipsBuild)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &PartnershipsBuildRsp{Code: Success, SignInfo: si, Response: new(PartnershipsBuild)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -44,15 +45,15 @@ func (c *ClientV3) V3PartnershipsTerminate(ctx context.Context, idempotencyKey s
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &PartnershipsTerminateRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(PartnershipsTerminate)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &PartnershipsTerminateRsp{Code: Success, SignInfo: si, Response: new(PartnershipsTerminate)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -69,15 +70,15 @@ func (c *ClientV3) V3PartnershipsList(ctx context.Context, bm gopay.BodyMap) (wx
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &PartnershipsListRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(PartnershipsList)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &PartnershipsListRsp{Code: Success, SignInfo: si, Response: new(PartnershipsList)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }

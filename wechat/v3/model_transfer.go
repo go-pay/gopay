@@ -2,106 +2,119 @@ package wechat
 
 // 发起批量转账 Rsp
 type TransferRsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Response *Transfer `json:"response,omitempty"`
-	Error    string    `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *Transfer   `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // 微信批次单号查询批次单 Rsp
 type TransferQueryRsp struct {
-	Code     int            `json:"-"`
-	SignInfo *SignInfo      `json:"-"`
-	Response *TransferQuery `json:"response,omitempty"`
-	Error    string         `json:"-"`
+	Code        int            `json:"-"`
+	SignInfo    *SignInfo      `json:"-"`
+	Response    *TransferQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse    `json:"err_response,omitempty"`
+	Error       string         `json:"-"`
 }
 
 // 微信批次单号查询批次单（服务商） Rsp
 type PartnerTransferQueryRsp struct {
-	Code     int                   `json:"-"`
-	SignInfo *SignInfo             `json:"-"`
-	Response *PartnerTransferQuery `json:"response,omitempty"`
-	Error    string                `json:"-"`
+	Code        int                   `json:"-"`
+	SignInfo    *SignInfo             `json:"-"`
+	Response    *PartnerTransferQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse           `json:"err_response,omitempty"`
+	Error       string                `json:"-"`
 }
 
 // 微信明细单号查询明细单 Rsp
 type TransferDetailRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *TransferDetailQuery `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *TransferDetailQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 // 微信明细单号查询明细单（服务商） Rsp
 type PartnerTransferDetailRsp struct {
-	Code     int                    `json:"-"`
-	SignInfo *SignInfo              `json:"-"`
-	Response *PartnerTransferDetail `json:"response,omitempty"`
-	Error    string                 `json:"-"`
+	Code        int                    `json:"-"`
+	SignInfo    *SignInfo              `json:"-"`
+	Response    *PartnerTransferDetail `json:"response,omitempty"`
+	ErrResponse ErrResponse            `json:"err_response,omitempty"`
+	Error       string                 `json:"-"`
 }
 
 // 商家批次单号查询批次单 Rsp
 type TransferMerchantQueryRsp struct {
-	Code     int                    `json:"-"`
-	SignInfo *SignInfo              `json:"-"`
-	Response *TransferMerchantQuery `json:"response,omitempty"`
-	Error    string                 `json:"-"`
+	Code        int                    `json:"-"`
+	SignInfo    *SignInfo              `json:"-"`
+	Response    *TransferMerchantQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse            `json:"err_response,omitempty"`
+	Error       string                 `json:"-"`
 }
 
 // 商家批次单号查询批次单（服务商） Rsp
 type PartnerTransferMerchantQueryRsp struct {
-	Code     int                           `json:"-"`
-	SignInfo *SignInfo                     `json:"-"`
-	Response *PartnerTransferMerchantQuery `json:"response,omitempty"`
-	Error    string                        `json:"-"`
+	Code        int                           `json:"-"`
+	SignInfo    *SignInfo                     `json:"-"`
+	Response    *PartnerTransferMerchantQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse                   `json:"err_response,omitempty"`
+	Error       string                        `json:"-"`
 }
 
 // 商家明细单号查询明细单 Rsp
 type TransferMerchantDetailRsp struct {
-	Code     int                     `json:"-"`
-	SignInfo *SignInfo               `json:"-"`
-	Response *TransferMerchantDetail `json:"response,omitempty"`
-	Error    string                  `json:"-"`
+	Code        int                     `json:"-"`
+	SignInfo    *SignInfo               `json:"-"`
+	Response    *TransferMerchantDetail `json:"response,omitempty"`
+	ErrResponse ErrResponse             `json:"err_response,omitempty"`
+	Error       string                  `json:"-"`
 }
 
 // 商家明细单号查询明细单（服务商） Rsp
 type PartnerTransferMerchantDetailRsp struct {
-	Code     int                            `json:"-"`
-	SignInfo *SignInfo                      `json:"-"`
-	Response *PartnerTransferMerchantDetail `json:"response,omitempty"`
-	Error    string                         `json:"-"`
+	Code        int                            `json:"-"`
+	SignInfo    *SignInfo                      `json:"-"`
+	Response    *PartnerTransferMerchantDetail `json:"response,omitempty"`
+	ErrResponse ErrResponse                    `json:"err_response,omitempty"`
+	Error       string                         `json:"-"`
 }
 
 // 转账电子回单申请受理 Rsp
 type TransferReceiptRsp struct {
-	Code     int              `json:"-"`
-	SignInfo *SignInfo        `json:"-"`
-	Response *TransferReceipt `json:"response,omitempty"`
-	Error    string           `json:"-"`
+	Code        int              `json:"-"`
+	SignInfo    *SignInfo        `json:"-"`
+	Response    *TransferReceipt `json:"response,omitempty"`
+	ErrResponse ErrResponse      `json:"err_response,omitempty"`
+	Error       string           `json:"-"`
 }
 
 // 查询转账电子回单 Rsp
 type TransferReceiptQueryRsp struct {
-	Code     int                   `json:"-"`
-	SignInfo *SignInfo             `json:"-"`
-	Response *TransferReceiptQuery `json:"response,omitempty"`
-	Error    string                `json:"-"`
+	Code        int                   `json:"-"`
+	SignInfo    *SignInfo             `json:"-"`
+	Response    *TransferReceiptQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse           `json:"err_response,omitempty"`
+	Error       string                `json:"-"`
 }
 
 // 转账明细电子回单受理 Rsp
 type TransferDetailReceiptRsp struct {
-	Code     int                    `json:"-"`
-	SignInfo *SignInfo              `json:"-"`
-	Response *TransferDetailReceipt `json:"response,omitempty"`
-	Error    string                 `json:"-"`
+	Code        int                    `json:"-"`
+	SignInfo    *SignInfo              `json:"-"`
+	Response    *TransferDetailReceipt `json:"response,omitempty"`
+	ErrResponse ErrResponse            `json:"err_response,omitempty"`
+	Error       string                 `json:"-"`
 }
 
 // 查询转账明细电子回单受理结果 Rsp
 type TransferDetailReceiptQueryRsp struct {
-	Code     int                         `json:"-"`
-	SignInfo *SignInfo                   `json:"-"`
-	Response *TransferDetailReceiptQuery `json:"response,omitempty"`
-	Error    string                      `json:"-"`
+	Code        int                         `json:"-"`
+	SignInfo    *SignInfo                   `json:"-"`
+	Response    *TransferDetailReceiptQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse                 `json:"err_response,omitempty"`
+	Error       string                      `json:"-"`
 }
 
 // =========================================================分割=========================================================
