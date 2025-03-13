@@ -2,122 +2,137 @@ package wechat
 
 // 二级商户进件 Rsp
 type EcommerceApplyRsp struct {
-	Code     int             `json:"-"`
-	SignInfo *SignInfo       `json:"-"`
-	Response *EcommerceApply `json:"response,omitempty"`
-	Error    string          `json:"-"`
+	Code        int             `json:"-"`
+	SignInfo    *SignInfo       `json:"-"`
+	Response    *EcommerceApply `json:"response,omitempty"`
+	ErrResponse ErrResponse     `json:"err_response,omitempty"`
+	Error       string          `json:"-"`
 }
 
 // 查询申请状态 Rsp
 type EcommerceApplyStatusRsp struct {
-	Code     int                   `json:"-"`
-	SignInfo *SignInfo             `json:"-"`
-	Response *EcommerceApplyStatus `json:"response,omitempty"`
-	Error    string                `json:"-"`
+	Code        int                   `json:"-"`
+	SignInfo    *SignInfo             `json:"-"`
+	Response    *EcommerceApplyStatus `json:"response,omitempty"`
+	ErrResponse ErrResponse           `json:"err_response,omitempty"`
+	Error       string                `json:"-"`
 }
 
 // 电商平台预约提现 Rsp
 type EcommerceWithdrawRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *EcommerceWithdraw `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *EcommerceWithdraw `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
 }
 
 // 电商平台查询预约提现状态 Rsp
 type EcommerceWithdrawStatusRsp struct {
-	Code     int                      `json:"-"`
-	SignInfo *SignInfo                `json:"-"`
-	Response *EcommerceWithdrawStatus `json:"response,omitempty"`
-	Error    string                   `json:"-"`
+	Code        int                      `json:"-"`
+	SignInfo    *SignInfo                `json:"-"`
+	Response    *EcommerceWithdrawStatus `json:"response,omitempty"`
+	ErrResponse ErrResponse              `json:"err_response,omitempty"`
+	Error       string                   `json:"-"`
 }
 
 // 请求分账 Rsp
 type EcommerceProfitShareRsp struct {
-	Code     int                   `json:"-"`
-	SignInfo *SignInfo             `json:"-"`
-	Response *EcommerceProfitShare `json:"response,omitempty"`
-	Error    string                `json:"-"`
+	Code        int                   `json:"-"`
+	SignInfo    *SignInfo             `json:"-"`
+	Response    *EcommerceProfitShare `json:"response,omitempty"`
+	ErrResponse ErrResponse           `json:"err_response,omitempty"`
+	Error       string                `json:"-"`
 }
 
 // 查询分账结果 Rsp
 type EcommerceProfitShareQueryRsp struct {
-	Code     int                        `json:"-"`
-	SignInfo *SignInfo                  `json:"-"`
-	Response *EcommerceProfitShareQuery `json:"response,omitempty"`
-	Error    string                     `json:"-"`
+	Code        int                        `json:"-"`
+	SignInfo    *SignInfo                  `json:"-"`
+	Response    *EcommerceProfitShareQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse                `json:"err_response,omitempty"`
+	Error       string                     `json:"-"`
 }
 
 // 请求分账回退 Rsp
 type EcommerceProfitShareReturnRsp struct {
-	Code     int                         `json:"-"`
-	SignInfo *SignInfo                   `json:"-"`
-	Response *EcommerceProfitShareReturn `json:"response,omitempty"`
-	Error    string                      `json:"-"`
+	Code        int                         `json:"-"`
+	SignInfo    *SignInfo                   `json:"-"`
+	Response    *EcommerceProfitShareReturn `json:"response,omitempty"`
+	ErrResponse ErrResponse                 `json:"err_response,omitempty"`
+	Error       string                      `json:"-"`
 }
 
 // 查询分账回退结果 Rsp
 type EcommerceProfitShareReturnResultRsp struct {
-	Code     int                         `json:"-"`
-	SignInfo *SignInfo                   `json:"-"`
-	Response *EcommerceProfitShareReturn `json:"response,omitempty"`
-	Error    string                      `json:"-"`
+	Code        int                         `json:"-"`
+	SignInfo    *SignInfo                   `json:"-"`
+	Response    *EcommerceProfitShareReturn `json:"response,omitempty"`
+	ErrResponse ErrResponse                 `json:"err_response,omitempty"`
+	Error       string                      `json:"-"`
 }
 
 // 完结分账 Rsp
 type EcommerceProfitShareFinishRsp struct {
-	Code     int                         `json:"-"`
-	SignInfo *SignInfo                   `json:"-"`
-	Response *EcommerceProfitShareFinish `json:"response,omitempty"`
-	Error    string                      `json:"-"`
+	Code        int                         `json:"-"`
+	SignInfo    *SignInfo                   `json:"-"`
+	Response    *EcommerceProfitShareFinish `json:"response,omitempty"`
+	ErrResponse ErrResponse                 `json:"err_response,omitempty"`
+	Error       string                      `json:"-"`
 }
 
 // 查询订单剩余待分金额 Rsp
 type EcommerceProfitShareUnsplitAmountRsp struct {
-	Code     int                                `json:"-"`
-	SignInfo *SignInfo                          `json:"-"`
-	Response *EcommerceProfitShareUnsplitAmount `json:"response,omitempty"`
-	Error    string                             `json:"-"`
+	Code        int                                `json:"-"`
+	SignInfo    *SignInfo                          `json:"-"`
+	Response    *EcommerceProfitShareUnsplitAmount `json:"response,omitempty"`
+	ErrResponse ErrResponse                        `json:"err_response,omitempty"`
+	Error       string                             `json:"-"`
 }
 
 // 添加分账接收方 Rsp
 type EcommerceProfitShareAddReceiverRsp struct {
-	Code     int                           `json:"-"`
-	SignInfo *SignInfo                     `json:"-"`
-	Response *EcommerceProfitShareReceiver `json:"response,omitempty"`
-	Error    string                        `json:"-"`
+	Code        int                           `json:"-"`
+	SignInfo    *SignInfo                     `json:"-"`
+	Response    *EcommerceProfitShareReceiver `json:"response,omitempty"`
+	ErrResponse ErrResponse                   `json:"err_response,omitempty"`
+	Error       string                        `json:"-"`
 }
 
 // 删除分账接收方 Rsp
 type EcommerceProfitShareDeleteReceiverRsp struct {
-	Code     int                           `json:"-"`
-	SignInfo *SignInfo                     `json:"-"`
-	Response *EcommerceProfitShareReceiver `json:"response,omitempty"`
-	Error    string                        `json:"-"`
+	Code        int                           `json:"-"`
+	SignInfo    *SignInfo                     `json:"-"`
+	Response    *EcommerceProfitShareReceiver `json:"response,omitempty"`
+	ErrResponse ErrResponse                   `json:"err_response,omitempty"`
+	Error       string                        `json:"-"`
 }
 
 // 请求补差 Rsp
 type EcommerceSubsidiesRsp struct {
-	Code     int                 `json:"-"`
-	SignInfo *SignInfo           `json:"-"`
-	Response *EcommerceSubsidies `json:"response,omitempty"`
-	Error    string              `json:"-"`
+	Code        int                 `json:"-"`
+	SignInfo    *SignInfo           `json:"-"`
+	Response    *EcommerceSubsidies `json:"response,omitempty"`
+	ErrResponse ErrResponse         `json:"err_response,omitempty"`
+	Error       string              `json:"-"`
 }
 
 // 请求补差回退 Rsp
 type EcommerceSubsidiesReturnRsp struct {
-	Code     int                       `json:"-"`
-	SignInfo *SignInfo                 `json:"-"`
-	Response *EcommerceSubsidiesReturn `json:"response,omitempty"`
-	Error    string                    `json:"-"`
+	Code        int                       `json:"-"`
+	SignInfo    *SignInfo                 `json:"-"`
+	Response    *EcommerceSubsidiesReturn `json:"response,omitempty"`
+	ErrResponse ErrResponse               `json:"err_response,omitempty"`
+	Error       string                    `json:"-"`
 }
 
 // 取消补差 Rsp
 type EcommerceSubsidiesCancelRsp struct {
-	Code     int                       `json:"-"`
-	SignInfo *SignInfo                 `json:"-"`
-	Response *EcommerceSubsidiesCancel `json:"response,omitempty"`
-	Error    string                    `json:"-"`
+	Code        int                       `json:"-"`
+	SignInfo    *SignInfo                 `json:"-"`
+	Response    *EcommerceSubsidiesCancel `json:"response,omitempty"`
+	ErrResponse ErrResponse               `json:"err_response,omitempty"`
+	Error       string                    `json:"-"`
 }
 
 // =========================================================分割=========================================================

@@ -6,77 +6,98 @@ type OrderNoType uint8
 // 微信证书类型：RSA、SM2
 type CertType string
 
+type ErrResponse struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+	Detail  struct {
+		Field    string `json:"field"`
+		Value    string `json:"value"`
+		Issue    string `json:"issue"`
+		Location string `json:"location"`
+	} `json:"detail"`
+}
+
 type PlatformCertRsp struct {
-	Code  int                 `json:"-"`
-	Certs []*PlatformCertItem `json:"certs"`
-	Error string              `json:"-"`
+	Code        int                 `json:"-"`
+	Certs       []*PlatformCertItem `json:"certs"`
+	ErrResponse ErrResponse         `json:"err_response,omitempty"`
+	Error       string              `json:"-"`
 }
 
 type EmptyRsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Error    string    `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // 服务人员注册 Rsp
 type SmartGuideRegRsp struct {
-	Code     int            `json:"-"`
-	SignInfo *SignInfo      `json:"-"`
-	Response *SmartGuideReg `json:"response,omitempty"`
-	Error    string         `json:"-"`
+	Code        int            `json:"-"`
+	SignInfo    *SignInfo      `json:"-"`
+	Response    *SmartGuideReg `json:"response,omitempty"`
+	ErrResponse ErrResponse    `json:"err_response,omitempty"`
+	Error       string         `json:"-"`
 }
 
 // 服务人员查询 Rsp
 type SmartGuideQueryRsp struct {
-	Code     int              `json:"-"`
-	SignInfo *SignInfo        `json:"-"`
-	Response *SmartGuideQuery `json:"response,omitempty"`
-	Error    string           `json:"-"`
+	Code        int              `json:"-"`
+	SignInfo    *SignInfo        `json:"-"`
+	Response    *SmartGuideQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse      `json:"err_response,omitempty"`
+	Error       string           `json:"-"`
 }
 
 // 点金计划管理 Rsp
 type GoldPlanManageRsp struct {
-	Code     int             `json:"-"`
-	SignInfo *SignInfo       `json:"-"`
-	Response *GoldPlanManage `json:"response,omitempty"`
-	Error    string          `json:"-"`
+	Code        int             `json:"-"`
+	SignInfo    *SignInfo       `json:"-"`
+	Response    *GoldPlanManage `json:"response,omitempty"`
+	ErrResponse ErrResponse     `json:"err_response,omitempty"`
+	Error       string          `json:"-"`
 }
 
 // 特约商户余额提现 Rsp
 type WithdrawRsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Response *Withdraw `json:"response,omitempty"`
-	Error    string    `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *Withdraw   `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // 查询特约商户提现状态 Rsp
 type WithdrawStatusRsp struct {
-	Code     int             `json:"-"`
-	SignInfo *SignInfo       `json:"-"`
-	Response *WithdrawStatus `json:"response,omitempty"`
-	Error    string          `json:"-"`
+	Code        int             `json:"-"`
+	SignInfo    *SignInfo       `json:"-"`
+	Response    *WithdrawStatus `json:"response,omitempty"`
+	ErrResponse ErrResponse     `json:"err_response,omitempty"`
+	Error       string          `json:"-"`
 }
 
 type EntrustPayNotifyRsp struct {
-	Code     int               `json:"-"`
-	SignInfo *SignInfo         `json:"-"`
-	Response *BankSearchBranch `json:"response,omitempty"`
-	Error    string            `json:"-"`
+	Code        int               `json:"-"`
+	SignInfo    *SignInfo         `json:"-"`
+	Response    *BankSearchBranch `json:"response,omitempty"`
+	ErrResponse ErrResponse       `json:"err_response,omitempty"`
+	Error       string            `json:"-"`
 }
 
 type PalmServicePreAuthorizeRsp struct {
-	Code     int                      `json:"-"`
-	SignInfo *SignInfo                `json:"-"`
-	Response *PalmServicePreAuthorize `json:"response,omitempty"`
-	Error    string                   `json:"-"`
+	Code        int                      `json:"-"`
+	SignInfo    *SignInfo                `json:"-"`
+	Response    *PalmServicePreAuthorize `json:"response,omitempty"`
+	ErrResponse ErrResponse              `json:"err_response,omitempty"`
+	Error       string                   `json:"-"`
 }
 
 type PalmServiceOpenidQueryRsp struct {
-	Code     int                     `json:"-"`
-	SignInfo *SignInfo               `json:"-"`
-	Response *PalmServiceOpenidQuery `json:"response,omitempty"`
-	Error    string                  `json:"-"`
+	Code        int                     `json:"-"`
+	SignInfo    *SignInfo               `json:"-"`
+	Response    *PalmServiceOpenidQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse             `json:"err_response,omitempty"`
+	Error       string                  `json:"-"`
 }
 
 // =========================================================分割=========================================================

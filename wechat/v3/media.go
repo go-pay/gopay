@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/go-pay/util/js"
 	"net/http"
 	"net/url"
 
@@ -53,15 +54,15 @@ func (c *ClientV3) V3MediaUploadImage(ctx context.Context, fileName, fileSha256 
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &MediaUploadRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(MediaUpload)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &MediaUploadRsp{Code: Success, SignInfo: si, Response: new(MediaUpload)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -85,15 +86,15 @@ func (c *ClientV3) V3MediaUploadVideo(ctx context.Context, fileName, fileSha256 
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &MediaUploadRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(MediaUpload)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &MediaUploadRsp{Code: Success, SignInfo: si, Response: new(MediaUpload)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }

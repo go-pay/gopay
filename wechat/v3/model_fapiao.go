@@ -3,73 +3,83 @@ package wechat
 import "time"
 
 type InvoiceCardTemplateCreateRsp struct {
-	Code     int                        `json:"-"`
-	SignInfo *SignInfo                  `json:"-"`
-	Response *InvoiceCardTemplateCreate `json:"response,omitempty"`
-	Error    string                     `json:"-"`
+	Code        int                        `json:"-"`
+	SignInfo    *SignInfo                  `json:"-"`
+	Response    *InvoiceCardTemplateCreate `json:"response,omitempty"`
+	ErrResponse ErrResponse                `json:"err_response,omitempty"`
+	Error       string                     `json:"-"`
 }
 
 type InvoiceMerchantDevConfigRsp struct {
-	Code     int                       `json:"-"`
-	SignInfo *SignInfo                 `json:"-"`
-	Response *InvoiceMerchantDevConfig `json:"response,omitempty"`
-	Error    string                    `json:"-"`
+	Code        int                       `json:"-"`
+	SignInfo    *SignInfo                 `json:"-"`
+	Response    *InvoiceMerchantDevConfig `json:"response,omitempty"`
+	ErrResponse ErrResponse               `json:"err_response,omitempty"`
+	Error       string                    `json:"-"`
 }
 
 type InvoiceMerchantDevConfigQueryRsp struct {
-	Code     int                            `json:"-"`
-	SignInfo *SignInfo                      `json:"-"`
-	Response *InvoiceMerchantDevConfigQuery `json:"response,omitempty"`
-	Error    string                         `json:"-"`
+	Code        int                            `json:"-"`
+	SignInfo    *SignInfo                      `json:"-"`
+	Response    *InvoiceMerchantDevConfigQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse                    `json:"err_response,omitempty"`
+	Error       string                         `json:"-"`
 }
 
 type InvoiceQueryRsp struct {
-	Code     int           `json:"-"`
-	SignInfo *SignInfo     `json:"-"`
-	Response *InvoiceQuery `json:"response,omitempty"`
-	Error    string        `json:"-"`
+	Code        int           `json:"-"`
+	SignInfo    *SignInfo     `json:"-"`
+	Response    *InvoiceQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse   `json:"err_response,omitempty"`
+	Error       string        `json:"-"`
 }
 
 type InvoiceUserTitleUrlRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *InvoiceUserTitleUrl `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *InvoiceUserTitleUrl `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 type InvoiceUserTitleRsp struct {
-	Code     int               `json:"-"`
-	SignInfo *SignInfo         `json:"-"`
-	Response *InvoiceUserTitle `json:"response,omitempty"`
-	Error    string            `json:"-"`
+	Code        int               `json:"-"`
+	SignInfo    *SignInfo         `json:"-"`
+	Response    *InvoiceUserTitle `json:"response,omitempty"`
+	ErrResponse ErrResponse       `json:"err_response,omitempty"`
+	Error       string            `json:"-"`
 }
 
 type InvoiceMerchantBaseInfoRsp struct {
-	Code     int                      `json:"-"`
-	SignInfo *SignInfo                `json:"-"`
-	Response *InvoiceMerchantBaseInfo `json:"response,omitempty"`
-	Error    string                   `json:"-"`
+	Code        int                      `json:"-"`
+	SignInfo    *SignInfo                `json:"-"`
+	Response    *InvoiceMerchantBaseInfo `json:"response,omitempty"`
+	ErrResponse ErrResponse              `json:"err_response,omitempty"`
+	Error       string                   `json:"-"`
 }
 
 type InvoiceMerchantTaxCodesRsp struct {
-	Code     int                      `json:"-"`
-	SignInfo *SignInfo                `json:"-"`
-	Response *InvoiceMerchantTaxCodes `json:"response,omitempty"`
-	Error    string                   `json:"-"`
+	Code        int                      `json:"-"`
+	SignInfo    *SignInfo                `json:"-"`
+	Response    *InvoiceMerchantTaxCodes `json:"response,omitempty"`
+	ErrResponse ErrResponse              `json:"err_response,omitempty"`
+	Error       string                   `json:"-"`
 }
 
 type InvoiceFileUrlRsp struct {
-	Code     int             `json:"-"`
-	SignInfo *SignInfo       `json:"-"`
-	Response *InvoiceFileUrl `json:"response,omitempty"`
-	Error    string          `json:"-"`
+	Code        int             `json:"-"`
+	SignInfo    *SignInfo       `json:"-"`
+	Response    *InvoiceFileUrl `json:"response,omitempty"`
+	ErrResponse ErrResponse     `json:"err_response,omitempty"`
+	Error       string          `json:"-"`
 }
 
 type InvoiceUploadFileRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *InvoiceUploadFile `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *InvoiceUploadFile `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
 }
 
 // =========================================================分割=========================================================

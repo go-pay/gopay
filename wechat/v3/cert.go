@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/go-pay/util/js"
 	"net/http"
 	"runtime"
 	"sort"
@@ -112,6 +113,7 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 	}
 	certs = &PlatformCertRsp{Code: Success}
 	if res.StatusCode != http.StatusOK {
+		_ = js.UnmarshalBytes(bs, &certs.ErrResponse)
 		certs.Code = res.StatusCode
 		certs.Error = string(bs)
 		return certs, nil
