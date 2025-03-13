@@ -18,9 +18,9 @@ var (
 	ctx               = context.Background()
 	client            *ClientV3
 	err               error
-	MchId             = "1641941819"
-	APIv3Key          = "adcgbhkml123456jgfdcjuiljgfdcjil"
-	SerialNo          = "1D56C05A325661584D099182BABF59C62A24626C"
+	MchId             = ""
+	APIv3Key          = ""
+	SerialNo          = ""
 	PrivateKeyContent = `-----BEGIN PRIVATE KEY-----
 MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4mfL8EmLG9Qo9
 EHo17xL8pW3dxRPS3xjUnvt4FKobzqXgO/6FFs23yMisw5GGKQcp0iLJ3nUmuex3
@@ -63,15 +63,19 @@ func TestMain(m *testing.M) {
 		return
 	}
 
-	// 设置微信平台证书和序列号，如开启自动验签，请忽略此步骤
-	//client.SetPlatformCert([]byte(""), "")
-
-	// 启用自动同步返回验签，并定时更新微信平台API证书
-	err = client.AutoVerifySign()
+	// 注意：以下两种自动验签方式二选一
+	// 微信支付公钥自动同步验签（新微信支付用户推荐）
+	err = client.AutoVerifySignByPublicKey([]byte("微信支付公钥内容"), "微信支付公钥ID")
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
+	//// 微信平台证书自动获取证书+同步验签（并自动定时更新微信平台API证书）
+	//err = client.AutoVerifySign()
+	//if err != nil {
+	//	xlog.Error(err)
+	//	return
+	//}
 
 	// 打开Debug开关，输出日志
 	client.DebugSwitch = gopay.DebugOff
@@ -80,7 +84,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetPlatformCertsWithoutClient(t *testing.T) {
-	certs, err := GetPlatformCerts(ctx, MchId, APIv3Key, SerialNo, PrivateKeyContent, "as")
+	certs, err := GetPlatformCerts(ctx, MchId, APIv3Key, SerialNo, PrivateKeyContent, CertTypeALL)
 	if err != nil {
 		xlog.Error(err)
 		return

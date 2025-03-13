@@ -10,7 +10,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/go-pay/util/js"
 	"net/http"
 	"runtime"
 	"sort"
@@ -25,6 +24,7 @@ import (
 	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/util"
 	"github.com/go-pay/util/convert"
+	"github.com/go-pay/util/js"
 	"github.com/go-pay/util/retry"
 	"github.com/go-pay/xtime"
 )
