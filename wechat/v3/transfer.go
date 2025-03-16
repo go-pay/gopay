@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // 发起商家转账API
@@ -21,16 +22,15 @@ func (c *ClientV3) V3Transfer(ctx context.Context, bm gopay.BodyMap) (*TransferR
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &TransferRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(Transfer)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &TransferRsp{Code: Success, SignInfo: si, Response: new(Transfer)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -47,16 +47,15 @@ func (c *ClientV3) V3PartnerTransfer(ctx context.Context, bm gopay.BodyMap) (*Tr
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &TransferRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(Transfer)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &TransferRsp{Code: Success, SignInfo: si, Response: new(Transfer)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -75,16 +74,15 @@ func (c *ClientV3) V3TransferQuery(ctx context.Context, batchId string, bm gopay
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &TransferQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(TransferQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &TransferQueryRsp{Code: Success, SignInfo: si, Response: new(TransferQuery)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -103,16 +101,15 @@ func (c *ClientV3) V3PartnerTransferQuery(ctx context.Context, batchId string, b
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &PartnerTransferQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(PartnerTransferQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &PartnerTransferQueryRsp{Code: Success, SignInfo: si, Response: new(PartnerTransferQuery)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -129,16 +126,15 @@ func (c *ClientV3) V3TransferDetail(ctx context.Context, batchId, detailId strin
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &TransferDetailRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(TransferDetailQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &TransferDetailRsp{Code: Success, SignInfo: si, Response: new(TransferDetailQuery)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -155,24 +151,17 @@ func (c *ClientV3) V3PartnerTransferDetail(ctx context.Context, batchId, detailI
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &PartnerTransferDetailRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(PartnerTransferDetail)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &PartnerTransferDetailRsp{Code: Success, SignInfo: si, Response: new(PartnerTransferDetail)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
 	return wxRsp, c.verifySyncSign(si)
-}
-
-// Deprecated
-// 推荐直接使用 client.V3TransferDetail() 方法
-func (c *ClientV3) V3TransferDetailQuery(ctx context.Context, batchId, detailId string) (*TransferDetailRsp, error) {
-	return c.V3TransferDetail(ctx, batchId, detailId)
 }
 
 // 通过商家批次单号查询批次单
@@ -189,16 +178,15 @@ func (c *ClientV3) V3TransferMerchantQuery(ctx context.Context, outBatchNo strin
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &TransferMerchantQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(TransferMerchantQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &TransferMerchantQueryRsp{Code: Success, SignInfo: si, Response: new(TransferMerchantQuery)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -217,16 +205,15 @@ func (c *ClientV3) V3PartnerTransferMerchantQuery(ctx context.Context, outBatchN
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &PartnerTransferMerchantQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(PartnerTransferMerchantQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &PartnerTransferMerchantQueryRsp{Code: Success, SignInfo: si, Response: new(PartnerTransferMerchantQuery)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -243,16 +230,15 @@ func (c *ClientV3) V3TransferMerchantDetail(ctx context.Context, outBatchNo, out
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &TransferMerchantDetailRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(TransferMerchantDetail)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &TransferMerchantDetailRsp{Code: Success, SignInfo: si, Response: new(TransferMerchantDetail)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -269,16 +255,15 @@ func (c *ClientV3) V3PartnerTransferMerchantDetail(ctx context.Context, outBatch
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &PartnerTransferMerchantDetailRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(PartnerTransferMerchantDetail)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &PartnerTransferMerchantDetailRsp{Code: Success, SignInfo: si, Response: new(PartnerTransferMerchantDetail)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -288,7 +273,6 @@ func (c *ClientV3) V3PartnerTransferMerchantDetail(ctx context.Context, outBatch
 func (c *ClientV3) V3TransferReceipt(ctx context.Context, outBatchNo string) (*TransferReceiptRsp, error) {
 	bm := make(gopay.BodyMap)
 	bm.Set("out_batch_no", outBatchNo)
-
 	authorization, err := c.authorization(MethodPost, v3TransferReceipt, bm)
 	if err != nil {
 		return nil, err
@@ -297,16 +281,15 @@ func (c *ClientV3) V3TransferReceipt(ctx context.Context, outBatchNo string) (*T
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &TransferReceiptRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(TransferReceipt)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &TransferReceiptRsp{Code: Success, SignInfo: si, Response: new(TransferReceipt)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -323,16 +306,15 @@ func (c *ClientV3) V3TransferReceiptQuery(ctx context.Context, outBatchNo string
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &TransferReceiptQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(TransferReceiptQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &TransferReceiptQueryRsp{Code: Success, SignInfo: si, Response: new(TransferReceiptQuery)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -348,16 +330,15 @@ func (c *ClientV3) V3TransferDetailReceipt(ctx context.Context, bm gopay.BodyMap
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &TransferDetailReceiptRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(TransferDetailReceipt)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &TransferDetailReceiptRsp{Code: Success, SignInfo: si, Response: new(TransferDetailReceipt)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -374,16 +355,15 @@ func (c *ClientV3) V3TransferDetailReceiptQuery(ctx context.Context, bm gopay.Bo
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &TransferDetailReceiptQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(TransferDetailReceiptQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &TransferDetailReceiptQueryRsp{Code: Success, SignInfo: si, Response: new(TransferDetailReceiptQuery)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }

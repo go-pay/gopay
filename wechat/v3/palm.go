@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // 用户自主录掌&预授权
@@ -24,6 +25,7 @@ func (c *ClientV3) V3PalmServicePreAuthorize(ctx context.Context, bm gopay.BodyM
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
@@ -48,6 +50,7 @@ func (c *ClientV3) V3PalmServiceOpenidQuery(ctx context.Context, openid string, 
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {

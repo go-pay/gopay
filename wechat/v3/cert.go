@@ -24,6 +24,7 @@ import (
 	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/util"
 	"github.com/go-pay/util/convert"
+	"github.com/go-pay/util/js"
 	"github.com/go-pay/util/retry"
 	"github.com/go-pay/xtime"
 )
@@ -112,6 +113,7 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 	}
 	certs = &PlatformCertRsp{Code: Success}
 	if res.StatusCode != http.StatusOK {
+		_ = js.UnmarshalBytes(bs, &certs.ErrResponse)
 		certs.Code = res.StatusCode
 		certs.Error = string(bs)
 		return certs, nil

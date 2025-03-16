@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // 图片上传（营销专用）
@@ -28,15 +29,15 @@ func (c *ClientV3) V3FavorMediaUploadImage(ctx context.Context, fileName, fileSh
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &MarketMediaUploadRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(MarketMediaUpload)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &MarketMediaUploadRsp{Code: Success, SignInfo: si, Response: new(MarketMediaUpload)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }

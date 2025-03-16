@@ -2,18 +2,20 @@ package wechat
 
 // 商圈积分授权查询 Rsp
 type BusinessAuthPointsQueryRsp struct {
-	Code     int                      `json:"-"`
-	SignInfo *SignInfo                `json:"-"`
-	Response *BusinessAuthPointsQuery `json:"response,omitempty"`
-	Error    string                   `json:"-"`
+	Code        int                      `json:"-"`
+	SignInfo    *SignInfo                `json:"-"`
+	Response    *BusinessAuthPointsQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse              `json:"err_response,omitempty"`
+	Error       string                   `json:"-"`
 }
 
 // 商圈会员待积分状态查询 Rsp
 type BusinessPointsStatusQueryRsp struct {
-	Code     int                        `json:"-"`
-	SignInfo *SignInfo                  `json:"-"`
-	Response *BusinessPointsStatusQuery `json:"response,omitempty"`
-	Error    string                     `json:"-"`
+	Code        int                        `json:"-"`
+	SignInfo    *SignInfo                  `json:"-"`
+	Response    *BusinessPointsStatusQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse                `json:"err_response,omitempty"`
+	Error       string                     `json:"-"`
 }
 
 // =========================================================分割=========================================================
