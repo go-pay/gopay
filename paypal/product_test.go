@@ -1,6 +1,6 @@
 // Package paypal
 // Copyright 2025 Giga Inc. All Rights Reserved
-// Author: 刘静修 <jingxiu.liu@gigaai.cc>
+// Author: Stuart <stuartjing@sina.com>
 // Date: 2025/3/4
 /*
    DESCRIPTION: xx
