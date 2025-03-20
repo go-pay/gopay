@@ -9,8 +9,10 @@ import (
 	"github.com/go-pay/gopay"
 )
 
+type HeaderKeyType string
+
 const (
-	PreferHeaderKey = "Prefer"
+	PreferHeaderKey HeaderKeyType = "Prefer"
 )
 
 func (c *Client) doPayPalGet(ctx context.Context, uri string) (res *http.Response, bs []byte, err error) {
@@ -138,7 +140,7 @@ func (c *Client) setPaypalHeader(ctx context.Context, req *xhttp.Request) {
 	// 尝试从 context 中获取数据 paypal 的返回格式设定
 	if value := ctx.Value(PreferHeaderKey); value != nil {
 		if prefer, ok := value.(string); ok {
-			req.Header.Add(PreferHeaderKey, prefer)
+			req.Header.Add(string(PreferHeaderKey), prefer)
 		}
 	}
 }
