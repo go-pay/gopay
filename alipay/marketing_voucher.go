@@ -9,7 +9,6 @@ import (
 )
 
 // alipay.marketing.material.image.upload(营销图片资源上传接口)
-// bm参数中 file_content 可不传，file为必传参数
 // 文档地址：https://opendocs.alipay.com/open/389b24b6_alipay.marketing.material.image.upload
 func (a *Client) MarketingMaterialImageUpload(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingMaterialImageUploadRsp, err error) {
 	if err = bm.CheckEmptyError("file_key", "file_content"); err != nil {
