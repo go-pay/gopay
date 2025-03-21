@@ -10,6 +10,7 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
+	"net/textproto"
 	"net/url"
 	"sort"
 	"strings"
@@ -169,21 +170,40 @@ func (r *Request) EndBytesForAlipayV3(ctx context.Context) (res *http.Response, 
 			}
 		case TypeMultipartFormData:
 			for k, v := range r.multipartBodyMap {
-				// file 参数
+				// file_content 参数
 				if file, ok := v.(*gopay.File); ok {
 					fw, e := bw.CreateFormFile(k, file.Name)
 					if e != nil {
 						return nil, nil, e
 					}
 					_, _ = fw.Write(file.Content)
+
+					//h := make(textproto.MIMEHeader)
+					//h.Set("Content-Disposition",
+					//	fmt.Sprintf(`form-data; name="%s"; filename="%s"`,
+					//		escapeQuotes(k), escapeQuotes(file.Name)))
+					//h.Set("Content-Type", "application/octet-stream")
+					//part, e := bw.CreatePart(h)
+					//if e != nil {
+					//	return nil, nil, e
+					//}
+					//_, _ = part.Write(file.Content)
 					continue
 				}
-				// text 参数
+
+				// text 参数 data
+				h := make(textproto.MIMEHeader)
+				h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"`, escapeQuotes(k)))
+				h.Set("Content-Type", "application/json")
+				part, e := bw.CreatePart(h)
+				if e != nil {
+					return nil, nil, e
+				}
 				switch vs := v.(type) {
 				case string:
-					_ = bw.WriteField(k, vs)
+					_, _ = part.Write([]byte(vs))
 				default:
-					_ = bw.WriteField(k, ConvertToString(v))
+					_, _ = part.Write([]byte(ConvertToString(v)))
 				}
 			}
 			_ = bw.Close()

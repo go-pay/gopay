@@ -67,15 +67,6 @@ func (bm BodyMap) GetString(key string) string {
 	return v
 }
 
-// Deprecated
-// 推荐使用 GetAny()
-func (bm BodyMap) GetInterface(key string) any {
-	if bm == nil {
-		return nil
-	}
-	return bm[key]
-}
-
 // 获取原始参数
 func (bm BodyMap) GetAny(key string) any {
 	if bm == nil {
@@ -250,6 +241,14 @@ func (bm BodyMap) CheckNotAllEmptyError(keys ...string) error {
 		return fmt.Errorf("[%w], %v", MissParamErr, strings.Join(emptyKeys, ", "))
 	}
 	return nil
+}
+
+func (bm BodyMap) Range(f func(k string, v any) bool) {
+	for k, v := range bm {
+		if !f(k, v) {
+			break
+		}
+	}
 }
 
 func convertToString(v any) (str string) {
