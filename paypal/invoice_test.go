@@ -18,7 +18,7 @@ import (
 func TestClient_InvoiceCreate(t *testing.T) {
 
 	type args struct {
-		header        string
+		header        HeaderKeyType
 		headerContext string
 		body          gopay.BodyMap
 	}
@@ -172,7 +172,7 @@ func TestClient_InvoiceCreate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			newCtx := context.Background()
 			if len(tt.args.header) > 0 {
-				client.SetRequestHeader(tt.args.header)
+				client.SetRequestHeader(string(tt.args.header))
 				newCtx = context.WithValue(newCtx, tt.args.header, tt.args.headerContext)
 			}
 			got, err := client.InvoiceCreate(newCtx, tt.args.body)
