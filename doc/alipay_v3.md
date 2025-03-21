@@ -243,5 +243,11 @@ return c.String(http.StatusOK, "success")
   * 手机号三要素核验详版：`client.MobileThreeMetaDetailCheck()`
   * 服务端OCR：`client.OcrServerDetect()`
   * App端OCR初始化：`client.OcrMobileInitialize()`
+* <font color='#027AFF' size='4'>推广计划</font>
+  * 创建推广计划：`client.MarketingActivityDeliveryCreate()`
+  * 查询推广计划：`client.MarketingActivityDeliveryQuery()`
+  * 停止推广计划：`client.MarketingActivityDeliveryStop()`
+* <font color='#027AFF' size='4'>图片素材</font>
+  * 营销图片资源上传接口：`client.MarketingMaterialImageUpload()`
 
 ### 支付宝公共 API
