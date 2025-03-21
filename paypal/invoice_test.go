@@ -18,8 +18,9 @@ import (
 func TestClient_InvoiceCreate(t *testing.T) {
 
 	type args struct {
-		header string
-		body   gopay.BodyMap
+		header        string
+		headerContext string
+		body          gopay.BodyMap
 	}
 	tests := []struct {
 		name    string
@@ -27,9 +28,9 @@ func TestClient_InvoiceCreate(t *testing.T) {
 		wantErr bool
 	}{
 		{name: "001-发票创建-with header",
-			args: args{header: "return=representation", body: gopay.BodyMap{
+			args: args{header: "Prefer", headerContext: "return=representation", body: gopay.BodyMap{
 				"detail": map[string]any{
-					"invoice_number": "INV-202503141441011",
+					"invoice_number": "INV-202503141441412", // 注意每次提交保证num不一致
 					"reference":      "",
 					"invoice_date":   "2025-03-17",
 					"currency_code":  "USD",
@@ -50,7 +51,6 @@ func TestClient_InvoiceCreate(t *testing.T) {
 						"country_code":   "US",
 					},
 					"email_address": "xxxx@business.example.com",
-					"logo_url":      "xxxx",
 				},
 				"items": []map[string]any{map[string]any{
 					"name": "product vip member 1",
@@ -100,7 +100,7 @@ func TestClient_InvoiceCreate(t *testing.T) {
 		{name: "002-发票创建-without header",
 			args: args{header: "", body: gopay.BodyMap{
 				"detail": map[string]any{
-					"invoice_number": "INV-202503141441020",
+					"invoice_number": "INV-202503141441021", // 注意每次提交保证num不一致
 					"reference":      "",
 					"invoice_date":   "2025-03-17",
 					"currency_code":  "USD",
@@ -121,7 +121,6 @@ func TestClient_InvoiceCreate(t *testing.T) {
 						"country_code":   "US",
 					},
 					"email_address": "xxxx@business.example.com",
-					"logo_url":      "vvv",
 				},
 				"items": []map[string]any{map[string]any{
 					"name": "product vip member 1",
@@ -173,7 +172,8 @@ func TestClient_InvoiceCreate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			newCtx := context.Background()
 			if len(tt.args.header) > 0 {
-				newCtx = context.WithValue(newCtx, PreferHeaderKey, tt.args.header)
+				client.SetRequestHeader(tt.args.header)
+				newCtx = context.WithValue(newCtx, tt.args.header, tt.args.headerContext)
 			}
 			got, err := client.InvoiceCreate(newCtx, tt.args.body)
 			fmt.Println(got, err)

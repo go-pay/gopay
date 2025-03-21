@@ -11,10 +11,6 @@ import (
 
 type HeaderKeyType string
 
-const (
-	PreferHeaderKey HeaderKeyType = "Prefer"
-)
-
 func (c *Client) doPayPalGet(ctx context.Context, uri string) (res *http.Response, bs []byte, err error) {
 	var url = c.baseUrlProd + uri
 	if !c.IsProd {
@@ -137,10 +133,19 @@ func (c *Client) doPayPalDelete(ctx context.Context, path string) (res *http.Res
 func (c *Client) setPaypalHeader(ctx context.Context, req *xhttp.Request) {
 	req.Header.Add(HeaderAuthorization, AuthorizationPrefixBearer+c.AccessToken)
 	req.Header.Add("Accept", "*/*")
-	// 尝试从 context 中获取数据 paypal 的返回格式设定
-	if value := ctx.Value(PreferHeaderKey); value != nil {
-		if prefer, ok := value.(string); ok {
-			req.Header.Add(string(PreferHeaderKey), prefer)
+
+	// 尝试从 context 中获取header 如果数据为空则不设置
+	if len(c.headerKeyMap) > 0 {
+		for key := range c.headerKeyMap {
+			if value := ctx.Value(key); value != nil {
+				if _, ok := value.(string); ok {
+					if len(value.(string)) > 0 {
+						req.Header.Add(key, value.(string))
+					}
+				}
+			}
 		}
+
 	}
+
 }
