@@ -11,8 +11,9 @@ package paypal
 import (
 	"context"
 	"fmt"
-	"github.com/go-pay/gopay"
 	"testing"
+
+	"github.com/go-pay/gopay"
 )
 
 func TestClient_InvoiceCreate(t *testing.T) {

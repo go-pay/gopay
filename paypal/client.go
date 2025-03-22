@@ -124,7 +124,7 @@ func (c *Client) SetRequestHeader(key string, defaultVal ...string) {
 	}
 }
 
-// CleanRequestHeader 清理自定义的header
-func (c *Client) CleanRequestHeader() {
+// ClearRequestHeader 清理自定义的header
+func (c *Client) ClearRequestHeader() {
 	c.headerKeyMap = make(map[string]string)
 }

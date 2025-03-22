@@ -3,10 +3,10 @@ package paypal
 import (
 	"context"
 	"encoding/json"
-	"github.com/go-pay/gopay/pkg/xhttp"
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/pkg/xhttp"
 )
 
 type HeaderKeyType string
