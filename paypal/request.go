@@ -131,21 +131,19 @@ func (c *Client) doPayPalDelete(ctx context.Context, path string) (res *http.Res
 
 // setPaypalHeader 给paypal设定header  可以增加paypal的一些指定的header 示例： 'Prefer': 'return=representation',
 func (c *Client) setPaypalHeader(ctx context.Context, req *xhttp.Request) {
-	req.Header.Add(HeaderAuthorization, AuthorizationPrefixBearer+c.AccessToken)
-	req.Header.Add("Accept", "*/*")
+	req.Header.Set(HeaderAuthorization, AuthorizationPrefixBearer+c.AccessToken)
+	req.Header.Set("Accept", "*/*")
 
 	// 尝试从 context 中获取header 如果数据为空则不设置
 	if len(c.headerKeyMap) > 0 {
-		for key := range c.headerKeyMap {
-			if value := ctx.Value(key); value != nil {
-				if _, ok := value.(string); ok {
-					if len(value.(string)) > 0 {
-						req.Header.Add(key, value.(string))
-					}
+		for headerKey, defaultVal := range c.headerKeyMap {
+			req.Header.Set(headerKey, defaultVal)
+			if value := ctx.Value(headerKey); value != nil {
+				// 存在自定义，则覆盖默认值
+				if v, ok := value.(string); ok && v != "" {
+					req.Header.Set(headerKey, v)
 				}
 			}
 		}
-
 	}
-
 }
