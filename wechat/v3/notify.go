@@ -342,15 +342,6 @@ func V3ParseNotify(req *http.Request) (notifyReq *V3NotifyReq, err error) {
 	return notifyReq, nil
 }
 
-// Deprecated
-// 推荐使用 VerifySignByPK()
-func (v *V3NotifyReq) VerifySign(wxPkContent string) (err error) {
-	if v.SignInfo != nil {
-		return V3VerifySign(v.SignInfo.HeaderTimestamp, v.SignInfo.HeaderNonce, v.SignInfo.SignBody, v.SignInfo.HeaderSignature, wxPkContent)
-	}
-	return errors.New("verify notify sign, bug SignInfo is nil")
-}
-
 // 异步通知验签
 // wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKeyMap() 获取，然后根据 signInfo.HeaderSerial 获取相应的公钥
 // 推荐使用 VerifySignByPKMap()

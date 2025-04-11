@@ -14,32 +14,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-pay/crypto/xpem"
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/util"
 	"github.com/go-pay/util/convert"
 )
 
-// Deprecated
-// 推荐使用 wechat.V3VerifySignByPK()
-func V3VerifySign(timestamp, nonce, signBody, sign, wxPubKeyContent string) (err error) {
-	publicKey, err := xpem.DecodePublicKey([]byte(wxPubKeyContent))
-	if err != nil {
-		return err
-	}
-	str := timestamp + "\n" + nonce + "\n" + signBody + "\n"
-	signBytes, _ := base64.StdEncoding.DecodeString(sign)
-
-	sum256 := sha256.Sum256([]byte(str))
-	if err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, sum256[:], signBytes); err != nil {
-		return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, err)
-	}
-	return nil
-}
-
 // 推荐直接开启自动同步验签功能
 // 微信V3 版本验签（同步）
-// wxPublicKey：微信平台证书公钥内容，通过 client.WxPublicKeyMap() 获取，然后根据 signInfo.HeaderSerial 获取相应的公钥
+// wxPublicKey：微信平台证书公钥 或 微信支付公钥
 func V3VerifySignByPK(timestamp, nonce, signBody, sign string, wxPublicKey *rsa.PublicKey) (err error) {
 	if wxPublicKey == nil || wxPublicKey.N == nil {
 		return fmt.Errorf("[%w]: %v", gopay.VerifySignatureErr, "wxPublicKey is nil")
@@ -271,6 +253,12 @@ func (c *ClientV3) verifySyncSign(si *SignInfo) (err error) {
 
 	wxPublicKey, exist := c.SnCertMap.Load(si.HeaderSerial)
 	if !exist {
+		// 如果 Wechatpay-Serial 以 PUB_KEY_ID 开头，表示是微信支付公钥
+		if strings.HasPrefix(si.HeaderSerial, "PUB_KEY_ID") {
+			// 直接报错，提示用户设置 微信支付公钥
+			return errors.New("auto verify sign, but wxPublicKey is nil, please call client.AutoVerifySignByPublicKey() set wxPublicKey and wxPublicKeyID")
+		}
+		// 老微信平台证书用户，尝试获取重新获取一次平台证书
 		err = c.AutoVerifySign(false)
 		if err != nil {
 			return fmt.Errorf("[get all public key err]: %v", err)
