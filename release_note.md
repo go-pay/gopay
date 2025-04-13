@@ -1,3 +1,10 @@
+## 版本号：v1.5.111
+
+* 修改记录：
+  * 微信V3：删除废弃的 wechat.V3VerifySign()、notify.VerifySign() 函数和方法。
+  * 微信V3：client.verifySyncSign() 私有方法优化，证书没找到时，如果是微信支付公钥模式，直接返回报错。
+  * 
+
 ## 版本号：v1.5.110
 
 * 修改记录：
