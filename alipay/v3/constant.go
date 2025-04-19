@@ -129,4 +129,5 @@ const (
 	v3DataDataserviceAdConsumehistoryQuery            = "/v3/alipay/data/dataservice/ad/consumehistory/query"            // POST 消费明细查询接口
 	v3DataDataserviceProductLandinginfoCreateOrModify = "/v3/alipay/data/dataservice/product/landinginfo/createormodify" // POST 商品落地页信息创建或更新
 	v3DataDataserviceProductLandinginfoQuery          = "/v3/alipay/data/dataservice/product/landinginfo/query"          // POST 商品落地页信息查询
+	v3DataDataserviceAdAgentreportdataQuery           = "/v3/alipay/data/dataservice/ad/agentreportdata/query"           // POST 广告投放数据代理商查询
 )
