@@ -102,6 +102,13 @@ const (
 	// 公域-经营推广-推广计划
 	v3MarketingMaterialImageUpload = "/v3/alipay/marketing/material/image" // POST 营销图片资源上传接口
 
+	// 营销
+	v3MarketingCampaignCashCreate       = "/v3/alipay/marketing/campaign/cash/create"        // POST 创建现金活动
+	v3MarketingCampaignCashTrigger      = "/v3/alipay/marketing/campaign/cash/trigger"       // POST 触发现金红包
+	v3MarketingCampaignCashStatusModify = "/v3/alipay/marketing/campaign/cash/status/modify" // POST 更改现金活动状态
+	v3MarketingCampaignCashListQuery    = "/v3/alipay/marketing/campaign/cash/list/query"    // POST 现金活动列表查询
+	v3MarketingCampaignCashDetailQuery  = "/v3/alipay/marketing/campaign/cash/detail/query"  // POST 现金活动详情查询
+
 	// 信用-芝麻go
 	v3ZmGoPreorderCreate       = "/v3/zhima/credit/pe/zmgo/preorder/create"  // PUT 芝麻GO签约预创单接口
 	v3ZmGoCumulateSync         = "/v3/zhima/merchant/zmgo/cumulate/sync"     // POST 商家芝麻GO累计数据回传接口
@@ -112,13 +119,6 @@ const (
 	v3ZmGoAgreementQueryUnsign = "/v3/zhima/credit/pe/zmgo/agreement/unsign" // POST 芝麻GO协议解约
 	v3ZmGoTemplateCreate       = "/v3/zhima/merchant/zmgo/template/create"   // POST 商家芝麻GO模板创建
 	v3ZmGoTemplateQuery        = "/v3/zhima/merchant/zmgo/template/query"    // GET 商家芝麻GO模板查询
-
-	// 营销-营销活动送红包
-	v3MarketingCampaignCashCreate       = "/v3/alipay/marketing/campaign/cash/create"        // POST 创建现金活动
-	v3MarketingCampaignCashTrigger      = "/v3/alipay/marketing/campaign/cash/trigger"       // POST 触发现金红包
-	v3MarketingCampaignCashStatusModify = "/v3/alipay/marketing/campaign/cash/status/modify" // POST 更改现金活动状态
-	v3MarketingCampaignCashListQuery    = "/v3/alipay/marketing/campaign/cash/list/query"    // POST 现金活动列表查询
-	v3MarketingCampaignCashDetailQuery  = "/v3/alipay/marketing/campaign/cash/detail/query"  // POST 现金活动详情查询
 
 	// 广告-支付宝广告投放
 	v3DataDataserviceAdConversionUpload               = "/v3/alipay/data/dataservice/ad/conversion/upload"               // POST 转化数据回传
