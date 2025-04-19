@@ -93,4 +93,32 @@ const (
 	v3FundTransCommonQuery       = "/v3/alipay/fund/trans/common/query"       // GET 转账业务单据查询接口
 	v3FundTransMultistepTransfer = "/v3/alipay/fund/trans/multistep/transfer" // POST 多步转账创建并支付
 	v3FundTransMultistepQuery    = "/v3/alipay/fund/trans/multistep/query"    // POST 多步转账查询接口
+
+	// 信用-芝麻go
+	v3ZmGoPreorderCreate       = "/v3/zhima/credit/pe/zmgo/preorder/create"  // PUT 芝麻GO签约预创单接口
+	v3ZmGoCumulateSync         = "/v3/zhima/merchant/zmgo/cumulate/sync"     // POST 商家芝麻GO累计数据回传接口
+	v3ZmGoCumulateQuery        = "/v3/zhima/merchant/zmgo/cumulate/query"    // GET 商家芝麻GO累计数据查询接口
+	v3ZmGoSettleApply          = "/v3/zhima/credit/pe/zmgo/settle/apply"     // POST 芝麻GO结算申请
+	v3ZmGoSettleApplyRefund    = "/v3/zhima/credit/pe/zmgo/settle/refund"    // POST 芝麻GO结算退款
+	v3ZmGoAgreementQuery       = "/v3/zhima/credit/pe/zmgo/agreement/query"  // GET 芝麻GO协议查询
+	v3ZmGoAgreementQueryUnsign = "/v3/zhima/credit/pe/zmgo/agreement/unsign" // POST 芝麻GO协议解约
+	v3ZmGoTemplateCreate       = "/v3/zhima/merchant/zmgo/template/create"   // POST 商家芝麻GO模板创建
+	v3ZmGoTemplateQuery        = "/v3/zhima/merchant/zmgo/template/query"    // GET 商家芝麻GO模板查询
+
+	// 营销-营销活动送红包
+	v3MarketingCampaignCashCreate       = "/v3/alipay/marketing/campaign/cash/create"        // POST 创建现金活动
+	v3MarketingCampaignCashTrigger      = "/v3/alipay/marketing/campaign/cash/trigger"       // POST 触发现金红包
+	v3MarketingCampaignCashStatusModify = "/v3/alipay/marketing/campaign/cash/status/modify" // POST 更改现金活动状态
+	v3MarketingCampaignCashListQuery    = "/v3/alipay/marketing/campaign/cash/list/query"    // POST 现金活动列表查询
+	v3MarketingCampaignCashDetailQuery  = "/v3/alipay/marketing/campaign/cash/detail/query"  // POST 现金活动详情查询
+
+	// 广告-支付宝广告投放
+	v3DataDataserviceAdConversionUpload               = "/v3/alipay/data/dataservice/ad/conversion/upload"               // POST 转化数据回传
+	v3DataDataserviceAdReportdataQuery                = "/v3/alipay/data/dataservice/ad/reportdata/query"                // POST 广告投放数据通用查询
+	v3DataDataserviceAdPromotepageBatchquery          = "/v3/alipay/data/dataservice/ad/promotepage/batchquery"          // GET 自建推广页列表批量查询
+	v3DataDataserviceAdPromotepageDownload            = "/v3/alipay/data/dataservice/ad/promotepage/download"            // GET 自建推广页留资数据查询
+	v3DataDataserviceXlightTaskQuery                  = "/v3/alipay/data/dataservice/xlight/task/query"                  // POST 任务广告完成状态查询接口
+	v3DataDataserviceAdConsumehistoryQuery            = "/v3/alipay/data/dataservice/ad/consumehistory/query"            // POST 消费明细查询接口
+	v3DataDataserviceProductLandinginfoCreateOrModify = "/v3/alipay/data/dataservice/product/landinginfo/createormodify" // POST 商品落地页信息创建或更新
+	v3DataDataserviceProductLandinginfoQuery          = "/v3/alipay/data/dataservice/product/landinginfo/query"          // POST 商品落地页信息查询
 )
