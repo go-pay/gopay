@@ -23,6 +23,7 @@ type Client struct {
 	baseUrlProd      string
 	baseUrlSandbox   string
 	autoRefreshToken bool
+	headerKeyMap     map[string]string
 }
 
 type Option func(*Client)
@@ -45,6 +46,7 @@ func NewClient(clientid, secret string, isProd bool, options ...Option) (client 
 		baseUrlProd:      baseUrlProd,
 		baseUrlSandbox:   baseUrlSandbox,
 		autoRefreshToken: true,
+		headerKeyMap:     make(map[string]string),
 	}
 	for _, option := range options {
 		option(client)
@@ -108,4 +110,21 @@ func (c *Client) SetLogger(logger xlog.XLogger) {
 func (c *Client) SetProxyUrl(proxyUrlProd, proxyUrlSandbox string) {
 	c.baseUrlProd = proxyUrlProd
 	c.baseUrlSandbox = proxyUrlSandbox
+}
+
+// SetRequestHeader 设置自定义的header
+// defaultVal: 默认值
+func (c *Client) SetRequestHeader(key string, defaultVal ...string) {
+	if key != "" {
+		if len(defaultVal) > 0 {
+			c.headerKeyMap[key] = defaultVal[0]
+		} else {
+			c.headerKeyMap[key] = ""
+		}
+	}
+}
+
+// ClearRequestHeader 清理自定义的header
+func (c *Client) ClearRequestHeader() {
+	c.headerKeyMap = make(map[string]string)
 }

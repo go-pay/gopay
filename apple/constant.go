@@ -7,6 +7,9 @@ const (
 	// Get Transaction History
 	getTransactionHistory = "/inApps/v1/history/%s" // transactionId
 
+	// Get Transaction History
+	getTransactionHistoryV2 = "/inApps/v2/history/%s" // transactionId
+
 	// Get Transaction Info
 	getTransactionInfo = "/inApps/v1/transactions/%s" // transactionId
 

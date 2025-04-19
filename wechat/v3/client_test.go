@@ -22,32 +22,32 @@ var (
 	APIv3Key          = ""
 	SerialNo          = ""
 	PrivateKeyContent = `-----BEGIN PRIVATE KEY-----
-MIIEwAIBADANBgkqhkiG9w0BAQEFAASCBKowggSmAgEAAoIBAQDV523KVXZaaZI3
-WxQiaz0J8o8nxAYsxBjrfcaKPnLo+r5uFME7GPV+4UHEZWG6ZogJ87yBt8L4IV8q
-/2n0MPKV5qNtS0htG7G0Mtyw7lPmdXUXsA0ionbL2mzz0kgJ1S6FJwyZRRZNJ08Q
-/GQE3TWqErbxL/2ITuzTeHrdTNL0i9oNxtB92EWFZ0gSL677zEiz41EVog24SyOd
-TFqxjGFd9DR0CeRNU/oQPplFnM9YFseRuhEZ/jLATEvubH/U1qGqTlW0UHvIn14j
-NqRxyAjDI/HfXl3Bo7Fx0QCJkVkqb+5ou8KFRchbcixRU0khbrxTy7dDJj60vSmr
-PySqqZLFAgMBAAECggEBAKHPN9ZfX/B0/A6z7z86MCpeOryyJJmondFGi/H326Uy
-SOus959k+hDJBZ8zsgH3neEpZ+gYwnxBgmRcYiI/BMMwfWAoGtmuoXbXIusU3pLv
-N2x72PPiQktjKBgpciU+BrrjFzy6bmxe2AjZZC/pxrapAYrh6sA6NBykfwz5GHu0
-DQmjHYqSlghDDljCzVR3Gcs/KicCMw6eQ0JlWDqtDEDoENlBkfn4spHwocV7HtSq
-0bnUrQqqMtpZjbMJzZxJc39qkyNNDosuNy5GXYLQE7lr9RuRqLxEfg6KfGUS5bAZ
-eJ5pizql7+c0viUtiXG17PYp8QR4c5G+54RlQd1pPuECgYEA9UBi5rFJzK0/n4aO
-lsrp6BvUOSherp57SNYvpsRuBPU0odyH2/McLNphisKTxfSm0/hADaTmnzAnOUVg
-cduc/5/5tVaaqyLL3SemxJhwqVsL3tE/KAN7HUBhhQrqD+H8r39TAoIkyfjCOHzS
-74rygZ35x0kXNMavXQFB0RE2fEcCgYEA30dWaLddGmTvUXwhyTWcsiDfrsKbw8+n
-MhAlSCXE42v9Uo3ULqD3/rpUQlMhoqaZb3cSyOyQwJvv0tp/g3hM7Q4usLxkdysc
-KA9HmmZ4Q2P2838cqvNr/Dz1UAnfdDryMEnbiv1MUKYqFFTVX6oR0iH544JgDFCG
-YLQA2M+3GpMCgYEAh+ax51v+pSirxN5vTSgMDc69/x5buS+g6W+m4CahQKYQEFGA
-B2XkCwbIXngMIvm7KGK8O9NQ6I1qbtX+55jmmtAvM0lWU9boWRiL1Q0UAQSuwz34
-XVfwdPkkEPFHWp3DxAwuF4m+kR0DowGocYzxbNn5e3EJJvmiW0tDCXMcWikCgYEA
-tyNxWcUFBdBCh+i0YbCqzWSvdE3Fq8/YSPT7T3lDTHLYPu18W57Gq1Y0JI7BaQMT
-mVzmuI1pkcKV7LIxoyl6l3ppi6eLFD/1AVq/FYL1I/mLpl/dqM6vBR8O686dTV3I
-Jxl9jTyEayZQH4sR1TzPDze1GwpmM9Oc1RbwFuYRPycCgYEAzYaRKh6EQ+s37HDv
-e/ZGMs3PI+CoA/x6lx4Owa7amRsWRKys45NV6gcC8pkbN4IeFaYXVHmJ1Yaef3xn
-0VxHAzWI4BF+1pUwXzS2rAMBZR/VKS0XA856NauAC3mKHipoOWVVs+uFP3VMUQ79
-hSImAa7UBzss6b6ie7AYxXtZBjY=
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4mfL8EmLG9Qo9
+EHo17xL8pW3dxRPS3xjUnvt4FKobzqXgO/6FFs23yMisw5GGKQcp0iLJ3nUmuex3
+5S8puGbzd5Ce5gCLOk44DInMmFUHqJAbl+O8CqpfC4j5PP+uCkDBj5wkvoeLMnjk
+gzayft5LZYV4qFMplOqv0jDbq27dmU8EqHlR8kgNp1OBEISCmWq4xCPXpntmuu+T
+Z23SEcopXpQTi8LxQQgxbAM2xexCezuikjhAz5g/TgyUTXL4wSKOCTY05fUCiCLM
+JtZ8IAs972LxwtFNbsh/9AVvARSDUZprlWGtlEow4xOkoPvFAcv+ibYYVbcCinRT
+qvNQjGJ7AgMBAAECggEAXOtA35jxl2voR2xv144LZJhwgNyeadpaSUvtEDh2l6Cg
+5gnMx3j++69ZM30NVxZ3wJlBYZNULLYRTRhTcRCc4Zghd5oWU/55OMU254EV69Dx
+GLKPsys7LrRDshD+McB/b+61jdlJqMszBvL1KUuq4RCs6lrv4VJP/0gxx6C3IVsa
+2lxfAF/YGED6ch0ma8QbyxV074P1wBe4nQ3hbHCglFAJDUT0sKdP8ODWyZqKJjgd
+e4erURiuH7JFKrdFlbwF8wwt5eXbNyNkdExCkxvM6cBNYKIHNv/m+Ba5EatK2pMg
+3FDhVl+5R5HlN8hqDPBvq7ZyEyHYHxNF98SpYedUoQKBgQDi6wcfwMKsabNJIePt
+MENKGR+VjWn6BB5BS0uRl9ZgEu8xwCH7JcfS/q2QKH0AcCNu2g7F+NyLwZA8mfuw
+ObA17F53RISzDYo49/5wJMStA0d/sFPRVvK8ktikvtm8vopRCrBQ3alFaoXfWKtX
+berkIc/dudKncmngv+Huc679TwKBgQDQQoySjb/S1OXFf14RNwANcjggnMzO1WR1
+gCaM5fAxVhi8hcczT3ZY7PTWPuquSpSc25hYqnHEQSUsmSfiHyCaUQEglGfUbz6T
+gSWlVFvFfhGXUhOVY5pEDKnBqLNt8uwDYk8nKvxfo5qZMyz5keTcp7DEZa7ltjhQ
+sKofqav1FQKBgCqdoRThiq3+m+EcMEYXTkvYNApOKJz/sP7qOSL6tRQN+kYJo1gb
+XE/P7KCqOe+fH8htw2CCwEiu7Xu0H4SVEPbPkV4szA8kd9UDHhHJlfY4K3FbmCI0
+hhnMKkumXBYKYsedjkdhmayjuMidSnB9ACQgBX3KrDkuT5wZ7UBvEWoZAoGAWKfr
+5buYLG1bPz8gUV3DlPXJtQBrI6Wt9WNPhe2g2a/YKfEdQteR/vsoo0f3aajwKPJG
+oYA1nCFLbPfqBZXQsEDJpQ/oP4P39J0m5IHL63/mhy92jMLw+gUWAw4JDEY8eJhS
+L89ZznD8MDmb7MZR0ilE0+ahlMKEqLz8Pyxgup0CgYEAk9EvewHhcuFwAStTN4zf
+EqHfxkPdjGs4EXGTXXXhwPtu9Kp180jAIiges4etmsNbznkzposez+K+iG186g+V
+mkgKgkvSfxgtMrbnJUjwFrJGcu3HxDGrPy/uUV6hFHuY25u7jlR5oyw1f8DAUolU
+CuVW0u9PIpT8cOLhv5URzCg=
 -----END PRIVATE KEY-----`
 )
 
@@ -63,15 +63,19 @@ func TestMain(m *testing.M) {
 		return
 	}
 
-	// 设置微信平台证书和序列号，如开启自动验签，请忽略此步骤
-	//client.SetPlatformCert([]byte(""), "")
-
-	// 启用自动同步返回验签，并定时更新微信平台API证书
-	err = client.AutoVerifySign()
+	// 注意：以下两种自动验签方式二选一
+	// 微信支付公钥自动同步验签（新微信支付用户推荐）
+	err = client.AutoVerifySignByPublicKey([]byte("微信支付公钥内容"), "微信支付公钥ID")
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
+	//// 微信平台证书自动获取证书+同步验签（并自动定时更新微信平台API证书）
+	//err = client.AutoVerifySign()
+	//if err != nil {
+	//	xlog.Error(err)
+	//	return
+	//}
 
 	// 打开Debug开关，输出日志
 	client.DebugSwitch = gopay.DebugOff
@@ -95,6 +99,7 @@ func TestGetPlatformCertsWithoutClient(t *testing.T) {
 		return
 	}
 	xlog.Errorf("certs:%s", certs.Error)
+	xlog.Errorf("err: %+v", certs.ErrResponse)
 }
 
 func TestGetAndSelectNewestCert(t *testing.T) {

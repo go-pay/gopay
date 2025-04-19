@@ -9,7 +9,7 @@ const (
 	MethodPost          = "POST"
 	MethodPut           = "PUT"
 	MethodDelete        = "DELETE"
-	MethodPATCH         = "PATCH"
+	MethodPatch         = "PATCH"
 	HeaderAuthorization = "Authorization"
 	HeaderRequestID     = "alipay-request-id"
 	HeaderSdkVersion    = "alipay-sdk-version"
@@ -93,6 +93,14 @@ const (
 	v3FundTransCommonQuery       = "/v3/alipay/fund/trans/common/query"       // GET 转账业务单据查询接口
 	v3FundTransMultistepTransfer = "/v3/alipay/fund/trans/multistep/transfer" // POST 多步转账创建并支付
 	v3FundTransMultistepQuery    = "/v3/alipay/fund/trans/multistep/query"    // POST 多步转账查询接口
+
+	// 公域-经营推广-推广计划
+	v3MarketingActivityDeliveryCreate = "/v3/alipay/marketing/delivery"          // POST 创建推广计划
+	v3MarketingActivityDeliveryQuery  = "/v3/alipay/marketing/delivery/%s/query" // POST delivery_id 查询推广计划
+	v3MarketingActivityDeliveryStop   = "/v3/alipay/marketing/delivery/%s/stop"  // PATCH delivery_id 停止推广计划
+
+	// 公域-经营推广-推广计划
+	v3MarketingMaterialImageUpload = "/v3/alipay/marketing/material/image" // POST 营销图片资源上传接口
 
 	// 信用-芝麻go
 	v3ZmGoPreorderCreate       = "/v3/zhima/credit/pe/zmgo/preorder/create"  // PUT 芝麻GO签约预创单接口

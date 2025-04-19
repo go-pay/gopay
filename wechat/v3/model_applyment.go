@@ -2,42 +2,47 @@ package wechat
 
 // 特约商户进件提交申请单 Rsp
 type Apply4SubSubmitRsp struct {
-	Code     int              `json:"-"`
-	SignInfo *SignInfo        `json:"-"`
-	Response *Apply4SubSubmit `json:"response,omitempty"`
-	Error    string           `json:"-"`
+	Code        int              `json:"-"`
+	SignInfo    *SignInfo        `json:"-"`
+	Response    *Apply4SubSubmit `json:"response,omitempty"`
+	ErrResponse ErrResponse      `json:"err_response,omitempty"`
+	Error       string           `json:"-"`
 }
 
 // 特约商户进件申请单查询 Rsp
 type Apply4SubQueryRsp struct {
-	Code     int             `json:"-"`
-	SignInfo *SignInfo       `json:"-"`
-	Response *Apply4SubQuery `json:"response,omitempty"`
-	Error    string          `json:"-"`
+	Code        int             `json:"-"`
+	SignInfo    *SignInfo       `json:"-"`
+	Response    *Apply4SubQuery `json:"response,omitempty"`
+	ErrResponse ErrResponse     `json:"err_response,omitempty"`
+	Error       string          `json:"-"`
 }
 
 // 特约商户/二级商户修改结算账号 Rsp
 type Apply4SubModifySettlementRsp struct {
-	Code     int                        `json:"-"`
-	SignInfo *SignInfo                  `json:"-"`
-	Response *Apply4SubModifySettlement `json:"response,omitempty"`
-	Error    string                     `json:"-"`
+	Code        int                        `json:"-"`
+	SignInfo    *SignInfo                  `json:"-"`
+	Response    *Apply4SubModifySettlement `json:"response,omitempty"`
+	ErrResponse ErrResponse                `json:"err_response,omitempty"`
+	Error       string                     `json:"-"`
 }
 
 // 查询结算账户修改申请状态 Rsp
 type V3Apply4SubMerchantsApplicationRsp struct {
-	Code     int                              `json:"-"`
-	SignInfo *SignInfo                        `json:"-"`
-	Response *V3Apply4SubMerchantsApplication `json:"response,omitempty"`
-	Error    string                           `json:"-"`
+	Code        int                              `json:"-"`
+	SignInfo    *SignInfo                        `json:"-"`
+	Response    *V3Apply4SubMerchantsApplication `json:"response,omitempty"`
+	ErrResponse ErrResponse                      `json:"err_response,omitempty"`
+	Error       string                           `json:"-"`
 }
 
 // 特约商户查询结算账号 Rsp
 type Apply4SubQuerySettlementRsp struct {
-	Code     int                       `json:"-"`
-	SignInfo *SignInfo                 `json:"-"`
-	Response *Apply4SubQuerySettlement `json:"response,omitempty"`
-	Error    string                    `json:"-"`
+	Code        int                       `json:"-"`
+	SignInfo    *SignInfo                 `json:"-"`
+	Response    *Apply4SubQuerySettlement `json:"response,omitempty"`
+	ErrResponse ErrResponse               `json:"err_response,omitempty"`
+	Error       string                    `json:"-"`
 }
 
 // =========================================================分割=========================================================

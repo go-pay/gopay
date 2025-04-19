@@ -26,7 +26,7 @@ func (c *Client) CreateOrder(ctx context.Context, bm gopay.BodyMap) (ppRsp *Crea
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
-	if res.StatusCode != http.StatusCreated {
+	if res.StatusCode != http.StatusCreated && res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
 		ppRsp.Error = string(bs)
 		ppRsp.ErrorResponse = new(ErrorResponse)

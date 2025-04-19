@@ -3,6 +3,10 @@
 * 修改记录：
   * gopay：module 最低版本 go 1.22
   * Apple：client.GetRefundHistory() 接口优化，无version时，请求query参数中不再带上version字段。
+  * 微信V3：新增 client.AutoVerifySignByPublicKey()，微信公钥自动验签。
+  * 微信V3：每个业务方法优化错误判断优先级，增加ErrResponse字段。
+  * PayPal：新增 client.SetRequestHeader()，设置自定义Header。
+  * PayPal：新增 client.ClearRequestHeader()，清除自定义Header。
   * PayPal：新增 Subscriptions 相关接口。
     * client.PlanList()，计划列表。
     * client.PlanDetails()，计划详情。
@@ -24,6 +28,12 @@
     * client.ProductList()，产品列表。
     * client.ProductDetails()，产品详情。
     * client.ProductUpdate()，更新产品。
+  * 支付宝V3：新增推广计划接口
+    * client.MarketingActivityDeliveryCreate()，创建推广计划。
+    * client.MarketingActivityDeliveryQuery()，查询推广计划。
+    * client.MarketingActivityDeliveryStop()，停止推广计划。
+  * 支付宝V3：新增图片素材接口
+    * client.MarketingMaterialImageUpload()，营销图片资源上传。
 
 ## 版本号：v1.5.109
 
