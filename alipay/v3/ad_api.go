@@ -181,7 +181,7 @@ func (a *ClientV3) AdConsumehistoryQuery(ctx context.Context, bm gopay.BodyMap) 
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 消费明细查询接口 alipay.data.dataservice.product.landinginfo.createormodify
+// 商品落地页信息创建或更新 alipay.data.dataservice.product.landinginfo.createormodify
 // StatusCode = 200 is success
 func (a *ClientV3) ProductLandinginfoCreateOrModify(ctx context.Context, bm gopay.BodyMap) (aliRsp *ProductLandinginfoCreateOrModifyRsp, err error) {
 	err = bm.CheckEmptyError("item_id", "out_item_id", "landing")
@@ -210,7 +210,7 @@ func (a *ClientV3) ProductLandinginfoCreateOrModify(ctx context.Context, bm gopa
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// 消费明细查询接口 alipay.data.dataservice.product.landinginfo.query
+// 商品落地页信息查询 alipay.data.dataservice.product.landinginfo.query
 // StatusCode = 200 is success
 func (a *ClientV3) ProductLandinginfoQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *ProductLandinginfoQueryRsp, err error) {
 	err = bm.CheckEmptyError("item_id", "out_item_id")

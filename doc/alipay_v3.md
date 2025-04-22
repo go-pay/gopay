@@ -247,7 +247,36 @@ return c.String(http.StatusOK, "success")
   * 创建推广计划：`client.MarketingActivityDeliveryCreate()`
   * 查询推广计划：`client.MarketingActivityDeliveryQuery()`
   * 停止推广计划：`client.MarketingActivityDeliveryStop()`
+* <font color='#027AFF' size='4'>营销</font>
+  * 创建现金活动：`client.MarketingCampaignCashCreate()`
+  * 触发现金红包：`client.MarketingCampaignCashTrigger()`
+  * 更改现金活动状态：`client.MarketingCampaignCashStatusModify()`
+  * 现金活动列表查询：`client.MarketingCampaignCashListQuery()`
+  * 现金活动详情查询：`client.MarketingCampaignCashDetailQuery()`
+  
 * <font color='#027AFF' size='4'>图片素材</font>
   * 营销图片资源上传接口：`client.MarketingMaterialImageUpload()`
+* <font color='#027AFF' size='4'>信用</font>
+  * 芝麻GO签约预创单：`client.ZmGoPreorderCreate()`
+  * 商家芝麻GO累计数据回传接口：`client.ZmGoCumulateSync()`
+  * 商家芝麻GO累计数据查询接口：`client.ZmGoCumulateQuery()`
+  * 芝麻GO结算申请：`client.ZmGoSettleApply()`
+  * 芝麻GO结算退款：`client.ZmGoSettleRefund()`
+  * 芝麻Go协议查询接口：`client.ZmGoAgreementQuery()`
+  * 芝麻GO协议解约：`client.ZmGoAgreementQueryUnsign()`
+  * 商户创建芝麻GO模板接口：`client.ZmGoTemplateCreate()`
+  * 商家芝麻GO模板查询：`client.ZmGoTemplateQuery()`
+
+* <font color='#027AFF' size='4'>广告</font>
+  * 转化数据回传：`client.AdConversionUpload()`
+  * 广告投放数据通用查询：`client.AdReportdataQuery()`
+  * 自建推广页列表批量查询：`client.AdPromotepageBatchquery()`
+  * 自建推广页留资数据查询：`client.AdPromotepageDownload()`
+  * 任务广告完成状态查询接口：`client.XlightTaskQuery()`
+  * 消费明细查询接口：`client.AdConsumehistoryQuery()`
+  * 商品落地页信息创建或更新：`client.ProductLandinginfoCreateOrModify()`
+  * 商品落地页信息查询：`client.ProductLandinginfoQuery()`
+  * 广告代理商投放数据查询：`client.AdAgentreportdataQuery()`
+
 
 ### 支付宝公共 API
