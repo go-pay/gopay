@@ -1,6 +1,8 @@
 ## 版本号：v1.5.111
 
 * 修改记录：
+  * gopay：go mod 升级至 go 1.23.0
+  * gopay：golang.org/x/crypto 版本升级到 v0.37.0。
   * 微信V3：删除废弃的 wechat.V3VerifySign()、notify.VerifySign() 函数和方法。
   * 微信V3：client.verifySyncSign() 私有方法优化，证书没找到时，如果是微信支付公钥模式，直接返回报错。
   * 支付宝v3：修复 alipay-app-auth-token 无法设置问题，提供 client.SetAppAuthToken() 方法。
