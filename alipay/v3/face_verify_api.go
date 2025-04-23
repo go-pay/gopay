@@ -44,12 +44,14 @@ func (a *ClientV3) FaceVerificationQuery(ctx context.Context, bm gopay.BodyMap) 
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3FaceVerificationQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -130,12 +132,14 @@ func (a *ClientV3) FaceCertifyQuery(ctx context.Context, bm gopay.BodyMap) (aliR
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3FaceCertifyQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -216,12 +220,14 @@ func (a *ClientV3) FaceCheckQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3FaceCheckQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}

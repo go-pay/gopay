@@ -44,12 +44,14 @@ func (a *ClientV3) UserCertifyOpenQuery(ctx context.Context, bm gopay.BodyMap) (
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3UserCertifyOpenQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -129,12 +131,14 @@ func (a *ClientV3) UserAuthRelationshipQuery(ctx context.Context, bm gopay.BodyM
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3UserAuthRelationshipQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}

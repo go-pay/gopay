@@ -1,6 +1,7 @@
 package alipay
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -43,7 +44,8 @@ func (e *BizErr) Error() string {
 }
 
 func IsBizError(err error) (*BizErr, bool) {
-	if bizErr, ok := err.(*BizErr); ok {
+	var bizErr *BizErr
+	if errors.As(err, &bizErr) {
 		return bizErr, true
 	}
 	return nil, false

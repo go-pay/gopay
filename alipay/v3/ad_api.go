@@ -72,12 +72,14 @@ func (a *ClientV3) AdPromotepageBatchquery(ctx context.Context, bm gopay.BodyMap
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3DataDataserviceAdPromotepageBatchquery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -101,12 +103,14 @@ func (a *ClientV3) AdPromotepageDownload(ctx context.Context, bm gopay.BodyMap) 
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3DataDataserviceAdPromotepageDownload + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -130,8 +134,7 @@ func (a *ClientV3) XlightTaskQuery(ctx context.Context, bm gopay.BodyMap) (aliRs
 	if err != nil {
 		return nil, err
 	}
-	uri := v3DataDataserviceXlightTaskQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodPost, uri, nil)
+	authorization, err := a.authorization(MethodPost, v3DataDataserviceXlightTaskQuery, bm)
 	if err != nil {
 		return nil, err
 	}
@@ -159,8 +162,7 @@ func (a *ClientV3) AdConsumehistoryQuery(ctx context.Context, bm gopay.BodyMap) 
 	if err != nil {
 		return nil, err
 	}
-	uri := v3DataDataserviceAdConsumehistoryQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodPost, uri, nil)
+	authorization, err := a.authorization(MethodPost, v3DataDataserviceAdConsumehistoryQuery, bm)
 	if err != nil {
 		return nil, err
 	}
@@ -188,8 +190,7 @@ func (a *ClientV3) ProductLandinginfoCreateOrModify(ctx context.Context, bm gopa
 	if err != nil {
 		return nil, err
 	}
-	uri := v3DataDataserviceProductLandinginfoCreateOrModify + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodPost, uri, nil)
+	authorization, err := a.authorization(MethodPost, v3DataDataserviceProductLandinginfoCreateOrModify, bm)
 	if err != nil {
 		return nil, err
 	}
@@ -217,8 +218,7 @@ func (a *ClientV3) ProductLandinginfoQuery(ctx context.Context, bm gopay.BodyMap
 	if err != nil {
 		return nil, err
 	}
-	uri := v3DataDataserviceProductLandinginfoQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodPost, uri, nil)
+	authorization, err := a.authorization(MethodPost, v3DataDataserviceProductLandinginfoQuery, bm)
 	if err != nil {
 		return nil, err
 	}
@@ -246,8 +246,7 @@ func (a *ClientV3) AdAgentreportdataQuery(ctx context.Context, bm gopay.BodyMap)
 	if err != nil {
 		return nil, err
 	}
-	uri := v3DataDataserviceAdAgentreportdataQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodPost, uri, nil)
+	authorization, err := a.authorization(MethodPost, v3DataDataserviceAdAgentreportdataQuery, bm)
 	if err != nil {
 		return nil, err
 	}

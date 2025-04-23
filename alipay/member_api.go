@@ -35,7 +35,7 @@ func (a *Client) SystemOauthToken(ctx context.Context, bm gopay.BodyMap) (aliRsp
 		aat = a.AppAuthToken
 	}
 	// if user set app_auth_token in body_map, use this
-	if bmAt := bm.GetString("app_auth_token"); bmAt != gopay.NULL {
+	if bmAt := bm.GetString(AppAuthToken); bmAt != gopay.NULL {
 		aat = bmAt
 	}
 	if bs, err = systemOauthToken(ctx, a.AppId, a.privateKey, bm, "alipay.system.oauth.token", a.IsProd, a.SignType, aat); err != nil {

@@ -165,7 +165,7 @@ func systemOauthToken(ctx context.Context, appId string, privateKey *rsa.Private
 	bm.Set("timestamp", time.Now().Format(xtime.TimeLayout))
 	bm.Set("version", "1.0")
 	if appAuthToken != gopay.NULL {
-		bm.Set("app_auth_token", appAuthToken)
+		bm.Set(AppAuthToken, appAuthToken)
 	}
 	var (
 		sign    string

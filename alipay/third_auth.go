@@ -38,7 +38,7 @@ func (a *Client) OpenAuthTokenApp(ctx context.Context, bm gopay.BodyMap) (aliRsp
 // alipay.open.auth.token.app.query(查询某个应用授权AppAuthToken的授权信息)
 // 文档地址：https://opendocs.alipay.com/isv/04hgcp
 func (a *Client) OpenAuthTokenAppQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *OpenAuthTokenAppQueryResponse, err error) {
-	err = bm.CheckEmptyError("app_auth_token")
+	err = bm.CheckEmptyError(AppAuthToken)
 	if err != nil {
 		return nil, err
 	}

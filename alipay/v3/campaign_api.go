@@ -9,7 +9,7 @@ import (
 	"github.com/go-pay/gopay"
 )
 
-// MarketingCampaignCashCreate 创建现金活动
+// 创建现金活动 alipay.marketing.campaign.cash.create
 // StatusCode = 200 is success
 func (a *ClientV3) MarketingCampaignCashCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingCampaignCashCreateRsp, err error) {
 	err = bm.CheckEmptyError("coupon_name", "prize_type", "total_money", "total_num", "prize_msg", "start_time", "end_time")
@@ -37,7 +37,7 @@ func (a *ClientV3) MarketingCampaignCashCreate(ctx context.Context, bm gopay.Bod
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// MarketingCampaignCashTrigger 触发现金红包
+// 触发现金红包 alipay.marketing.campaign.cash.trigger
 // StatusCode = 200 is success
 func (a *ClientV3) MarketingCampaignCashTrigger(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingCampaignCashTriggerRsp, err error) {
 	err = bm.CheckEmptyError("crowd_no")
@@ -65,7 +65,7 @@ func (a *ClientV3) MarketingCampaignCashTrigger(ctx context.Context, bm gopay.Bo
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// MarketingCampaignCashStatusModify 更改现金活动状态
+// 更改现金活动状态 alipay.marketing.campaign.cash.status.modify
 // StatusCode = 200 is success
 func (a *ClientV3) MarketingCampaignCashStatusModify(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingCampaignCashStatusModifyRsp, err error) {
 	err = bm.CheckEmptyError("crowd_no", "camp_status")
@@ -93,19 +93,21 @@ func (a *ClientV3) MarketingCampaignCashStatusModify(ctx context.Context, bm gop
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// MarketingCampaignCashListQuery 现金活动列表查询
+// 现金活动列表查询 alipay.marketing.campaign.cash.list.query
 // StatusCode = 200 is success
 func (a *ClientV3) MarketingCampaignCashListQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingCampaignCashListQueryRsp, err error) {
 	err = bm.CheckEmptyError("page_size", "page_index")
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3MarketingCampaignCashListQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -122,19 +124,21 @@ func (a *ClientV3) MarketingCampaignCashListQuery(ctx context.Context, bm gopay.
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
-// MarketingCampaignCashDetailQuery 现金活动详情查询
+// 现金活动详情查询 alipay.marketing.campaign.cash.detail.query
 // StatusCode = 200 is success
 func (a *ClientV3) MarketingCampaignCashDetailQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingCampaignCashDetailQueryRsp, err error) {
 	err = bm.CheckEmptyError("crowd_no")
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3MarketingCampaignCashDetailQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}

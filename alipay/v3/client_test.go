@@ -30,17 +30,17 @@ func TestMain(m *testing.M) {
 		return
 	}
 
-	// 自定义配置http请求接收返回结果body大小，默认 10MB
-	//client.SetBodySize() // 没有特殊需求，可忽略此配置
+	// 设置自定义配置（如需要）
+	//client.
+	//	SetAppAuthToken("xxx").    // 设置授权token
+	//	SetBodySize().                        // 自定义配置http请求接收返回结果body大小，默认 10MB，没有特殊需求，可忽略此配置
+	//	SetRequestIdFunc().                   // 设置自定义RequestId生成方法
+	//	SetAESKey("KvKUTqSVZX2fUgmxnFyMaQ==") // 设置biz_content加密KEY，设置此参数默认开启加密（目前不可用）
+
+	// 如果需要单个请求独立设置 app_auth_token，body map 中设置 app_auth_token
 
 	// Debug开关，输出/关闭日志
 	client.DebugSwitch = gopay.DebugOn
-
-	// 设置自定义RequestId生成方法
-	//client.SetRequestIdFunc()
-
-	// 设置biz_content加密KEY，设置此参数默认开启加密（目前不可用）
-	//client.SetAESKey("KvKUTqSVZX2fUgmxnFyMaQ==")
 
 	// 传入证书内容
 	err = client.SetCert(cert.AppPublicContent, cert.AlipayRootContent, cert.AlipayPublicContentRSA2)

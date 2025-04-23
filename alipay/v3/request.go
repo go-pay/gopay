@@ -28,12 +28,14 @@ func (a *ClientV3) DoAliPayAPISelfV3(ctx context.Context, method, path string, b
 	)
 	switch method {
 	case MethodGet:
+		aat := bm.GetString(HeaderAppAuthToken)
+		bm.Remove(HeaderAppAuthToken)
 		uri := path + "?" + bm.EncodeURLParams()
 		authorization, err = a.authorization(MethodGet, uri, nil)
 		if err != nil {
 			return nil, err
 		}
-		res, bs, err = a.doGet(ctx, uri, authorization)
+		res, bs, err = a.doGet(ctx, uri, authorization, aat)
 		if err != nil {
 			return nil, err
 		}
@@ -76,7 +78,9 @@ func (a *ClientV3) doPost(ctx context.Context, bm gopay.BodyMap, uri, authorizat
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, a.requestIdFunc.RequestId())
 	req.Header.Add(HeaderSdkVersion, "gopay/"+gopay.Version)
-	if a.AppAuthToken != "" {
+	if aat := bm.GetString(HeaderAppAuthToken); aat != gopay.NULL {
+		req.Header.Add(HeaderAppAuthToken, aat)
+	} else if a.AppAuthToken != "" {
 		req.Header.Add(HeaderAppAuthToken, a.AppAuthToken)
 	}
 	req.Header.Add("Accept", "application/json")
@@ -109,7 +113,9 @@ func (a *ClientV3) doPatch(ctx context.Context, bm gopay.BodyMap, uri, authoriza
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, a.requestIdFunc.RequestId())
 	req.Header.Add(HeaderSdkVersion, "gopay/"+gopay.Version)
-	if a.AppAuthToken != "" {
+	if aat := bm.GetString(HeaderAppAuthToken); aat != gopay.NULL {
+		req.Header.Add(HeaderAppAuthToken, aat)
+	} else if a.AppAuthToken != "" {
 		req.Header.Add(HeaderAppAuthToken, a.AppAuthToken)
 	}
 	req.Header.Add("Accept", "application/json")
@@ -142,7 +148,9 @@ func (a *ClientV3) doPut(ctx context.Context, bm gopay.BodyMap, uri, authorizati
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, a.requestIdFunc.RequestId())
 	req.Header.Add(HeaderSdkVersion, "gopay/"+gopay.Version)
-	if a.AppAuthToken != "" {
+	if aat := bm.GetString(HeaderAppAuthToken); aat != gopay.NULL {
+		req.Header.Add(HeaderAppAuthToken, aat)
+	} else if a.AppAuthToken != "" {
 		req.Header.Add(HeaderAppAuthToken, a.AppAuthToken)
 	}
 	req.Header.Add("Accept", "application/json")
@@ -163,7 +171,7 @@ func (a *ClientV3) doPut(ctx context.Context, bm gopay.BodyMap, uri, authorizati
 	return res, bs, nil
 }
 
-func (a *ClientV3) doGet(ctx context.Context, uri, authorization string) (res *http.Response, bs []byte, err error) {
+func (a *ClientV3) doGet(ctx context.Context, uri, authorization, aat string) (res *http.Response, bs []byte, err error) {
 	var url = v3BaseUrlCh + uri
 	if !a.IsProd {
 		url = v3SandboxBaseUrl + uri
@@ -175,7 +183,9 @@ func (a *ClientV3) doGet(ctx context.Context, uri, authorization string) (res *h
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, a.requestIdFunc.RequestId())
 	req.Header.Add(HeaderSdkVersion, "gopay/"+gopay.Version)
-	if a.AppAuthToken != "" {
+	if aat != gopay.NULL {
+		req.Header.Add(HeaderAppAuthToken, aat)
+	} else if a.AppAuthToken != "" {
 		req.Header.Add(HeaderAppAuthToken, a.AppAuthToken)
 	}
 	req.Header.Add("Accept", "application/json")
@@ -204,6 +214,11 @@ func (a *ClientV3) doProdPostFile(ctx context.Context, bm gopay.BodyMap, uri, au
 	req.Header.Add(HeaderAuthorization, authorization)
 	req.Header.Add(HeaderRequestID, a.requestIdFunc.RequestId())
 	req.Header.Add(HeaderSdkVersion, "gopay/"+gopay.Version)
+	if aat := bm.GetString(HeaderAppAuthToken); aat != gopay.NULL {
+		req.Header.Add(HeaderAppAuthToken, aat)
+	} else if a.AppAuthToken != "" {
+		req.Header.Add(HeaderAppAuthToken, a.AppAuthToken)
+	}
 	req.Header.Add("Accept", "application/json")
 	if a.DebugSwitch == gopay.DebugOn {
 		a.logger.Debugf("Alipay_V3_Url: %s", url)

@@ -12,7 +12,7 @@ import (
 // 芝麻GO签约预创单 zhima.credit.pe.zmgo.preorder.create
 // StatusCode = 200 is success
 func (a *ClientV3) ZmGoPreorderCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *ZmGoPreorderCreateRsp, err error) {
-	err = bm.CheckEmptyError("partner_id", "template_id", "out_request_no")
+	err = bm.CheckEmptyError("partner_id", "template_id", "out_request_no", "biz_time")
 	if err != nil {
 		return nil, err
 	}
@@ -72,12 +72,14 @@ func (a *ClientV3) ZmGoCumulateQuery(ctx context.Context, bm gopay.BodyMap) (ali
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodGet, v3ZmGoCumulateQuery, nil)
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
+	uri := v3ZmGoCumulateQuery + "?" + bm.EncodeURLParams()
+	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	uri := v3ZmGoCumulateQuery + "?" + bm.EncodeURLParams()
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -157,12 +159,14 @@ func (a *ClientV3) ZmGoAgreementQuery(ctx context.Context, bm gopay.BodyMap) (al
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3ZmGoAgreementQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, v3ZmGoAgreementQuery, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -242,12 +246,14 @@ func (a *ClientV3) ZmGoTemplateQuery(ctx context.Context, bm gopay.BodyMap) (ali
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodGet, v3ZmGoTemplateQuery, nil)
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
+	uri := v3ZmGoTemplateQuery + "?" + bm.EncodeURLParams()
+	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	uri := v3ZmGoTemplateQuery + "?" + bm.EncodeURLParams()
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}

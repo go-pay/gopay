@@ -51,7 +51,7 @@ func TestClient_OpenAuthTokenApp(t *testing.T) {
 func TestClient_OpenAuthTokenAppQuery(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
-	bm.Set("app_auth_token", "202212BB9e1cd0c2e0ab489393aa2570ec4faX87")
+	bm.Set(AppAuthToken, "202212BB9e1cd0c2e0ab489393aa2570ec4faX87")
 
 	// 发起请求
 	aliRsp, err := client.OpenAuthTokenAppQuery(ctx, bm)

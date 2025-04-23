@@ -188,12 +188,14 @@ func (a *ClientV3) DataBillDownloadUrlQuery(ctx context.Context, bm gopay.BodyMa
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3DataBillDownloadUrlQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}

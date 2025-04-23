@@ -20,12 +20,14 @@ func (a *ClientV3) FundAccountQuery(ctx context.Context, bm gopay.BodyMap) (aliR
 	if bm.GetString("alipay_user_id") == gopay.NULL && bm.GetString("alipay_open_id") == gopay.NULL {
 		return nil, errors.New("alipay_user_id and alipay_open_id are not allowed to be null at the same time")
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3FundAccountQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -49,12 +51,14 @@ func (a *ClientV3) FundQuotaQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3FundQuotaQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -134,12 +138,14 @@ func (a *ClientV3) DataBillEreceiptQuery(ctx context.Context, bm gopay.BodyMap) 
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3DataBillEreceiptQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -159,12 +165,14 @@ func (a *ClientV3) DataBillEreceiptQuery(ctx context.Context, bm gopay.BodyMap) 
 // 转账业务单据查询接口 alipay.fund.trans.common.query
 // StatusCode = 200 is success
 func (a *ClientV3) FundTransCommonQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *FundTransCommonQueryRsp, err error) {
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	uri := v3FundTransCommonQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doGet(ctx, uri, authorization)
+	res, bs, err := a.doGet(ctx, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}

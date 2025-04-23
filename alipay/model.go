@@ -15,6 +15,8 @@ const (
 	RSA                       = "RSA"
 	RSA2                      = "RSA2"
 	UTF8                      = "utf-8"
+
+	AppAuthToken = "app_auth_token" // 授权令牌
 )
 
 var (
