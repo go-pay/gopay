@@ -102,6 +102,9 @@ func (a *ClientV3) MarketingCampaignCashListQuery(ctx context.Context, bm gopay.
 	}
 	uri := v3MarketingCampaignCashListQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
+	if err != nil {
+		return nil, err
+	}
 	res, bs, err := a.doGet(ctx, uri, authorization)
 	if err != nil {
 		return nil, err
@@ -128,6 +131,9 @@ func (a *ClientV3) MarketingCampaignCashDetailQuery(ctx context.Context, bm gopa
 	}
 	uri := v3MarketingCampaignCashDetailQuery + "?" + bm.EncodeURLParams()
 	authorization, err := a.authorization(MethodGet, uri, nil)
+	if err != nil {
+		return nil, err
+	}
 	res, bs, err := a.doGet(ctx, uri, authorization)
 	if err != nil {
 		return nil, err
