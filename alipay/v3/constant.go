@@ -177,14 +177,6 @@ const (
 	// 营销-支付券（支付券中有很多v2接口，可能是支付宝还未重构完）
 	v3MarketingCampaignOrderVoucherConsult = "/v3/alipay/marketing/campaign/order/voucher/consult" // POST 订单优惠前置咨询
 
-
-	// 营销
-	v3MarketingCampaignCashCreate       = "/v3/alipay/marketing/campaign/cash/create"        // POST 创建现金活动
-	v3MarketingCampaignCashTrigger      = "/v3/alipay/marketing/campaign/cash/trigger"       // POST 触发现金红包
-	v3MarketingCampaignCashStatusModify = "/v3/alipay/marketing/campaign/cash/status/modify" // POST 更改现金活动状态
-	v3MarketingCampaignCashListQuery    = "/v3/alipay/marketing/campaign/cash/list/query"    // POST 现金活动列表查询
-	v3MarketingCampaignCashDetailQuery  = "/v3/alipay/marketing/campaign/cash/detail/query"  // POST 现金活动详情查询
-
 	// 信用-芝麻go
 	v3ZmGoPreorderCreate       = "/v3/zhima/credit/pe/zmgo/preorder/create"  // PUT 芝麻GO签约预创单接口
 	v3ZmGoCumulateSync         = "/v3/zhima/merchant/zmgo/cumulate/sync"     // POST 商家芝麻GO累计数据回传接口
