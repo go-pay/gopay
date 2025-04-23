@@ -3,7 +3,9 @@
 * 修改记录：
   * 微信V3：删除废弃的 wechat.V3VerifySign()、notify.VerifySign() 函数和方法。
   * 微信V3：client.verifySyncSign() 私有方法优化，证书没找到时，如果是微信支付公钥模式，直接返回报错。
-  * 
+  * 支付宝v3：修复 alipay-app-auth-token 无法设置问题，提供 client.SetAppAuthToken() 方法。
+  * 支付宝v3：支持方法自定义设置 alipay-app-auth-token，bm.Set(alipay.HeaderAppAuthToken, "xxx")。
+  * 支付宝v3：新增部分接口，详情查看v3文档接口列表
 
 ## 版本号：v1.5.110
 

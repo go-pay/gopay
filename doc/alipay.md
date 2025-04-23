@@ -86,6 +86,7 @@ err := client.SetCertSnByContent("appPublicCert.crt bytes", "alipayRootCert byte
 ```go
 import (
     "github.com/go-pay/gopay"
+    "github.com/go-pay/gopay/alipay"
 )
 
 // 初始化 BodyMap
@@ -95,15 +96,11 @@ bm.Set("subject", "条码支付").
     Set("auth_code", "286248566432274952").
     Set("out_trade_no", "GZ201909081743431443").
     Set("total_amount", "0.01").
-    Set("timeout_express", "2m")
+    Set("timeout_express", "2m").
+    Set(alipay.AppAuthToken, "i_am_app_auth_token") // 如果需要，可以设置自定义应用授权
 
 aliRsp, err := client.TradePay(bm)
 if err != nil {
-    if bizErr, ok := alipay.IsBizError(err); ok {
-        xlog.Errorf("%+v", bizErr)
-        // do something
-        return
-    }
     xlog.Errorf("client.TradePay(%+v),err:%+v", bm, err)
     return
 }

@@ -40,18 +40,15 @@ if err != nil {
     return
 }
 
-// 自定义配置http请求接收返回结果body大小，默认 10MB
-client.SetBodySize() // 没有特殊需求，可忽略此配置
-
-// 设置自定义RequestId生成方法，非必须
-client.SetRequestIdFunc()
+// 设置自定义配置（如需要）
+//client.
+//	SetAppAuthToken("app_auth_token").    // 设置授权token
+//	SetBodySize().                        // 自定义配置http请求接收返回结果body大小，默认 10MB，没有特殊需求，可忽略此配置
+//	SetRequestIdFunc().                   // 设置自定义RequestId生成方法
+//	SetAESKey("KvKUTqSVZX2fUgmxnFyMaQ==") // 设置biz_content加密KEY，设置此参数默认开启加密（目前不可用）
 
 // 打开Debug开关，输出日志，默认关闭
 client.DebugSwitch = gopay.DebugOn
-
-
-// 设置biz_content加密KEY，设置此参数默认开启加密（目前不可用）
-//client.SetAESKey("1234567890123456")
 
 // 传入证书内容
 err := client.SetCert("appPublicCert.crt bytes", "alipayRootCert bytes", "alipayPublicCert.crt bytes")
@@ -60,6 +57,7 @@ err := client.SetCert("appPublicCert.crt bytes", "alipayRootCert bytes", "alipay
 ### 2、API 方法调用及入参
 
 > 具体参数请根据不同接口查看：[支付宝V3版API接口文档](https://opendocs.alipay.com/open-v3)
+> ★入参 BodyMap中，支持如下公共参数在当次请求中自定义设置：`alipay-app-auth-token`
 
 - 统一收单线下交易预创建 - 示例
 
@@ -69,6 +67,7 @@ import (
     "github.com/go-pay/gopay/pkg/js"
     "github.com/go-pay/util"
     "github.com/go-pay/xlog"
+    "github.com/go-pay/gopay/alipay/v3"
 )
 
 // 请求参数
@@ -76,6 +75,7 @@ bm := make(gopay.BodyMap)
 bm.Set("subject", "预创建创建订单").
     Set("out_trade_no", util.RandomString(32)).
     Set("total_amount", "0.01")
+    Set(alipay.HeaderAppAuthToken, "i_am_app_auth_token") // 如果需要，可以设置自定义应用授权
 
 // 创建订单
 aliRsp, err := client.TradePrecreate(ctx, bm)
