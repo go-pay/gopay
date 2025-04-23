@@ -1,7 +1,7 @@
 package alipay
 
 type MarketingCampaignCashCreateRsp struct {
-	StatusCode  int
+	StatusCode  int         `json:"status_code"`
 	ErrResponse ErrResponse `json:"-"`
 
 	CrowdNo       string `json:"crowd_no"`
@@ -10,7 +10,7 @@ type MarketingCampaignCashCreateRsp struct {
 }
 
 type MarketingCampaignCashTriggerRsp struct {
-	StatusCode  int
+	StatusCode  int         `json:"status_code"`
 	ErrResponse ErrResponse `json:"-"`
 
 	TriggerResult     string `json:"trigger_result"`
@@ -26,12 +26,12 @@ type MarketingCampaignCashTriggerRsp struct {
 }
 
 type MarketingCampaignCashStatusModifyRsp struct {
-	StatusCode  int
+	StatusCode  int         `json:"status_code"`
 	ErrResponse ErrResponse `json:"-"`
 }
 
 type MarketingCampaignCashListQueryRsp struct {
-	StatusCode  int
+	StatusCode  int         `json:"status_code"`
 	ErrResponse ErrResponse `json:"-"`
 
 	PageSize string `json:"page_size"`
@@ -46,7 +46,7 @@ type MarketingCampaignCashListQueryRsp struct {
 }
 
 type MarketingCampaignCashDetailQueryRsp struct {
-	StatusCode  int
+	StatusCode  int         `json:"status_code"`
 	ErrResponse ErrResponse `json:"-"`
 
 	CrowdNo       string  `json:"crowd_no"`
