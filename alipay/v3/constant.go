@@ -177,4 +177,25 @@ const (
 	// 营销-支付券（支付券中有很多v2接口，可能是支付宝还未重构完）
 	v3MarketingCampaignOrderVoucherConsult = "/v3/alipay/marketing/campaign/order/voucher/consult" // POST 订单优惠前置咨询
 
+	// 信用-芝麻go
+	v3ZmGoPreorderCreate       = "/v3/zhima/credit/pe/zmgo/preorder/create"  // PUT 芝麻GO签约预创单接口
+	v3ZmGoCumulateSync         = "/v3/zhima/merchant/zmgo/cumulate/sync"     // POST 商家芝麻GO累计数据回传接口
+	v3ZmGoCumulateQuery        = "/v3/zhima/merchant/zmgo/cumulate/query"    // GET 商家芝麻GO累计数据查询接口
+	v3ZmGoSettleApply          = "/v3/zhima/credit/pe/zmgo/settle/apply"     // POST 芝麻GO结算申请
+	v3ZmGoSettleApplyRefund    = "/v3/zhima/credit/pe/zmgo/settle/refund"    // POST 芝麻GO结算退款
+	v3ZmGoAgreementQuery       = "/v3/zhima/credit/pe/zmgo/agreement/query"  // GET 芝麻GO协议查询
+	v3ZmGoAgreementQueryUnsign = "/v3/zhima/credit/pe/zmgo/agreement/unsign" // POST 芝麻GO协议解约
+	v3ZmGoTemplateCreate       = "/v3/zhima/merchant/zmgo/template/create"   // POST 商家芝麻GO模板创建
+	v3ZmGoTemplateQuery        = "/v3/zhima/merchant/zmgo/template/query"    // GET 商家芝麻GO模板查询
+
+	// 广告-支付宝广告投放
+	v3DataDataserviceAdConversionUpload               = "/v3/alipay/data/dataservice/ad/conversion/upload"               // POST 转化数据回传
+	v3DataDataserviceAdReportdataQuery                = "/v3/alipay/data/dataservice/ad/reportdata/query"                // POST 广告投放数据通用查询
+	v3DataDataserviceAdPromotepageBatchquery          = "/v3/alipay/data/dataservice/ad/promotepage/batchquery"          // GET 自建推广页列表批量查询
+	v3DataDataserviceAdPromotepageDownload            = "/v3/alipay/data/dataservice/ad/promotepage/download"            // GET 自建推广页留资数据查询
+	v3DataDataserviceXlightTaskQuery                  = "/v3/alipay/data/dataservice/xlight/task/query"                  // POST 任务广告完成状态查询接口
+	v3DataDataserviceAdConsumehistoryQuery            = "/v3/alipay/data/dataservice/ad/consumehistory/query"            // POST 消费明细查询接口
+	v3DataDataserviceProductLandinginfoCreateOrModify = "/v3/alipay/data/dataservice/product/landinginfo/createormodify" // POST 商品落地页信息创建或更新
+	v3DataDataserviceProductLandinginfoQuery          = "/v3/alipay/data/dataservice/product/landinginfo/query"          // POST 商品落地页信息查询
+	v3DataDataserviceAdAgentreportdataQuery           = "/v3/alipay/data/dataservice/ad/agentreportdata/query"           // POST 广告投放数据代理商查询
 )
