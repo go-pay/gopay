@@ -89,17 +89,17 @@ func (c *ClientV3) AutoVerifySign(autoRefresh ...bool) (err error) {
 		}
 	}
 	c.WxSerialNo = wxSerialNo
+	c.autoSign = true
 	if len(autoRefresh) == 1 && !autoRefresh[0] {
 		return nil
 	}
-	c.autoSign = true
 	go c.autoCheckCertProc()
 	return nil
 }
 
 // AutoVerifySignByPublicKey 微信支付公钥自动验签
 // wxPublicKeyContent：微信支付公钥内容[]byte
-// wxPublicKeyID：微信支付公钥ID
+// wxPublicKeyID：微信支付公钥ID，如果带 PUB_KEY_ID_ 前缀，请不要删除，否则会出错
 func (c *ClientV3) AutoVerifySignByPublicKey(wxPublicKeyContent []byte, wxPublicKeyID string) (err error) {
 	return c.AutoVerifySignByCert(wxPublicKeyContent, wxPublicKeyID)
 }

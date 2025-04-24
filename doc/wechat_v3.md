@@ -37,7 +37,7 @@ if err != nil {
 
 // 注意：以下两种自动验签方式二选一
 // 微信支付公钥自动同步验签（新微信支付用户推荐）
-err = client.AutoVerifySignByPublicKey([]byte("微信支付公钥内容"), "微信支付公钥ID")
+err = client.AutoVerifySignByPublicKey([]byte("微信支付公钥内容"), "微信支付公钥ID，不能删除 PUB_KEY_ID_ 前缀，否则会出错")
 if err != nil {
     xlog.Error(err)
     return
