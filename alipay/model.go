@@ -318,3 +318,73 @@ type Apis struct {
 }
 
 // ===================================================
+
+type OpenAppApiFieldApplyRsp struct {
+	Response     *OpenAppApiFieldApply `json:"alipay_open_app_api_field_apply_response"`
+	AlipayCertSn string                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                `json:"-"`
+	Sign         string                `json:"sign"`
+}
+
+type OpenAppApiFieldApply struct {
+	ErrorResponse
+}
+
+type OpenAppApiSceneQueryRsp struct {
+	Response     *OpenAppApiSceneQuery `json:"alipay_open_app_api_scene_query_response"`
+	AlipayCertSn string                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                `json:"-"`
+	Sign         string                `json:"sign"`
+}
+
+type OpenAppApiSceneQuery struct {
+	ErrorResponse
+	AuthFieldScene []struct {
+		SceneCode string `json:"scene_code"`
+		SceneDesc string `json:"scene_desc"`
+	} `json:"auth_field_scene"`
+}
+
+type OpenAppApiFieldQueryRsp struct {
+	Response     *OpenAppApiFieldQuery `json:"alipay_open_app_api_field_query_response"`
+	AlipayCertSn string                `json:"alipay_cert_sn,omitempty"`
+	SignData     string                `json:"-"`
+	Sign         string                `json:"sign"`
+}
+
+type OpenAppApiFieldQuery struct {
+	ErrorResponse
+	AuthFieldResponse struct {
+		Records []struct {
+			UserAppId   string `json:"user_app_id"`
+			ApiName     string `json:"api_name"`
+			FieldName   string `json:"field_name"`
+			Status      string `json:"status"`
+			Reason      string `json:"reason"`
+			PackageCode string `json:"package_code"`
+		} `json:"records"`
+	} `json:"auth_field_response"`
+}
+
+type OpenAppInfoModifyRsp struct {
+	Response     *OpenAppInfoModify `json:"alipay_open_appinfo_modify_response"`
+	AlipayCertSn string             `json:"alipay_cert_sn,omitempty"`
+	SignData     string             `json:"-"`
+	Sign         string             `json:"sign"`
+}
+
+type OpenAppInfoModify struct {
+	ErrorResponse
+}
+
+type OpenAppInfoQueryRsp struct {
+	Response     *OpenAppInfoQuery `json:"alipay_open_appinfo_modify_response"`
+	AlipayCertSn string            `json:"alipay_cert_sn,omitempty"`
+	SignData     string            `json:"-"`
+	Sign         string            `json:"sign"`
+}
+
+type OpenAppInfoQuery struct {
+	ErrorResponse
+	OpenIdConfig string `json:"open_id_config"`
+}

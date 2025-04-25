@@ -494,7 +494,17 @@ xlog.Infof("%+v", phone)
   * 商家费率申请
     * 特殊费率申请接口：https://opendocs.alipay.com/open/c50c780c_alipay.open.fee.adjust.apply
 * <font color='#027AFF' size='4'>第三方应用产品</font>
-  * 换取应用授权令牌：`client.OpenAuthTokenApp()`
+  * 第三方应用授权
+    * 换取应用授权令牌：`client.OpenAuthTokenApp()`
+    * 查询某个应用授权AppAuthToken的授权信息：`client.OpenAuthTokenAppQuery()`
+    * ISV向商户发起应用授权邀约：`client.OpenAuthTokenAppInviteCreate()`
+  * 三方开发基础
+    * 查询应用可申请的接口出参敏感字段列表：`client.OpenAppApiQuery()`
+    * 申请获取接口用户敏感信息字段：`client.OpenAppApiFieldApply()`
+    * 查询接口字段使用场景：`client.OpenAppApiSceneQuery()`
+    * 用户信息申请记录查询：`client.OpenAppApiFieldQuery()`
+    * 应用信息修改接口：`client.OpenAppInfoModify()`
+    * 应用信息查询接口：`client.OpenAppInfoQuery()`
 * <font color='#027AFF' size='4'>邀测站点</font>
   * 营销咨询
     * 商户前置内容咨询接口： `client.PayAppMarketingConsult()`
