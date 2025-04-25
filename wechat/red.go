@@ -16,7 +16,7 @@ import (
 // 发放现金红包
 // 注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 // 注意：此处参数中的 wxappid 需要单独传参，不复用 NewClient 时的 appid，total_num = 1
-// 微信文档：https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_4&index=3
+// 微信文档：https://pay.weixin.qq.com/doc/v2/partner/4011983137
 func (w *Client) SendCashRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *SendCashRedResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "mch_billno", "wxappid", "send_name", "re_openid", "total_amount", "total_num", "wishing", "client_ip", "act_name", "remark")
 	if err != nil {
@@ -111,7 +111,7 @@ func (w *Client) SendAppletRed(ctx context.Context, bm gopay.BodyMap) (wxRsp *Se
 // 查询红包记录
 // 注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
 // 注意：此处参数中的 appid 需要单独传参，不复用 NewClient 时的 appid，bill_type = MCHT
-// 微信文档：https://pay.weixin.qq.com/wiki/doc/api/tools/cash_coupon.php?chapter=13_6&index=5
+// 微信文档：https://pay.weixin.qq.com/doc/v2/partner/4011983160
 func (w *Client) QueryRedRecord(ctx context.Context, bm gopay.BodyMap) (wxRsp *QueryRedRecordResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "mch_billno", "appid", "bill_type")
 	if err != nil {
