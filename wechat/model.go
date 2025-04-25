@@ -337,13 +337,6 @@ type ReportResponse struct {
 	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`
 }
 
-type EntrustPublicResponse struct {
-	ReturnCode string `xml:"return_code,omitempty" json:"return_code,omitempty"`
-	ReturnMsg  string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
-	ResultCode string `xml:"result_code,omitempty" json:"result_code,omitempty"`
-	ResultMsg  string `xml:"result_msg,omitempty" json:"result_msg,omitempty"`
-}
-
 type EntrustAppPreResponse struct {
 	ReturnCode      string `xml:"return_code,omitempty" json:"return_code,omitempty"`
 	ReturnMsg       string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
