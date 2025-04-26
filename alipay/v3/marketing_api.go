@@ -16,11 +16,12 @@ func (a *ClientV3) MarketingActivityDeliveryCreate(ctx context.Context, bm gopay
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3MarketingActivityDeliveryCreate, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3MarketingActivityDeliveryCreate, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3MarketingActivityDeliveryCreate, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3MarketingActivityDeliveryCreate, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -44,12 +45,13 @@ func (a *ClientV3) MarketingActivityDeliveryQuery(ctx context.Context, deliveryI
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
 	url := fmt.Sprintf(v3MarketingActivityDeliveryQuery, deliveryId)
-	authorization, err := a.authorization(MethodPost, url, bm)
+	authorization, err := a.authorization(MethodPost, url, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, url, authorization)
+	res, bs, err := a.doPost(ctx, bm, url, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -73,12 +75,13 @@ func (a *ClientV3) MarketingActivityDeliveryStop(ctx context.Context, deliveryId
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
 	url := fmt.Sprintf(v3MarketingActivityDeliveryStop, deliveryId)
-	authorization, err := a.authorization(MethodPatch, url, bm)
+	authorization, err := a.authorization(MethodPatch, url, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPatch(ctx, bm, url, authorization)
+	res, bs, err := a.doPatch(ctx, bm, url, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -102,6 +105,8 @@ func (a *ClientV3) MarketingMaterialImageUpload(ctx context.Context, bm gopay.Bo
 	if err != nil {
 		return nil, err
 	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
 	upfile := bm.GetAny("file_content")
 	// 签名时需要移除文件字段
 	bm.Remove("file_content")
@@ -115,13 +120,13 @@ func (a *ClientV3) MarketingMaterialImageUpload(ctx context.Context, bm gopay.Bo
 			return true
 		})
 	})
-	authorization, err := a.authorization(MethodPost, v3MarketingMaterialImageUpload, bm)
+	authorization, err := a.authorization(MethodPost, v3MarketingMaterialImageUpload, bm, aat)
 	if err != nil {
 		return nil, err
 	}
 	bm.Set("file_content", upfile)
 	// 至此，bodymap 内容 key 如下：file_content, data
-	res, bs, err := a.doProdPostFile(ctx, bm, v3MarketingMaterialImageUpload, authorization)
+	res, bs, err := a.doProdPostFile(ctx, bm, v3MarketingMaterialImageUpload, authorization, aat)
 	if err != nil {
 		return nil, err
 	}

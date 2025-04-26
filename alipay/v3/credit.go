@@ -16,11 +16,12 @@ func (a *ClientV3) ZmGoPreorderCreate(ctx context.Context, bm gopay.BodyMap) (al
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPut, v3ZmGoPreorderCreate, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPut, v3ZmGoPreorderCreate, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPut(ctx, bm, v3ZmGoPreorderCreate, authorization)
+	res, bs, err := a.doPut(ctx, bm, v3ZmGoPreorderCreate, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -44,11 +45,12 @@ func (a *ClientV3) ZmGoCumulateSync(ctx context.Context, bm gopay.BodyMap) (aliR
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3ZmGoCumulateSync, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3ZmGoCumulateSync, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3ZmGoCumulateSync, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3ZmGoCumulateSync, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +77,7 @@ func (a *ClientV3) ZmGoCumulateQuery(ctx context.Context, bm gopay.BodyMap) (ali
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3ZmGoCumulateQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -103,11 +105,12 @@ func (a *ClientV3) ZmGoSettleApply(ctx context.Context, bm gopay.BodyMap) (aliRs
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3ZmGoSettleApply, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3ZmGoSettleApply, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3ZmGoSettleApply, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3ZmGoSettleApply, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -131,11 +134,12 @@ func (a *ClientV3) ZmGoSettleRefund(ctx context.Context, bm gopay.BodyMap) (aliR
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3ZmGoSettleApplyRefund, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3ZmGoSettleApplyRefund, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3ZmGoSettleApplyRefund, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3ZmGoSettleApplyRefund, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -162,7 +166,7 @@ func (a *ClientV3) ZmGoAgreementQuery(ctx context.Context, bm gopay.BodyMap) (al
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3ZmGoAgreementQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -190,11 +194,12 @@ func (a *ClientV3) ZmGoAgreementQueryUnsign(ctx context.Context, bm gopay.BodyMa
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3ZmGoAgreementQueryUnsign, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3ZmGoAgreementQueryUnsign, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3ZmGoAgreementQueryUnsign, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3ZmGoAgreementQueryUnsign, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -218,11 +223,12 @@ func (a *ClientV3) ZmGoTemplateCreate(ctx context.Context, bm gopay.BodyMap) (al
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3ZmGoTemplateCreate, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3ZmGoTemplateCreate, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3ZmGoTemplateCreate, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3ZmGoTemplateCreate, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -249,7 +255,7 @@ func (a *ClientV3) ZmGoTemplateQuery(ctx context.Context, bm gopay.BodyMap) (ali
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3ZmGoTemplateQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}

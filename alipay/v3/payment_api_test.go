@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/alipay/cert"
 	"github.com/go-pay/util"
 	"github.com/go-pay/util/js"
 	"github.com/go-pay/xlog"
@@ -40,8 +39,8 @@ func TestTradeCreate(t *testing.T) {
 		Set("out_trade_no", util.RandomString(32)).
 		Set("total_amount", "0.01").
 		Set("product_code", "JSAPI_PAY").
-		Set("op_app_id", cert.Appid).
-		Set("buyer_open_id", "xxxxxx")
+		Set("op_app_id", "2021005143630063"). // 小程序的APPID
+		Set("buyer_open_id", "018OacbttSLyJtNfdPbDOcaGoo-ncctDVT45IdYxaUsmIY8")
 
 	// 创建订单
 	aliRsp, err := client.TradeCreate(ctx, bm)

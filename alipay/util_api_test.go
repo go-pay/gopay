@@ -8,27 +8,6 @@ import (
 	"github.com/go-pay/xlog"
 )
 
-func TestClient_SystemOauthToken(t *testing.T) {
-	// 请求参数
-	bm := make(gopay.BodyMap)
-	bm.Set("grant_type", "authorization_code")
-	bm.Set("code", "3a06216ac8f84b8c93507bb9774bWX11")
-
-	// 发起请求
-	aliRsp, err := client.SystemOauthToken(ctx, bm)
-	if err != nil {
-		if bizErr, ok := IsBizError(err); ok {
-			xlog.Errorf("%+v", bizErr)
-			// do something
-			return
-		}
-		return
-	}
-	xlog.Debug("aliRsp:", *aliRsp)
-	xlog.Debug("aliRsp:", aliRsp.Response.AccessToken)
-	xlog.Debug("aliRsp:", aliRsp.SignData)
-}
-
 func TestClient_OpenAuthTokenApp(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
@@ -90,11 +69,7 @@ func TestClient_UserInfoShare(t *testing.T) {
 	// 发起请求
 	aliRsp, err := client.UserInfoShare(ctx, "auth_token")
 	if err != nil {
-		if bizErr, ok := IsBizError(err); ok {
-			xlog.Errorf("%+v", bizErr)
-			// do something
-			return
-		}
+		xlog.Errorf("%+v", err)
 		return
 	}
 	xlog.Debug("aliRsp:", *aliRsp)

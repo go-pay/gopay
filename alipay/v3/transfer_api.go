@@ -23,7 +23,7 @@ func (a *ClientV3) FundAccountQuery(ctx context.Context, bm gopay.BodyMap) (aliR
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3FundAccountQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (a *ClientV3) FundQuotaQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3FundQuotaQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -82,11 +82,12 @@ func (a *ClientV3) FundTransUniTransfer(ctx context.Context, bm gopay.BodyMap) (
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3FundTransUniTransfer, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3FundTransUniTransfer, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3FundTransUniTransfer, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3FundTransUniTransfer, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -110,11 +111,12 @@ func (a *ClientV3) DataBillEreceiptApply(ctx context.Context, bm gopay.BodyMap) 
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3DataBillEreceiptApply, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3DataBillEreceiptApply, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3DataBillEreceiptApply, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3DataBillEreceiptApply, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +143,7 @@ func (a *ClientV3) DataBillEreceiptQuery(ctx context.Context, bm gopay.BodyMap) 
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3DataBillEreceiptQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -168,7 +170,7 @@ func (a *ClientV3) FundTransCommonQuery(ctx context.Context, bm gopay.BodyMap) (
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3FundTransCommonQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -196,11 +198,12 @@ func (a *ClientV3) FundTransMultistepTransfer(ctx context.Context, bm gopay.Body
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3FundTransMultistepTransfer, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3FundTransMultistepTransfer, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3FundTransMultistepTransfer, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3FundTransMultistepTransfer, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -224,11 +227,12 @@ func (a *ClientV3) FundTransMultistepQuery(ctx context.Context, bm gopay.BodyMap
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3FundTransMultistepQuery, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3FundTransMultistepQuery, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3FundTransMultistepQuery, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3FundTransMultistepQuery, authorization, aat)
 	if err != nil {
 		return nil, err
 	}

@@ -19,7 +19,7 @@ func (a *ClientV3) UserAgreementQuery(ctx context.Context, bm gopay.BodyMap) (al
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3UserAgreementQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -50,11 +50,12 @@ func (a *ClientV3) UserAgreementPageUnSign(ctx context.Context, bm gopay.BodyMap
 	if bm.GetString("external_agreement_no") == gopay.NULL && bm.GetString("agreement_no") == gopay.NULL {
 		return nil, errors.New("external_agreement_no and agreement_no are not allowed to be null at the same time")
 	}
-	authorization, err := a.authorization(MethodPost, v3UserAgreementPageUnSign, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3UserAgreementPageUnSign, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3UserAgreementPageUnSign, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3UserAgreementPageUnSign, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -75,11 +76,12 @@ func (a *ClientV3) TradeRelationBind(ctx context.Context, bm gopay.BodyMap) (ali
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3TradeRoyaltyRelationBind, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3TradeRoyaltyRelationBind, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3TradeRoyaltyRelationBind, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3TradeRoyaltyRelationBind, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -103,11 +105,12 @@ func (a *ClientV3) TradeRelationUnbind(ctx context.Context, bm gopay.BodyMap) (a
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3TradeRoyaltyRelationUnbind, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3TradeRoyaltyRelationUnbind, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3TradeRoyaltyRelationUnbind, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3TradeRoyaltyRelationUnbind, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -127,11 +130,12 @@ func (a *ClientV3) TradeRelationUnbind(ctx context.Context, bm gopay.BodyMap) (a
 // 分账关系查询 alipay.trade.royalty.relation.batchquery
 // StatusCode = 200 is success
 func (a *ClientV3) TradeRelationBatchQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeRelationBatchQueryRsp, err error) {
-	authorization, err := a.authorization(MethodPost, v3TradeRoyaltyRelationBatchQuery, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3TradeRoyaltyRelationBatchQuery, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3TradeRoyaltyRelationBatchQuery, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3TradeRoyaltyRelationBatchQuery, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +162,7 @@ func (a *ClientV3) TradeRoyaltyRateQuery(ctx context.Context, bm gopay.BodyMap) 
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3TradeRoyaltyRateQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -187,11 +191,12 @@ func (a *ClientV3) TradeOrderSettle(ctx context.Context, bm gopay.BodyMap) (aliR
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3TradeOrderSettle, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3TradeOrderSettle, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3TradeOrderSettle, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3TradeOrderSettle, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -214,7 +219,7 @@ func (a *ClientV3) TradeOrderSettleQuery(ctx context.Context, bm gopay.BodyMap) 
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3TradeOrderSettleQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -246,7 +251,7 @@ func (a *ClientV3) TradeOrderOnSettleQuery(ctx context.Context, bm gopay.BodyMap
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3TradeOrderOnSettleQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}

@@ -17,10 +17,10 @@ import (
 )
 
 // v3 鉴权请求 Authorization Header
-func (a *ClientV3) authorization(method, uri string, bm gopay.BodyMap) (string, error) {
+func (a *ClientV3) authorization(method, uri string, bm gopay.BodyMap, appAuthToken string) (string, error) {
 	var (
 		jb        = ""
-		aat       string // 应用授权令牌
+		aat       = a.AppAuthToken // 默认值
 		timestamp = convert.Int64ToString(time.Now().UnixNano() / int64(time.Millisecond))
 		nonceStr  = util.RandomString(32)
 		// app_id=2014060600164699,app_cert_sn=xxx,nonce=5f9fba93-bbb2-40f0-b328-04d5ead3e131,timestamp=1667804301218
@@ -29,8 +29,10 @@ func (a *ClientV3) authorization(method, uri string, bm gopay.BodyMap) (string, 
 	if a.AppCertSN == gopay.NULL {
 		authString = "app_id=" + a.AppId + ",nonce=" + nonceStr + ",timestamp=" + timestamp
 	}
+	if appAuthToken != "" {
+		aat = appAuthToken
+	}
 	if bm != nil {
-		aat = bm.GetString(HeaderAppAuthToken)
 		// 签名body里需要删掉 alipay-app-auth-token
 		bm.Remove(HeaderAppAuthToken)
 		jb = bm.JsonBody()
@@ -60,8 +62,6 @@ func (a *ClientV3) authorization(method, uri string, bm gopay.BodyMap) (string, 
 	signStr := authString + "\n" + method + "\n" + uri + "\n" + jb + "\n"
 	if aat != gopay.NULL {
 		signStr += aat + "\n"
-	} else if a.AppAuthToken != "" {
-		signStr += a.AppAuthToken + "\n"
 	}
 	if a.DebugSwitch == gopay.DebugOn {
 		a.logger.Debugf("Alipay_V3_SignString:\n%s", signStr)

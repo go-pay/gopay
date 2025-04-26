@@ -16,11 +16,12 @@ func (a *ClientV3) SystemOauthToken(ctx context.Context, bm gopay.BodyMap) (aliR
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3SystemOauthToken, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3SystemOauthToken, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3SystemOauthToken, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3SystemOauthToken, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +48,7 @@ func (a *ClientV3) UserCertifyOpenQuery(ctx context.Context, bm gopay.BodyMap) (
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3UserCertifyOpenQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -75,11 +76,12 @@ func (a *ClientV3) UserCertifyOpenInitialize(ctx context.Context, bm gopay.BodyM
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3UserCertifyOpenInitialize, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3UserCertifyOpenInitialize, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3UserCertifyOpenInitialize, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3UserCertifyOpenInitialize, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -99,15 +101,17 @@ func (a *ClientV3) UserCertifyOpenInitialize(ctx context.Context, bm gopay.BodyM
 // 支付宝会员授权信息查询接口 alipay.user.info.share
 // StatusCode = 200 is success
 func (a *ClientV3) UserInfoShare(ctx context.Context, bm gopay.BodyMap) (aliRsp *UserInfoShareRsp, err error) {
-	err = bm.CheckEmptyError("avatar", "city", "nick_name", "province")
+	err = bm.CheckEmptyError("auth_token")
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3UserInfoShare, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	uri := v3UserInfoShare + "?" + bm.EncodeURLParams()
+	authorization, err := a.authorization(MethodPost, uri, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3UserInfoShare, authorization)
+	res, bs, err := a.doPost(ctx, bm, uri, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +138,7 @@ func (a *ClientV3) UserAuthRelationshipQuery(ctx context.Context, bm gopay.BodyM
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3UserAuthRelationshipQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -162,11 +166,12 @@ func (a *ClientV3) UserDelOauthDetailQuery(ctx context.Context, bm gopay.BodyMap
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3UserDelOauthDetailQuery, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3UserDelOauthDetailQuery, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3UserDelOauthDetailQuery, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3UserDelOauthDetailQuery, authorization, aat)
 	if err != nil {
 		return nil, err
 	}

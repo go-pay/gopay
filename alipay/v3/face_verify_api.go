@@ -16,11 +16,12 @@ func (a *ClientV3) FaceVerificationInitialize(ctx context.Context, bm gopay.Body
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3FaceVerificationInitialize, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3FaceVerificationInitialize, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3FaceVerificationInitialize, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3FaceVerificationInitialize, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +48,7 @@ func (a *ClientV3) FaceVerificationQuery(ctx context.Context, bm gopay.BodyMap) 
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3FaceVerificationQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -76,11 +77,12 @@ func (a *ClientV3) FaceCertifyInitialize(ctx context.Context, bm gopay.BodyMap) 
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3FaceCertifyInitialize, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3FaceCertifyInitialize, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3FaceCertifyInitialize, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3FaceCertifyInitialize, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -104,11 +106,12 @@ func (a *ClientV3) FaceCertifyVerify(ctx context.Context, bm gopay.BodyMap) (ali
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3FaceCertifyVerify, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3FaceCertifyVerify, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3FaceCertifyVerify, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3FaceCertifyVerify, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +138,7 @@ func (a *ClientV3) FaceCertifyQuery(ctx context.Context, bm gopay.BodyMap) (aliR
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3FaceCertifyQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -164,11 +167,12 @@ func (a *ClientV3) FaceSourceCertify(ctx context.Context, bm gopay.BodyMap) (ali
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3FaceSourceCertify, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3FaceSourceCertify, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3FaceSourceCertify, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3FaceSourceCertify, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -192,11 +196,12 @@ func (a *ClientV3) FaceCheckInitialize(ctx context.Context, bm gopay.BodyMap) (a
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3FaceCheckInitialize, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3FaceCheckInitialize, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3FaceCheckInitialize, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3FaceCheckInitialize, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -223,7 +228,7 @@ func (a *ClientV3) FaceCheckQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3FaceCheckQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -252,11 +257,12 @@ func (a *ClientV3) IDCardTwoMetaCheck(ctx context.Context, bm gopay.BodyMap) (al
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3IDCardTwoMetaCheck, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3IDCardTwoMetaCheck, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3IDCardTwoMetaCheck, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3IDCardTwoMetaCheck, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -280,11 +286,12 @@ func (a *ClientV3) BankCardCheck(ctx context.Context, bm gopay.BodyMap) (aliRsp 
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3BankCardCheck, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3BankCardCheck, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3BankCardCheck, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3BankCardCheck, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -308,11 +315,12 @@ func (a *ClientV3) MobileThreeMetaSimpleCheck(ctx context.Context, bm gopay.Body
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3MobileThreeMetaSimpleCheck, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3MobileThreeMetaSimpleCheck, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3MobileThreeMetaSimpleCheck, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3MobileThreeMetaSimpleCheck, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -336,11 +344,12 @@ func (a *ClientV3) MobileThreeMetaDetailCheck(ctx context.Context, bm gopay.Body
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3MobileThreeMetaDetailCheck, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3MobileThreeMetaDetailCheck, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3MobileThreeMetaDetailCheck, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3MobileThreeMetaDetailCheck, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -364,11 +373,12 @@ func (a *ClientV3) OcrServerDetect(ctx context.Context, bm gopay.BodyMap) (aliRs
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3OcrServerDetect, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3OcrServerDetect, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3OcrServerDetect, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3OcrServerDetect, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -392,11 +402,12 @@ func (a *ClientV3) OcrMobileInitialize(ctx context.Context, bm gopay.BodyMap) (a
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3OcrMobileInitialize, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3OcrMobileInitialize, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3OcrMobileInitialize, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3OcrMobileInitialize, authorization, aat)
 	if err != nil {
 		return nil, err
 	}

@@ -16,11 +16,12 @@ func (a *ClientV3) MarketingCampaignCashCreate(ctx context.Context, bm gopay.Bod
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3MarketingCampaignCashCreate, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3MarketingCampaignCashCreate, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3MarketingCampaignCashCreate, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3MarketingCampaignCashCreate, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -44,11 +45,12 @@ func (a *ClientV3) MarketingCampaignCashTrigger(ctx context.Context, bm gopay.Bo
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3MarketingCampaignCashTrigger, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3MarketingCampaignCashTrigger, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3MarketingCampaignCashTrigger, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3MarketingCampaignCashTrigger, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -72,11 +74,12 @@ func (a *ClientV3) MarketingCampaignCashStatusModify(ctx context.Context, bm gop
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3MarketingCampaignCashStatusModify, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3MarketingCampaignCashStatusModify, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3MarketingCampaignCashStatusModify, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3MarketingCampaignCashStatusModify, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +106,7 @@ func (a *ClientV3) MarketingCampaignCashListQuery(ctx context.Context, bm gopay.
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3MarketingCampaignCashListQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +137,7 @@ func (a *ClientV3) MarketingCampaignCashDetailQuery(ctx context.Context, bm gopa
 	aat := bm.GetString(HeaderAppAuthToken)
 	bm.Remove(HeaderAppAuthToken)
 	uri := v3MarketingCampaignCashDetailQuery + "?" + bm.EncodeURLParams()
-	authorization, err := a.authorization(MethodGet, uri, nil)
+	authorization, err := a.authorization(MethodGet, uri, nil, aat)
 	if err != nil {
 		return nil, err
 	}

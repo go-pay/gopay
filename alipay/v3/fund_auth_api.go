@@ -12,11 +12,12 @@ import (
 // 资金授权操作查询接口 alipay.fund.auth.operation.detail.query
 // StatusCode = 200 is success
 func (a *ClientV3) FundAuthOperationDetailQuery(ctx context.Context, bm gopay.BodyMap) (aliRsp *FundAuthOperationDetailQueryRsp, err error) {
-	authorization, err := a.authorization(MethodPost, v3FundAuthOperationDetailQuery, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3FundAuthOperationDetailQuery, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3FundAuthOperationDetailQuery, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3FundAuthOperationDetailQuery, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -40,11 +41,12 @@ func (a *ClientV3) FundAuthOrderFreeze(ctx context.Context, bm gopay.BodyMap) (a
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3FundAuthOrderFreeze, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3FundAuthOrderFreeze, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3FundAuthOrderFreeze, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3FundAuthOrderFreeze, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -68,11 +70,12 @@ func (a *ClientV3) FundAuthOrderUnfreeze(ctx context.Context, bm gopay.BodyMap) 
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3FundAuthOrderUnfreeze, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3FundAuthOrderUnfreeze, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3FundAuthOrderUnfreeze, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3FundAuthOrderUnfreeze, authorization, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -96,11 +99,12 @@ func (a *ClientV3) FundAuthOrderVoucherCreate(ctx context.Context, bm gopay.Body
 	if err != nil {
 		return nil, err
 	}
-	authorization, err := a.authorization(MethodPost, v3FundAuthOrderVoucherCreate, bm)
+	aat := bm.GetString(HeaderAppAuthToken)
+	authorization, err := a.authorization(MethodPost, v3FundAuthOrderVoucherCreate, bm, aat)
 	if err != nil {
 		return nil, err
 	}
-	res, bs, err := a.doPost(ctx, bm, v3FundAuthOrderVoucherCreate, authorization)
+	res, bs, err := a.doPost(ctx, bm, v3FundAuthOrderVoucherCreate, authorization, aat)
 	if err != nil {
 		return nil, err
 	}

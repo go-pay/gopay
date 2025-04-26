@@ -37,7 +37,7 @@ func TestMain(m *testing.M) {
 	//	SetRequestIdFunc().                   // 设置自定义RequestId生成方法
 	//	SetAESKey("KvKUTqSVZX2fUgmxnFyMaQ==") // 设置biz_content加密KEY，设置此参数默认开启加密（目前不可用）
 
-	// 如果需要单个请求独立设置 app_auth_token，body map 中设置 app_auth_token
+	// 如果需要单个请求独立设置 Alipay-App-Auth-Token，每个请求的 body map 中 bm.Set(alipay.HeaderAppAuthToken, "xxx")
 
 	// Debug开关，输出/关闭日志
 	client.DebugSwitch = gopay.DebugOn

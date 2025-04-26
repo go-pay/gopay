@@ -4,13 +4,12 @@ type SystemOauthTokenRsp struct {
 	StatusCode  int         `json:"status_code"`
 	ErrResponse ErrResponse `json:"-"`
 
-	UserId       string `json:"user_id"`
-	OpenId       string `json:"open_id"`
 	AccessToken  string `json:"access_token"`
-	ExpiresIn    string `json:"expires_in"`
 	RefreshToken string `json:"refresh_token"`
-	ReExpiresIn  string `json:"re_expires_in"`
+	OpenId       string `json:"open_id"`
+	ReExpiresIn  int    `json:"re_expires_in"`
 	AuthStart    string `json:"auth_start"`
+	ExpiresIn    int    `json:"expires_in"`
 }
 
 type UserCertifyOpenQueryRsp struct {
