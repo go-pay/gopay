@@ -18,12 +18,14 @@ type MediaUploadRsp struct {
 	Error       string       `json:"-"`
 }
 
+// ComplaintImageRsp 是原返回结构
 type ComplaintImageRsp struct {
-	Code        int             `json:"-"`
-	SignInfo    *SignInfo       `json:"-"`
-	Response    *ComplaintImage `json:"response,omitempty"`
-	ErrResponse ErrResponse     `json:"err_response,omitempty"`
-	Error       string          `json:"-"`
+	Code        int                // 返回码
+	Error       string             // 错误信息
+	ErrResponse *gopay.ErrResponse // 解析后的错误
+	Response    *ComplaintImage    // 原来 JSON 结构体
+	ImageData   []byte             // 🔥 新增：如果是图片流，放到这里
+	SignInfo    *SignInfo          // 签名信息
 }
 
 // =========================================================分割=========================================================

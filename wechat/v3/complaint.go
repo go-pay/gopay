@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/util/js"
@@ -147,25 +148,41 @@ func (c *ClientV3) V3ComplaintUploadImage(ctx context.Context, fileName, fileSha
 // Code = 0 is success
 func (c *ClientV3) V3ComplaintImage(ctx context.Context, mediaId string) (wxRsp *ComplaintImageRsp, err error) {
 	uri := fmt.Sprintf(v3ComplaintImage, mediaId)
+
 	authorization, err := c.authorization(MethodGet, uri, nil)
 	if err != nil {
 		return nil, err
 	}
+
 	res, si, bs, err := c.doProdGet(ctx, uri, authorization)
 	if err != nil {
 		return nil, err
 	}
+
 	wxRsp = &ComplaintImageRsp{Code: Success, SignInfo: si}
+
+	contentType := res.Header.Get("Content-Type")
+
 	if res.StatusCode != http.StatusOK {
+		// 非200，一定是JSON错误信息
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
 		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
+
+	if strings.HasPrefix(contentType, "image/") {
+		// 成功，并且是图片
+		wxRsp.ImageData = bs
+		return wxRsp, nil
+	}
+
+	// 理论上不会到这里，但防止微信后续协议变化
 	wxRsp.Response = new(ComplaintImage)
 	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
+
 	return wxRsp, c.verifySyncSign(si)
 }
 
