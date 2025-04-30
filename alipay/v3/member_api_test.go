@@ -12,7 +12,8 @@ func TestClient_SystemOauthToken(t *testing.T) {
 	// 请求参数
 	bm := make(gopay.BodyMap)
 	bm.Set("grant_type", "authorization_code").
-		Set("code", "13e3374dcc924524a6627337eed7YX18")
+		Set("code", "309cd66a1c024e4b9d89f7241db4UA18").
+		Set(HeaderAppAuthToken, "202504BBcb0db76aff98487fb3fd2b733a474X87")
 
 	// 发起请求
 	aliRsp, err := client.SystemOauthToken(ctx, bm)

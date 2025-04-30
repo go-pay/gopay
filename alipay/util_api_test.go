@@ -67,7 +67,7 @@ func TestClient_UserInfoAuth(t *testing.T) {
 
 func TestClient_UserInfoShare(t *testing.T) {
 	// 发起请求
-	aliRsp, err := client.UserInfoShare(ctx, "auth_token")
+	aliRsp, err := client.UserInfoShare(ctx, "authbseBb6dd42c0d93a47dfa1b23aa725778X18")
 	if err != nil {
 		xlog.Errorf("%+v", err)
 		return

@@ -115,8 +115,8 @@ func (a *Client) UserInfoShare(ctx context.Context, authToken string) (aliRsp *U
 	if err = json.Unmarshal(bs, aliRsp); err != nil || aliRsp.Response == nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
-	if aliRsp.ErrorResponse != nil {
-		info := aliRsp.ErrorResponse
+	if aliRsp.Response.Code != "10000" {
+		info := aliRsp.Response.ErrorResponse
 		return aliRsp, fmt.Errorf(`{"code":"%s","msg":"%s","sub_code":"%s","sub_msg":"%s"}`, info.Code, info.Msg, info.SubCode, info.SubMsg)
 	}
 	signData, signDataErr := a.getSignData(bs, aliRsp.AlipayCertSn)
