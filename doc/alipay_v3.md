@@ -163,7 +163,7 @@ if err != nil {
 ok, err = alipay.VerifySign(aliPayPublicKey, notifyReq)
 
 // 支付宝异步通知验签（公钥证书模式）
-ok, err = alipay.VerifySignWithCert("alipayPublicCert.crt content", notifyReq)
+ok, err = alipay.VerifySignWithCert([]byte("alipayPublicCert.crt content"), notifyReq)
 
 // 如果需要，可将 BodyMap 内数据，Unmarshal 到指定结构体指针 ptr
 err = notifyReq.Unmarshal(ptr)
