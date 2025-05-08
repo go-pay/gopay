@@ -4,9 +4,9 @@
 
 - 已实现API列表附录：[API 列表附录](https://github.com/go-pay/gopay/blob/main/doc/wechat_v3.md#%E9%99%84%E5%BD%95)
 
-- 微信官方文档：[商户平台文档](https://pay.weixin.qq.com/wiki/doc/apiv3/wxpay/pages/index.shtml)、[服务商平台文档](https://pay.weixin.qq.com/wiki/doc/apiv3_partner/pages/index.shtml)
+- 微信官方文档：[商户平台文档](https://pay.weixin.qq.com/doc/v3/merchant/4012062524)、[服务商平台文档](https://pay.weixin.qq.com/doc/v3/partner/4012069852)
 
-- 通用规则：[通用规则](https://pay.weixin.qq.com/docs/merchant/development/interface-rules/introduction.html)
+- 通用规则：[通用规则](https://pay.weixin.qq.com/doc/v3/partner/4012081673)
 
 - GoPay微信v2文档：[GoPay微信v2文档](https://github.com/go-pay/gopay/blob/main/doc/wechat_v2.md) （部分接口仅v2版本支持）
 
