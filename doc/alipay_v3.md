@@ -254,7 +254,23 @@ return c.String(http.StatusOK, "success")
   * 更改现金活动状态：`client.MarketingCampaignCashStatusModify()`
   * 现金活动列表查询：`client.MarketingCampaignCashListQuery()`
   * 现金活动详情查询：`client.MarketingCampaignCashDetailQuery()`
-  
+  * 创建商家券活动：`client.MarketingActivityOrderVoucherCreate()`
+  * 同步商家券券码：`client.MarketingActivityOrderVoucherCodeDeposit()`
+  * 修改商家活动券基本信息：`client.MarketingActivityOrderVoucherModify()`
+  * 停止商家活动券：`client.MarketingActivityOrderVoucherStop()`
+  * 修改商家活动券发券数量上限：`client.MarketingActivityOrderVoucherAppend()`
+  * 同步券核销状态：`client.MarketingActivityOrderVoucherUse()`
+  * 取消券核销状态：`client.MarketingActivityOrderVoucherRefund()`
+  * 活动领取咨询接口：`client.MarketingActivityConsult()`
+  * 查询商家券活动：`client.MarketingActivityOrderVoucherQuery()`
+  * 查询活动详情：`client.MarketingActivityQuery()`
+  * 统计商家券券码数量：`client.MarketingActivityOrderVoucherCodeCount()`
+  * 条件查询活动列表：`client.MarketingActivityBatchQuery()`
+  * 条件查询用户券：`client.MarketingActivityQueryUserBatchQueryVoucher()`
+  * 查询用户券详情：`client.MarketingActivityQueryUserQueryVoucher()`
+  * 查询活动可用小程序：`client.MarketingActivityQueryAppBatchQuery()`
+  * 查询活动可用门店：`client.MarketingActivityQueryShopBatchQuery()`
+  * 查询活动适用商品：`client.MarketingActivityQueryGoodsBatchQuery()`
 * <font color='#027AFF' size='4'>图片素材</font>
   * 营销图片资源上传接口：`client.MarketingMaterialImageUpload()`
 * <font color='#027AFF' size='4'>信用</font>

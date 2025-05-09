@@ -1,3 +1,26 @@
+## 版本号：v1.5.113
+
+* 修改记录：
+  * 微信v3：修正接口 client.V3ComplaintImage() 的数据返回，新增 ImageData bytes。
+  * 支付宝v3：新增商家活动券相关接口。
+    * client.MarketingActivityOrderVoucherCreate()，创建商家活动券。
+    * client.MarketingActivityOrderVoucherCodeDeposit()，同步商家券券码。
+    * client.MarketingActivityOrderVoucherModify()，修改商家活动券基本信息。
+    * client.MarketingActivityOrderVoucherStop()，停止商家活动券。
+    * client.MarketingActivityOrderVoucherAppend()，修改商家活动券发券数量上限。
+    * client.MarketingActivityOrderVoucherUse()，同步券核销状态。
+    * client.MarketingActivityOrderVoucherRefund()，取消券核销状态。
+    * client.MarketingActivityConsult()，活动领取咨询接口。
+    * client.MarketingActivityOrderVoucherQuery()，查询商家活动券。
+    * client.MarketingActivityQuery()，查询活动详情。
+    * client.MarketingActivityOrderVoucherCodeCount()，统计商家券券码数量。
+    * client.MarketingActivityBatchQuery()，条件查询活动列表。
+    * client.MarketingActivityQueryUserBatchQueryVoucher()，条件查询用户券。
+    * client.MarketingActivityQueryUserQueryVoucher()，查询用户券详情。
+    * client.MarketingActivityQueryAppBatchQuery()，查询活动可用小程序。
+    * client.MarketingActivityQueryShopBatchQuery()，查询活动可用门店。
+    * client.MarketingActivityQueryGoodsBatchQuery()，查询活动适用商品。
+
 ## 版本号：v1.5.112
 
 * 修改记录：
