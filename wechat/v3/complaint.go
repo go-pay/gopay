@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/util/js"
@@ -155,11 +156,16 @@ func (c *ClientV3) V3ComplaintImage(ctx context.Context, mediaId string) (wxRsp 
 	if err != nil {
 		return nil, err
 	}
+	contentType := res.Header.Get("Content-Type")
 	wxRsp = &ComplaintImageRsp{Code: Success, SignInfo: si}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
 		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
+		return wxRsp, nil
+	}
+	if strings.HasPrefix(contentType, "image/") {
+		wxRsp.ImageData = bs
 		return wxRsp, nil
 	}
 	wxRsp.Response = new(ComplaintImage)

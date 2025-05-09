@@ -22,6 +22,7 @@ type ComplaintImageRsp struct {
 	Code        int             `json:"-"`
 	SignInfo    *SignInfo       `json:"-"`
 	Response    *ComplaintImage `json:"response,omitempty"`
+	ImageData   []byte          // 🔥 新增：如果是图片流，放到这里
 	ErrResponse ErrResponse     `json:"err_response,omitempty"`
 	Error       string          `json:"-"`
 }
