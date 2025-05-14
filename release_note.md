@@ -2,7 +2,7 @@
 
 * 修改记录：
   * 微信v3：修正接口 client.V3ComplaintImage() 的数据返回，新增 ImageData bytes。
-  * 支付宝v3：新增商家活动券相关接口。
+  * 支付宝v3：新增 商家活动券 相关接口。
     * client.MarketingActivityOrderVoucherCreate()，创建商家活动券。
     * client.MarketingActivityOrderVoucherCodeDeposit()，同步商家券券码。
     * client.MarketingActivityOrderVoucherModify()，修改商家活动券基本信息。
@@ -20,6 +20,28 @@
     * client.MarketingActivityQueryAppBatchQuery()，查询活动可用小程序。
     * client.MarketingActivityQueryShopBatchQuery()，查询活动可用门店。
     * client.MarketingActivityQueryGoodsBatchQuery()，查询活动适用商品。
+  * 支付宝v3：新增 蚂蚁店铺 相关接口。
+    * client.AntMerchantShopCreate()，蚂蚁店铺创建。
+    * client.AntMerchantShopModify()，修改蚂蚁店铺。
+    * client.AntMerchantShopQuery()，店铺查询接口。
+    * client.AntMerchantShopClose()，蚂蚁店铺关闭。
+    * client.AntMerchantOrderQuery()，商户申请单查询。
+    * client.AntMerchantShopPageQuery()，店铺分页查询接口。
+    * client.AntMerchantExpandIndirectImageUpload()，图片上传。
+    * client.AntMerchantExpandMccQuery()，商户mcc信息查询。
+    * client.AntMerchantExpandShopReceiptAccountSave()，店铺增加收单账号。
+  * 支付宝v3：新增 商家会员卡 相关接口。
+    * client.MarketingCardTemplateCreate()，会员卡模板创建。
+    * client.MarketingCardTemplateQuery()，会员卡模板查询接口。
+    * client.MarketingCardTemplateModify()，会员卡模板修改。
+    * client.MarketingCardFormTemplateSet()，会员卡开卡表单模板配置。
+    * client.MarketingCardQuery()，会员卡查询。
+    * client.MarketingCardUpdate()，会员卡更新。
+    * client.MarketingCardDelete()，会员卡删卡。
+    * client.MarketingCardMessageNotify()，会员卡消息通知。
+    * client.OfflineMaterialImageUpload()，上传门店照片和视频。
+  * 支付宝v3：新增 红包 相关接口。
+    * client.FundTransRefund()，资金退回接口。
 
 ## 版本号：v1.5.112
 
