@@ -133,7 +133,7 @@ const (
 	v3AntMerchantShopQuery                    = "/v3/ant/merchant/shop"                            // GET 店铺查询接口
 	v3AntMerchantShopModify                   = "/v3/ant/merchant/shop"                            // PATCH 修改蚂蚁店铺
 	v3AntMerchantShopClose                    = "/v3/ant/merchant/shop/close"                      // PATCH 蚂蚁店铺关闭
-	v3AntMerchantOrderQuery                   = "/v3/ant/merchant/order/{order_id}"                // GET order_id 商户申请单查询
+	v3AntMerchantOrderQuery                   = "/v3/ant/merchant/order/%s"                        // GET order_id 商户申请单查询
 	v3AntMerchantShopPageQuery                = "/v3/ant/merchant/shop/pagequery"                  // GET 店铺分页查询接口
 	v3AntMerchantExpandIndirectImageUpload    = "/v3/ant/merchant/indirect/image"                  // POST 图片上传
 	v3AntMerchantExpandMccQuery               = "/v3/ant/merchant/mcc/query"                       // GET 商户mcc信息查询

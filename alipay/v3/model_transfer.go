@@ -125,3 +125,15 @@ type PayeeInfo struct {
 	AgreementNo     string `json:"agreement_no"`
 	RentAgreementNo string `json:"rent_agreement_no"`
 }
+
+type FundTransRefundRsp struct {
+	StatusCode  int         `json:"status_code"`
+	ErrResponse ErrResponse `json:"-"`
+
+	RefundOrderId string `json:"refund_order_id"`
+	OrderId       string `json:"order_id"`
+	OutRequestNo  string `json:"out_request_no"`
+	Status        string `json:"status"`
+	RefundAmount  string `json:"refund_amount"`
+	RefundDate    string `json:"refund_date"`
+}

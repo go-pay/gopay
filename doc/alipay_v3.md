@@ -271,6 +271,25 @@ return c.String(http.StatusOK, "success")
   * 查询活动可用小程序：`client.MarketingActivityQueryAppBatchQuery()`
   * 查询活动可用门店：`client.MarketingActivityQueryShopBatchQuery()`
   * 查询活动适用商品：`client.MarketingActivityQueryGoodsBatchQuery()`
+  * 蚂蚁店铺创建：`client.AntMerchantShopCreate()`
+  * 店铺查询接口：`client.AntMerchantShopQuery()`
+  * 修改蚂蚁店铺：`client.AntMerchantShopModify()`
+  * 蚂蚁店铺关闭：`client.AntMerchantShopClose()`
+  * 商户申请单查询：`client.AntMerchantOrderQuery()`
+  * 店铺分页查询接口：`client.AntMerchantShopPageQuery()`
+  * 图片上传：`client.AntMerchantExpandIndirectImageUpload()`
+  * 商户mcc信息查询：`client.AntMerchantExpandMccQuery()`
+  * 店铺增加收单账号：`client.AntMerchantExpandShopReceiptAccountSave()`
+  * 会员卡模板创建：`client.MarketingCardTemplateCreate()`
+  * 会员卡模板查询接口：`client.MarketingCardTemplateQuery()`
+  * 会员卡模板修改：`client.MarketingCardTemplateModify()`
+  * 会员卡开卡表单模板配置：`client.MarketingCardFormTemplateSet()`
+  * 会员卡查询：`client.MarketingCardQuery()`
+  * 会员卡更新：`client.MarketingCardUpdate()`
+  * 会员卡删卡：`client.MarketingCardDelete()`
+  * 会员卡消息通知：`client.MarketingCardMessageNotify()`
+  * 上传门店照片和视频接口：`client.OfflineMaterialImageUpload()`
+  * 资金退回接口：`client.FundTransRefund()`
 * <font color='#027AFF' size='4'>图片素材</font>
   * 营销图片资源上传接口：`client.MarketingMaterialImageUpload()`
 * <font color='#027AFF' size='4'>信用</font>
@@ -283,7 +302,6 @@ return c.String(http.StatusOK, "success")
   * 芝麻GO协议解约：`client.ZmGoAgreementQueryUnsign()`
   * 商户创建芝麻GO模板接口：`client.ZmGoTemplateCreate()`
   * 商家芝麻GO模板查询：`client.ZmGoTemplateQuery()`
-
 * <font color='#027AFF' size='4'>广告</font>
   * 转化数据回传：`client.AdConversionUpload()`
   * 广告投放数据通用查询：`client.AdReportdataQuery()`
