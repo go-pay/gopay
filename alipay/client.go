@@ -10,10 +10,11 @@ import (
 	"github.com/go-pay/crypto/aes"
 	"github.com/go-pay/crypto/xpem"
 	"github.com/go-pay/crypto/xrsa"
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/xlog"
 	"github.com/go-pay/xtime"
+
+	"github.com/go-pay/gopay"
+	"github.com/go-pay/gopay/pkg/xhttp"
 )
 
 type Client struct {
@@ -65,6 +66,11 @@ func NewClient(appid, privateKey string, isProd bool) (client *Client, err error
 		hc:          xhttp.NewClient(),
 	}
 	return client, nil
+}
+
+// GetXHttpClient 获取 xhttp.Client，用于自定义调整 http 请求参数
+func (a *Client) GetXHttpClient() *xhttp.Client {
+	return a.hc
 }
 
 // 开启请求完自动验签功能（默认不开启，推荐开启，只支持证书模式）
