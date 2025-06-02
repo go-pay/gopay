@@ -92,13 +92,16 @@ func main() {
 
 ---
 
-## 讨论群
-> 微信群过期加个人微信: **[85411418](.github/wechat_jerry.png)** 邀请加群（加个人微信备注 gopay 并关注抖音账号，谢谢）。
+## 问题沟通（非必要不用加微信）
+> 微信: **[85411418](.github/wechat_jerry.png)**（加个人微信备注 gopay 并关注抖音账号，谢谢）。
 
-关注抖音：
-<img width="240" height="240" src=".github/douyin_jerry.png"/>
-&nbsp;&nbsp;&nbsp;&nbsp;微信群：
-<img width="240" height="240" src=".github/wx_gopay.png"/>
+[//]: # (关注抖音：)
+
+[//]: # (<img width="240" height="240" src=".github/douyin_jerry.png"/>)
+
+[//]: # (&nbsp;&nbsp;&nbsp;&nbsp;QQ群：)
+
+[//]: # (<img width="240" height="240" src=".github/wx_gopay.png"/>)
 
 ---
 
