@@ -6,11 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-pay/util"
-	"github.com/go-pay/xlog"
-
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/alipay/cert"
+	"github.com/go-pay/util"
+	"github.com/go-pay/xlog"
 )
 
 var (
@@ -95,8 +94,8 @@ func TestDecryptOpenDataToBodyMap(t *testing.T) {
 	xlog.Info("bm:", bm)
 }
 
-func TestClient_GetXHttpClient(t *testing.T) {
+func TestClient_GetHttpClient(t *testing.T) {
 	c, _ := NewClient(cert.Appid, cert.PrivateKey, false)
-	httpClient := c.GetXHttpClient()
+	httpClient := c.GetHttpClient()
 	httpClient.SetTimeout(time.Millisecond)
 }
