@@ -62,3 +62,11 @@ type UserDelOauthDetail struct {
 	UserId      string `json:"user_id"`
 	OpenId      string `json:"open_id"`
 }
+
+type MobilePhoneNumberDecryptionResp struct {
+	Code    string `json:"code"`
+	Msg     string `json:"msg"`
+	SubCode string `json:"subCode"`
+	SubMsg  string `json:"subMsg"`
+	Mobile  string `json:"mobile"`
+}
