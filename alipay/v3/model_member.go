@@ -6,6 +6,7 @@ type SystemOauthTokenRsp struct {
 
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
+	UnionId      string `json:"union_id"`
 	OpenId       string `json:"open_id"`
 	ReExpiresIn  int    `json:"re_expires_in"`
 	AuthStart    string `json:"auth_start"`
@@ -60,4 +61,12 @@ type UserDelOauthDetail struct {
 	DelAuthTime string `json:"del_auth_time"`
 	UserId      string `json:"user_id"`
 	OpenId      string `json:"open_id"`
+}
+
+type MobilePhoneNumberDecryptionResp struct {
+	Code    string `json:"code"`
+	Msg     string `json:"msg"`
+	SubCode string `json:"subCode"`
+	SubMsg  string `json:"subMsg"`
+	Mobile  string `json:"mobile"`
 }

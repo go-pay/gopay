@@ -2,7 +2,11 @@ package alipay
 
 import (
 	"context"
+	"crypto/aes"
+	"crypto/cipher"
+	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -186,4 +190,65 @@ func (a *ClientV3) UserDelOauthDetailQuery(ctx context.Context, bm gopay.BodyMap
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}
 	return aliRsp, a.autoVerifySignByCert(res, bs)
+}
+
+// MobilePhoneNumberDecryption 解密手机号
+func (a *ClientV3) MobilePhoneNumberDecryption(response string) (*MobilePhoneNumberDecryptionResp, error) {
+	if a.aesKey == "" {
+		return nil, fmt.Errorf("aes key is empty")
+	}
+	var data, err = base64.StdEncoding.DecodeString(a.aesKey)
+	if err != nil {
+		return nil, err
+	}
+
+	block, err := aes.NewCipher(data)
+	if err != nil {
+		return nil, err
+	}
+
+	iv := make([]byte, 16)
+	for i := 0; i < 16; i++ {
+		iv[i] = 0
+	}
+
+	encryptedBytes, err := base64.StdEncoding.DecodeString(response)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(encryptedBytes)%aes.BlockSize != 0 {
+		return nil, errors.New("ciphertext is not a multiple of the block size")
+	}
+
+	mode := cipher.NewCBCDecrypter(block, iv)
+
+	mode.CryptBlocks(encryptedBytes, encryptedBytes)
+
+	decryptedBytes, err := a.pkcs5Unpad(encryptedBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp = new(MobilePhoneNumberDecryptionResp)
+	if err := json.Unmarshal(decryptedBytes, resp); err != nil {
+		return nil, err
+	}
+
+	if resp.Code != "10000" {
+		return resp, fmt.Errorf("%s:%s", resp.Msg, resp.SubMsg)
+	}
+
+	return resp, nil
+}
+
+func (a *ClientV3) pkcs5Unpad(src []byte) ([]byte, error) {
+	length := len(src)
+	unpadding := int(src[length-1])
+
+	if unpadding > length {
+		return nil, errors.New("unpadding error")
+	}
+
+	return src[:(length - unpadding)], nil
 }
