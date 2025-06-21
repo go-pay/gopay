@@ -25,7 +25,7 @@ func (a *ClientV3) OpenMiniVersionAuditApply(ctx context.Context, bm gopay.BodyM
 	bm.Remove(HeaderAppAuthToken)
 	// 临时存放 body file
 	tempFile := make(gopay.BodyMap)
-
+	signMap := make(gopay.BodyMap)
 	// 遍历 map，把除了 file文件 字段之外的参数重新 set 到 bm 的 data 字段里签名用，然后移除自身
 	bm.SetBodyMap("data", func(b gopay.BodyMap) {
 		bm.Range(func(k string, v any) bool {
@@ -37,13 +37,16 @@ func (a *ClientV3) OpenMiniVersionAuditApply(ctx context.Context, bm gopay.BodyM
 				bm.Remove(k)
 				return true
 			}
-			// 非 file 类型的参数，重新 set 到 data 字段中，然后从原map中删除
+			// 非 file 类型的参数 set 到签名用的 map 中
+			signMap.Set(k, v)
+			// 非 file 类型的参数 set 到 data 字段中，然后从原map中删除
 			b.Set(k, v)
 			bm.Remove(k)
 			return true
 		})
 	})
-	authorization, err := a.authorization(MethodPost, v3OpenMiniVersionAuditApply, bm, aat)
+
+	authorization, err := a.authorization(MethodPost, v3OpenMiniVersionAuditApply, signMap, aat)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +56,6 @@ func (a *ClientV3) OpenMiniVersionAuditApply(ctx context.Context, bm gopay.BodyM
 		return true
 	})
 
-	// 至此，bodymap 内容 key 如下：image_content, data
 	res, bs, err := a.doProdPostFile(ctx, bm, v3OpenMiniVersionAuditApply, authorization, aat)
 	if err != nil {
 		return nil, err

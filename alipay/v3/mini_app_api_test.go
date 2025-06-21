@@ -24,7 +24,7 @@ func TestOpenMiniVersionAuditApply(t *testing.T) {
 		return
 	}
 	bm := make(gopay.BodyMap)
-	bm.Set(HeaderAppAuthToken, "202506BB364aecd0262f46afa8e472a46a9ffX29")
+	bm.Set(HeaderAppAuthToken, "xxxxx")
 	bm.Set("app_version", "0.0.1")                                                         // 商家小程序版本号，格式: x.y.z
 	bm.Set("version_desc", "该版本新增了XXX功能，修复了XXX的bug，优化了用户体验。")                              // 小程序版本描述
 	bm.Set("app_slogan", "我是简介")                                                           // 小程序简介

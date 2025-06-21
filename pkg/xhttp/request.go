@@ -7,6 +7,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"github.com/go-pay/xlog"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -203,6 +204,7 @@ func (r *Request) EndBytesForAlipayV3(ctx context.Context) (res *http.Response, 
 				case string:
 					_, _ = part.Write([]byte(vs))
 				default:
+					xlog.Warnf("multipart-form-data key: %s, value: %s", k, ConvertToString(v))
 					_, _ = part.Write([]byte(ConvertToString(v)))
 				}
 			}
