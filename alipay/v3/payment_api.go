@@ -6,8 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/xtime"
 )
 
 // 统一收单交易支付接口 alipay.trade.pay
@@ -247,15 +249,89 @@ func (a *ClientV3) TradePrecreate(ctx context.Context, bm gopay.BodyMap) (aliRsp
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
+// alipay.trade.app.pay(app支付接口2.0)
+// 文档地址：https://opendocs.alipay.com/open-v3/429e4d75_alipay.trade.app.pay
+func (a *ClientV3) TradeAppPay(ctx context.Context, bm gopay.BodyMap) (orderStr string, err error) {
+	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
+	if err != nil {
+		return gopay.NULL, err
+	}
+
+	aat := bm.Get(HeaderAppAuthToken)
+	bm.Remove(HeaderAppAuthToken)
+	bizContent := bm.JsonBody()
+	if aat != gopay.NULL {
+		bm.Set(HeaderAppAuthToken, aat)
+	}
+
+	pubBody := make(gopay.BodyMap)
+	pubBody.Set("app_id", a.AppId).
+		Set("method", "alipay.trade.app.pay").
+		Set("format", "JSON").
+		Set("charset", "utf-8").
+		Set("sign_type", "RSA2").
+		Set("version", "1.0").
+		Set("timestamp", time.Now().Format(xtime.TimeLayout))
+
+	// 前置参数校验赋值
+	if a.AppCertSN != gopay.NULL {
+		pubBody.Set("app_cert_sn", a.AppCertSN)
+	}
+	if a.AliPayRootCertSN != gopay.NULL {
+		pubBody.Set("alipay_root_cert_sn", a.AliPayRootCertSN)
+	}
+	// default use app_auth_token
+	if a.AppAuthToken != gopay.NULL {
+		pubBody.Set("app_auth_token", a.AppAuthToken)
+	}
+	if bm != nil {
+		// version
+		if version := bm.GetString("version"); version != gopay.NULL {
+			pubBody.Set("version", version)
+		}
+		if returnUrl := bm.GetString("return_url"); returnUrl != gopay.NULL {
+			pubBody.Set("return_url", returnUrl)
+		}
+		if notifyUrl := bm.GetString("notify_url"); notifyUrl != gopay.NULL {
+			pubBody.Set("notify_url", notifyUrl)
+		}
+		// if user set app_auth_token in body_map, use this
+		if aat := bm.Get(HeaderAppAuthToken); aat != gopay.NULL {
+			pubBody.Set("app_auth_token", aat)
+		}
+	}
+	if bizContent != gopay.NULL {
+		if a.aesKey == gopay.NULL {
+			pubBody.Set("biz_content", bizContent)
+		} else {
+			// AES Encrypt biz_content
+			encryptBizContent, err := a.encryptBizContent(bizContent)
+			if err != nil {
+				return "", fmt.Errorf("EncryptBizContent Error: %w", err)
+			}
+			if a.DebugSwitch == gopay.DebugOn {
+				a.logger.Debugf("Alipay_Origin_BizContent: %s", bizContent)
+				a.logger.Debugf("Alipay_Encrypt_BizContent: %s", encryptBizContent)
+			}
+			pubBody.Set("biz_content", encryptBizContent)
+		}
+	}
+	// sign
+	sign, err := a.rsaSign(pubBody.EncodeAliPaySignParams())
+	if err != nil {
+		return "", fmt.Errorf("GetRsaSign Error: %w", err)
+	}
+	pubBody.Set("sign", sign)
+	orderStr = pubBody.EncodeURLParams()
+	return orderStr, nil
+}
+
 // 统一收单交易创建接口 alipay.trade.create
 // StatusCode = 200 is success
 func (a *ClientV3) TradeCreate(ctx context.Context, bm gopay.BodyMap) (aliRsp *TradeCreateRsp, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject", "product_code", "op_app_id")
 	if err != nil {
 		return nil, err
-	}
-	if bm.GetString("buyer_id") == gopay.NULL && bm.GetString("buyer_open_id") == gopay.NULL {
-		return nil, errors.New("buyer_id and buyer_open_id are not allowed to be null at the same time")
 	}
 	aat := bm.GetString(HeaderAppAuthToken)
 	authorization, err := a.authorization(MethodPost, v3TradeCreate, bm, aat)

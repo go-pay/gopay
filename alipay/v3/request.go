@@ -2,11 +2,13 @@ package alipay
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
 
+	"github.com/go-pay/crypto/aes"
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/util"
@@ -269,4 +271,12 @@ func (a *ClientV3) doDelete(ctx context.Context, bm gopay.BodyMap, uri, authoriz
 		a.logger.Debugf("Alipay_V3_Rsp_Headers: %#v", res.Header)
 	}
 	return res, bs, nil
+}
+
+func (a *ClientV3) encryptBizContent(originData string) (string, error) {
+	encryptData, err := aes.CBCEncrypt([]byte(originData), []byte(a.aesKey), a.ivKey)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(encryptData), nil
 }
