@@ -62,6 +62,25 @@ const (
 	v3FundAuthOrderUnfreeze        = "/v3/alipay/fund/auth/order/unfreeze"         // 资金授权解冻接口
 	v3FundAuthOrderVoucherCreate   = "/v3/alipay/fund/auth/order/voucher/create"   // 资金授权发码接口
 
+	// 私域-小程序开发管理-小程序开发版本
+
+	v3OpenMiniVersionAuditedCancel = "/v3/alipay/open/mini/version/audited/cancel" // 小程序退回开发
+	v3OpenMiniVersionGrayOnline    = "/v3/alipay/open/mini/version/gray/online"    // 小程序灰度上架
+	v3OpenMiniVersionGrayCancel    = "/v3/alipay/open/mini/version/gray/cancel"    // 小程序结束灰度
+	v3OpenMiniVersionOnline        = "/v3/alipay/open/mini/version/online"         // 小程序上架
+	v3OpenMiniVersionOffline       = "/v3/alipay/open/mini/version/offline"        // 小程序下架
+	v3OpenMiniVersionRollback      = "/v3/alipay/open/mini/version/rollback"       // 小程序回滚
+	v3OpenMiniVersionDelete        = "/v3/alipay/open/mini/version/delete"         // 小程序删除版本
+	v3OpenMiniVersionAuditApply    = "/v3/alipay/open/mini/version/audit/apply"    // 小程序提交审核
+	v3OpenMiniVersionUpload        = "/v3/alipay/open/mini/version/upload"         // 小程序基于模板上传版本
+	v3OpenMiniTemplateUsageQuery   = "/v3/alipay/open/mini/template/usage/query"   // 查询使用模板的小程序列表
+	v3OpenMiniVersionBuildQuery    = "/v3/alipay/open/mini/version/build/query"    // 小程序查询版本构建状态
+	v3OpenMiniVersionDetailQuery   = "/v3/alipay/open/mini/version/detail/query"   // 小程序版本详情查询
+	v3OpenMiniVersionListQuery     = "/v3/alipay/open/mini/version/list/query"     // 小程序版本列表查询
+	v3OpenMiniExperienceCreate     = "/v3/alipay/open/mini/experience/create"      // 小程序生成体验版
+	v3OpenMiniExperienceQuery      = "/v3/alipay/open/mini/experience/query"       // 小程序体验版状态查询接口
+	v3OpenMiniExperienceCancel     = "/v3/alipay/open/mini/experience/cancel"      // 小程序取消体验版
+
 	// 会员
 	v3UserCertifyOpenQuery       = "/v3/alipay/user/certify/open/query"                                // 身份认证记录查询
 	v3UserCertifyOpenInitialize  = "/v3/alipay/user/certify/open/initialize"                           // 身份认证初始化服务
