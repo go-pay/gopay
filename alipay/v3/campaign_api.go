@@ -90,9 +90,6 @@ func (a *ClientV3) MarketingCampaignCashStatusModify(ctx context.Context, bm gop
 		}
 		return aliRsp, nil
 	}
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
-	}
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 

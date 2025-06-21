@@ -1,3 +1,26 @@
+## 版本号：v1.5.114
+
+* 修改记录：
+  * gopay：golang.org/x/crypto 版本升级到 v0.39.0。
+  * 支付宝v3：修复上传文件相关接口签名错误问题。
+  * 支付宝v3：新增 小程序开发相关接口。
+    * client.OpenMiniVersionAuditedCancel()，小程序退回开发。
+    * client.OpenMiniVersionGrayOnline()，小程序灰度上架。
+    * client.OpenMiniVersionGrayCancel()，小程序结束灰度。
+    * client.OpenMiniVersionOnline()，小程序上架。
+    * client.OpenMiniVersionOffline()，小程序下架。
+    * client.OpenMiniVersionRollback()，小程序回滚。
+    * client.OpenMiniVersionDelete()，小程序删除版本。
+    * client.OpenMiniVersionAuditApply()，小程序提交审核。
+    * client.OpenMiniVersionUpload()，小程序基于模板上传版本。
+    * client.OpenMiniTemplateUsageQuery()，查询使用模板的小程序列表。
+    * client.OpenMiniVersionBuildQuery()，小程序查询版本构建状态。
+    * client.OpenMiniVersionDetailQuery()，小程序版本详情查询。
+    * client.OpenMiniVersionListQuery()，小程序版本列表查询。
+    * client.OpenMiniExperienceCreate()，小程序生成体验版。
+    * client.OpenMiniExperienceQuery()，小程序体验版状态查询接口。
+    * client.OpenMiniExperienceCancel()，小程序取消体验版。
+
 ## 版本号：v1.5.113
 
 * 修改记录：
