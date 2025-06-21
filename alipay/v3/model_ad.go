@@ -4,6 +4,7 @@ type AdConversionUploadRsp struct {
 	StatusCode  int         `json:"status_code"`
 	ErrResponse ErrResponse `json:"-"`
 }
+
 type AdReportdataQueryRsp struct {
 	StatusCode  int         `json:"status_code"`
 	ErrResponse ErrResponse `json:"-"`

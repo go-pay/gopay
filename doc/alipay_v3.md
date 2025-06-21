@@ -312,6 +312,22 @@ return c.String(http.StatusOK, "success")
   * 商品落地页信息创建或更新：`client.ProductLandinginfoCreateOrModify()`
   * 商品落地页信息查询：`client.ProductLandinginfoQuery()`
   * 广告代理商投放数据查询：`client.AdAgentreportdataQuery()`
-
+* <font color='#027AFF' size='4'>小程序开发</font>
+  * 小程序退回开发：`client.OpenMiniVersionAuditedCancel()`
+  * 小程序灰度上架：`client.OpenMiniVersionGrayOnline()`
+  * 小程序结束灰度：`client.OpenMiniVersionGrayCancel()`
+  * 小程序上架：`client.OpenMiniVersionOnline()`
+  * 小程序下架：`client.OpenMiniVersionOffline()`
+  * 小程序回滚：`client.OpenMiniVersionRollback()`
+  * 小程序删除版本：`client.OpenMiniVersionDelete()`
+  * 小程序提交审核：`client.OpenMiniVersionAuditApply()`
+  * 小程序基于模板上传版本：`client.OpenMiniVersionUpload()`
+  * 查询使用模板的小程序列表：`client.OpenMiniTemplateUsageQuery()`
+  * 小程序查询版本构建状态：`client.OpenMiniVersionBuildQuery()`
+  * 小程序版本详情查询：`client.OpenMiniVersionDetailQuery()`
+  * 小程序版本列表查询：`client.OpenMiniVersionListQuery()`
+  * 小程序生成体验版：`client.OpenMiniExperienceCreate()`
+  * 小程序体验版状态查询接口：`client.OpenMiniExperienceQuery()`
+  * 小程序取消体验版：`client.OpenMiniExperienceCancel()`
 
 ### 支付宝公共 API

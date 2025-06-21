@@ -32,9 +32,6 @@ func (a *ClientV3) AdConversionUpload(ctx context.Context, bm gopay.BodyMap) (al
 		}
 		return aliRsp, nil
 	}
-	if err = json.Unmarshal(bs, aliRsp); err != nil {
-		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
-	}
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
 
