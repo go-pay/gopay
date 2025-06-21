@@ -3,6 +3,7 @@
 * 修改记录：
   * gopay：golang.org/x/crypto 版本升级到 v0.39.0。
   * 支付宝v3：新增 client.TradeAppPay()，支付宝APP支付（v2版本）。
+  * 支付宝v3：新增 client.TradePagePay()，统一收单下单并支付页面接口（v2版本）。
   * 支付宝v3：修复上传文件相关接口签名错误问题。
   * 支付宝v3：新增 小程序开发相关接口。
     * client.OpenMiniVersionAuditedCancel()，小程序退回开发。

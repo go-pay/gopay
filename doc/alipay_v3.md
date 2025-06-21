@@ -196,6 +196,7 @@ return c.String(http.StatusOK, "success")
   * 查询对账单下载地址：`client.DataBillDownloadUrlQuery()`
   * 统一收单线下交易预创建：`client.TradePrecreate()`
   * 支付宝APP支付（v2版本）：`client.TradeAppPay()`
+  * 统一收单下单并支付页面接口（v2版本）：`client.TradePagePay()`
   * 统一收单交易创建接口：`client.TradeCreate()`
   * 支付宝订单信息同步接口：`client.TradeOrderInfoSync()`
   * 资金授权操作查询接口：`client.FundAuthOperationDetailQuery()`
