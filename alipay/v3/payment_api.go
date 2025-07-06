@@ -344,7 +344,7 @@ func (a *ClientV3) TradePagePay(ctx context.Context, bm gopay.BodyMap) (payUrl s
 
 	pubBody := make(gopay.BodyMap)
 	pubBody.Set("app_id", a.AppId).
-		Set("method", "alipay.trade.app.pay").
+		Set("method", "alipay.trade.page.pay").
 		Set("format", "JSON").
 		Set("charset", "utf-8").
 		Set("sign_type", "RSA2").
