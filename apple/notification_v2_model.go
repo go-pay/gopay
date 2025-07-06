@@ -23,6 +23,7 @@ const (
 	NotificationTypeV2RenewalExtended        = "RENEWAL_EXTENDED"
 	NotificationTypeV2Revoke                 = "REVOKE"
 	NotificationTypeV2Subscribed             = "SUBSCRIBED"
+	NotificationTypeV2OneTimeCharge          = "ONE_TIME_CHARGE"
 
 	// 子类型常量
 	// https://developer.apple.com/documentation/appstoreservernotifications/subtype
