@@ -55,6 +55,12 @@ const (
 	v3CombineQuery    = "/v3/combine-transactions/out-trade-no/%s" // 合单查询
 	v3CombineClose    = "/v3/combine-transactions/out-trade-no/%s/close"
 
+	// 付款码支付
+	v3ApiCodePay               = "/v3/pay/transactions/codepay"                         // 付款码支付
+	v3ApiCodePayReverse        = "/v3/pay/transactions/out-trade-no/%s/reverse"         // out_trade_no 撤销
+	v3ApiPartnerCodePay        = "/v3/pay/partner/transactions/codepay"                 // 服务商付款码支付
+	v3ApiPartnerCodePayReverse = "/v3/pay/partner/transactions/out-trade-no/%s/reverse" // out_trade_no 服务商撤销
+
 	// 退款
 	v3DomesticRefund         = "/v3/refund/domestic/refunds"                          // 申请退款
 	v3DomesticRefundQuery    = "/v3/refund/domestic/refunds/%s"                       // out_refund_no 查询单笔退款

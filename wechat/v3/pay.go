@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/go-pay/util/js"
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // APP下单
@@ -135,6 +135,61 @@ func (c *ClientV3) V3QQTransactionH5(ctx context.Context, qqAppid, accessToken, 
 		return nil, err
 	}
 	wxRsp = &H5Rsp{Code: Success, SignInfo: si, Response: new(H5Url)}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
+		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 付款码支付
+// Code = 0 is success
+func (c *ClientV3) V3TransactionCodePay(ctx context.Context, bm gopay.BodyMap) (wxRsp *CodePayRsp, err error) {
+	if bm.GetString("mchid") == gopay.NULL {
+		bm.Set("mchid", c.Mchid)
+	}
+	authorization, err := c.authorization(MethodPost, v3ApiCodePay, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(ctx, bm, v3ApiCodePay, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &CodePayRsp{Code: Success, SignInfo: si, Response: new(CodePay)}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
+		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 撤销
+// Code = 0 is success
+func (c *ClientV3) V3TransactionCodePayReverse(ctx context.Context, ourTradeNo string, bm gopay.BodyMap) (wxRsp *CodePayReverseRsp, err error) {
+	url := fmt.Sprintf(v3ApiCodePayReverse, ourTradeNo)
+	if bm.GetString("mchid") == gopay.NULL {
+		bm.Set("mchid", c.Mchid)
+	}
+	authorization, err := c.authorization(MethodPost, url, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(ctx, bm, url, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &CodePayReverseRsp{Code: Success, SignInfo: si, Response: new(CodePayReverse)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
