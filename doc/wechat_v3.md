@@ -244,6 +244,8 @@ wechat.V3DecryptCombineNotifyCipherText()
     * QQ小程序H5下单：`client.V3QQTransactionH5()`
     * 商户订单号/微信支付订单号 查询订单：`client.V3TransactionQueryOrder()`
     * 关闭订单：`client.V3TransactionCloseOrder()`
+    * 付款码支付：`client.V3TransactionCodePay()`
+    * 付款码支付撤销：`client.V3TransactionCodePayReverse()`
 * <font color='#07C160' size='4'>基础支付（服务商）</font>
     * APP下单：`client.V3PartnerTransactionApp()`
     * JSAPI/小程序下单：`client.V3PartnerTransactionJsapi()`
@@ -251,6 +253,8 @@ wechat.V3DecryptCombineNotifyCipherText()
     * H5下单：`client.V3PartnerTransactionH5()`
     * 查询订单：`client.V3PartnerQueryOrder()`
     * 关闭订单：`client.V3PartnerCloseOrder()`
+    * 付款码支付：`client.V3PartnerTransactionCodePay()`
+    * 付款码支付撤销：`client.V3PartnerTransactionCodePayReverse()`
 * <font color='#07C160' size='4'>合单支付</font>
     * 合单下单-APP：`client.V3CombineTransactionApp()`
     * 合单下单-JSAPI/小程序：`client.V3CombineTransactionJsapi()`
