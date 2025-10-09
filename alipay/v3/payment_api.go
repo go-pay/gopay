@@ -329,19 +329,19 @@ func (a *ClientV3) TradeAppPay(ctx context.Context, bm gopay.BodyMap) (orderStr 
 // alipay.trade.page.pay(统一收单下单并支付页面接口)
 // 文档地址：https://opendocs.alipay.com/open-v3/2423fad5_alipay.trade.page.pay
 func (a *ClientV3) TradePagePay(ctx context.Context, bm gopay.BodyMap) (payUrl string, err error) {
-	return a.tradePagePayAndWapPay(ctx, bm, true)
+	return a.tradePagePayAndWapPay(ctx, bm, "alipay.trade.page.pay")
 }
 
 // alipay.trade.wap.pay(手机网站支付接口2.0)
 // 文档地址：https://opendocs.alipay.com/open-v3/1a957be0_alipay.trade.wap.pay
 func (a *ClientV3) TradeWapPay(ctx context.Context, bm gopay.BodyMap) (payUrl string, err error) {
-	return a.tradePagePayAndWapPay(ctx, bm, false)
+	return a.tradePagePayAndWapPay(ctx, bm, "alipay.trade.wap.pay")
 }
 
 // alipay.trade.page.pay(统一收单下单并支付页面接口) 与 alipay.trade.wap.pay(手机网站支付接口2.0) 统一实现
 // 文档地址：https://opendocs.alipay.com/open-v3/2423fad5_alipay.trade.page.pay
 // 文档地址：https://opendocs.alipay.com/open-v3/1a957be0_alipay.trade.wap.pay
-func (a *ClientV3) tradePagePayAndWapPay(ctx context.Context, bm gopay.BodyMap, isPagePay bool) (payUrl string, err error) {
+func (a *ClientV3) tradePagePayAndWapPay(ctx context.Context, bm gopay.BodyMap, method string) (payUrl string, err error) {
 	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
 	if err != nil {
 		return gopay.NULL, err
@@ -353,13 +353,6 @@ func (a *ClientV3) tradePagePayAndWapPay(ctx context.Context, bm gopay.BodyMap, 
 	bizContent := bm.JsonBody()
 	if aat != gopay.NULL {
 		bm.Set(HeaderAppAuthToken, aat)
-	}
-
-	var method string
-	if isPagePay {
-		method = "alipay.trade.page.pay"
-	} else {
-		method = "alipay.trade.wap.pay"
 	}
 
 	pubBody := make(gopay.BodyMap)
