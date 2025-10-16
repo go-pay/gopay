@@ -338,18 +338,20 @@ type ReportResponse struct {
 }
 
 type EntrustAppPreResponse struct {
-	ReturnCode      string `xml:"return_code,omitempty" json:"return_code,omitempty"`
-	ReturnMsg       string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
-	ResultCode      string `xml:"result_code,omitempty" json:"result_code,omitempty"`
-	ErrCode         string `xml:"err_code,omitempty" json:"err_code,omitempty"`
-	ErrCodeDes      string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
-	Appid           string `xml:"appid,omitempty" json:"appid,omitempty"`
-	SubAppid        string `xml:"sub_appid,omitempty" json:"sub_appid,omitempty"`
-	MchId           string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
-	SubMchId        string `xml:"sub_mch_id,omitempty" json:"sub_mch_id,omitempty"`
-	Sign            string `xml:"sign,omitempty" json:"sign,omitempty"`
-	NonceStr        string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
-	PreEntrustwebId string `xml:"pre_entrustweb_id,omitempty" json:"pre_entrustweb_id,omitempty"`
+	ReturnCode          string `xml:"return_code,omitempty" json:"return_code,omitempty"`
+	ReturnMsg           string `xml:"return_msg,omitempty" json:"return_msg,omitempty"`
+	ResultCode          string `xml:"result_code,omitempty" json:"result_code,omitempty"`
+	ErrCode             string `xml:"err_code,omitempty" json:"err_code,omitempty"`
+	ErrCodeDes          string `xml:"err_code_des,omitempty" json:"err_code_des,omitempty"`
+	Appid               string `xml:"appid,omitempty" json:"appid,omitempty"`
+	SubAppid            string `xml:"sub_appid,omitempty" json:"sub_appid,omitempty"`
+	MchId               string `xml:"mch_id,omitempty" json:"mch_id,omitempty"`
+	SubMchId            string `xml:"sub_mch_id,omitempty" json:"sub_mch_id,omitempty"`
+	Sign                string `xml:"sign,omitempty" json:"sign,omitempty"`
+	NonceStr            string `xml:"nonce_str,omitempty" json:"nonce_str,omitempty"`
+	PreEntrustwebId     string `xml:"pre_entrustweb_id,omitempty" json:"pre_entrustweb_id,omitempty"`
+	MiniprogramUsername string `xml:"miniprogram_username,omitempty" json:"miniprogram_username,omitempty"`
+	MiniprogramPath     string `xml:"miniprogram_path,omitempty" json:"miniprogram_path,omitempty"`
 }
 
 type EntrustH5Response struct {
