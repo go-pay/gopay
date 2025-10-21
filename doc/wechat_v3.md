@@ -101,11 +101,11 @@ xlog.Errorf("wxRsp:%s", wxRsp.Error)
 
 ### 3、下单后，获取微信小程序支付、APP支付、JSAPI支付所需要的 pay sign
 
-> 小程序调起支付API：[小程序调起支付API](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_5_4.shtml)
+> 小程序调起支付API：[小程序调起支付API](https://pay.weixin.qq.com/doc/v3/merchant/4012791898)
 
-> APP调起支付API：[APP调起支付API](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_2_4.shtml)
+> APP调起支付API：[APP调起支付API](https://pay.weixin.qq.com/doc/v3/merchant/4013070351)
 
-> JSAPI调起支付API：[JSAPI调起支付API](https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_4.shtml)
+> JSAPI调起支付API：[JSAPI调起支付API](https://pay.weixin.qq.com/doc/v3/merchant/4012791857)
 
 ```go
 // 小程序
