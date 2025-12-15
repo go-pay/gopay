@@ -1,3 +1,12 @@
+## 版本号：v1.5.116
+
+* 修改记录：
+  * gopay：golang.org/x/crypto 版本升级到 v0.46.0。
+  * gopay：golang module 版本升级到 go 1.24.0。
+  * 微信v3：新增 wechat.GetOauth2AccessToken()，返回参数新增 is_snapshotuser 字段。
+  * 支付宝v3：新增 client.MerchantItemFileUpload()，商家商品文件上传接口。
+
+
 ## 版本号：v1.5.114
 
 * 修改记录：
