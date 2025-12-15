@@ -17,7 +17,7 @@ const (
 	getAllSubscriptionStatuses = "/inApps/v1/subscriptions/%s" // transactionId
 
 	// Send Consumption Information
-	sendConsumptionInformation = "/inApps/v1/transactions/consumption/%s" // transactionId
+	sendConsumptionInformation = "/inApps/v2/transactions/consumption/%s" // transactionId
 
 	// Look Up Order ID
 	lookUpOrderID = "/inApps/v1/lookup/%s" // orderId
