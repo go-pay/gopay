@@ -130,7 +130,7 @@ func (a *ClientV3) MarketingMaterialImageUpload(ctx context.Context, bm gopay.Bo
 		})
 	})
 
-	authorization, err := a.authorization(MethodPost, v3MarketingMaterialImageUpload, bm, aat)
+	authorization, err := a.authorization(MethodPost, v3MarketingMaterialImageUpload, signMap, aat)
 	if err != nil {
 		return nil, err
 	}

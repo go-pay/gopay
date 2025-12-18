@@ -62,8 +62,10 @@ const (
 	v3FundAuthOrderUnfreeze        = "/v3/alipay/fund/auth/order/unfreeze"         // 资金授权解冻接口
 	v3FundAuthOrderVoucherCreate   = "/v3/alipay/fund/auth/order/voucher/create"   // 资金授权发码接口
 
-	// 私域-小程序开发管理-小程序开发版本
+	// 私域-小程序产品-订单中心
+	v3MerchantItemFileUpload = "/v3/alipay/merchant/item/file/upload" // POST 商品图片上传接口
 
+	// 私域-小程序产品-小程序开发管理-小程序开发版本
 	v3OpenMiniVersionAuditedCancel = "/v3/alipay/open/mini/version/audited/cancel" // POST 小程序退回开发
 	v3OpenMiniVersionGrayOnline    = "/v3/alipay/open/mini/version/gray/online"    // POST 小程序灰度上架
 	v3OpenMiniVersionGrayCancel    = "/v3/alipay/open/mini/version/gray/cancel"    // POST 小程序结束灰度

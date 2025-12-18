@@ -575,14 +575,15 @@ type OpenIdByAuthCodeRsp struct {
 
 // 获取开放平台，access_token 返回结构体
 type Oauth2AccessToken struct {
-	AccessToken  string `json:"access_token,omitempty"`
-	ExpiresIn    int    `json:"expires_in,omitempty"`
-	RefreshToken string `json:"refresh_token,omitempty"`
-	Openid       string `json:"openid,omitempty"`
-	Scope        string `json:"scope,omitempty"`
-	Unionid      string `json:"unionid,omitempty"`
-	Errcode      int    `json:"errcode,omitempty"` // 错误码
-	Errmsg       string `json:"errmsg,omitempty"`  // 错误信息
+	AccessToken    string `json:"access_token,omitempty"`
+	ExpiresIn      int    `json:"expires_in,omitempty"`
+	RefreshToken   string `json:"refresh_token,omitempty"`
+	Openid         string `json:"openid,omitempty"`
+	Scope          string `json:"scope,omitempty"`
+	IsSnapshotuser int    `json:"is_snapshotuser,omitempty"`
+	Unionid        string `json:"unionid,omitempty"`
+	Errcode        int    `json:"errcode,omitempty"` // 错误码
+	Errmsg         string `json:"errmsg,omitempty"`  // 错误信息
 }
 
 type CheckAccessTokenRsp struct {

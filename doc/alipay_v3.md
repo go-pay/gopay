@@ -332,5 +332,7 @@ return c.String(http.StatusOK, "success")
   * 小程序生成体验版：`client.OpenMiniExperienceCreate()`
   * 小程序体验版状态查询接口：`client.OpenMiniExperienceQuery()`
   * 小程序取消体验版：`client.OpenMiniExperienceCancel()`
+* <font color='#027AFF' size='4'>小程序产品-订单中心</font>
+  * 商品文件上传接口：`client.MerchantItemFileUpload()`
 
 ### 支付宝公共 API
