@@ -41,6 +41,32 @@ type UserInfoShareRsp struct {
 	NickName string `json:"nick_name"`
 	Province string `json:"province"`
 	Gender   string `json:"gender"`
+
+	Address                   string `json:"address"`
+	Age                       string `json:"age"`
+	Area                      string `json:"area"`
+	BusinessScope             string `json:"business_scope"`
+	CertNo                    string `json:"cert_no"`
+	CertType                  string `json:"cert_type"`
+	CollegeName               string `json:"college_name"`
+	CountryCode               string `json:"country_code"`
+	Degree                    string `json:"degree"`
+	DisplayName               string `json:"display_name"`
+	Email                     string `json:"email"`
+	InstOrCorp                string `json:"inst_or_corp"`
+	IsAdult                   string `json:"is_adult"`
+	IsBalanceFrozen           string `json:"is_balance_frozen"`
+	IsBlocked                 string `json:"is_blocked"`
+	IsCertified               string `json:"is_certified"`
+	MemberGrade               string `json:"member_grade"`
+	Mobile                    string `json:"mobile"`
+	OrganizationCode          string `json:"organization_code"`
+	PersonBirthday            string `json:"person_birthday"`
+	PersonBirthdayWithoutYear string `json:"person_birthday_without_year"`
+	Phone                     string `json:"phone"`
+	UserName                  string `json:"user_name"`
+	UserStatus                string `json:"user_status"`
+	UserType                  string `json:"user_type"`
 }
 
 type UserAuthRelationshipQueryRsp struct {
