@@ -8,6 +8,7 @@ type SystemOauthTokenRsp struct {
 	RefreshToken string `json:"refresh_token"`
 	UnionId      string `json:"union_id"`
 	OpenId       string `json:"open_id"`
+	UserId 		 string `json:"user_id"` // 老用户字段
 	ReExpiresIn  int    `json:"re_expires_in"`
 	AuthStart    string `json:"auth_start"`
 	ExpiresIn    int    `json:"expires_in"`
