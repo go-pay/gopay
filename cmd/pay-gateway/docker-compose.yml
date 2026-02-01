@@ -1,0 +1,26 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  pay-gateway:
+    build:
+      context: ../..
+      dockerfile: cmd/pay-gateway/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "${PAY_GATEWAY_PORT:-8088}:8088"
+    volumes:
+      - ./config:/config:ro
+      - ./secrets:/secrets:ro
+    depends_on:
+      redis:
+        condition: service_healthy
+
