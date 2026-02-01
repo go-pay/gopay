@@ -25,7 +25,12 @@ curl -sS http://127.0.0.1:8088/healthz
 
 ## Auth (internal APIs)
 
-If `apiAuth.token` is set in config, Java callers must send `X-Pay-Gateway-Token` for all `/v1/**` endpoints.
+Recommended: use `sharedAuth.sharedSecret` (HMAC) so Go ↔ Java share a single secret for:
+- Java → Go internal APIs (`/v1/**`)
+- Go → Java webhook signing
+- Go → Java merchant snapshot pull signing (optional)
+
+Legacy (compat): `apiAuth.token` enables `X-Pay-Gateway-Token` for all `/v1/**` endpoints.
 
 ## Run with Docker Compose (local)
 
@@ -45,6 +50,7 @@ If `PAY_GATEWAY_REDIS_ADDR` (or `redis.addr` in config) is set, pay-gateway will
 - Idempotency (create payment/refund)
 - Callback de-duplication across instances
 - Optional outbox delivery (`javaWebhook.async=true`) to decouple platform callbacks from Java webhook availability.
+ - Nonce replay protection for shared HMAC auth across instances.
 
 Example secret layout:
 ```text

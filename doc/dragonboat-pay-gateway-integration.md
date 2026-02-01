@@ -5,17 +5,21 @@
 ## 1. 总体架构（推荐）
 
 **Go：pay-gateway（新增服务）**
-- 对外（公网）：仅接收支付平台回调（微信/支付宝/PayPal…），完成解析、验签/解密、去重，并发布事件到 MQ。
+- 对外（公网）：仅接收支付平台回调（微信/支付宝/PayPal…），完成解析、验签/解密、去重，并把“可信事件”投递给 Java（Webhook）。
 - 对内（内网）：提供统一支付 API（下单/关单/查询/退款/补偿查询），供 Java 调用。
-- 设计目标：**无状态**（便于水平扩展），依赖 Redis 做幂等与去重，依赖 MQ 做事件投递。
+- 设计目标：**无状态**（便于水平扩展），依赖 Redis 做幂等/去重/Outbox（可选），事件投递链路默认走 HTTP（可按需演进 MQ）。
 
 **Java：`ruoyi-modules/ruoyi-pay`（新增微服务模块）**
 - 对外：管理端/业务端 REST（通过 `ruoyi-gateway` 路由 `/pay/**`）。
 - 对内：可选 Dubbo API（建议新增 `ruoyi-api/ruoyi-api-payment` 承载契约与 DTO）。
-- 职责：支付订单/退款订单的**业务状态机**、补偿任务、商户配置管理（多租户）、权限与审计。
+- 职责：支付订单/退款订单的**业务状态机**、补偿任务、商户配置管理（多租户）、权限与审计；并对 pay-gateway 提供“商户配置快照”接口供其拉取（动态加载配置）。
 
-**RabbitMQ（现有）**
-- Go → MQ → Java：支付/退款事件（回调驱动，至少一次投递）。
+**Redis（建议）**
+- Go 幂等/回调去重/Outbox 重试（多实例必配）。
+- 可选：用于推送“配置变更通知”（stream），加速 pay-gateway 的配置刷新（仍以轮询兜底）。
+
+**RabbitMQ（可选演进）**
+- 若你们更偏好 MQ，也可以把“Go → Java”从 Webhook 演进为 MQ 投递（pay-gateway 需要新增 publisher）。
 
 ## 2. L0 能力边界（必须统一抽象）
 
@@ -56,16 +60,15 @@ Java 侧统一抽象 + `ext` 透传，覆盖四大金刚：
 处理流程（强约束）：
 1) 读取 headers/body → 解析 → 验签/解密（失败直接返回失败回执）
 2) **去重**：以平台事件唯一键去重（例如 `transaction_id + event_type` / `notify_id` 等），Redis `SETNX` + TTL（如 7d）
-3) 发布 MQ 事件（payload 含验签结果与核心业务字段）
+3) 投递事件到 Java（Webhook；可选先写入 Redis Outbox 再异步投递）
 4) 返回平台规定回执（微信/支付宝格式不同）
 
-## 5. MQ 事件契约（Go → Java）
+## 5. Webhook 事件契约（Go → Java）
 
-建议使用一个 Exchange（topic）+ routing key：
-- Exchange：`pay.events`（topic）
-- routingKey：
-  - `payment.succeeded` / `payment.failed` / `payment.closed`
-  - `refund.succeeded` / `refund.failed`
+pay-gateway 会向 Java 配置的 `javaWebhook.url` 发起 `POST`（JSON）。建议 Java：
+- 校验 shared secret HMAC（`X-Pay-Gateway-*` 头），只维护一份密钥（放 Nacos 下发）
+- 以 `eventId` 或 `idempotencyKey` 做消费幂等（唯一索引/去重表）
+- 轻量处理后快速返回 2xx（业务重活异步化）
 
 事件 Envelope（JSON，字段建议）：
 - `eventId`：UUID（全局唯一）
@@ -81,11 +84,7 @@ Java 侧统一抽象 + `ext` 透传，覆盖四大金刚：
 - `tradeState` / `refundState`（统一枚举）
 - `raw`：可选（原始回调 body + 关键 headers 的脱敏快照）
 - `signatureVerified`：bool（必须）
-- `idempotencyKey`：用于 Java 侧幂等消费
-
-Java 消费要求：
-- 以 `eventId` 或 `idempotencyKey` 做**消费幂等**（入库去重表或唯一索引）。
-- 所有状态迁移必须可重放（重复事件不应破坏状态）。
+- `idempotencyKey`：用于 Java 侧幂等消费（建议：`{tenantId}:{merchantId}:{outTradeNo|outRefundNo}`）
 
 ## 6. Java `ruoyi-pay`：模块结构建议（目录级）
 
@@ -99,7 +98,7 @@ Java 消费要求：
   - `mapper/`
   - `service/` + `service/impl/`
   - `client/`：Go 网关 client（HTTP）
-  - `mq/consumer/`：消费 `pay.events`
+  - `webhook/`：接收 pay-gateway 事件（`javaWebhook.url` 对应 Controller）
   - `task/`：补偿查询定时任务（仅扫 `PAYING/REFUNDING`）
 
 建议新增的 API 契约模块（可选但推荐）：
@@ -184,18 +183,23 @@ Java 消费要求：
 
 ### 8.2 Go ↔ Java 内网鉴权
 Go 调用 Java 的“商户配置拉取/刷新”等内部接口，建议：
-- `X-Pay-Gateway-Token`（Nacos 配置下发）+ IP 白名单；后续可演进 mTLS。
+- **推荐：shared secret HMAC**（Nacos 配置下发，Go 与 Java 共用同一份密钥）：
+  - Java → Go：调用 `/v1/**` 时带 `X-Pay-Gateway-*` 签名 header
+  - Go → Java：推送 webhook 事件时带 `X-Pay-Gateway-*` 签名 header
+  - Go → Java：拉取商户快照时带 `X-Pay-Gateway-*` 签名 header
+- 可选：叠加 IP 白名单；后续可演进 mTLS。
 - 所有敏感字段日志脱敏，严禁打印私钥/证书全文。
 
 ### 8.3 多租户配置
 - Java 管理端维护商户配置（tenant scoped）。
-- Go 运行时按 `tenantId + merchantId + channel` 缓存 client；配置变更通过 MQ 或按需拉取刷新。
+- Go 运行时按 `tenantId + merchantId + channel` 缓存 client；配置变更通过“Java 快照拉取 + 轮询兜底”刷新。
+- 若 Java 侧已关闭多租户：Go 配置 `defaultTenantId=0`，Java 调用网关可不传 `tenantId`。
 
 ## 9. 交付清单（建议里程碑）
 
 M1（可联调）：
-- pay-gateway：微信 V3 + 支付宝 L0、回调入站、MQ 事件发布、Redis 幂等/去重、TLS 加固
-- ruoyi-pay：支付单/退款单表、事件消费、状态机、补偿任务、管理端查询接口
+- pay-gateway：微信 V3 + 支付宝 L0、回调入站、Webhook 事件推送（可选 Outbox）、Redis 幂等/去重、TLS 加固、sharedAuth
+- ruoyi-pay：支付单/退款单表、事件接收（webhook）、状态机、补偿任务、管理端查询接口、商户配置快照接口
 
 M2（上线前加固）：
 - 配置管理 UI + 审计
@@ -209,9 +213,10 @@ M2（上线前加固）：
 请求：
 ```json
 {
-  "tenantId": "100",
+  "tenantId": "0",
   "merchantId": "mch_001",
   "channel": "WECHAT_V3",
+  "scene": "JSAPI",
   "outTradeNo": "P202602010001",
   "bizOrderNo": "O202602010001",
   "currency": "CNY",
@@ -219,10 +224,9 @@ M2（上线前加固）：
   "subject": "订单支付",
   "description": "订单 O202602010001",
   "expireAt": "2026-02-01T13:00:00+08:00",
-  "notifyUrl": "https://pay.example.com/callbacks/wechat/v3",
+  "openid": "user-openid",
   "ext": {
-    "attach": "{\"biz\":\"dragonboat\"}",
-    "openid": "user-openid"
+    "attach": "{\"biz\":\"dragonboat\"}"
   }
 }
 ```
@@ -262,6 +266,6 @@ M2（上线前加固）：
   "currency": "CNY",
   "tradeState": "SUCCESS",
   "signatureVerified": true,
-  "idempotencyKey": "100:mch_001:WECHAT_V3:P202602010001"
+  "idempotencyKey": "0:mch_001:P202602010001"
 }
 ```
