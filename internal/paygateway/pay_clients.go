@@ -42,6 +42,13 @@ func NewClientManager(cfg *Config, store *MerchantStore) (*ClientManager, error)
 
 func (m *ClientManager) HTTPClient() *http.Client { return m.hc }
 
+func (m *ClientManager) InvalidateKeys(keys []string) {
+	for _, key := range keys {
+		m.wechatV3.Delete(key)
+		m.alipay.Delete(key)
+	}
+}
+
 func (m *ClientManager) WechatV3(tenantID, merchantID string) (*wechatv3.ClientV3, *WechatV3Config, error) {
 	mc, ok := m.store.Get(tenantID, merchantID)
 	if !ok || mc.WechatV3 == nil {

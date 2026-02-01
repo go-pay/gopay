@@ -24,6 +24,7 @@ type Server struct {
 	dedup     CallbackDeduper
 	nonce     NonceStore
 	outbox    *OutboxWorker
+	cfgSync   *MerchantSyncWorker
 	mux       *http.ServeMux
 	srv       *http.Server
 }
@@ -92,6 +93,20 @@ func NewServer(cfg *Config) (*Server, error) {
 		outbox:    outboxWorker,
 		mux:       http.NewServeMux(),
 	}
+	if cfg.MerchantSync.SnapshotURL != "" {
+		s.cfgSync = NewMerchantSyncWorker(MerchantSyncWorkerOptions{
+			SnapshotURL:     cfg.MerchantSync.SnapshotURL,
+			PollInterval:    time.Duration(max(1, cfg.MerchantSync.PollIntervalSeconds)) * time.Second,
+			ChangeStream:    cfg.MerchantSync.ChangeStream,
+			ConsumerGroup:   cfg.MerchantSync.ChangeConsumerGroup,
+			Redis:           redisClient,
+			HTTPClient:      clients.HTTPClient(),
+			SharedAuth:      cfg.SharedAuth,
+			DefaultTenantID: cfg.DefaultTenantID,
+			Store:           store,
+			Clients:         clients,
+		})
+	}
 	if redisClient != nil {
 		s.idem = NewRedisIdempotencyStore(redisClient, cfg.Redis.KeyPrefix, time.Duration(cfg.Redis.IdempotencyTTLSeconds)*time.Second)
 		s.dedup = NewRedisCallbackDeduper(redisClient, cfg.Redis.KeyPrefix, time.Duration(cfg.Redis.CallbackProcessingTTLSeconds)*time.Second, time.Duration(cfg.Redis.CallbackDedupTTLSeconds)*time.Second)
@@ -116,6 +131,12 @@ func (s *Server) ListenAndServe() error {
 			return err
 		}
 		defer s.outbox.Stop()
+	}
+	if s.cfgSync != nil {
+		if err := s.cfgSync.Start(); err != nil {
+			return err
+		}
+		defer s.cfgSync.Stop()
 	}
 	return s.srv.ListenAndServe()
 }

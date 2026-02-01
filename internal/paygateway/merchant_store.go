@@ -1,30 +1,31 @@
 package paygateway
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
+	"sync"
 )
 
 type MerchantStore struct {
-	byKey map[string]*MerchantConfig
+	mu              sync.RWMutex
+	byKey           map[string]*MerchantConfig
+	hashByKey       map[string]string
+	version         string
+	defaultTenantID string
 }
 
 func NewMerchantStore(cfg *Config) (*MerchantStore, error) {
-	ms := &MerchantStore{byKey: make(map[string]*MerchantConfig)}
-	for i := range cfg.Merchants {
-		m := &cfg.Merchants[i]
-		if m.TenantID == "" || m.MerchantID == "" {
-			return nil, fmt.Errorf("merchant missing tenantId/merchantId")
-		}
-		if err := resolveMerchantSecretFiles(m); err != nil {
-			return nil, err
-		}
-		key := merchantKey(m.TenantID, m.MerchantID)
-		if _, exists := ms.byKey[key]; exists {
-			return nil, fmt.Errorf("duplicate merchant: %s", key)
-		}
-		ms.byKey[key] = m
+	ms := &MerchantStore{
+		byKey:           make(map[string]*MerchantConfig),
+		hashByKey:       make(map[string]string),
+		defaultTenantID: cfg.DefaultTenantID,
+	}
+	if _, err := ms.Replace(cfg.Merchants, "bootstrap"); err != nil {
+		return nil, err
 	}
 	return ms, nil
 }
@@ -69,8 +70,95 @@ func resolveMerchantSecretFiles(m *MerchantConfig) error {
 }
 
 func (s *MerchantStore) Get(tenantID, merchantID string) (*MerchantConfig, bool) {
+	if tenantID == "" {
+		tenantID = s.defaultTenantID
+	}
+	s.mu.RLock()
+	defer s.mu.RUnlock()
 	m, ok := s.byKey[merchantKey(tenantID, merchantID)]
 	return m, ok
+}
+
+func (s *MerchantStore) Version() string {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	return s.version
+}
+
+// Replace atomically replaces the merchant config set.
+// Returns keys (tenant:merchant) that were added/removed/changed.
+func (s *MerchantStore) Replace(merchants []MerchantConfig, version string) ([]string, error) {
+	nextByKey := make(map[string]*MerchantConfig, len(merchants))
+	nextHash := make(map[string]string, len(merchants))
+	changed := make([]string, 0)
+
+	for i := range merchants {
+		mc := merchants[i] // copy
+		if mc.TenantID == "" {
+			mc.TenantID = s.defaultTenantID
+		}
+		if mc.TenantID == "" || mc.MerchantID == "" {
+			return nil, fmt.Errorf("merchant missing tenantId/merchantId")
+		}
+		if err := resolveMerchantSecretFiles(&mc); err != nil {
+			return nil, err
+		}
+		key := merchantKey(mc.TenantID, mc.MerchantID)
+		if _, exists := nextByKey[key]; exists {
+			return nil, fmt.Errorf("duplicate merchant: %s", key)
+		}
+
+		hash, err := hashMerchantConfig(&mc)
+		if err != nil {
+			return nil, err
+		}
+		nextByKey[key] = &mc
+		nextHash[key] = hash
+	}
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	for key, oldHash := range s.hashByKey {
+		newHash, ok := nextHash[key]
+		if !ok || newHash != oldHash {
+			changed = append(changed, key)
+		}
+	}
+	for key := range nextHash {
+		if _, ok := s.hashByKey[key]; !ok {
+			changed = append(changed, key)
+		}
+	}
+
+	s.byKey = nextByKey
+	s.hashByKey = nextHash
+	if version != "" {
+		s.version = version
+	}
+	return uniqueStrings(changed), nil
+}
+
+func hashMerchantConfig(mc *MerchantConfig) (string, error) {
+	bs, err := json.Marshal(mc)
+	if err != nil {
+		return "", err
+	}
+	sum := sha256.Sum256(bs)
+	return hex.EncodeToString(sum[:]), nil
+}
+
+func uniqueStrings(in []string) []string {
+	seen := make(map[string]struct{}, len(in))
+	out := make([]string, 0, len(in))
+	for _, v := range in {
+		if _, ok := seen[v]; ok {
+			continue
+		}
+		seen[v] = struct{}{}
+		out = append(out, v)
+	}
+	return out
 }
 
 func merchantKey(tenantID, merchantID string) string {
