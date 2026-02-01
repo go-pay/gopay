@@ -7,7 +7,10 @@ info:
 
     Notes:
     - All money amounts are integers in the smallest currency unit (e.g., CNY fen).
-    - If `apiAuth.token` is configured, all `/v1/**` endpoints require `X-Pay-Gateway-Token`.
+    - Auth is **either**:
+      - HMAC shared secret headers (`X-Pay-Gateway-*`) when `sharedAuth.sharedSecret` is configured (recommended), **or**
+      - Legacy token header (`X-Pay-Gateway-Token`) when `apiAuth.token` is configured.
+    - `tenantId` can be omitted when `defaultTenantId` is configured on pay-gateway.
 servers:
   - url: http://pay-gateway.internal
 
@@ -37,9 +40,10 @@ paths:
       summary: Create payment (idempotent)
       security:
         - PayGatewayToken: []
-      parameters:
-        - $ref: "#/components/parameters/PayGatewayToken"
-        - $ref: "#/components/parameters/IdempotencyKey"
+        - PayGatewayHmacTimestamp: []
+          PayGatewayHmacNonce: []
+          PayGatewayHmacBodySHA256: []
+          PayGatewayHmacSignature: []
       requestBody:
         required: true
         content:
@@ -78,8 +82,11 @@ paths:
       summary: Query payment
       security:
         - PayGatewayToken: []
+        - PayGatewayHmacTimestamp: []
+          PayGatewayHmacNonce: []
+          PayGatewayHmacBodySHA256: []
+          PayGatewayHmacSignature: []
       parameters:
-        - $ref: "#/components/parameters/PayGatewayToken"
         - name: outTradeNo
           in: path
           required: true
@@ -87,9 +94,10 @@ paths:
             type: string
         - name: tenantId
           in: query
-          required: true
+          required: false
           schema:
             type: string
+          description: Optional when `defaultTenantId` is configured on pay-gateway.
         - name: merchantId
           in: query
           required: true
@@ -126,8 +134,11 @@ paths:
       summary: Close payment
       security:
         - PayGatewayToken: []
+        - PayGatewayHmacTimestamp: []
+          PayGatewayHmacNonce: []
+          PayGatewayHmacBodySHA256: []
+          PayGatewayHmacSignature: []
       parameters:
-        - $ref: "#/components/parameters/PayGatewayToken"
         - name: outTradeNo
           in: path
           required: true
@@ -165,8 +176,11 @@ paths:
       summary: Create refund (idempotent)
       security:
         - PayGatewayToken: []
+        - PayGatewayHmacTimestamp: []
+          PayGatewayHmacNonce: []
+          PayGatewayHmacBodySHA256: []
+          PayGatewayHmacSignature: []
       parameters:
-        - $ref: "#/components/parameters/PayGatewayToken"
         - $ref: "#/components/parameters/IdempotencyKey"
       requestBody:
         required: true
@@ -206,8 +220,11 @@ paths:
       summary: Query refund
       security:
         - PayGatewayToken: []
+        - PayGatewayHmacTimestamp: []
+          PayGatewayHmacNonce: []
+          PayGatewayHmacBodySHA256: []
+          PayGatewayHmacSignature: []
       parameters:
-        - $ref: "#/components/parameters/PayGatewayToken"
         - name: outRefundNo
           in: path
           required: true
@@ -215,9 +232,10 @@ paths:
             type: string
         - name: tenantId
           in: query
-          required: true
+          required: false
           schema:
             type: string
+          description: Optional when `defaultTenantId` is configured on pay-gateway.
         - name: merchantId
           in: query
           required: true
@@ -266,8 +284,12 @@ paths:
       summary: Batch query payments for compensation jobs
       security:
         - PayGatewayToken: []
+        - PayGatewayHmacTimestamp: []
+          PayGatewayHmacNonce: []
+          PayGatewayHmacBodySHA256: []
+          PayGatewayHmacSignature: []
       parameters:
-        - $ref: "#/components/parameters/PayGatewayToken"
+        - $ref: "#/components/parameters/IdempotencyKey"
       requestBody:
         required: true
         content:
@@ -300,14 +322,24 @@ components:
       type: apiKey
       in: header
       name: X-Pay-Gateway-Token
+    PayGatewayHmacTimestamp:
+      type: apiKey
+      in: header
+      name: X-Pay-Gateway-Timestamp
+    PayGatewayHmacNonce:
+      type: apiKey
+      in: header
+      name: X-Pay-Gateway-Nonce
+    PayGatewayHmacBodySHA256:
+      type: apiKey
+      in: header
+      name: X-Pay-Gateway-Body-SHA256
+    PayGatewayHmacSignature:
+      type: apiKey
+      in: header
+      name: X-Pay-Gateway-Signature
 
   parameters:
-    PayGatewayToken:
-      name: X-Pay-Gateway-Token
-      in: header
-      required: true
-      schema:
-        type: string
     IdempotencyKey:
       name: X-Idempotency-Key
       in: header
@@ -331,7 +363,6 @@ components:
     CreatePaymentRequest:
       type: object
       required:
-        - tenantId
         - merchantId
         - channel
         - scene
@@ -342,6 +373,7 @@ components:
       properties:
         tenantId:
           type: string
+          description: Optional when `defaultTenantId` is configured on pay-gateway.
         merchantId:
           type: string
         channel:
@@ -404,10 +436,11 @@ components:
 
     ClosePaymentRequest:
       type: object
-      required: [tenantId, merchantId, channel]
+      required: [merchantId, channel]
       properties:
         tenantId:
           type: string
+          description: Optional when `defaultTenantId` is configured on pay-gateway.
         merchantId:
           type: string
         channel:
@@ -424,7 +457,6 @@ components:
     CreateRefundRequest:
       type: object
       required:
-        - tenantId
         - merchantId
         - channel
         - outTradeNo
@@ -434,6 +466,7 @@ components:
       properties:
         tenantId:
           type: string
+          description: Optional when `defaultTenantId` is configured on pay-gateway.
         merchantId:
           type: string
         channel:
@@ -484,10 +517,11 @@ components:
 
     CompensationQueryPaymentsRequest:
       type: object
-      required: [tenantId, merchantId, channel, outTradeNos]
+      required: [merchantId, channel, outTradeNos]
       properties:
         tenantId:
           type: string
+          description: Optional when `defaultTenantId` is configured on pay-gateway.
         merchantId:
           type: string
         channel:
