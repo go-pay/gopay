@@ -32,6 +32,8 @@ type JavaWebhookConfig struct {
 	URL           string `json:"url"`
 	Token         string `json:"token"`
 	TimeoutMillis int    `json:"timeoutMillis"`
+	Async         bool   `json:"async"`
+	ConsumerGroup string `json:"consumerGroup"`
 }
 
 type APIAuthConfig struct {
@@ -99,6 +101,9 @@ func LoadConfig(path string) (*Config, error) {
 	if cfg.JavaWebhook.TimeoutMillis == 0 {
 		cfg.JavaWebhook.TimeoutMillis = 1500
 	}
+	if cfg.JavaWebhook.ConsumerGroup == "" {
+		cfg.JavaWebhook.ConsumerGroup = "pay-gateway"
+	}
 	if cfg.Redis.IdempotencyTTLSeconds == 0 {
 		cfg.Redis.IdempotencyTTLSeconds = 24 * 60 * 60
 	}
@@ -138,6 +143,12 @@ func applyEnvOverrides(cfg *Config) error {
 	}
 	if v, ok := envInt("PAY_GATEWAY_JAVA_WEBHOOK_TIMEOUT_MILLIS"); ok {
 		cfg.JavaWebhook.TimeoutMillis = v
+	}
+	if v, ok := envBool("PAY_GATEWAY_JAVA_WEBHOOK_ASYNC"); ok {
+		cfg.JavaWebhook.Async = v
+	}
+	if v, ok := envString("PAY_GATEWAY_JAVA_WEBHOOK_CONSUMER_GROUP"); ok {
+		cfg.JavaWebhook.ConsumerGroup = v
 	}
 	if v, ok := envString("PAY_GATEWAY_TLS_CA_FILE"); ok {
 		cfg.TLS.CAFile = v
@@ -179,4 +190,19 @@ func envInt(key string) (int, bool) {
 		return 0, false
 	}
 	return n, true
+}
+
+func envBool(key string) (bool, bool) {
+	v, ok := envString(key)
+	if !ok {
+		return false, false
+	}
+	switch strings.ToLower(v) {
+	case "1", "true", "yes", "y", "on":
+		return true, true
+	case "0", "false", "no", "n", "off":
+		return false, true
+	default:
+		return false, false
+	}
 }

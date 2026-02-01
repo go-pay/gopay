@@ -22,6 +22,7 @@ type Server struct {
 	publisher EventPublisher
 	idem      IdempotencyStore
 	dedup     CallbackDeduper
+	outbox    *OutboxWorker
 	mux       *http.ServeMux
 	srv       *http.Server
 }
@@ -41,9 +42,30 @@ func NewServer(cfg *Config) (*Server, error) {
 		return nil, err
 	}
 
+	var outboxWorker *OutboxWorker
 	var publisher EventPublisher
 	if cfg.JavaWebhook.URL != "" {
-		publisher = NewWebhookPublisher(cfg.JavaWebhook.URL, cfg.JavaWebhook.Token, clients.HTTPClient(), time.Duration(cfg.JavaWebhook.TimeoutMillis)*time.Millisecond)
+		webhook := NewWebhookPublisher(cfg.JavaWebhook.URL, cfg.JavaWebhook.Token, clients.HTTPClient(), time.Duration(cfg.JavaWebhook.TimeoutMillis)*time.Millisecond)
+		if cfg.JavaWebhook.Async {
+			if redisClient == nil {
+				return nil, errors.New("javaWebhook.async requires redis")
+			}
+			stream := cfg.Redis.KeyPrefix + "outbox"
+			worker, err := NewOutboxWorker(redisClient, OutboxWorkerConfig{
+				Stream:  stream,
+				Group:   cfg.JavaWebhook.ConsumerGroup,
+				MinIdle: 30 * time.Second,
+				Block:   2 * time.Second,
+				Count:   16,
+			}, webhook)
+			if err != nil {
+				return nil, err
+			}
+			publisher = NewRedisOutboxPublisher(redisClient, stream)
+			outboxWorker = worker
+		} else {
+			publisher = webhook
+		}
 	} else {
 		publisher = EventPublisherFunc(func(ctx context.Context, event *Event) error {
 			log.Printf("event: %+v", event)
@@ -56,6 +78,7 @@ func NewServer(cfg *Config) (*Server, error) {
 		store:     store,
 		clients:   clients,
 		publisher: publisher,
+		outbox:    outboxWorker,
 		mux:       http.NewServeMux(),
 	}
 	if redisClient != nil {
@@ -76,7 +99,15 @@ func NewServer(cfg *Config) (*Server, error) {
 	return s, nil
 }
 
-func (s *Server) ListenAndServe() error { return s.srv.ListenAndServe() }
+func (s *Server) ListenAndServe() error {
+	if s.outbox != nil {
+		if err := s.outbox.Start(); err != nil {
+			return err
+		}
+		defer s.outbox.Stop()
+	}
+	return s.srv.ListenAndServe()
+}
 
 func (s *Server) routes() {
 	s.mux.HandleFunc("GET /healthz", s.handleHealthz)
