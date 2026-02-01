@@ -417,7 +417,11 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 				writeJSON(w, http.StatusBadGateway, CreatePaymentResponse{Code: "UPSTREAM_ERROR", Message: wxRsp.Error, OutTradeNo: req.OutTradeNo})
 				return
 			}
-			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: wxRsp.Response}
+			payURL := ""
+			if wxRsp.Response != nil {
+				payURL = wxRsp.Response.H5Url
+			}
+			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: map[string]string{"payUrl": payURL}}
 			bs := writeJSONBytes(w, http.StatusOK, resp)
 			if bs != nil {
 				if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
@@ -436,7 +440,11 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 				writeJSON(w, http.StatusBadGateway, CreatePaymentResponse{Code: "UPSTREAM_ERROR", Message: wxRsp.Error, OutTradeNo: req.OutTradeNo})
 				return
 			}
-			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: wxRsp.Response}
+			qrCode := ""
+			if wxRsp.Response != nil {
+				qrCode = wxRsp.Response.CodeUrl
+			}
+			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: map[string]string{"qrCode": qrCode}}
 			bs := writeJSONBytes(w, http.StatusOK, resp)
 			if bs != nil {
 				if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
