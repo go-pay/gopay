@@ -432,6 +432,9 @@ components:
           type: string
         message:
           type: string
+        status:
+          type: string
+          description: Normalized payment status (PAYING/SUCCESS/CLOSED/FAILED/UNKNOWN).
         data:
           type: object
           additionalProperties: true
@@ -548,6 +551,9 @@ components:
             properties:
               outTradeNo:
                 type: string
+              status:
+                type: string
+                description: Normalized payment status (PAYING/SUCCESS/CLOSED/FAILED/UNKNOWN).
               data:
                 type: object
                 additionalProperties: true

@@ -132,6 +132,10 @@ payData 约定（Phase 1）：
 
 `GET /v1/payments/{outTradeNo}?merchantId=...&channel=ALIPAY[&tenantId=...]`
 
+返回说明：
+- `status`：网关统一后的支付状态（`PAYING/SUCCESS/CLOSED/FAILED/UNKNOWN`），Java 侧补偿/落库只认这个字段
+- `data`：渠道原始响应（仅用于排障与审计，业务逻辑避免依赖渠道字段）
+
 ### 2.3 关单
 
 `POST /v1/payments/{outTradeNo}/close`

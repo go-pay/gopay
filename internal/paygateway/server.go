@@ -562,7 +562,11 @@ func (s *Server) handleQueryPayment(w http.ResponseWriter, r *http.Request, outT
 			writeJSON(w, http.StatusBadGateway, QueryPaymentResponse{Code: "UPSTREAM_ERROR", Message: wxRsp.Error, Data: wxRsp.ErrResponse})
 			return
 		}
-		writeJSON(w, http.StatusOK, QueryPaymentResponse{Code: "OK", Data: wxRsp.Response})
+		status := "UNKNOWN"
+		if wxRsp.Response != nil {
+			status = normalizePaymentStatusFromWechatTradeState(wxRsp.Response.TradeState)
+		}
+		writeJSON(w, http.StatusOK, QueryPaymentResponse{Code: "OK", Status: status, Data: wxRsp.Response})
 		return
 	case ChannelAlipay:
 		c, _, err := s.clients.Alipay(tenantID, merchantID)
@@ -577,7 +581,11 @@ func (s *Server) handleQueryPayment(w http.ResponseWriter, r *http.Request, outT
 			writeJSON(w, http.StatusBadGateway, QueryPaymentResponse{Code: "UPSTREAM_ERROR", Message: err.Error()})
 			return
 		}
-		writeJSON(w, http.StatusOK, QueryPaymentResponse{Code: "OK", Data: aliRsp.Response})
+		status := "UNKNOWN"
+		if aliRsp != nil && aliRsp.Response != nil {
+			status = normalizePaymentStatusFromAlipayTradeStatus(aliRsp.Response.TradeStatus)
+		}
+		writeJSON(w, http.StatusOK, QueryPaymentResponse{Code: "OK", Status: status, Data: aliRsp.Response})
 		return
 	default:
 		writeJSON(w, http.StatusBadRequest, QueryPaymentResponse{Code: "BAD_REQUEST", Message: "unsupported channel"})
@@ -849,7 +857,7 @@ func (s *Server) handleCompensationQueryPayments(w http.ResponseWriter, r *http.
 
 	items := make([]CompensationPaymentItem, 0, len(req.OutTradeNos))
 	for _, outTradeNo := range req.OutTradeNos {
-		item := CompensationPaymentItem{OutTradeNo: outTradeNo}
+		item := CompensationPaymentItem{OutTradeNo: outTradeNo, Status: "UNKNOWN"}
 		switch req.Channel {
 		case ChannelWechatV3:
 			c, _, err := s.clients.WechatV3(req.TenantID, req.MerchantID)
@@ -867,6 +875,9 @@ func (s *Server) handleCompensationQueryPayments(w http.ResponseWriter, r *http.
 				item.Data = wxRsp.ErrResponse
 				break
 			}
+			if wxRsp.Response != nil {
+				item.Status = normalizePaymentStatusFromWechatTradeState(wxRsp.Response.TradeState)
+			}
 			item.Data = wxRsp.Response
 		case ChannelAlipay:
 			c, _, err := s.clients.Alipay(req.TenantID, req.MerchantID)
@@ -880,6 +891,9 @@ func (s *Server) handleCompensationQueryPayments(w http.ResponseWriter, r *http.
 			if err != nil {
 				item.Error = err.Error()
 				break
+			}
+			if aliRsp != nil && aliRsp.Response != nil {
+				item.Status = normalizePaymentStatusFromAlipayTradeStatus(aliRsp.Response.TradeStatus)
 			}
 			item.Data = aliRsp.Response
 		default:
@@ -1148,6 +1162,34 @@ func alipayEventType(tradeStatus string) string {
 		return "payment.closed"
 	default:
 		return "payment.updated"
+	}
+}
+
+func normalizePaymentStatusFromAlipayTradeStatus(tradeStatus string) string {
+	switch strings.ToUpper(strings.TrimSpace(tradeStatus)) {
+	case "WAIT_BUYER_PAY":
+		return "PAYING"
+	case "TRADE_SUCCESS", "TRADE_FINISHED":
+		return "SUCCESS"
+	case "TRADE_CLOSED":
+		return "CLOSED"
+	default:
+		return "UNKNOWN"
+	}
+}
+
+func normalizePaymentStatusFromWechatTradeState(tradeState string) string {
+	switch strings.ToUpper(strings.TrimSpace(tradeState)) {
+	case "SUCCESS", "REFUND":
+		return "SUCCESS"
+	case "NOTPAY", "USERPAYING":
+		return "PAYING"
+	case "CLOSED", "REVOKED":
+		return "CLOSED"
+	case "PAYERROR":
+		return "FAILED"
+	default:
+		return "UNKNOWN"
 	}
 }
 

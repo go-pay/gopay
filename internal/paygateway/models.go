@@ -45,6 +45,7 @@ type ClosePaymentResponse struct {
 type QueryPaymentResponse struct {
 	Code    string      `json:"code"`
 	Message string      `json:"message,omitempty"`
+	Status  string      `json:"status,omitempty"`
 	Data    interface{} `json:"data,omitempty"`
 }
 
@@ -91,6 +92,7 @@ type CompensationQueryPaymentsResponse struct {
 
 type CompensationPaymentItem struct {
 	OutTradeNo string      `json:"outTradeNo"`
+	Status     string      `json:"status,omitempty"`
 	Data       interface{} `json:"data,omitempty"`
 	Error      string      `json:"error,omitempty"`
 }
