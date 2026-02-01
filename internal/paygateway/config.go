@@ -9,6 +9,7 @@ import (
 type Config struct {
 	Server        ServerConfig      `json:"server"`
 	PublicBaseURL string            `json:"publicBaseUrl"`
+	APIAuth       APIAuthConfig     `json:"apiAuth"`
 	JavaWebhook   JavaWebhookConfig `json:"javaWebhook"`
 	TLS           TLSConfig         `json:"tls"`
 	Merchants     []MerchantConfig  `json:"merchants"`
@@ -28,6 +29,10 @@ type JavaWebhookConfig struct {
 	URL           string `json:"url"`
 	Token         string `json:"token"`
 	TimeoutMillis int    `json:"timeoutMillis"`
+}
+
+type APIAuthConfig struct {
+	Token string `json:"token"`
 }
 
 type MerchantConfig struct {

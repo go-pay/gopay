@@ -69,13 +69,13 @@ func (s *Server) ListenAndServe() error { return s.srv.ListenAndServe() }
 func (s *Server) routes() {
 	s.mux.HandleFunc("GET /healthz", s.handleHealthz)
 
-	s.mux.HandleFunc("POST /v1/payments", s.handleCreatePayment)
-	s.mux.HandleFunc("/v1/payments/", s.handlePaymentsSubroutes)
+	s.mux.HandleFunc("POST /v1/payments", s.withInternalAuth(s.handleCreatePayment))
+	s.mux.HandleFunc("/v1/payments/", s.withInternalAuth(s.handlePaymentsSubroutes))
 
-	s.mux.HandleFunc("POST /v1/refunds", s.handleCreateRefund)
-	s.mux.HandleFunc("/v1/refunds/", s.handleRefundsSubroutes)
+	s.mux.HandleFunc("POST /v1/refunds", s.withInternalAuth(s.handleCreateRefund))
+	s.mux.HandleFunc("/v1/refunds/", s.withInternalAuth(s.handleRefundsSubroutes))
 
-	s.mux.HandleFunc("POST /v1/compensations/payments/query", s.handleCompensationQueryPayments)
+	s.mux.HandleFunc("POST /v1/compensations/payments/query", s.withInternalAuth(s.handleCompensationQueryPayments))
 
 	s.mux.HandleFunc("/callbacks/wechat/v3/", s.handleWechatV3Callback)
 	s.mux.HandleFunc("/callbacks/alipay/", s.handleAlipayCallback)
@@ -151,6 +151,24 @@ func max(a, b int) int {
 		return a
 	}
 	return b
+}
+
+func (s *Server) withInternalAuth(next http.HandlerFunc) http.HandlerFunc {
+	expected := strings.TrimSpace(s.cfg.APIAuth.Token)
+	if expected == "" {
+		return next
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		token := r.Header.Get("X-Pay-Gateway-Token")
+		if token == "" || token != expected {
+			writeJSON(w, http.StatusUnauthorized, map[string]string{
+				"code":    "UNAUTHORIZED",
+				"message": "missing or invalid X-Pay-Gateway-Token",
+			})
+			return
+		}
+		next(w, r)
+	}
 }
 
 func (s *Server) callbackURL(channel string, tenantID, merchantID string) (string, error) {

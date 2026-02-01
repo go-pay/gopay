@@ -5,6 +5,9 @@
     "writeTimeoutSeconds": 10
   },
   "publicBaseUrl": "https://pay.example.com",
+  "apiAuth": {
+    "token": "change-me"
+  },
   "javaWebhook": {
     "url": "http://ruoyi-pay.internal/pay/events",
     "token": "change-me",
@@ -33,4 +36,3 @@
     }
   ]
 }
-
