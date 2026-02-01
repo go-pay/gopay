@@ -12,6 +12,7 @@ type Config struct {
 	Server          ServerConfig       `json:"server"`
 	PublicBaseURL   string             `json:"publicBaseUrl"`
 	DefaultTenantID string             `json:"defaultTenantId"`
+	SecretsBaseDir  string             `json:"secretsBaseDir"`
 	APIAuth         APIAuthConfig      `json:"apiAuth"`
 	SharedAuth      SharedAuthConfig   `json:"sharedAuth"`
 	JavaWebhook     JavaWebhookConfig  `json:"javaWebhook"`
@@ -83,6 +84,9 @@ type WechatV3Config struct {
 	SerialNo   string `json:"serialNo"`
 	ApiV3Key   string `json:"apiV3Key"`
 	PrivateKey string `json:"privateKey"`
+
+	// Recommended: reference a secret file under `secretsBaseDir` (e.g. "wechat/mch_001/apiclient_key.pem").
+	PrivateKeyRef string `json:"privateKeyRef,omitempty"`
 	// Alternative to `privateKey` to avoid embedding multi-line secrets in JSON.
 	PrivateKeyFile string `json:"privateKeyFile,omitempty"`
 
@@ -90,6 +94,7 @@ type WechatV3Config struct {
 	WechatPayPublicKey     string `json:"wechatPayPublicKey,omitempty"`
 	WechatPayPublicKeyID   string `json:"wechatPayPublicKeyId,omitempty"`
 	WechatPayPublicKeyFile string `json:"wechatPayPublicKeyFile,omitempty"`
+	WechatPayPublicKeyRef  string `json:"wechatPayPublicKeyRef,omitempty"`
 }
 
 type AlipayConfig struct {
@@ -98,6 +103,9 @@ type AlipayConfig struct {
 	PrivateKey      string `json:"privateKey"`
 	AlipayPublicKey string `json:"alipayPublicKey"`
 
+	// Recommended: reference secret files under `secretsBaseDir`.
+	PrivateKeyRef      string `json:"privateKeyRef,omitempty"`
+	AlipayPublicKeyRef string `json:"alipayPublicKeyRef,omitempty"`
 	// Alternative to `privateKey` / `alipayPublicKey` to avoid embedding secrets in JSON.
 	PrivateKeyFile      string `json:"privateKeyFile,omitempty"`
 	AlipayPublicKeyFile string `json:"alipayPublicKeyFile,omitempty"`
@@ -119,6 +127,9 @@ func LoadConfig(path string) (*Config, error) {
 	}
 	if cfg.DefaultTenantID == "" {
 		cfg.DefaultTenantID = "0"
+	}
+	if cfg.SecretsBaseDir == "" {
+		cfg.SecretsBaseDir = "/secrets"
 	}
 	if cfg.JavaWebhook.TimeoutMillis == 0 {
 		cfg.JavaWebhook.TimeoutMillis = 1500
@@ -171,6 +182,9 @@ func applyEnvOverrides(cfg *Config) error {
 	}
 	if v, ok := envString("PAY_GATEWAY_DEFAULT_TENANT_ID"); ok {
 		cfg.DefaultTenantID = v
+	}
+	if v, ok := envString("PAY_GATEWAY_SECRETS_BASE_DIR"); ok {
+		cfg.SecretsBaseDir = v
 	}
 	if v, ok := envString("PAY_GATEWAY_API_AUTH_TOKEN"); ok {
 		cfg.APIAuth.Token = v

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 )
@@ -16,6 +17,7 @@ type MerchantStore struct {
 	hashByKey       map[string]string
 	version         string
 	defaultTenantID string
+	secretsBaseDir  string
 }
 
 func NewMerchantStore(cfg *Config) (*MerchantStore, error) {
@@ -23,6 +25,13 @@ func NewMerchantStore(cfg *Config) (*MerchantStore, error) {
 		byKey:           make(map[string]*MerchantConfig),
 		hashByKey:       make(map[string]string),
 		defaultTenantID: cfg.DefaultTenantID,
+		secretsBaseDir:  cfg.SecretsBaseDir,
+	}
+	if ms.secretsBaseDir == "" {
+		return nil, fmt.Errorf("secretsBaseDir is empty")
+	}
+	if !filepath.IsAbs(ms.secretsBaseDir) {
+		return nil, fmt.Errorf("secretsBaseDir must be absolute: %s", ms.secretsBaseDir)
 	}
 	if _, err := ms.Replace(cfg.Merchants, "bootstrap"); err != nil {
 		return nil, err
@@ -30,38 +39,89 @@ func NewMerchantStore(cfg *Config) (*MerchantStore, error) {
 	return ms, nil
 }
 
-func resolveMerchantSecretFiles(m *MerchantConfig) error {
+func safeJoinUnderBaseDir(baseDir, ref string) (string, error) {
+	ref = strings.TrimSpace(ref)
+	if ref == "" {
+		return "", fmt.Errorf("secret ref is empty")
+	}
+	if strings.ContainsRune(ref, '\x00') {
+		return "", fmt.Errorf("invalid secret ref")
+	}
+
+	base := filepath.Clean(baseDir)
+	if base == "." || base == "" {
+		return "", fmt.Errorf("invalid secretsBaseDir")
+	}
+
+	var target string
+	if filepath.IsAbs(ref) {
+		target = filepath.Clean(ref)
+	} else {
+		target = filepath.Clean(filepath.Join(base, ref))
+	}
+
+	rel, err := filepath.Rel(base, target)
+	if err != nil {
+		return "", fmt.Errorf("resolve secret ref: %w", err)
+	}
+	if rel == "." || rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+		return "", fmt.Errorf("secret ref escapes base dir")
+	}
+	return target, nil
+}
+
+func resolveMerchantSecretFiles(m *MerchantConfig, secretsBaseDir string) error {
 	if m == nil {
 		return nil
 	}
 	if m.WechatV3 != nil {
-		if m.WechatV3.PrivateKey == "" && m.WechatV3.PrivateKeyFile != "" {
-			bs, err := os.ReadFile(m.WechatV3.PrivateKeyFile)
+		if m.WechatV3.PrivateKey == "" && (m.WechatV3.PrivateKeyRef != "" || m.WechatV3.PrivateKeyFile != "") {
+			ref := firstNonEmpty(m.WechatV3.PrivateKeyRef, m.WechatV3.PrivateKeyFile)
+			path, err := safeJoinUnderBaseDir(secretsBaseDir, ref)
 			if err != nil {
-				return fmt.Errorf("read wechatV3.privateKeyFile: %w", err)
+				return fmt.Errorf("resolve wechatV3 private key: %w", err)
+			}
+			bs, err := os.ReadFile(path)
+			if err != nil {
+				return fmt.Errorf("read wechatV3 private key: %w", err)
 			}
 			m.WechatV3.PrivateKey = strings.TrimSpace(string(bs))
 		}
-		if m.WechatV3.WechatPayPublicKey == "" && m.WechatV3.WechatPayPublicKeyFile != "" {
-			bs, err := os.ReadFile(m.WechatV3.WechatPayPublicKeyFile)
+		if m.WechatV3.WechatPayPublicKey == "" && (m.WechatV3.WechatPayPublicKeyRef != "" || m.WechatV3.WechatPayPublicKeyFile != "") {
+			ref := firstNonEmpty(m.WechatV3.WechatPayPublicKeyRef, m.WechatV3.WechatPayPublicKeyFile)
+			path, err := safeJoinUnderBaseDir(secretsBaseDir, ref)
 			if err != nil {
-				return fmt.Errorf("read wechatV3.wechatPayPublicKeyFile: %w", err)
+				return fmt.Errorf("resolve wechatV3 wechatPayPublicKey: %w", err)
+			}
+			bs, err := os.ReadFile(path)
+			if err != nil {
+				return fmt.Errorf("read wechatV3 wechatPayPublicKey: %w", err)
 			}
 			m.WechatV3.WechatPayPublicKey = strings.TrimSpace(string(bs))
 		}
 	}
 	if m.Alipay != nil {
-		if m.Alipay.PrivateKey == "" && m.Alipay.PrivateKeyFile != "" {
-			bs, err := os.ReadFile(m.Alipay.PrivateKeyFile)
+		if m.Alipay.PrivateKey == "" && (m.Alipay.PrivateKeyRef != "" || m.Alipay.PrivateKeyFile != "") {
+			ref := firstNonEmpty(m.Alipay.PrivateKeyRef, m.Alipay.PrivateKeyFile)
+			path, err := safeJoinUnderBaseDir(secretsBaseDir, ref)
 			if err != nil {
-				return fmt.Errorf("read alipay.privateKeyFile: %w", err)
+				return fmt.Errorf("resolve alipay private key: %w", err)
+			}
+			bs, err := os.ReadFile(path)
+			if err != nil {
+				return fmt.Errorf("read alipay private key: %w", err)
 			}
 			m.Alipay.PrivateKey = strings.TrimSpace(string(bs))
 		}
-		if m.Alipay.AlipayPublicKey == "" && m.Alipay.AlipayPublicKeyFile != "" {
-			bs, err := os.ReadFile(m.Alipay.AlipayPublicKeyFile)
+		if m.Alipay.AlipayPublicKey == "" && (m.Alipay.AlipayPublicKeyRef != "" || m.Alipay.AlipayPublicKeyFile != "") {
+			ref := firstNonEmpty(m.Alipay.AlipayPublicKeyRef, m.Alipay.AlipayPublicKeyFile)
+			path, err := safeJoinUnderBaseDir(secretsBaseDir, ref)
 			if err != nil {
-				return fmt.Errorf("read alipay.alipayPublicKeyFile: %w", err)
+				return fmt.Errorf("resolve alipay public key: %w", err)
+			}
+			bs, err := os.ReadFile(path)
+			if err != nil {
+				return fmt.Errorf("read alipay public key: %w", err)
 			}
 			m.Alipay.AlipayPublicKey = strings.TrimSpace(string(bs))
 		}
@@ -100,7 +160,7 @@ func (s *MerchantStore) Replace(merchants []MerchantConfig, version string) ([]s
 		if mc.TenantID == "" || mc.MerchantID == "" {
 			return nil, fmt.Errorf("merchant missing tenantId/merchantId")
 		}
-		if err := resolveMerchantSecretFiles(&mc); err != nil {
+		if err := resolveMerchantSecretFiles(&mc, s.secretsBaseDir); err != nil {
 			return nil, err
 		}
 		key := merchantKey(mc.TenantID, mc.MerchantID)

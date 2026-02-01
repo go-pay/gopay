@@ -6,6 +6,7 @@
   },
   "publicBaseUrl": "https://pay.example.com",
   "defaultTenantId": "0",
+  "secretsBaseDir": "/secrets",
   "apiAuth": {
     "token": ""
   },
@@ -50,13 +51,13 @@
         "mchId": "1900000109",
         "serialNo": "serial_no",
         "apiV3Key": "api_v3_key",
-        "privateKeyFile": "/secrets/wechat/apiclient_key.pem"
+        "privateKeyRef": "wechat/mch_001/apiclient_key.pem"
       },
       "alipay": {
         "isProd": false,
         "appId": "2021000123456789",
-        "privateKeyFile": "/secrets/alipay/app_private_key.pem",
-        "alipayPublicKeyFile": "/secrets/alipay/alipay_public_key.pem"
+        "privateKeyRef": "alipay/mch_001/app_private_key.pem",
+        "alipayPublicKeyRef": "alipay/mch_001/alipay_public_key.pem"
       }
     }
   ]
