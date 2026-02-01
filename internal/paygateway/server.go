@@ -544,9 +544,15 @@ func (s *Server) handleCreateRefund(w http.ResponseWriter, r *http.Request) {
 			writeJSON(w, http.StatusBadRequest, CreateRefundResponse{Code: "BAD_REQUEST", Message: err.Error()})
 			return
 		}
+		notifyURL, err := s.callbackURL(string(ChannelWechatV3), req.TenantID, req.MerchantID)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, CreateRefundResponse{Code: "ERROR", Message: err.Error()})
+			return
+		}
 		bm := make(gopay.BodyMap)
 		bm.Set("out_trade_no", req.OutTradeNo).
 			Set("out_refund_no", req.OutRefundNo).
+			Set("notify_url", notifyURL).
 			SetBodyMap("amount", func(b gopay.BodyMap) {
 				b.Set("refund", req.RefundAmount).
 					Set("total", req.TotalAmount).
@@ -759,31 +765,61 @@ func (s *Server) handleWechatV3Callback(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	var decrypt wechatv3.V3DecryptPayResult
-	if err := notifyReq.DecryptCipherTextToStruct(wc.ApiV3Key, &decrypt); err != nil {
-		writeWechatV3NotifyResp(w, http.StatusBadRequest, "FAIL", "decrypt failed")
-		return
-	}
-	if decrypt.Amount == nil {
-		writeWechatV3NotifyResp(w, http.StatusBadRequest, "FAIL", "missing amount")
-		return
-	}
-
-	ev := &Event{
-		EventID:           "WECHAT_V3:" + notifyReq.Id,
-		EventType:         wechatV3EventType(notifyReq.EventType, decrypt.TradeState),
-		EventVersion:      1,
-		OccurredAt:        time.Now().UTC().Format(time.RFC3339),
-		TenantID:          tenantID,
-		MerchantID:        merchantID,
-		Channel:           string(ChannelWechatV3),
-		OutTradeNo:        decrypt.OutTradeNo,
-		TransactionID:     decrypt.TransactionId,
-		Amount:            int64(decrypt.Amount.Total),
-		Currency:          decrypt.Amount.Currency,
-		TradeState:        decrypt.TradeState,
-		SignatureVerified: true,
-		IdempotencyKey:    merchantKey(tenantID, merchantID) + ":" + decrypt.OutTradeNo,
+	var ev *Event
+	if isWechatRefundNotify(notifyReq) {
+		var decrypt wechatv3.V3DecryptRefundResult
+		if err := notifyReq.DecryptCipherTextToStruct(wc.ApiV3Key, &decrypt); err != nil {
+			writeWechatV3NotifyResp(w, http.StatusBadRequest, "FAIL", "decrypt failed")
+			return
+		}
+		if decrypt.Amount == nil {
+			writeWechatV3NotifyResp(w, http.StatusBadRequest, "FAIL", "missing amount")
+			return
+		}
+		ev = &Event{
+			EventID:           "WECHAT_V3:" + notifyReq.Id,
+			EventType:         wechatV3RefundEventType(notifyReq.EventType, decrypt.RefundStatus),
+			EventVersion:      1,
+			OccurredAt:        time.Now().UTC().Format(time.RFC3339),
+			TenantID:          tenantID,
+			MerchantID:        merchantID,
+			Channel:           string(ChannelWechatV3),
+			OutTradeNo:        decrypt.OutTradeNo,
+			TransactionID:     decrypt.TransactionId,
+			OutRefundNo:       decrypt.OutRefundNo,
+			RefundID:          decrypt.RefundId,
+			Amount:            int64(decrypt.Amount.Refund),
+			Currency:          "CNY",
+			RefundState:       decrypt.RefundStatus,
+			SignatureVerified: true,
+			IdempotencyKey:    merchantKey(tenantID, merchantID) + ":" + decrypt.OutRefundNo,
+		}
+	} else {
+		var decrypt wechatv3.V3DecryptPayResult
+		if err := notifyReq.DecryptCipherTextToStruct(wc.ApiV3Key, &decrypt); err != nil {
+			writeWechatV3NotifyResp(w, http.StatusBadRequest, "FAIL", "decrypt failed")
+			return
+		}
+		if decrypt.Amount == nil {
+			writeWechatV3NotifyResp(w, http.StatusBadRequest, "FAIL", "missing amount")
+			return
+		}
+		ev = &Event{
+			EventID:           "WECHAT_V3:" + notifyReq.Id,
+			EventType:         wechatV3EventType(notifyReq.EventType, decrypt.TradeState),
+			EventVersion:      1,
+			OccurredAt:        time.Now().UTC().Format(time.RFC3339),
+			TenantID:          tenantID,
+			MerchantID:        merchantID,
+			Channel:           string(ChannelWechatV3),
+			OutTradeNo:        decrypt.OutTradeNo,
+			TransactionID:     decrypt.TransactionId,
+			Amount:            int64(decrypt.Amount.Total),
+			Currency:          decrypt.Amount.Currency,
+			TradeState:        decrypt.TradeState,
+			SignatureVerified: true,
+			IdempotencyKey:    merchantKey(tenantID, merchantID) + ":" + decrypt.OutTradeNo,
+		}
 	}
 	if err := s.publisher.Publish(r.Context(), ev); err != nil {
 		writeWechatV3NotifyResp(w, http.StatusInternalServerError, "FAIL", "publish failed")
@@ -882,6 +918,35 @@ func wechatV3EventType(eventType, tradeState string) string {
 		}
 		return "payment.updated"
 	}
+}
+
+func wechatV3RefundEventType(eventType, refundStatus string) string {
+	switch refundStatus {
+	case "SUCCESS":
+		return "refund.succeeded"
+	case "CLOSED":
+		return "refund.closed"
+	case "ABNORMAL":
+		return "refund.failed"
+	default:
+		if eventType != "" {
+			return "wechat." + strings.ToLower(eventType)
+		}
+		return "refund.updated"
+	}
+}
+
+func isWechatRefundNotify(req *wechatv3.V3NotifyReq) bool {
+	if req == nil {
+		return false
+	}
+	if strings.HasPrefix(strings.ToUpper(req.EventType), "REFUND.") {
+		return true
+	}
+	if req.Resource != nil && strings.EqualFold(req.Resource.OriginalType, "refund") {
+		return true
+	}
+	return false
 }
 
 func alipayEventType(tradeStatus string) string {
