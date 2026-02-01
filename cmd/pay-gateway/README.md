@@ -21,3 +21,6 @@ Health check:
 curl -sS http://127.0.0.1:8088/healthz
 ```
 
+## Auth (internal APIs)
+
+If `apiAuth.token` is set in config, Java callers must send `X-Pay-Gateway-Token` for all `/v1/**` endpoints.

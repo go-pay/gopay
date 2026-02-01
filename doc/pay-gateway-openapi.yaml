@@ -1,0 +1,519 @@
+openapi: 3.0.3
+info:
+  title: pay-gateway API
+  version: 1.0.0
+  description: |
+    Internal HTTP/JSON API exposed by `cmd/pay-gateway` for a Java backend.
+
+    Notes:
+    - All money amounts are integers in the smallest currency unit (e.g., CNY fen).
+    - If `apiAuth.token` is configured, all `/v1/**` endpoints require `X-Pay-Gateway-Token`.
+servers:
+  - url: http://pay-gateway.internal
+
+tags:
+  - name: Health
+  - name: Payments
+  - name: Refunds
+  - name: Compensations
+
+paths:
+  /healthz:
+    get:
+      tags: [Health]
+      summary: Health check
+      responses:
+        "200":
+          description: ok
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: ok
+
+  /v1/payments:
+    post:
+      tags: [Payments]
+      summary: Create payment (idempotent)
+      security:
+        - PayGatewayToken: []
+      parameters:
+        - $ref: "#/components/parameters/PayGatewayToken"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePaymentRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreatePaymentResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "502":
+          description: Upstream error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/payments/{outTradeNo}:
+    get:
+      tags: [Payments]
+      summary: Query payment
+      security:
+        - PayGatewayToken: []
+      parameters:
+        - $ref: "#/components/parameters/PayGatewayToken"
+        - name: outTradeNo
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: merchantId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: channel
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/Channel"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryPaymentResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/payments/{outTradeNo}/close:
+    post:
+      tags: [Payments]
+      summary: Close payment
+      security:
+        - PayGatewayToken: []
+      parameters:
+        - $ref: "#/components/parameters/PayGatewayToken"
+        - name: outTradeNo
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClosePaymentRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClosePaymentResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/refunds:
+    post:
+      tags: [Refunds]
+      summary: Create refund (idempotent)
+      security:
+        - PayGatewayToken: []
+      parameters:
+        - $ref: "#/components/parameters/PayGatewayToken"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRefundRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateRefundResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "502":
+          description: Upstream error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/refunds/{outRefundNo}:
+    get:
+      tags: [Refunds]
+      summary: Query refund
+      security:
+        - PayGatewayToken: []
+      parameters:
+        - $ref: "#/components/parameters/PayGatewayToken"
+        - name: outRefundNo
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: merchantId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: channel
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/Channel"
+        - name: outTradeNo
+          in: query
+          required: false
+          description: Required for ALIPAY unless `tradeNo` is provided.
+          schema:
+            type: string
+        - name: tradeNo
+          in: query
+          required: false
+          description: Required for ALIPAY unless `outTradeNo` is provided.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QueryRefundResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /v1/compensations/payments/query:
+    post:
+      tags: [Compensations]
+      summary: Batch query payments for compensation jobs
+      security:
+        - PayGatewayToken: []
+      parameters:
+        - $ref: "#/components/parameters/PayGatewayToken"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompensationQueryPaymentsRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompensationQueryPaymentsResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  securitySchemes:
+    PayGatewayToken:
+      type: apiKey
+      in: header
+      name: X-Pay-Gateway-Token
+
+  parameters:
+    PayGatewayToken:
+      name: X-Pay-Gateway-Token
+      in: header
+      required: true
+      schema:
+        type: string
+    IdempotencyKey:
+      name: X-Idempotency-Key
+      in: header
+      required: false
+      schema:
+        type: string
+
+  schemas:
+    Channel:
+      type: string
+      enum: [WECHAT_V3, ALIPAY]
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+    CreatePaymentRequest:
+      type: object
+      required:
+        - tenantId
+        - merchantId
+        - channel
+        - scene
+        - outTradeNo
+        - currency
+        - amount
+        - subject
+      properties:
+        tenantId:
+          type: string
+        merchantId:
+          type: string
+        channel:
+          $ref: "#/components/schemas/Channel"
+        scene:
+          type: string
+          description: e.g. WECHAT_V3: JSAPI/MINIAPP/APP/H5/NATIVE; ALIPAY: APP/WAP/PAGE/PRECREATE
+        outTradeNo:
+          type: string
+        bizOrderNo:
+          type: string
+        currency:
+          type: string
+          example: CNY
+        amount:
+          type: integer
+          format: int64
+          description: smallest unit (e.g., fen)
+        subject:
+          type: string
+        description:
+          type: string
+        expireAt:
+          type: string
+          description: RFC3339
+        openid:
+          type: string
+          description: Required for WECHAT_V3 JSAPI/MINIAPP
+        ext:
+          type: object
+          additionalProperties:
+            type: string
+
+    CreatePaymentResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        outTradeNo:
+          type: string
+        status:
+          type: string
+          example: PAYING
+        payData:
+          type: object
+          additionalProperties: true
+
+    QueryPaymentResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+
+    ClosePaymentRequest:
+      type: object
+      required: [tenantId, merchantId, channel]
+      properties:
+        tenantId:
+          type: string
+        merchantId:
+          type: string
+        channel:
+          $ref: "#/components/schemas/Channel"
+
+    ClosePaymentResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+    CreateRefundRequest:
+      type: object
+      required:
+        - tenantId
+        - merchantId
+        - channel
+        - outTradeNo
+        - outRefundNo
+        - currency
+        - refundAmount
+      properties:
+        tenantId:
+          type: string
+        merchantId:
+          type: string
+        channel:
+          $ref: "#/components/schemas/Channel"
+        outTradeNo:
+          type: string
+        outRefundNo:
+          type: string
+        currency:
+          type: string
+          example: CNY
+        totalAmount:
+          type: integer
+          format: int64
+          description: Required for WECHAT_V3
+        refundAmount:
+          type: integer
+          format: int64
+        reason:
+          type: string
+
+    CreateRefundResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        outRefundNo:
+          type: string
+        status:
+          type: string
+          example: REFUNDING
+        data:
+          type: object
+          additionalProperties: true
+
+    QueryRefundResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+
+    CompensationQueryPaymentsRequest:
+      type: object
+      required: [tenantId, merchantId, channel, outTradeNos]
+      properties:
+        tenantId:
+          type: string
+        merchantId:
+          type: string
+        channel:
+          $ref: "#/components/schemas/Channel"
+        outTradeNos:
+          type: array
+          maxItems: 50
+          items:
+            type: string
+
+    CompensationQueryPaymentsResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              outTradeNo:
+                type: string
+              data:
+                type: object
+                additionalProperties: true
+              error:
+                type: string

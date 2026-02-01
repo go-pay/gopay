@@ -13,17 +13,26 @@ go run ./cmd/pay-gateway --config /path/to/pay-gateway.json
 
 配置示例：`cmd/pay-gateway/config.example.json`
 - `publicBaseUrl`：外网可访问的域名，用于生成回调地址（微信/支付宝会回调到 Go）。
+- `apiAuth.token`：Java 调用 Go 内网 API 的鉴权 token（Header：`X-Pay-Gateway-Token`）。为空则不校验（不建议）。
 - `javaWebhook.url`：Java 内网接收事件的地址（Go → Java）。
 - `javaWebhook.token`：Go 请求 Java 时携带 `X-Pay-Gateway-Token`，Java 需校验。
 - `tls.caFile`：可选，自定义 CA（用于 pay-gateway 出站 TLS 校验；默认系统 CA）。
 
+建议：`apiAuth.token` 与 `javaWebhook.token` 分开配置（两个方向的鉴权密钥不要复用）。
+
 ## 2) Java → Go：核心 API（L0）
+
+### 2.0 认证（推荐开启）
+
+当 `apiAuth.token` 配置非空时，Java 调用所有 `/v1/**` 接口必须携带：
+- `X-Pay-Gateway-Token: <apiAuth.token>`
 
 ### 2.1 创建支付
 
 `POST /v1/payments`
 
-Header（可选）：
+Header：
+- `X-Pay-Gateway-Token`：鉴权 token（推荐开启 `apiAuth.token` 后强制传）。
 - `X-Idempotency-Key`：幂等键（未传时网关会按 `tenantId/merchantId/channel/outTradeNo` 生成）。当前实现为**内存缓存**，仅用于开发/单实例；生产请替换为 Redis/DB。
 
 Body（字段）：
@@ -116,6 +125,7 @@ pay-gateway 会按订单自动设置回调地址（你不需要 Java 侧拼接 n
 
 说明：
 - Go 会先验签/解密，再推送事件给 Java；若推送失败，会对平台返回失败，让平台重试回调（实现“至少一次”）。
+- 微信退款：网关在发起退款时会设置 `notify_url` 指向同一个微信回调地址；回调事件会以 `refund.*` 的 `eventType` 推送给 Java。
 
 ## 4) Go → Java：事件推送（Webhook）
 
@@ -141,6 +151,10 @@ Go 会向 `javaWebhook.url` 发起 `POST`（JSON），并携带：
   "idempotencyKey": "100:mch_001:P202602010001"
 }
 ```
+
+常见 `eventType`：
+- `payment.succeeded` / `payment.closed` / `payment.updated`
+- `refund.succeeded` / `refund.closed` / `refund.failed` / `refund.updated`
 
 Java 接收端要求（强制）：
 - 校验 `X-Pay-Gateway-Token`
