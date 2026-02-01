@@ -2,7 +2,9 @@
 
 `pay-gateway` is a lightweight HTTP service that wraps `gopay` (this repo) so a Java backend can call payment capabilities remotely, while **payment platform callbacks land in Go** (verify + decrypt), and then are forwarded to Java as trusted events.
 
-This folder is intentionally dependency-light (std + `gopay` only). For production, add durable idempotency (Redis), durable outbox, and structured logging/metrics.
+This folder is intentionally dependency-light (std + `gopay`, plus optional Redis for idempotency/de-dup). For production, consider durable outbox (DB/MQ) and structured logging/metrics.
+
+Deployment notes: see `doc/pay-gateway-deploy.md`.
 
 ## Run
 
@@ -36,6 +38,12 @@ docker compose up -d --build
 ```
 
 You can keep most values in `.env` and leave `config/pay-gateway.json` focused on merchant configs (keys/certs should be mounted as files under `secrets/`).
+
+## Redis (recommended)
+
+If `PAY_GATEWAY_REDIS_ADDR` (or `redis.addr` in config) is set, pay-gateway will use Redis for:
+- Idempotency (create payment/refund)
+- Callback de-duplication across instances
 
 Example secret layout:
 ```text

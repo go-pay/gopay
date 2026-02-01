@@ -17,8 +17,18 @@ go run ./cmd/pay-gateway --config /path/to/pay-gateway.json
 - `javaWebhook.url`：Java 内网接收事件的地址（Go → Java）。
 - `javaWebhook.token`：Go 请求 Java 时携带 `X-Pay-Gateway-Token`，Java 需校验。
 - `tls.caFile`：可选，自定义 CA（用于 pay-gateway 出站 TLS 校验；默认系统 CA）。
+- `redis.*`：强烈建议配置（用于 **幂等** 与 **回调去重**）。不配置时网关会退化为“内存幂等/去重”，仅适用于单实例开发环境。
 
 建议：`apiAuth.token` 与 `javaWebhook.token` 分开配置（两个方向的鉴权密钥不要复用）。
+
+### 配置覆盖（.env）
+
+pay-gateway 支持使用环境变量覆盖部分配置（便于容器化部署），常用项：
+- `PAY_GATEWAY_PUBLIC_BASE_URL`
+- `PAY_GATEWAY_API_AUTH_TOKEN`
+- `PAY_GATEWAY_JAVA_WEBHOOK_URL`
+- `PAY_GATEWAY_JAVA_WEBHOOK_TOKEN`
+- `PAY_GATEWAY_REDIS_ADDR` / `PAY_GATEWAY_REDIS_PASSWORD` / `PAY_GATEWAY_REDIS_DB` / `PAY_GATEWAY_REDIS_KEY_PREFIX`
 
 ## 2) Java → Go：核心 API（L0）
 
@@ -33,7 +43,7 @@ go run ./cmd/pay-gateway --config /path/to/pay-gateway.json
 
 Header：
 - `X-Pay-Gateway-Token`：鉴权 token（推荐开启 `apiAuth.token` 后强制传）。
-- `X-Idempotency-Key`：幂等键（未传时网关会按 `tenantId/merchantId/channel/outTradeNo` 生成）。当前实现为**内存缓存**，仅用于开发/单实例；生产请替换为 Redis/DB。
+- `X-Idempotency-Key`：幂等键（未传时网关会按 `tenantId/merchantId/channel/outTradeNo` 生成）。网关默认内存幂等；配置 `redis.addr`（或 `PAY_GATEWAY_REDIS_ADDR`）后会自动切换为 Redis 幂等（推荐）。
 
 Body（字段）：
 - `channel`：`WECHAT_V3` / `ALIPAY`
@@ -126,6 +136,7 @@ pay-gateway 会按订单自动设置回调地址（你不需要 Java 侧拼接 n
 说明：
 - Go 会先验签/解密，再推送事件给 Java；若推送失败，会对平台返回失败，让平台重试回调（实现“至少一次”）。
 - 微信退款：网关在发起退款时会设置 `notify_url` 指向同一个微信回调地址；回调事件会以 `refund.*` 的 `eventType` 推送给 Java。
+- 去重策略（建议启用 Redis）：平台回调可能重复投递。网关会对同一事件做去重；若事件已投递成功，会直接对平台返回成功回执。
 
 ## 4) Go → Java：事件推送（Webhook）
 
