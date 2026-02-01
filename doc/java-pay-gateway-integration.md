@@ -16,6 +16,8 @@ go run ./cmd/pay-gateway --config /path/to/pay-gateway.json
 - `apiAuth.token`：Java 调用 Go 内网 API 的鉴权 token（Header：`X-Pay-Gateway-Token`）。为空则不校验（不建议）。
 - `javaWebhook.url`：Java 内网接收事件的地址（Go → Java）。
 - `javaWebhook.token`：Go 请求 Java 时携带 `X-Pay-Gateway-Token`，Java 需校验。
+- `javaWebhook.async`：是否启用“回调事件先入 Redis Outbox，再异步投递 Java webhook”（推荐开启，需要 Redis）。
+- `javaWebhook.consumerGroup`：Outbox 消费者组（多实例部署时用于协作消费）。
 - `tls.caFile`：可选，自定义 CA（用于 pay-gateway 出站 TLS 校验；默认系统 CA）。
 - `redis.*`：强烈建议配置（用于 **幂等** 与 **回调去重**）。不配置时网关会退化为“内存幂等/去重”，仅适用于单实例开发环境。
 
@@ -134,7 +136,8 @@ pay-gateway 会按订单自动设置回调地址（你不需要 Java 侧拼接 n
 - 支付宝：`POST /callbacks/alipay/{tenantId}/{merchantId}`
 
 说明：
-- Go 会先验签/解密，再推送事件给 Java；若推送失败，会对平台返回失败，让平台重试回调（实现“至少一次”）。
+- 同步模式（`javaWebhook.async=false`）：Go 会先验签/解密，再同步推送事件给 Java；若推送失败，会对平台返回失败，让平台重试回调（实现“至少一次”）。
+- 异步模式（`javaWebhook.async=true`，推荐）：Go 会先验签/解密 → 写入 Redis Outbox → 立即对平台返回成功回执；后台 worker 负责重试投递到 Java webhook（更稳健，避免依赖平台重试节奏）。
 - 微信退款：网关在发起退款时会设置 `notify_url` 指向同一个微信回调地址；回调事件会以 `refund.*` 的 `eventType` 推送给 Java。
 - 去重策略（建议启用 Redis）：平台回调可能重复投递。网关会对同一事件做去重；若事件已投递成功，会直接对平台返回成功回执。
 

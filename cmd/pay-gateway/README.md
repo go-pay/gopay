@@ -44,6 +44,7 @@ You can keep most values in `.env` and leave `config/pay-gateway.json` focused o
 If `PAY_GATEWAY_REDIS_ADDR` (or `redis.addr` in config) is set, pay-gateway will use Redis for:
 - Idempotency (create payment/refund)
 - Callback de-duplication across instances
+- Optional outbox delivery (`javaWebhook.async=true`) to decouple platform callbacks from Java webhook availability.
 
 Example secret layout:
 ```text

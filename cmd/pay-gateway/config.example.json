@@ -11,7 +11,9 @@
   "javaWebhook": {
     "url": "http://ruoyi-pay.internal/pay/events",
     "token": "change-me",
-    "timeoutMillis": 1500
+    "timeoutMillis": 1500,
+    "async": true,
+    "consumerGroup": "pay-gateway"
   },
   "tls": {
     "caFile": ""

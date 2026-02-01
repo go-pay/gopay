@@ -41,6 +41,18 @@ pay-gateway 支持用环境变量覆盖常用项（见 `cmd/pay-gateway/.env.exa
 配置 `redis.addr`（或 `PAY_GATEWAY_REDIS_ADDR`）后，网关会启用：
 - 下单/退款接口幂等（跨实例）
 - 平台回调去重（跨实例）
+- （可选）回调事件 Outbox（异步投递 Java webhook）
 
 建议：回调去重 key TTL ≥ 7 天；幂等 key TTL ≥ 24 小时（可按业务调整）。
 
+## 6) 回调事件 Outbox（推荐开启）
+
+当 `javaWebhook.async=true` 时，回调处理链路变为：
+1) 验签/解密
+2) 写入 Redis Stream（默认 stream：`${PAY_GATEWAY_REDIS_KEY_PREFIX}outbox`）
+3) 立即对平台返回成功
+4) 后台 worker 从 consumer group 消费并重试投递到 Java webhook
+
+多实例部署时请确保：
+- 所有实例连接同一 Redis
+- `javaWebhook.consumerGroup` 统一（默认 `pay-gateway`）
