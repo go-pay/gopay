@@ -22,6 +22,7 @@ type Server struct {
 	publisher EventPublisher
 	idem      IdempotencyStore
 	dedup     CallbackDeduper
+	nonce     NonceStore
 	outbox    *OutboxWorker
 	mux       *http.ServeMux
 	srv       *http.Server
@@ -42,10 +43,19 @@ func NewServer(cfg *Config) (*Server, error) {
 		return nil, err
 	}
 
+	var nonceStore NonceStore
+	if cfg.SharedAuth.SharedSecret != "" || cfg.SharedAuth.SharedSecretPrev != "" {
+		if redisClient != nil {
+			nonceStore = NewRedisNonceStore(redisClient, cfg.Redis.KeyPrefix)
+		} else {
+			nonceStore = NewMemoryNonceStore()
+		}
+	}
+
 	var outboxWorker *OutboxWorker
 	var publisher EventPublisher
 	if cfg.JavaWebhook.URL != "" {
-		webhook := NewWebhookPublisher(cfg.JavaWebhook.URL, cfg.JavaWebhook.Token, clients.HTTPClient(), time.Duration(cfg.JavaWebhook.TimeoutMillis)*time.Millisecond)
+		webhook := NewWebhookPublisher(cfg.JavaWebhook.URL, cfg.JavaWebhook.Token, cfg.SharedAuth.SharedSecret, clients.HTTPClient(), time.Duration(cfg.JavaWebhook.TimeoutMillis)*time.Millisecond)
 		if cfg.JavaWebhook.Async {
 			if redisClient == nil {
 				return nil, errors.New("javaWebhook.async requires redis")
@@ -78,6 +88,7 @@ func NewServer(cfg *Config) (*Server, error) {
 		store:     store,
 		clients:   clients,
 		publisher: publisher,
+		nonce:     nonceStore,
 		outbox:    outboxWorker,
 		mux:       http.NewServeMux(),
 	}
@@ -197,13 +208,39 @@ func max(a, b int) int {
 }
 
 func (s *Server) withInternalAuth(next http.HandlerFunc) http.HandlerFunc {
-	expected := strings.TrimSpace(s.cfg.APIAuth.Token)
-	if expected == "" {
+	expectedToken := strings.TrimSpace(s.cfg.APIAuth.Token)
+	shared := s.cfg.SharedAuth.SharedSecret != "" || s.cfg.SharedAuth.SharedSecretPrev != ""
+	if expectedToken == "" && !shared {
 		return next
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
+		// Prefer shared HMAC auth when configured.
+		if shared {
+			if !s.cfg.SharedAuth.Required && expectedToken != "" {
+				if token := r.Header.Get("X-Pay-Gateway-Token"); token != "" && token == expectedToken {
+					next(w, r)
+					return
+				}
+			}
+			if _, err := verifyHMACRequest(r, s.cfg.SharedAuth, s.nonce); err == nil {
+				next(w, r)
+				return
+			} else if !s.cfg.SharedAuth.Required && expectedToken != "" {
+				if token := r.Header.Get("X-Pay-Gateway-Token"); token != "" && token == expectedToken {
+					next(w, r)
+					return
+				}
+			}
+			writeJSON(w, http.StatusUnauthorized, map[string]string{
+				"code":    "UNAUTHORIZED",
+				"message": "missing or invalid shared auth",
+			})
+			return
+		}
+
+		// Legacy token-only auth.
 		token := r.Header.Get("X-Pay-Gateway-Token")
-		if token == "" || token != expected {
+		if token == "" || token != expectedToken {
 			writeJSON(w, http.StatusUnauthorized, map[string]string{
 				"code":    "UNAUTHORIZED",
 				"message": "missing or invalid X-Pay-Gateway-Token",
@@ -237,6 +274,9 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 	if err := decodeJSON(r, &req); err != nil {
 		writeJSON(w, http.StatusBadRequest, CreatePaymentResponse{Code: "BAD_REQUEST", Message: err.Error()})
 		return
+	}
+	if req.TenantID == "" {
+		req.TenantID = s.cfg.DefaultTenantID
 	}
 	if req.TenantID == "" || req.MerchantID == "" || req.OutTradeNo == "" || req.Currency == "" || req.Amount <= 0 || req.Subject == "" {
 		writeJSON(w, http.StatusBadRequest, CreatePaymentResponse{Code: "BAD_REQUEST", Message: "missing required fields"})
@@ -487,6 +527,9 @@ func (s *Server) handleQueryPayment(w http.ResponseWriter, r *http.Request, outT
 	tenantID := r.URL.Query().Get("tenantId")
 	merchantID := r.URL.Query().Get("merchantId")
 	channel := Channel(r.URL.Query().Get("channel"))
+	if tenantID == "" {
+		tenantID = s.cfg.DefaultTenantID
+	}
 	if tenantID == "" || merchantID == "" || channel == "" {
 		writeJSON(w, http.StatusBadRequest, QueryPaymentResponse{Code: "BAD_REQUEST", Message: "missing tenantId/merchantId/channel"})
 		return
@@ -541,6 +584,9 @@ func (s *Server) handleClosePayment(w http.ResponseWriter, r *http.Request, outT
 		writeJSON(w, http.StatusBadRequest, ClosePaymentResponse{Code: "BAD_REQUEST", Message: err.Error()})
 		return
 	}
+	if body.TenantID == "" {
+		body.TenantID = s.cfg.DefaultTenantID
+	}
 	if body.TenantID == "" || body.MerchantID == "" || body.Channel == "" {
 		writeJSON(w, http.StatusBadRequest, ClosePaymentResponse{Code: "BAD_REQUEST", Message: "missing tenantId/merchantId/channel"})
 		return
@@ -592,6 +638,9 @@ func (s *Server) handleCreateRefund(w http.ResponseWriter, r *http.Request) {
 	if err := decodeJSON(r, &req); err != nil {
 		writeJSON(w, http.StatusBadRequest, CreateRefundResponse{Code: "BAD_REQUEST", Message: err.Error()})
 		return
+	}
+	if req.TenantID == "" {
+		req.TenantID = s.cfg.DefaultTenantID
 	}
 	if req.TenantID == "" || req.MerchantID == "" || req.OutTradeNo == "" || req.OutRefundNo == "" || req.Currency == "" || req.RefundAmount <= 0 {
 		writeJSON(w, http.StatusBadRequest, CreateRefundResponse{Code: "BAD_REQUEST", Message: "missing required fields"})
@@ -708,6 +757,9 @@ func (s *Server) handleQueryRefund(w http.ResponseWriter, r *http.Request, outRe
 	tenantID := r.URL.Query().Get("tenantId")
 	merchantID := r.URL.Query().Get("merchantId")
 	channel := Channel(r.URL.Query().Get("channel"))
+	if tenantID == "" {
+		tenantID = s.cfg.DefaultTenantID
+	}
 	if tenantID == "" || merchantID == "" || channel == "" {
 		writeJSON(w, http.StatusBadRequest, QueryRefundResponse{Code: "BAD_REQUEST", Message: "missing tenantId/merchantId/channel"})
 		return
@@ -771,6 +823,9 @@ func (s *Server) handleCompensationQueryPayments(w http.ResponseWriter, r *http.
 	if err := decodeJSON(r, &req); err != nil {
 		writeJSON(w, http.StatusBadRequest, CompensationQueryPaymentsResponse{Code: "BAD_REQUEST", Message: err.Error()})
 		return
+	}
+	if req.TenantID == "" {
+		req.TenantID = s.cfg.DefaultTenantID
 	}
 	if req.TenantID == "" || req.MerchantID == "" || req.Channel == "" || len(req.OutTradeNos) == 0 {
 		writeJSON(w, http.StatusBadRequest, CompensationQueryPaymentsResponse{Code: "BAD_REQUEST", Message: "missing required fields"})

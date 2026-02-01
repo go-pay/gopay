@@ -36,14 +36,15 @@ type EventPublisher interface {
 }
 
 type WebhookPublisher struct {
-	url     string
-	token   string
-	client  *http.Client
-	timeout time.Duration
+	url          string
+	token        string
+	sharedSecret string
+	client       *http.Client
+	timeout      time.Duration
 }
 
-func NewWebhookPublisher(url, token string, client *http.Client, timeout time.Duration) *WebhookPublisher {
-	return &WebhookPublisher{url: url, token: token, client: client, timeout: timeout}
+func NewWebhookPublisher(url, token, sharedSecret string, client *http.Client, timeout time.Duration) *WebhookPublisher {
+	return &WebhookPublisher{url: url, token: token, sharedSecret: sharedSecret, client: client, timeout: timeout}
 }
 
 func (p *WebhookPublisher) Publish(ctx context.Context, event *Event) error {
@@ -61,6 +62,11 @@ func (p *WebhookPublisher) Publish(ctx context.Context, event *Event) error {
 	req.Header.Set("Content-Type", "application/json")
 	if p.token != "" {
 		req.Header.Set("X-Pay-Gateway-Token", p.token)
+	}
+	if p.sharedSecret != "" {
+		if err := signHTTPRequest(req, bs, p.sharedSecret); err != nil {
+			return err
+		}
 	}
 
 	ctx2, cancel := context.WithTimeout(ctx, p.timeout)

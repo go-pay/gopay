@@ -9,13 +9,16 @@ import (
 )
 
 type Config struct {
-	Server        ServerConfig      `json:"server"`
-	PublicBaseURL string            `json:"publicBaseUrl"`
-	APIAuth       APIAuthConfig     `json:"apiAuth"`
-	JavaWebhook   JavaWebhookConfig `json:"javaWebhook"`
-	TLS           TLSConfig         `json:"tls"`
-	Redis         RedisConfig       `json:"redis"`
-	Merchants     []MerchantConfig  `json:"merchants"`
+	Server          ServerConfig       `json:"server"`
+	PublicBaseURL   string             `json:"publicBaseUrl"`
+	DefaultTenantID string             `json:"defaultTenantId"`
+	APIAuth         APIAuthConfig      `json:"apiAuth"`
+	SharedAuth      SharedAuthConfig   `json:"sharedAuth"`
+	JavaWebhook     JavaWebhookConfig  `json:"javaWebhook"`
+	TLS             TLSConfig          `json:"tls"`
+	Redis           RedisConfig        `json:"redis"`
+	MerchantSync    MerchantSyncConfig `json:"merchantSync"`
+	Merchants       []MerchantConfig   `json:"merchants"`
 }
 
 type ServerConfig struct {
@@ -40,6 +43,15 @@ type APIAuthConfig struct {
 	Token string `json:"token"`
 }
 
+type SharedAuthConfig struct {
+	SharedSecret     string `json:"sharedSecret"`
+	SharedSecretPrev string `json:"sharedSecretPrev,omitempty"`
+	Required         bool   `json:"required"`
+
+	ClockSkewSeconds int `json:"clockSkewSeconds"`
+	NonceTTLSeconds  int `json:"nonceTtlSeconds"`
+}
+
 type RedisConfig struct {
 	Addr      string `json:"addr"`
 	Password  string `json:"password"`
@@ -49,6 +61,13 @@ type RedisConfig struct {
 	IdempotencyTTLSeconds        int `json:"idempotencyTtlSeconds"`
 	CallbackDedupTTLSeconds      int `json:"callbackDedupTtlSeconds"`
 	CallbackProcessingTTLSeconds int `json:"callbackProcessingTtlSeconds"`
+}
+
+type MerchantSyncConfig struct {
+	SnapshotURL         string `json:"snapshotUrl"`
+	PollIntervalSeconds int    `json:"pollIntervalSeconds"`
+	ChangeStream        string `json:"changeStream"`
+	ChangeConsumerGroup string `json:"changeConsumerGroup"`
 }
 
 type MerchantConfig struct {
@@ -98,11 +117,23 @@ func LoadConfig(path string) (*Config, error) {
 	if cfg.Server.Addr == "" {
 		cfg.Server.Addr = ":8088"
 	}
+	if cfg.DefaultTenantID == "" {
+		cfg.DefaultTenantID = "0"
+	}
 	if cfg.JavaWebhook.TimeoutMillis == 0 {
 		cfg.JavaWebhook.TimeoutMillis = 1500
 	}
 	if cfg.JavaWebhook.ConsumerGroup == "" {
 		cfg.JavaWebhook.ConsumerGroup = "pay-gateway"
+	}
+	if cfg.SharedAuth.ClockSkewSeconds == 0 {
+		cfg.SharedAuth.ClockSkewSeconds = 300
+	}
+	if cfg.SharedAuth.NonceTTLSeconds == 0 {
+		cfg.SharedAuth.NonceTTLSeconds = 300
+	}
+	if cfg.MerchantSync.PollIntervalSeconds == 0 {
+		cfg.MerchantSync.PollIntervalSeconds = 60
 	}
 	if cfg.Redis.IdempotencyTTLSeconds == 0 {
 		cfg.Redis.IdempotencyTTLSeconds = 24 * 60 * 60
@@ -115,6 +146,12 @@ func LoadConfig(path string) (*Config, error) {
 	}
 	if cfg.Redis.KeyPrefix == "" {
 		cfg.Redis.KeyPrefix = "pay-gateway:"
+	}
+	if cfg.MerchantSync.ChangeStream == "" && cfg.Redis.KeyPrefix != "" {
+		cfg.MerchantSync.ChangeStream = cfg.Redis.KeyPrefix + "merchant-config-changed"
+	}
+	if cfg.MerchantSync.ChangeConsumerGroup == "" {
+		cfg.MerchantSync.ChangeConsumerGroup = "pay-gateway-config"
 	}
 	if err := applyEnvOverrides(&cfg); err != nil {
 		return nil, err
@@ -132,8 +169,26 @@ func applyEnvOverrides(cfg *Config) error {
 	if v, ok := envString("PAY_GATEWAY_PUBLIC_BASE_URL"); ok {
 		cfg.PublicBaseURL = v
 	}
+	if v, ok := envString("PAY_GATEWAY_DEFAULT_TENANT_ID"); ok {
+		cfg.DefaultTenantID = v
+	}
 	if v, ok := envString("PAY_GATEWAY_API_AUTH_TOKEN"); ok {
 		cfg.APIAuth.Token = v
+	}
+	if v, ok := envString("PAY_GATEWAY_SHARED_SECRET"); ok {
+		cfg.SharedAuth.SharedSecret = v
+	}
+	if v, ok := envString("PAY_GATEWAY_SHARED_SECRET_PREV"); ok {
+		cfg.SharedAuth.SharedSecretPrev = v
+	}
+	if v, ok := envBool("PAY_GATEWAY_SHARED_AUTH_REQUIRED"); ok {
+		cfg.SharedAuth.Required = v
+	}
+	if v, ok := envInt("PAY_GATEWAY_SHARED_AUTH_CLOCK_SKEW_SECONDS"); ok {
+		cfg.SharedAuth.ClockSkewSeconds = v
+	}
+	if v, ok := envInt("PAY_GATEWAY_SHARED_AUTH_NONCE_TTL_SECONDS"); ok {
+		cfg.SharedAuth.NonceTTLSeconds = v
 	}
 	if v, ok := envString("PAY_GATEWAY_JAVA_WEBHOOK_URL"); ok {
 		cfg.JavaWebhook.URL = v
@@ -164,6 +219,18 @@ func applyEnvOverrides(cfg *Config) error {
 	}
 	if v, ok := envString("PAY_GATEWAY_REDIS_KEY_PREFIX"); ok {
 		cfg.Redis.KeyPrefix = v
+	}
+	if v, ok := envString("PAY_GATEWAY_MERCHANT_SNAPSHOT_URL"); ok {
+		cfg.MerchantSync.SnapshotURL = v
+	}
+	if v, ok := envInt("PAY_GATEWAY_MERCHANT_POLL_INTERVAL_SECONDS"); ok {
+		cfg.MerchantSync.PollIntervalSeconds = v
+	}
+	if v, ok := envString("PAY_GATEWAY_MERCHANT_CHANGE_STREAM"); ok {
+		cfg.MerchantSync.ChangeStream = v
+	}
+	if v, ok := envString("PAY_GATEWAY_MERCHANT_CHANGE_GROUP"); ok {
+		cfg.MerchantSync.ChangeConsumerGroup = v
 	}
 	return nil
 }
