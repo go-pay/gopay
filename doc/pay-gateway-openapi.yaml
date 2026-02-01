@@ -423,7 +423,7 @@ components:
         payData:
           type: object
           additionalProperties: true
-          description: For ALIPAY, Phase 1 uses PRECREATE -> {"qrCode": "..."} and WAP/PAGE -> {"payUrl": "..."}.
+          description: For ALIPAY, Phase 1 uses PRECREATE -> {"qrCode": "..."} and WAP/PAGE -> {"payUrl": "..."}; for WECHAT_V3 demo, NATIVE -> {"qrCode": "..."} and H5 -> {"payUrl": "..."}.
 
     QueryPaymentResponse:
       type: object

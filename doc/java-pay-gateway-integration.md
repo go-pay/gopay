@@ -5,6 +5,8 @@
 > 金额字段统一使用 **Long（最小货币单位）** 传输，禁止 `double/float`。
 >
 > Phase 1 验收口径：**仅 ALIPAY 作为生产级验收**；`WECHAT_V3` 仅做代码级兼容/沙箱演示。
+>
+> 微信沙箱演示建议：使用 `scene=NATIVE`（二维码），`payData.qrCode` 可复用支付宝 `PRECREATE` 的前端二维码逻辑（避免临时改前端）。
 
 ## 1) 部署与配置（Go）
 
@@ -127,6 +129,17 @@ payData 约定（Phase 1）：
 说明：
 - 当 Go 配置了 `defaultTenantId` 且 Java 侧关闭多租户时，`tenantId` 可以不传，网关会自动补齐为 `defaultTenantId`。
 - 网关侧强制只收 `CNY`；若业务币种为 USD 等，换算与舍入（Round Half Up）由 Java 侧定义并落金额快照。
+
+非 CNY 业务币种的 FX 换算快照（Java 侧，推荐口径）：
+- **FX 来源**：维护一张 `fx_rate`（或复用你们已有的报价/计价快照表）每日同步汇率（含 `source`、`rate_date`、`published_at`）。
+- **取数时点**：以“生成支付单/锁定应付金额”的时间点为准（payment create 时刻或 pricing snapshot 时刻），取 `published_at <= snapshot_at` 的最新一条，并把汇率 **复制** 到支付单（不可后改）。
+- **舍入**：按 `Round Half Up` 四舍五入到 **CNY 分（fen）**。
+- **落库字段（建议）**：
+  - `currency_original` / `amount_original_minor`（原币种与原金额最小单位）
+  - `currency_pay='CNY'` / `amount_pay_fen`
+  - `fx_base`（原币种）/ `fx_quote='CNY'`
+  - `fx_rate`（BigDecimal，建议 scale>=8）/ `fx_source` / `fx_rate_at`（取数时点）
+  - `rounding_mode='HALF_UP'`
 
 ### 2.2 查询支付
 
@@ -255,6 +268,7 @@ Go 会向 `javaWebhook.url` 发起 `POST`（JSON），并携带：
 
 Java 接收端要求（强制）：
 - 校验 sharedAuth 签名（推荐）；或校验 `X-Pay-Token`（legacy）
+- 校验 `X-Pay-Timestamp` 的时间窗（建议 ±5min），并对 `X-Pay-Nonce` 做去重（推荐 Redis `SETNX` + TTL=300s，防重放）
 - 以 `eventId`（平台通知 ID）做消费幂等（唯一索引/去重表）；建议同时给 `outTradeNo` 建索引用于业务查单
 - 轻量处理后立即返回 2xx（业务重活异步化），避免阻塞支付平台回调链路
 

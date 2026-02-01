@@ -6,6 +6,7 @@
 
 - 渠道：**仅 ALIPAY 作为生产级验收**；`WECHAT_V3` 只做代码级兼容/沙箱演示。
 - ALIPAY Scene：`PRECREATE`（二维码）+ `WAP`（H5 跳转），统一 `payData` 形态（`qrCode` / `payUrl`）。
+- WECHAT_V3 演示建议：`scene=NATIVE`（二维码），复用 `payData.qrCode` 展示二维码即可。
 - 币种：网关侧强制 `CNY`；汇率换算与舍入（Round Half Up）由 Java 侧定义并落金额快照。
 - 商户：`merchantId` 本期只有一个，但 API/表结构必须保留该字段，避免未来扩展改签名。
 
