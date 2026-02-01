@@ -238,7 +238,7 @@ func (s *Server) withInternalAuth(next http.HandlerFunc) http.HandlerFunc {
 		// Prefer shared HMAC auth when configured.
 		if shared {
 			if !s.cfg.SharedAuth.Required && expectedToken != "" {
-				if token := r.Header.Get("X-Pay-Gateway-Token"); token != "" && token == expectedToken {
+				if token := firstNonEmpty(r.Header.Get(HeaderPayToken), r.Header.Get(HeaderPayTokenLegacy)); token != "" && token == expectedToken {
 					next(w, r)
 					return
 				}
@@ -247,7 +247,7 @@ func (s *Server) withInternalAuth(next http.HandlerFunc) http.HandlerFunc {
 				next(w, r)
 				return
 			} else if !s.cfg.SharedAuth.Required && expectedToken != "" {
-				if token := r.Header.Get("X-Pay-Gateway-Token"); token != "" && token == expectedToken {
+				if token := firstNonEmpty(r.Header.Get(HeaderPayToken), r.Header.Get(HeaderPayTokenLegacy)); token != "" && token == expectedToken {
 					next(w, r)
 					return
 				}
@@ -260,11 +260,11 @@ func (s *Server) withInternalAuth(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		// Legacy token-only auth.
-		token := r.Header.Get("X-Pay-Gateway-Token")
+		token := firstNonEmpty(r.Header.Get(HeaderPayToken), r.Header.Get(HeaderPayTokenLegacy))
 		if token == "" || token != expectedToken {
 			writeJSON(w, http.StatusUnauthorized, map[string]string{
 				"code":    "UNAUTHORIZED",
-				"message": "missing or invalid X-Pay-Gateway-Token",
+				"message": "missing or invalid X-Pay-Token",
 			})
 			return
 		}

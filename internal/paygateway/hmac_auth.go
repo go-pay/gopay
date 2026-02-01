@@ -16,10 +16,18 @@ import (
 )
 
 const (
-	HeaderPayGatewayTimestamp  = "X-Pay-Gateway-Timestamp"
-	HeaderPayGatewayNonce      = "X-Pay-Gateway-Nonce"
-	HeaderPayGatewayBodySHA256 = "X-Pay-Gateway-Body-SHA256"
-	HeaderPayGatewaySignature  = "X-Pay-Gateway-Signature"
+	HeaderPayGatewayTimestamp  = "X-Pay-Timestamp"
+	HeaderPayGatewayNonce      = "X-Pay-Nonce"
+	HeaderPayGatewayBodySHA256 = "X-Pay-Body-SHA256"
+	HeaderPayGatewaySignature  = "X-Pay-Signature"
+
+	HeaderPayGatewayTimestampLegacy  = "X-Pay-Gateway-Timestamp"
+	HeaderPayGatewayNonceLegacy      = "X-Pay-Gateway-Nonce"
+	HeaderPayGatewayBodySHA256Legacy = "X-Pay-Gateway-Body-SHA256"
+	HeaderPayGatewaySignatureLegacy  = "X-Pay-Gateway-Signature"
+
+	HeaderPayToken       = "X-Pay-Token"
+	HeaderPayTokenLegacy = "X-Pay-Gateway-Token"
 )
 
 func signHeaders(method, requestURI, ts, nonce, bodySHA string, secret string) string {
@@ -62,10 +70,10 @@ func verifyHMACRequest(r *http.Request, cfg SharedAuthConfig, nonceStore NonceSt
 	if cfg.SharedSecret == "" && cfg.SharedSecretPrev == "" {
 		return nil, errors.New("shared secret not configured")
 	}
-	ts := r.Header.Get(HeaderPayGatewayTimestamp)
-	nonce := r.Header.Get(HeaderPayGatewayNonce)
-	bodySHA := r.Header.Get(HeaderPayGatewayBodySHA256)
-	sig := r.Header.Get(HeaderPayGatewaySignature)
+	ts := firstNonEmpty(r.Header.Get(HeaderPayGatewayTimestamp), r.Header.Get(HeaderPayGatewayTimestampLegacy))
+	nonce := firstNonEmpty(r.Header.Get(HeaderPayGatewayNonce), r.Header.Get(HeaderPayGatewayNonceLegacy))
+	bodySHA := firstNonEmpty(r.Header.Get(HeaderPayGatewayBodySHA256), r.Header.Get(HeaderPayGatewayBodySHA256Legacy))
+	sig := firstNonEmpty(r.Header.Get(HeaderPayGatewaySignature), r.Header.Get(HeaderPayGatewaySignatureLegacy))
 	if ts == "" || nonce == "" || bodySHA == "" || sig == "" {
 		return nil, errors.New("missing hmac headers")
 	}

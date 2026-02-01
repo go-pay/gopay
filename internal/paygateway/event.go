@@ -61,7 +61,7 @@ func (p *WebhookPublisher) Publish(ctx context.Context, event *Event) error {
 	}
 	req.Header.Set("Content-Type", "application/json")
 	if p.token != "" {
-		req.Header.Set("X-Pay-Gateway-Token", p.token)
+		req.Header.Set(HeaderPayToken, p.token)
 	}
 	if p.sharedSecret != "" {
 		if err := signHTTPRequest(req, bs, p.sharedSecret); err != nil {
