@@ -1,0 +1,36 @@
+{
+  "server": {
+    "addr": ":8088",
+    "readTimeoutSeconds": 10,
+    "writeTimeoutSeconds": 10
+  },
+  "publicBaseUrl": "https://pay.example.com",
+  "javaWebhook": {
+    "url": "http://ruoyi-pay.internal/pay/events",
+    "token": "change-me",
+    "timeoutMillis": 1500
+  },
+  "tls": {
+    "caFile": ""
+  },
+  "merchants": [
+    {
+      "tenantId": "100",
+      "merchantId": "mch_001",
+      "wechatV3": {
+        "appId": "wx_appid",
+        "mchId": "1900000109",
+        "serialNo": "serial_no",
+        "apiV3Key": "api_v3_key",
+        "privateKey": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+      },
+      "alipay": {
+        "isProd": false,
+        "appId": "2021000123456789",
+        "privateKey": "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKc...",
+        "alipayPublicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A..."
+      }
+    }
+  ]
+}
+
