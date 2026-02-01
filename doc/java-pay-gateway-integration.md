@@ -3,6 +3,8 @@
 `pay-gateway` 是一个 Go HTTP 服务（见 `cmd/pay-gateway`），把本仓库 `gopay` 的渠道能力（微信 V3 / 支付宝）以统一 API 暴露给 Java，同时 **支付平台回调只落在 Go**（验签/解密），再把“可信事件”推送给 Java。
 
 > 金额字段统一使用 **Long（最小货币单位）** 传输，禁止 `double/float`。
+>
+> Phase 1 验收口径：**仅 ALIPAY 作为生产级验收**；`WECHAT_V3` 仅做代码级兼容/沙箱演示。
 
 ## 1) 部署与配置（Go）
 
@@ -86,37 +88,55 @@ Body（字段）：
 - `channel`：`WECHAT_V3` / `ALIPAY`
 - `scene`：
   - 微信：`JSAPI`（需要 `openid`）、`MINIAPP`（需要 `openid`）、`APP`、`H5`、`NATIVE`
-  - 支付宝：`APP`、`WAP`、`PAGE`、`PRECREATE`
+  - 支付宝（Phase 1）：`PRECREATE`（二维码） / `WAP`（H5，返回跳转 URL）
 
-示例（微信 JSAPI）：
+payData 约定（Phase 1）：
+- `ALIPAY + PRECREATE`：`{"qrCode":"..."}`（前端生成二维码）
+- `ALIPAY + WAP`：`{"payUrl":"..."}`（前端 `window.location.href` 跳转）
+
+示例（支付宝 PRECREATE / PC 扫码）：
 ```json
 {
-  "tenantId": "0",
   "merchantId": "mch_001",
-  "channel": "WECHAT_V3",
-  "scene": "JSAPI",
+  "channel": "ALIPAY",
+  "scene": "PRECREATE",
   "outTradeNo": "P202602010001",
   "bizOrderNo": "O202602010001",
   "currency": "CNY",
   "amount": 100,
   "subject": "订单支付",
-  "description": "订单 O202602010001",
-  "openid": "user-openid"
+  "description": "订单 O202602010001"
+}
+```
+
+示例（支付宝 WAP / 移动 H5）：
+```json
+{
+  "merchantId": "mch_001",
+  "channel": "ALIPAY",
+  "scene": "WAP",
+  "outTradeNo": "P202602010002",
+  "bizOrderNo": "O202602010002",
+  "currency": "CNY",
+  "amount": 100,
+  "subject": "订单支付",
+  "description": "订单 O202602010002"
 }
 ```
 
 说明：
 - 当 Go 配置了 `defaultTenantId` 且 Java 侧关闭多租户时，`tenantId` 可以不传，网关会自动补齐为 `defaultTenantId`。
+- 网关侧强制只收 `CNY`；若业务币种为 USD 等，换算与舍入（Round Half Up）由 Java 侧定义并落金额快照。
 
 ### 2.2 查询支付
 
-`GET /v1/payments/{outTradeNo}?merchantId=...&channel=WECHAT_V3[&tenantId=...]`
+`GET /v1/payments/{outTradeNo}?merchantId=...&channel=ALIPAY[&tenantId=...]`
 
 ### 2.3 关单
 
 `POST /v1/payments/{outTradeNo}/close`
 ```json
-{ "tenantId":"0", "merchantId":"mch_001", "channel":"WECHAT_V3" }
+{ "tenantId":"0", "merchantId":"mch_001", "channel":"ALIPAY" }
 ```
 
 ### 2.4 发起退款
@@ -127,16 +147,29 @@ Body（字段）：
 - **微信 V3 必须传 `totalAmount`**（原订单金额，最小货币单位），以及 `refundAmount`（本次退款金额）。
 - 支付宝目前仅支持 `CNY`（网关会把“分 → 元字符串”）。
 
-示例（微信退款）：
+示例（微信退款，后续微信接入时）：
 ```json
 {
-  "tenantId": "100",
+  "tenantId": "0",
   "merchantId": "mch_001",
   "channel": "WECHAT_V3",
   "outTradeNo": "P202602010001",
   "outRefundNo": "R202602010001",
   "currency": "CNY",
   "totalAmount": 100,
+  "refundAmount": 100,
+  "reason": "订单取消"
+}
+```
+
+示例（支付宝退款）：
+```json
+{
+  "merchantId": "mch_001",
+  "channel": "ALIPAY",
+  "outTradeNo": "P202602010001",
+  "outRefundNo": "R202602010001",
+  "currency": "CNY",
   "refundAmount": 100,
   "reason": "订单取消"
 }
@@ -159,13 +192,20 @@ Body（字段）：
 {
   "tenantId": "0",
   "merchantId": "mch_001",
-  "channel": "WECHAT_V3",
+  "channel": "ALIPAY",
   "outTradeNos": ["P202602010001", "P202602010002"]
 }
 ```
 
 建议 Java 侧定时任务：
 - 扫描 `PAYING/REFUNDING` 超时单 → 调该接口批量查询 → 修正状态（避免仅靠回调）。
+- 必须落库 `expireAt`（预支付单有效期）。超过 `expireAt` 后：最后查一次 → 调 `POST /v1/payments/{outTradeNo}/close` 关单 → 停止后续轮询，闭环状态机。
+
+补偿查询的“阶梯式轮询”（建议默认值）：
+- 前 5 分钟：每 1 分钟查 1 次
+- 5-30 分钟：每 5 分钟查 1 次
+- 30-120 分钟：每 15 分钟查 1 次
+- 2 小时后：调用 ClosePayment 并标记 `CLOSED`
 
 ## 3) 支付平台 → Go：回调地址（必须落 Go）
 
@@ -188,18 +228,18 @@ Go 会向 `javaWebhook.url` 发起 `POST`（JSON），并携带：
 事件体（示例）：
 ```json
 {
-  "eventId": "WECHAT_V3:0f3d6b9c-7a0a-4b7d-9b3b-2d6b5f6f2caa",
+  "eventId": "ALIPAY:20260201000000000000",
   "eventType": "payment.succeeded",
   "eventVersion": 1,
   "occurredAt": "2026-02-01T12:01:02Z",
   "tenantId": "0",
   "merchantId": "mch_001",
-  "channel": "WECHAT_V3",
+  "channel": "ALIPAY",
   "outTradeNo": "P202602010001",
-  "transactionId": "420000xxxx",
+  "transactionId": "2026020122001400000000000000",
   "amount": 100,
   "currency": "CNY",
-  "tradeState": "SUCCESS",
+  "tradeState": "TRADE_SUCCESS",
   "signatureVerified": true,
   "idempotencyKey": "0:mch_001:P202602010001"
 }
@@ -211,7 +251,7 @@ Go 会向 `javaWebhook.url` 发起 `POST`（JSON），并携带：
 
 Java 接收端要求（强制）：
 - 校验 sharedAuth 签名（推荐）；或校验 `X-Pay-Token`（legacy）
-- 以 `eventId`（或 `idempotencyKey`）做消费幂等（唯一索引/去重表）
+- 以 `eventId`（平台通知 ID）做消费幂等（唯一索引/去重表）；建议同时给 `outTradeNo` 建索引用于业务查单
 - 轻量处理后立即返回 2xx（业务重活异步化），避免阻塞支付平台回调链路
 
 ## 5) （推荐）Java 提供商户配置快照接口（Go 拉取）

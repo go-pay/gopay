@@ -2,6 +2,13 @@
 
 本文把 `gopay`（Go SDK）网关化为一个独立 Go 服务（Data Plane），并在 `dragonboat-backend` 新增 `ruoyi-pay` 模块作为支付编排与状态机（Control Plane），实现“Java 管理端调用支付能力 + 回调驱动”的闭环。
 
+## Phase 1 范围（验收口径）
+
+- 渠道：**仅 ALIPAY 作为生产级验收**；`WECHAT_V3` 只做代码级兼容/沙箱演示。
+- ALIPAY Scene：`PRECREATE`（二维码）+ `WAP`（H5 跳转），统一 `payData` 形态（`qrCode` / `payUrl`）。
+- 币种：网关侧强制 `CNY`；汇率换算与舍入（Round Half Up）由 Java 侧定义并落金额快照。
+- 商户：`merchantId` 本期只有一个，但 API/表结构必须保留该字段，避免未来扩展改签名。
+
 ## 1. 总体架构（推荐）
 
 **Go：pay-gateway（新增服务）**

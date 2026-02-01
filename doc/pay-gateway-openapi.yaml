@@ -7,6 +7,7 @@ info:
 
     Notes:
     - All money amounts are integers in the smallest currency unit (e.g., CNY fen).
+    - Phase 1: this gateway only accepts `currency = CNY`.
     - Auth is **either**:
       - HMAC shared secret headers (`X-Pay-*`) when `sharedAuth.sharedSecret` is configured (recommended), **or**
       - Legacy token header (`X-Pay-Token`) when `apiAuth.token` is configured.
@@ -380,7 +381,7 @@ components:
           $ref: "#/components/schemas/Channel"
         scene:
           type: string
-          description: e.g. WECHAT_V3: JSAPI/MINIAPP/APP/H5/NATIVE; ALIPAY: APP/WAP/PAGE/PRECREATE
+          description: e.g. WECHAT_V3: JSAPI/MINIAPP/APP/H5/NATIVE; ALIPAY: PRECREATE (qrCode) / WAP (payUrl) / PAGE (payUrl)
         outTradeNo:
           type: string
         bizOrderNo:
@@ -422,6 +423,7 @@ components:
         payData:
           type: object
           additionalProperties: true
+          description: For ALIPAY, Phase 1 uses PRECREATE -> {"qrCode": "..."} and WAP/PAGE -> {"payUrl": "..."}.
 
     QueryPaymentResponse:
       type: object
