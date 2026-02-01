@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
 )
 
 type Config struct {
@@ -78,5 +80,60 @@ func LoadConfig(path string) (*Config, error) {
 	if cfg.JavaWebhook.TimeoutMillis == 0 {
 		cfg.JavaWebhook.TimeoutMillis = 1500
 	}
+	if err := applyEnvOverrides(&cfg); err != nil {
+		return nil, err
+	}
 	return &cfg, nil
+}
+
+func applyEnvOverrides(cfg *Config) error {
+	if cfg == nil {
+		return nil
+	}
+	if v, ok := envString("PAY_GATEWAY_ADDR"); ok {
+		cfg.Server.Addr = v
+	}
+	if v, ok := envString("PAY_GATEWAY_PUBLIC_BASE_URL"); ok {
+		cfg.PublicBaseURL = v
+	}
+	if v, ok := envString("PAY_GATEWAY_API_AUTH_TOKEN"); ok {
+		cfg.APIAuth.Token = v
+	}
+	if v, ok := envString("PAY_GATEWAY_JAVA_WEBHOOK_URL"); ok {
+		cfg.JavaWebhook.URL = v
+	}
+	if v, ok := envString("PAY_GATEWAY_JAVA_WEBHOOK_TOKEN"); ok {
+		cfg.JavaWebhook.Token = v
+	}
+	if v, ok := envInt("PAY_GATEWAY_JAVA_WEBHOOK_TIMEOUT_MILLIS"); ok {
+		cfg.JavaWebhook.TimeoutMillis = v
+	}
+	if v, ok := envString("PAY_GATEWAY_TLS_CA_FILE"); ok {
+		cfg.TLS.CAFile = v
+	}
+	return nil
+}
+
+func envString(key string) (string, bool) {
+	v, ok := os.LookupEnv(key)
+	if !ok {
+		return "", false
+	}
+	v = strings.TrimSpace(v)
+	if v == "" {
+		return "", false
+	}
+	return v, true
+}
+
+func envInt(key string) (int, bool) {
+	v, ok := envString(key)
+	if !ok {
+		return 0, false
+	}
+	n, err := strconv.Atoi(v)
+	if err != nil {
+		return 0, false
+	}
+	return n, true
 }

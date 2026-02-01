@@ -34,3 +34,5 @@ mkdir -p config secrets
 cp config.example.json config/pay-gateway.json
 docker compose up -d --build
 ```
+
+You can keep most values in `.env` and leave `config/pay-gateway.json` focused on merchant configs (keys/certs should be mounted as files under `secrets/`).
