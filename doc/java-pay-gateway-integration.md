@@ -53,13 +53,13 @@ Java 调用所有 `/v1/**` 接口携带以下 Header：
 - `X-Pay-Gateway-Body-SHA256`: `base64(sha256(body))`（GET/空 body 使用空串的 sha）
 - `X-Pay-Gateway-Signature`: `base64(hmac_sha256(secret, canonical))`
 
-canonical 串（注意换行）：
+canonical 串（精确到最后一个换行）：
 ```text
-METHOD
-REQUEST_URI
-TIMESTAMP
-NONCE
-BODY_SHA256
+METHOD + "\n" +
+REQUEST_URI + "\n" +
+TIMESTAMP + "\n" +
+NONCE + "\n" +
+BODY_SHA256 + "\n"
 ```
 
 其中 `REQUEST_URI` 必须包含 query string（例如 `/v1/payments/xxx?merchantId=...&channel=WECHAT_V3`）。
