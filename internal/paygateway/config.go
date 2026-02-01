@@ -50,10 +50,13 @@ type WechatV3Config struct {
 	SerialNo   string `json:"serialNo"`
 	ApiV3Key   string `json:"apiV3Key"`
 	PrivateKey string `json:"privateKey"`
+	// Alternative to `privateKey` to avoid embedding multi-line secrets in JSON.
+	PrivateKeyFile string `json:"privateKeyFile,omitempty"`
 
 	// Optional: avoid network fetching platform certs (verify-only mode).
-	WechatPayPublicKey   string `json:"wechatPayPublicKey,omitempty"`
-	WechatPayPublicKeyID string `json:"wechatPayPublicKeyId,omitempty"`
+	WechatPayPublicKey     string `json:"wechatPayPublicKey,omitempty"`
+	WechatPayPublicKeyID   string `json:"wechatPayPublicKeyId,omitempty"`
+	WechatPayPublicKeyFile string `json:"wechatPayPublicKeyFile,omitempty"`
 }
 
 type AlipayConfig struct {
@@ -61,6 +64,10 @@ type AlipayConfig struct {
 	AppID           string `json:"appId"`
 	PrivateKey      string `json:"privateKey"`
 	AlipayPublicKey string `json:"alipayPublicKey"`
+
+	// Alternative to `privateKey` / `alipayPublicKey` to avoid embedding secrets in JSON.
+	PrivateKeyFile      string `json:"privateKeyFile,omitempty"`
+	AlipayPublicKeyFile string `json:"alipayPublicKeyFile,omitempty"`
 }
 
 func LoadConfig(path string) (*Config, error) {

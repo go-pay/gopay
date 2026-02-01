@@ -36,3 +36,13 @@ docker compose up -d --build
 ```
 
 You can keep most values in `.env` and leave `config/pay-gateway.json` focused on merchant configs (keys/certs should be mounted as files under `secrets/`).
+
+Example secret layout:
+```text
+cmd/pay-gateway/secrets/
+  wechat/
+    apiclient_key.pem
+  alipay/
+    app_private_key.pem
+    alipay_public_key.pem
+```
