@@ -5,12 +5,20 @@
     "writeTimeoutSeconds": 10
   },
   "publicBaseUrl": "https://pay.example.com",
+  "defaultTenantId": "0",
   "apiAuth": {
-    "token": "change-me"
+    "token": ""
+  },
+  "sharedAuth": {
+    "sharedSecret": "change-me",
+    "sharedSecretPrev": "",
+    "required": true,
+    "clockSkewSeconds": 300,
+    "nonceTtlSeconds": 300
   },
   "javaWebhook": {
     "url": "http://ruoyi-pay.internal/pay/events",
-    "token": "change-me",
+    "token": "",
     "timeoutMillis": 1500,
     "async": true,
     "consumerGroup": "pay-gateway"
@@ -27,9 +35,15 @@
     "callbackDedupTtlSeconds": 604800,
     "callbackProcessingTtlSeconds": 300
   },
+  "merchantSync": {
+    "snapshotUrl": "",
+    "pollIntervalSeconds": 60,
+    "changeStream": "pay-gateway:merchant-config-changed",
+    "changeConsumerGroup": "pay-gateway-config"
+  },
   "merchants": [
     {
-      "tenantId": "100",
+      "tenantId": "0",
       "merchantId": "mch_001",
       "wechatV3": {
         "appId": "wx_appid",
