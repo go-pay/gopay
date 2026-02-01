@@ -30,7 +30,7 @@ Recommended: use `sharedAuth.sharedSecret` (HMAC) so Go ↔ Java share a single 
 - Go → Java webhook signing
 - Go → Java merchant snapshot pull signing (optional)
 
-Legacy (compat): `apiAuth.token` enables `X-Pay-Gateway-Token` for all `/v1/**` endpoints.
+Legacy (compat): `apiAuth.token` enables `X-Pay-Token` for all `/v1/**` endpoints.
 
 ## Run with Docker Compose (local)
 
@@ -50,14 +50,16 @@ If `PAY_GATEWAY_REDIS_ADDR` (or `redis.addr` in config) is set, pay-gateway will
 - Idempotency (create payment/refund)
 - Callback de-duplication across instances
 - Optional outbox delivery (`javaWebhook.async=true`) to decouple platform callbacks from Java webhook availability.
- - Nonce replay protection for shared HMAC auth across instances.
+- Nonce replay protection for shared HMAC auth across instances.
 
 Example secret layout:
 ```text
 cmd/pay-gateway/secrets/
   wechat/
-    apiclient_key.pem
+    mch_001/
+      apiclient_key.pem
   alipay/
-    app_private_key.pem
-    alipay_public_key.pem
+    mch_001/
+      app_private_key.pem
+      alipay_public_key.pem
 ```

@@ -8,8 +8,8 @@ info:
     Notes:
     - All money amounts are integers in the smallest currency unit (e.g., CNY fen).
     - Auth is **either**:
-      - HMAC shared secret headers (`X-Pay-Gateway-*`) when `sharedAuth.sharedSecret` is configured (recommended), **or**
-      - Legacy token header (`X-Pay-Gateway-Token`) when `apiAuth.token` is configured.
+      - HMAC shared secret headers (`X-Pay-*`) when `sharedAuth.sharedSecret` is configured (recommended), **or**
+      - Legacy token header (`X-Pay-Token`) when `apiAuth.token` is configured.
     - `tenantId` can be omitted when `defaultTenantId` is configured on pay-gateway.
 servers:
   - url: http://pay-gateway.internal
@@ -321,23 +321,23 @@ components:
     PayGatewayToken:
       type: apiKey
       in: header
-      name: X-Pay-Gateway-Token
+      name: X-Pay-Token
     PayGatewayHmacTimestamp:
       type: apiKey
       in: header
-      name: X-Pay-Gateway-Timestamp
+      name: X-Pay-Timestamp
     PayGatewayHmacNonce:
       type: apiKey
       in: header
-      name: X-Pay-Gateway-Nonce
+      name: X-Pay-Nonce
     PayGatewayHmacBodySHA256:
       type: apiKey
       in: header
-      name: X-Pay-Gateway-Body-SHA256
+      name: X-Pay-Body-SHA256
     PayGatewayHmacSignature:
       type: apiKey
       in: header
-      name: X-Pay-Gateway-Signature
+      name: X-Pay-Signature
 
   parameters:
     IdempotencyKey:

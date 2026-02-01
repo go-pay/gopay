@@ -15,8 +15,10 @@ docker compose up -d --build
 ## 2) 配置文件与密钥文件
 
 建议把“结构化配置”放在 `config/pay-gateway.json`（商户列表、渠道参数），把“敏感多行密钥/证书”放在 `secrets/` 并通过文件引用：
-- 微信：`wechatV3.privateKeyFile`
-- 支付宝：`alipay.privateKeyFile` / `alipay.alipayPublicKeyFile`
+- 微信：`wechatV3.privateKeyRef`
+- 支付宝：`alipay.privateKeyRef` / `alipay.alipayPublicKeyRef`
+
+pay-gateway 会把 `*Ref` 解析为 `${secretsBaseDir}/${ref}`（默认 `secretsBaseDir=/secrets`），并拒绝任何越界路径。
 
 容器挂载（compose 已包含）：
 - `./config -> /config:ro`
@@ -40,10 +42,10 @@ pay-gateway 支持用环境变量覆盖常用项（见 `cmd/pay-gateway/.env.exa
 不要让 Go 网关直接校验 Sa-Token 用户态 token（会引入强耦合、额外 RPC/Redis 依赖链路，且难以在 Go 侧复用 Sa-Token 生态）。推荐：
 
 - **用户态权限**：仍由 Java（ruoyi-auth + Sa-Token）处理。
-- **服务级鉴权（推荐）**：Go ↔ Java 使用同一个 `sharedAuth.sharedSecret` 做 HMAC 鉴权/签名（Header：`X-Pay-Gateway-*` 一组），这样只维护 **一份密钥**。
+- **服务级鉴权（推荐）**：Go ↔ Java 使用同一个 `sharedAuth.sharedSecret` 做 HMAC 鉴权/签名（Header：`X-Pay-*` 一组），这样只维护 **一份密钥**。
 - **密钥管理（Nacos）**：把 shared secret 放到 Nacos 统一下发，并通过 `PAY_GATEWAY_SHARED_SECRET` 注入 pay-gateway；Java 模块同样从 Nacos 读取并校验/签名。
 
-> 仍可保留 `X-Pay-Gateway-Token`（`apiAuth.token` / `javaWebhook.token`）作为过渡，但建议最终只保留 sharedAuth。
+> 仍可保留 `X-Pay-Token`（`apiAuth.token` / `javaWebhook.token`）作为过渡，但建议最终只保留 sharedAuth。
 
 ## 5) Redis（上线前必配）
 
