@@ -14,6 +14,7 @@ type Config struct {
 	APIAuth       APIAuthConfig     `json:"apiAuth"`
 	JavaWebhook   JavaWebhookConfig `json:"javaWebhook"`
 	TLS           TLSConfig         `json:"tls"`
+	Redis         RedisConfig       `json:"redis"`
 	Merchants     []MerchantConfig  `json:"merchants"`
 }
 
@@ -35,6 +36,17 @@ type JavaWebhookConfig struct {
 
 type APIAuthConfig struct {
 	Token string `json:"token"`
+}
+
+type RedisConfig struct {
+	Addr      string `json:"addr"`
+	Password  string `json:"password"`
+	DB        int    `json:"db"`
+	KeyPrefix string `json:"keyPrefix"`
+
+	IdempotencyTTLSeconds        int `json:"idempotencyTtlSeconds"`
+	CallbackDedupTTLSeconds      int `json:"callbackDedupTtlSeconds"`
+	CallbackProcessingTTLSeconds int `json:"callbackProcessingTtlSeconds"`
 }
 
 type MerchantConfig struct {
@@ -87,6 +99,18 @@ func LoadConfig(path string) (*Config, error) {
 	if cfg.JavaWebhook.TimeoutMillis == 0 {
 		cfg.JavaWebhook.TimeoutMillis = 1500
 	}
+	if cfg.Redis.IdempotencyTTLSeconds == 0 {
+		cfg.Redis.IdempotencyTTLSeconds = 24 * 60 * 60
+	}
+	if cfg.Redis.CallbackDedupTTLSeconds == 0 {
+		cfg.Redis.CallbackDedupTTLSeconds = 7 * 24 * 60 * 60
+	}
+	if cfg.Redis.CallbackProcessingTTLSeconds == 0 {
+		cfg.Redis.CallbackProcessingTTLSeconds = 5 * 60
+	}
+	if cfg.Redis.KeyPrefix == "" {
+		cfg.Redis.KeyPrefix = "pay-gateway:"
+	}
 	if err := applyEnvOverrides(&cfg); err != nil {
 		return nil, err
 	}
@@ -117,6 +141,18 @@ func applyEnvOverrides(cfg *Config) error {
 	}
 	if v, ok := envString("PAY_GATEWAY_TLS_CA_FILE"); ok {
 		cfg.TLS.CAFile = v
+	}
+	if v, ok := envString("PAY_GATEWAY_REDIS_ADDR"); ok {
+		cfg.Redis.Addr = v
+	}
+	if v, ok := envString("PAY_GATEWAY_REDIS_PASSWORD"); ok {
+		cfg.Redis.Password = v
+	}
+	if v, ok := envInt("PAY_GATEWAY_REDIS_DB"); ok {
+		cfg.Redis.DB = v
+	}
+	if v, ok := envString("PAY_GATEWAY_REDIS_KEY_PREFIX"); ok {
+		cfg.Redis.KeyPrefix = v
 	}
 	return nil
 }

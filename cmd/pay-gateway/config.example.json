@@ -16,6 +16,15 @@
   "tls": {
     "caFile": ""
   },
+  "redis": {
+    "addr": "redis:6379",
+    "password": "",
+    "db": 0,
+    "keyPrefix": "pay-gateway:",
+    "idempotencyTtlSeconds": 86400,
+    "callbackDedupTtlSeconds": 604800,
+    "callbackProcessingTtlSeconds": 300
+  },
   "merchants": [
     {
       "tenantId": "100",

@@ -20,7 +20,8 @@ type Server struct {
 	store     *MerchantStore
 	clients   *ClientManager
 	publisher EventPublisher
-	idem      *IdempotencyStore
+	idem      IdempotencyStore
+	dedup     CallbackDeduper
 	mux       *http.ServeMux
 	srv       *http.Server
 }
@@ -31,6 +32,11 @@ func NewServer(cfg *Config) (*Server, error) {
 		return nil, err
 	}
 	clients, err := NewClientManager(cfg, store)
+	if err != nil {
+		return nil, err
+	}
+
+	redisClient, err := newRedisClient(cfg.Redis)
 	if err != nil {
 		return nil, err
 	}
@@ -50,8 +56,14 @@ func NewServer(cfg *Config) (*Server, error) {
 		store:     store,
 		clients:   clients,
 		publisher: publisher,
-		idem:      NewIdempotencyStore(24 * time.Hour),
 		mux:       http.NewServeMux(),
+	}
+	if redisClient != nil {
+		s.idem = NewRedisIdempotencyStore(redisClient, cfg.Redis.KeyPrefix, time.Duration(cfg.Redis.IdempotencyTTLSeconds)*time.Second)
+		s.dedup = NewRedisCallbackDeduper(redisClient, cfg.Redis.KeyPrefix, time.Duration(cfg.Redis.CallbackProcessingTTLSeconds)*time.Second, time.Duration(cfg.Redis.CallbackDedupTTLSeconds)*time.Second)
+	} else {
+		s.idem = NewMemoryIdempotencyStore(24 * time.Hour)
+		s.dedup = NewMemoryCallbackDeduper(5*time.Minute, 7*24*time.Hour)
 	}
 	s.routes()
 
@@ -204,7 +216,10 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 	if idemKey == "" {
 		idemKey = fmt.Sprintf("payment:%s:%s:%s:%s", req.TenantID, req.MerchantID, req.Channel, req.OutTradeNo)
 	}
-	if status, body, ok := s.idem.Get(idemKey); ok {
+	if status, body, ok, err := s.idem.Get(r.Context(), idemKey); err != nil {
+		writeJSON(w, http.StatusInternalServerError, CreatePaymentResponse{Code: "ERROR", Message: "idempotency store error"})
+		return
+	} else if ok {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(status)
 		_, _ = w.Write(body)
@@ -266,7 +281,9 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: payData}
 			bs := writeJSONBytes(w, http.StatusOK, resp)
 			if bs != nil {
-				s.idem.Put(idemKey, http.StatusOK, bs)
+				if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
+					log.Printf("idempotency put failed: %v", err)
+				}
 			}
 			return
 
@@ -288,7 +305,9 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: payData}
 			bs := writeJSONBytes(w, http.StatusOK, resp)
 			if bs != nil {
-				s.idem.Put(idemKey, http.StatusOK, bs)
+				if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
+					log.Printf("idempotency put failed: %v", err)
+				}
 			}
 			return
 
@@ -305,7 +324,9 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: wxRsp.Response}
 			bs := writeJSONBytes(w, http.StatusOK, resp)
 			if bs != nil {
-				s.idem.Put(idemKey, http.StatusOK, bs)
+				if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
+					log.Printf("idempotency put failed: %v", err)
+				}
 			}
 			return
 
@@ -322,7 +343,9 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: wxRsp.Response}
 			bs := writeJSONBytes(w, http.StatusOK, resp)
 			if bs != nil {
-				s.idem.Put(idemKey, http.StatusOK, bs)
+				if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
+					log.Printf("idempotency put failed: %v", err)
+				}
 			}
 			return
 
@@ -372,7 +395,9 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: map[string]string{"orderStr": orderStr}}
 			bs := writeJSONBytes(w, http.StatusOK, resp)
 			if bs != nil {
-				s.idem.Put(idemKey, http.StatusOK, bs)
+				if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
+					log.Printf("idempotency put failed: %v", err)
+				}
 			}
 			return
 		case "WAP":
@@ -384,7 +409,9 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: map[string]string{"payUrl": payURL}}
 			bs := writeJSONBytes(w, http.StatusOK, resp)
 			if bs != nil {
-				s.idem.Put(idemKey, http.StatusOK, bs)
+				if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
+					log.Printf("idempotency put failed: %v", err)
+				}
 			}
 			return
 		case "PAGE":
@@ -396,7 +423,9 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: map[string]string{"payUrl": payURL}}
 			bs := writeJSONBytes(w, http.StatusOK, resp)
 			if bs != nil {
-				s.idem.Put(idemKey, http.StatusOK, bs)
+				if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
+					log.Printf("idempotency put failed: %v", err)
+				}
 			}
 			return
 		case "PRECREATE":
@@ -408,7 +437,9 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: aliRsp.Response}
 			bs := writeJSONBytes(w, http.StatusOK, resp)
 			if bs != nil {
-				s.idem.Put(idemKey, http.StatusOK, bs)
+				if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
+					log.Printf("idempotency put failed: %v", err)
+				}
 			}
 			return
 		default:
@@ -540,7 +571,10 @@ func (s *Server) handleCreateRefund(w http.ResponseWriter, r *http.Request) {
 	if idemKey == "" {
 		idemKey = fmt.Sprintf("refund:%s:%s:%s:%s", req.TenantID, req.MerchantID, req.Channel, req.OutRefundNo)
 	}
-	if status, body, ok := s.idem.Get(idemKey); ok {
+	if status, body, ok, err := s.idem.Get(r.Context(), idemKey); err != nil {
+		writeJSON(w, http.StatusInternalServerError, CreateRefundResponse{Code: "ERROR", Message: "idempotency store error"})
+		return
+	} else if ok {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(status)
 		_, _ = w.Write(body)
@@ -591,7 +625,9 @@ func (s *Server) handleCreateRefund(w http.ResponseWriter, r *http.Request) {
 		resp := CreateRefundResponse{Code: "OK", OutRefundNo: req.OutRefundNo, Status: "REFUNDING", Data: wxRsp.Response}
 		bs := writeJSONBytes(w, http.StatusOK, resp)
 		if bs != nil {
-			s.idem.Put(idemKey, http.StatusOK, bs)
+			if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
+				log.Printf("idempotency put failed: %v", err)
+			}
 		}
 		return
 
@@ -625,7 +661,9 @@ func (s *Server) handleCreateRefund(w http.ResponseWriter, r *http.Request) {
 		resp := CreateRefundResponse{Code: "OK", OutRefundNo: req.OutRefundNo, Status: "REFUNDING", Data: aliRsp.Response}
 		bs := writeJSONBytes(w, http.StatusOK, resp)
 		if bs != nil {
-			s.idem.Put(idemKey, http.StatusOK, bs)
+			if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
+				log.Printf("idempotency put failed: %v", err)
+			}
 		}
 		return
 
@@ -839,9 +877,27 @@ func (s *Server) handleWechatV3Callback(w http.ResponseWriter, r *http.Request) 
 			IdempotencyKey:    merchantKey(tenantID, merchantID) + ":" + decrypt.OutTradeNo,
 		}
 	}
+	dedupKey := fmt.Sprintf("%s:%s:%s:%s", ChannelWechatV3, tenantID, merchantID, notifyReq.Id)
+	locked, state, err := s.dedup.TryLock(r.Context(), dedupKey)
+	if err != nil {
+		writeWechatV3NotifyResp(w, http.StatusInternalServerError, "FAIL", "dedup error")
+		return
+	}
+	if !locked {
+		if state == DedupStateDone {
+			writeWechatV3NotifyResp(w, http.StatusOK, "SUCCESS", "ok")
+			return
+		}
+		writeWechatV3NotifyResp(w, http.StatusInternalServerError, "FAIL", "processing")
+		return
+	}
 	if err := s.publisher.Publish(r.Context(), ev); err != nil {
+		_ = s.dedup.Release(r.Context(), dedupKey)
 		writeWechatV3NotifyResp(w, http.StatusInternalServerError, "FAIL", "publish failed")
 		return
+	}
+	if err := s.dedup.MarkDone(r.Context(), dedupKey); err != nil {
+		log.Printf("dedup mark done failed: %v", err)
 	}
 	writeWechatV3NotifyResp(w, http.StatusOK, "SUCCESS", "ok")
 }
@@ -898,9 +954,27 @@ func (s *Server) handleAlipayCallback(w http.ResponseWriter, r *http.Request) {
 		IdempotencyKey:    merchantKey(tenantID, merchantID) + ":" + outTradeNo,
 		Ext:               map[string]string{"total_amount": totalAmount},
 	}
-	if err := s.publisher.Publish(r.Context(), ev); err != nil {
+	dedupKey := fmt.Sprintf("%s:%s:%s:%s", ChannelAlipay, tenantID, merchantID, eventID)
+	locked, state, err := s.dedup.TryLock(r.Context(), dedupKey)
+	if err != nil {
 		http.Error(w, "failure", http.StatusInternalServerError)
 		return
+	}
+	if !locked {
+		if state == DedupStateDone {
+			_, _ = w.Write([]byte("success"))
+			return
+		}
+		http.Error(w, "failure", http.StatusInternalServerError)
+		return
+	}
+	if err := s.publisher.Publish(r.Context(), ev); err != nil {
+		_ = s.dedup.Release(r.Context(), dedupKey)
+		http.Error(w, "failure", http.StatusInternalServerError)
+		return
+	}
+	if err := s.dedup.MarkDone(r.Context(), dedupKey); err != nil {
+		log.Printf("dedup mark done failed: %v", err)
 	}
 	_, _ = w.Write([]byte("success"))
 }
