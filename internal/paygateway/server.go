@@ -303,6 +303,10 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusBadRequest, CreatePaymentResponse{Code: "BAD_REQUEST", Message: "missing required fields"})
 		return
 	}
+	if strings.ToUpper(req.Currency) != "CNY" {
+		writeJSON(w, http.StatusBadRequest, CreatePaymentResponse{Code: "BAD_REQUEST", Message: "only supports CNY"})
+		return
+	}
 
 	idemKey := r.Header.Get("X-Idempotency-Key")
 	if idemKey == "" {
@@ -447,10 +451,6 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 		}
 
 	case ChannelAlipay:
-		if strings.ToUpper(req.Currency) != "CNY" {
-			writeJSON(w, http.StatusBadRequest, CreatePaymentResponse{Code: "BAD_REQUEST", Message: "ALIPAY only supports CNY in this gateway"})
-			return
-		}
 		c, ac, err := s.clients.Alipay(req.TenantID, req.MerchantID)
 		if err != nil {
 			writeJSON(w, http.StatusBadRequest, CreatePaymentResponse{Code: "BAD_REQUEST", Message: err.Error()})
@@ -477,21 +477,6 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 		}
 
 		switch strings.ToUpper(req.Scene) {
-		case "APP":
-			orderStr, err := c.TradeAppPay(r.Context(), bm)
-			if err != nil {
-				writeJSON(w, http.StatusBadGateway, CreatePaymentResponse{Code: "UPSTREAM_ERROR", Message: err.Error()})
-				return
-			}
-			_ = ac // currently unused but kept for symmetry
-			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: map[string]string{"orderStr": orderStr}}
-			bs := writeJSONBytes(w, http.StatusOK, resp)
-			if bs != nil {
-				if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
-					log.Printf("idempotency put failed: %v", err)
-				}
-			}
-			return
 		case "WAP":
 			payURL, err := c.TradeWapPay(r.Context(), bm)
 			if err != nil {
@@ -526,7 +511,12 @@ func (s *Server) handleCreatePayment(w http.ResponseWriter, r *http.Request) {
 				writeJSON(w, http.StatusBadGateway, CreatePaymentResponse{Code: "UPSTREAM_ERROR", Message: err.Error()})
 				return
 			}
-			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: aliRsp.Response}
+			_ = ac // kept for symmetry
+			qrCode := ""
+			if aliRsp != nil && aliRsp.Response != nil {
+				qrCode = aliRsp.Response.QrCode
+			}
+			resp := CreatePaymentResponse{Code: "OK", OutTradeNo: req.OutTradeNo, Status: "PAYING", PayData: map[string]string{"qrCode": qrCode}}
 			bs := writeJSONBytes(w, http.StatusOK, resp)
 			if bs != nil {
 				if err := s.idem.Put(r.Context(), idemKey, http.StatusOK, bs); err != nil {
@@ -667,6 +657,10 @@ func (s *Server) handleCreateRefund(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, http.StatusBadRequest, CreateRefundResponse{Code: "BAD_REQUEST", Message: "missing required fields"})
 		return
 	}
+	if strings.ToUpper(req.Currency) != "CNY" {
+		writeJSON(w, http.StatusBadRequest, CreateRefundResponse{Code: "BAD_REQUEST", Message: "only supports CNY"})
+		return
+	}
 
 	idemKey := r.Header.Get("X-Idempotency-Key")
 	if idemKey == "" {
@@ -733,10 +727,6 @@ func (s *Server) handleCreateRefund(w http.ResponseWriter, r *http.Request) {
 		return
 
 	case ChannelAlipay:
-		if strings.ToUpper(req.Currency) != "CNY" {
-			writeJSON(w, http.StatusBadRequest, CreateRefundResponse{Code: "BAD_REQUEST", Message: "ALIPAY only supports CNY in this gateway"})
-			return
-		}
 		c, _, err := s.clients.Alipay(req.TenantID, req.MerchantID)
 		if err != nil {
 			writeJSON(w, http.StatusBadRequest, CreateRefundResponse{Code: "BAD_REQUEST", Message: err.Error()})
@@ -1040,6 +1030,7 @@ func (s *Server) handleAlipayCallback(w http.ResponseWriter, r *http.Request) {
 	tradeNo := bm.GetString("trade_no")
 	totalAmount := bm.GetString("total_amount")
 	notifyID := bm.GetString("notify_id")
+	amountFen, _ := parseCNYYuanStringToFen(totalAmount)
 	eventID := "ALIPAY:" + outTradeNo
 	if notifyID != "" {
 		eventID = "ALIPAY:" + notifyID
@@ -1055,6 +1046,7 @@ func (s *Server) handleAlipayCallback(w http.ResponseWriter, r *http.Request) {
 		Channel:           string(ChannelAlipay),
 		OutTradeNo:        outTradeNo,
 		TransactionID:     tradeNo,
+		Amount:            amountFen,
 		Currency:          "CNY",
 		TradeState:        tradeStatus,
 		SignatureVerified: true,
