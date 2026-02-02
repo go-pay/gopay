@@ -37,6 +37,10 @@ pay-gateway 支持用环境变量覆盖常用项（见 `cmd/pay-gateway/.env.exa
 - `PAY_GATEWAY_MERCHANT_SNAPSHOT_URL`（可选：Go 定时拉取 Java 商户配置快照）
 - `PAY_GATEWAY_REDIS_ADDR`（启用 Redis 幂等/去重）
 
+建议与 Java（ruoyi-pay）对齐的内网 URL：
+- `PAY_GATEWAY_JAVA_WEBHOOK_URL=http://ruoyi-pay/internal/pay-gateway/events`
+- `PAY_GATEWAY_MERCHANT_SNAPSHOT_URL=http://ruoyi-pay/internal/pay-gateway/merchants/snapshot`
+
 ## 4) 鉴权如何结合 ruoyi-auth（推荐做法）
 
 不要让 Go 网关直接校验 Sa-Token 用户态 token（会引入强耦合、额外 RPC/Redis 依赖链路，且难以在 Go 侧复用 Sa-Token 生态）。推荐：
@@ -46,6 +50,12 @@ pay-gateway 支持用环境变量覆盖常用项（见 `cmd/pay-gateway/.env.exa
 - **密钥管理（Nacos）**：把 shared secret 放到 Nacos 统一下发，并通过 `PAY_GATEWAY_SHARED_SECRET` 注入 pay-gateway；Java 模块同样从 Nacos 读取并校验/签名。
 
 > 仍可保留 `X-Pay-Token`（`apiAuth.token` / `javaWebhook.token`）作为过渡，但建议最终只保留 sharedAuth。
+
+建议在 `ruoyi-pay.yml`（Nacos）配置（Java 与 Go 共用同一份密钥）：
+- `pay.gateway.sharedSecret`
+- `pay.gateway.sharedSecretPrev`（可选）
+- `pay.gateway.clockSkewSeconds=300`
+- `pay.gateway.nonceTtlSeconds=300`
 
 ## 5) Redis（上线前必配）
 

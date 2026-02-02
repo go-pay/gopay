@@ -10,6 +10,19 @@
 - 币种：网关侧强制 `CNY`；汇率换算与舍入（Round Half Up）由 Java 侧定义并落金额快照。
 - 商户：`merchantId` 本期只有一个，但 API/表结构必须保留该字段，避免未来扩展改签名。
 
+## Phase 1 落地配置（建议写入 Nacos）
+
+建议在 `ruoyi-pay.yml` 配置并由 Java 与 Go 共用同一份 secret：
+- `pay.gateway.sharedSecret`
+- `pay.gateway.sharedSecretPrev`（可选，用于轮换窗口）
+- `pay.gateway.clockSkewSeconds=300`
+- `pay.gateway.nonceTtlSeconds=300`
+- `pay.gateway.defaultMerchantId`（本期单商户时使用）
+
+ruoyi-pay 建议提供内网接口（不经 `ruoyi-gateway` 暴露），并做 HMAC 校验：
+- `POST /internal/pay-gateway/events`（pay-gateway → ruoyi-pay）
+- `GET /internal/pay-gateway/merchants/snapshot`（pay-gateway 拉取商户快照）
+
 ## 1. 总体架构（推荐）
 
 **Go：pay-gateway（新增服务）**

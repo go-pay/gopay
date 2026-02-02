@@ -18,7 +18,7 @@
     "nonceTtlSeconds": 300
   },
   "javaWebhook": {
-    "url": "http://ruoyi-pay.internal/pay/events",
+    "url": "http://ruoyi-pay/internal/pay-gateway/events",
     "token": "",
     "timeoutMillis": 1500,
     "async": true,
@@ -37,7 +37,7 @@
     "callbackProcessingTtlSeconds": 300
   },
   "merchantSync": {
-    "snapshotUrl": "",
+    "snapshotUrl": "http://ruoyi-pay/internal/pay-gateway/merchants/snapshot",
     "pollIntervalSeconds": 60,
     "changeStream": "pay-gateway:merchant-config-changed",
     "changeConsumerGroup": "pay-gateway-config"

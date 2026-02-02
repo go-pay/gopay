@@ -45,6 +45,27 @@ pay-gateway 支持使用环境变量覆盖部分配置（便于容器化部署�
 - `PAY_GATEWAY_MERCHANT_SNAPSHOT_URL`
 - `PAY_GATEWAY_REDIS_ADDR` / `PAY_GATEWAY_REDIS_PASSWORD` / `PAY_GATEWAY_REDIS_DB` / `PAY_GATEWAY_REDIS_KEY_PREFIX`
 
+## 1.1) Java 侧约定（Nacos 配置 + 内网接口）
+
+### Nacos 配置（ruoyi-pay）
+
+建议在 `ruoyi-pay.yml` 配置并由 ruoyi-pay 与 pay-gateway 共用（同一份 secret）：
+- `pay.gateway.sharedSecret`：HMAC shared secret（必填）
+- `pay.gateway.sharedSecretPrev`：旧 secret（可选，用于轮换窗口）
+- `pay.gateway.clockSkewSeconds`：时间窗（建议 300）
+- `pay.gateway.nonceTtlSeconds`：nonce TTL（建议 300）
+- `pay.gateway.defaultMerchantId`：本期只有一个 merchant 时可配置默认值（前端不感知）
+
+### ruoyi-pay 内网接口（给 pay-gateway 调用）
+
+不建议走 `ruoyi-gateway` 暴露；建议只在 ruoyi-pay 内网开放，并做 HMAC 校验：
+- Webhook（Go → Java）：`POST /internal/pay-gateway/events`
+- Merchant Snapshot（Go → Java）：`GET /internal/pay-gateway/merchants/snapshot`
+
+对应 pay-gateway 配置示例：
+- `javaWebhook.url=http://ruoyi-pay/internal/pay-gateway/events`
+- `merchantSync.snapshotUrl=http://ruoyi-pay/internal/pay-gateway/merchants/snapshot`
+
 ## 2) Java → Go：核心 API（L0）
 
 ### 2.0 认证（推荐：sharedAuth，只维护一份密钥）
