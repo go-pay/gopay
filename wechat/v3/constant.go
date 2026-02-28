@@ -221,6 +221,9 @@ const (
 	v3ViolationNotifyUrlUpdate = "/v3/merchant-risk-manage/violation-notifications" // 查询商户违规通知回调地址 PUT
 	v3ViolationNotifyUrlDelete = "/v3/merchant-risk-manage/violation-notifications" // 删除商户违规通知回调地址 DELETE
 
+	// 服务商特约商户号管控查询
+	v3LimitationsSubMchid = "/v3/mch-operation-manage/merchant-limitations/sub-mchid/%s" // 查询特约商户号管控列表 GET
+
 	// 分账（服务商）
 	v3ProfitShareOrder           = "/v3/profitsharing/orders"                  // 请求分账 POST
 	v3ProfitShareQuery           = "/v3/profitsharing/orders/%s"               // out_order_no 查询分账结果 GET
