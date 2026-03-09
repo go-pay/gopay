@@ -1,10 +1,28 @@
 ## 版本号：v1.5.116
 
 * 修改记录：
-  * gopay：golang.org/x/crypto 版本升级到 v0.46.0。
+  * gopay：golang.org/x/crypto 版本升级到 v0.48.0。
   * gopay：golang module 版本升级到 go 1.24.0。
   * 微信v3：新增 wechat.GetOauth2AccessToken()，返回参数新增 is_snapshotuser 字段。
   * 支付宝v3：新增 client.MerchantItemFileUpload()，商家商品文件上传接口。
+  * 支付宝v3：新增 棋盘密云 相关接口。
+    * client.MerchantQipanCrowdCreate()，上传创建人群。
+    * client.MerchantQipanCrowdUserAdd()，人群中追加用户。
+    * client.MerchantQipanCrowdUserDelete()，人群中删除用户。
+    * client.MarketingQipanTagBaseBatchQuery()，棋盘人群圈选标签基本信息查询。
+    * client.MarketingQipanTagQuery()，棋盘标签圈选值查询。
+    * client.MarketingQipanCrowdBatchQuery()，查询人群列表。
+    * client.MarketingQipanCrowdQuery()，查询人群详情。
+    * client.MarketingQipanCrowdModify()，修改人群。
+    * client.MerchantQipanCrowdPoolCreate()，人群池创建。
+    * client.MerchantQipanCrowdSpread()，人群扩展接口。
+    * client.MerchantQipanGreyBlackCrowdCreate()，上传创建灰黑产人群。
+    * client.MerchantQipanGreyBlackCrowdUserAdd()，灰黑产人群中追加用户。
+    * client.MerchantQipanGreyBlackCrowdUserDelete()，灰黑产人群中删除用户。
+  * 支付宝v3：新增 client.MarketingCampaignOrderVoucherConsult()，订单优惠前置咨询接口。
+  * 支付宝v3：删除已下架接口 client.MarketingQipanCrowdOperationCreate()。
+  * 支付宝v3：修复多个棋盘密云接口的必传参数和响应结构体字段，确保与官方文档一致。
+
 
 
 ## 版本号：v1.5.114
