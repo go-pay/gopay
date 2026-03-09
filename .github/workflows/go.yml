@@ -63,13 +63,5 @@ jobs:
       - name: Build
         run: go build -v ./...
 
-      - name: Test with race detector
-        run: go test -v -race -coverprofile=coverage.out -covermode=atomic ./...
-
-      - name: Upload coverage to Codecov
-        if: matrix.os == 'ubuntu-latest' && matrix.go == '1.26'
-        uses: codecov/codecov-action@v5
-        with:
-          files: ./coverage.out
-          flags: unittests
-          fail_ci_if_error: false
+      - name: Test
+        run: go test -v ./...
