@@ -180,16 +180,9 @@ const (
 	v3MerchantQipanCrowdUserDelete          = "/v3/alipay/merchant/qipan/crowduser/delete"          // POST 人群中删除用户
 	v3MarketingQipanTagBaseBatchQuery       = "/v3/alipay/marketing/qipan/tagbase/query"            // GET 棋盘人群圈选标签基本信息查询
 	v3MarketingQipanTagQuery                = "/v3/alipay/marketing/qipan/operationnode/query"      // GET 棋盘标签圈选值查询
-	v3MarketingQipanCrowdOperationCreate    = "/v3/alipay/marketing/qipan/crowdoperation/create"    // POST 棋盘人群创建
 	v3MarketingQipanCrowdBatchQuery         = "/v3/alipay/merchant/qipan/crowd/batchquery"          // POST 查询人群列表
 	v3MarketingQipanCrowdQuery              = "/v3/alipay/merchant/qipan/crowd/query"               // GET 查询人群详情
 	v3MarketingQipanCrowdModify             = "/v3/alipay/merchant/qipan/crowd/modify"              // POST 修改人群
-	v3MarketingQipanBoardQuery              = "/v3/alipay/merchant/qipan/board/query"               // POST 看板分析
-	v3MarketingQipanInsightQuery            = "/v3/alipay/merchant/qipan/insight/query"             // POST 画像分析
-	v3MarketingQipanBehaviorQuery           = "/v3/alipay/merchant/qipan/behavior/query"            // POST 行为分析
-	v3MarketingQipanTrendQuery              = "/v3/alipay/merchant/qipan/trend/query"               // POST 趋势分析
-	v3MarketingQipanInsightCityQuery        = "/v3/alipay/merchant/qipan/insightcity/query"         // POST 常住省市查询
-	v3MerchantQipanCrowdPoolCreate          = "/v3/alipay/merchant/qipan/crowdpool/create"          // POST 人群池创建
 	v3MerchantQipanCrowdSpread              = "/v3/alipay/merchant/qipan/crowd/spread"              // POST 人群扩展接口
 	v3MerchantQipanGreyBlackCrowdCreate     = "/v3/alipay/merchant/qipan/greyblackcrowd/create"     // POST 上传创建灰黑产人群
 	v3MerchantQipanGreyBlackCrowdUserAdd    = "/v3/alipay/merchant/qipan/greyblackcrowduser/add"    // POST 灰黑产人群中追加用户

@@ -62,3 +62,44 @@ type MarketingCampaignCashDetailQueryRsp struct {
 	OriginCrowdNo string  `json:"origin_crowd_no"`
 	CampStatus    string  `json:"camp_status"`
 }
+
+type MarketingCampaignOrderVoucherConsultRsp struct {
+	StatusCode  int         `json:"status_code"`
+	ErrResponse ErrResponse `json:"-"`
+
+	OptimalTotalPromoAmount string                `json:"optimal_total_promo_amount"`
+	VoucherConsultList      []*VoucherConsultInfo `json:"voucher_consult_list"`
+}
+
+// VoucherConsultInfo 优惠券咨询信息
+type VoucherConsultInfo struct {
+	VoucherId       string         `json:"voucher_id"`
+	VoucherName     string         `json:"voucher_name"`
+	VoucherType     string         `json:"voucher_type"`
+	PromoType       string         `json:"promo_type"`
+	PromoAmount     string         `json:"promo_amount"`
+	Optimal         bool           `json:"optimal"`
+	ThresholdAmount string         `json:"threshold_amount"`
+	ReductionAmount string         `json:"reduction_amount"`
+	SpecifiedAmount string         `json:"specified_amount"`
+	ReductionRatio  string         `json:"reduction_ratio"`
+	CeilingAmount   string         `json:"ceiling_amount"`
+	PromoText       string         `json:"promo_text"`
+	ItemPromoInfo   *ItemPromoInfo `json:"item_promo_info"`
+}
+
+// ItemPromoInfo 单品券商品优惠信息
+type ItemPromoInfo struct {
+	ItemName          string             `json:"item_name"`
+	ItemConsultList   []*ItemConsultInfo `json:"item_consult_list"`
+	ItemDesc          string             `json:"item_desc"`
+	ItemCoverPic      string             `json:"item_cover_pic"`
+	ItemDetailPicList []string           `json:"item_detail_pic_list"`
+}
+
+// ItemConsultInfo 商品咨询信息
+type ItemConsultInfo struct {
+	ItemId      string `json:"item_id"`
+	PromoAmount string `json:"promo_amount"`
+	PromoCount  string `json:"promo_count"`
+}

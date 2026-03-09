@@ -154,3 +154,36 @@ func (a *ClientV3) MarketingCampaignCashDetailQuery(ctx context.Context, bm gopa
 	}
 	return aliRsp, a.autoVerifySignByCert(res, bs)
 }
+
+// 订单优惠前置咨询 alipay.marketing.campaign.order.voucher.consult
+// StatusCode = 200 is success
+func (a *ClientV3) MarketingCampaignOrderVoucherConsult(ctx context.Context, bm gopay.BodyMap) (aliRsp *MarketingCampaignOrderVoucherConsultRsp, err error) {
+	err = bm.CheckEmptyError("auth_token", "scene_code", "order_amount")
+	if err != nil {
+		return nil, err
+	}
+	aat := bm.GetString(HeaderAppAuthToken)
+	// auth_token 是 query 参数，需要拼接到 URL
+	authToken := bm.GetString("auth_token")
+	bm.Remove("auth_token")
+	uri := v3MarketingCampaignOrderVoucherConsult + "?auth_token=" + authToken
+	authorization, err := a.authorization(MethodPost, v3MarketingCampaignOrderVoucherConsult, bm, aat)
+	if err != nil {
+		return nil, err
+	}
+	res, bs, err := a.doPost(ctx, bm, uri, authorization, aat)
+	if err != nil {
+		return nil, err
+	}
+	aliRsp = &MarketingCampaignOrderVoucherConsultRsp{StatusCode: res.StatusCode}
+	if res.StatusCode != http.StatusOK {
+		if err = json.Unmarshal(bs, &aliRsp.ErrResponse); err != nil {
+			return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+		}
+		return aliRsp, nil
+	}
+	if err = json.Unmarshal(bs, aliRsp); err != nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	return aliRsp, a.autoVerifySignByCert(res, bs)
+}
