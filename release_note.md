@@ -1,3 +1,13 @@
+## 版本号：v1.5.117
+
+* 修改记录：
+  * 微信v3：新增 医保支付 相关接口。
+    * client.V3MedInsOrder()，医保自费混合收款下单。
+    * client.V3MedInsOrderQueryByMixNo()，使用医保自费混合订单号查看下单结果。
+    * client.V3MedInsOrderQueryByOutNo()，使用商户订单号查看下单结果。
+
+
+
 ## 版本号：v1.5.116
 
 * 修改记录：

@@ -7,7 +7,7 @@ const (
 	OK       = "OK"
 	DebugOff = 0
 	DebugOn  = 1
-	Version  = "v1.5.116"
+	Version  = "v1.5.117"
 )
 
 type DebugSwitch int8

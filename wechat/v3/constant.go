@@ -328,6 +328,11 @@ const (
 	v3PalmServicePreAuthorize = "/v3/palmservice/authorization/preauthorize" // 用户自主录掌&预授权 POST
 	v3PalmServiceOpenidQuery  = "/v3/palmservice/authorization/openid/%s"    // organization_id 预授权状态查询 GET
 
+	// 医保支付
+	v3MedInsOrder             = "/v3/med-ins/orders"                 // 医保自费混合收款下单 POST
+	v3MedInsOrderQueryByMixNo = "/v3/med-ins/orders/mix-trade-no/%s" // mix_trade_no 使用医保自费混合订单号查看下单结果 GET
+	v3MedInsOrderQueryByOutNo = "/v3/med-ins/orders/out-trade-no/%s" // out_trade_no 使用商户订单号查看下单结果 GET
+
 	// 特约商户进件申请单状态
 	ApplyStateEditing       = "APPLYMENT_STATE_EDITTING"        // 编辑中
 	ApplyStateAuditing      = "APPLYMENT_STATE_AUDITING"        // 审核中
