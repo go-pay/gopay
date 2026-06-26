@@ -93,10 +93,8 @@ func TestClient_NativePay(t *testing.T) {
 	bm.Set("reqsn", "nativelarry01").Set("trxamt", "1").Set("body", "支付测试").Set("expiretime", expire)
 	resp, err := client.NativePay(ctx, bm)
 	if err != nil {
-		xlog.Errorf("%+v", err)
-		return
+		t.Fatal(err)
 	}
-
 	t.Logf("rsp:%+v", resp)
 
 	// Output:
@@ -108,7 +106,6 @@ func TestClient_NativeClose(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	t.Logf("rsp:%+v", resp)
 
 	// Output:
