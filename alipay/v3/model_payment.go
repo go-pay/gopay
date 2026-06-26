@@ -14,19 +14,19 @@ type TradePayRsp struct {
 	InvoiceAmount       string           `json:"invoice_amount"`
 	GmtPayment          string           `json:"gmt_payment"`
 	FundBillList        []*FundBill      `json:"fund_bill_list"`
-	StoreName           string           `json:"store_name"`
-	DiscountGoodsDetail string           `json:"discount_goods_detail"`
+	StoreName           string           `json:"store_name,omitempty"`
+	DiscountGoodsDetail string           `json:"discount_goods_detail,omitempty"`
 	BuyerUserId         string           `json:"buyer_user_id"`
-	BuyerOpenId         string           `json:"buyer_open_id"`
-	VoucherDetailList   []*VoucherDetail `json:"voucher_detail_list"`
-	MdiscountAmount     string           `json:"mdiscount_amount"`
-	DiscountAmount      string           `json:"discount_amount"`
+	BuyerOpenId         string           `json:"buyer_open_id,omitempty"`
+	VoucherDetailList   []*VoucherDetail `json:"voucher_detail_list,omitempty"`
+	MdiscountAmount     string           `json:"mdiscount_amount,omitempty"`
+	DiscountAmount      string           `json:"discount_amount,omitempty"`
 }
 
 type FundBill struct {
 	FundChannel string `json:"fund_channel"`
 	Amount      string `json:"amount"`
-	RealAmount  string `json:"real_amount"`
+	RealAmount  string `json:"real_amount,omitempty"`
 }
 
 type VoucherDetail struct {
@@ -208,4 +208,42 @@ type TradeCreateRsp struct {
 
 	TradeNo    string `json:"trade_no"`
 	OutTradeNo string `json:"out_trade_no"`
+}
+
+type TradeOrderInfoSyncRsp struct {
+	StatusCode  int         `json:"status_code"`
+	ErrResponse ErrResponse `json:"-"`
+
+	TradeNo     string `json:"trade_no"`
+	OutTradeNo  string `json:"out_trade_no"`
+	BuyerUserId string `json:"buyer_user_id"`
+	BuyerOpenId string `json:"buyer_open_id"`
+}
+
+type ZolozAuthenticationSmilepayInitializeRsp struct {
+	StatusCode  int         `json:"status_code"`
+	ErrResponse ErrResponse `json:"-"`
+
+	RetCodeSub        string `json:"ret_code_sub"`
+	RetMessageSub     string `json:"ret_message_sub"`
+	ZimId             string `json:"zim_id"`
+	ZimInitClientData string `json:"zim_init_client_data"`
+}
+
+type ZolozAuthenticationCustomerFtokenQueryRsp struct {
+	StatusCode  int         `json:"status_code"`
+	ErrResponse ErrResponse `json:"-"`
+
+	Uid            string        `json:"uid"`
+	OpenId         string        `json:"open_id"`
+	UidTelPairList []*UidTelPair `json:"uid_tel_pair_list"`
+	AgeCheckResult string        `json:"age_check_result"`
+	CertNo         string        `json:"cert_no"`
+	CertName       string        `json:"cert_name"`
+	FaceId         string        `json:"face_id"`
+}
+
+type UidTelPair struct {
+	UserId string `json:"user_id"`
+	OpenId string `json:"open_id"`
 }

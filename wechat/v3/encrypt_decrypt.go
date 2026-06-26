@@ -22,7 +22,7 @@ func (c *ClientV3) V3EncryptText(text string) (cipherText string, err error) {
 	}
 	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, c.wxPublicKey, []byte(text), nil)
 	if err != nil {
-		return "", fmt.Errorf("rsa.EncryptOAEP：%w", err)
+		return "", fmt.Errorf("rsa.EncryptOAEP: %w", err)
 	}
 	return base64.StdEncoding.EncodeToString(cipherByte), nil
 }
@@ -32,7 +32,7 @@ func (c *ClientV3) V3DecryptText(cipherText string) (text string, err error) {
 	cipherByte, _ := base64.StdEncoding.DecodeString(cipherText)
 	textByte, err := rsa.DecryptOAEP(sha1.New(), rand.Reader, c.privateKey, cipherByte, nil)
 	if err != nil {
-		return "", fmt.Errorf("rsa.DecryptOAEP：%w", err)
+		return "", fmt.Errorf("rsa.DecryptOAEP: %w", err)
 	}
 	return string(textByte), nil
 }
@@ -46,7 +46,7 @@ func V3EncryptText(text string, wxPublicKeyContent []byte) (cipherText string, e
 	}
 	cipherByte, err := rsa.EncryptOAEP(sha1.New(), rand.Reader, publicKey, []byte(text), nil)
 	if err != nil {
-		return "", fmt.Errorf("rsa.EncryptOAEP：%w", err)
+		return "", fmt.Errorf("rsa.EncryptOAEP: %w", err)
 	}
 	return base64.StdEncoding.EncodeToString(cipherByte), nil
 }
@@ -61,7 +61,7 @@ func V3DecryptText(cipherText string, privateKeyContent []byte) (text string, er
 	cipherByte, _ := base64.StdEncoding.DecodeString(cipherText)
 	textByte, err := rsa.DecryptOAEP(sha1.New(), rand.Reader, privateKey, cipherByte, nil)
 	if err != nil {
-		return "", fmt.Errorf("rsa.DecryptOAEP：%w", err)
+		return "", fmt.Errorf("rsa.DecryptOAEP: %w", err)
 	}
 	return string(textByte), nil
 }
@@ -316,6 +316,20 @@ func V3DecryptTransferBatchNotifyCipherText(ciphertext, nonce, additional, apiV3
 		return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
 	}
 	result = &V3DecryptTransferBatchResult{}
+	if err = json.Unmarshal(decrypt, result); err != nil {
+		return nil, fmt.Errorf("json.Unmarshal(%s), err:%w", string(decrypt), err)
+	}
+	return result, nil
+}
+
+// 解密 新版商家转账通知 回调中的加密信息
+func V3DecryptTransferBillsNotifyCipherText(ciphertext, nonce, additional, apiV3Key string) (result *V3DecryptTransferBillsResult, err error) {
+	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
+	decrypt, err := aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(additional), []byte(apiV3Key))
+	if err != nil {
+		return nil, fmt.Errorf("aes.GCMDecrypt, err:%w", err)
+	}
+	result = &V3DecryptTransferBillsResult{}
 	if err = json.Unmarshal(decrypt, result); err != nil {
 		return nil, fmt.Errorf("json.Unmarshal(%s), err:%w", string(decrypt), err)
 	}

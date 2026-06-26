@@ -23,6 +23,7 @@ const (
 	NotificationTypeV2RenewalExtended        = "RENEWAL_EXTENDED"
 	NotificationTypeV2Revoke                 = "REVOKE"
 	NotificationTypeV2Subscribed             = "SUBSCRIBED"
+	NotificationTypeV2OneTimeCharge          = "ONE_TIME_CHARGE"
 
 	// 子类型常量
 	// https://developer.apple.com/documentation/appstoreservernotifications/subtype
@@ -117,10 +118,14 @@ type RenewalInfo struct {
 	SignedDate                  int64    `json:"signedDate"`
 }
 
-// TransactionInfo https://developer.apple.com/documentation/appstoreservernotifications/jwstransactiondecodedpayload
-type TransactionInfo struct {
+// JWSTransactionDecodedPayload represents both
+// - TransactionInfo from [AppStoreServerNotifications](https://developer.apple.com/documentation/appstoreservernotifications/jwstransactiondecodedpayload)
+// - TransactionItem from [AppStoreServerAPI](https://developer.apple.com/documentation/appstoreserverapi/jwstransactiondecodedpayload)
+// They are identical in structure.
+type JWSTransactionDecodedPayload struct {
 	jwt.StandardClaims
 	AppAccountToken             string `json:"appAccountToken"`
+	AppTransactionId            string `json:"appTransactionId"` // Note: "appTransactionId" is different from "transactionId".
 	BundleId                    string `json:"bundleId"`
 	Currency                    string `json:"currency"`
 	Environment                 string `json:"environment"`
@@ -129,6 +134,7 @@ type TransactionInfo struct {
 	IsUpgraded                  bool   `json:"isUpgraded"`
 	OfferDiscountType           string `json:"offerDiscountType"`
 	OfferIdentifier             string `json:"offerIdentifier"`
+	OfferPeriod                 string `json:"offerPeriod"`
 	OfferType                   int64  `json:"offerType"` // 1:An introductory offer. 2:A promotional offer. 3:An offer with a subscription offer code.
 	OriginalPurchaseDate        int64  `json:"originalPurchaseDate"`
 	OriginalTransactionId       string `json:"originalTransactionId"`
@@ -137,8 +143,10 @@ type TransactionInfo struct {
 	PurchaseDate                int64  `json:"purchaseDate"`
 	Quantity                    int64  `json:"quantity"`
 	RevocationDate              int64  `json:"revocationDate"`
+	RevocationPercentage        int64  `json:"revocationPercentage"` // A integer value from 0 to 100000.
 	RevocationReason            int    `json:"revocationReason"`
-	SignedDate                  int64  `json:"signedDate"` // Auto-Renewable Subscription: An auto-renewable subscription.  Non-Consumable: A non-consumable in-app purchase.  Consumable: A consumable in-app purchase.  Non-Renewing Subscription: A non-renewing subcription.
+	RevocationType              string `json:"revocationType"` // Possible values: "REFUND_FULL", "REFUND_PRORATED", "FAMILY_REVOKE"
+	SignedDate                  int64  `json:"signedDate"`     // Auto-Renewable Subscription: An auto-renewable subscription.  Non-Consumable: A non-consumable in-app purchase.  Consumable: A consumable in-app purchase.  Non-Renewing Subscription: A non-renewing subcription.
 	Storefront                  string `json:"storefront"`
 	StorefrontId                string `json:"storefrontId"`
 	SubscriptionGroupIdentifier string `json:"subscriptionGroupIdentifier"`
@@ -147,6 +155,10 @@ type TransactionInfo struct {
 	Type                        string `json:"type"`
 	WebOrderLineItemId          string `json:"webOrderLineItemId"`
 }
+
+// Creating type aliases for backward compatibility
+type TransactionInfo = JWSTransactionDecodedPayload
+type TransactionsItem = JWSTransactionDecodedPayload
 
 type NotificationHistoryRsp struct {
 	StatusCodeErr

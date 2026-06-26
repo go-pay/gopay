@@ -25,7 +25,7 @@ import (
 func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 	bs, err := io.ReadAll(io.LimitReader(req.Body, int64(3<<20))) // default 3MB change the size you want;
 	if err != nil {
-		return nil, fmt.Errorf("io.ReadAll：%w", err)
+		return nil, fmt.Errorf("io.ReadAll: %w", err)
 	}
 	bm = make(gopay.BodyMap)
 	if err = xml.Unmarshal(bs, &bm); err != nil {
@@ -39,7 +39,7 @@ func ParseNotifyToBodyMap(req *http.Request) (bm gopay.BodyMap, err error) {
 func ParseNotify(req *http.Request) (notifyReq *NotifyRequest, err error) {
 	notifyReq = new(NotifyRequest)
 	if err = xml.NewDecoder(req.Body).Decode(notifyReq); err != nil {
-		return nil, fmt.Errorf("xml.NewDecoder.Decode：%w", err)
+		return nil, fmt.Errorf("xml.NewDecoder.Decode: %w", err)
 	}
 	return
 }

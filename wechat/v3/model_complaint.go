@@ -2,34 +2,38 @@ package wechat
 
 // 查询投诉单列表 Rsp
 type ComplaintListRsp struct {
-	Code     int            `json:"-"`
-	SignInfo *SignInfo      `json:"-"`
-	Response *ComplaintList `json:"response,omitempty"`
-	Error    string         `json:"-"`
+	Code        int            `json:"-"`
+	SignInfo    *SignInfo      `json:"-"`
+	Response    *ComplaintList `json:"response,omitempty"`
+	ErrResponse ErrResponse    `json:"err_response,omitempty"`
+	Error       string         `json:"-"`
 }
 
 // 查询投诉单详情 Rsp
 type ComplaintDetailRsp struct {
-	Code     int              `json:"-"`
-	SignInfo *SignInfo        `json:"-"`
-	Response *ComplaintDetail `json:"response,omitempty"`
-	Error    string           `json:"-"`
+	Code        int              `json:"-"`
+	SignInfo    *SignInfo        `json:"-"`
+	Response    *ComplaintDetail `json:"response,omitempty"`
+	ErrResponse ErrResponse      `json:"err_response,omitempty"`
+	Error       string           `json:"-"`
 }
 
 // 查询投诉单详情 Rsp
 type ComplaintNegotiationHistoryRsp struct {
-	Code     int                          `json:"-"`
-	SignInfo *SignInfo                    `json:"-"`
-	Response *ComplaintNegotiationHistory `json:"response,omitempty"`
-	Error    string                       `json:"-"`
+	Code        int                          `json:"-"`
+	SignInfo    *SignInfo                    `json:"-"`
+	Response    *ComplaintNegotiationHistory `json:"response,omitempty"`
+	ErrResponse ErrResponse                  `json:"err_response,omitempty"`
+	Error       string                       `json:"-"`
 }
 
 // 创建、查询、更新投诉通知回调地址 Rsp
 type ComplaintNotifyUrlRsp struct {
-	Code     int                 `json:"-"`
-	SignInfo *SignInfo           `json:"-"`
-	Response *ComplaintNotifyUrl `json:"response,omitempty"`
-	Error    string              `json:"-"`
+	Code        int                 `json:"-"`
+	SignInfo    *SignInfo           `json:"-"`
+	Response    *ComplaintNotifyUrl `json:"response,omitempty"`
+	ErrResponse ErrResponse         `json:"err_response,omitempty"`
+	Error       string              `json:"-"`
 }
 
 // =========================================================分割=========================================================

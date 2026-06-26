@@ -10,8 +10,8 @@ import (
 )
 
 // 统一下单
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_1
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi_sl.php?chapter=9_1
+// 商户文档：https://pay.weixin.qq.com/doc/v2/merchant/4011935214
+// 服务商文档：https://pay.weixin.qq.com/doc/v2/partner/4011936644
 func (w *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *UnifiedOrderResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "notify_url", "trade_type")
 	if err != nil {
@@ -35,8 +35,8 @@ func (w *Client) UnifiedOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Uni
 }
 
 // 提交付款码支付
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_10&index=1
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/micropay_sl.php?chapter=9_10&index=1
+// 商户文档：https://pay.weixin.qq.com/doc/v2/merchant/4011937125
+// 服务商文档：https://pay.weixin.qq.com/doc/v2/partner/4011941293
 func (w *Client) Micropay(ctx context.Context, bm gopay.BodyMap) (wxRsp *MicropayResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "spbill_create_ip", "auth_code")
 	if err != nil {
@@ -60,8 +60,8 @@ func (w *Client) Micropay(ctx context.Context, bm gopay.BodyMap) (wxRsp *Micropa
 }
 
 // 查询订单
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_2
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi_sl.php?chapter=9_2
+// 商户文档：https://pay.weixin.qq.com/doc/v2/merchant/4011935215
+// 服务商文档：https://pay.weixin.qq.com/doc/v2/partner/4011936645
 func (w *Client) QueryOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *QueryOrderResponse, resBm gopay.BodyMap, err error) {
 	err = bm.CheckEmptyError("nonce_str")
 	if err != nil {
@@ -81,18 +81,18 @@ func (w *Client) QueryOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Query
 	}
 	wxRsp = new(QueryOrderResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s): %w", string(bs), err)
 	}
 	resBm = make(gopay.BodyMap)
 	if err = xml.Unmarshal(bs, &resBm); err != nil {
-		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s): %w", string(bs), err)
 	}
 	return wxRsp, resBm, nil
 }
 
 // 关闭订单
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_3
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi_sl.php?chapter=9_3
+// 商户文档：https://pay.weixin.qq.com/doc/v2/merchant/4011935216
+// 服务商文档：https://pay.weixin.qq.com/doc/v2/partner/4011936646
 func (w *Client) CloseOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *CloseOrderResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_trade_no")
 	if err != nil {
@@ -116,8 +116,8 @@ func (w *Client) CloseOrder(ctx context.Context, bm gopay.BodyMap) (wxRsp *Close
 
 // 申请退款
 // 注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_4
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi_sl.php?chapter=9_4
+// 商户文档：https://pay.weixin.qq.com/doc/v2/merchant/4011935217
+// 服务商文档：https://pay.weixin.qq.com/doc/v2/partner/4011936647
 func (w *Client) Refund(ctx context.Context, bm gopay.BodyMap) (wxRsp *RefundResponse, resBm gopay.BodyMap, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_refund_no", "total_fee", "refund_fee")
 	if err != nil {
@@ -139,18 +139,18 @@ func (w *Client) Refund(ctx context.Context, bm gopay.BodyMap) (wxRsp *RefundRes
 	}
 	wxRsp = new(RefundResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s): %w", string(bs), err)
 	}
 	resBm = make(gopay.BodyMap)
 	if err = xml.Unmarshal(bs, &resBm); err != nil {
-		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s): %w", string(bs), err)
 	}
 	return wxRsp, resBm, nil
 }
 
 // 查询退款
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_5
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/jsapi_sl.php?chapter=9_5
+// 商户文档：https://pay.weixin.qq.com/doc/v2/merchant/4011935218
+// 服务商文档：https://pay.weixin.qq.com/doc/v2/partner/4011936648
 func (w *Client) QueryRefund(ctx context.Context, bm gopay.BodyMap) (wxRsp *QueryRefundResponse, resBm gopay.BodyMap, err error) {
 	err = bm.CheckEmptyError("nonce_str")
 	if err != nil {
@@ -170,19 +170,19 @@ func (w *Client) QueryRefund(ctx context.Context, bm gopay.BodyMap) (wxRsp *Quer
 	}
 	wxRsp = new(QueryRefundResponse)
 	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalStruct(%s): %w", string(bs), err)
 	}
 	resBm = make(gopay.BodyMap)
 	if err = xml.Unmarshal(bs, &resBm); err != nil {
-		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s)：%w", string(bs), err)
+		return nil, nil, fmt.Errorf("xml.UnmarshalBodyMap(%s): %w", string(bs), err)
 	}
 	return wxRsp, resBm, nil
 }
 
 // 撤销订单
 // 注意：请在初始化client时，调用 client 添加证书的相关方法添加证书
-// 商户文档：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_11&index=3
-// 服务商文档：https://pay.weixin.qq.com/wiki/doc/api/micropay_sl.php?chapter=9_11&index=3
+// 商户文档：https://pay.weixin.qq.com/doc/v2/merchant/4011937361
+// 服务商文档：https://pay.weixin.qq.com/doc/v2/partner/4012218602
 func (w *Client) Reverse(ctx context.Context, bm gopay.BodyMap) (wxRsp *ReverseResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "out_trade_no")
 	if err != nil {

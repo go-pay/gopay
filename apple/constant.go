@@ -7,6 +7,9 @@ const (
 	// Get Transaction History
 	getTransactionHistory = "/inApps/v1/history/%s" // transactionId
 
+	// Get Transaction History
+	getTransactionHistoryV2 = "/inApps/v2/history/%s" // transactionId
+
 	// Get Transaction Info
 	getTransactionInfo = "/inApps/v1/transactions/%s" // transactionId
 
@@ -14,7 +17,7 @@ const (
 	getAllSubscriptionStatuses = "/inApps/v1/subscriptions/%s" // transactionId
 
 	// Send Consumption Information
-	sendConsumptionInformation = "/inApps/v1/transactions/consumption/%s" // transactionId
+	sendConsumptionInformation = "/inApps/v2/transactions/consumption/%s" // transactionId
 
 	// Look Up Order ID
 	lookUpOrderID = "/inApps/v1/lookup/%s" // orderId

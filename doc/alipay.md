@@ -86,6 +86,7 @@ err := client.SetCertSnByContent("appPublicCert.crt bytes", "alipayRootCert byte
 ```go
 import (
     "github.com/go-pay/gopay"
+    "github.com/go-pay/gopay/alipay"
 )
 
 // 初始化 BodyMap
@@ -95,15 +96,11 @@ bm.Set("subject", "条码支付").
     Set("auth_code", "286248566432274952").
     Set("out_trade_no", "GZ201909081743431443").
     Set("total_amount", "0.01").
-    Set("timeout_express", "2m")
+    Set("timeout_express", "2m").
+    Set(alipay.AppAuthToken, "i_am_app_auth_token") // 如果需要，可以设置自定义应用授权
 
 aliRsp, err := client.TradePay(bm)
 if err != nil {
-    if bizErr, ok := alipay.IsBizError(err); ok {
-        xlog.Errorf("%+v", bizErr)
-        // do something
-        return
-    }
     xlog.Errorf("client.TradePay(%+v),err:%+v", bm, err)
     return
 }
@@ -233,6 +230,7 @@ xlog.Infof("%+v", phone)
 ### 支付宝支付 API
 
 * 支付宝接口自行实现方法：`client.PostAliPayAPISelfV2()`
+* 生成请求参数：`client.RequestParam()`
 * <font color='#027AFF' size='4'>支付产品</font>
   * 当面付
     * 付款码支付接口(商家扫用户付款码)：`client.TradePay()`
@@ -278,7 +276,7 @@ xlog.Infof("%+v", phone)
       * 交易分账查询接口：`client.TradeOrderSettleQuery()`
   * 商家扣款
     * 支付宝个人协议页面签约接口: `client.UserAgreementPageSign()`
-    * 支付宝个人协议页面签约接口(App 专用,生成唤醒签约页面链接): `client.UserAgreementPageSignInApp()`
+    * 支付宝个人协议页面签约接口 - PC转二维码唤起签约页: `client.UserAgreementPageSignInQRCode()`
     * 支付宝个人代扣协议查询接口: `client.UserAgreementQuery()`
     * 支付宝个人代扣协议解约接口: `client.UserAgreementPageUnSign()`
     * 周期性扣款协议执行计划修改接口: `client.UserAgreementExecutionplanModify()`
@@ -472,34 +470,54 @@ xlog.Infof("%+v", phone)
     * 商户数据同步：`client.SecurityCustomerRiskSend()`
   * RiskGO
     * 消费者投诉
-      * 处理消费者投诉接口：https://opendocs.alipay.com/open/da75e1ec_alipay.security.risk.complaint.process.finish
-      * 投诉处理附件图片上传接口：https://opendocs.alipay.com/open/20ea7441_alipay.security.risk.complaint.file.upload
-      * 查询消费者投诉详情接口：https://opendocs.alipay.com/open/271499b9_alipay.security.risk.complaint.info.query
-      * 查询消费者投诉列表接口：https://opendocs.alipay.com/open/8ad1ac86_alipay.security.risk.complaint.info.batchquery
+      * 处理消费者投诉接口：`client.SecurityRiskComplaintProcessFinish()`
+      * 投诉处理附件图片上传接口：`client.SecurityRiskComplaintFileUpload()`
+      * 查询消费者投诉详情接口：`client.SecurityRiskComplaintInfoQuery()`
+      * 查询消费者投诉列表接口：`client.SecurityRiskComplaintInfoBatchquery()`
     * 营销风险识别
-      * 营销风险识别发奖接口：https://opendocs.alipay.com/open/f4427923_alipay.security.risk.marketing.awarding.query
-      * 营销风险识别抢购接口：https://opendocs.alipay.com/open/91f83d97_alipay.security.risk.marketing.purchase.query
+      * 营销风险识别发奖接口：`client.SecurityRiskMarketingAwardingQuery()`
+      * 营销风险识别抢购接口：`client.SecurityRiskMarketingPurchaseQuery()`
     * 行业风险识别
-      * 行业风险识别黄牛接口：https://opendocs.alipay.com/open/5e344142_alipay.security.risk.industry.scalper.query
-      * 行业风险识别刷单接口：https://opendocs.alipay.com/open/e76efd50_alipay.security.risk.industry.farming.query
-      * 行业风险识别先享后付违约接口：https://opendocs.alipay.com/open/399e7ee9_alipay.security.risk.industry.nsf.query
+      * 行业风险识别黄牛接口：`client.SecurityRiskIndustryScalperQuery()`
+      * 行业风险识别刷单接口：`client.SecurityRiskIndustryFarmingQuery()`
+      * 行业风险识别先享后付违约接口：`client.SecurityRiskIndustryNsfQuery()`
     * 内容风险识别
-      * 内容风险同步识别：https://opendocs.alipay.com/open/8513019b_alipay.security.risk.content.sync.detect
+      * 内容风险同步识别接口：`client.SecurityRiskContentSyncDetect()`
 * <font color='#027AFF' size='4'>广告产品</font>
   * 支付宝广告投放
-    * 转化数据回传接口：https://opendocs.alipay.com/open/3940a105_alipay.data.dataservice.ad.conversion.upload
-    * 广告投放数据通用查询接口：https://opendocs.alipay.com/open/c089ee8d_alipay.data.dataservice.ad.reportdata.query
-    * 自建推广页列表批量查询接口：https://opendocs.alipay.com/open/e060c7d1_alipay.data.dataservice.ad.promotepage.batchquery
-    * 自建推广页留资数据查询接口：https://opendocs.alipay.com/open/1df3222a_alipay.data.dataservice.ad.promotepage.download
-    * 任务广告完成状态查询接口：https://opendocs.alipay.com/open/7275fba1_alipay.data.dataservice.xlight.task.query
+    * 转化数据回传接口：`client.DataServiceAdConversionUpload()`
+    * 广告投放数据通用查询接口：`client.DataServiceAdReportdataQuery()`
+    * 自建推广页列表批量查询接口：`client.DataServiceAdPromotepageBatchquery()`
+    * 自建推广页留资数据查询接口：`client.DataServiceAdPromotepageDownload()`
+    * 任务广告完成状态查询接口：`client.DataServiceXlightTaskQuery()`
 * <font color='#027AFF' size='4'>其他通用产品</font>
   * 商家费率申请
-    * 特殊费率申请接口：https://opendocs.alipay.com/open/c50c780c_alipay.open.fee.adjust.apply
+    * 特殊费率申请接口：`client.OpenFeeAdjustApply()`
 * <font color='#027AFF' size='4'>第三方应用产品</font>
-  * 换取应用授权令牌：`client.OpenAuthTokenApp()`
+  * 第三方应用授权
+    * 换取应用授权令牌：`client.OpenAuthTokenApp()`
+    * 查询某个应用授权AppAuthToken的授权信息：`client.OpenAuthTokenAppQuery()`
+    * ISV向商户发起应用授权邀约：`client.OpenAuthTokenAppInviteCreate()`
+  * 三方开发基础
+    * 查询应用可申请的接口出参敏感字段列表：`client.OpenAppApiQuery()`
+    * 申请获取接口用户敏感信息字段：`client.OpenAppApiFieldApply()`
+    * 查询接口字段使用场景：`client.OpenAppApiSceneQuery()`
+    * 用户信息申请记录查询：`client.OpenAppApiFieldQuery()`
+    * 应用信息修改接口：`client.OpenAppInfoModify()`
+    * 应用信息查询接口：`client.OpenAppInfoQuery()`
 * <font color='#027AFF' size='4'>邀测站点</font>
   * 营销咨询
     * 商户前置内容咨询接口： `client.PayAppMarketingConsult()`
+  * 订阅
+    * 商品创建接口：`client.TradeProductCreate()`
+    * 商品修改接口：`client.TradeProductModify()`
+    * 商品查询接口：`client.TradeProductQuery()`
+    * 价格创建接口：`client.TradePriceCreate()`
+    * 价格查询接口：`client.TradePriceQuery()`
+    * 客户创建接口：`client.TradeCustomerCreate()`
+    * 订阅创建接口：`client.TradeSubscriptionCreate()`
+    * 订阅修改接口：`client.TradeSubscriptionModify()`
+    * 订阅查询接口：`client.TradeSubscriptionQuery()`
 * <font color='#027AFF' size='4'>可能失效的接口</font>
   * 应用支付宝公钥证书下载：`client.PublicCertDownload()`
   * 小程序生成推广二维码接口：`client.OpenAppQrcodeCreate()`

@@ -2,12 +2,12 @@
 
 # GoPay
 
-### 微信、支付宝、QQ、通联支付、拉卡拉、PayPal 的 Golang 版本SDK
+### 微信、支付宝、QQ、通联支付、拉卡拉、PayPal、扫呗、Apple支付的 Golang 版本SDK
 
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
 [![Github](https://img.shields.io/github/forks/go-pay/gopay?label=Fork&style=social)](https://github.com/go-pay/gopay/fork)
 
-[![Golang](https://img.shields.io/badge/golang-1.21-brightgreen.svg)](https://golang.google.cn)
+[![Golang](https://img.shields.io/badge/golang-1.24.0-brightgreen.svg)](https://golang.google.cn)
 [![GoDoc](https://img.shields.io/badge/doc-pkg.go.dev-informational.svg)](https://pkg.go.dev/github.com/go-pay/gopay)
 [![Go](https://github.com/go-pay/gopay/actions/workflows/go.yml/badge.svg)](https://github.com/go-pay/gopay/actions/workflows/go.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/go-pay/gopay)](https://github.com/go-pay/gopay/releases)
@@ -19,12 +19,12 @@
 # 一、安装
 
 ```bash
-go get -u github.com/go-pay/gopay
+go get github.com/go-pay/gopay
 ```
 
 #### 查看 GoPay 版本
 
-  [版本更新记录](https://github.com/go-pay/gopay/blob/main/release_note.txt)
+  [版本更新记录](https://github.com/go-pay/gopay/blob/main/release_note.md)
 
 ```go
 import (
@@ -48,6 +48,7 @@ func main() {
 * #### [支付宝支付（V3版）](https://github.com/go-pay/gopay/blob/main/doc/alipay_v3.md)
 * #### [支付宝支付](https://github.com/go-pay/gopay/blob/main/doc/alipay.md)
 * #### [微信支付（V3版）](https://github.com/go-pay/gopay/blob/main/doc/wechat_v3.md)
+  * 微信商家转账产品升级，目前已支持新版商家转账接口
 * #### [微信支付（V2版，不推荐）](https://github.com/go-pay/gopay/blob/main/doc/wechat_v2.md)
 * #### [QQ支付](https://github.com/go-pay/gopay/blob/main/doc/qq.md)
 * #### [通联支付](https://github.com/go-pay/gopay/blob/main/doc/allinpay.md)
@@ -86,17 +87,21 @@ func main() {
 ## 赞赏多少是您的心意，感谢支持！
 
 微信赞赏码： <img width="200" height="200" src=".github/zanshang.png"/>
+&nbsp;&nbsp;&nbsp;&nbsp;
 支付宝赞助码： <img width="200" height="200" src=".github/zanshang_zfb.png"/>
 
 ---
 
-## 讨论群
-> 抖音关注加主页粉丝群，获取微信入群二维码
+## 问题沟通（非必要不用加微信）
+> 微信: **[85411418](.github/wechat_jerry.png)**（加个人微信备注清楚来意，谢谢）。
 
-抖音扫码关注：
-<img width="240" height="240" src=".github/douyin_jerry.png"/>
-&nbsp;&nbsp;&nbsp;&nbsp;微信群：
-<img width="240" height="240" src=".github/wx_gopay.png"/>
+[//]: # (关注抖音：)
+
+[//]: # (<img width="240" height="240" src=".github/douyin_jerry.png"/>)
+
+[//]: # (&nbsp;&nbsp;&nbsp;&nbsp;QQ群：)
+
+[//]: # (<img width="240" height="240" src=".github/wx_gopay.png"/>)
 
 ---
 
@@ -110,4 +115,4 @@ func main() {
 <br>
 [<img src=".github/jetbrains.png" width="300"/>](https://www.jetbrains.com/?from=gopay)
 
-> Copyright © 2000-2024 JetBrains s.r.o. JetBrains and the JetBrains logo are registered trademarks of JetBrains s.r.o.
+> Copyright © 2025 JetBrains s.r.o. JetBrains and the JetBrains logo are trademarks of JetBrains s.r.o.

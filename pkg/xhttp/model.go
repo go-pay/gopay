@@ -1,6 +1,9 @@
 package xhttp
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"strings"
+)
 
 const (
 	GET    = "GET"
@@ -45,4 +48,10 @@ func ConvertToString(v any) (str string) {
 	}
 	str = string(bs)
 	return
+}
+
+var quoteEscaper = strings.NewReplacer("\\", "\\\\", `"`, "\\\"")
+
+func escapeQuotes(s string) string {
+	return quoteEscaper.Replace(s)
 }

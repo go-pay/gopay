@@ -1,5 +1,9 @@
 package paypal
 
+import (
+	"encoding/json"
+)
+
 type AccessToken struct {
 	Scope       string `json:"scope"`
 	AccessToken string `json:"access_token"`
@@ -227,6 +231,41 @@ type InvoiceTemplateUpdateRsp struct {
 	Response      *Template      `json:"response,omitempty"`
 }
 
+type PaymentTokenCreateRsp struct {
+	Code          int                  `json:"-"`
+	Error         string               `json:"-"`
+	ErrorResponse *ErrorResponse       `json:"-"`
+	Response      *PaymentMethodDetail `json:"response,omitempty"`
+}
+
+type PaymentTokenListRsp struct {
+	Code          int                `json:"-"`
+	Error         string             `json:"-"`
+	ErrorResponse *ErrorResponse     `json:"-"`
+	Response      *PaymentTokensList `json:"response,omitempty"`
+}
+
+type PaymentTokenDetailRsp struct {
+	Code          int                  `json:"-"`
+	Error         string               `json:"-"`
+	ErrorResponse *ErrorResponse       `json:"-"`
+	Response      *PaymentMethodDetail `json:"response,omitempty"`
+}
+
+type PaymentSetupTokenCreateRsp struct {
+	Code          int                      `json:"-"`
+	Error         string                   `json:"-"`
+	ErrorResponse *ErrorResponse           `json:"-"`
+	Response      *PaymentSetupTokenDetail `json:"response,omitempty"`
+}
+
+type PaymentSetupTokenDetailRsp struct {
+	Code          int                      `json:"-"`
+	Error         string                   `json:"-"`
+	ErrorResponse *ErrorResponse           `json:"-"`
+	Response      *PaymentSetupTokenDetail `json:"response,omitempty"`
+}
+
 // ==================================分割==================================
 
 type Patch struct {
@@ -292,7 +331,13 @@ type PaypalVault struct {
 }
 
 type PaypalCustomer struct {
-	ID string `json:"id"`
+	ID         string         `json:"id"`
+	Phones     []*PhoneDetail `json:"phones"`
+	WebsiteUrl string         `json:"website_url"`
+	Company    string         `json:"company"`
+	Name       *Name          `json:"name"`
+	Email      string         `json:"email"`
+	Links      []*Link        `json:"links,omitempty"`
 }
 
 type PaypalLink struct {
@@ -686,6 +731,30 @@ type NetAmountBreakdown struct {
 	ExchangeRate    *ExchangeRate `json:"exchange_rate,omitempty"`
 }
 
+type PaymentMethodDetail struct {
+	Id            string          `json:"id,omitempty"`
+	PaymentSource *PaymentSource  `json:"payment_source,omitempty"`
+	Customer      *PaypalCustomer `json:"customer,omitempty"`
+	Links         []*Link         `json:"links,omitempty"`
+}
+
+type PaymentTokensList struct {
+	TotalItems    int                    `json:"total_items,omitempty"`
+	TotalPages    int                    `json:"total_pages,omitempty"`
+	PaymentTokens []*PaymentMethodDetail `json:"payment_tokens,omitempty"`
+	Links         []*Link                `json:"links,omitempty"`
+	Customer      *PaypalCustomer        `json:"customer,omitempty"`
+}
+
+type PaymentSetupTokenDetail struct {
+	PaymentSource *PaymentSource  `json:"payment_source,omitempty"`
+	Links         []*Link         `json:"links,omitempty"`
+	Id            string          `json:"id,omitempty"`
+	Ordinal       int             `json:"ordinal,omitempty"`
+	Customer      *PaypalCustomer `json:"customer,omitempty"`
+	Status        string          `json:"status,omitempty"`
+}
+
 // =============== V1 API Payout ==================================
 
 type V1Amount struct {
@@ -811,6 +880,58 @@ type BillingDetail struct {
 	UsageType   string  `json:"usage_type"`
 	CreateTime  string  `json:"create_time"`
 	Links       []*Link `json:"links"`
+}
+
+type PlanListRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *BillingPlan   `json:"response,omitempty"`
+}
+
+type BillingPlan struct {
+	Plans []*Plan `json:"plans"`
+	Links []*Link `json:"links,omitempty"`
+}
+
+type Plan struct {
+	ID          string  `json:"id"`
+	Name        string  `json:"name"`
+	Status      string  `json:"status"`
+	Description string  `json:"description"`
+	UsageType   string  `json:"usage_type"`
+	CreateTime  string  `json:"create_time"`
+	Links       []*Link `json:"links,omitempty"`
+}
+
+type PlanDetailRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *PlanDetail    `json:"response,omitempty"`
+}
+
+type PlanDetail struct {
+	ID            string           `json:"id"`
+	ProductID     string           `json:"product_id"`
+	Name          string           `json:"name"`
+	Description   string           `json:"description"`
+	Status        string           `json:"status"`
+	BillingCycles []*BillingCycles `json:"billing_cycles"`
+	Taxes         *Taxes           `json:"taxes"`
+	CreateTime    string           `json:"create_time"`
+	UpdateTime    string           `json:"update_time"`
+	Links         []*Link          `json:"links,omitempty"`
+}
+
+type Taxes struct {
+	Percentage string `json:"percentage"`
+	Inclusive  bool   `json:"inclusive"`
+}
+
+type CommonAmount struct {
+	CurrencyCode string `json:"currency_code"`
+	Value        string `json:"value"`
 }
 
 type InvoiceNumber struct {
@@ -1054,4 +1175,111 @@ type AddTrackingNumberRsp struct {
 	Error         string         `json:"-"`
 	ErrorResponse *ErrorResponse `json:"-"`
 	Response      *OrderDetail   `json:"response,omitempty"`
+}
+
+type CreateWebhookRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Webhook       `json:"response,omitempty"`
+}
+
+type WebhookEventType struct {
+	Name             string   `json:"name"`
+	Description      string   `json:"description,omitempty"`
+	Status           string   `json:"status,omitempty"`
+	ResourceVersions []string `json:"resource_versions,omitempty"`
+}
+
+type Webhook struct {
+	Id         string              `json:"id"`
+	Url        string              `json:"url"`
+	EventTypes []*WebhookEventType `json:"event_types"`
+	Links      []*Link             `json:"links,omitempty"`
+}
+
+type ListWebhook struct {
+	Webhooks []*Webhook `json:"webhooks"`
+}
+
+type ListWebhookRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *ListWebhook   `json:"response,omitempty"`
+}
+
+type WebhookDetailRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Webhook       `json:"response,omitempty"`
+}
+
+type WebhookEventDetailRsp struct {
+	Code          int                 `json:"-"`
+	Error         string              `json:"-"`
+	ErrorResponse *ErrorResponse      `json:"-"`
+	Response      *WebhookEventDetail `json:"response,omitempty"`
+}
+
+type WebhookEventDetail struct {
+	Id              string `json:"id"`
+	CreateTime      string `json:"create_time"`
+	ResourceType    string `json:"resource_type"`
+	EventVersion    string `json:"event_version"`
+	EventType       string `json:"event_type"`
+	Summary         string `json:"summary"`
+	ResourceVersion string `json:"resource_version"`
+	Resource        struct {
+		Id         string `json:"id"`
+		CreateTime string `json:"create_time"`
+		UpdateTime string `json:"update_time"`
+		State      string `json:"state"`
+		Amount     struct {
+			Total    string `json:"total"`
+			Currency string `json:"currency"`
+			Details  struct {
+				Subtotal string `json:"subtotal"`
+			} `json:"details"`
+		} `json:"amount"`
+		ParentPayment string `json:"parent_payment"`
+		ValidUntil    string `json:"valid_until"`
+		Links         []struct {
+			Href   string `json:"href"`
+			Rel    string `json:"rel"`
+			Method string `json:"method"`
+		} `json:"links"`
+	} `json:"resource"`
+	Links []struct {
+		Href   string `json:"href"`
+		Rel    string `json:"rel"`
+		Method string `json:"method"`
+	} `json:"links"`
+}
+
+type VerifyWebhookSignatureRequest struct {
+	AuthAlgo         string          `json:"auth_algo,omitempty"`
+	CertURL          string          `json:"cert_url,omitempty"`
+	TransmissionID   string          `json:"transmission_id,omitempty"`
+	TransmissionSig  string          `json:"transmission_sig,omitempty"`
+	TransmissionTime string          `json:"transmission_time,omitempty"`
+	WebhookID        string          `json:"webhook_id,omitempty"`
+	Event            json.RawMessage `json:"webhook_event,omitempty"`
+}
+
+type VerifyWebhookResponse struct {
+	VerificationStatus string `json:"verification_status,omitempty"`
+}
+
+type WebhookEvent struct {
+	Id              string          `json:"id"`
+	CreateTime      string          `json:"create_time"`
+	ResourceType    string          `json:"resource_type"`
+	EventType       string          `json:"event_type"`
+	Summary         string          `json:"summary"`
+	Resource        json.RawMessage `json:"resource,omitempty"`
+	Links           []*Link         `json:"links,omitempty"`
+	EventVersion    string          `json:"event_version"`
+	ResourceVersion string          `json:"resource_version"`
 }

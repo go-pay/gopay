@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/alipay/cert"
@@ -61,7 +62,7 @@ func TestClient_PostAliPayAPISelfV2(t *testing.T) {
 
 	// 自定义公共参数（根据自己需求，需要独立设置的自行设置，不需要单独设置的，共享client的配置）
 	bm.Set("app_id", "appid")
-	bm.Set("app_auth_token", "app_auth_token")
+	bm.Set(AppAuthToken, "xxx")
 	bm.Set("auth_token", "auth_token")
 
 	// biz_content
@@ -91,4 +92,10 @@ func TestDecryptOpenDataToBodyMap(t *testing.T) {
 		return
 	}
 	xlog.Info("bm:", bm)
+}
+
+func TestClient_GetHttpClient(t *testing.T) {
+	c, _ := NewClient(cert.Appid, cert.PrivateKey, false)
+	httpClient := c.GetHttpClient()
+	httpClient.SetTimeout(time.Millisecond)
 }

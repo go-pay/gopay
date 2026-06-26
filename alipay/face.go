@@ -57,7 +57,7 @@ func (a *Client) FaceVerificationQuery(ctx context.Context, bm gopay.BodyMap) (a
 // datadigital.fincloud.generalsaas.face.certify.initialize(H5人脸核身初始化)
 // 文档地址：https://opendocs.alipay.com/open/02zloa
 func (a *Client) FaceCertifyInitialize(ctx context.Context, bm gopay.BodyMap) (aliRsp *FaceCertifyInitializeRsp, err error) {
-	err = bm.CheckEmptyError("outer_order_no", "biz_code", "identity_param", "merchant_config")
+	err = bm.CheckEmptyError("outer_order_no", "identity_param", "merchant_config")
 	if err != nil {
 		return nil, err
 	}

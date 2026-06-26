@@ -1,7 +1,6 @@
 package gopay
 
 import (
-	"container/list"
 	"encoding/json"
 	"encoding/xml"
 	"testing"
@@ -172,8 +171,4 @@ func TestOutSlice(t *testing.T) {
 	xlog.Debugf("%v", bm.GetAny(""))
 	xlog.Debugf("%s", bm.GetString(""))
 	xlog.Debugf("%s", bm.JsonBody())
-}
-
-func TestLruCache(t *testing.T) {
-	list.New()
 }

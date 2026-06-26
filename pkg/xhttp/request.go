@@ -7,9 +7,11 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"github.com/go-pay/xlog"
 	"io"
 	"mime/multipart"
 	"net/http"
+	"net/textproto"
 	"net/url"
 	"sort"
 	"strings"
@@ -72,7 +74,7 @@ func (r *Request) SendStruct(v any) (c *Request) {
 	}
 	bs, err := json.Marshal(v)
 	if err != nil {
-		r.err = fmt.Errorf("json.Marshal(%+v)：%w", v, err)
+		r.err = fmt.Errorf("json.Marshal(%+v): %w", v, err)
 		return r
 	}
 	switch r.requestType {
@@ -81,7 +83,7 @@ func (r *Request) SendStruct(v any) (c *Request) {
 	case TypeXML, TypeFormData:
 		body := make(map[string]any)
 		if err = json.Unmarshal(bs, &body); err != nil {
-			r.err = fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), body, err)
+			r.err = fmt.Errorf("json.Unmarshal(%s, %+v): %w", string(bs), body, err)
 			return r
 		}
 		r.formString = FormatURLParam(body)
@@ -97,7 +99,7 @@ func (r *Request) SendBodyMap(bm map[string]any) (client *Request) {
 	case TypeJSON:
 		bs, err := json.Marshal(bm)
 		if err != nil {
-			r.err = fmt.Errorf("json.Marshal(%+v)：%w", bm, err)
+			r.err = fmt.Errorf("json.Marshal(%+v): %w", bm, err)
 			return r
 		}
 		r.jsonByte = bs
@@ -115,7 +117,7 @@ func (r *Request) SendMultipartBodyMap(bm map[string]any) (client *Request) {
 	case TypeJSON:
 		bs, err := json.Marshal(bm)
 		if err != nil {
-			r.err = fmt.Errorf("json.Marshal(%+v)：%w", bm, err)
+			r.err = fmt.Errorf("json.Marshal(%+v): %w", bm, err)
 			return r
 		}
 		r.jsonByte = bs
@@ -169,21 +171,41 @@ func (r *Request) EndBytesForAlipayV3(ctx context.Context) (res *http.Response, 
 			}
 		case TypeMultipartFormData:
 			for k, v := range r.multipartBodyMap {
-				// file 参数
+				// file_content 参数
 				if file, ok := v.(*gopay.File); ok {
 					fw, e := bw.CreateFormFile(k, file.Name)
 					if e != nil {
 						return nil, nil, e
 					}
 					_, _ = fw.Write(file.Content)
+
+					//h := make(textproto.MIMEHeader)
+					//h.Set("Content-Disposition",
+					//	fmt.Sprintf(`form-data; name="%s"; filename="%s"`,
+					//		escapeQuotes(k), escapeQuotes(file.Name)))
+					//h.Set("Content-Type", "application/octet-stream")
+					//part, e := bw.CreatePart(h)
+					//if e != nil {
+					//	return nil, nil, e
+					//}
+					//_, _ = part.Write(file.Content)
 					continue
 				}
-				// text 参数
+
+				// text 参数 data
+				h := make(textproto.MIMEHeader)
+				h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"`, escapeQuotes(k)))
+				h.Set("Content-Type", "application/json")
+				part, e := bw.CreatePart(h)
+				if e != nil {
+					return nil, nil, e
+				}
 				switch vs := v.(type) {
 				case string:
-					_ = bw.WriteField(k, vs)
+					_, _ = part.Write([]byte(vs))
 				default:
-					_ = bw.WriteField(k, ConvertToString(v))
+					xlog.Warnf("multipart-form-data key: %s, value: %s", k, ConvertToString(v))
+					_, _ = part.Write([]byte(ConvertToString(v)))
 				}
 			}
 			_ = bw.Close()
@@ -307,13 +329,13 @@ func (r *Request) EndStruct(ctx context.Context, v any) (res *http.Response, err
 	case ResTypeJSON:
 		err = json.Unmarshal(bs, &v)
 		if err != nil {
-			return nil, fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), v, err)
+			return nil, fmt.Errorf("json.Unmarshal(%s, %+v): %w", string(bs), v, err)
 		}
 		return res, nil
 	case ResTypeXML:
 		err = xml.Unmarshal(bs, &v)
 		if err != nil {
-			return nil, fmt.Errorf("xml.Unmarshal(%s, %+v)：%w", string(bs), v, err)
+			return nil, fmt.Errorf("xml.Unmarshal(%s, %+v): %w", string(bs), v, err)
 		}
 		return res, nil
 	default:

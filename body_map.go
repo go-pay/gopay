@@ -3,6 +3,7 @@ package gopay
 import (
 	"encoding/json"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"io"
 	"net/url"
@@ -29,27 +30,26 @@ type File struct {
 
 // 设置参数
 func (bm BodyMap) Set(key string, value any) BodyMap {
-	bm[key] = value
+	if bm != nil {
+		bm[key] = value
+	}
 	return bm
 }
 
 func (bm BodyMap) SetBodyMap(key string, value func(b BodyMap)) BodyMap {
 	_bm := make(BodyMap)
 	value(_bm)
-	bm[key] = _bm
-	return bm
-}
-
-func (bm BodyMap) SetSlice(key string, value func(b BodyMap)) BodyMap {
-	_bm := make(BodyMap)
-	value(_bm)
-	bm[key] = _bm
+	if bm != nil {
+		bm[key] = _bm
+	}
 	return bm
 }
 
 // 设置 FormFile
 func (bm BodyMap) SetFormFile(key string, file *File) BodyMap {
-	bm[key] = file
+	if bm != nil {
+		bm[key] = file
+	}
 	return bm
 }
 
@@ -74,15 +74,6 @@ func (bm BodyMap) GetString(key string) string {
 	return v
 }
 
-// Deprecated
-// 推荐使用 GetAny()
-func (bm BodyMap) GetInterface(key string) any {
-	if bm == nil {
-		return nil
-	}
-	return bm[key]
-}
-
 // 获取原始参数
 func (bm BodyMap) GetAny(key string) any {
 	if bm == nil {
@@ -93,7 +84,9 @@ func (bm BodyMap) GetAny(key string) any {
 
 // 删除参数
 func (bm BodyMap) Remove(key string) {
-	delete(bm, key)
+	if bm != nil {
+		delete(bm, key)
+	}
 }
 
 // 置空BodyMap
@@ -104,9 +97,12 @@ func (bm BodyMap) Reset() {
 }
 
 func (bm BodyMap) JsonBody() (jb string) {
+	if bm == nil {
+		return NULL
+	}
 	bs, err := json.Marshal(bm)
 	if err != nil {
-		return ""
+		return NULL
 	}
 	jb = string(bs)
 	return jb
@@ -233,6 +229,9 @@ func (bm BodyMap) EncodeURLParams() string {
 }
 
 func (bm BodyMap) CheckEmptyError(keys ...string) error {
+	if bm == nil {
+		return errors.New("BodyMap is nil")
+	}
 	var emptyKeys []string
 	for _, k := range keys {
 		if v := bm.GetString(k); v == NULL {
@@ -246,6 +245,9 @@ func (bm BodyMap) CheckEmptyError(keys ...string) error {
 }
 
 func (bm BodyMap) CheckNotAllEmptyError(keys ...string) error {
+	if bm == nil {
+		return errors.New("BodyMap is nil")
+	}
 	var emptyKeys []string
 	for _, k := range keys {
 		if v := bm.GetString(k); v == NULL {
@@ -257,6 +259,14 @@ func (bm BodyMap) CheckNotAllEmptyError(keys ...string) error {
 		return fmt.Errorf("[%w], %v", MissParamErr, strings.Join(emptyKeys, ", "))
 	}
 	return nil
+}
+
+func (bm BodyMap) Range(f func(k string, v any) bool) {
+	for k, v := range bm {
+		if !f(k, v) {
+			break
+		}
+	}
 }
 
 func convertToString(v any) (str string) {

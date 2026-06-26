@@ -22,7 +22,7 @@ func (a *Client) PostAliPayAPISelfV2(ctx context.Context, bodyMap gopay.BodyMap,
 	bz := bodyMap.GetAny("biz_content")
 	if bzBody, ok := bz.(gopay.BodyMap); ok {
 		if bodyBs, err = json.Marshal(bzBody); err != nil {
-			return fmt.Errorf("json.Marshal(%v)：%w", bzBody, err)
+			return fmt.Errorf("json.Marshal(%v): %w", bzBody, err)
 		}
 		bodyMap.Set("biz_content", string(bodyBs))
 	}
@@ -139,21 +139,21 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 	if bm != nil {
 		_, has := appAuthTokenInBizContent[method]
 		if !has {
-			aat := bm.GetString("app_auth_token")
-			bm.Remove("app_auth_token")
+			aat := bm.GetString(AppAuthToken)
+			bm.Remove(AppAuthToken)
 			if bodyBs, err = json.Marshal(bm); err != nil {
-				return nil, fmt.Errorf("json.Marshal：%w", err)
+				return nil, fmt.Errorf("json.Marshal: %w", err)
 			}
 			bizContent = string(bodyBs)
 			if aat != "" {
-				bm.Set("app_auth_token", aat)
+				bm.Set(AppAuthToken, aat)
 			}
 		} else {
 			if bodyBs, err = json.Marshal(bm); err != nil {
-				return nil, fmt.Errorf("json.Marshal：%w", err)
+				return nil, fmt.Errorf("json.Marshal: %w", err)
 			}
 			bizContent = string(bodyBs)
-			bm.Remove("app_auth_token")
+			bm.Remove(AppAuthToken)
 		}
 	}
 	// 处理公共参数
@@ -162,7 +162,9 @@ func (a *Client) doAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 		return nil, err
 	}
 	switch method {
-	case "alipay.trade.app.pay", "alipay.fund.auth.order.app.freeze", "zhima.credit.pe.zmgo.sign.apply", "zhima.credit.payafteruse.creditagreement.sign":
+	case "alipay.trade.app.pay", "alipay.fund.auth.order.app.freeze",
+		"alipay.fund.trans.app.pay", "alipay.user.agreement.page.sign",
+		"zhima.credit.pe.zmgo.sign.apply", "zhima.credit.payafteruse.creditagreement.sign":
 		return []byte(param), nil
 	case "alipay.trade.wap.pay", "alipay.trade.page.pay", "alipay.user.certify.open.certify":
 		if !a.IsProd {
@@ -197,19 +199,19 @@ func (a *Client) DoAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 	if bm != nil {
 		_, has := appAuthTokenInBizContent[method]
 		if !has {
-			aat := bm.GetString("app_auth_token")
-			bm.Remove("app_auth_token")
+			aat := bm.GetString(AppAuthToken)
+			bm.Remove(AppAuthToken)
 			if bodyBs, err = json.Marshal(bm); err != nil {
-				return nil, fmt.Errorf("json.Marshal：%w", err)
+				return nil, fmt.Errorf("json.Marshal: %w", err)
 			}
 			bizContent = string(bodyBs)
-			bm.Set("app_auth_token", aat)
+			bm.Set(AppAuthToken, aat)
 		} else {
 			if bodyBs, err = json.Marshal(bm); err != nil {
-				return nil, fmt.Errorf("json.Marshal：%w", err)
+				return nil, fmt.Errorf("json.Marshal: %w", err)
 			}
 			bizContent = string(bodyBs)
-			bm.Remove("app_auth_token")
+			bm.Remove(AppAuthToken)
 		}
 	}
 	// 处理公共参数
@@ -218,7 +220,9 @@ func (a *Client) DoAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 		return nil, err
 	}
 	switch method {
-	case "alipay.trade.app.pay", "alipay.fund.auth.order.app.freeze":
+	case "alipay.trade.app.pay", "alipay.fund.auth.order.app.freeze",
+		"alipay.fund.trans.app.pay", "alipay.user.agreement.page.sign",
+		"zhima.credit.pe.zmgo.sign.apply", "zhima.credit.payafteruse.creditagreement.sign":
 		return []byte(param), nil
 	case "alipay.trade.wap.pay", "alipay.trade.page.pay", "alipay.user.certify.open.certify":
 		if !a.IsProd {
@@ -244,7 +248,7 @@ func (a *Client) DoAliPay(ctx context.Context, bm gopay.BodyMap, method string, 
 	}
 }
 
-// 保持和官方 SDK 命名方式一致
+// Deprecated
 func (a *Client) PageExecute(ctx context.Context, bm gopay.BodyMap, method string, authToken ...string) (url string, err error) {
 	var (
 		bizContent string
@@ -253,19 +257,19 @@ func (a *Client) PageExecute(ctx context.Context, bm gopay.BodyMap, method strin
 	if bm != nil {
 		_, has := appAuthTokenInBizContent[method]
 		if !has {
-			aat := bm.GetString("app_auth_token")
-			bm.Remove("app_auth_token")
+			aat := bm.GetString(AppAuthToken)
+			bm.Remove(AppAuthToken)
 			if bodyBs, err = json.Marshal(bm); err != nil {
-				return "", fmt.Errorf("json.Marshal：%w", err)
+				return "", fmt.Errorf("json.Marshal: %w", err)
 			}
 			bizContent = string(bodyBs)
-			bm.Set("app_auth_token", aat)
+			bm.Set(AppAuthToken, aat)
 		} else {
 			if bodyBs, err = json.Marshal(bm); err != nil {
-				return "", fmt.Errorf("json.Marshal：%w", err)
+				return "", fmt.Errorf("json.Marshal: %w", err)
 			}
 			bizContent = string(bodyBs)
-			bm.Remove("app_auth_token")
+			bm.Remove(AppAuthToken)
 		}
 	}
 	// 处理公共参数
@@ -286,8 +290,8 @@ func (a *Client) FileUploadRequest(ctx context.Context, bm gopay.BodyMap, method
 		aat string
 	)
 	if bm != nil {
-		aat = bm.GetString("app_auth_token")
-		bm.Remove("app_auth_token")
+		aat = bm.GetString(AppAuthToken)
+		bm.Remove(AppAuthToken)
 	}
 	pubBody := make(gopay.BodyMap)
 	pubBody.Set("app_id", a.AppId).
@@ -315,11 +319,11 @@ func (a *Client) FileUploadRequest(ctx context.Context, bm gopay.BodyMap, method
 	}
 	// default use app_auth_token
 	if a.AppAuthToken != gopay.NULL {
-		pubBody.Set("app_auth_token", a.AppAuthToken)
+		pubBody.Set(AppAuthToken, a.AppAuthToken)
 	}
 	// if user set app_auth_token in body_map, use this
 	if aat != gopay.NULL {
-		pubBody.Set("app_auth_token", aat)
+		pubBody.Set(AppAuthToken, aat)
 	}
 	// 文件上传除文件外其他参数也需要签名
 	for k, v := range bm {

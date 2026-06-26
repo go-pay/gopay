@@ -416,8 +416,7 @@ func (w *Client) doProdGet(ctx context.Context, bm gopay.BodyMap, path, signType
 	if w.DebugSwitch == gopay.DebugOn {
 		w.logger.Debugf("Wechat_Request: %s", bm.JsonBody())
 	}
-	param := bm.EncodeURLParams()
-	uri := url + "?" + param
+	uri := url + "?" + bm.EncodeURLParams()
 	res, bs, err := w.hc.Req(xhttp.TypeXML).Get(uri).EndBytes(ctx)
 	if err != nil {
 		return nil, err
@@ -432,4 +431,32 @@ func (w *Client) doProdGet(ctx context.Context, bm gopay.BodyMap, path, signType
 		return nil, errors.New(string(bs))
 	}
 	return bs, nil
+}
+
+// GetOpenIdByAuthCode 授权码查询openid(AccessToken:157字符)
+// appId:APPID
+// mchId:商户号
+// ApiKey:apiKey
+// authCode:用户授权码
+// nonceStr:随即字符串
+// 文档：https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_13&index=9
+func GetOpenIdByAuthCode(ctx context.Context, appId, mchId, apiKey, authCode, nonceStr string) (openIdRsp *OpenIdByAuthCodeRsp, err error) {
+	var (
+		url string
+		bm  gopay.BodyMap
+	)
+	url = "https://api.mch.weixin.qq.com/tools/authcodetoopenid"
+	bm = make(gopay.BodyMap)
+	bm.Set("appid", appId)
+	bm.Set("mch_id", mchId)
+	bm.Set("auth_code", authCode)
+	bm.Set("nonce_str", nonceStr)
+	bm.Set("sign", GetReleaseSign(apiKey, SignType_MD5, bm))
+
+	openIdRsp = new(OpenIdByAuthCodeRsp)
+	_, err = xhttp.NewClient().Req(xhttp.TypeXML).Post(url).SendString(GenerateXml(bm)).EndStruct(ctx, openIdRsp)
+	if err != nil {
+		return nil, err
+	}
+	return openIdRsp, nil
 }

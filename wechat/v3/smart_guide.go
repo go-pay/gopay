@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // 服务人员注册API
@@ -21,15 +22,15 @@ func (c *ClientV3) V3SmartGuideReg(ctx context.Context, bm gopay.BodyMap) (wxRsp
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &SmartGuideRegRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(SmartGuideReg)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &SmartGuideRegRsp{Code: Success, SignInfo: si, Response: new(SmartGuideReg)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -52,6 +53,7 @@ func (c *ClientV3) V3SmartGuideAssign(ctx context.Context, guideId, tradeNo stri
 	if res.StatusCode != http.StatusNoContent {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	return wxRsp, c.verifySyncSign(si)
@@ -73,15 +75,15 @@ func (c *ClientV3) V3SmartGuideQuery(ctx context.Context, bm gopay.BodyMap) (wxR
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &SmartGuideQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(SmartGuideQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &SmartGuideQueryRsp{Code: Success, SignInfo: si, Response: new(SmartGuideQuery)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -103,6 +105,7 @@ func (c *ClientV3) V3SmartGuideUpdate(ctx context.Context, guideId string, bm go
 	if res.StatusCode != http.StatusNoContent {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	return wxRsp, c.verifySyncSign(si)

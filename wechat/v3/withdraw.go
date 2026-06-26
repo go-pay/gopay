@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 	"github.com/go-pay/xtime"
 )
 
@@ -26,16 +27,15 @@ func (c *ClientV3) V3Withdraw(ctx context.Context, bm gopay.BodyMap) (*WithdrawR
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &WithdrawRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(Withdraw)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &WithdrawRsp{Code: Success, SignInfo: si, Response: new(Withdraw)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -62,15 +62,15 @@ func (c *ClientV3) V3WithdrawStatus(ctx context.Context, withdrawId, outRequestN
 	if err != nil {
 		return nil, err
 	}
-	wxRsp := &WithdrawStatusRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(WithdrawStatus)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &WithdrawStatusRsp{Code: Success, SignInfo: si, Response: new(WithdrawStatus)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -90,16 +90,15 @@ func (c *ClientV3) V3EcommerceWithdraw(ctx context.Context, bm gopay.BodyMap) (*
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &EcommerceWithdrawRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(EcommerceWithdraw)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &EcommerceWithdrawRsp{Code: Success, SignInfo: si, Response: new(EcommerceWithdraw)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -126,15 +125,15 @@ func (c *ClientV3) V3EcommerceWithdrawStatus(ctx context.Context, withdrawId, ou
 	if err != nil {
 		return nil, err
 	}
-	wxRsp := &EcommerceWithdrawStatusRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(EcommerceWithdrawStatus)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &EcommerceWithdrawStatusRsp{Code: Success, SignInfo: si, Response: new(EcommerceWithdrawStatus)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -161,16 +160,15 @@ func (c *ClientV3) V3WithdrawDownloadErrBill(ctx context.Context, bm gopay.BodyM
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp = &BillRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(TradeBill)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &BillRsp{Code: Success, SignInfo: si, Response: new(TradeBill)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }

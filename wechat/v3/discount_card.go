@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // 预受理领卡请求API
@@ -20,15 +21,15 @@ func (c *ClientV3) V3DiscountCardApply(ctx context.Context, bm gopay.BodyMap) (w
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &DiscountCardApplyRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(DiscountCardApply)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &DiscountCardApplyRsp{Code: Success, SignInfo: si, Response: &DiscountCardApply{}}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -53,6 +54,7 @@ func (c *ClientV3) V3DiscountCardAddUser(ctx context.Context, bm gopay.BodyMap) 
 	if res.StatusCode != http.StatusNoContent {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	return wxRsp, c.verifySyncSign(si)
@@ -70,15 +72,15 @@ func (c *ClientV3) V3DiscountCardQuery(ctx context.Context, outCardCode string) 
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &DiscountCardQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(DiscountCardQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &DiscountCardQueryRsp{Code: Success, SignInfo: si, Response: &DiscountCardQuery{}}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }

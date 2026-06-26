@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // 请求分账API
@@ -21,16 +22,15 @@ func (c *ClientV3) V3ProfitShareOrder(ctx context.Context, bm gopay.BodyMap) (*P
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &ProfitShareOrderRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ProfitShareOrder)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &ProfitShareOrderRsp{Code: Success, SignInfo: si, Response: new(ProfitShareOrder)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -47,16 +47,15 @@ func (c *ClientV3) V3ProfitShareOrderQuery(ctx context.Context, orderNo string, 
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &ProfitShareOrderQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ProfitShareOrderQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &ProfitShareOrderQueryRsp{Code: Success, SignInfo: si, Response: new(ProfitShareOrderQuery)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -72,16 +71,15 @@ func (c *ClientV3) V3ProfitShareReturn(ctx context.Context, bm gopay.BodyMap) (*
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &ProfitShareReturnRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ProfitShareReturn)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &ProfitShareReturnRsp{Code: Success, SignInfo: si, Response: new(ProfitShareReturn)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -98,16 +96,15 @@ func (c *ClientV3) V3ProfitShareReturnResult(ctx context.Context, returnNo strin
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &ProfitShareReturnResultRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ProfitShareReturnResult)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &ProfitShareReturnResultRsp{Code: Success, SignInfo: si, Response: new(ProfitShareReturnResult)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -123,16 +120,15 @@ func (c *ClientV3) V3ProfitShareOrderUnfreeze(ctx context.Context, bm gopay.Body
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &ProfitShareOrderUnfreezeRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ProfitShareOrderUnfreeze)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &ProfitShareOrderUnfreezeRsp{Code: Success, SignInfo: si, Response: new(ProfitShareOrderUnfreeze)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -149,16 +145,15 @@ func (c *ClientV3) V3ProfitShareUnsplitAmount(ctx context.Context, transId strin
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &ProfitShareUnsplitAmountRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ProfitShareUnsplitAmount)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &ProfitShareUnsplitAmountRsp{Code: Success, SignInfo: si, Response: new(ProfitShareUnsplitAmount)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -175,16 +170,15 @@ func (c *ClientV3) V3ProfitShareMerchantConfigs(ctx context.Context, subMchId st
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &ProfitShareMerchantConfigsRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ProfitShareMerchantConfigs)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &ProfitShareMerchantConfigsRsp{Code: Success, SignInfo: si, Response: new(ProfitShareMerchantConfigs)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -200,16 +194,15 @@ func (c *ClientV3) V3ProfitShareAddReceiver(ctx context.Context, bm gopay.BodyMa
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &ProfitShareAddReceiverRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ProfitShareAddReceiver)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &ProfitShareAddReceiverRsp{Code: Success, SignInfo: si, Response: new(ProfitShareAddReceiver)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -225,16 +218,15 @@ func (c *ClientV3) V3ProfitShareDeleteReceiver(ctx context.Context, bm gopay.Bod
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &ProfitShareDeleteReceiverRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ProfitShareDeleteReceiver)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &ProfitShareDeleteReceiverRsp{Code: Success, SignInfo: si, Response: new(ProfitShareDeleteReceiver)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -251,16 +243,15 @@ func (c *ClientV3) V3ProfitShareBills(ctx context.Context, bm gopay.BodyMap) (*P
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp := &ProfitShareBillsRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ProfitShareBills)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &ProfitShareBillsRsp{Code: Success, SignInfo: si, Response: new(ProfitShareBills)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }

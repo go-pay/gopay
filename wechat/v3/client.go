@@ -4,11 +4,12 @@ import (
 	"context"
 	"crypto/rsa"
 	"errors"
-	"sync"
+	"strings"
 
 	"github.com/go-pay/crypto/xpem"
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/go-pay/smap"
 	"github.com/go-pay/xlog"
 )
 
@@ -17,9 +18,9 @@ type ClientV3 struct {
 	Mchid         string
 	ApiV3Key      []byte
 	SerialNo      string
-	WxSerialNo    string
+	WxSerialNo    string // 微信支付公钥ID（微信平台证书序列号）
+	proxyHost     string // 代理host地址
 	autoSign      bool
-	rwMu          sync.RWMutex
 	hc            *xhttp.Client
 	privateKey    *rsa.PrivateKey
 	wxPublicKey   *rsa.PublicKey
@@ -27,7 +28,7 @@ type ClientV3 struct {
 	DebugSwitch   gopay.DebugSwitch
 	requestIdFunc xhttp.RequestIdHandler
 	logger        xlog.XLogger
-	SnCertMap     map[string]*rsa.PublicKey // key: serial_no
+	SnCertMap     smap.Map[string, *rsa.PublicKey] // key: serial_no
 }
 
 // NewClientV3 初始化微信客户端 V3
@@ -59,6 +60,7 @@ func NewClientV3(mchid, serialNo, apiV3Key, privateKey string) (client *ClientV3
 	return client, nil
 }
 
+// SetRequestIdFunc 设置自定义请求头 Request-Id 处理方法
 func (c *ClientV3) SetRequestIdFunc(requestIdFunc xhttp.RequestIdHandler) {
 	if requestIdFunc != nil {
 		c.requestIdFunc = requestIdFunc
@@ -67,13 +69,13 @@ func (c *ClientV3) SetRequestIdFunc(requestIdFunc xhttp.RequestIdHandler) {
 
 // AutoVerifySign 开启请求完自动验签功能（默认不开启，推荐开启）
 // 开启自动验签，自动开启每12小时一次轮询，请求最新证书操作
+// autoRefresh：是否自动刷新证书，默认 true：自动刷新
+// 说明：开启自动验签功能，会自动获取并刷新微信平台证书，并同步验签。
+// 注意：此方法仅支持微信平台证书验签，不支持微信支付公钥验签，如使用微信支付公钥验签请使用 AutoVerifySignByPublicKey() 方法
 func (c *ClientV3) AutoVerifySign(autoRefresh ...bool) (err error) {
 	wxSerialNo, certMap, err := c.GetAndSelectNewestCert()
 	if err != nil {
 		return err
-	}
-	if len(c.SnCertMap) <= 0 {
-		c.SnCertMap = make(map[string]*rsa.PublicKey)
 	}
 	for sn, cert := range certMap {
 		// decode cert
@@ -81,20 +83,31 @@ func (c *ClientV3) AutoVerifySign(autoRefresh ...bool) (err error) {
 		if err != nil {
 			return err
 		}
-		c.SnCertMap[sn] = pubKey
+		c.SnCertMap.Store(sn, pubKey)
+		if sn == wxSerialNo {
+			c.wxPublicKey = pubKey
+		}
 	}
 	c.WxSerialNo = wxSerialNo
-	c.wxPublicKey = c.SnCertMap[wxSerialNo]
+	c.autoSign = true
 	if len(autoRefresh) == 1 && !autoRefresh[0] {
 		return nil
 	}
-	c.autoSign = true
 	go c.autoCheckCertProc()
 	return nil
 }
 
+// AutoVerifySignByPublicKey 微信支付公钥自动验签
+// wxPublicKeyContent：微信支付公钥内容[]byte
+// wxPublicKeyID：微信支付公钥ID，如果带 PUB_KEY_ID_ 前缀，请不要删除，否则会出错
+func (c *ClientV3) AutoVerifySignByPublicKey(wxPublicKeyContent []byte, wxPublicKeyID string) (err error) {
+	return c.AutoVerifySignByCert(wxPublicKeyContent, wxPublicKeyID)
+}
+
+// Deprecated
+// AutoVerifySignByCert 微信平台证书自动验签（微信支付公钥验签同样适用）
 // wxPublicKeyContent：微信公钥证书文件内容[]byte
-// wxPublicKeyID：微信公钥证书ID
+// wxPublicKeyID：微信公钥证书ID，即 证书序列号
 func (c *ClientV3) AutoVerifySignByCert(wxPublicKeyContent []byte, wxPublicKeyID string) (err error) {
 	pubKey, err := xpem.DecodePublicKey(wxPublicKeyContent)
 	if err != nil {
@@ -103,10 +116,7 @@ func (c *ClientV3) AutoVerifySignByCert(wxPublicKeyContent []byte, wxPublicKeyID
 	if pubKey == nil {
 		return errors.New("xpem.DecodePublicKey() failed, pubKey is nil")
 	}
-	if len(c.SnCertMap) <= 0 {
-		c.SnCertMap = make(map[string]*rsa.PublicKey)
-	}
-	c.SnCertMap[wxPublicKeyID] = pubKey
+	c.SnCertMap.Store(wxPublicKeyID, pubKey)
 	c.wxPublicKey = pubKey
 	c.WxSerialNo = wxPublicKeyID
 	c.autoSign = true
@@ -127,8 +137,27 @@ func (c *ClientV3) SetHttpClient(client *xhttp.Client) {
 	}
 }
 
+// SetLogger 设置自定义 logger
 func (c *ClientV3) SetLogger(logger xlog.XLogger) {
 	if logger != nil {
 		c.logger = logger
 	}
+}
+
+// SetProxyHost 设置的 ProxyHost
+// 使用场景：
+// 1. 部署环境无法访问互联网，可以通过代理服务器访问
+// 2. 不设置则默认 https://api.mch.weixin.qq.com
+func (c *ClientV3) SetProxyHost(proxyHost string) {
+	before, found := strings.CutSuffix(proxyHost, "/")
+	if found {
+		c.proxyHost = before
+		return
+	}
+	c.proxyHost = proxyHost
+}
+
+// GetProxyHost 返回当前的 ProxyHost
+func (c *ClientV3) GetProxyHost() string {
+	return c.proxyHost
 }

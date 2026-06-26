@@ -2,18 +2,20 @@ package wechat
 
 // 交易、资金账单 Rsp
 type BillRsp struct {
-	Code     int        `json:"-"`
-	SignInfo *SignInfo  `json:"-"`
-	Response *TradeBill `json:"response,omitempty"`
-	Error    string     `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *TradeBill  `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // 二级商户资金账单 Rsp
 type EcommerceFundFlowBillRsp struct {
-	Code     int           `json:"-"`
-	SignInfo *SignInfo     `json:"-"`
-	Response *DownloadBill `json:"response,omitempty"`
-	Error    string        `json:"-"`
+	Code        int           `json:"-"`
+	SignInfo    *SignInfo     `json:"-"`
+	Response    *DownloadBill `json:"response,omitempty"`
+	ErrResponse ErrResponse   `json:"err_response,omitempty"`
+	Error       string        `json:"-"`
 }
 
 // =========================================================分割=========================================================

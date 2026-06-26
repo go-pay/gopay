@@ -9,25 +9,36 @@ import (
 )
 
 // 公众号纯签约（正式）
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/papay/chapter3_1.shtml
-func (w *Client) EntrustPublic(ctx context.Context, bm gopay.BodyMap) (wxRsp *EntrustPublicResponse, err error) {
+// 文档地址：https://pay.weixin.qq.com/doc/v2/merchant/4011986768
+func (w *Client) EntrustPublic(ctx context.Context, bm gopay.BodyMap) (entrustURL string, err error) {
 	err = bm.CheckEmptyError("plan_id", "contract_code", "request_serial", "contract_display_account", "notify_url", "version", "timestamp")
 	if err != nil {
-		return nil, err
+		return gopay.NULL, err
 	}
-	bs, err := w.doProdGet(ctx, bm, entrustPublic, SignType_MD5)
-	if err != nil {
-		return nil, err
+	// https://api.mch.weixin.qq.com/papay/entrustweb?
+	// appid=wx426a3015555a46be&contract_code=122&contract_display_account=name1&mch_id=1223816102¬ify_url=http%3A%2F%2Fwww.qq.com%2Ftest%2Fpapay&plan_id=106&request_serial=123×tamp=1414488825&version=1.0&sign=FF1A406564EE701064450CA2149E2514
+	if bm.GetString("appid") == gopay.NULL {
+		bm.Set("appid", w.AppId)
 	}
-	wxRsp = new(EntrustPublicResponse)
-	if err = xml.Unmarshal(bs, wxRsp); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	if bm.GetString("mch_id") == gopay.NULL {
+		bm.Set("mch_id", w.MchId)
 	}
-	return wxRsp, nil
+	bm.Remove("sign")
+	sign := w.getReleaseSign(w.ApiKey, SignType_MD5, bm)
+	bm.Set("sign", sign)
+	url := baseUrlCh + entrustPublic
+	if w.BaseURL != gopay.NULL {
+		url = w.BaseURL + entrustPublic
+	}
+	entrustURL = url + "?" + bm.EncodeURLParams()
+	if w.DebugSwitch == gopay.DebugOn {
+		w.logger.Debugf("EntrustPublic_URL: %s", entrustURL)
+	}
+	return entrustURL, nil
 }
 
 // APP纯签约-预签约接口-获取预签约ID（正式）
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/papay/chapter3_2.shtml
+// 文档地址：https://pay.weixin.qq.com/doc/v2/merchant/4011986804
 func (w *Client) EntrustAppPre(ctx context.Context, bm gopay.BodyMap) (wxRsp *EntrustAppPreResponse, err error) {
 	err = bm.CheckEmptyError("plan_id", "contract_code", "request_serial", "contract_display_account", "notify_url", "version", "timestamp")
 	if err != nil {
@@ -45,7 +56,7 @@ func (w *Client) EntrustAppPre(ctx context.Context, bm gopay.BodyMap) (wxRsp *En
 }
 
 // H5纯签约（正式）
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/papay/chapter3_4.shtml
+// 文档地址：https://pay.weixin.qq.com/doc/v2/merchant/4011987295
 func (w *Client) EntrustH5(ctx context.Context, bm gopay.BodyMap) (wxRsp *EntrustH5Response, err error) {
 	err = bm.CheckEmptyError("plan_id", "contract_code", "request_serial", "contract_display_account", "notify_url", "version", "timestamp", "clientip")
 	if err != nil {
@@ -63,7 +74,7 @@ func (w *Client) EntrustH5(ctx context.Context, bm gopay.BodyMap) (wxRsp *Entrus
 }
 
 // 支付中签约（正式）
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/papay/chapter3_5.shtml
+// 文档地址：https://pay.weixin.qq.com/doc/v2/merchant/4011987320
 func (w *Client) EntrustPaying(ctx context.Context, bm gopay.BodyMap) (wxRsp *EntrustPayingResponse, err error) {
 	err = bm.CheckEmptyError("contract_mchid", "contract_appid",
 		"out_trade_no", "nonce_str", "body", "notify_url", "total_fee",
@@ -84,7 +95,7 @@ func (w *Client) EntrustPaying(ctx context.Context, bm gopay.BodyMap) (wxRsp *En
 }
 
 // 申请扣款
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/papay/chapter3_8.shtml
+// 文档地址：https://pay.weixin.qq.com/doc/v2/merchant/4011987377
 func (w *Client) EntrustApplyPay(ctx context.Context, bm gopay.BodyMap) (wxRsp *EntrustApplyPayResponse, err error) {
 	err = bm.CheckEmptyError("nonce_str", "body", "out_trade_no", "total_fee", "notify_url", "trade_type", "contract_id")
 	if err != nil {
@@ -102,7 +113,7 @@ func (w *Client) EntrustApplyPay(ctx context.Context, bm gopay.BodyMap) (wxRsp *
 }
 
 // 申请解约
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/papay/chapter3_9.shtml
+// 文档地址：https://pay.weixin.qq.com/doc/v2/merchant/4011987432
 func (w *Client) EntrustDelete(ctx context.Context, bm gopay.BodyMap) (wxRsp *EntrustDeleteResponse, err error) {
 	err = bm.CheckEmptyError("contract_termination_remark", "version")
 	if err != nil {
@@ -120,7 +131,7 @@ func (w *Client) EntrustDelete(ctx context.Context, bm gopay.BodyMap) (wxRsp *En
 }
 
 // 查询签约关系
-// 文档地址：https://pay.weixin.qq.com/wiki/doc/api/wxpay_v2/papay/chapter3_7.shtml
+// 文档地址：https://pay.weixin.qq.com/doc/v2/merchant/4011987640
 func (w *Client) EntrustQuery(ctx context.Context, bm gopay.BodyMap) (wxRsp *EntrustQueryResponse, err error) {
 	err = bm.CheckEmptyError("version")
 	if err != nil {

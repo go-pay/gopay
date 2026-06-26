@@ -9,11 +9,10 @@ type SystemOauthTokenResponse struct {
 }
 
 type UserInfoShareResponse struct {
-	Response      *UserInfoShare `json:"alipay_user_info_share_response"`
-	ErrorResponse *ErrorResponse `json:"error_response,omitempty"`
-	AlipayCertSn  string         `json:"alipay_cert_sn,omitempty"`
-	SignData      string         `json:"-"`
-	Sign          string         `json:"sign"`
+	Response     *UserInfoShare `json:"alipay_user_info_share_response"`
+	AlipayCertSn string         `json:"alipay_cert_sn,omitempty"`
+	SignData     string         `json:"-"`
+	Sign         string         `json:"sign"`
 }
 
 type UserCertifyOpenInitResponse struct {
@@ -172,6 +171,7 @@ type OauthTokenInfo struct {
 }
 
 type UserInfoShare struct {
+	ErrorResponse
 	UserId             string `json:"user_id,omitempty"`
 	OpenId             string `json:"open_id,omitempty"`
 	Avatar             string `json:"avatar,omitempty"`

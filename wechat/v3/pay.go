@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // APP下单
@@ -24,15 +25,15 @@ func (c *ClientV3) V3TransactionApp(ctx context.Context, bm gopay.BodyMap) (wxRs
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &PrepayRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(Prepay)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &PrepayRsp{Code: Success, SignInfo: si, Response: new(Prepay)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -51,15 +52,15 @@ func (c *ClientV3) V3TransactionJsapi(ctx context.Context, bm gopay.BodyMap) (wx
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &PrepayRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(Prepay)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &PrepayRsp{Code: Success, SignInfo: si, Response: new(Prepay)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -78,15 +79,15 @@ func (c *ClientV3) V3TransactionNative(ctx context.Context, bm gopay.BodyMap) (w
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &NativeRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(Native)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &NativeRsp{Code: Success, SignInfo: si, Response: new(Native)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -105,15 +106,15 @@ func (c *ClientV3) V3TransactionH5(ctx context.Context, bm gopay.BodyMap) (wxRsp
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &H5Rsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(H5Url)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &H5Rsp{Code: Success, SignInfo: si, Response: new(H5Url)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -133,15 +134,70 @@ func (c *ClientV3) V3QQTransactionH5(ctx context.Context, qqAppid, accessToken, 
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &H5Rsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(H5Url)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &H5Rsp{Code: Success, SignInfo: si, Response: new(H5Url)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 付款码支付
+// Code = 0 is success
+func (c *ClientV3) V3TransactionCodePay(ctx context.Context, bm gopay.BodyMap) (wxRsp *CodePayRsp, err error) {
+	if bm.GetString("mchid") == gopay.NULL {
+		bm.Set("mchid", c.Mchid)
+	}
+	authorization, err := c.authorization(MethodPost, v3ApiCodePay, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(ctx, bm, v3ApiCodePay, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &CodePayRsp{Code: Success, SignInfo: si, Response: new(CodePay)}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
+		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
+// 撤销
+// Code = 0 is success
+func (c *ClientV3) V3TransactionCodePayReverse(ctx context.Context, ourTradeNo string, bm gopay.BodyMap) (wxRsp *CodePayReverseRsp, err error) {
+	url := fmt.Sprintf(v3ApiCodePayReverse, ourTradeNo)
+	if bm.GetString("mchid") == gopay.NULL {
+		bm.Set("mchid", c.Mchid)
+	}
+	authorization, err := c.authorization(MethodPost, url, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(ctx, bm, url, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp = &CodePayReverseRsp{Code: Success, SignInfo: si, Response: new(CodePayReverse)}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
+		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -166,23 +222,22 @@ func (c *ClientV3) V3TransactionQueryOrder(ctx context.Context, orderNoType Orde
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp = &QueryOrderRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(QueryOrder)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &QueryOrderRsp{Code: Success, SignInfo: si, Response: new(QueryOrder)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
 
 // 关闭订单API
 // Code = 0 is success
-func (c *ClientV3) V3TransactionCloseOrder(ctx context.Context, tradeNo string) (wxRsp *CloseOrderRsp, err error) {
+func (c *ClientV3) V3TransactionCloseOrder(ctx context.Context, tradeNo string) (wxRsp *EmptyRsp, err error) {
 	url := fmt.Sprintf(v3ApiCloseOrder, tradeNo)
 	bm := make(gopay.BodyMap)
 	bm.Set("mchid", c.Mchid)
@@ -194,11 +249,11 @@ func (c *ClientV3) V3TransactionCloseOrder(ctx context.Context, tradeNo string) 
 	if err != nil {
 		return nil, err
 	}
-
-	wxRsp = &CloseOrderRsp{Code: Success, SignInfo: si}
+	wxRsp = &EmptyRsp{Code: Success, SignInfo: si}
 	if res.StatusCode != http.StatusNoContent {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	return wxRsp, c.verifySyncSign(si)

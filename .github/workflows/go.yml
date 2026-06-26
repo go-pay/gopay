@@ -9,10 +9,19 @@ on:
   pull_request:
     branches: [ "main" ]
 
+# Cancel in-progress runs for the same workflow and branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
 
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,7 +29,8 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: '1.24'
+          cache: true
 
       - name: Setup golangci-lint
         uses: golangci/golangci-lint-action@v6
@@ -31,10 +41,12 @@ jobs:
   test:
     needs: lint
     strategy:
+      fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
-        go: [ '1.21', '1.22' , '1.23' ]
+        os: [ ubuntu-latest ]
+        go: [ '1.24', '1.25', '1.26' ]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -43,6 +55,13 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go }}
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Build
+        run: go build -v ./...
 
       - name: Test
-        run: go test -v
+        run: go test -v ./...

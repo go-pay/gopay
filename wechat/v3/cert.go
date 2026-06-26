@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"runtime"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
@@ -23,9 +24,38 @@ import (
 	"github.com/go-pay/gopay/pkg/xhttp"
 	"github.com/go-pay/util"
 	"github.com/go-pay/util/convert"
+	"github.com/go-pay/util/js"
 	"github.com/go-pay/util/retry"
 	"github.com/go-pay/xtime"
 )
+
+// 设置代理Host地址
+// 使用场景：
+// 1. 部署环境无法访问互联网，可以通过代理服务器访问
+var (
+	proxyHost string
+	mu        sync.RWMutex
+)
+
+// GetProxyHost 返回当前的 ProxyHost
+func GetProxyHost() string {
+	mu.RLock()
+	defer mu.RUnlock()
+	return proxyHost
+}
+
+// SetProxyHost 设置新的 ProxyHost
+// 注意：目前仅适用于 wechat.GetPlatformCerts() 函数
+func SetProxyHost(newProxyHost string) {
+	mu.Lock()
+	defer mu.Unlock()
+	before, found := strings.CutSuffix(newProxyHost, "/")
+	if found {
+		proxyHost = before
+		return
+	}
+	proxyHost = newProxyHost
+}
 
 // 获取平台RSA证书列表（获取后自行保存使用，如需定期刷新功能，自行实现）
 // 注意事项
@@ -69,6 +99,9 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 	authorization := Authorization + ` mchid="` + mchid + `",nonce_str="` + nonceStr + `",timestamp="` + ts + `",serial_no="` + serialNo + `",signature="` + sign + `"`
 	// Request
 	var url = v3BaseUrlCh + uri
+	if proxyHost != "" {
+		url = proxyHost + uri
+	}
 	hc := xhttp.NewClient().Req()
 	hc.Header.Add(HeaderAuthorization, authorization)
 	hc.Header.Add(HeaderRequestID, fmt.Sprintf("%s-%d", util.RandomString(21), time.Now().Unix()))
@@ -80,6 +113,7 @@ func GetPlatformCerts(ctx context.Context, mchid, apiV3Key, serialNo, privateKey
 	}
 	certs = &PlatformCertRsp{Code: Success}
 	if res.StatusCode != http.StatusOK {
+		_ = js.UnmarshalBytes(bs, &certs.ErrResponse)
 		certs.Code = res.StatusCode
 		certs.Error = string(bs)
 		return certs, nil
@@ -153,10 +187,11 @@ func (c *ClientV3) WxPublicKey() (wxPublicKey *rsa.PublicKey) {
 // 获取 微信平台证书 Map（readonly）
 // wxPublicKeyMap: key:SerialNo, value:WxPublicKey
 func (c *ClientV3) WxPublicKeyMap() (wxPublicKeyMap map[string]*rsa.PublicKey) {
-	wxPublicKeyMap = make(map[string]*rsa.PublicKey, len(c.SnCertMap))
-	for k, v := range c.SnCertMap {
+	wxPublicKeyMap = make(map[string]*rsa.PublicKey)
+	c.SnCertMap.Range(func(k string, v *rsa.PublicKey) bool {
 		wxPublicKeyMap[k] = v
-	}
+		return true
+	})
 	return wxPublicKeyMap
 }
 
@@ -328,19 +363,17 @@ func (c *ClientV3) autoCheckCertProc() {
 			if err != nil {
 				return err
 			}
-			snPkMap := make(map[string]*rsa.PublicKey)
 			for sn, cert := range snCertMap {
 				pubKey, err := xpem.DecodePublicKey([]byte(cert))
 				if err != nil {
 					return err
 				}
-				snPkMap[sn] = pubKey
+				c.SnCertMap.Store(sn, pubKey)
+				if sn == serialNo {
+					c.wxPublicKey = pubKey
+				}
 			}
-			c.rwMu.Lock()
-			c.SnCertMap = snPkMap
 			c.WxSerialNo = serialNo
-			c.wxPublicKey = snPkMap[serialNo]
-			c.rwMu.Unlock()
 			return nil
 		}, 3, time.Second)
 		if err != nil {

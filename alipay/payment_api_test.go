@@ -125,7 +125,8 @@ func TestClient_TradePay(t *testing.T) {
 		Set("auth_code", "286248566432274952").
 		Set("out_trade_no", "GZ201909081743431443").
 		Set("total_amount", "0.01").
-		Set("timeout_express", "2m")
+		Set("timeout_express", "2m").
+		Set(AppAuthToken, "i_am_app_auth_token")
 
 	// 条码支付
 	aliRsp, err := client.TradePay(ctx, bm)

@@ -30,6 +30,27 @@ func (c *Client) GetTransactionHistory(ctx context.Context, transactionId string
 	return rsp, nil
 }
 
+// GetTransactionHistoryV2 Get Transaction History v2
+// Doc: https://developer.apple.com/documentation/appstoreserverapi/get-v2-history-_transactionid_
+func (c *Client) GetTransactionHistoryV2(ctx context.Context, transactionId string, bm gopay.BodyMap) (rsp *TransactionHistoryRsp, err error) {
+	path := fmt.Sprintf(getTransactionHistoryV2, transactionId) + "?" + bm.EncodeURLParams()
+	res, bs, err := c.doRequestGet(ctx, path)
+	if err != nil {
+		return nil, err
+	}
+	rsp = &TransactionHistoryRsp{}
+	if err = json.Unmarshal(bs, rsp); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode == http.StatusOK {
+		return rsp, nil
+	}
+	if err = statusCodeErrCheck(rsp.StatusCodeErr); err != nil {
+		return rsp, err
+	}
+	return rsp, nil
+}
+
 // GetTransactionInfo Get Transaction Info
 // Doc: https://developer.apple.com/documentation/appstoreserverapi/get_transaction_info
 func (c *Client) GetTransactionInfo(ctx context.Context, transactionId string) (rsp *TransactionInfoRsp, err error) {

@@ -2,250 +2,281 @@ package wechat
 
 // 创建代金券批次 Rsp
 type FavorBatchCreateRsp struct {
-	Code     int               `json:"-"`
-	SignInfo *SignInfo         `json:"-"`
-	Response *FavorBatchCreate `json:"response,omitempty"`
-	Error    string            `json:"-"`
+	Code        int               `json:"-"`
+	SignInfo    *SignInfo         `json:"-"`
+	Response    *FavorBatchCreate `json:"response,omitempty"`
+	ErrResponse ErrResponse       `json:"err_response,omitempty"`
+	Error       string            `json:"-"`
 }
 
 // 发放代金券批次 Rsp
 type FavorBatchGrantRsp struct {
-	Code     int              `json:"-"`
-	SignInfo *SignInfo        `json:"-"`
-	Response *FavorBatchGrant `json:"response,omitempty"`
-	Error    string           `json:"-"`
+	Code        int              `json:"-"`
+	SignInfo    *SignInfo        `json:"-"`
+	Response    *FavorBatchGrant `json:"response,omitempty"`
+	ErrResponse ErrResponse      `json:"err_response,omitempty"`
+	Error       string           `json:"-"`
 }
 
 // 激活代金券批次 Rsp
 type FavorBatchStartRsp struct {
-	Code     int              `json:"-"`
-	SignInfo *SignInfo        `json:"-"`
-	Response *FavorBatchStart `json:"response,omitempty"`
-	Error    string           `json:"-"`
+	Code        int              `json:"-"`
+	SignInfo    *SignInfo        `json:"-"`
+	Response    *FavorBatchStart `json:"response,omitempty"`
+	ErrResponse ErrResponse      `json:"err_response,omitempty"`
+	Error       string           `json:"-"`
 }
 
 // 条件查询批次列表 Rsp
 type FavorBatchListRsp struct {
-	Code     int             `json:"-"`
-	SignInfo *SignInfo       `json:"-"`
-	Response *FavorBatchList `json:"response,omitempty"`
-	Error    string          `json:"-"`
+	Code        int             `json:"-"`
+	SignInfo    *SignInfo       `json:"-"`
+	Response    *FavorBatchList `json:"response,omitempty"`
+	ErrResponse ErrResponse     `json:"err_response,omitempty"`
+	Error       string          `json:"-"`
 }
 
 // 查询批次详情 Rsp
 type FavorBatchDetailRsp struct {
-	Code     int         `json:"-"`
-	SignInfo *SignInfo   `json:"-"`
-	Response *FavorBatch `json:"response,omitempty"`
-	Error    string      `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *FavorBatch `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // 查询批次详情 Rsp
 type FavorDetailRsp struct {
-	Code     int          `json:"-"`
-	SignInfo *SignInfo    `json:"-"`
-	Response *FavorDetail `json:"response,omitempty"`
-	Error    string       `json:"-"`
+	Code        int          `json:"-"`
+	SignInfo    *SignInfo    `json:"-"`
+	Response    *FavorDetail `json:"response,omitempty"`
+	ErrResponse ErrResponse  `json:"err_response,omitempty"`
+	Error       string       `json:"-"`
 }
 
 // 查询代金券可用商户 Rsp
 type FavorMerchantRsp struct {
-	Code     int            `json:"-"`
-	SignInfo *SignInfo      `json:"-"`
-	Response *FavorMerchant `json:"response,omitempty"`
-	Error    string         `json:"-"`
+	Code        int            `json:"-"`
+	SignInfo    *SignInfo      `json:"-"`
+	Response    *FavorMerchant `json:"response,omitempty"`
+	ErrResponse ErrResponse    `json:"err_response,omitempty"`
+	Error       string         `json:"-"`
 }
 
 // 查询代金券可用单品 Rsp
 type FavorItemsRsp struct {
-	Code     int         `json:"-"`
-	SignInfo *SignInfo   `json:"-"`
-	Response *FavorItems `json:"response,omitempty"`
-	Error    string      `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *FavorItems `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // 根据商户号查用户的券 Rsp
 type FavorUserCouponsRsp struct {
-	Code     int               `json:"-"`
-	SignInfo *SignInfo         `json:"-"`
-	Response *FavorUserCoupons `json:"response,omitempty"`
-	Error    string            `json:"-"`
+	Code        int               `json:"-"`
+	SignInfo    *SignInfo         `json:"-"`
+	Response    *FavorUserCoupons `json:"response,omitempty"`
+	ErrResponse ErrResponse       `json:"err_response,omitempty"`
+	Error       string            `json:"-"`
 }
 
 // 下载批次核销明细 Rsp
 type FavorUseFlowDownloadRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *FavorFlowDownload `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *FavorFlowDownload `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
 }
 
 // 下载批次退款明细 Rsp
 type FavorRefundFlowDownloadRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *FavorFlowDownload `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *FavorFlowDownload `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
 }
 
 // 查询消息通知地址 Rsp
 type FavorCallbackUrlGetRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *FavorCallbackUrlGet `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *FavorCallbackUrlGet `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 // 设置消息通知地址 Rsp
 type FavorCallbackUrlSetRsp struct {
-	Code     int               `json:"-"`
-	SignInfo *SignInfo         `json:"-"`
-	Response *FavorCallbackUrl `json:"response,omitempty"`
-	Error    string            `json:"-"`
+	Code        int               `json:"-"`
+	SignInfo    *SignInfo         `json:"-"`
+	Response    *FavorCallbackUrl `json:"response,omitempty"`
+	ErrResponse ErrResponse       `json:"err_response,omitempty"`
+	Error       string            `json:"-"`
 }
 
 // 暂停代金券批次 Rsp
 type FavorBatchPauseRsp struct {
-	Code     int              `json:"-"`
-	SignInfo *SignInfo        `json:"-"`
-	Response *FavorBatchPause `json:"response,omitempty"`
-	Error    string           `json:"-"`
+	Code        int              `json:"-"`
+	SignInfo    *SignInfo        `json:"-"`
+	Response    *FavorBatchPause `json:"response,omitempty"`
+	ErrResponse ErrResponse      `json:"err_response,omitempty"`
+	Error       string           `json:"-"`
 }
 
 // 重启代金券批次 Rsp
 type FavorBatchRestartRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *FavorBatchRestart `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *FavorBatchRestart `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
 }
 
 // 创建商家券 Rsp
 type BusiFavorCreateRsp struct {
-	Code     int               `json:"-"`
-	SignInfo *SignInfo         `json:"-"`
-	Response *FavorBatchCreate `json:"response,omitempty"`
-	Error    string            `json:"-"`
+	Code        int               `json:"-"`
+	SignInfo    *SignInfo         `json:"-"`
+	Response    *FavorBatchCreate `json:"response,omitempty"`
+	ErrResponse ErrResponse       `json:"err_response,omitempty"`
+	Error       string            `json:"-"`
 }
 
 // 查询商家券详情 Rsp
 type BusiFavorBatchDetailRsp struct {
-	Code     int                   `json:"-"`
-	SignInfo *SignInfo             `json:"-"`
-	Response *BusiFavorBatchDetail `json:"response,omitempty"`
-	Error    string                `json:"-"`
+	Code        int                   `json:"-"`
+	SignInfo    *SignInfo             `json:"-"`
+	Response    *BusiFavorBatchDetail `json:"response,omitempty"`
+	ErrResponse ErrResponse           `json:"err_response,omitempty"`
+	Error       string                `json:"-"`
 }
 
 // 核销用户券 Rsp
 type BusiFavorUseRsp struct {
-	Code     int           `json:"-"`
-	SignInfo *SignInfo     `json:"-"`
-	Response *BusiFavorUse `json:"response,omitempty"`
-	Error    string        `json:"-"`
+	Code        int           `json:"-"`
+	SignInfo    *SignInfo     `json:"-"`
+	Response    *BusiFavorUse `json:"response,omitempty"`
+	ErrResponse ErrResponse   `json:"err_response,omitempty"`
+	Error       string        `json:"-"`
 }
 
 // 核销用户券 Rsp
 type BusiFavorUserCouponsRsp struct {
-	Code     int                   `json:"-"`
-	SignInfo *SignInfo             `json:"-"`
-	Response *BusiFavorUserCoupons `json:"response,omitempty"`
-	Error    string                `json:"-"`
+	Code        int                   `json:"-"`
+	SignInfo    *SignInfo             `json:"-"`
+	Response    *BusiFavorUserCoupons `json:"response,omitempty"`
+	ErrResponse ErrResponse           `json:"err_response,omitempty"`
+	Error       string                `json:"-"`
 }
 
 // 查询用户单张券详情 Rsp
 type BusiFavorUserCouponDetailRsp struct {
-	Code     int             `json:"-"`
-	SignInfo *SignInfo       `json:"-"`
-	Response *BusiUserCoupon `json:"response,omitempty"`
-	Error    string          `json:"-"`
+	Code        int             `json:"-"`
+	SignInfo    *SignInfo       `json:"-"`
+	Response    *BusiUserCoupon `json:"response,omitempty"`
+	ErrResponse ErrResponse     `json:"err_response,omitempty"`
+	Error       string          `json:"-"`
 }
 
 // 上传预存code Rsp
 type BusiFavorCodeUploadRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *BusiFavorCodeUpload `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *BusiFavorCodeUpload `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 // 设置商家券事件通知地址 Rsp
 type BusiFavorCallbackUrlSetRsp struct {
-	Code     int                      `json:"-"`
-	SignInfo *SignInfo                `json:"-"`
-	Response *BusiFavorCallbackUrlSet `json:"response,omitempty"`
-	Error    string                   `json:"-"`
+	Code        int                      `json:"-"`
+	SignInfo    *SignInfo                `json:"-"`
+	Response    *BusiFavorCallbackUrlSet `json:"response,omitempty"`
+	ErrResponse ErrResponse              `json:"err_response,omitempty"`
+	Error       string                   `json:"-"`
 }
 
 // 查询商家券事件通知地址 Rsp
 type BusiFavorCallbackUrlRsp struct {
-	Code     int                   `json:"-"`
-	SignInfo *SignInfo             `json:"-"`
-	Response *BusiFavorCallbackUrl `json:"response,omitempty"`
-	Error    string                `json:"-"`
+	Code        int                   `json:"-"`
+	SignInfo    *SignInfo             `json:"-"`
+	Response    *BusiFavorCallbackUrl `json:"response,omitempty"`
+	ErrResponse ErrResponse           `json:"err_response,omitempty"`
+	Error       string                `json:"-"`
 }
 
 // 关联订单信息 Rsp
 type BusiFavorAssociateRsp struct {
-	Code     int                 `json:"-"`
-	SignInfo *SignInfo           `json:"-"`
-	Response *BusiFavorAssociate `json:"response,omitempty"`
-	Error    string              `json:"-"`
+	Code        int                 `json:"-"`
+	SignInfo    *SignInfo           `json:"-"`
+	Response    *BusiFavorAssociate `json:"response,omitempty"`
+	ErrResponse ErrResponse         `json:"err_response,omitempty"`
+	Error       string              `json:"-"`
 }
 
 // 取消关联订单信息 Rsp
 type BusiFavorDisassociateRsp struct {
-	Code     int                    `json:"-"`
-	SignInfo *SignInfo              `json:"-"`
-	Response *BusiFavorDisassociate `json:"response,omitempty"`
-	Error    string                 `json:"-"`
+	Code        int                    `json:"-"`
+	SignInfo    *SignInfo              `json:"-"`
+	Response    *BusiFavorDisassociate `json:"response,omitempty"`
+	ErrResponse ErrResponse            `json:"err_response,omitempty"`
+	Error       string                 `json:"-"`
 }
 
 // 修改批次预算 Rsp
 type BusiFavorBatchUpdateRsp struct {
-	Code     int                   `json:"-"`
-	SignInfo *SignInfo             `json:"-"`
-	Response *BusiFavorBatchUpdate `json:"response,omitempty"`
-	Error    string                `json:"-"`
+	Code        int                   `json:"-"`
+	SignInfo    *SignInfo             `json:"-"`
+	Response    *BusiFavorBatchUpdate `json:"response,omitempty"`
+	ErrResponse ErrResponse           `json:"err_response,omitempty"`
+	Error       string                `json:"-"`
 }
 
 // 发放消费卡 Rsp
 type BusiFavorSendRsp struct {
-	Code     int            `json:"-"`
-	SignInfo *SignInfo      `json:"-"`
-	Response *BusiFavorSend `json:"response,omitempty"`
-	Error    string         `json:"-"`
+	Code        int            `json:"-"`
+	SignInfo    *SignInfo      `json:"-"`
+	Response    *BusiFavorSend `json:"response,omitempty"`
+	ErrResponse ErrResponse    `json:"err_response,omitempty"`
+	Error       string         `json:"-"`
 }
 
 // 申请退券 Rsp
 type BusiFavorReturnRsp struct {
-	Code     int              `json:"-"`
-	SignInfo *SignInfo        `json:"-"`
-	Response *BusiFavorReturn `json:"response,omitempty"`
-	Error    string           `json:"-"`
+	Code        int              `json:"-"`
+	SignInfo    *SignInfo        `json:"-"`
+	Response    *BusiFavorReturn `json:"response,omitempty"`
+	ErrResponse ErrResponse      `json:"err_response,omitempty"`
+	Error       string           `json:"-"`
 }
 
 // 使券失效 Rsp
 type BusiFavorDeactivateRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *BusiFavorDeactivate `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *BusiFavorDeactivate `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 // 营销补差付款 Rsp
 type BusiFavorSubsidyPayRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *BusiFavorSubsidyPay `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *BusiFavorSubsidyPay `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 // 查询营销补差付款单详情 Rsp
 type BusiFavorSubsidyPayDetailRsp struct {
-	Code     int                  `json:"-"`
-	SignInfo *SignInfo            `json:"-"`
-	Response *BusiFavorSubsidyPay `json:"response,omitempty"`
-	Error    string               `json:"-"`
+	Code        int                  `json:"-"`
+	SignInfo    *SignInfo            `json:"-"`
+	Response    *BusiFavorSubsidyPay `json:"response,omitempty"`
+	ErrResponse ErrResponse          `json:"err_response,omitempty"`
+	Error       string               `json:"-"`
 }
 
 // =========================================================分割=========================================================

@@ -91,13 +91,6 @@ type FundBatchDetailQueryResponse struct {
 	Sign         string                `json:"sign"`
 }
 
-type FundTransAppPayResponse struct {
-	Response     *FundTransAppPay `json:"alipay_fund_trans_app_pay_response"`
-	AlipayCertSn string           `json:"alipay_cert_sn,omitempty"`
-	SignData     string           `json:"-"`
-	Sign         string           `json:"sign"`
-}
-
 type FundTransPayeeBindQueryRsp struct {
 	Response     *FundTransPayeeBindQuery `json:"alipay_fund_trans_payee_bind_query_response"`
 	AlipayCertSn string                   `json:"alipay_cert_sn,omitempty"`

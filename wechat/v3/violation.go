@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // 创建商户违规通知回调地址API
@@ -22,15 +23,15 @@ func (c *ClientV3) V3ViolationNotifyUrlCreate(ctx context.Context, url string) (
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &ViolationNotifyUrlRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ViolationNotifyUrl)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &ViolationNotifyUrlRsp{Code: Success, SignInfo: si, Response: new(ViolationNotifyUrl)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -46,15 +47,15 @@ func (c *ClientV3) V3ViolationNotifyUrlQuery(ctx context.Context) (wxRsp *Violat
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &ViolationNotifyUrlRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ViolationNotifyUrl)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &ViolationNotifyUrlRsp{Code: Success, SignInfo: si, Response: new(ViolationNotifyUrl)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -72,15 +73,15 @@ func (c *ClientV3) V3ViolationNotifyUrlUpdate(ctx context.Context, url string) (
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &ViolationNotifyUrlRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(ViolationNotifyUrl)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &ViolationNotifyUrlRsp{Code: Success, SignInfo: si, Response: new(ViolationNotifyUrl)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -100,6 +101,7 @@ func (c *ClientV3) V3ViolationNotifyUrlDelete(ctx context.Context) (wxRsp *Empty
 	if res.StatusCode != http.StatusNoContent {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
 	}
 	return wxRsp, c.verifySyncSign(si)

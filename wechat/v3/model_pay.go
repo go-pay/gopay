@@ -2,57 +2,88 @@ package wechat
 
 // Prepay 支付Rsp
 type PrepayRsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Response *Prepay   `json:"response,omitempty"`
-	Error    string    `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *Prepay     `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // H5 支付Rsp
 type H5Rsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Response *H5Url    `json:"response,omitempty"`
-	Error    string    `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *H5Url      `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // Native 支付Rsp
 type NativeRsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Response *Native   `json:"response,omitempty"`
-	Error    string    `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *Native     `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // 查询订单 Rsp
 type QueryOrderRsp struct {
-	Code     int         `json:"-"`
-	SignInfo *SignInfo   `json:"-"`
-	Response *QueryOrder `json:"response,omitempty"`
-	Error    string      `json:"-"`
-}
-
-// 关闭订单 Rsp
-type CloseOrderRsp struct {
-	Code     int       `json:"-"`
-	SignInfo *SignInfo `json:"-"`
-	Error    string    `json:"-"`
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *QueryOrder `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
 }
 
 // 合单查询订单 Rsp
 type CombineQueryOrderRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *CombineQueryOrder `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *CombineQueryOrder `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
 }
 
 // 服务商查询订单 Rsp
 type PartnerQueryOrderRsp struct {
-	Code     int                `json:"-"`
-	SignInfo *SignInfo          `json:"-"`
-	Response *PartnerQueryOrder `json:"response,omitempty"`
-	Error    string             `json:"-"`
+	Code        int                `json:"-"`
+	SignInfo    *SignInfo          `json:"-"`
+	Response    *PartnerQueryOrder `json:"response,omitempty"`
+	ErrResponse ErrResponse        `json:"err_response,omitempty"`
+	Error       string             `json:"-"`
+}
+
+type CodePayRsp struct {
+	Code        int         `json:"-"`
+	SignInfo    *SignInfo   `json:"-"`
+	Response    *CodePay    `json:"response,omitempty"`
+	ErrResponse ErrResponse `json:"err_response,omitempty"`
+	Error       string      `json:"-"`
+}
+
+type PartnerCodePayRsp struct {
+	Code        int             `json:"-"`
+	SignInfo    *SignInfo       `json:"-"`
+	Response    *PartnerCodePay `json:"response,omitempty"`
+	ErrResponse ErrResponse     `json:"err_response,omitempty"`
+	Error       string          `json:"-"`
+}
+
+type CodePayReverseRsp struct {
+	Code        int             `json:"-"`
+	SignInfo    *SignInfo       `json:"-"`
+	Response    *CodePayReverse `json:"response,omitempty"`
+	ErrResponse ErrResponse     `json:"err_response,omitempty"`
+	Error       string          `json:"-"`
+}
+
+type PartnerCodePayReverseRsp struct {
+	Code        int                    `json:"-"`
+	SignInfo    *SignInfo              `json:"-"`
+	Response    *PartnerCodePayReverse `json:"response,omitempty"`
+	ErrResponse ErrResponse            `json:"err_response,omitempty"`
+	Error       string                 `json:"-"`
 }
 
 // =========================================================分割=========================================================
@@ -142,4 +173,52 @@ type PartnerQueryOrder struct {
 type PartnerPayer struct {
 	SpOpenid  string `json:"sp_openid"`  // 用户在服务商appid下的唯一标识。
 	SubOpenid string `json:"sub_openid"` // 用户在子商户appid下的唯一标识。 如果返回sub_appid，那么sub_openid一定会返回。
+}
+
+type CodePay struct {
+	Appid           string             `json:"appid"`
+	Mchid           string             `json:"mchid"`
+	OutTradeNo      string             `json:"out_trade_no"`
+	TransactionId   string             `json:"transaction_id"`
+	TradeType       string             `json:"trade_type"`
+	BankType        string             `json:"bank_type"`
+	SuccessTime     string             `json:"success_time"`
+	TradeState      string             `json:"trade_state"`
+	TradeStateDesc  string             `json:"trade_state_desc"`
+	Attach          string             `json:"attach"`
+	Payer           *Payer             `json:"payer"`
+	Amount          *Amount            `json:"amount,omitempty"`
+	PromotionDetail []*PromotionDetail `json:"promotion_detail,omitempty"`
+}
+
+type PartnerCodePay struct {
+	SpAppid         string             `json:"sp_appid"`
+	SpMchid         string             `json:"sp_mchid"`
+	SubAppid        string             `json:"sub_appid"`
+	SubMchid        string             `json:"sub_mchid"`
+	OutTradeNo      string             `json:"out_trade_no"`
+	TransactionId   string             `json:"transaction_id"`
+	TradeType       string             `json:"trade_type"`
+	BankType        string             `json:"bank_type"`
+	SuccessTime     string             `json:"success_time"`
+	TradeState      string             `json:"trade_state"`
+	TradeStateDesc  string             `json:"trade_state_desc"`
+	Attach          string             `json:"attach"`
+	Payer           *PartnerPayer      `json:"payer"`
+	Amount          *Amount            `json:"amount,omitempty"`
+	PromotionDetail []*PromotionDetail `json:"promotion_detail,omitempty"`
+}
+
+type CodePayReverse struct {
+	Appid      string `json:"appid"`
+	Mchid      string `json:"mchid"`
+	OutTradeNo string `json:"out_trade_no"`
+}
+
+type PartnerCodePayReverse struct {
+	SpAppid    string `json:"sp_appid"`
+	SpMchid    string `json:"sp_mchid"`
+	SubAppid   string `json:"sub_appid"`
+	SubMchid   string `json:"sub_mchid"`
+	OutTradeNo string `json:"out_trade_no"`
 }

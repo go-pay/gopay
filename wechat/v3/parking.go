@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/go-pay/gopay"
+	"github.com/go-pay/util/js"
 )
 
 // 查询车牌服务开通信息
@@ -22,15 +23,15 @@ func (c *ClientV3) V3VehicleParkingQuery(ctx context.Context, bm gopay.BodyMap) 
 	if err != nil {
 		return nil, err
 	}
-	wxRsp := &VehicleParkingQueryRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(VehicleParkingQuery)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &VehicleParkingQueryRsp{Code: Success, SignInfo: si, Response: new(VehicleParkingQuery)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -47,15 +48,15 @@ func (c *ClientV3) V3VehicleParkingIn(ctx context.Context, bm gopay.BodyMap) (wx
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &VehicleParkingInRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(VehicleParkingIn)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &VehicleParkingInRsp{Code: Success, SignInfo: si, Response: new(VehicleParkingIn)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -72,15 +73,15 @@ func (c *ClientV3) V3VehicleParkingFee(ctx context.Context, bm gopay.BodyMap) (w
 	if err != nil {
 		return nil, err
 	}
-	wxRsp = &VehicleParkingFeeRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(VehicleParkingFee)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp = &VehicleParkingFeeRsp{Code: Success, SignInfo: si, Response: new(VehicleParkingFee)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
@@ -98,15 +99,15 @@ func (c *ClientV3) V3VehicleParkingOrder(ctx context.Context, outTradeNo string,
 	if err != nil {
 		return nil, err
 	}
-	wxRsp := &VehicleParkingOrderRsp{Code: Success, SignInfo: si}
-	wxRsp.Response = new(VehicleParkingOrder)
-	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
-		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
-	}
+	wxRsp := &VehicleParkingOrderRsp{Code: Success, SignInfo: si, Response: new(VehicleParkingOrder)}
 	if res.StatusCode != http.StatusOK {
 		wxRsp.Code = res.StatusCode
 		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
 		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
 }
