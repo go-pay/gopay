@@ -128,7 +128,7 @@ func (c *Client) QueryConfirm(ctx context.Context, orderType string, no string) 
 		bm.Set("trxid", no)
 	}
 	var bs []byte
-	if bs, err = c.doPost(ctx, queryPath, bm); err != nil {
+	if bs, err = c.doPost(ctx, queryConfirmPath, bm); err != nil {
 		return nil, err
 	}
 	rsp = new(QueryConfirmRsp)
