@@ -481,6 +481,17 @@ wechat.V3DecryptCombineNotifyCipherText()
     * 查询省份列表：`client.V3BankSearchProvinceList()`
     * 查询城市列表：`client.V3BankSearchCityList()`
     * 查询支行列表：`client.V3BankSearchBranchList()`
+* <font color='#07C160' size='4'>扣费服务（预约扣费）</font>
+    * 小程序预签约：`client.V3ScheduledDeductPreSignMiniProgram()`
+    * APP 预签约：`client.V3ScheduledDeductPreSignApp()`
+    * H5 预签约：`client.V3ScheduledDeductPreSignH5()`
+    * JSAPI 预签约：`client.V3ScheduledDeductPreSignJsapi()`
+    * 通过商户协议号查询签约：`client.V3ScheduledDeductContractQuery()`
+    * 通过商户协议号解约：`client.V3ScheduledDeductContractTerminate()`
+    * 创建预约扣费：`client.V3ScheduledDeductSchedule()`
+    * 查询预约扣费结果：`client.V3ScheduledDeductScheduleQuery()`
+    * 受理扣款：`client.V3ScheduledDeductApply()`
+    * 回调通知载荷：`PapayScheduledSignNotifyResource`、`PapayScheduledPayNotifyResource`（配合 `wechat.V3DecryptNotifyCipherTextToStruct` 使用）
 * <font color='#07C160' size='4'>掌纹支付</font>
     * 用户自主录掌&预授权：`client.V3PalmServicePreAuthorize()`
     * 预授权状态查询：`client.V3PalmServiceOpenidQuery()`

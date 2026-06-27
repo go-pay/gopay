@@ -324,6 +324,21 @@ const (
 	// 扣款服务-直连模式（其他相关接口在v2接口中）
 	v3EntrustPayNotify = "/v3/papay/contracts/%s/notify" // contract_id 预扣费通知 POST
 
+	// 扣费服务（预约扣费）—— 签约
+	v3ScheduledDeductPreSignMiniProgram = "/v3/papay/scheduled-deduct-sign/contracts/pre-entrust-sign/mini-program" // 小程序预签约 POST
+	v3ScheduledDeductPreSignApp         = "/v3/papay/scheduled-deduct-sign/contracts/pre-entrust-sign/app"          // APP 预签约 POST
+	v3ScheduledDeductPreSignH5          = "/v3/papay/scheduled-deduct-sign/contracts/pre-entrust-sign/h5"           // H5 预签约 POST
+	v3ScheduledDeductPreSignJsapi       = "/v3/papay/scheduled-deduct-sign/contracts/pre-entrust-sign/jsapi"        // JSAPI 预签约 POST
+
+	// 扣费服务（预约扣费）—— 协议管理
+	v3ScheduledDeductContractQuery     = "/v3/papay/sign/contracts/plan-id/%s/out-contract-code/%s"           // plan_id, out_contract_code 通过商户协议号查询签约 GET
+	v3ScheduledDeductContractTerminate = "/v3/papay/sign/contracts/plan-id/%s/out-contract-code/%s/terminate" // plan_id, out_contract_code 通过商户协议号解约 POST
+
+	// 扣费服务（预约扣费）—— 扣款
+	v3ScheduledDeductSchedule      = "/v3/papay/pay/schedules/contract-id/%s/schedule" // contract_id 创建预约扣费 POST
+	v3ScheduledDeductScheduleQuery = "/v3/papay/pay/schedules/contract-id/%s"          // contract_id 查询预约扣费结果 GET
+	v3ScheduledDeductApply         = "/v3/papay/pay/transactions/apply"                // 受理扣款 POST
+
 	// 刷掌支付
 	v3PalmServicePreAuthorize = "/v3/palmservice/authorization/preauthorize" // 用户自主录掌&预授权 POST
 	v3PalmServiceOpenidQuery  = "/v3/palmservice/authorization/openid/%s"    // organization_id 预授权状态查询 GET
