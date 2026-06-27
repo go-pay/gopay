@@ -63,6 +63,19 @@ func main() {
 
 # 三、其他说明
 
+* **【v1.5.119 起 TLS 证书校验默认开启】** 此前 `pkg/xhttp.NewClient()` 默认 `tls.Config{InsecureSkipVerify: true}`，存在中间人攻击风险（CWE-295），自 v1.5.119 起改为使用 Go 标准库默认安全配置。
+  * **不影响生产环境**：所有支付平台官方域名证书均受信任。
+  * **沙箱 / 自签证书场景需手动恢复**：New Client 后调用 `SetHttpClient` 注入跳过校验的 xhttp.Client：
+    ```go
+    import (
+        "crypto/tls"
+        "github.com/go-pay/gopay/pkg/xhttp"
+    )
+
+    hc := xhttp.NewClient().SetHttpTLSConfig(&tls.Config{InsecureSkipVerify: true})
+    client.SetHttpClient(hc) // wechat / alipay / paypal / qq / allinpay / lakala / saobei 均支持
+    ```
+
 * 如需自定义Log输出，New Client 后，调用 `client.SetLogger()` 方法设置自定义Logger，自定义Logger实现 `xlog.XLogger` interface即可。
 
 * 各支付方式接入，请仔细查看 `xxx_test.go` 使用方式
