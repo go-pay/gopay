@@ -528,17 +528,36 @@ type PlatformFee struct {
 }
 
 type Item struct {
-	Id            string    `json:"id,omitempty"`
-	Name          string    `json:"name,omitempty"`
-	UnitAmount    *Amount   `json:"unit_amount,omitempty"`
-	Tax           *Amount   `json:"tax,omitempty"`
-	Quantity      string    `json:"quantity,omitempty"`
-	Description   string    `json:"description,omitempty"`
-	Sku           string    `json:"sku,omitempty"`
-	Category      string    `json:"category,omitempty"`
-	ItemDate      string    `json:"item_date,omitempty"`
-	Discount      *Discount `json:"discount,omitempty"`
-	UnitOfMeasure string    `json:"unit_of_measure,omitempty"`
+	Id            string            `json:"id,omitempty"`
+	Name          string            `json:"name,omitempty"`
+	UnitAmount    *Amount           `json:"unit_amount,omitempty"`
+	Tax           *Amount           `json:"tax,omitempty"`
+	Quantity      string            `json:"quantity,omitempty"`
+	Description   string            `json:"description,omitempty"`
+	Sku           string            `json:"sku,omitempty"`
+	Category      string            `json:"category,omitempty"`
+	ItemDate      string            `json:"item_date,omitempty"`
+	Discount      *Discount         `json:"discount,omitempty"`
+	UnitOfMeasure string            `json:"unit_of_measure,omitempty"`
+	BillingPlan   *OrderBillingPlan `json:"billing_plan,omitempty"`
+}
+
+// OrderBillingPlan PayPal Orders v2 API 内联订阅计划，用于循环扣款（保存支付方式/订阅/分期）。
+// 来源：https://developer.paypal.com/docs/api/orders/v2/ 中 order_billing_plan schema。
+type OrderBillingPlan struct {
+	Name          string               `json:"name,omitempty"`
+	SetupFee      *Amount              `json:"setup_fee,omitempty"`
+	BillingCycles []*OrderBillingCycle `json:"billing_cycles"`
+}
+
+// OrderBillingCycle PayPal Orders v2 billing_cycle。
+// 与 Subscriptions v1 的 BillingCycles 不同：v2 没有 frequency 字段。
+type OrderBillingCycle struct {
+	TenureType    string         `json:"tenure_type"`
+	PricingScheme *PricingScheme `json:"pricing_scheme,omitempty"`
+	TotalCycles   int            `json:"total_cycles,omitempty"`
+	Sequence      int            `json:"sequence,omitempty"`
+	StartDate     string         `json:"start_date,omitempty"`
 }
 
 type Discount struct {

@@ -1,6 +1,7 @@
 package apple
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/go-pay/gopay/pkg/jwt"
@@ -95,27 +96,50 @@ type Data struct {
 	SignedTransactionInfo string `json:"signedTransactionInfo"`
 }
 
+// TransactionCommitmentInfo https://developer.apple.com/documentation/appstoreservernotifications/transactioncommitmentinfo
+type TransactionCommitmentInfo struct {
+	BillingPeriodNumber   int   `json:"billingPeriodNumber,omitempty"`
+	TotalBillingPeriods   int   `json:"totalBillingPeriods,omitempty"`
+	CommitmentExpiresDate int64 `json:"commitmentExpiresDate,omitempty"`
+	CommitmentPrice       int64 `json:"commitmentPrice,omitempty"`
+}
+
+// RenewalCommitmentInfo https://developer.apple.com/documentation/appstoreservernotifications/renewalcommitmentinfo
+type RenewalCommitmentInfo struct {
+	CommitmentAutoRenewProductId     string `json:"commitmentAutoRenewProductId,omitempty"`
+	CommitmentAutoRenewStatus        int64  `json:"commitmentAutoRenewStatus,omitempty"`
+	CommitmentRenewalBillingPlanType string `json:"commitmentRenewalBillingPlanType,omitempty"`
+	CommitmentRenewalDate            int64  `json:"commitmentRenewalDate,omitempty"`
+	CommitmentRenewalPrice           int64  `json:"commitmentRenewalPrice,omitempty"`
+}
+
 // RenewalInfo https://developer.apple.com/documentation/appstoreservernotifications/jwsrenewalinfodecodedpayload
 type RenewalInfo struct {
 	jwt.StandardClaims
-	AutoRenewProductId          string   `json:"autoRenewProductId"`
-	AutoRenewStatus             int64    `json:"autoRenewStatus"`
-	Currency                    string   `json:"currency"`
-	EligibleWinBackOfferIds     []string `json:"eligibleWinBackOfferIds"`
-	Environment                 string   `json:"environment"`
-	ExpirationIntent            int64    `json:"expirationIntent"`
-	GracePeriodExpiresDate      int64    `json:"gracePeriodExpiresDate"`
-	IsInBillingRetryPeriod      bool     `json:"isInBillingRetryPeriod"`
-	OfferDiscountType           string   `json:"offerDiscountType"`
-	OfferIdentifier             string   `json:"offerIdentifier"`
-	OfferType                   int64    `json:"offerType"` // 1:An introductory offer. 2:A promotional offer. 3:An offer with a subscription offer code.
-	OriginalTransactionId       string   `json:"originalTransactionId"`
-	PriceIncreaseStatus         int64    `json:"priceIncreaseStatus"` // 0: The customer hasn’t responded to the subscription price increase. 1:The customer consented to the subscription price increase.
-	ProductId                   string   `json:"productId"`
-	RecentSubscriptionStartDate int64    `json:"recentSubscriptionStartDate"`
-	RenewalDate                 int64    `json:"renewalDate,omitempty"` // The UNIX time, in milliseconds, that the most recent auto-renewable subscription purchase expires.
-	RenewalPrice                int64    `json:"renewalPrice"`
-	SignedDate                  int64    `json:"signedDate"`
+	AdvancedCommerceInfo        json.RawMessage        `json:"advancedCommerceInfo,omitempty"`
+	AppAccountToken             string                 `json:"appAccountToken,omitempty"`
+	AppTransactionId            string                 `json:"appTransactionId,omitempty"`
+	AutoRenewProductId          string                 `json:"autoRenewProductId"`
+	AutoRenewStatus             int64                  `json:"autoRenewStatus"`
+	CommitmentInfo              *RenewalCommitmentInfo `json:"commitmentInfo,omitempty"`
+	Currency                    string                 `json:"currency"`
+	EligibleWinBackOfferIds     []string               `json:"eligibleWinBackOfferIds"`
+	Environment                 string                 `json:"environment"`
+	ExpirationIntent            int64                  `json:"expirationIntent"`
+	GracePeriodExpiresDate      int64                  `json:"gracePeriodExpiresDate"`
+	IsInBillingRetryPeriod      bool                   `json:"isInBillingRetryPeriod"`
+	OfferDiscountType           string                 `json:"offerDiscountType"`
+	OfferIdentifier             string                 `json:"offerIdentifier"`
+	OfferPeriod                 string                 `json:"offerPeriod,omitempty"`
+	OfferType                   int64                  `json:"offerType"` // 1:An introductory offer. 2:A promotional offer. 3:An offer with a subscription offer code.
+	OriginalTransactionId       string                 `json:"originalTransactionId"`
+	PriceIncreaseStatus         int64                  `json:"priceIncreaseStatus"` // 0: The customer hasn’t responded to the subscription price increase. 1:The customer consented to the subscription price increase.
+	ProductId                   string                 `json:"productId"`
+	RecentSubscriptionStartDate int64                  `json:"recentSubscriptionStartDate"`
+	RenewalBillingPlanType      string                 `json:"renewalBillingPlanType,omitempty"`
+	RenewalDate                 int64                  `json:"renewalDate,omitempty"` // The UNIX time, in milliseconds, that the most recent auto-renewable subscription purchase expires.
+	RenewalPrice                int64                  `json:"renewalPrice"`
+	SignedDate                  int64                  `json:"signedDate"`
 }
 
 // JWSTransactionDecodedPayload represents both
@@ -124,36 +148,40 @@ type RenewalInfo struct {
 // They are identical in structure.
 type JWSTransactionDecodedPayload struct {
 	jwt.StandardClaims
-	AppAccountToken             string `json:"appAccountToken"`
-	AppTransactionId            string `json:"appTransactionId"` // Note: "appTransactionId" is different from "transactionId".
-	BundleId                    string `json:"bundleId"`
-	Currency                    string `json:"currency"`
-	Environment                 string `json:"environment"`
-	ExpiresDate                 int64  `json:"expiresDate"`
-	InAppOwnershipType          string `json:"inAppOwnershipType"` // FAMILY_SHARED  PURCHASED
-	IsUpgraded                  bool   `json:"isUpgraded"`
-	OfferDiscountType           string `json:"offerDiscountType"`
-	OfferIdentifier             string `json:"offerIdentifier"`
-	OfferPeriod                 string `json:"offerPeriod"`
-	OfferType                   int64  `json:"offerType"` // 1:An introductory offer. 2:A promotional offer. 3:An offer with a subscription offer code.
-	OriginalPurchaseDate        int64  `json:"originalPurchaseDate"`
-	OriginalTransactionId       string `json:"originalTransactionId"`
-	Price                       int64  `json:"price"`
-	ProductId                   string `json:"productId"`
-	PurchaseDate                int64  `json:"purchaseDate"`
-	Quantity                    int64  `json:"quantity"`
-	RevocationDate              int64  `json:"revocationDate"`
-	RevocationPercentage        int64  `json:"revocationPercentage"` // A integer value from 0 to 100000.
-	RevocationReason            int    `json:"revocationReason"`
-	RevocationType              string `json:"revocationType"` // Possible values: "REFUND_FULL", "REFUND_PRORATED", "FAMILY_REVOKE"
-	SignedDate                  int64  `json:"signedDate"`     // Auto-Renewable Subscription: An auto-renewable subscription.  Non-Consumable: A non-consumable in-app purchase.  Consumable: A consumable in-app purchase.  Non-Renewing Subscription: A non-renewing subcription.
-	Storefront                  string `json:"storefront"`
-	StorefrontId                string `json:"storefrontId"`
-	SubscriptionGroupIdentifier string `json:"subscriptionGroupIdentifier"`
-	TransactionId               string `json:"transactionId"`
-	TransactionReason           string `json:"transactionReason"`
-	Type                        string `json:"type"`
-	WebOrderLineItemId          string `json:"webOrderLineItemId"`
+	AdvancedCommerceInfo          json.RawMessage            `json:"advancedCommerceInfo,omitempty"`
+	AppAccountToken               string                     `json:"appAccountToken"`
+	AppTransactionId              string                     `json:"appTransactionId"` // Note: "appTransactionId" is different from "transactionId".
+	BillingPlanType               string                     `json:"billingPlanType,omitempty"`
+	BundleId                      string                     `json:"bundleId"`
+	CommitmentInfo                *TransactionCommitmentInfo `json:"commitmentInfo,omitempty"`
+	Currency                      string                     `json:"currency"`
+	Environment                   string                     `json:"environment"`
+	ExpiresDate                   int64                      `json:"expiresDate"`
+	InAppOwnershipType            string                     `json:"inAppOwnershipType"` // FAMILY_SHARED  PURCHASED
+	IsUpgraded                    bool                       `json:"isUpgraded"`
+	OfferDiscountType             string                     `json:"offerDiscountType"`
+	OfferIdentifier               string                     `json:"offerIdentifier"`
+	OfferPeriod                   string                     `json:"offerPeriod"`
+	OfferType                     int64                      `json:"offerType"` // 1:An introductory offer. 2:A promotional offer. 3:An offer with a subscription offer code.
+	OriginalPurchaseDate          int64                      `json:"originalPurchaseDate"`
+	OriginalTransactionId         string                     `json:"originalTransactionId"`
+	PreviousOriginalTransactionId string                     `json:"previousOriginalTransactionId,omitempty"`
+	Price                         int64                      `json:"price"`
+	ProductId                     string                     `json:"productId"`
+	PurchaseDate                  int64                      `json:"purchaseDate"`
+	Quantity                      int64                      `json:"quantity"`
+	RevocationDate                int64                      `json:"revocationDate"`
+	RevocationPercentage          int64                      `json:"revocationPercentage"` // A integer value from 0 to 100000.
+	RevocationReason              int                        `json:"revocationReason"`
+	RevocationType                string                     `json:"revocationType"` // Possible values: "REFUND_FULL", "REFUND_PRORATED", "FAMILY_REVOKE"
+	SignedDate                    int64                      `json:"signedDate"`     // Auto-Renewable Subscription: An auto-renewable subscription.  Non-Consumable: A non-consumable in-app purchase.  Consumable: A consumable in-app purchase.  Non-Renewing Subscription: A non-renewing subcription.
+	Storefront                    string                     `json:"storefront"`
+	StorefrontId                  string                     `json:"storefrontId"`
+	SubscriptionGroupIdentifier   string                     `json:"subscriptionGroupIdentifier"`
+	TransactionId                 string                     `json:"transactionId"`
+	TransactionReason             string                     `json:"transactionReason"`
+	Type                          string                     `json:"type"`
+	WebOrderLineItemId            string                     `json:"webOrderLineItemId"`
 }
 
 // Creating type aliases for backward compatibility

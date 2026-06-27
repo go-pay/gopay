@@ -1,3 +1,21 @@
+## 版本号：v1.5.119
+
+* 修改记录：
+  * 安全修复：`pkg/xhttp.NewClient()` 默认启用 TLS 证书校验（修复 CWE-295，issue #540）。
+    * 此前默认 `tls.Config{InsecureSkipVerify: true}`，所有支付平台（alipay/wechat/apple/paypal/allinpay/lakala/saobei/qq）的请求均存在中间人攻击风险。
+    * **BREAKING CHANGE**：升级后，沙箱环境或使用自签证书的场景会出现 TLS 握手失败。如需保留旧行为，请在创建 client 后显式调用：
+      ```go
+      hc := xhttp.NewClient().SetHttpTLSConfig(&tls.Config{InsecureSkipVerify: true})
+      ```
+  * PayPal：`Item` 新增 `BillingPlan` 字段，配套新增 `OrderBillingPlan` / `OrderBillingCycle` 类型，支持 Orders v2 API 内联订阅计划（循环扣款 / 保存支付方式 / 分期），无需再用 `map[string]interface{}` 绕过（issue #541）。
+  * Apple：`RenewalInfo` / `JWSTransactionDecodedPayload` 补齐 Advanced Commerce / Subscription Commitment 新字段（issue #542）。
+    * `RenewalInfo` 新增：`commitmentInfo` (`*RenewalCommitmentInfo`)、`renewalBillingPlanType`、`appAccountToken`、`appTransactionId`、`offerPeriod`、`advancedCommerceInfo` (`json.RawMessage`)。
+    * `JWSTransactionDecodedPayload` 新增：`commitmentInfo` (`*TransactionCommitmentInfo`)、`billingPlanType`、`previousOriginalTransactionId`、`advancedCommerceInfo` (`json.RawMessage`)。
+    * 新增类型：`RenewalCommitmentInfo`、`TransactionCommitmentInfo`。
+    * `advancedCommerceInfo` 用 `json.RawMessage` 透传原始 JSON，需要解码时由调用方按 Apple `advancedCommerceRenewalInfo` / `advancedCommerceTransactionInfo` schema 自行 Unmarshal。
+
+
+
 ## 版本号：v1.5.118
 
 * 修改记录：
