@@ -393,6 +393,7 @@ wechat.V3DecryptCombineNotifyCipherText()
     * 提交回复：`client.V3ComplaintResponse()`
     * 反馈处理完成：`client.V3ComplaintComplete()`
     * 更新退款审批结果：`client.V3ComplaintUpdateRefundProgress()`
+    * 回复需要即时服务的投诉单：`client.V3ComplaintResponseImmediateService()`
     * 商户上传反馈图片：`client.V3ComplaintUploadImage()`
     * 商户反馈图片请求：`client.V3ComplaintImage()`
 * <font color='#07C160' size='4'>商户平台处置通知</font>
@@ -430,6 +431,12 @@ wechat.V3DecryptCombineNotifyCipherText()
     * 微信单号申请电子回单：`client.V3TransferElecsign()`
     * 商户单号查询电子回单：`client.V3TransferElecsignQuery()`
     * 微信单号查询电子回单：`client.V3TransferElecsignMerchantQuery()`
+    * 下载电子回单：`client.V3TransferElecsignDownload()`
+* <font color='#07C160' size='4'>商家转账（免确认收款授权）</font>
+    * 发起转账并完成免确认收款授权：`client.V3TransferPreTransferWithAuth()`
+    * 发起免确认收款授权：`client.V3TransferUserConfirmAuth()`
+    * 商户单号查询授权结果：`client.V3TransferUserConfirmAuthQuery()`
+    * 解除免确认收款授权：`client.V3TransferUserConfirmAuthClose()`
 * <font color='#07C160' size='4'>余额查询</font>
     * 查询特约商户账户实时余额：`client.V3EcommerceBalance()`
     * 查询二级商户账户日终余额：`client.V3EcommerceDayBalance()`

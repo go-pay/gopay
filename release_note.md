@@ -1,7 +1,7 @@
 ## 版本号：v1.5.120
 
 * 修改记录：
-    * 微信v3：新增"扣费服务（预约扣费）"全套接口（issue #543）。
+    * 微信v3：新增接口。
         * 直连商户签约（4 个 channel 各自独立函数）：
             * `client.V3ScheduledDeductPreSignMiniProgram()`，小程序预签约。
             * `client.V3ScheduledDeductPreSignApp()`，APP 预签约。
@@ -16,8 +16,13 @@
             * `client.V3ScheduledDeductApply()`，受理扣款。
         * 回调通知载荷模型：`PapayScheduledSignNotifyResource`（签解约结果）、`PapayScheduledPayNotifyResource`
           （支付结果）；回调验签 / 解密复用现有 `wechat.V3DecryptNotifyCipherTextToStruct` 等公共方法。
-        * 文档与状态枚举常量：`PapayContractState*`、`PapayTerminationMode*`、`PapayScheduleState*` 已在
-          `wechat/v3/model_papay.go` 导出。
+        * 其他
+            * `client.V3TransferPreTransferWithAuth()`，发起转账并完成免确认收款授权
+            * `client.V3TransferUserConfirmAuth()`，发起免确认收款授权
+            * `client.V3TransferUserConfirmAuthQuery()`，商户单号查询授权结果
+            * `client.V3TransferUserConfirmAuthClose()`，解除免确认收款授权
+            * `client.V3TransferElecsignDownload()`，下载电子回单
+            * `client.V3ComplaintResponseImmediateService()`，回复需要即时服务的投诉单
 
 ## 版本号：v1.5.119
 

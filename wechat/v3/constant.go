@@ -202,18 +202,19 @@ const (
 	v3GoldPlanCloseAdShow  = "/v3/goldplan/merchants/close-advertising-show"          // 关闭广告展示 POST
 
 	// 消费者投诉2.0
-	v3ComplaintList                 = "/v3/merchant-service/complaints-v2"                           // 查询投诉单列表 GET
-	v3ComplaintDetail               = "/v3/merchant-service/complaints-v2/%s"                        // complaint_id 查询投诉单详情 GET
-	v3ComplaintNegotiationHistory   = "/v3/merchant-service/complaints-v2/%s/negotiation-historys"   // complaint_id 查询投诉协商历史 GET
-	v3ComplaintNotifyUrlCreate      = "/v3/merchant-service/complaint-notifications"                 // 创建投诉通知回调地址 POST
-	v3ComplaintNotifyUrlQuery       = "/v3/merchant-service/complaint-notifications"                 // 查询投诉通知回调地址 GET
-	v3ComplaintNotifyUrlUpdate      = "/v3/merchant-service/complaint-notifications"                 // 查询投诉通知回调地址 PUT
-	v3ComplaintNotifyUrlDelete      = "/v3/merchant-service/complaint-notifications"                 // 删除投诉通知回调地址 DELETE
-	v3ComplaintResponse             = "/v3/merchant-service/complaints-v2/%s/response"               // complaint_id 回复用户 POST
-	v3ComplaintComplete             = "/v3/merchant-service/complaints-v2/%s/complete"               // complaint_id 反馈处理完成 POST
-	v3ComplaintUpdateRefundProgress = "/v3/merchant-service/complaints-v2/%s/update-refund-progress" // complaint_id 更新退款审批结果 POST
-	v3ComplaintUploadImage          = "/v3/merchant-service/images/upload"                           // 商户上传反馈图片 POST
-	v3ComplaintImage                = "/v3/merchant-service/images/%s"                               // media_id 图片请求接口 GET
+	v3ComplaintList                     = "/v3/merchant-service/complaints-v2"                               // 查询投诉单列表 GET
+	v3ComplaintDetail                   = "/v3/merchant-service/complaints-v2/%s"                            // complaint_id 查询投诉单详情 GET
+	v3ComplaintNegotiationHistory       = "/v3/merchant-service/complaints-v2/%s/negotiation-historys"       // complaint_id 查询投诉协商历史 GET
+	v3ComplaintNotifyUrlCreate          = "/v3/merchant-service/complaint-notifications"                     // 创建投诉通知回调地址 POST
+	v3ComplaintNotifyUrlQuery           = "/v3/merchant-service/complaint-notifications"                     // 查询投诉通知回调地址 GET
+	v3ComplaintNotifyUrlUpdate          = "/v3/merchant-service/complaint-notifications"                     // 查询投诉通知回调地址 PUT
+	v3ComplaintNotifyUrlDelete          = "/v3/merchant-service/complaint-notifications"                     // 删除投诉通知回调地址 DELETE
+	v3ComplaintResponse                 = "/v3/merchant-service/complaints-v2/%s/response"                   // complaint_id 回复用户 POST
+	v3ComplaintComplete                 = "/v3/merchant-service/complaints-v2/%s/complete"                   // complaint_id 反馈处理完成 POST
+	v3ComplaintUpdateRefundProgress     = "/v3/merchant-service/complaints-v2/%s/update-refund-progress"     // complaint_id 更新退款审批结果 POST
+	v3ComplaintResponseImmediateService = "/v3/merchant-service/complaints-v2/%s/response-immediate-service" // complaint_id 回复需要即时服务的投诉单 POST（2024-09 上线）
+	v3ComplaintUploadImage              = "/v3/merchant-service/images/upload"                               // 商户上传反馈图片 POST
+	v3ComplaintImage                    = "/v3/merchant-service/images/%s"                                   // media_id 图片请求接口 GET
 
 	// 商户平台处置通知
 	v3ViolationNotifyUrlCreate = "/v3/merchant-risk-manage/violation-notifications" // 创建商户违规通知回调地址 POST
@@ -267,6 +268,13 @@ const (
 	V3TransferElecsignMerchantQuery = "/v3/fund-app/mch-transfer/elecsign/out-bill-no/%s"              // 商户单号查询电子回单 GET
 	V3TransferElecsign              = "/v3/fund-app/mch-transfer/elecsign/transfer-bill-no"            // 微信单号申请电子回单 POST
 	V3TransferElecsignQuery         = "/v3/fund-app/mch-transfer/elecsign/transfer-bill-no/%s"         // 微信单号查询电子回单 GET
+	V3TransferElecsignDownload      = "/v3/transferdownload/signfile"                                  // 下载电子回单 GET（query: token）
+
+	// 用户授权免确认收款（商家转账 2025-05 新增）
+	V3TransferPreTransferWithAuth  = "/v3/fund-app/mch-transfer/transfer-bills/pre-transfer-with-authorization"           // 发起转账并完成免确认收款授权 POST
+	V3TransferUserConfirmAuth      = "/v3/fund-app/mch-transfer/user-confirm-authorization"                               // 发起免确认收款授权 POST
+	V3TransferUserConfirmAuthQry   = "/v3/fund-app/mch-transfer/user-confirm-authorization/out-authorization-no/%s"       // out_authorization_no 商户单号查询授权结果 GET
+	V3TransferUserConfirmAuthClose = "/v3/fund-app/mch-transfer/user-confirm-authorization/out-authorization-no/%s/close" // out_authorization_no 解除免确认收款授权 POST
 
 	// 平台收付通（余额查询）
 	v3MerchantBalance     = "/v3/merchant/fund/balance/%s"        // account_type 查询账户实时余额 GET

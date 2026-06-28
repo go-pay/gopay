@@ -136,10 +136,11 @@ type SubOrders struct {
 }
 
 type CombineAmount struct {
-	TotalAmount   int    `json:"total_amount,omitempty"`   // 订单总金额，单位为分
-	Currency      string `json:"currency,omitempty"`       // 标价币种：符合ISO 4217标准的三位字母代码，人民币：CNY
-	PayerAmount   int    `json:"payer_amount"`             // 订单现金支付金额
-	PayerCurrency string `json:"payer_currency,omitempty"` // 现金支付币种：符合ISO 4217标准的三位字母代码，默认人民币：CNY
+	TotalAmount    int    `json:"total_amount,omitempty"`    // 订单总金额，单位为分
+	Currency       string `json:"currency,omitempty"`        // 标价币种：符合ISO 4217标准的三位字母代码，人民币：CNY
+	PayerAmount    int    `json:"payer_amount"`              // 订单现金支付金额
+	PayerCurrency  string `json:"payer_currency,omitempty"`  // 现金支付币种：符合ISO 4217标准的三位字母代码，默认人民币：CNY
+	SettlementRate int    `json:"settlement_rate,omitempty"` // 结算汇率，标价币种和商品单商户号的结算币种不一致时才返回（汇率值是汇率乘以10的8次方，如 6.5 → 650000000）
 }
 
 type CombineQueryOrder struct {

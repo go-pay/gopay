@@ -146,6 +146,7 @@ if ppRsp.Code != paypal.Success {
   * 订单支付授权（Authorize payment for order）：`client.OrderAuthorize()`
   * 订单支付捕获（Capture payment for order）：`client.OrderCapture()`
   * 订单支付确认（Confirm the Order）：`client.OrderConfirm()`
+  * 支持内联订阅计划（循环扣款 / 保存支付方式 / 分期）：`Item.BillingPlan`（类型 `OrderBillingPlan` / `OrderBillingCycle`）
 * <font color='#003087' size='4'>Payments</font>
   * 支付授权详情（Show details for authorized payment）：`client.PaymentAuthorizeDetail()`
   * 重新授权支付授权（Reauthorize authorized payment）：`client.PaymentReauthorize()`
