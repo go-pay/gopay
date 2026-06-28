@@ -231,6 +231,13 @@ type InvoiceTemplateUpdateRsp struct {
 	Response      *Template      `json:"response,omitempty"`
 }
 
+type InvoiceTemplateDetailRsp struct {
+	Code          int            `json:"-"`
+	Error         string         `json:"-"`
+	ErrorResponse *ErrorResponse `json:"-"`
+	Response      *Template      `json:"response,omitempty"`
+}
+
 type PaymentTokenCreateRsp struct {
 	Code          int                  `json:"-"`
 	Error         string               `json:"-"`
@@ -271,7 +278,7 @@ type PaymentSetupTokenDetailRsp struct {
 type Patch struct {
 	Op    string `json:"op"` // The possible values are: add、remove、replace、move、copy、test
 	Path  string `json:"path,omitempty"`
-	Value any    `json:"value"` // The value to apply. The remove operation does not require a value.
+	Value any    `json:"value,omitempty"` // The value to apply. The remove operation does not require a value.
 	From  string `json:"from,omitempty"`
 }
 
@@ -489,9 +496,9 @@ type PurchaseUnit struct {
 }
 
 type Amount struct {
-	CurrencyCode          string                `json:"currency_code"`
-	Value                 string                `json:"value"`
-	PurchaseUnitBreakdown PurchaseUnitBreakdown `json:"breakdown"`
+	CurrencyCode          string                 `json:"currency_code,omitempty"`
+	Value                 string                 `json:"value,omitempty"`
+	PurchaseUnitBreakdown *PurchaseUnitBreakdown `json:"breakdown,omitempty"`
 }
 
 type PurchaseUnitBreakdown struct {
@@ -676,6 +683,7 @@ type PaymentAuthorizeDetail struct {
 	InvoiceId        string            `json:"invoice_id,omitempty"`
 	CustomId         string            `json:"custom_id,omitempty"`
 	SellerProtection *SellerProtection `json:"seller_protection,omitempty"`
+	Payee            *Payee            `json:"payee,omitempty"`
 	Links            []*Link           `json:"links,omitempty"`
 	ExpirationTime   string            `json:"expiration_time,omitempty"`
 	CreateTime       string            `json:"create_time,omitempty"`
@@ -698,10 +706,23 @@ type PaymentAuthorizeCapture struct {
 	SellerProtection          *SellerProtection          `json:"seller_protection,omitempty"`
 	SellerReceivableBreakdown *SellerReceivableBreakdown `json:"seller_receivable_breakdown,omitempty"`
 	DisbursementMode          string                     `json:"disbursement_mode,omitempty"`
+	Payee                     *Payee                     `json:"payee,omitempty"`
+	SupplementaryData         *SupplementaryData         `json:"supplementary_data,omitempty"`
 	Links                     []*Link                    `json:"links,omitempty"`
 	ProcessorResponse         *Processor                 `json:"processor_response,omitempty"`
 	CreateTime                string                     `json:"create_time,omitempty"`
 	UpdateTime                string                     `json:"update_time,omitempty"`
+}
+
+// SupplementaryData PayPal capture/refund 响应里的辅助数据，目前只包含 related_ids
+// 文档样例：{"related_ids": {"order_id": "...", "authorization_id": "..."}}
+type SupplementaryData struct {
+	RelatedIds *RelatedIds `json:"related_ids,omitempty"`
+}
+
+type RelatedIds struct {
+	OrderId         string `json:"order_id,omitempty"`
+	AuthorizationId string `json:"authorization_id,omitempty"`
 }
 
 type SellerReceivableBreakdown struct {
@@ -769,7 +790,6 @@ type PaymentSetupTokenDetail struct {
 	PaymentSource *PaymentSource  `json:"payment_source,omitempty"`
 	Links         []*Link         `json:"links,omitempty"`
 	Id            string          `json:"id,omitempty"`
-	Ordinal       int             `json:"ordinal,omitempty"`
 	Customer      *PaypalCustomer `json:"customer,omitempty"`
 	Status        string          `json:"status,omitempty"`
 }
@@ -812,9 +832,11 @@ type BatchHeader struct {
 	BatchStatus       string             `json:"batch_status"` // DENIED、PENDING、PROCESSING、SUCCESS、CANCELED
 	TimeCreated       string             `json:"time_created,omitempty"`
 	TimeCompleted     string             `json:"time_completed,omitempty"`
+	TimeClosed        string             `json:"time_closed,omitempty"`
 	SenderBatchHeader *SenderBatchHeader `json:"sender_batch_header"`
 	Amount            *V1Amount          `json:"amount,omitempty"`
 	Fees              *V1Amount          `json:"fees,omitempty"`
+	Displayable       bool               `json:"displayable,omitempty"`
 }
 
 type BatchPayout struct {
@@ -842,7 +864,7 @@ type PayoutBatchDetail struct {
 	Items       []*PayoutItemDetail `json:"items"`
 	Links       []*Link             `json:"links"`
 	TotalItems  int64               `json:"total_items,omitempty"`
-	TotalPage   int64               `json:"total_page,omitempty"`
+	TotalPages  int64               `json:"total_pages,omitempty"`
 }
 
 // Subscription Model
@@ -853,7 +875,11 @@ type Frequency struct {
 }
 
 type PricingScheme struct {
-	FixedPrice *FixedPrice `json:"fixed_price"`
+	FixedPrice *FixedPrice `json:"fixed_price,omitempty"`
+	Status     string      `json:"status,omitempty"` // ACTIVE / INACTIVE / CREATED
+	Version    int         `json:"version,omitempty"`
+	CreateTime string      `json:"create_time,omitempty"`
+	UpdateTime string      `json:"update_time,omitempty"`
 }
 
 type FixedPrice struct {
@@ -953,8 +979,11 @@ type CommonAmount struct {
 	Value        string `json:"value"`
 }
 
+// InvoiceNumber 对应 generate-next-invoice-number 接口的响应
+// fetch_id=false（默认）返回 {"invoice_number": "..."}, fetch_id=true 返回 {"invoice_id": "..."}
 type InvoiceNumber struct {
-	InvoiceNumber string `json:"invoice_number"`
+	InvoiceNumber string `json:"invoice_number,omitempty"`
+	InvoiceId     string `json:"invoice_id,omitempty"`
 }
 
 type InvoiceList struct {
@@ -1044,24 +1073,32 @@ type Configuration struct {
 	TemplateId                 string          `json:"template_id"`
 }
 
+// Money 通用金额类型（spec money schema），仅含 currency_code + value，无 breakdown
+// 文档：https://developer.paypal.com/docs/api/invoicing/v2/#definition-money_v5
+// 注意：与 Amount 区分——Amount 是 Orders/Payments 用的 amount_with_breakdown / amount_summary_detail，含可选 breakdown
+type Money struct {
+	CurrencyCode string `json:"currency_code,omitempty"`
+	Value        string `json:"value,omitempty"`
+}
+
 type PartialPayment struct {
-	AllowPartialPayment bool    `json:"allow_partial_payment"`
-	MinimumAmount       *Amount `json:"minimum_amount"`
+	AllowPartialPayment bool   `json:"allow_partial_payment,omitempty"`
+	MinimumAmountDue    *Money `json:"minimum_amount_due,omitempty"` // spec 字段名 minimum_amount_due，旧版误用 minimum_amount 永远反序列化失败
 }
 
 type InvoicePayments struct {
-	PaidAmount   *Amount          `json:"paid_amount"`
-	Transactions []*PaymentDetail `json:"transactions"`
+	PaidAmount   *Money           `json:"paid_amount,omitempty"`
+	Transactions []*PaymentDetail `json:"transactions,omitempty"`
 }
 
 type PaymentDetail struct {
-	Method       string              `json:"method"`
-	Amount       *Amount             `json:"amount"`
-	Note         string              `json:"note"`
-	PaymentDate  string              `json:"payment_date"`
-	PaymentId    string              `json:"payment_id"`
-	Type         string              `json:"type"`
-	ShippingInfo *ContactInformation `json:"shipping_info"`
+	Method       string              `json:"method,omitempty"`
+	Amount       *Money              `json:"amount,omitempty"`
+	Note         string              `json:"note,omitempty"`
+	PaymentDate  string              `json:"payment_date,omitempty"`
+	PaymentId    string              `json:"payment_id,omitempty"`
+	Type         string              `json:"type,omitempty"`
+	ShippingInfo *ContactInformation `json:"shipping_info,omitempty"`
 }
 
 type ContactInformation struct {
@@ -1090,20 +1127,25 @@ type PhoneDetail struct {
 }
 
 type InvoiceRefunds struct {
-	RefundAmount *Amount         `json:"refund_amount"`
-	Transactions []*RefundDetail `json:"transactions"`
+	RefundAmount *Money          `json:"refund_amount,omitempty"`
+	Transactions []*RefundDetail `json:"transactions,omitempty"`
 }
 
 type RefundDetail struct {
-	Method     string  `json:"method"`
-	Amount     *Amount `json:"amount"`
-	RefundDate string  `json:"refund_date"`
-	RefundId   string  `json:"refund_id"`
-	Type       string  `json:"type"`
+	Method     string `json:"method,omitempty"`
+	Amount     *Money `json:"amount,omitempty"`
+	RefundDate string `json:"refund_date,omitempty"`
+	RefundId   string `json:"refund_id,omitempty"`
+	Type       string `json:"type,omitempty"`
 }
 
+// QRCodeBase64 InvoiceGenerateQRCode 接口的响应
+// 实际响应：multipart/form-data 信封，内含 name="image" 的 application/octet-stream part（PNG 字节）
+// Image 字段是从 multipart 中解出的 PNG 原始字节流；Base64 是 base64 编码后的字符串，方便嵌入 HTML <img>
+// 文档：https://developer.paypal.com/docs/api/invoicing/v2/#invoices_generate-qr-code
 type QRCodeBase64 struct {
-	Base64Image string
+	Image  []byte `json:"-"` // PNG 原始字节
+	Base64 string `json:"-"` // PNG 经 base64 编码的字符串
 }
 
 type InvoicePayment struct {
@@ -1182,13 +1224,25 @@ type AddTrackingNumberReq struct {
 	NotifyPayer      bool        `json:"notify_payer"`
 	ShipItem         []*ShipItem `json:"items"`
 }
+
+// ShipItem 物流单中的商品项（orders.track_create / orders.trackers_patch）
+// 文档：https://developer.paypal.com/docs/api/orders/v2/#orders_track_create
+// Quantity 类型：spec tracker_item.quantity 是 string（pattern ^[1-9][0-9]{0,9}$），不是 int
 type ShipItem struct {
-	Name     string `json:"name"`
-	Quantity int    `json:"quantity"`
-	Sku      string `json:"sku"`
-	Url      string `json:"url"`
-	ImageUrl string `json:"image_url"`
+	Name     string         `json:"name,omitempty"`
+	Quantity string         `json:"quantity,omitempty"`
+	Sku      string         `json:"sku,omitempty"`
+	Url      string         `json:"url,omitempty"`
+	ImageUrl string         `json:"image_url,omitempty"`
+	Upc      *UniversalCode `json:"upc,omitempty"`
 }
+
+// UniversalCode UPC 商品条码（type + code）
+type UniversalCode struct {
+	Type string `json:"type,omitempty"` // UPC-A / UPC-B / UPC-C / UPC-D / UPC-E / UPC-2 / UPC-5
+	Code string `json:"code,omitempty"`
+}
+
 type AddTrackingNumberRsp struct {
 	Code          int            `json:"-"`
 	Error         string         `json:"-"`
@@ -1301,4 +1355,21 @@ type WebhookEvent struct {
 	Links           []*Link         `json:"links,omitempty"`
 	EventVersion    string          `json:"event_version"`
 	ResourceVersion string          `json:"resource_version"`
+}
+
+// FindEligibleMethodsRsp 对应 POST /v2/payments/find-eligible-methods
+// 响应 schema 见 https://developer.paypal.com/docs/api/payments/v2/#find_eligible_methods
+// EligibleMethods 子字段含 paypal / venmo / paylater / card 等多种 payment source 类型，
+// 每种 source 的 schema 嵌套深且差异大；这里用 map[string]json.RawMessage 保留原始 JSON，
+// 调用方按需 json.Unmarshal 进自己的类型。
+type FindEligibleMethodsRsp struct {
+	Code          int                          `json:"-"`
+	Error         string                       `json:"-"`
+	ErrorResponse *ErrorResponse               `json:"-"`
+	Response      *FindEligibleMethodsResponse `json:"response,omitempty"`
+}
+
+type FindEligibleMethodsResponse struct {
+	EligibleMethods map[string]json.RawMessage `json:"eligible_methods,omitempty"`
+	Links           []*Link                    `json:"links,omitempty"`
 }

@@ -1,10 +1,15 @@
 package paypal
 
 import (
+	"bytes"
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"mime"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 
@@ -14,9 +19,9 @@ import (
 // 生成下一个发票号码（Generate invoice number）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/invoicing/v2/#invoices_generate-next-invoice-number
-func (c *Client) InvoiceNumberGenerate(ctx context.Context, invoiceNumber string) (ppRsp *InvoiceNumberGenerateRsp, err error) {
+func (c *Client) InvoiceNumberGenerate(ctx context.Context, fetchId bool) (ppRsp *InvoiceNumberGenerateRsp, err error) {
 	bm := make(gopay.BodyMap)
-	bm.Set("invoice_number", invoiceNumber)
+	bm.Set("fetch_id", fetchId)
 	res, bs, err := c.doPayPalPost(ctx, bm, generateInvoiceNumber)
 	if err != nil {
 		return nil, err
@@ -199,14 +204,53 @@ func (c *Client) InvoiceGenerateQRCode(ctx context.Context, invoiceId string, bo
 		return nil, err
 	}
 	ppRsp = &InvoiceGenerateQRCodeRsp{Code: Success}
-	ppRsp.Response = &QRCodeBase64{Base64Image: string(bs)}
 	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
 		ppRsp.Error = string(bs)
 		ppRsp.ErrorResponse = new(ErrorResponse)
 		_ = json.Unmarshal(bs, ppRsp.ErrorResponse)
+		return ppRsp, nil
+	}
+	imageBytes, err := parseQRCodeMultipart(res.Header.Get("Content-Type"), bs)
+	if err != nil {
+		return nil, fmt.Errorf("paypal: parse qr-code multipart response: %w", err)
+	}
+	ppRsp.Response = &QRCodeBase64{
+		Image:  imageBytes,
+		Base64: base64.StdEncoding.EncodeToString(imageBytes),
 	}
 	return ppRsp, nil
+}
+
+// parseQRCodeMultipart 从 invoices.generate-qr-code 接口的 multipart/form-data 响应里提取 name="image" 的字节
+func parseQRCodeMultipart(contentType string, body []byte) ([]byte, error) {
+	mediaType, params, err := mime.ParseMediaType(contentType)
+	if err != nil {
+		return nil, fmt.Errorf("invalid Content-Type %q: %w", contentType, err)
+	}
+	boundary, ok := params["boundary"]
+	if !ok || boundary == "" {
+		return nil, fmt.Errorf("missing boundary in Content-Type %q (mediaType=%s)", contentType, mediaType)
+	}
+	reader := multipart.NewReader(bytes.NewReader(body), boundary)
+	for {
+		part, perr := reader.NextPart()
+		if perr == io.EOF {
+			return nil, errors.New(`no "image" part found in multipart body`)
+		}
+		if perr != nil {
+			return nil, perr
+		}
+		if part.FormName() == "image" {
+			data, rerr := io.ReadAll(part)
+			_ = part.Close()
+			if rerr != nil {
+				return nil, rerr
+			}
+			return data, nil
+		}
+		_ = part.Close()
+	}
 }
 
 // 发票付款记录（Record payment for invoice）
@@ -359,13 +403,13 @@ func (c *Client) InvoiceSend(ctx context.Context, invoiceId string, body gopay.B
 func (c *Client) InvoiceSearch(ctx context.Context, page, pageSize int, totalRequired bool, body gopay.BodyMap) (ppRsp *InvoiceSearchRsp, err error) {
 	uri := searchInvoice
 	if page != 0 && pageSize != 0 {
-		uri += uri + "?page=" + strconv.Itoa(page) + "&page_size=" + strconv.Itoa(pageSize)
+		uri = uri + "?page=" + strconv.Itoa(page) + "&page_size=" + strconv.Itoa(pageSize)
 	}
 	if totalRequired {
 		if page != 0 && pageSize != 0 {
-			uri += uri + "&total_required=true"
+			uri = uri + "&total_required=true"
 		} else {
-			uri += uri + "?total_required=true"
+			uri = uri + "?total_required=true"
 		}
 	}
 	res, bs, err := c.doPayPalPost(ctx, body, uri)
@@ -423,6 +467,33 @@ func (c *Client) InvoiceTemplateCreate(ctx context.Context, body gopay.BodyMap) 
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	if res.StatusCode != http.StatusCreated {
+		ppRsp.Code = res.StatusCode
+		ppRsp.Error = string(bs)
+		ppRsp.ErrorResponse = new(ErrorResponse)
+		_ = json.Unmarshal(bs, ppRsp.ErrorResponse)
+	}
+	return ppRsp, nil
+}
+
+// 发票模板详情（Show template details）
+// Code = 0 is success
+// 文档：https://developer.paypal.com/docs/api/invoicing/v2/#templates_get
+// 成功状态码：200
+func (c *Client) InvoiceTemplateDetail(ctx context.Context, templateId string) (ppRsp *InvoiceTemplateDetailRsp, err error) {
+	if templateId == gopay.NULL {
+		return nil, errors.New("template_id is empty")
+	}
+	url := fmt.Sprintf(showInvoiceTemplate, templateId)
+	res, bs, err := c.doPayPalGet(ctx, url)
+	if err != nil {
+		return nil, err
+	}
+	ppRsp = &InvoiceTemplateDetailRsp{Code: Success}
+	ppRsp.Response = new(Template)
+	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
 		ppRsp.Error = string(bs)
 		ppRsp.ErrorResponse = new(ErrorResponse)

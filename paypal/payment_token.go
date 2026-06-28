@@ -38,7 +38,11 @@ func (c *Client) CreatePaymentToken(ctx context.Context, bm gopay.BodyMap) (ppRs
 // ListAllPaymentTokens lists all payment tokens.
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/payment-tokens/v3/#customer_payment-tokens_get
+// 必填 query：customer_id（pattern ^[0-9a-zA-Z_-]+$，长度 7-36）
 func (c *Client) ListAllPaymentTokens(ctx context.Context, query gopay.BodyMap) (ppRsp *PaymentTokenListRsp, err error) {
+	if err = query.CheckEmptyError("customer_id"); err != nil {
+		return nil, err
+	}
 	uri := paymentTokenList + "?" + query.EncodeURLParams()
 	res, bs, err := c.doPayPalGet(ctx, uri)
 	if err != nil {

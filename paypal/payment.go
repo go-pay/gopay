@@ -53,7 +53,7 @@ func (c *Client) PaymentReauthorize(ctx context.Context, authorizationId string,
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
-	if res.StatusCode != http.StatusCreated {
+	if res.StatusCode != http.StatusCreated && res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
 		ppRsp.Error = string(bs)
 		ppRsp.ErrorResponse = new(ErrorResponse)
@@ -75,7 +75,7 @@ func (c *Client) PaymentAuthorizeVoid(ctx context.Context, authorizationId strin
 		return nil, err
 	}
 	ppRsp = &EmptyRsp{Code: Success}
-	if res.StatusCode != http.StatusNoContent {
+	if res.StatusCode != http.StatusNoContent && res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
 		ppRsp.Error = string(bs)
 		ppRsp.ErrorResponse = new(ErrorResponse)
@@ -101,7 +101,7 @@ func (c *Client) PaymentAuthorizeCapture(ctx context.Context, authorizationId st
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
-	if res.StatusCode != http.StatusCreated {
+	if res.StatusCode != http.StatusCreated && res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
 		ppRsp.Error = string(bs)
 		ppRsp.ErrorResponse = new(ErrorResponse)
@@ -153,7 +153,7 @@ func (c *Client) PaymentCaptureRefund(ctx context.Context, captureId string, bm 
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
-	if res.StatusCode != http.StatusCreated {
+	if res.StatusCode != http.StatusCreated && res.StatusCode != http.StatusOK {
 		ppRsp.Code = res.StatusCode
 		ppRsp.Error = string(bs)
 		ppRsp.ErrorResponse = new(ErrorResponse)
@@ -176,6 +176,29 @@ func (c *Client) PaymentRefundDetail(ctx context.Context, refundId string) (ppRs
 	}
 	ppRsp = &PaymentRefundDetailRsp{Code: Success}
 	ppRsp.Response = new(PaymentCaptureRefund)
+	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	if res.StatusCode != http.StatusOK {
+		ppRsp.Code = res.StatusCode
+		ppRsp.Error = string(bs)
+		ppRsp.ErrorResponse = new(ErrorResponse)
+		_ = json.Unmarshal(bs, ppRsp.ErrorResponse)
+	}
+	return ppRsp, nil
+}
+
+// FindEligiblePaymentMethods 查询可用支付方式
+// 文档：https://developer.paypal.com/docs/api/payments/v2/#find_eligible_methods
+// 入参 BodyMap 推荐字段：customer (object) / purchase_units (array, 1..10 items) / preferences (object)
+// 成功状态码：200，body 含 eligible_methods（paypal/venmo/paylater/card 等多种 payment source 类型）
+func (c *Client) FindEligiblePaymentMethods(ctx context.Context, bm gopay.BodyMap) (ppRsp *FindEligibleMethodsRsp, err error) {
+	res, bs, err := c.doPayPalPost(ctx, bm, findEligiblePaymentMethods)
+	if err != nil {
+		return nil, err
+	}
+	ppRsp = &FindEligibleMethodsRsp{Code: Success}
+	ppRsp.Response = new(FindEligibleMethodsResponse)
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}

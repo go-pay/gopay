@@ -202,18 +202,19 @@ const (
 	v3GoldPlanCloseAdShow  = "/v3/goldplan/merchants/close-advertising-show"          // 关闭广告展示 POST
 
 	// 消费者投诉2.0
-	v3ComplaintList                 = "/v3/merchant-service/complaints-v2"                           // 查询投诉单列表 GET
-	v3ComplaintDetail               = "/v3/merchant-service/complaints-v2/%s"                        // complaint_id 查询投诉单详情 GET
-	v3ComplaintNegotiationHistory   = "/v3/merchant-service/complaints-v2/%s/negotiation-historys"   // complaint_id 查询投诉协商历史 GET
-	v3ComplaintNotifyUrlCreate      = "/v3/merchant-service/complaint-notifications"                 // 创建投诉通知回调地址 POST
-	v3ComplaintNotifyUrlQuery       = "/v3/merchant-service/complaint-notifications"                 // 查询投诉通知回调地址 GET
-	v3ComplaintNotifyUrlUpdate      = "/v3/merchant-service/complaint-notifications"                 // 查询投诉通知回调地址 PUT
-	v3ComplaintNotifyUrlDelete      = "/v3/merchant-service/complaint-notifications"                 // 删除投诉通知回调地址 DELETE
-	v3ComplaintResponse             = "/v3/merchant-service/complaints-v2/%s/response"               // complaint_id 回复用户 POST
-	v3ComplaintComplete             = "/v3/merchant-service/complaints-v2/%s/complete"               // complaint_id 反馈处理完成 POST
-	v3ComplaintUpdateRefundProgress = "/v3/merchant-service/complaints-v2/%s/update-refund-progress" // complaint_id 更新退款审批结果 POST
-	v3ComplaintUploadImage          = "/v3/merchant-service/images/upload"                           // 商户上传反馈图片 POST
-	v3ComplaintImage                = "/v3/merchant-service/images/%s"                               // media_id 图片请求接口 GET
+	v3ComplaintList                     = "/v3/merchant-service/complaints-v2"                               // 查询投诉单列表 GET
+	v3ComplaintDetail                   = "/v3/merchant-service/complaints-v2/%s"                            // complaint_id 查询投诉单详情 GET
+	v3ComplaintNegotiationHistory       = "/v3/merchant-service/complaints-v2/%s/negotiation-historys"       // complaint_id 查询投诉协商历史 GET
+	v3ComplaintNotifyUrlCreate          = "/v3/merchant-service/complaint-notifications"                     // 创建投诉通知回调地址 POST
+	v3ComplaintNotifyUrlQuery           = "/v3/merchant-service/complaint-notifications"                     // 查询投诉通知回调地址 GET
+	v3ComplaintNotifyUrlUpdate          = "/v3/merchant-service/complaint-notifications"                     // 查询投诉通知回调地址 PUT
+	v3ComplaintNotifyUrlDelete          = "/v3/merchant-service/complaint-notifications"                     // 删除投诉通知回调地址 DELETE
+	v3ComplaintResponse                 = "/v3/merchant-service/complaints-v2/%s/response"                   // complaint_id 回复用户 POST
+	v3ComplaintComplete                 = "/v3/merchant-service/complaints-v2/%s/complete"                   // complaint_id 反馈处理完成 POST
+	v3ComplaintUpdateRefundProgress     = "/v3/merchant-service/complaints-v2/%s/update-refund-progress"     // complaint_id 更新退款审批结果 POST
+	v3ComplaintResponseImmediateService = "/v3/merchant-service/complaints-v2/%s/response-immediate-service" // complaint_id 回复需要即时服务的投诉单 POST（2024-09 上线）
+	v3ComplaintUploadImage              = "/v3/merchant-service/images/upload"                               // 商户上传反馈图片 POST
+	v3ComplaintImage                    = "/v3/merchant-service/images/%s"                                   // media_id 图片请求接口 GET
 
 	// 商户平台处置通知
 	v3ViolationNotifyUrlCreate = "/v3/merchant-risk-manage/violation-notifications" // 创建商户违规通知回调地址 POST
@@ -267,6 +268,13 @@ const (
 	V3TransferElecsignMerchantQuery = "/v3/fund-app/mch-transfer/elecsign/out-bill-no/%s"              // 商户单号查询电子回单 GET
 	V3TransferElecsign              = "/v3/fund-app/mch-transfer/elecsign/transfer-bill-no"            // 微信单号申请电子回单 POST
 	V3TransferElecsignQuery         = "/v3/fund-app/mch-transfer/elecsign/transfer-bill-no/%s"         // 微信单号查询电子回单 GET
+	V3TransferElecsignDownload      = "/v3/transferdownload/signfile"                                  // 下载电子回单 GET（query: token）
+
+	// 用户授权免确认收款（商家转账 2025-05 新增）
+	V3TransferPreTransferWithAuth  = "/v3/fund-app/mch-transfer/transfer-bills/pre-transfer-with-authorization"           // 发起转账并完成免确认收款授权 POST
+	V3TransferUserConfirmAuth      = "/v3/fund-app/mch-transfer/user-confirm-authorization"                               // 发起免确认收款授权 POST
+	V3TransferUserConfirmAuthQry   = "/v3/fund-app/mch-transfer/user-confirm-authorization/out-authorization-no/%s"       // out_authorization_no 商户单号查询授权结果 GET
+	V3TransferUserConfirmAuthClose = "/v3/fund-app/mch-transfer/user-confirm-authorization/out-authorization-no/%s/close" // out_authorization_no 解除免确认收款授权 POST
 
 	// 平台收付通（余额查询）
 	v3MerchantBalance     = "/v3/merchant/fund/balance/%s"        // account_type 查询账户实时余额 GET
@@ -323,6 +331,21 @@ const (
 
 	// 扣款服务-直连模式（其他相关接口在v2接口中）
 	v3EntrustPayNotify = "/v3/papay/contracts/%s/notify" // contract_id 预扣费通知 POST
+
+	// 扣费服务（预约扣费）—— 签约
+	v3ScheduledDeductPreSignMiniProgram = "/v3/papay/scheduled-deduct-sign/contracts/pre-entrust-sign/mini-program" // 小程序预签约 POST
+	v3ScheduledDeductPreSignApp         = "/v3/papay/scheduled-deduct-sign/contracts/pre-entrust-sign/app"          // APP 预签约 POST
+	v3ScheduledDeductPreSignH5          = "/v3/papay/scheduled-deduct-sign/contracts/pre-entrust-sign/h5"           // H5 预签约 POST
+	v3ScheduledDeductPreSignJsapi       = "/v3/papay/scheduled-deduct-sign/contracts/pre-entrust-sign/jsapi"        // JSAPI 预签约 POST
+
+	// 扣费服务（预约扣费）—— 协议管理
+	v3ScheduledDeductContractQuery     = "/v3/papay/sign/contracts/plan-id/%s/out-contract-code/%s"           // plan_id, out_contract_code 通过商户协议号查询签约 GET
+	v3ScheduledDeductContractTerminate = "/v3/papay/sign/contracts/plan-id/%s/out-contract-code/%s/terminate" // plan_id, out_contract_code 通过商户协议号解约 POST
+
+	// 扣费服务（预约扣费）—— 扣款
+	v3ScheduledDeductSchedule      = "/v3/papay/pay/schedules/contract-id/%s/schedule" // contract_id 创建预约扣费 POST
+	v3ScheduledDeductScheduleQuery = "/v3/papay/pay/schedules/contract-id/%s"          // contract_id 查询预约扣费结果 GET
+	v3ScheduledDeductApply         = "/v3/papay/pay/transactions/apply"                // 受理扣款 POST
 
 	// 刷掌支付
 	v3PalmServicePreAuthorize = "/v3/palmservice/authorization/preauthorize" // 用户自主录掌&预授权 POST

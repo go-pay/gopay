@@ -297,6 +297,35 @@ func (c *ClientV3) V3ComplaintComplete(ctx context.Context, complaintId string, 
 	return wxRsp, c.verifySyncSign(si)
 }
 
+// 回复需要即时服务的投诉单（即时响应消息）
+// 文档：https://pay.weixin.qq.com/doc/v3/merchant/4017151596.md
+// 2024-09 上线，配合 ComplaintListItem.NeedImmediateService=true 使用。
+// 请求体走 message.blocks 协议（TEXT/IMAGE/LINK/FAQ_LIST/BUTTON 等多种 block），结构复杂，
+// 调用方通过 BodyMap 自行构造，顶层 4 个字段：complainted_mchid / message / message_sender_identity / idempotent_id。
+// 响应：200 OK 返回 log_id（与协商历史 log_id 对应）。
+func (c *ClientV3) V3ComplaintResponseImmediateService(ctx context.Context, complaintId string, bm gopay.BodyMap) (*ComplaintResponseImmediateServiceRsp, error) {
+	url := fmt.Sprintf(v3ComplaintResponseImmediateService, complaintId)
+	authorization, err := c.authorization(MethodPost, url, bm)
+	if err != nil {
+		return nil, err
+	}
+	res, si, bs, err := c.doProdPost(ctx, bm, url, authorization)
+	if err != nil {
+		return nil, err
+	}
+	wxRsp := &ComplaintResponseImmediateServiceRsp{Code: Success, SignInfo: si, Response: &ComplaintResponseImmediateService{}}
+	if res.StatusCode != http.StatusOK {
+		wxRsp.Code = res.StatusCode
+		wxRsp.Error = string(bs)
+		_ = js.UnmarshalBytes(bs, &wxRsp.ErrResponse)
+		return wxRsp, nil
+	}
+	if err = json.Unmarshal(bs, wxRsp.Response); err != nil {
+		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
+	}
+	return wxRsp, c.verifySyncSign(si)
+}
+
 // 更新退款审批结果
 // Code = 0 is success
 func (c *ClientV3) V3ComplaintUpdateRefundProgress(ctx context.Context, complaintId string, bm gopay.BodyMap) (wxRsp *EmptyRsp, err error) {
