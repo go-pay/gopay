@@ -1,5 +1,20 @@
 # GoPay 项目说明
 
+## 代码探索约定
+
+探索/索引本项目代码时，**默认优先使用 `codebase-memory` MCP**，未安装则降级到默认工具：
+
+1. **首选**：`mcp__codebase-memory-mcp__*` 工具（若可用）
+   - `search_graph` — 按名称/标签/限定名查找函数、类型、路由
+   - `trace_path` — 调用链、数据流、跨服务追踪
+   - `get_code_snippet` — 按限定名获取精确源码片段
+   - `query_graph` — 复杂 Cypher 查询
+   - `get_architecture` — 项目结构总览
+   - `search_code` — 图增强的文本搜索
+   - 项目未索引时，先运行 `index_repository` 建立索引
+2. **降级（MCP 未安装/不可用时）**：使用默认工具 `Grep` / `Glob` / `Read` / `Bash`（find、grep）进行文本与文件检索
+3. 不管哪种方式，**编辑前必须先 `Read` 目标文件**
+
 ## 项目概述
 
 GoPay 是一个 Go 语言的支付 SDK 项目，提供微信、支付宝、QQ、通联支付、拉卡拉、PayPal、扫呗、Apple 支付的统一接口。
