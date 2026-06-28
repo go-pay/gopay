@@ -137,6 +137,7 @@ if ppRsp.Code != paypal.Success {
 	* 发票搜索（Search for invoices）：`client.InvoiceSearch()`
 	* 发票模板列表（List templates）：`client.InvoiceTemplateList()`
 	* 创建发票模板（Create template）：`client.InvoiceTemplateCreate()`
+	* 发票模板详情（Show template details）：`client.InvoiceTemplateDetail()`
 	* 删除发票模板（Delete template）：`client.InvoiceTemplateDelete()`
 	* 更新发票模板（Fully update template）：`client.InvoiceTemplateUpdate()`
 * <font color='#003087' size='4'>Orders</font>
@@ -155,6 +156,7 @@ if ppRsp.Code != paypal.Success {
   * 支付捕获详情（Show captured payment details）：`client.PaymentCaptureDetail()`
   * 支付捕获退款（Refund captured payment）：`client.PaymentCaptureRefund()`
   * 支付退款详情（Show refund details）：`client.PaymentRefundDetail()`
+  * 可用支付方式查询（Find eligible payment methods）：`client.FindEligiblePaymentMethods()`
 * <font color='#003087' size='4'>Payment Method Tokens</font>
   * 为给定的支付来源创建支付令牌（Create payment token for a given payment source）：`client.CreatePaymentToken()`
   * 列出所有支付令牌（List all payment tokens）：`client.ListAllPaymentTokens()`
@@ -189,3 +191,6 @@ if ppRsp.Code != paypal.Success {
   * 产品列表（List products）：`client.ProductList()`
   * 产品详情（Show product details）：`client.ProductDetails()`
   * 更新产品（Update product）：`client.ProductUpdate()`
+* <font color='#003087' size='4'>Tracking（物流）</font>
+  * 添加物流单号（Add tracking information for an order）：`client.AddTrackingNumber()`
+  * 更新或取消物流（Update or cancel tracking information）：`client.UpdateTracker()`

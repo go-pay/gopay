@@ -13,8 +13,9 @@ import (
 // 创建计划（Create plan）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/subscriptions/v1/#plans_create
+// 必填：product_id / name / billing_cycles / payment_preferences（spec plan_request_POST.required）
 func (c *Client) CreateBillingPlan(ctx context.Context, bm gopay.BodyMap) (ppRsp *CreateBillingRsp, err error) {
-	if err = bm.CheckEmptyError("product_id", "billing_cycles"); err != nil {
+	if err = bm.CheckEmptyError("product_id", "name", "billing_cycles", "payment_preferences"); err != nil {
 		return nil, err
 	}
 	res, bs, err := c.doPayPalPost(ctx, bm, planCreate)
@@ -39,7 +40,10 @@ func (c *Client) CreateBillingPlan(ctx context.Context, bm gopay.BodyMap) (ppRsp
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/subscriptions/v1/#plans_list
 func (c *Client) PlanList(ctx context.Context, bm gopay.BodyMap) (ppRsp *PlanListRsp, err error) {
-	uri := planList + "?" + bm.EncodeURLParams()
+	uri := planList
+	if len(bm) > 0 {
+		uri += "?" + bm.EncodeURLParams()
+	}
 	res, bs, err := c.doPayPalGet(ctx, uri)
 	if err != nil {
 		return nil, err
@@ -207,7 +211,10 @@ func (c *Client) SubscriptionDetails(ctx context.Context, subscriptionId string,
 	if subscriptionId == gopay.NULL {
 		return nil, errors.New("subscription_id is empty")
 	}
-	uri := fmt.Sprintf(subscriptionDetail, subscriptionId) + "?" + bm.EncodeURLParams()
+	uri := fmt.Sprintf(subscriptionDetail, subscriptionId)
+	if len(bm) > 0 {
+		uri += "?" + bm.EncodeURLParams()
+	}
 	res, bs, err := c.doPayPalGet(ctx, uri)
 	if err != nil {
 		return nil, err
@@ -333,9 +340,6 @@ func (c *Client) SubscriptionActivate(ctx context.Context, subscriptionId string
 	if subscriptionId == gopay.NULL {
 		return nil, errors.New("subscriptionId is empty")
 	}
-	if err = bm.CheckEmptyError("reason"); err != nil {
-		return nil, err
-	}
 	uri := fmt.Sprintf(subscriptionActivate, subscriptionId)
 	res, bs, err := c.doPayPalPost(ctx, bm, uri)
 	if err != nil {
@@ -381,7 +385,14 @@ func (c *Client) SubscriptionCapture(ctx context.Context, subscriptionId string,
 // 订阅的交易列表（List transactions for subscription）
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/subscriptions/v1/#subscriptions_transactions
+// 必填 query：start_time / end_time（docs 双 required）
 func (c *Client) SubscriptionTransactionList(ctx context.Context, subscriptionId string, bm gopay.BodyMap) (ppRsp *SubscriptionTransactionListRsp, err error) {
+	if subscriptionId == gopay.NULL {
+		return nil, errors.New("subscriptionId is empty")
+	}
+	if err = bm.CheckEmptyError("start_time", "end_time"); err != nil {
+		return nil, err
+	}
 	uri := fmt.Sprintf(subscriptionTransactions, subscriptionId) + "?" + bm.EncodeURLParams()
 	res, bs, err := c.doPayPalGet(ctx, uri)
 	if err != nil {

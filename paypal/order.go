@@ -64,7 +64,10 @@ func (c *Client) OrderDetail(ctx context.Context, orderId string, bm gopay.BodyM
 	if orderId == gopay.NULL {
 		return nil, errors.New("order_id is empty")
 	}
-	uri := fmt.Sprintf(orderDetail, orderId) + "?" + bm.EncodeURLParams()
+	uri := fmt.Sprintf(orderDetail, orderId)
+	if len(bm) > 0 {
+		uri += "?" + bm.EncodeURLParams()
+	}
 	res, bs, err := c.doPayPalGet(ctx, uri)
 	if err != nil {
 		return nil, err
@@ -142,6 +145,9 @@ func (c *Client) OrderConfirm(ctx context.Context, orderId string, bm gopay.Body
 	if orderId == gopay.NULL {
 		return nil, errors.New("order_id is empty")
 	}
+	if err = bm.CheckEmptyError("payment_source"); err != nil {
+		return nil, err
+	}
 	url := fmt.Sprintf(orderConfirm, orderId)
 	res, bs, err := c.doPayPalPost(ctx, bm, url)
 	if err != nil {
@@ -152,7 +158,7 @@ func (c *Client) OrderConfirm(ctx context.Context, orderId string, bm gopay.Body
 	if err = json.Unmarshal(bs, ppRsp.Response); err != nil {
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
-	if res.StatusCode != http.StatusOK {
+	if res.StatusCode != http.StatusOK && res.StatusCode != http.StatusNoContent {
 		ppRsp.Code = res.StatusCode
 		ppRsp.Error = string(bs)
 		ppRsp.ErrorResponse = new(ErrorResponse)

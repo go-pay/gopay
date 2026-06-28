@@ -1,8 +1,8 @@
 ## 版本号：v1.5.120
 
 * 修改记录：
-    * 微信v3：新增接口。
-        * 直连商户签约（4 个 channel 各自独立函数）：
+    * 微信v3：新增 扣费服务（预约扣费）相关接口。
+        * 预签约（4 个渠道各自独立函数）：
             * `client.V3ScheduledDeductPreSignMiniProgram()`，小程序预签约。
             * `client.V3ScheduledDeductPreSignApp()`，APP 预签约。
             * `client.V3ScheduledDeductPreSignH5()`，H5 预签约。
@@ -16,13 +16,47 @@
             * `client.V3ScheduledDeductApply()`，受理扣款。
         * 回调通知载荷模型：`PapayScheduledSignNotifyResource`（签解约结果）、`PapayScheduledPayNotifyResource`
           （支付结果）；回调验签 / 解密复用现有 `wechat.V3DecryptNotifyCipherTextToStruct` 等公共方法。
-        * 其他
-            * `client.V3TransferPreTransferWithAuth()`，发起转账并完成免确认收款授权
-            * `client.V3TransferUserConfirmAuth()`，发起免确认收款授权
-            * `client.V3TransferUserConfirmAuthQuery()`，商户单号查询授权结果
-            * `client.V3TransferUserConfirmAuthClose()`，解除免确认收款授权
-            * `client.V3TransferElecsignDownload()`，下载电子回单
-            * `client.V3ComplaintResponseImmediateService()`，回复需要即时服务的投诉单
+    * 微信v3：新增 商家转账（免确认收款授权）相关接口。
+        * `client.V3TransferPreTransferWithAuth()`，发起转账并完成免确认收款授权（一步式，POST）。
+        * `client.V3TransferUserConfirmAuth()`，发起免确认收款授权（仅授权，POST）。
+        * `client.V3TransferUserConfirmAuthQuery()`，商户单号查询授权结果（GET）。
+        * `client.V3TransferUserConfirmAuthClose()`，解除免确认收款授权（POST）。
+    * 微信v3：商家转账（新版）补充。
+        * `client.V3TransferElecsignDownload()`，下载电子回单（GET `/v3/transferdownload/signfile`，传 `TransferElecsignQuery.DownloadURL` 返回 PDF 字节）。
+    * 微信v3：消费者投诉 2.0 补充。
+        * `client.V3ComplaintResponseImmediateService()`，回复需要即时服务的投诉单（POST，2024-09 上线）。
+    * PayPal：新增接口。
+        * `client.FindEligiblePaymentMethods()`，可用支付方式查询（POST `/v2/payments/find-eligible-methods`，返回 paypal/venmo/paylater/card 等多种支付源）。
+        * `client.UpdateTracker()`，更新或取消订单物流信息（PATCH `/v2/checkout/orders/{order_id}/trackers/{tracker_id}`，仅支持 op=replace/add，status 仅可改 CANCELLED）。
+        * `client.InvoiceTemplateDetail()`，发票模板详情查询（GET `/v2/invoicing/templates/{template_id}`）。
+    * PayPal：BREAKING CHANGE。
+        * `client.InvoiceNumberGenerate(ctx, invoiceNumber string)` → `client.InvoiceNumberGenerate(ctx, fetchId bool)`。按 spec 重写：`fetch_id=true` 返回 `invoice_id`，否则返回 `invoice_number`。配套 `InvoiceNumber` 结构新增 `InvoiceId` 字段。
+        * `QRCodeBase64` 拆分为 `Image []byte`（PNG 原始字节）+ `Base64 string`（base64 字符串）。修复 `InvoiceGenerateQRCode` 对 multipart/form-data 响应的解析（此前 `Base64Image` 直接装载整个 multipart 信封，无法直接使用）。
+        * `PartialPayment.MinimumAmount` (`*Amount`) → `MinimumAmountDue` (`*Money`)。原字段名与 spec 不一致，反序列化永远失败。
+        * Invoice 子模块金额字段 `*Amount` → `*Money`（`InvoicePayments.PaidAmount`、`PaymentDetail.Amount`、`InvoiceRefunds.RefundAmount`、`RefundDetail.Amount`）。`Money` 只含 `currency_code/value`，不含 `breakdown`。
+        * `ShipItem.Quantity` 类型 `int` → `string`（spec pattern `^[1-9][0-9]{0,9}$`）。
+        * `PayoutBatchDetail.TotalPage` → `TotalPages`（修正 JSON tag 拼写，原字段反序列化失败）。
+        * `Amount.PurchaseUnitBreakdown` 由值类型改为 `*PurchaseUnitBreakdown`，加 `omitempty`，避免空 breakdown 反序列化报错。
+        * `PaymentSetupTokenDetail.Ordinal` 字段移除（spec 中不存在）。
+    * PayPal：v1.5.119 内联订阅计划字段补充使用说明。
+        * `Item.BillingPlan`（`*OrderBillingPlan`）：Orders v2 API 创建订单时支持内联订阅计划（循环扣款 / 保存支付方式 / 分期），配合 `OrderBillingPlan` / `OrderBillingCycle` 类型使用。
+    * PayPal：参数校验补充（按 spec required）。
+        * `OrderConfirm`：必填 `payment_source`；接受 204 No Content。
+        * `CreateBillingPlan`：必填补 `name`、`payment_preferences`。
+        * `SubscriptionActivate`：移除 `reason` 必填（spec 中为可选）。
+        * `SubscriptionTransactionList`：必填 `start_time`、`end_time`。
+        * `ListAllPaymentTokens`：必填 query `customer_id`。
+    * PayPal：行为修复。
+        * 多个 GET 接口在 BodyMap 为空时不再拼接多余的 `?`：`OrderDetail`、`ShowPayoutBatchDetails`、`ProductList`、`ProductDetails`、`PlanList`、`SubscriptionDetails`。
+        * `InvoiceSearch` URI 重复拼接 bug 修复。
+        * `PaymentReauthorize` / `PaymentAuthorizeCapture` / `PaymentCaptureRefund` / `AddTrackingNumber` 兼容返回 200 与 201；`PaymentAuthorizeVoid` 兼容 200 与 204。
+        * `Patch.Value` 加 `omitempty`，支持 op=remove 无 value 场景。
+    * PayPal：新增模型 / 字段。
+        * 新增类型：`Money`、`InvoiceTemplateDetailRsp`、`SupplementaryData`、`RelatedIds`、`UniversalCode`、`FindEligibleMethodsRsp` / `FindEligibleMethodsResponse`。
+        * `PaymentAuthorizeDetail`、`PaymentAuthorizeCapture` 新增 `Payee` 字段；`PaymentAuthorizeCapture` 新增 `SupplementaryData`（含 `related_ids.order_id` / `authorization_id`）。
+        * `BatchHeader` 新增 `TimeClosed`、`Displayable` 字段。
+        * `PricingScheme` 新增 `Status`、`Version`、`CreateTime`、`UpdateTime` 字段。
+        * `ShipItem` 新增 `Upc` 字段（UPC 商品条码）。
 
 ## 版本号：v1.5.119
 
