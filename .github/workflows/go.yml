@@ -33,10 +33,10 @@ jobs:
           cache: true
 
       - name: Setup golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v8
         with:
           version: latest
-          args: -v --disable=unused
+          args: --verbose
 
   test:
     needs: lint
