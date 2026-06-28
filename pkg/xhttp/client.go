@@ -2,36 +2,26 @@ package xhttp
 
 import (
 	"crypto/tls"
-	"net"
 	"net/http"
 	"time"
 )
 
 type Client struct {
 	HttpClient *http.Client
-	bodySize   int // body size limit(MB), default is 10MB
+	bodySizeMB int // body size limit (MB), default is 10MB
 }
 
 func defaultClient() *Client {
+	tp := http.DefaultTransport.(*http.Transport).Clone()
+	tp.MaxIdleConns = 5000
+	tp.MaxIdleConnsPerHost = 1000
+	tp.MaxConnsPerHost = 3000
 	return &Client{
 		HttpClient: &http.Client{
-			Timeout: 60 * time.Second,
-			Transport: &http.Transport{
-				Proxy: http.ProxyFromEnvironment,
-				DialContext: defaultTransportDialContext(&net.Dialer{
-					Timeout:   30 * time.Second,
-					KeepAlive: 30 * time.Second,
-				}),
-				MaxIdleConnsPerHost:   1000,
-				MaxConnsPerHost:       3000,
-				IdleConnTimeout:       90 * time.Second,
-				TLSHandshakeTimeout:   10 * time.Second,
-				ExpectContinueTimeout: 1 * time.Second,
-				DisableKeepAlives:     true,
-				ForceAttemptHTTP2:     true,
-			},
+			Timeout:   60 * time.Second,
+			Transport: tp,
 		},
-		bodySize: 10, // default is 10MB
+		bodySizeMB: 10,
 	}
 }
 
@@ -46,15 +36,21 @@ func (c *Client) SetTransport(transport http.RoundTripper) (client *Client) {
 	return c
 }
 
+// SetHttpTransport 等价于 SetTransport，仅为兼容旧 API 保留。
+// 新代码请直接用 SetTransport。
 func (c *Client) SetHttpTransport(transport *http.Transport) (client *Client) {
-	c.HttpClient.Transport = transport
-	return c
+	return c.SetTransport(transport)
 }
 
+// SetHttpTLSConfig 在底层 *http.Transport 上设置 TLS 配置。
+// 如果先调用 SetTransport 把 transport 替换成了非 *http.Transport 的实现，
+// 调用本方法将 panic —— 而不是静默丢失 TLS 配置导致请求以默认 TLS 设置出网。
 func (c *Client) SetHttpTLSConfig(tlsCfg *tls.Config) (client *Client) {
-	if ht, ok := c.HttpClient.Transport.(*http.Transport); ok {
-		ht.TLSClientConfig = tlsCfg
+	ht, ok := c.HttpClient.Transport.(*http.Transport)
+	if !ok {
+		panic("xhttp: SetHttpTLSConfig requires the underlying Transport to be *http.Transport; current transport has been replaced via SetTransport")
 	}
+	ht.TLSClientConfig = tlsCfg
 	return c
 }
 
@@ -63,16 +59,17 @@ func (c *Client) SetTimeout(timeout time.Duration) (client *Client) {
 	return c
 }
 
-// set body size (MB), default is 10MB
+// SetBodySize 设置响应体大小上限（MB），默认 10MB。
 func (c *Client) SetBodySize(sizeMB int) (client *Client) {
-	c.bodySize = sizeMB
+	c.bodySizeMB = sizeMB
 	return c
 }
 
-// typeStr is request type and response type
-// default is TypeJSON
-// first param is request type
-// second param is response data type
+// Req 构造一个新的 Request。
+// typeStr 第一个参数为请求 Content-Type，第二个参数为响应解析类型。
+// 默认请求体类型 TypeJSON，响应类型 ResTypeJSON。
+//
+// 调用方必须先通过 NewClient() 构造 *Client；对 nil 接收者调用 Req 将 panic。
 func (c *Client) Req(typeStr ...string) *Request {
 	var (
 		reqTp = TypeJSON    // default
@@ -96,9 +93,6 @@ func (c *Client) Req(typeStr ...string) *Request {
 		if _, ok := _ResTypeMap[stpp]; ok {
 			resTp = stpp
 		}
-	}
-	if c == nil {
-		c = defaultClient()
 	}
 	r := &Request{
 		client:       c,

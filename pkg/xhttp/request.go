@@ -7,7 +7,6 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"github.com/go-pay/xlog"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -15,6 +14,8 @@ import (
 	"net/url"
 	"sort"
 	"strings"
+
+	"github.com/go-pay/xlog"
 
 	"github.com/go-pay/gopay"
 )
@@ -232,7 +233,7 @@ func (r *Request) EndBytesForAlipayV3(ctx context.Context) (res *http.Response, 
 		return nil, nil, err
 	}
 	defer res.Body.Close()
-	bs, err = io.ReadAll(io.LimitReader(res.Body, int64(r.client.bodySize<<20))) // default 10MB change the size you want
+	bs, err = io.ReadAll(io.LimitReader(res.Body, int64(r.client.bodySizeMB<<20))) // default 10MB change the size you want
 	if err != nil {
 		return nil, nil, err
 	}
@@ -309,7 +310,7 @@ func (r *Request) EndBytes(ctx context.Context) (res *http.Response, bs []byte, 
 		return nil, nil, err
 	}
 	defer res.Body.Close()
-	bs, err = io.ReadAll(io.LimitReader(res.Body, int64(r.client.bodySize<<20))) // default 10MB change the size you want
+	bs, err = io.ReadAll(io.LimitReader(res.Body, int64(r.client.bodySizeMB<<20))) // default 10MB change the size you want
 	if err != nil {
 		return nil, nil, err
 	}
