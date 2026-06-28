@@ -82,6 +82,16 @@ func (w *Client) SetLogger(logger xlog.XLogger) {
 	}
 }
 
+// GetHttpClient 获取 xhttp.Client，用于自定义调整 http 请求参数
+func (w *Client) GetHttpClient() *xhttp.Client {
+	return w.hc
+}
+
+// GetTLSHttpClient 获取 xhttp.Client，用于自定义调整 http 请求参数（TLS）
+func (w *Client) GetTLSHttpClient() *xhttp.Client {
+	return w.tlsHc
+}
+
 // 向微信发送Post请求，对于本库未提供的微信API，可自行实现，通过此方法发送请求
 // bm：请求参数的BodyMap
 // path：接口地址去掉baseURL的path，例如：url为https://api.mch.weixin.qq.com/pay/micropay，只需传 pay/micropay

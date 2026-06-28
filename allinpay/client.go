@@ -141,3 +141,8 @@ func (c *Client) doPost(ctx context.Context, path string, bm gopay.BodyMap) (bs 
 func (c *Client) SetHttpClient(client *xhttp.Client) {
 	c.hc = client
 }
+
+// GetHttpClient 获取 xhttp.Client，用于自定义调整 http 请求参数
+func (c *Client) GetHttpClient() *xhttp.Client {
+	return c.hc
+}

@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/xlog"
@@ -27,6 +28,8 @@ func TestMain(m *testing.M) {
 	}
 	// 打开Debug开关，输出日志
 	client.DebugSwitch = gopay.DebugOn
+	// 给 HTTP 客户端设置整体超时，避免支付宝某些接口偶发卡住导致 go test 整体超时
+	client.GetHttpClient().SetTimeout(15 * time.Second)
 
 	xlog.Debugf("Appid: %s", client.Appid)
 	xlog.Debugf("AccessToken: %s", client.AccessToken)

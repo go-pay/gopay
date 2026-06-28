@@ -24,15 +24,15 @@ import (
 // keyFilePath：apiclient_key.pem 路径
 // pkcs12FilePath：apiclient_cert.p12 路径
 // 返回err
-func (q *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath any) (err error) {
+func (c *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath any) (err error) {
 	if err = checkCertFilePathOrContent(certFilePath, keyFilePath, pkcs12FilePath); err != nil {
 		return err
 	}
-	config, err := q.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
+	config, err := c.addCertConfig(certFilePath, keyFilePath, pkcs12FilePath)
 	if err != nil {
 		return
 	}
-	q.tlsHc.SetHttpTLSConfig(config)
+	c.tlsHc.SetHttpTLSConfig(config)
 	return nil
 }
 
@@ -41,8 +41,8 @@ func (q *Client) AddCertFilePath(certFilePath, keyFilePath, pkcs12FilePath any) 
 // keyFileContent：apiclient_key.pem 内容
 // pkcs12FileContent：apiclient_cert.p12 内容
 // 返回err
-func (q *Client) AddCertFileContent(certFileContent, keyFileContent, pkcs12FileContent []byte) (err error) {
-	return q.AddCertFilePath(certFileContent, keyFileContent, pkcs12FileContent)
+func (c *Client) AddCertFileContent(certFileContent, keyFileContent, pkcs12FileContent []byte) (err error) {
+	return c.AddCertFilePath(certFileContent, keyFileContent, pkcs12FileContent)
 }
 
 func checkCertFilePathOrContent(certFile, keyFile, pkcs12File any) error {
@@ -106,27 +106,27 @@ func GetReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign stri
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 }
 
-func (q *Client) getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
+func (c *Client) getReleaseSign(apiKey string, signType string, bm gopay.BodyMap) (sign string) {
 	signParams := bm.EncodeWeChatSignParams(apiKey)
-	if q.DebugSwitch == gopay.DebugOn {
+	if c.DebugSwitch == gopay.DebugOn {
 		xlog.Debugf("QQ_Request_SignStr: %s", signParams)
 	}
 	var h hash.Hash
 	if signType == SignType_HMAC_SHA256 {
-		h = q.sha256Hash
+		h = c.sha256Hash
 	} else {
-		h = q.md5Hash
+		h = c.md5Hash
 	}
-	q.mu.Lock()
+	c.mu.Lock()
 	defer func() {
 		h.Reset()
-		q.mu.Unlock()
+		c.mu.Unlock()
 	}()
 	h.Write([]byte(signParams))
 	return strings.ToUpper(hex.EncodeToString(h.Sum(nil)))
 }
 
-func (q *Client) addCertConfig(certFile, keyFile, pkcs12File any) (tlsConfig *tls.Config, err error) {
+func (c *Client) addCertConfig(certFile, keyFile, pkcs12File any) (tlsConfig *tls.Config, err error) {
 	if certFile == nil && keyFile == nil && pkcs12File == nil {
 		return nil, errors.New("cert parse failed")
 	}
@@ -158,7 +158,7 @@ func (q *Client) addCertConfig(certFile, keyFile, pkcs12File any) (tlsConfig *tl
 				return nil, fmt.Errorf("os.ReadFile: %w", err)
 			}
 		}
-		blocks, err := pkcs12.ToPEM(pfxData, q.MchId)
+		blocks, err := pkcs12.ToPEM(pfxData, c.MchId)
 		if err != nil {
 			return nil, fmt.Errorf("pkcs12.ToPEM: %w", err)
 		}

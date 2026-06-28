@@ -101,3 +101,8 @@ func (c *Client) doRequestPut(ctx context.Context, path string, bm gopay.BodyMap
 	}
 	return res, bs, nil
 }
+
+// GetHttpClient 获取 xhttp.Client，用于自定义调整 http 请求参数
+func (c *Client) GetHttpClient() *xhttp.Client {
+	return c.hc
+}

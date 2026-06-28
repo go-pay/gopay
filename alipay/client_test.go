@@ -2,6 +2,7 @@ package alipay
 
 import (
 	"context"
+	"flag"
 	"os"
 	"testing"
 	"time"
@@ -19,6 +20,12 @@ var (
 )
 
 func TestMain(m *testing.M) {
+	// alipay/v3 包内测试均依赖真实支付宝接口（集成测试），
+	// 在 `go test -short ./...` 模式下整体跳过，避免拖慢整个仓库的测试。
+	flag.Parse()
+	if testing.Short() {
+		os.Exit(0)
+	}
 	xlog.SetLevel(xlog.DebugLevel)
 	// 初始化支付宝客户端
 	//    appid：应用ID
@@ -31,6 +38,8 @@ func TestMain(m *testing.M) {
 	}
 	// Debug开关，输出/关闭日志
 	client.DebugSwitch = gopay.DebugOff
+	// 给 HTTP 客户端设置整体超时，避免支付宝某些接口偶发卡住导致 go test 整体超时
+	client.GetHttpClient().SetTimeout(15 * time.Second)
 
 	// 配置公共参数
 	client.SetCharset("utf-8").

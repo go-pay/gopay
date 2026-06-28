@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/go-pay/gopay/saobei/cert"
 	"github.com/go-pay/xlog"
@@ -28,6 +29,8 @@ func TestMain(m *testing.M) {
 		xlog.Error(err)
 		return
 	}
+	// 给 HTTP 客户端设置整体超时，避免支付宝某些接口偶发卡住导致 go test 整体超时
+	client.GetHttpClient().SetTimeout(15 * time.Second)
 
 	os.Exit(m.Run())
 }

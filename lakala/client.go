@@ -73,6 +73,11 @@ func (c *Client) SetLogger(logger xlog.XLogger) {
 	}
 }
 
+// GetHttpClient 获取 xhttp.Client，用于自定义调整 http 请求参数
+func (c *Client) GetHttpClient() *xhttp.Client {
+	return c.hc
+}
+
 // 公共参数处理 Query Params
 func (c *Client) pubParamsHandle() (param string, err error) {
 	bm := make(gopay.BodyMap)
