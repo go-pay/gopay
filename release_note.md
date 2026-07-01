@@ -1,3 +1,60 @@
+## 版本号：v1.5.122
+
+* 修改记录：
+    * 新增 抖音支付 SDK。
+        * 基础设施：
+            * `douyin.NewClient()`，初始化抖音支付客户端。
+            * `client.SetPlatformCert()`，注册抖音支付平台证书（支持多证书）。
+            * `client.PlatformCertMap()`，获取已注册平台证书 map，用于回调验签。
+            * `client.NewestPlatformSerialNo()`，获取最新平台证书序列号。
+            * `client.SetHttpClient()` / `SetLogger()` / `SetProxyHost()` / `SetBodySize()`，通用配置项。
+            * 签名 / 验签 / 加解密：SHA256-RSA 请求签名与响应验签、RSA-PKCS1v15 敏感字段加解密、AEAD-AES-256-GCM 回调解密。
+        * 基础支付（下单）：
+            * `client.AppOrder()`，App 支付下单。
+            * `client.JsapiOrder()`，JSAPI / 小程序支付下单。
+            * `client.H5Order()`，H5 支付下单（直接返回 `h5_url`）。
+            * `client.NativeOrder()`，Native 支付下单（直接返回 `code_url`）。
+        * 基础支付（调起签名）：
+            * `client.PaySignOfApp()`，生成 App 端调起支付参数。
+            * `client.PaySignOfJSAPI()`,生成 JSAPI 前端调起支付参数。
+        * 订单与退款：
+            * `client.OrderQueryByTransactionId()`，通过抖音支付订单号查询订单。
+            * `client.OrderQueryByOutTradeNo()`，通过商户订单号查询订单。
+            * `client.CloseOrder()`，关闭订单。
+            * `client.Refund()`，申请退款。
+            * `client.RefundQuery()`，查询退款。
+        * 账单：
+            * `client.ApplyTradeBill()`，申请交易账单。
+            * `client.ApplyFundBill()`，申请资金账单。
+            * `client.ApplyProfitBill()`，申请分账账单。
+            * `client.DownloadBillFile()`，下载账单文件（跨域名下载 + 自动签名）。
+            * `douyin.UngzipBill()`，GZIP 账单解压工具。
+            * `douyin.VerifyBillHash()`，SHA1 完整性校验工具。
+        * 分账：
+            * `client.ProfitRequest()`，请求分账（异步受理）。
+            * `client.ProfitQuery()`，查询分账结果。
+            * `client.ProfitRollback()`，请求分账回退。
+            * `client.ProfitRollbackQuery()`，查询分账回退结果。
+            * `client.ProfitComplete()`，完结分账。
+            * `client.ProfitBalanceQuery()`，查询订单剩余待分账金额。
+            * `client.ProfitReceiverAdd()`，添加分账接收方。
+            * `client.ProfitReceiverDelete()`，删除分账接收方。
+        * 转账：
+            * `client.Transfer()`，商户转账到抖音零钱。
+            * `client.TransferQueryByOutBillNo()`，通过商户订单号查询转账单。
+            * `client.TransferQueryByTransferBillNo()`，通过抖音转账单号查询转账单。
+        * 回调通知：
+            * `douyin.ParseNotify()`，解析回调请求为 `NotifyReq` 结构体（含 SignInfo）。
+            * `douyin.ParseNotifyToBodyMap()`，解析回调请求到 `gopay.BodyMap`。
+            * `(v *NotifyReq).VerifySignByPK()`，指定平台公钥验签。
+            * `(v *NotifyReq).VerifySignByPKMap()`，按 Serial 从公钥 map 匹配验签。
+            * `(v *NotifyReq).DecryptCipherTextToStruct()`，通用回调密文解密到任意结构体。
+            * `(v *NotifyReq).DecryptPayCipherText()`，`TRANSACTION.SUCCESS` 支付成功通知解密。
+            * `(v *NotifyReq).DecryptRefundCipherText()`，`REFUND.SUCCESS` 退款结果通知解密。
+            * `(v *NotifyReq).DecryptProfitResultCipherText()`，`ASYNC_SPLIT.FINISH` 分账结果通知解密。
+            * `(v *NotifyReq).DecryptProfitDynamicCipherText()`，`SPLIT.SUCCESS` 分账动账通知解密。
+            * `(v *NotifyReq).DecryptTransferCipherText()`，`TRANSFER.SUCCESS` 转账结果通知解密。
+
 ## 版本号：v1.5.121
 
 * 修改记录：

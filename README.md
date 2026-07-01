@@ -2,7 +2,7 @@
 
 # GoPay
 
-### 微信、支付宝、QQ、通联支付、拉卡拉、PayPal、扫呗、Apple支付的 Golang 版本SDK
+### 微信、支付宝、抖音、QQ、通联支付、拉卡拉、PayPal、扫呗、Apple支付的 Golang 版本SDK
 
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
 [![Github](https://img.shields.io/github/forks/go-pay/gopay?label=Fork&style=social)](https://github.com/go-pay/gopay/fork)
@@ -50,6 +50,7 @@ func main() {
 * #### [微信支付（V3版）](https://github.com/go-pay/gopay/blob/main/doc/wechat_v3.md)
   * 微信商家转账产品升级，目前已支持新版商家转账接口
 * #### [微信支付（V2版，不推荐）](https://github.com/go-pay/gopay/blob/main/doc/wechat_v2.md)
+* #### [抖音支付](https://github.com/go-pay/gopay/blob/main/doc/douyin.md)
 * #### [QQ支付](https://github.com/go-pay/gopay/blob/main/doc/qq.md)
 * #### [通联支付](https://github.com/go-pay/gopay/blob/main/doc/allinpay.md)
 * #### [拉卡拉支付](https://github.com/go-pay/gopay/blob/main/doc/lakala.md)
@@ -73,7 +74,7 @@ func main() {
     )
 
     hc := xhttp.NewClient().SetHttpTLSConfig(&tls.Config{InsecureSkipVerify: true})
-    client.SetHttpClient(hc) // wechat / alipay / paypal / qq / allinpay / lakala / saobei 均支持
+    client.SetHttpClient(hc) // wechat / alipay / douyin / paypal / qq / allinpay / lakala / saobei 均支持
     ```
 
 * 如需自定义Log输出，New Client 后，调用 `client.SetLogger()` 方法设置自定义Logger，自定义Logger实现 `xlog.XLogger` interface即可。
@@ -82,6 +83,7 @@ func main() {
     * `gopay/wechat/v3/client_test.go`
     * `gopay/alipay/v3/client_test.go`
     * `gopay/alipay/client_test.go`
+    * `gopay/examples/douyin/douyin.go`（示例代码）
     * `gopay/qq/client_test.go`
     * `gopay/allinpay/client_test.go`
     * `gopay/lakala/client_test.go`
