@@ -8,6 +8,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -73,12 +74,26 @@ func VerifySignByPK(timestamp, nonce, signBody, sign string, publicKey *rsa.Publ
 }
 
 // verifySyncSign 同步应答自动验签（仅在 autoSign=true 且 SignInfo 非空时执行）
+// 在验签前会先校验响应 Header 时间戳与本地时间的偏差（可通过 c.RespTimestampWindow 调整或关闭）
 func (c *Client) verifySyncSign(si *SignInfo) error {
 	if !c.autoSign {
 		return nil
 	}
 	if si == nil {
 		return errors.New("auto verify sign, but SignInfo is nil")
+	}
+	if c.RespTimestampWindow > 0 {
+		ts, err := strconv.ParseInt(si.HeaderTimestamp, 10, 64)
+		if err != nil {
+			return fmt.Errorf("invalid Douyinpay-Timestamp: %q, err: %v", si.HeaderTimestamp, err)
+		}
+		diff := time.Now().Unix() - ts
+		if diff < 0 {
+			diff = -diff
+		}
+		if diff >= c.RespTimestampWindow {
+			return fmt.Errorf("response timestamp expired: diff=%ds, window=%ds", diff, c.RespTimestampWindow)
+		}
 	}
 	pubKey, ok := c.getPlatformKey(si.HeaderSerial)
 	if !ok {

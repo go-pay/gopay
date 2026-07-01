@@ -1,6 +1,8 @@
 package douyin
 
 import (
+	"crypto/aes"
+	"crypto/cipher"
 	"crypto/rand"
 	"crypto/rsa"
 	"encoding/base64"
@@ -9,7 +11,6 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/go-pay/crypto/aes"
 	"github.com/go-pay/crypto/xpem"
 	"github.com/go-pay/gopay"
 )
@@ -78,11 +79,23 @@ func DecryptText(cipherText string, privateKeyContent []byte) (text string, err 
 }
 
 // DecryptNotifyCipherTextToBytes 回调密文 AES-256-GCM 解密到 []byte
+// 使用 NewGCMWithNonceSize 兼容任意长度 nonce（与官方 douyinpay-go SDK 一致）
 func DecryptNotifyCipherTextToBytes(ciphertext, nonce, associatedData, apiKey string) (decrypt []byte, err error) {
-	cipherBytes, _ := base64.StdEncoding.DecodeString(ciphertext)
-	decrypt, err = aes.GCMDecrypt(cipherBytes, []byte(nonce), []byte(associatedData), []byte(apiKey))
+	cipherBytes, err := base64.StdEncoding.DecodeString(ciphertext)
 	if err != nil {
-		return nil, fmt.Errorf("aes.GCMDecrypt: %w", err)
+		return nil, fmt.Errorf("base64 decode ciphertext: %w", err)
+	}
+	block, err := aes.NewCipher([]byte(apiKey))
+	if err != nil {
+		return nil, fmt.Errorf("aes.NewCipher: %w", err)
+	}
+	gcm, err := cipher.NewGCMWithNonceSize(block, len(nonce))
+	if err != nil {
+		return nil, fmt.Errorf("cipher.NewGCMWithNonceSize: %w", err)
+	}
+	decrypt, err = gcm.Open(nil, []byte(nonce), cipherBytes, []byte(associatedData))
+	if err != nil {
+		return nil, fmt.Errorf("gcm.Open: %w", err)
 	}
 	return decrypt, nil
 }

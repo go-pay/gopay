@@ -21,7 +21,7 @@ import (
 type Client struct {
 	Mchid       string
 	SerialNo    string
-	ApiKey    []byte
+	ApiKey      []byte
 	privateKey  *rsa.PrivateKey
 	proxyHost   string
 	autoSign    bool
@@ -29,6 +29,10 @@ type Client struct {
 	ctx         context.Context
 	DebugSwitch gopay.DebugSwitch
 	logger      xlog.XLogger
+
+	// RespTimestampWindow 响应时间戳允许的最大偏差（秒），默认 300（与官方 SDK 一致）
+	// 设为 <= 0 可关闭校验（例如本地时钟不准时）
+	RespTimestampWindow int64
 
 	// 抖音支付平台公钥（多序列号并存，key: serial_no）
 	certMu    sync.RWMutex
@@ -52,15 +56,16 @@ func NewClient(mchid, serialNo, apiKey, privateKey string) (client *Client, err 
 	logger := xlog.NewLogger()
 	logger.SetLevel(xlog.DebugLevel)
 	client = &Client{
-		Mchid:       mchid,
-		SerialNo:    serialNo,
-		ApiKey:    []byte(apiKey),
-		privateKey:  priKey,
-		ctx:         context.Background(),
-		DebugSwitch: gopay.DebugOff,
-		logger:      logger,
-		hc:          xhttp.NewClient(),
-		certMap:     make(map[string]*rsa.PublicKey),
+		Mchid:               mchid,
+		SerialNo:            serialNo,
+		ApiKey:              []byte(apiKey),
+		privateKey:          priKey,
+		ctx:                 context.Background(),
+		DebugSwitch:         gopay.DebugOff,
+		logger:              logger,
+		hc:                  xhttp.NewClient(),
+		certMap:             make(map[string]*rsa.PublicKey),
+		RespTimestampWindow: DefaultRespTimestampWindow,
 	}
 	return client, nil
 }

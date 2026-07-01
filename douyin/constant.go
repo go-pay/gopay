@@ -10,8 +10,12 @@ const (
 
 	// 请求头
 	HeaderAuthorization = "Authorization"
-	HeaderRequestID     = "Request-ID"
+	HeaderRequestID     = "Request-Id"
 	HeaderSerial        = "Douyinpay-Serial"
+
+	// 响应时间戳与本地时间的最大允许差值（秒），超过则拒绝
+	// 与官方 douyinpay-go SDK 一致：response 校验 5 分钟窗口
+	DefaultRespTimestampWindow int64 = 5 * 60
 
 	// 应答/回调头
 	HeaderTimestamp = "Douyinpay-Timestamp"
