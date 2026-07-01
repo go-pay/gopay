@@ -79,7 +79,7 @@ func DecryptText(cipherText string, privateKeyContent []byte) (text string, err 
 }
 
 // DecryptNotifyCipherTextToBytes 回调密文 AES-256-GCM 解密到 []byte
-// 使用 NewGCMWithNonceSize 兼容任意长度 nonce（与官方 douyinpay-go SDK 一致）
+// 使用 NewGCMWithNonceSize 兼容任意长度 nonce
 func DecryptNotifyCipherTextToBytes(ciphertext, nonce, associatedData, apiKey string) (decrypt []byte, err error) {
 	cipherBytes, err := base64.StdEncoding.DecodeString(ciphertext)
 	if err != nil {

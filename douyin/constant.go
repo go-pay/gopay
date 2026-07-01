@@ -14,7 +14,6 @@ const (
 	HeaderSerial        = "Douyinpay-Serial"
 
 	// 响应时间戳与本地时间的最大允许差值（秒），超过则拒绝
-	// 与官方 douyinpay-go SDK 一致：response 校验 5 分钟窗口
 	DefaultRespTimestampWindow int64 = 5 * 60
 
 	// 应答/回调头
@@ -50,19 +49,19 @@ const (
 	refundQuery = "/v1/trade/refund/domestic/refunds/%s" // GET，占位: out_refund_no
 
 	// 账单
-	applyTradeBill  = "/v1/bill/billapply"     // GET
-	applyFundBill   = "/v1/bill/fundflowbill"  // GET
-	applyProfitBill = "/v1/bill/splitbill"     // GET
+	applyTradeBill  = "/v1/bill/billapply"    // GET
+	applyFundBill   = "/v1/bill/fundflowbill" // GET
+	applyProfitBill = "/v1/bill/splitbill"    // GET
 
 	// 分账
-	profitRequest       = "/v1/trade/profitsharing/orders"                // POST
-	profitQuery         = "/v1/trade/profitsharing/orders/%s"             // GET，占位: out_order_no
-	profitRollback      = "/v1/trade/profitsharing/return-orders"         // POST
-	profitRollbackQuery = "/v1/trade/profitsharing/return-orders/%s"      // GET，占位: out_return_no
-	profitComplete      = "/v1/trade/profitsharing/finish-orders"         // POST
-	profitBalanceQuery  = "/v1/trade/profitsharing/order/%s/amounts"      // GET，占位: transaction_id
-	receiverAdd         = "/v1/trade/profitsharing/receivers/add"         // POST
-	receiverDelete      = "/v1/trade/profitsharing/receivers/delete"      // POST
+	profitRequest       = "/v1/trade/profitsharing/orders"           // POST
+	profitQuery         = "/v1/trade/profitsharing/orders/%s"        // GET，占位: out_order_no
+	profitRollback      = "/v1/trade/profitsharing/return-orders"    // POST
+	profitRollbackQuery = "/v1/trade/profitsharing/return-orders/%s" // GET，占位: out_return_no
+	profitComplete      = "/v1/trade/profitsharing/finish-orders"    // POST
+	profitBalanceQuery  = "/v1/trade/profitsharing/order/%s/amounts" // GET，占位: transaction_id
+	receiverAdd         = "/v1/trade/profitsharing/receivers/add"    // POST
+	receiverDelete      = "/v1/trade/profitsharing/receivers/delete" // POST
 
 	// 转账
 	transfer                      = "/v1/fund_trade/mch-transfer/transfer-bills"                     // POST
