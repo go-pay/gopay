@@ -9,5 +9,8 @@ require (
 	github.com/go-pay/util v0.0.4
 	github.com/go-pay/xlog v0.0.3
 	github.com/go-pay/xtime v0.0.2
+	github.com/tjfoc/gmsm v1.4.1
 	golang.org/x/crypto v0.53.0
 )
+
+require golang.org/x/sys v0.46.0 // indirect
