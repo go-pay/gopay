@@ -36,6 +36,20 @@ type ComplaintNotifyUrlRsp struct {
 	Error       string              `json:"-"`
 }
 
+// 回复需要即时服务的投诉单 Rsp
+type ComplaintResponseImmediateServiceRsp struct {
+	Code        int                                `json:"-"`
+	SignInfo    *SignInfo                          `json:"-"`
+	Response    *ComplaintResponseImmediateService `json:"response,omitempty"`
+	ErrResponse ErrResponse                        `json:"err_response,omitempty"`
+	Error       string                             `json:"-"`
+}
+
+// 回复需要即时服务的投诉单响应。
+type ComplaintResponseImmediateService struct {
+	LogId string `json:"log_id"` // 操作流水号，与协商历史接口 log_id 对应
+}
+
 // =========================================================分割=========================================================
 
 type ComplaintList struct {
@@ -62,6 +76,8 @@ type ComplaintListItem struct {
 	ApplyRefundAmount     int                   `json:"apply_refund_amount"`
 	UserTagList           []string              `json:"user_tag_list"`
 	AdditionalInfo        *AdditionalInfo       `json:"additional_info"`
+	InPlatformService     bool                  `json:"in_platform_service,omitempty"`    // 投诉单是否正处在平台协助流程中（2024-09 新增）
+	NeedImmediateService  bool                  `json:"need_immediate_service,omitempty"` // 是否需要商户更即时地响应（2024-09 新增）
 }
 
 type ComplaintOrderInfo struct {
@@ -82,12 +98,18 @@ type ComplaintMediaList struct {
 }
 
 type AdditionalInfo struct {
-	Type           string          `json:"type"`
-	SharePowerInfo *SharePowerInfo `json:"share_power_info"`
+	Type           string          `json:"type"`             // 补充信息类型，枚举值：SHARE_POWER_TYPE（充电宝投诉相关行业）
+	SharePowerInfo *SharePowerInfo `json:"share_power_info"` // 当 type=SHARE_POWER_TYPE 时返回
 }
 
 type SharePowerInfo struct {
-	ReturnTime string `json:"return_time"`
+	ReturnTime        string             `json:"return_time"`                   // 归还充电宝的时间
+	ReturnAddressInfo *ReturnAddressInfo `json:"return_address_info,omitempty"` // 归还地址信息（2024-09 新增）
+}
+
+// 充电宝归还地址信息。
+type ReturnAddressInfo struct {
+	IsReturnedToSameMachine bool `json:"is_returned_to_same_machine,omitempty"` // 用户声明是否将充电宝归还至与借取时同一柜机
 }
 
 type ComplaintDetail struct {
@@ -109,6 +131,8 @@ type ComplaintDetail struct {
 	ApplyRefundAmount     int                   `json:"apply_refund_amount"`
 	UserTagList           []string              `json:"user_tag_list"`
 	AdditionalInfo        *AdditionalInfo       `json:"additional_info"`
+	InPlatformService     bool                  `json:"in_platform_service,omitempty"`    // 投诉单是否正处在平台协助流程中（2024-09 新增）
+	NeedImmediateService  bool                  `json:"need_immediate_service,omitempty"` // 是否需要商户更即时地响应（2024-09 新增）
 }
 
 type ComplaintNegotiationHistory struct {

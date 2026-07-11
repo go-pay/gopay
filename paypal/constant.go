@@ -22,13 +22,14 @@ const (
 	orderConfirm   = "/v2/checkout/orders/%s/confirm-payment-source" // order_id 订单支付确认 POST
 
 	// 支付相关
-	paymentAuthorizeDetail  = "/v2/payments/authorizations/%s"             // authorization_id 支付授权详情 GET
-	paymentAuthorizeCapture = "/v2/payments/authorizations/%s/capture"     // authorization_id 支付授权捕获 POST
-	paymentReauthorize      = "/v2/payments/authorizations/%s/reauthorize" // authorization_id 重新授权支付授权 POST
-	paymentAuthorizeVoid    = "/v2/payments/authorizations/%s/void"        // authorization_id 作废支付授权 POST
-	paymentCaptureDetail    = "/v2/payments/captures/%s"                   // capture_id 支付捕获详情 GET
-	paymentCaptureRefund    = "/v2/payments/captures/%s/refund"            // capture_id 支付捕获退款 POST
-	paymentRefundDetail     = "/v2/payments/refunds/%s"                    // refund_id 支付退款详情 GET
+	paymentAuthorizeDetail     = "/v2/payments/authorizations/%s"             // authorization_id 支付授权详情 GET
+	paymentAuthorizeCapture    = "/v2/payments/authorizations/%s/capture"     // authorization_id 支付授权捕获 POST
+	paymentReauthorize         = "/v2/payments/authorizations/%s/reauthorize" // authorization_id 重新授权支付授权 POST
+	paymentAuthorizeVoid       = "/v2/payments/authorizations/%s/void"        // authorization_id 作废支付授权 POST
+	paymentCaptureDetail       = "/v2/payments/captures/%s"                   // capture_id 支付捕获详情 GET
+	paymentCaptureRefund       = "/v2/payments/captures/%s/refund"            // capture_id 支付捕获退款 POST
+	paymentRefundDetail        = "/v2/payments/refunds/%s"                    // refund_id 支付退款详情 GET
+	findEligiblePaymentMethods = "/v2/payments/find-eligible-methods"         // 可用支付方式查询 POST
 
 	// 支出相关
 	createBatchPayout         = "/v1/payments/payouts"                // 创建批量支出 POST
@@ -74,9 +75,11 @@ const (
 	createInvoiceTemplate      = "/v2/invoicing/templates"                    // 创建发票模板 POST
 	deleteInvoiceTemplate      = "/v2/invoicing/templates/%s"                 // template_id 删除发票模板 DELETE
 	fullyUpdateInvoiceTemplate = "/v2/invoicing/templates/%s"                 // template_id 全量更新发票模板 PUT
+	showInvoiceTemplate        = "/v2/invoicing/templates/%s"                 // template_id 获取发票模板详情 GET
 
 	// 物流相关
-	addTrackingNumber = "/v2/checkout/orders/%s/track" // order_id 授权物流信息 POST
+	addTrackingNumber = "/v2/checkout/orders/%s/track"       // order_id 授权物流信息 POST
+	updateTracker     = "/v2/checkout/orders/%s/trackers/%s" // order_id, tracker_id 更新或取消物流 PATCH
 
 	// webhook 相关
 	createWebhook          = "/v1/notifications/webhooks"                 // 创建webhook POST

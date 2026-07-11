@@ -1,5 +1,13 @@
 package wechat
 
+// 商家转账 user_recv_style.type 枚举：用户收款样式（2025-05 新增功能）。
+// 文档：https://pay.weixin.qq.com/doc/v3/merchant/4012716434.md
+// 使用方式：bm.Set("user_recv_style", gopay.BodyMap{"type": TransferUserRecvStyleRedPacket})
+const (
+	TransferUserRecvStyleConfirmPage = "CONFIRM_PAGE" // 收款确认页样式（默认）
+	TransferUserRecvStyleRedPacket   = "RED_PACKET"   // 红包样式（单笔金额 ≤ 200 元）
+)
+
 // 发起转账 Rsp
 type TransferBillsRsp struct {
 	Code        int            `json:"-"`
@@ -148,4 +156,94 @@ type TransferElecsignQuery struct {
 	HashValue   string `json:"hash_value"`
 	DownloadURL string `json:"download_url"`
 	FailReason  string `json:"fail_reason"`
+}
+
+// ===================== 用户授权免确认收款（2025-05 新增） =====================
+
+// 发起转账并完成免确认收款授权 Rsp
+type TransferPreTransferWithAuthRsp struct {
+	Code        int                          `json:"-"`
+	SignInfo    *SignInfo                    `json:"-"`
+	Response    *TransferPreTransferWithAuth `json:"response,omitempty"`
+	ErrResponse ErrResponse                  `json:"err_response,omitempty"`
+	Error       string                       `json:"-"`
+}
+
+type TransferPreTransferWithAuth struct {
+	OutBillNo          string `json:"out_bill_no"`
+	TransferBillNo     string `json:"transfer_bill_no"`
+	CreateTime         string `json:"create_time"`
+	State              string `json:"state"`
+	PackageInfo        string `json:"package_info"` // 调起授权页所需的 package 串
+	UserDisplayName    string `json:"user_display_name"`
+	OutAuthorizationNo string `json:"out_authorization_no"`
+}
+
+// 发起免确认收款授权 Rsp
+type TransferUserConfirmAuthRsp struct {
+	Code        int                      `json:"-"`
+	SignInfo    *SignInfo                `json:"-"`
+	Response    *TransferUserConfirmAuth `json:"response,omitempty"`
+	ErrResponse ErrResponse              `json:"err_response,omitempty"`
+	Error       string                   `json:"-"`
+}
+
+type TransferUserConfirmAuth struct {
+	OutAuthorizationNo string `json:"out_authorization_no"`
+	State              string `json:"state"`
+	CreateTime         string `json:"create_time"`
+	PackageInfo        string `json:"package_info"` // 调起授权页所需的 package 串
+}
+
+// 商户单号查询授权结果 Rsp
+type TransferUserConfirmAuthQryRsp struct {
+	Code        int                         `json:"-"`
+	SignInfo    *SignInfo                   `json:"-"`
+	Response    *TransferUserConfirmAuthQry `json:"response,omitempty"`
+	ErrResponse ErrResponse                 `json:"err_response,omitempty"`
+	Error       string                      `json:"-"`
+}
+
+type TransferUserConfirmAuthQry struct {
+	OutAuthorizationNo string                 `json:"out_authorization_no"`
+	Appid              string                 `json:"appid"`
+	Openid             string                 `json:"openid,omitempty"`
+	UserDisplayName    string                 `json:"user_display_name,omitempty"`
+	AuthorizationId    string                 `json:"authorization_id,omitempty"`
+	State              string                 `json:"state"`
+	AuthorizeTime      string                 `json:"authorize_time,omitempty"`
+	CloseInfo          *TransferAuthCloseInfo `json:"close_info,omitempty"`
+	TransferSceneId    string                 `json:"transfer_scene_id,omitempty"`
+	UserRecvPerception string                 `json:"user_recv_perception,omitempty"`
+	CreateTime         string                 `json:"create_time,omitempty"`
+	PackageInfo        string                 `json:"package_info,omitempty"` // 当 query 参数 is_display_authorization=true 时返回
+}
+
+// 解除免确认收款授权 Rsp
+type TransferUserConfirmAuthCloseRsp struct {
+	Code        int                           `json:"-"`
+	SignInfo    *SignInfo                     `json:"-"`
+	Response    *TransferUserConfirmAuthClose `json:"response,omitempty"`
+	ErrResponse ErrResponse                   `json:"err_response,omitempty"`
+	Error       string                        `json:"-"`
+}
+
+type TransferUserConfirmAuthClose struct {
+	OutAuthorizationNo string                 `json:"out_authorization_no"`
+	Appid              string                 `json:"appid"`
+	Openid             string                 `json:"openid,omitempty"`
+	UserDisplayName    string                 `json:"user_display_name,omitempty"`
+	AuthorizationId    string                 `json:"authorization_id,omitempty"`
+	State              string                 `json:"state"`
+	AuthorizeTime      string                 `json:"authorize_time,omitempty"`
+	CloseInfo          *TransferAuthCloseInfo `json:"close_info,omitempty"`
+	TransferSceneId    string                 `json:"transfer_scene_id,omitempty"`
+	UserRecvPerception string                 `json:"user_recv_perception,omitempty"`
+	CreateTime         string                 `json:"create_time,omitempty"`
+}
+
+// 授权关闭信息。
+type TransferAuthCloseInfo struct {
+	CloseTime   string `json:"close_time,omitempty"`
+	CloseReason string `json:"close_reason,omitempty"`
 }

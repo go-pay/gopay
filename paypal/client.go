@@ -128,3 +128,8 @@ func (c *Client) SetRequestHeader(key string, defaultVal ...string) {
 func (c *Client) ClearRequestHeader() {
 	c.headerKeyMap = make(map[string]string)
 }
+
+// GetHttpClient 获取 xhttp.Client，用于自定义调整 http 请求参数
+func (c *Client) GetHttpClient() *xhttp.Client {
+	return c.hc
+}

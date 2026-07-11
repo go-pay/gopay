@@ -8,6 +8,7 @@ var (
 	MissPayPalInitParamErr = errors.New("missing paypal init parameter")
 	MissAppleInitParamErr  = errors.New("missing apple init parameter")
 	MissLakalaInitParamErr = errors.New("missing lakala init parameter")
+	MissDouyinInitParamErr = errors.New("missing douyin init parameter")
 	MissParamErr           = errors.New("missing required parameter")
 	MarshalErr             = errors.New("marshal error")
 	UnmarshalErr           = errors.New("unmarshal error")

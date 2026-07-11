@@ -2,12 +2,12 @@
 
 # GoPay
 
-### 微信、支付宝、QQ、通联支付、拉卡拉、PayPal、扫呗、Apple支付的 Golang 版本SDK
+### 微信、支付宝、抖音、QQ、通联支付、拉卡拉、PayPal、扫呗、Apple支付的 Golang 版本SDK
 
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
 [![Github](https://img.shields.io/github/forks/go-pay/gopay?label=Fork&style=social)](https://github.com/go-pay/gopay/fork)
 
-[![Golang](https://img.shields.io/badge/golang-1.24.0-brightgreen.svg)](https://golang.google.cn)
+[![Golang](https://img.shields.io/badge/golang-1.25.0-brightgreen.svg)](https://golang.google.cn)
 [![GoDoc](https://img.shields.io/badge/doc-pkg.go.dev-informational.svg)](https://pkg.go.dev/github.com/go-pay/gopay)
 [![Go](https://github.com/go-pay/gopay/actions/workflows/go.yml/badge.svg)](https://github.com/go-pay/gopay/actions/workflows/go.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/go-pay/gopay)](https://github.com/go-pay/gopay/releases)
@@ -50,6 +50,7 @@ func main() {
 * #### [微信支付（V3版）](https://github.com/go-pay/gopay/blob/main/doc/wechat_v3.md)
   * 微信商家转账产品升级，目前已支持新版商家转账接口
 * #### [微信支付（V2版，不推荐）](https://github.com/go-pay/gopay/blob/main/doc/wechat_v2.md)
+* #### [抖音支付](https://github.com/go-pay/gopay/blob/main/doc/douyin.md)
 * #### [QQ支付](https://github.com/go-pay/gopay/blob/main/doc/qq.md)
 * #### [通联支付](https://github.com/go-pay/gopay/blob/main/doc/allinpay.md)
 * #### [拉卡拉支付](https://github.com/go-pay/gopay/blob/main/doc/lakala.md)
@@ -63,12 +64,26 @@ func main() {
 
 # 三、其他说明
 
+* **【v1.5.119 起 TLS 证书校验默认开启】** 此前 `pkg/xhttp.NewClient()` 默认 `tls.Config{InsecureSkipVerify: true}`，存在中间人攻击风险（CWE-295），自 v1.5.119 起改为使用 Go 标准库默认安全配置。
+  * **不影响生产环境**：所有支付平台官方域名证书均受信任。
+  * **沙箱 / 自签证书场景需手动恢复**：New Client 后调用 `SetHttpClient` 注入跳过校验的 xhttp.Client：
+    ```go
+    import (
+        "crypto/tls"
+        "github.com/go-pay/gopay/pkg/xhttp"
+    )
+
+    hc := xhttp.NewClient().SetHttpTLSConfig(&tls.Config{InsecureSkipVerify: true})
+    client.SetHttpClient(hc) // wechat / alipay / douyin / paypal / qq / allinpay / lakala / saobei 均支持
+    ```
+
 * 如需自定义Log输出，New Client 后，调用 `client.SetLogger()` 方法设置自定义Logger，自定义Logger实现 `xlog.XLogger` interface即可。
 
 * 各支付方式接入，请仔细查看 `xxx_test.go` 使用方式
     * `gopay/wechat/v3/client_test.go`
     * `gopay/alipay/v3/client_test.go`
     * `gopay/alipay/client_test.go`
+    * `gopay/examples/douyin/douyin.go`（示例代码）
     * `gopay/qq/client_test.go`
     * `gopay/allinpay/client_test.go`
     * `gopay/lakala/client_test.go`
@@ -93,7 +108,7 @@ func main() {
 ---
 
 ## 问题沟通（非必要不用加微信）
-> 微信: **[85411418](.github/wechat_jerry.png)**（加个人微信备注 gopay 并关注抖音账号，谢谢）。
+> 微信: **[85411418](.github/wechat_jerry.png)**（加个人微信备注清楚来意，谢谢）。
 
 [//]: # (关注抖音：)
 

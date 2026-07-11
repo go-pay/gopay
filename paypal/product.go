@@ -39,7 +39,10 @@ func (c *Client) ProductCreate(ctx context.Context, bm gopay.BodyMap) (ppRsp *Pr
 // Code = 0 is success
 // 文档：https://developer.paypal.com/docs/api/catalog-products/v1/#products_list
 func (c *Client) ProductList(ctx context.Context, bm gopay.BodyMap) (ppRsp *ProductsListRsp, err error) {
-	uri := productList + "?" + bm.EncodeURLParams()
+	uri := productList
+	if len(bm) > 0 {
+		uri += "?" + bm.EncodeURLParams()
+	}
 	res, bs, err := c.doPayPalGet(ctx, uri)
 	if err != nil {
 		return nil, err
@@ -65,7 +68,10 @@ func (c *Client) ProductDetails(ctx context.Context, productId string, bm gopay.
 	if productId == gopay.NULL {
 		return nil, errors.New("product_id is empty")
 	}
-	uri := fmt.Sprintf(productDetail, productId) + "?" + bm.EncodeURLParams()
+	uri := fmt.Sprintf(productDetail, productId)
+	if len(bm) > 0 {
+		uri += "?" + bm.EncodeURLParams()
+	}
 	res, bs, err := c.doPayPalGet(ctx, uri)
 	if err != nil {
 		return nil, err

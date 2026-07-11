@@ -79,6 +79,8 @@ func TestMain(m *testing.M) {
 
 	// 打开Debug开关，输出日志
 	client.DebugSwitch = gopay.DebugOff
+	// 给 HTTP 客户端设置整体超时，避免支付宝某些接口偶发卡住导致 go test 整体超时
+	client.GetHttpClient().SetTimeout(15 * time.Second)
 
 	os.Exit(m.Run())
 }

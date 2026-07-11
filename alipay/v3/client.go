@@ -153,3 +153,8 @@ func (a *ClientV3) SetProxyHost(proxyHost string) *ClientV3 {
 func (a *ClientV3) GetProxyHost() string {
 	return a.proxyHost
 }
+
+// GetHttpClient 获取 xhttp.Client，用于自定义调整 http 请求参数
+func (a *ClientV3) GetHttpClient() *xhttp.Client {
+	return a.hc
+}

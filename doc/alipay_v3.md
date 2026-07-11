@@ -257,6 +257,7 @@ return c.String(http.StatusOK, "success")
   * 更改现金活动状态：`client.MarketingCampaignCashStatusModify()`
   * 现金活动列表查询：`client.MarketingCampaignCashListQuery()`
   * 现金活动详情查询：`client.MarketingCampaignCashDetailQuery()`
+  * 订单优惠前置咨询：`client.MarketingCampaignOrderVoucherConsult()`
   * 创建商家券活动：`client.MarketingActivityOrderVoucherCreate()`
   * 同步商家券券码：`client.MarketingActivityOrderVoucherCodeDeposit()`
   * 修改商家活动券基本信息：`client.MarketingActivityOrderVoucherModify()`
@@ -293,6 +294,20 @@ return c.String(http.StatusOK, "success")
   * 会员卡消息通知：`client.MarketingCardMessageNotify()`
   * 上传门店照片和视频接口：`client.OfflineMaterialImageUpload()`
   * 资金退回接口：`client.FundTransRefund()`
+* <font color='#027AFF' size='4'>棋盘密云</font>
+  * 上传创建人群：`client.MerchantQipanCrowdCreate()`
+  * 人群中追加用户：`client.MerchantQipanCrowdUserAdd()`
+  * 人群中删除用户：`client.MerchantQipanCrowdUserDelete()`
+  * 棋盘人群圈选标签基本信息查询：`client.MarketingQipanTagBaseBatchQuery()`
+  * 棋盘标签圈选值查询：`client.MarketingQipanTagQuery()`
+  * 查询人群列表：`client.MarketingQipanCrowdBatchQuery()`
+  * 查询人群详情：`client.MarketingQipanCrowdQuery()`
+  * 修改人群：`client.MarketingQipanCrowdModify()`
+  * 人群池创建：`client.MerchantQipanCrowdPoolCreate()`
+  * 人群扩展接口：`client.MerchantQipanCrowdSpread()`
+  * 上传创建灰黑产人群：`client.MerchantQipanGreyBlackCrowdCreate()`
+  * 灰黑产人群中追加用户：`client.MerchantQipanGreyBlackCrowdUserAdd()`
+  * 灰黑产人群中删除用户：`client.MerchantQipanGreyBlackCrowdUserDelete()`
 * <font color='#027AFF' size='4'>图片素材</font>
   * 营销图片资源上传接口：`client.MarketingMaterialImageUpload()`
 * <font color='#027AFF' size='4'>信用</font>

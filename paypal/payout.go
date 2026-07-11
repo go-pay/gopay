@@ -46,7 +46,10 @@ func (c *Client) ShowPayoutBatchDetails(ctx context.Context, payoutBatchId strin
 	if payoutBatchId == gopay.NULL {
 		return nil, errors.New("payout_batch_id is empty")
 	}
-	uri := fmt.Sprintf(showPayoutBatchDetail, payoutBatchId) + "?" + bm.EncodeURLParams()
+	uri := fmt.Sprintf(showPayoutBatchDetail, payoutBatchId)
+	if len(bm) > 0 {
+		uri += "?" + bm.EncodeURLParams()
+	}
 	res, bs, err := c.doPayPalGet(ctx, uri)
 	if err != nil {
 		return nil, err

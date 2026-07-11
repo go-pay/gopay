@@ -52,6 +52,49 @@ func (c *Client) ScanPay(ctx context.Context, bm gopay.BodyMap) (rsp *ScanPayRsp
 	return rsp, c.verifySign(bs)
 }
 
+// NativePay 统一主扫接口 https://prodoc.allinpay.com/doc/2064/
+func (c *Client) NativePay(ctx context.Context, bm gopay.BodyMap) (rsp *NativePayRsp, err error) {
+	err = bm.CheckEmptyError("reqsn", "trxamt", "expiretime")
+	if err != nil {
+		return nil, err
+	}
+	var bs []byte
+	if bs, err = c.doPost(ctx, nativePayPath, bm); err != nil {
+		return nil, err
+	}
+	rsp = new(NativePayRsp)
+	if err = json.Unmarshal(bs, rsp); err != nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err := bizErrCheck(rsp.RspBase); err != nil {
+		return nil, err
+	}
+	return rsp, c.verifySign(bs)
+}
+
+// NativeClose 主扫关闭接口 https://prodoc.allinpay.com/doc/2439/
+func (c *Client) NativeClose(ctx context.Context, orderType string, no string) (rsp *NativeCloseRsp, err error) {
+	bm := gopay.BodyMap{}
+	switch orderType {
+	case OrderTypeReqSN:
+		bm.Set("oldreqsn", no)
+	case OrderTypeTrxId:
+		bm.Set("oldtrxid", no)
+	}
+	var bs []byte
+	if bs, err = c.doPost(ctx, nativeClosePath, bm); err != nil {
+		return nil, err
+	}
+	rsp = new(NativeCloseRsp)
+	if err = json.Unmarshal(bs, rsp); err != nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err := bizErrCheck(rsp.RspBase); err != nil {
+		return nil, err
+	}
+	return rsp, c.verifySign(bs)
+}
+
 // Query 统一查询接口 https://aipboss.allinpay.com/know/devhelp/main.php?pid=15#mid=836
 func (c *Client) Query(ctx context.Context, orderType string, no string) (rsp *ScanPayRsp, err error) {
 	bm := gopay.BodyMap{}
@@ -66,6 +109,29 @@ func (c *Client) Query(ctx context.Context, orderType string, no string) (rsp *S
 		return nil, err
 	}
 	rsp = new(ScanPayRsp)
+	if err = json.Unmarshal(bs, rsp); err != nil {
+		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
+	}
+	if err := bizErrCheck(rsp.RspBase); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// QueryConfirm 交易确认查询接口 https://prodoc.allinpay.com/doc/2590/
+func (c *Client) QueryConfirm(ctx context.Context, orderType string, no string) (rsp *QueryConfirmRsp, err error) {
+	bm := gopay.BodyMap{}
+	switch orderType {
+	case OrderTypeReqSN:
+		bm.Set("reqsn", no)
+	case OrderTypeTrxId:
+		bm.Set("trxid", no)
+	}
+	var bs []byte
+	if bs, err = c.doPost(ctx, queryConfirmPath, bm); err != nil {
+		return nil, err
+	}
+	rsp = new(QueryConfirmRsp)
 	if err = json.Unmarshal(bs, rsp); err != nil {
 		return nil, fmt.Errorf("[%w], bytes: %s", gopay.UnmarshalErr, string(bs))
 	}

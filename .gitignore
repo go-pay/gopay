@@ -18,3 +18,8 @@ Thumbs.db
 *.patch
 *.tmp
 main
+
+# 抖音支付开发参考资料（离线 API 文档快照，不入仓）
+tmp/douyin/
+# playwright MCP 会话产物
+.playwright-mcp/

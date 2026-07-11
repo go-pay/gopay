@@ -48,6 +48,11 @@ func NewClient(instNo, key, merchantNo, terminalId, accessToken string, isProd b
 	}, nil
 }
 
+// GetHttpClient 获取 xhttp.Client，用于自定义调整 http 请求参数
+func (c *Client) GetHttpClient() *xhttp.Client {
+	return c.hc
+}
+
 // pubParamsHandle 公共参数处理
 func (c *Client) pubParamsHandle(bm gopay.BodyMap) gopay.BodyMap {
 	if ver := bm.GetString("pay_ver"); ver == gopay.NULL {

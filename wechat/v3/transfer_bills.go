@@ -3,8 +3,10 @@ package wechat
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/go-pay/gopay"
 	"github.com/go-pay/util/js"
@@ -197,4 +199,30 @@ func (c *ClientV3) V3TransferElecsignMerchantQuery(ctx context.Context, transfer
 		return nil, fmt.Errorf("[%w]: %v, bytes: %s", gopay.UnmarshalErr, err, string(bs))
 	}
 	return wxRsp, c.verifySyncSign(si)
+}
+
+// 下载电子回单
+// 文档：https://pay.weixin.qq.com/doc/v3/merchant/4013866774.md
+// 用法：传入 TransferElecsignQuery.DownloadURL（带 token 的完整 URL，10 分钟内有效），返回 PDF 文件字节。
+// 下载后建议用查询接口返回的 hash_value（SHA1）校验文件完整性。
+func (c *ClientV3) V3TransferElecsignDownload(ctx context.Context, downloadUrl string) (fileBytes []byte, err error) {
+	if downloadUrl == gopay.NULL {
+		return nil, errors.New("invalid download url")
+	}
+	split := strings.Split(downloadUrl, ".com")
+	if len(split) != 2 {
+		return nil, errors.New("invalid download url")
+	}
+	authorization, err := c.authorization(MethodGet, split[1], nil)
+	if err != nil {
+		return nil, err
+	}
+	res, _, bs, err := c.doProdGet(ctx, split[1], authorization)
+	if err != nil {
+		return nil, err
+	}
+	if res.StatusCode != http.StatusOK {
+		return nil, errors.New(string(bs))
+	}
+	return bs, nil
 }

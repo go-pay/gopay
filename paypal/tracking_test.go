@@ -12,7 +12,7 @@ func TestAddTrackingNumber(t *testing.T) {
 	var items []*ShipItem
 	var item = &ShipItem{
 		Name:     "T-Shirt",
-		Quantity: 1,
+		Quantity: "1",
 		Sku:      "sku02",
 		Url:      "https://www.example.com/example.jpg",
 		ImageUrl: "https://www.example.com/example",
