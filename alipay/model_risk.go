@@ -182,8 +182,8 @@ type SubCheckLabel struct {
 
 // ComplaintTradeInfo 投诉交易信息
 type ComplaintTradeInfo struct {
-	Id                string `json:"id,omitempty"`                  // id
-	ComplaintRecordId string `json:"complaint_record_id,omitempty"` // 投诉记录id
+	Id                int64  `json:"id,omitempty"`                  // id
+	ComplaintRecordId int64  `json:"complaint_record_id,omitempty"` // 投诉记录id
 	TradeNo           string `json:"trade_no,omitempty"`            // 支付宝交易号
 	OutNo             string `json:"out_no,omitempty"`              // 商户订单号
 	GmtTrade          string `json:"gmt_trade,omitempty"`           // 交易时间
