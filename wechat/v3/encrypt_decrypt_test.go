@@ -46,6 +46,24 @@ bdz/NH6klplarq02xmXk6pwxd11bfq3AvckrUdjywiRfGw6C1+bO+w==
 -----END RSA PRIVATE KEY-----`
 )
 
+// TestV3DecryptNotifyMalformedNonce 回调报文中的 nonce/ciphertext 均来自外部输入，
+// 长度非法时必须返回 error 而不是 panic，否则伪造的回调请求可以打挂商户进程。
+func TestV3DecryptNotifyMalformedNonce(t *testing.T) {
+	apiV3Key := "Cj5xC9RXf0GFCKWeD9PyY1ZWLgionbvx"
+	// 合法 AES-GCM nonce 为 12 字节，这里全部是非法长度。
+	for _, nonce := range []string{"", "1", "123456", "0123456789abc"} {
+		if _, err := V3DecryptPayNotifyCipherText("O9EOFzUdQESzEGqSo511CbQmt7ZlPuX/yg8n+agktdns0kFG2L0BCg==", nonce, "transaction", apiV3Key); err == nil {
+			t.Errorf("nonce 长度 %d 时应返回错误", len(nonce))
+		}
+	}
+	// 密文为非法 Base64 或长度不足一个 GCM tag 时同样只能返回错误。
+	for _, ciphertext := range []string{"", "!!!not-base64!!!", "AAAA"} {
+		if _, err := V3DecryptPayNotifyCipherText(ciphertext, "gopaynonce12", "transaction", apiV3Key); err == nil {
+			t.Errorf("密文 %q 应返回错误", ciphertext)
+		}
+	}
+}
+
 func TestV3EncryptTextAndV3DecryptText(t *testing.T) {
 	text := "I love GoPay"
 	cipherText, err := V3EncryptText(text, []byte(publicPKCS1))

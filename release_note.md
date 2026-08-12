@@ -1,4 +1,4 @@
-## 版本号：v1.5.122
+## 版本号：v1.5.123
 
 * 修改记录：
     * 新增 招商银行聚合支付 SDK（cmbpay）。
@@ -20,6 +20,16 @@
             * `client.ParseNotify()` / `ParseNotifyValues()` / `ParseNotifyBytes()`，异步通知验签并结构化。
             * `client.NotifySuccessBody()` / `NotifyFailBody()`，生成商户应答报文（加签失败时返回 error）。
             * `(n *NotifyData).IsPaySuccess()`，判断是否支付成功（仅 `tradeState=S` 为 true）。
+    * 修复 底层加解密的 panic 隐患（依赖 `github.com/go-pay/crypto` 升级至 v0.0.3）。
+        * AES-GCM 的 nonce 长度非法时返回 error，不再 panic。微信 V3 回调报文中的
+          `resource.nonce` 来自外部输入，此前长度不为 12 字节会打挂商户进程。
+        * AES / DES 的 CBC、ECB 解密在密文长度非分组整数倍、iv 短于一个分组时返回 error，
+          不再 panic。
+        * PKCS5 / PKCS7 去填充对空数据、非法填充数不再越界 panic，原样返回。
+
+## 版本号：v1.5.122
+
+* 修改记录：
     * 新增 抖音支付 SDK。
         * 基础设施：
             * `douyin.NewClient()`，初始化抖音支付客户端。

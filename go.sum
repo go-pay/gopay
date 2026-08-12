@@ -1,5 +1,5 @@
-github.com/go-pay/crypto v0.0.2 h1:UDJ8RUuvf8X1rsnK7pqs3LDY8IqzohaWPu6d9YK9Pvo=
-github.com/go-pay/crypto v0.0.2/go.mod h1:41oEIvHMKbNcYlWUlRWtsnC6+ASgh7u29z0gJXe5bes=
+github.com/go-pay/crypto v0.0.3 h1:PDYO7OduTBSSAujF/OLqMRFlcqcebEmAYNRKeTi1rdk=
+github.com/go-pay/crypto v0.0.3/go.mod h1:41oEIvHMKbNcYlWUlRWtsnC6+ASgh7u29z0gJXe5bes=
 github.com/go-pay/errgroup v0.0.3 h1:DB4s8e8oWYDyETKQ1y1riMJ7y29zE1uIsMCSjEOFSbU=
 github.com/go-pay/errgroup v0.0.3/go.mod h1:0+4b8mvFMS71MIzsaC+gVvB4x37I93lRb2dqrwuU8x8=
 github.com/go-pay/smap v0.0.2 h1:kKflYor5T5FgZltPFBMTFfjJvqYMHr5VnIFSEyhVTcA=
