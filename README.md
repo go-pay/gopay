@@ -51,6 +51,7 @@ func main() {
   * 微信商家转账产品升级，目前已支持新版商家转账接口
 * #### [微信支付（V2版，不推荐）](https://github.com/go-pay/gopay/blob/main/doc/wechat_v2.md)
 * #### [抖音支付](https://github.com/go-pay/gopay/blob/main/doc/douyin.md)
+* #### [招商银行聚合支付](https://github.com/go-pay/gopay/blob/main/doc/cmbpay.md)
 * #### [QQ支付](https://github.com/go-pay/gopay/blob/main/doc/qq.md)
 * #### [通联支付](https://github.com/go-pay/gopay/blob/main/doc/allinpay.md)
 * #### [拉卡拉支付](https://github.com/go-pay/gopay/blob/main/doc/lakala.md)
