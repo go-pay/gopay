@@ -518,6 +518,13 @@ xlog.Infof("%+v", phone)
     * 订阅创建接口：`client.TradeSubscriptionCreate()`
     * 订阅修改接口：`client.TradeSubscriptionModify()`
     * 订阅查询接口：`client.TradeSubscriptionQuery()`
+* <font color='#027AFF' size='4'>支付宝电子发票</font>
+  * 正向开票
+    * 支付开票开票申请创建接口：`client.IndustryInvoiceApplyCreate()`
+    * 支付开票开票申请查询接口：`client.IndustryInvoiceApplyQuery()`
+    * 支付开票开票申请重试接口：`client.IndustryInvoiceApplyRetry()`
+  * 企业信息
+    * 企业信息查询接口：`client.IndustryInvoiceCompanyQuery()`
 * <font color='#027AFF' size='4'>可能失效的接口</font>
   * 应用支付宝公钥证书下载：`client.PublicCertDownload()`
   * 小程序生成推广二维码接口：`client.OpenAppQrcodeCreate()`
