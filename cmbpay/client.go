@@ -7,14 +7,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
-	"github.com/tjfoc/gmsm/sm2"
+	"github.com/go-pay/crypto/sm2"
+	"github.com/go-pay/gopay"
+	"github.com/go-pay/xlog"
 )
 
 // Config 保存初始化 Client 所需的商户配置。
@@ -31,16 +31,14 @@ type Config struct {
 	PrivateKeyHex string
 	// CMBPublicKeyBase64 招行 SM2 公钥（Base64 ASN.1），用于报文体验签。
 	CMBPublicKeyBase64 string
+	// BillCheckHost 对账文件接口服务器地址（如 BillCheckHostPRD）。
+	// 对账文件接口与支付接口的主机地址不同，需单独配置，详见 BillRecord。
+	BillCheckHost string
 	// HTTPClient 可选的自定义 HTTP 客户端；为 nil 时使用带 30s 超时的默认客户端。
 	HTTPClient *http.Client
-	// 是否开启生产环境
-	IsTest bool
+	// DebugSwitch 调试开关，为 gopay.DebugOn 时打印请求与响应报文。
+	DebugSwitch gopay.DebugSwitch
 }
-
-var (
-	cmbClient *Client
-	cmbMu     sync.Mutex
-)
 
 // Client 是招行聚合支付接口的客户端。它是并发安全的，可在多个 goroutine 间共享。
 type Client struct {
@@ -48,6 +46,7 @@ type Client struct {
 	priv   *sm2.PrivateKey
 	cmbPub *sm2.PublicKey
 	http   *http.Client
+	logger xlog.XLogger
 }
 
 // NewClient 依据配置创建 Client，并完成密钥加载与校验。
@@ -61,35 +60,25 @@ func NewClient(cfg Config) (*Client, error) {
 	}
 	priv, err := LoadPrivateKeyHex(cfg.PrivateKeyHex)
 	if err != nil {
-		return nil, fmt.Errorf("cmbpay: 加载商户私钥失败: %w", err)
+		return nil, err
 	}
 	pub, err := LoadPublicKeyBase64(cfg.CMBPublicKeyBase64)
 	if err != nil {
-		return nil, fmt.Errorf("cmbpay: 加载招行公钥失败: %w", err)
+		return nil, err
 	}
 	if cfg.HTTPClient == nil {
 		cfg.HTTPClient = &http.Client{Timeout: 30 * time.Second}
 	}
-	return &Client{cfg: cfg, priv: priv, cmbPub: pub, http: cfg.HTTPClient}, nil
+	logger := xlog.NewLogger()
+	logger.SetLevel(xlog.DebugLevel)
+	return &Client{cfg: cfg, priv: priv, cmbPub: pub, http: cfg.HTTPClient, logger: logger}, nil
 }
 
-// New 返回全局单例 Client。首次调用时初始化，后续调用直接复用。
-// 若初始化失败，错误会被返回给调用方，且下次调用会重新尝试初始化。
-func New(cfg Config) (*Client, error) {
-	if cmbClient != nil {
-		return cmbClient, nil
+// SetLogger 设置自定义的 logger。
+func (c *Client) SetLogger(logger xlog.XLogger) {
+	if logger != nil {
+		c.logger = logger
 	}
-	cmbMu.Lock()
-	defer cmbMu.Unlock()
-	if cmbClient != nil {
-		return cmbClient, nil
-	}
-	c, err := NewClient(cfg)
-	if err != nil {
-		return nil, err
-	}
-	cmbClient = c
-	return cmbClient, nil
 }
 
 // MerID 返回配置中的商户号，便于装配业务请求时复用。
@@ -165,15 +154,17 @@ func (c *Client) execute(ctx context.Context, path string, bizContent any, encry
 		return fmt.Errorf("cmbpay: 报文序列化失败: %w", err)
 	}
 
-	if c.cfg.IsTest {
-		log.Println("请求URL：", c.cfg.Host+path)
-		log.Println("请求原始：", string(body))
+	if c.cfg.DebugSwitch == gopay.DebugOn {
+		c.logger.Debugf("CMBPay_Url: %s", strings.TrimRight(c.cfg.Host, "/")+path)
+		c.logger.Debugf("CMBPay_Request: %s", body)
 	}
 
 	respBody, err := c.doHTTP(ctx, path, sign, body)
-	if c.cfg.IsTest {
-		log.Println("请求响应原始：", string(respBody))
-		log.Println("请求响应错误：", err)
+	if c.cfg.DebugSwitch == gopay.DebugOn {
+		c.logger.Debugf("CMBPay_Response: %s", respBody)
+		if err != nil {
+			c.logger.Debugf("CMBPay_Response_Error: %+v", err)
+		}
 	}
 	if err != nil {
 		return err
@@ -219,13 +210,17 @@ func (c *Client) handleResponse(body []byte, out any) error {
 	// 提取签名并校验（招行公钥、SM2withSM3）。
 	sign, err := rawString(fields["sign"])
 	if err != nil {
-		return fmt.Errorf("cmbpay: 响应缺少 sign 字段: %w", err)
+		// 报文不合规范（字段超长、非法字符、签名错误等）时，招行可能返回不带 sign
+		// 的错误报文。此时应把真实的业务错误抛给调用方，而不是笼统地报缺少 sign
+		// （详见接口文档 2.2 第 8 条）。
+		returnCode, _ := rawString(fields["returnCode"])
+		respCode, _ := rawString(fields["respCode"])
+		if returnCode == ResultFail || respCode == ResultFail {
+			return newAPIError(fields)
+		}
+		return fmt.Errorf("cmbpay: 响应缺少 sign 字段: %w，原文: %s", err, truncate(string(body), 512))
 	}
-	params, err := responseSignParams(fields)
-	if err != nil {
-		return err
-	}
-	if err := verifySM2(c.cmbPub, buildSignString(params), sign); err != nil {
+	if err = verifySM2(c.cmbPub, buildSignString(responseSignParams(fields)), sign); err != nil {
 		return err
 	}
 
@@ -263,9 +258,13 @@ func (c *Client) handleResponse(body []byte, out any) error {
 	return nil
 }
 
-// responseSignParams 从响应字段中构造待验签参数集：剔除 sign，其余字段的字符串值
-// 参与验签。使用 rawString 反序列化后的原始字符串值（详见接口文档 2.4.1.2）。
-func responseSignParams(fields map[string]json.RawMessage) (map[string]string, error) {
+// responseSignParams 从响应字段中构造待验签参数集：剔除 sign，其余字段参与验签
+// （详见接口文档 2.4.1.2）。
+//
+// 招行报文字段约定为字符串，此处对 JSON 字符串取其反转义后的值；若某字段并非
+// 字符串（如数字、对象），则原样取其 JSON 文本参与验签 —— 招行后续新增非字符串
+// 字段时，不至于让整个响应直接验签报错。
+func responseSignParams(fields map[string]json.RawMessage) map[string]string {
 	params := make(map[string]string, len(fields))
 	for k, raw := range fields {
 		if k == "sign" {
@@ -273,11 +272,11 @@ func responseSignParams(fields map[string]json.RawMessage) (map[string]string, e
 		}
 		v, err := rawString(raw)
 		if err != nil {
-			return nil, fmt.Errorf("cmbpay: 响应字段 %s 非字符串: %w", k, err)
+			v = string(raw)
 		}
 		params[k] = v
 	}
-	return params, nil
+	return params
 }
 
 // newAPIError 从响应字段装配 *APIError。

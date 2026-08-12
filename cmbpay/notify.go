@@ -66,10 +66,16 @@ type NotifyData struct {
 // 典型用法（HTTP handler 中）：
 //
 //	data, err := client.ParseNotify(r)
-//	if err != nil { w.Write(client.NotifyFailBody("verify")) ; return }
+//	if err != nil {
+//	    body, _ := client.NotifyFailBody("verify")
+//	    w.Write(body)
+//	    return
+//	}
 //	// ... 幂等处理业务 ...
+//	body, err := client.NotifySuccessBody()
+//	if err != nil { /* 加签失败，告警 */ return }
 //	w.Header().Set("Content-Type", "application/json")
-//	w.Write(client.NotifySuccessBody())
+//	w.Write(body)
 func (c *Client) ParseNotify(r *http.Request) (*NotifyData, error) {
 	if err := r.ParseForm(); err != nil {
 		return nil, fmt.Errorf("cmbpay: 解析通知表单失败: %w", err)
@@ -152,19 +158,22 @@ func (c *Client) parseNotifyForm(form map[string]string) (*NotifyData, error) {
 // NotifySuccessBody 返回商户应答招行通知的成功报文（JSON），包含 version、encoding、
 // signMethod 与 SM2 签名。商户处理成功或幂等判定已处理后须返回该报文，招行据此不再重复通知
 // （详见接口文档 2.3 第 3 条、2.5 未知交易通知机制）。
-func (c *Client) NotifySuccessBody() []byte {
+func (c *Client) NotifySuccessBody() ([]byte, error) {
 	return c.notifyBody(ResultSuccess, ResultSuccess, "")
 }
 
 // NotifyFailBody 返回商户应答招行通知的失败报文（JSON），包含 version、encoding、
 // signMethod 与 SM2 签名。招行会按重试策略再次通知。
-func (c *Client) NotifyFailBody(respMsg string) []byte {
+func (c *Client) NotifyFailBody(respMsg string) ([]byte, error) {
 	return c.notifyBody(ResultSuccess, ResultFail, respMsg)
 }
 
 // notifyBody 构造商户应答报文：填充 version/encoding/signMethod 等固定字段，
 // 对除 sign 外的全部字段做 SM2 签名并将签名值写入 sign。
-func (c *Client) notifyBody(returnCode, respCode, respMsg string) []byte {
+//
+// 加签失败时返回错误而非返回未加签的报文 —— 未加签的应答会被招行判定为无效，
+// 商户应当据此告警，而不是让应答静默失效。
+func (c *Client) notifyBody(returnCode, respCode, respMsg string) ([]byte, error) {
 	m := map[string]string{
 		"returnCode": returnCode,
 		"respCode":   respCode,
@@ -175,15 +184,23 @@ func (c *Client) notifyBody(returnCode, respCode, respMsg string) []byte {
 	if respMsg != "" {
 		m["respMsg"] = respMsg
 	}
-	if sign, err := signSM2(c.priv, buildSignString(m)); err == nil {
-		m["sign"] = sign
+	sign, err := signSM2(c.priv, buildSignString(m))
+	if err != nil {
+		return nil, err
 	}
-	b, _ := json.Marshal(m)
-	return b
+	m["sign"] = sign
+	b, err := json.Marshal(m)
+	if err != nil {
+		return nil, fmt.Errorf("cmbpay: 应答报文序列化失败: %w", err)
+	}
+	return b, nil
 }
 
-// IsPaySuccess 报告该通知是否为支付成功（tradeState=S）。
-// 注：招行仅在成功支付时发送支付结果通知（详见接口文档 4.3.1）。
+// IsPaySuccess 报告该通知是否为支付成功（tradeState=S，详见接口文档 4.2.3）。
+//
+// 注意：仅当通知中明确带有 tradeState=S 时才返回 true。若通知未携带 tradeState
+// （例如退款通知，或招行后续调整了通知字段），此处一律返回 false，商户应调用
+// OrderQuery 查询订单以确认真实状态，避免把状态不明的通知误判为支付成功。
 func (n *NotifyData) IsPaySuccess() bool {
-	return n.TradeState == "" || strings.EqualFold(n.TradeState, TradeStateSuccess)
+	return strings.EqualFold(n.TradeState, TradeStateSuccess)
 }

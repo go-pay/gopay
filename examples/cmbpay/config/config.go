@@ -40,12 +40,13 @@ func NotifyURL() string {
 
 // MustClient 构建并返回一个 *cmbpay.Client，失败即退出。
 func MustClient() *cmbpay.Client {
-	host := cmbpay.HostUAT
+	host, billCheckHost := cmbpay.HostUAT, cmbpay.BillCheckHostUAT
 	if env("CMB_ENV", "uat") == "prod" {
-		host = cmbpay.HostProd
+		host, billCheckHost = cmbpay.HostProd, cmbpay.BillCheckHostPRD
 	}
 	client, err := cmbpay.NewClient(cmbpay.Config{
 		Host:               host,
+		BillCheckHost:      billCheckHost,
 		AppID:              env("CMB_APPID", demoAppID),
 		AppSecret:          env("CMB_APPSECRET", demoAppSecret),
 		MerID:              env("CMB_MERID", demoMerID),

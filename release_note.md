@@ -1,6 +1,25 @@
 ## 版本号：v1.5.122
 
 * 修改记录：
+    * 新增 招商银行聚合支付 SDK（cmbpay）。
+        * 基础设施：
+            * `cmbpay.NewClient()`，初始化招行聚合支付客户端。
+            * `client.SetLogger()`，替换日志实现；`Config.DebugSwitch` 置为 `gopay.DebugOn` 时打印请求与响应报文。
+            * 签名 / 验签 / 加解密：SM2withSM3 请求加签与响应/通知验签、SM4-ECB 敏感字段加密、SM2 数字信封（`encryptKey`）、报文头 `apisign`（MD5）。
+            * 国密算法改由 `github.com/go-pay/crypto` 的 `sm2` / `sm3` / `sm4` 提供（仅依赖 Go 标准库），不再引入 `github.com/tjfoc/gmsm`。
+        * 支付与订单：
+            * `client.QrCodeApply()` / `OrderQrCodeApply()`，收款码申请、订单二维码申请。
+            * `client.OrderQuery()`，支付结果查询；`client.Close()`，关闭订单。
+            * `client.Pay()` / `PayEncrypted()`，付款码收款；`client.Cancel()`，付款码支付撤销。
+            * `client.Refund()` / `RefundQuery()`，退款申请与退款结果查询。
+            * `client.OnlinePay()` / `MiniAppOrder()` / `ServPay()` / `ZfbNative()` / `CloudPay()` 等各渠道下单接口。
+            * `client.Execute()` / `ExecuteEncrypted()`，通用调用入口，覆盖数字人民币、微信支付分、支付宝 APP/WAP 等未封装接口。
+        * 对账：
+            * `client.BillRecord()`，对账文件下载地址获取（需配置 `Config.BillCheckHost` 或传入专用主机地址）。
+        * 回调通知：
+            * `client.ParseNotify()` / `ParseNotifyValues()` / `ParseNotifyBytes()`，异步通知验签并结构化。
+            * `client.NotifySuccessBody()` / `NotifyFailBody()`，生成商户应答报文（加签失败时返回 error）。
+            * `(n *NotifyData).IsPaySuccess()`，判断是否支付成功（仅 `tradeState=S` 为 true）。
     * 新增 抖音支付 SDK。
         * 基础设施：
             * `douyin.NewClient()`，初始化抖音支付客户端。

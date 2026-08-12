@@ -44,9 +44,8 @@
 go get github.com/go-pay/gopay/cmbpay
 ```
 
-要求 Go 1.18+（使用了泛型 `any` 等）。依赖国密库 `github.com/tjfoc/gmsm`，
-由 Go Modules 按需拉取（第三方公共包不纳入版本库，`vendor/` 已在 `.gitignore` 中忽略）。
-如需离线构建可自行执行 `go mod vendor`。
+国密算法（SM2 / SM3 / SM4）由 gopay 自有的 `github.com/go-pay/crypto` 提供，
+仅使用 Go 标准库实现，不引入第三方国密库。
 
 ## 快速开始
 
@@ -101,7 +100,9 @@ func main() {
 | `MerID` | 是 | 招行商户号 |
 | `PrivateKeyHex` | 是 | 商户 SM2 私钥，64 字符 HEX，用于报文体加签 |
 | `CMBPublicKeyBase64` | 是 | 招行 SM2 公钥，Base64（ASN.1），用于报文体/通知验签 |
+| `BillCheckHost` | 否 | 对账文件接口地址（`BillCheckHostPRD` / `BillCheckHostUAT`）。仅调用 `BillRecord` 时需要，其主机地址与支付接口不同 |
 | `HTTPClient` | 否 | 自定义 `*http.Client`；为 nil 时使用带 30s 超时的默认客户端 |
+| `DebugSwitch` | 否 | 置为 `gopay.DebugOn` 时打印请求与响应报文，可用 `client.SetLogger` 替换日志实现 |
 
 > 联调环境的示例 AppID / AppSecret / 商户私钥 / 招行公钥见接口文档附录 1，
 > 本仓库示例在未设置环境变量时会回退到这些参数，可直接体验。
@@ -202,23 +203,34 @@ func notifyHandler(w http.ResponseWriter, r *http.Request) {
 
 	data, err := client.ParseNotify(r) // 自动验签并结构化
 	if err != nil {
-		w.Write(cmbpay.NotifyFailBody("verify failed")) // 返回 FAIL，招行会重试
+		body, _ := client.NotifyFailBody("verify failed") // 返回 FAIL，招行会重试
+		w.Write(body)
 		return
 	}
 
 	// 幂等：同一通知可能重复投递，处理前先查本地状态
 	if alreadyProcessed(data.OrderID) {
-		w.Write(cmbpay.NotifySuccessBody())
+		body, _ := client.NotifySuccessBody()
+		w.Write(body)
 		return
 	}
 
-	if data.IsPaySuccess() {
+	if data.IsPaySuccess() { // 仅当通知明确带 tradeState=S 时为 true
 		// 更新本地订单为已支付、发货等
 	}
 
-	w.Write(cmbpay.NotifySuccessBody()) // {"returnCode":"SUCCESS","respCode":"SUCCESS"}
+	// 加签失败时不可返回未加签的报文（招行会判定无效），应返回 5xx 让招行重试
+	body, err := client.NotifySuccessBody() // {"returnCode":"SUCCESS","respCode":"SUCCESS",...}
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.Write(body)
 }
 ```
+
+> `IsPaySuccess()` 只在 `tradeState=S` 时返回 `true`。若通知未携带 `tradeState`
+> （如退款通知），请调用 `OrderQuery` 查询订单确认真实状态，切勿直接入账。
 
 未使用 `net/http` 时可用 `client.ParseNotifyValues(url.Values)`。完整可运行版本见
 [`example/notifyserver/main.go`](example/notifyserver/main.go)。
@@ -291,7 +303,7 @@ if err != nil {
 | `OnlinePay` | 微信统一下单 | 4.10 |
 | `ServPay` / `ServPayEncrypted` | 服务窗支付 | 4.11 |
 | `ZfbNative` / `ZfbNativeEncrypted` | 支付宝 native 码支付 | 4.12 |
-| `BillRecord` | 对账单下载地址获取，和下单/查单接口签名规则不一样 | - |
+| `BillRecord` | 对账单下载地址获取，和下单/查单接口签名规则不一样，需配置 `BillCheckHost` 或传入专用主机地址 | - |
 | `OrderQrCodeApply` / `OrderQrCodeApplyEncrypted` | 订单二维码申请 | 4.14 |
 | `MiniAppOrder` / `MiniAppOrderEncrypted` | 微信小程序下单 | 4.15 |
 | `CloudPay` | 银联云闪付 | 4.16 |

@@ -8,7 +8,10 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
+
+	"github.com/go-pay/gopay"
 )
 
 // 对账文件接口服务器地址（详见接口文档 - 聚合对账文件接口）
@@ -86,15 +89,24 @@ type BillRecordData struct {
 //   - 不需要 SM2 响应验签
 //   - 响应格式为 {code, data, message, timestamp}，而非 {returnCode, respCode, biz_content, sign}
 //
-// billCheckHost 为对账接口专用主机地址（如 BillCheckHostUAT），传空串则使用 c.cfg.Host。
+// billCheckHost 为对账接口专用主机地址（如 BillCheckHostPRD）；传空串则取
+// Config.BillCheckHost。两者皆为空时直接返回错误 —— 对账接口的主机地址已包含
+// /bill/check 等路径，退化为支付接口的 Config.Host 只会拼出错误的 URL。
+//
 // 建议在每日 10:35 后查询。
 func (c *Client) BillRecord(ctx context.Context, billCheckHost string, req *BillRecordReq) (*BillRecordResp, error) {
 	// 确定主机地址
 	host := billCheckHost
 	if host == "" {
-		host = c.cfg.Host
+		host = c.cfg.BillCheckHost
 	}
-	url := host + PathBillRecord
+	if host == "" {
+		return nil, fmt.Errorf("cmbpay: 对账文件接口主机地址为空，请传入 billCheckHost 或配置 Config.BillCheckHost")
+	}
+	if req == nil {
+		return nil, fmt.Errorf("cmbpay: 对账文件下载请求参数不能为空")
+	}
+	url := strings.TrimRight(host, "/") + PathBillRecord
 
 	// 构建请求体：{"requestBody": {...}}
 	wrapper := struct {
@@ -103,13 +115,13 @@ func (c *Client) BillRecord(ctx context.Context, billCheckHost string, req *Bill
 
 	bodyBytes, err := json.Marshal(wrapper)
 	if err != nil {
-		return nil, fmt.Errorf("billcheck: marshal request body: %w", err)
+		return nil, fmt.Errorf("cmbpay: 对账请求序列化失败: %w", err)
 	}
 
 	// 构建 HTTP 请求
 	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(bodyBytes))
 	if err != nil {
-		return nil, fmt.Errorf("billcheck: create http request: %w", err)
+		return nil, fmt.Errorf("cmbpay: 构造对账请求失败: %w", err)
 	}
 
 	// 设置请求头（对账接口专用 header 格式）
@@ -118,7 +130,7 @@ func (c *Client) BillRecord(ctx context.Context, billCheckHost string, req *Bill
 	// 计算 sign：对请求体进行 SM2withSM3 签名（Base64 格式）
 	signValue, err := signSM2(c.priv, string(bodyBytes))
 	if err != nil {
-		return nil, fmt.Errorf("billcheck: compute sign: %w", err)
+		return nil, err
 	}
 
 	// 计算 apisign：对 "appid=value&secret=value&sign=value&timestamp=value" 拼接字符串进行 SM2withSM3 签名
@@ -127,7 +139,7 @@ func (c *Client) BillRecord(ctx context.Context, billCheckHost string, req *Bill
 		c.cfg.AppID, c.cfg.AppSecret, signValue, ts)
 	apisign, err := signSM2Hex(c.priv, signStr)
 	if err != nil {
-		return nil, fmt.Errorf("billcheck: compute apisign: %w", err)
+		return nil, err
 	}
 
 	httpReq.Header.Set("Content-Type", "application/json")
@@ -140,23 +152,36 @@ func (c *Client) BillRecord(ctx context.Context, billCheckHost string, req *Bill
 	httpReq.Header.Set("funcCode", "BILLRECORD_GET_FORAPI")
 	httpReq.Header.Set("sysCode", "AP")
 
+	if c.cfg.DebugSwitch == gopay.DebugOn {
+		c.logger.Debugf("CMBPay_BillCheck_Url: %s", url)
+		c.logger.Debugf("CMBPay_BillCheck_Request: %s", bodyBytes)
+	}
+
 	// 发送请求（复用 Client 的 HTTP 客户端）
 	resp, err := c.http.Do(httpReq)
 	if err != nil {
-		return nil, fmt.Errorf("billcheck: send http request: %w", err)
+		return nil, fmt.Errorf("cmbpay: 对账请求发送失败: %w", err)
 	}
 	defer resp.Body.Close()
 
 	// 读取响应
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("billcheck: read response body: %w", err)
+		return nil, fmt.Errorf("cmbpay: 读取对账响应失败: %w", err)
+	}
+	if c.cfg.DebugSwitch == gopay.DebugOn {
+		c.logger.Debugf("CMBPay_BillCheck_Response: %s", respBody)
+	}
+	// 非 200 时响应体通常不是约定的 JSON 结构，需先拦截，避免把网关错误页
+	// 解析成一个 Code 为空的“成功”响应。
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("cmbpay: 对账接口 HTTP 状态码 %d，响应: %s", resp.StatusCode, truncate(string(respBody), 512))
 	}
 
 	// 解析响应（对账接口响应格式与普通接口不同，直接解析）
 	var billResp BillRecordResp
-	if err := json.Unmarshal(respBody, &billResp); err != nil {
-		return nil, fmt.Errorf("billcheck: unmarshal response: %w (body: %s)", err, string(respBody))
+	if err = json.Unmarshal(respBody, &billResp); err != nil {
+		return nil, fmt.Errorf("cmbpay: 对账响应解析失败: %w，原文: %s", err, truncate(string(respBody), 512))
 	}
 
 	// 检查响应码
@@ -164,17 +189,17 @@ func (c *Client) BillRecord(ctx context.Context, billCheckHost string, req *Bill
 	case BillRecordCodeSuccess:
 		return &billResp, nil
 	case BillRecordCodeBillEmpty:
-		return nil, fmt.Errorf("billcheck: bill empty: %s - %s", billResp.Code, billResp.Message)
+		return nil, fmt.Errorf("cmbpay: 账单文件为空: %s - %s", billResp.Code, billResp.Message)
 	case BillRecordCodeNotGenerated1, BillRecordCodeNotGenerated2:
-		return nil, fmt.Errorf("billcheck: bill not generated: %s - %s", billResp.Code, billResp.Message)
+		return nil, fmt.Errorf("cmbpay: 账单还未生成: %s - %s", billResp.Code, billResp.Message)
 	case BillRecordCodeNoBill1, BillRecordCodeNoBill2:
-		return nil, fmt.Errorf("billcheck: no bill for this day: %s - %s", billResp.Code, billResp.Message)
+		return nil, fmt.Errorf("cmbpay: 当日无账单: %s - %s", billResp.Code, billResp.Message)
 	default:
-		return nil, fmt.Errorf("billcheck: request failed: %s - %s", billResp.Code, billResp.Message)
+		return nil, fmt.Errorf("cmbpay: 对账文件查询失败: %s - %s", billResp.Code, billResp.Message)
 	}
 }
 
-// IsBillReady 检查账单是否已生成（SUC0000）
+// IsBillReady 检查账单是否已生成（BillRecordCodeSuccess）
 func (resp *BillRecordResp) IsBillReady() bool {
 	return resp.Code == BillRecordCodeSuccess
 }

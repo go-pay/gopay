@@ -46,18 +46,21 @@ func main() {
 		if err != nil {
 			log.Printf("通知验签失败: %v", err)
 			// 验签失败返回 FAIL，招行会按重试策略再次通知。
-			_, _ = w.Write(client.NotifyFailBody("verify failed"))
+			body, ackErr := client.NotifyFailBody("verify failed")
+			writeAck(w, body, ackErr)
 			return
 		}
 
 		// 2) 幂等：同一通知可能重复投递，已处理过直接返回成功。
 		if !store.markIfNew(data.OrderID) {
 			log.Printf("通知重复，幂等跳过: 订单=%s", data.OrderID)
-			_, _ = w.Write(client.NotifySuccessBody())
+			body, ackErr := client.NotifySuccessBody()
+			writeAck(w, body, ackErr)
 			return
 		}
 
-		// 3) 业务处理：招行仅在支付成功时发送支付结果通知。
+		// 3) 业务处理：仅当通知明确带 tradeState=S 时才视为支付成功，
+		//    其余状态应通过 OrderQuery 查询确认，不可直接入账。
 		if data.IsPaySuccess() {
 			log.Printf("支付成功: 订单=%s 平台单号=%s 金额(分)=%s 方式=%s 第三方单号=%s",
 				data.OrderID, data.CmbOrderID, data.TxnAmt, data.PayType, data.ThirdOrderID)
@@ -67,10 +70,22 @@ func main() {
 		}
 
 		// 4) 返回成功应答，招行据此停止重复通知。
-		_, _ = w.Write(client.NotifySuccessBody())
+		body, ackErr := client.NotifySuccessBody()
+		writeAck(w, body, ackErr)
 	})
 
 	addr := ":8080"
 	log.Printf("通知服务已启动: http://localhost%s/cmb/notify", addr)
 	log.Fatal(http.ListenAndServe(addr, nil))
+}
+
+// writeAck 写出应答报文。加签失败时不能返回未加签的报文（招行会判定无效），
+// 此处改为返回 500 并告警，让招行按重试策略再次通知。
+func writeAck(w http.ResponseWriter, body []byte, err error) {
+	if err != nil {
+		log.Printf("应答报文加签失败，需告警: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	_, _ = w.Write(body)
 }
